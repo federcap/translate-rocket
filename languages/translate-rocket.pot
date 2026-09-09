@@ -1,0 +1,3102 @@
+# Copyright (C) 2026 federico_dev
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: TranslateRocket 0.8.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/translate-rocket\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-17T16:13:43+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: translate-rocket\n"
+
+#. Plugin Name of the plugin
+#: translate-rocket.php
+#: src/Admin/Admin.php:160
+#: src/Admin/Admin.php:161
+#: src/Admin/EditorButton.php:78
+#: src/Admin/MetaBox.php:43
+msgid "TranslateRocket"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: translate-rocket.php
+msgid "https://translaterocket.com"
+msgstr ""
+
+#. Description of the plugin
+#: translate-rocket.php
+msgid "Free, AI-powered translation for WordPress. Translate your whole site — visible text, image alt tags, titles, placeholders and SEO meta — using your own AI keys (OpenAI, Anthropic, Gemini, DeepL, Google). Untranslated strings are detected automatically as visitors browse."
+msgstr ""
+
+#. Author of the plugin
+#: translate-rocket.php
+msgid "federico_dev"
+msgstr ""
+
+#. Author URI of the plugin
+#: translate-rocket.php
+msgid "https://federicocaputo.dev"
+msgstr ""
+
+#: src/Admin/Admin.php:73
+msgid "TranslateRocket preview mode is on."
+msgstr ""
+
+#: src/Admin/Admin.php:74
+msgid "Only administrators can see the translations — visitors get the default language. When you are happy with the result, switch visibility back to \"Everyone\" to publish."
+msgstr ""
+
+#: src/Admin/Admin.php:76
+msgid "Open settings"
+msgstr ""
+
+#. translators: %s: provider name (e.g. DeepL).
+#: src/Admin/Admin.php:101
+#, php-format
+msgid "%s is unavailable."
+msgstr ""
+
+#: src/Admin/Admin.php:102
+msgid "Automatic translation is falling back to the next provider in your chain (or stopping if there is none)."
+msgstr ""
+
+#: src/Admin/Admin.php:105
+#: src/Admin/Growth.php:161
+msgid "Dismiss"
+msgstr ""
+
+#: src/Admin/Admin.php:152
+#: src/Admin/Admin.php:1963
+#: src/Admin/Admin.php:4204
+#: src/Admin/MetaBox.php:232
+#: src/Frontend/VisualEditor.php:616
+msgid "Google Translate is unavailable right now."
+msgstr ""
+
+#: src/Admin/Admin.php:171
+#: src/Admin/Admin.php:172
+#: src/Admin/Admin.php:2252
+#: src/Admin/Admin.php:3702
+msgid "Translations"
+msgstr ""
+
+#: src/Admin/Admin.php:180
+msgid "Translation Memory"
+msgstr ""
+
+#: src/Admin/Admin.php:181
+#: src/Admin/Admin.php:2253
+msgid "Memory"
+msgstr ""
+
+#: src/Admin/Admin.php:189
+#: src/Admin/Admin.php:190
+#: src/Admin/Admin.php:2233
+#: src/Admin/Admin.php:2522
+#: src/Admin/Admin.php:3456
+msgid "AI Translation"
+msgstr ""
+
+#: src/Admin/Admin.php:198
+#: src/Admin/Admin.php:199
+#: src/Admin/Admin.php:2255
+msgid "Import"
+msgstr ""
+
+#: src/Admin/Admin.php:207
+#: src/Admin/Admin.php:208
+#: src/Admin/Admin.php:2256
+#: src/Admin/Admin.php:3261
+#: src/Admin/Admin.php:3465
+msgid "Switcher"
+msgstr ""
+
+#: src/Admin/Admin.php:216
+#: src/Admin/Admin.php:217
+#: src/Admin/Admin.php:2257
+#: src/Admin/Admin.php:2866
+msgid "Exclusions"
+msgstr ""
+
+#: src/Admin/Admin.php:225
+#: src/Admin/Admin.php:226
+#: src/Admin/Admin.php:2334
+msgid "Independent copies"
+msgstr ""
+
+#: src/Admin/Admin.php:234
+#: src/Admin/Admin.php:235
+#: src/Admin/Admin.php:2259
+#: src/Admin/Admin.php:3042
+msgid "Diagnostics"
+msgstr ""
+
+#: src/Admin/Admin.php:243
+#: src/Admin/Admin.php:244
+msgid "Setup wizard"
+msgstr ""
+
+#: src/Admin/Admin.php:325
+#: src/Admin/MetaBox.php:93
+#: src/Admin/MetaBox.php:162
+msgid "Loading…"
+msgstr ""
+
+#: src/Admin/Admin.php:326
+msgid "No models found — check the API key for this provider."
+msgstr ""
+
+#: src/Admin/Admin.php:327
+msgid "— pick a model —"
+msgstr ""
+
+#: src/Admin/Admin.php:328
+msgid "characters used"
+msgstr ""
+
+#: src/Admin/Admin.php:348
+msgid "Scan all published pages to detect translatable text? Keep this tab open until it finishes."
+msgstr ""
+
+#: src/Admin/Admin.php:349
+msgid "Scanning"
+msgstr ""
+
+#: src/Admin/Admin.php:350
+msgid "Scan complete — reloading…"
+msgstr ""
+
+#: src/Admin/Admin.php:351
+msgid "No published pages found to scan."
+msgstr ""
+
+#: src/Admin/Admin.php:423
+msgid "Add your DeepL key first."
+msgstr ""
+
+#: src/Admin/Admin.php:434
+msgid "Could not reach DeepL — check the key."
+msgstr ""
+
+#: src/Admin/Admin.php:438
+msgid "Unexpected response from DeepL."
+msgstr ""
+
+#: src/Admin/Admin.php:462
+msgid "No AI provider is configured."
+msgstr ""
+
+#: src/Admin/Admin.php:465
+msgid "Add the API key first."
+msgstr ""
+
+#. translators: %s: provider name.
+#: src/Admin/Admin.php:491
+#, php-format
+msgid "Connection test failed for %s."
+msgstr ""
+
+#: src/Admin/Admin.php:494
+msgid "The provider did not return a translation."
+msgstr ""
+
+#: src/Admin/Admin.php:906
+msgid "Security check failed."
+msgstr ""
+
+#: src/Admin/Admin.php:1148
+msgid "Import translations"
+msgstr ""
+
+#: src/Admin/Admin.php:1148
+msgid "Already used another translation plugin? Bring its translations into TranslateRocket so you don’t start over."
+msgstr ""
+
+#. translators: %d: number of imported translations.
+#: src/Admin/Admin.php:1155
+#, php-format
+msgid "Imported %d translations."
+msgstr ""
+
+#. translators: %d: number of translations imported from the CSV.
+#: src/Admin/Admin.php:1165
+#, php-format
+msgid "Imported %d translations from CSV."
+msgstr ""
+
+#: src/Admin/Admin.php:1170
+msgid "Could not read the CSV file. Please upload a valid .csv exported from TranslateRocket."
+msgstr ""
+
+#. translators: %d: number of translations imported from TMX.
+#: src/Admin/Admin.php:1176
+#, php-format
+msgid "Imported %d translations from TMX."
+msgstr ""
+
+#: src/Admin/Admin.php:1181
+msgid "Could not read the TMX file. Please upload a valid .tmx (without a DTD)."
+msgstr ""
+
+#. translators: %d: number of translations imported from the Weglot export.
+#: src/Admin/Admin.php:1187
+#, php-format
+msgid "Imported %d translations from your Weglot export."
+msgstr ""
+
+#. translators: %d: number of rows skipped because their language is not configured.
+#: src/Admin/Admin.php:1191
+#, php-format
+msgid "%d rows were skipped because their language is not configured as a target here."
+msgstr ""
+
+#: src/Admin/Admin.php:1201
+msgid "This does not look like a Weglot export: the header has no word_from / word_to columns."
+msgstr ""
+
+#: src/Admin/Admin.php:1203
+msgid "The file is too large (10 MB maximum). Export from Weglot in smaller batches, e.g. one language at a time."
+msgstr ""
+
+#: src/Admin/Admin.php:1205
+msgid "Could not read the file. Please upload the .csv exported from your Weglot dashboard."
+msgstr ""
+
+#: src/Admin/Admin.php:1211
+msgid "Bring your translations over from another plugin — no need to start from scratch."
+msgstr ""
+
+#: src/Admin/Admin.php:1214
+msgid "Existing TranslateRocket translations are kept; imported strings are added or filled in."
+msgstr ""
+
+#. translators: %d: number of strings found.
+#: src/Admin/Admin.php:1225
+#, php-format
+msgid "%d translatable strings found."
+msgstr ""
+
+#. translators: %s: source plugin name.
+#: src/Admin/Admin.php:1234
+#, php-format
+msgid "Import from %s"
+msgstr ""
+
+#: src/Admin/Admin.php:1242
+msgid "Detected, but there are no translations to import yet."
+msgstr ""
+
+#: src/Admin/Admin.php:1244
+msgid "Not detected (the plugin is not installed or configured)."
+msgstr ""
+
+#: src/Admin/Admin.php:1249
+msgid "Weglot keeps translations in its cloud, so there is nothing to detect locally. Export them from your Weglot dashboard (Translations → Export, CSV format) and upload the file here."
+msgstr ""
+
+#. translators: %s: link to the plugin settings.
+#: src/Admin/Admin.php:1255
+#, php-format
+msgid "Add your target languages in %s first, then upload the export."
+msgstr ""
+
+#: src/Admin/Admin.php:1256
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/Admin.php:1267
+msgid "Language of the file (used only when the export has no language column):"
+msgstr ""
+
+#: src/Admin/Admin.php:1274
+msgid "Import from Weglot"
+msgstr ""
+
+#: src/Admin/Admin.php:1279
+msgid "Note: Polylang and WPML store translations as separate posts, so their import brings over string translations, titles, slugs and matching body text (best effort)."
+msgstr ""
+
+#: src/Admin/Admin.php:1282
+msgid "Export & import (CSV)"
+msgstr ""
+
+#: src/Admin/Admin.php:1282
+msgid "Download all your translations as a spreadsheet (one column per language) for backup or offline editing, then upload it back."
+msgstr ""
+
+#: src/Admin/Admin.php:1284
+msgid "Export all translations"
+msgstr ""
+
+#: src/Admin/Admin.php:1285
+msgid "A UTF-8 CSV with columns: original, type, context, and one column per language. Opens in Excel, Google Sheets or Numbers."
+msgstr ""
+
+#: src/Admin/Admin.php:1288
+msgid "Download CSV"
+msgstr ""
+
+#: src/Admin/Admin.php:1294
+msgid "Import from CSV"
+msgstr ""
+
+#: src/Admin/Admin.php:1295
+msgid "Upload a CSV in the same format. Non-empty cells update the matching translation; blank cells are left untouched."
+msgstr ""
+
+#: src/Admin/Admin.php:1299
+msgid "Import CSV"
+msgstr ""
+
+#: src/Admin/Admin.php:1303
+msgid "Export & import (TMX)"
+msgstr ""
+
+#: src/Admin/Admin.php:1303
+msgid "TMX is the standard translation-memory format. Export to back up your memory, move it to another TranslateRocket site, or open it in a CAT tool; import a TMX to load translations."
+msgstr ""
+
+#: src/Admin/Admin.php:1305
+msgid "Export translation memory"
+msgstr ""
+
+#: src/Admin/Admin.php:1306
+msgid "A standard TMX 1.4 file: one translation unit per source string, one segment per language."
+msgstr ""
+
+#: src/Admin/Admin.php:1309
+msgid "Download TMX"
+msgstr ""
+
+#: src/Admin/Admin.php:1315
+#: src/Admin/Admin.php:1320
+msgid "Import TMX"
+msgstr ""
+
+#: src/Admin/Admin.php:1316
+msgid "Upload a TMX file. Segments are matched by their source-language text, then added or updated."
+msgstr ""
+
+#: src/Admin/Admin.php:1476
+msgid "Add target languages to see the preview."
+msgstr ""
+
+#: src/Admin/Admin.php:1526
+msgid "Language switcher"
+msgstr ""
+
+#: src/Admin/Admin.php:1528
+msgid "Switcher saved."
+msgstr ""
+
+#: src/Admin/Admin.php:1530
+msgid "Design your switcher — create profiles (e.g. header, footer), each with its own style and a live preview."
+msgstr ""
+
+#: src/Admin/Admin.php:1533
+msgid "Profile:"
+msgstr ""
+
+#: src/Admin/Admin.php:1534
+#: src/Admin/Admin.php:1636
+msgid "Default"
+msgstr ""
+
+#: src/Admin/Admin.php:1540
+msgid "header, footer…"
+msgstr ""
+
+#: src/Admin/Admin.php:1541
+msgid "+ Add profile"
+msgstr ""
+
+#: src/Admin/Admin.php:1544
+msgid "Insert with:"
+msgstr ""
+
+#: src/Admin/Admin.php:1548
+msgid "Delete this profile?"
+msgstr ""
+
+#: src/Admin/Admin.php:1551
+msgid "Delete profile"
+msgstr ""
+
+#: src/Admin/Admin.php:1563
+#: assets/js/switcher-block.js:49
+msgid "Style"
+msgstr ""
+
+#: src/Admin/Admin.php:1565
+msgid "Layout"
+msgstr ""
+
+#: src/Admin/Admin.php:1567
+#: assets/js/switcher-block.js:52
+msgid "Inline (horizontal)"
+msgstr ""
+
+#: src/Admin/Admin.php:1568
+#: assets/js/switcher-block.js:53
+msgid "List (vertical)"
+msgstr ""
+
+#: src/Admin/Admin.php:1569
+#: assets/js/switcher-block.js:54
+msgid "Dropdown"
+msgstr ""
+
+#: src/Admin/Admin.php:1570
+msgid "Scrollable bar (arrows, for many languages)"
+msgstr ""
+
+#: src/Admin/Admin.php:1573
+#: src/Admin/Admin.php:1582
+#: assets/js/switcher-block.js:59
+#: assets/js/switcher-block.js:72
+msgid "Show"
+msgstr ""
+
+#: src/Admin/Admin.php:1575
+#: assets/js/switcher-block.js:62
+msgid "Flag + name"
+msgstr ""
+
+#: src/Admin/Admin.php:1576
+#: assets/js/switcher-block.js:63
+msgid "Flag only"
+msgstr ""
+
+#: src/Admin/Admin.php:1577
+#: assets/js/switcher-block.js:64
+msgid "Name only"
+msgstr ""
+
+#: src/Admin/Admin.php:1580
+#: assets/js/switcher-block.js:69
+msgid "Current language"
+msgstr ""
+
+#: src/Admin/Admin.php:1583
+#: assets/js/switcher-block.js:73
+msgid "Hide"
+msgstr ""
+
+#: src/Admin/Admin.php:1586
+msgid "Language names"
+msgstr ""
+
+#: src/Admin/Admin.php:1587
+msgid "Show in English (otherwise native)"
+msgstr ""
+
+#: src/Admin/Admin.php:1589
+msgid "On mobile"
+msgstr ""
+
+#: src/Admin/Admin.php:1591
+msgid "Same as desktop"
+msgstr ""
+
+#: src/Admin/Admin.php:1592
+msgid "Flags only"
+msgstr ""
+
+#: src/Admin/Admin.php:1593
+msgid "Hidden"
+msgstr ""
+
+#: src/Admin/Admin.php:1595
+msgid "On small screens (e.g. with a burger menu): show only flags, or hide it."
+msgstr ""
+
+#: src/Admin/Admin.php:1597
+msgid "Open dropdown"
+msgstr ""
+
+#: src/Admin/Admin.php:1599
+msgid "On click"
+msgstr ""
+
+#: src/Admin/Admin.php:1600
+msgid "On mouse over"
+msgstr ""
+
+#: src/Admin/Admin.php:1602
+msgid "Only for the “Dropdown” layout."
+msgstr ""
+
+#: src/Admin/Admin.php:1604
+msgid "Arrow"
+msgstr ""
+
+#: src/Admin/Admin.php:1605
+msgid "Show an arrow that flips when the dropdown opens"
+msgstr ""
+
+#: src/Admin/Admin.php:1607
+msgid "Flag corners"
+msgstr ""
+
+#: src/Admin/Admin.php:1609
+msgid "Top-left corner"
+msgstr ""
+
+#: src/Admin/Admin.php:1610
+msgid "Top-right corner"
+msgstr ""
+
+#: src/Admin/Admin.php:1611
+msgid "Same value for all corners"
+msgstr ""
+
+#: src/Admin/Admin.php:1612
+msgid "Bottom-left corner"
+msgstr ""
+
+#: src/Admin/Admin.php:1613
+msgid "Bottom-right corner"
+msgstr ""
+
+#: src/Admin/Admin.php:1615
+msgid "Rounding (px) per corner. The centre link keeps them equal."
+msgstr ""
+
+#: src/Admin/Admin.php:1617
+msgid "Width"
+msgstr ""
+
+#: src/Admin/Admin.php:1619
+msgid "Auto"
+msgstr ""
+
+#: src/Admin/Admin.php:1620
+msgid "Small"
+msgstr ""
+
+#: src/Admin/Admin.php:1621
+#: src/Admin/Admin.php:1681
+msgid "Medium"
+msgstr ""
+
+#: src/Admin/Admin.php:1622
+msgid "Large"
+msgstr ""
+
+#: src/Admin/Admin.php:1623
+msgid "Custom (px)"
+msgstr ""
+
+#: src/Admin/Admin.php:1631
+msgid "Colours"
+msgstr ""
+
+#: src/Admin/Admin.php:1632
+msgid "Presets:"
+msgstr ""
+
+#: src/Admin/Admin.php:1637
+msgid "Minimal"
+msgstr ""
+
+#: src/Admin/Admin.php:1638
+#: src/Admin/Admin.php:1805
+msgid "Dark"
+msgstr ""
+
+#: src/Admin/Admin.php:1639
+msgid "Gold"
+msgstr ""
+
+#: src/Admin/Admin.php:1640
+msgid "Ocean"
+msgstr ""
+
+#: src/Admin/Admin.php:1641
+msgid "Glass"
+msgstr ""
+
+#: src/Admin/Admin.php:1642
+msgid "Pill"
+msgstr ""
+
+#: src/Admin/Admin.php:1643
+msgid "Soft"
+msgstr ""
+
+#: src/Admin/Admin.php:1644
+msgid "Sunset"
+msgstr ""
+
+#: src/Admin/Admin.php:1645
+msgid "Forest"
+msgstr ""
+
+#: src/Admin/Admin.php:1646
+msgid "Midnight"
+msgstr ""
+
+#: src/Admin/Admin.php:1647
+msgid "Candy"
+msgstr ""
+
+#: src/Admin/Admin.php:1648
+msgid "Outline"
+msgstr ""
+
+#: src/Admin/Admin.php:1649
+msgid "Paper"
+msgstr ""
+
+#: src/Admin/Admin.php:1650
+msgid "Neon"
+msgstr ""
+
+#: src/Admin/Admin.php:1651
+msgid "Frost"
+msgstr ""
+
+#: src/Admin/Admin.php:1652
+msgid "Smooth"
+msgstr ""
+
+#: src/Admin/Admin.php:1669
+msgid "Text colour"
+msgstr ""
+
+#: src/Admin/Admin.php:1670
+msgid "Text colour (hover)"
+msgstr ""
+
+#: src/Admin/Admin.php:1671
+msgid "Background colour"
+msgstr ""
+
+#: src/Admin/Admin.php:1672
+msgid "Menu background (dropdown)"
+msgstr ""
+
+#: src/Admin/Admin.php:1673
+msgid "Background colour (hover)"
+msgstr ""
+
+#: src/Admin/Admin.php:1674
+msgid "Border colour"
+msgstr ""
+
+#: src/Admin/Admin.php:1676
+msgid "Corner radius"
+msgstr ""
+
+#: src/Admin/Admin.php:1677
+msgid "Shadow"
+msgstr ""
+
+#: src/Admin/Admin.php:1679
+#: src/Admin/Admin.php:1687
+#: src/Admin/Admin.php:1695
+#: src/Admin/Admin.php:1746
+msgid "None"
+msgstr ""
+
+#: src/Admin/Admin.php:1680
+msgid "Light"
+msgstr ""
+
+#: src/Admin/Admin.php:1682
+msgid "Strong"
+msgstr ""
+
+#: src/Admin/Admin.php:1685
+msgid "Open animation"
+msgstr ""
+
+#: src/Admin/Admin.php:1685
+msgid "How the dropdown menu appears when opened."
+msgstr ""
+
+#: src/Admin/Admin.php:1688
+msgid "Fade"
+msgstr ""
+
+#: src/Admin/Admin.php:1689
+msgid "Slide down"
+msgstr ""
+
+#: src/Admin/Admin.php:1690
+msgid "Scale"
+msgstr ""
+
+#: src/Admin/Admin.php:1693
+msgid "Hover effect"
+msgstr ""
+
+#: src/Admin/Admin.php:1693
+msgid "A subtle effect on each language when the visitor hovers it."
+msgstr ""
+
+#: src/Admin/Admin.php:1696
+msgid "Lift"
+msgstr ""
+
+#: src/Admin/Admin.php:1697
+msgid "Grow"
+msgstr ""
+
+#: src/Admin/Admin.php:1698
+msgid "Underline"
+msgstr ""
+
+#: src/Admin/Admin.php:1701
+msgid "Font"
+msgstr ""
+
+#: src/Admin/Admin.php:1703
+msgid "Theme default"
+msgstr ""
+
+#: src/Admin/Admin.php:1736
+msgid "Text style"
+msgstr ""
+
+#: src/Admin/Admin.php:1737
+msgid "Bold"
+msgstr ""
+
+#: src/Admin/Admin.php:1738
+msgid "UPPERCASE"
+msgstr ""
+
+#: src/Admin/Admin.php:1740
+msgid "Font size"
+msgstr ""
+
+#: src/Admin/Admin.php:1742
+msgid "e.g. 14px. Leave empty to inherit from your theme."
+msgstr ""
+
+#: src/Admin/Admin.php:1744
+msgid "Flag / text divider"
+msgstr ""
+
+#: src/Admin/Admin.php:1753
+msgid "Shown only when both flag and name are visible."
+msgstr ""
+
+#: src/Admin/Admin.php:1755
+msgid "Background opacity"
+msgstr ""
+
+#: src/Admin/Admin.php:1758
+msgid "Affects only the background — the flag and text stay fully visible."
+msgstr ""
+
+#: src/Admin/Admin.php:1764
+msgid "Placement"
+msgstr ""
+
+#: src/Admin/Admin.php:1765
+msgid "Choose one: either place the switcher yourself with the shortcode / block, or let the plugin float it for you — not both."
+msgstr ""
+
+#: src/Admin/Admin.php:1767
+msgid "Where to show the switcher"
+msgstr ""
+
+#: src/Admin/Admin.php:1771
+msgid "Manual — I add it with the shortcode / block"
+msgstr ""
+
+#: src/Admin/Admin.php:1772
+msgid "Floating — bottom right"
+msgstr ""
+
+#: src/Admin/Admin.php:1773
+msgid "Floating — bottom left"
+msgstr ""
+
+#: src/Admin/Admin.php:1774
+msgid "Floating — top right"
+msgstr ""
+
+#: src/Admin/Admin.php:1775
+msgid "Floating — top left"
+msgstr ""
+
+#: src/Admin/Admin.php:1776
+msgid "Floating — custom position (X / Y)"
+msgstr ""
+
+#: src/Admin/Admin.php:1784
+msgid "X (from left)"
+msgstr ""
+
+#: src/Admin/Admin.php:1786
+msgid "Y (from top)"
+msgstr ""
+
+#: src/Admin/Admin.php:1787
+msgid "Use % or px, e.g. 10% / 20px."
+msgstr ""
+
+#: src/Admin/Admin.php:1789
+msgid "Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block."
+msgstr ""
+
+#: src/Admin/Admin.php:1792
+msgid "Save switcher"
+msgstr ""
+
+#: src/Admin/Admin.php:1797
+msgid "Live preview"
+msgstr ""
+
+#: src/Admin/Admin.php:1802
+msgid "Preview on:"
+msgstr ""
+
+#: src/Admin/Admin.php:1803
+msgid "White"
+msgstr ""
+
+#: src/Admin/Admin.php:1804
+msgid "Light grey"
+msgstr ""
+
+#: src/Admin/Admin.php:1806
+msgid "Brand"
+msgstr ""
+
+#: src/Admin/Admin.php:1807
+msgid "Teal"
+msgstr ""
+
+#: src/Admin/Admin.php:1808
+msgid "Photo"
+msgstr ""
+
+#: src/Admin/Admin.php:1809
+msgid "Custom background"
+msgstr ""
+
+#: src/Admin/Admin.php:1811
+msgid "Colours update live; layout and labels update after you save."
+msgstr ""
+
+#: src/Admin/Admin.php:1830
+msgid "Translation memory"
+msgstr ""
+
+#: src/Admin/Admin.php:1831
+msgid "Every string detected across your whole site, in one place. Search a word to find — and fix — it everywhere at once."
+msgstr ""
+
+#: src/Admin/Admin.php:1835
+#: src/Admin/Admin.php:3705
+msgid "Add a target language first in TranslateRocket settings."
+msgstr ""
+
+#: src/Admin/Admin.php:1847
+#: src/Admin/MetaBox.php:110
+msgid "Saved."
+msgstr ""
+
+#. translators: %d: number of removed strings.
+#: src/Admin/Admin.php:1853
+#, php-format
+msgid "Removed %d unused string."
+msgid_plural "Removed %d unused strings."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/Admin.php:1861
+msgid "AI translation failed — check the AI provider and key, or the daily limit."
+msgstr ""
+
+#. translators: %d: number of strings translated.
+#: src/Admin/Admin.php:1866
+#: src/Admin/Admin.php:3744
+#, php-format
+msgid "AI translated %d strings."
+msgstr ""
+
+#: src/Admin/Admin.php:1874
+#: src/Admin/Admin.php:3753
+msgid "Language:"
+msgstr ""
+
+#. translators: %d: number of strings.
+#: src/Admin/Admin.php:1891
+#, php-format
+msgid "Delete %d strings (and their translations) not seen on any page in the last 30 days? Run “Scan site for text” first so the pages you still have count as seen."
+msgstr ""
+
+#. translators: %d: number of strings.
+#: src/Admin/Admin.php:1892
+#, php-format
+msgid "🧹 Remove %d unused strings"
+msgstr ""
+
+#: src/Admin/Admin.php:1894
+msgid "Removes strings from pages that no longer exist (deleted or changed). Tip: run the site scan first, otherwise pages you simply haven’t opened recently could be counted as unused."
+msgstr ""
+
+#: src/Admin/Admin.php:1903
+msgid "Search source or translation…"
+msgstr ""
+
+#: src/Admin/Admin.php:1904
+msgid "Only missing"
+msgstr ""
+
+#: src/Admin/Admin.php:1905
+msgid "Search"
+msgstr ""
+
+#. translators: %d: number of matching strings.
+#: src/Admin/Admin.php:1914
+#, php-format
+msgid "%d string"
+msgid_plural "%d strings"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of missing strings.
+#: src/Admin/Admin.php:1927
+#, php-format
+msgid "Translate %d missing with AI"
+msgstr ""
+
+#: src/Admin/Admin.php:1929
+msgid "Fills every still-missing string for this language using the active AI provider."
+msgstr ""
+
+#: src/Admin/Admin.php:1931
+msgid "Set up an AI provider on the AI page to bulk-translate the missing strings."
+msgstr ""
+
+#: src/Admin/Admin.php:1956
+#: src/Admin/Admin.php:3640
+#: src/Admin/MetaBox.php:108
+msgid "Save changes"
+msgstr ""
+
+#: src/Admin/Admin.php:2225
+msgid "Translate this page with AI"
+msgstr ""
+
+#. translators: %s: link to the AI settings page.
+#: src/Admin/Admin.php:2232
+#, php-format
+msgid "Configure an AI provider first in %s."
+msgstr ""
+
+#: src/Admin/Admin.php:2251
+#: src/Admin/Admin.php:2991
+#: src/Admin/Admin.php:3259
+#: src/Admin/Admin.php:3480
+msgid "Languages"
+msgstr ""
+
+#: src/Admin/Admin.php:2254
+msgid "AI"
+msgstr ""
+
+#: src/Admin/Admin.php:2258
+msgid "Copies"
+msgstr ""
+
+#: src/Admin/Admin.php:2260
+msgid "Help"
+msgstr ""
+
+#: src/Admin/Admin.php:2268
+msgid "Free, AI-powered translation for WordPress"
+msgstr ""
+
+#: src/Admin/Admin.php:2269
+msgid "Unlimited languages · Visual editor · SEO-ready"
+msgstr ""
+
+#: src/Admin/Admin.php:2291
+msgid "TranslateRocket is 100% free. Support development to keep it free — supporters get priority support & custom help."
+msgstr ""
+
+#: src/Admin/Admin.php:2292
+#: src/Admin/Admin.php:3686
+#: src/Admin/Growth.php:218
+msgid "Support the project"
+msgstr ""
+
+#: src/Admin/Admin.php:2337
+msgid "Add at least one target language first."
+msgstr ""
+
+#. translators: %d: number of pages.
+#: src/Admin/Admin.php:2375
+#, php-format
+msgid "%d page updated."
+msgid_plural "%d pages updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/Admin.php:2379
+msgid "Detaching a page makes a fast, independent copy (a real, cache-friendly page you edit in WordPress). “Back to strings” reattaches it to the source — the copy is kept (paused), not deleted — so you can re-detach later and keep your edits."
+msgstr ""
+
+#: src/Admin/Admin.php:2410
+msgid "Create independent copy"
+msgstr ""
+
+#: src/Admin/Admin.php:2411
+msgid "Back to strings (reattach)"
+msgstr ""
+
+#: src/Admin/Admin.php:2412
+#: src/Frontend/VisualEditor.php:307
+msgid "Delete copy"
+msgstr ""
+
+#: src/Admin/Admin.php:2414
+msgid "Apply to selected"
+msgstr ""
+
+#: src/Admin/Admin.php:2419
+#: src/Admin/Admin.php:3882
+msgid "Page"
+msgstr ""
+
+#. translators: %s: language name.
+#: src/Admin/Admin.php:2423
+#, php-format
+msgid "Status (%s)"
+msgstr ""
+
+#: src/Admin/Admin.php:2439
+msgid "(no title)"
+msgstr ""
+
+#: src/Admin/Admin.php:2442
+msgid "Independent copy active"
+msgstr ""
+
+#: src/Admin/Admin.php:2443
+#: src/Frontend/VisualEditor.php:318
+msgid "Edit copy"
+msgstr ""
+
+#: src/Admin/Admin.php:2445
+msgid "Copy paused (reattached)"
+msgstr ""
+
+#: src/Admin/Admin.php:2447
+msgid "String translation"
+msgstr ""
+
+#: src/Admin/Admin.php:2488
+msgid "Free keys end in “:fx”. Use “Check usage” below for your live monthly quota."
+msgstr ""
+
+#: src/Admin/Admin.php:2494
+msgid "Pay-as-you-go (needs a few dollars of credit). gpt-4o-mini is cheap and good."
+msgstr ""
+
+#: src/Admin/Admin.php:2501
+msgid "Google Cloud Translation API key (requires a Google Cloud project with billing)."
+msgstr ""
+
+#: src/Admin/Admin.php:2507
+msgid "Has a free tier — create a key in Google AI Studio at no cost."
+msgstr ""
+
+#: src/Admin/Admin.php:2514
+msgid "Pay-as-you-go on the Anthropic API (separate from a Claude.ai subscription)."
+msgstr ""
+
+#: src/Admin/Admin.php:2525
+msgid "AI settings saved."
+msgstr ""
+
+#: src/Admin/Admin.php:2531
+msgid "Provider &amp; keys"
+msgstr ""
+
+#: src/Admin/Admin.php:2531
+msgid "Choose which AI service does the translating and paste its API key. You pay the provider directly — TranslateRocket takes nothing."
+msgstr ""
+
+#: src/Admin/Admin.php:2532
+msgid "You bring your own API key. Text is sent only to the provider you choose, only when you ask to translate."
+msgstr ""
+
+#: src/Admin/Admin.php:2534
+msgid "Active provider"
+msgstr ""
+
+#: src/Admin/Admin.php:2535
+msgid "The service used when you click “Translate with AI”. Leave on “None” to translate only by hand or copy-paste."
+msgstr ""
+
+#: src/Admin/Admin.php:2537
+msgid "— None —"
+msgstr ""
+
+#: src/Admin/Admin.php:2553
+msgid "Active"
+msgstr ""
+
+#: src/Admin/Admin.php:2553
+msgid "Key set"
+msgstr ""
+
+#: src/Admin/Admin.php:2557
+msgid "API key"
+msgstr ""
+
+#: src/Admin/Admin.php:2557
+msgid "Your secret key from this provider. Stored on your site only, and sent to the provider when translating."
+msgstr ""
+
+#. translators: 1: characters used, 2: character limit, 3: percentage.
+#: src/Admin/Admin.php:2575
+#, php-format
+msgid "Quota this cycle: %1$s of %2$s characters (%3$d%%)."
+msgstr ""
+
+#: src/Admin/Admin.php:2583
+msgid "Exhausted — translations fall back to the next provider in your chain."
+msgstr ""
+
+#: src/Admin/Admin.php:2585
+msgid "Almost used up."
+msgstr ""
+
+#. translators: %s: provider name (e.g. OpenAI).
+#: src/Admin/Admin.php:2602
+#, php-format
+msgid "Get a %s API key ↗"
+msgstr ""
+
+#: src/Admin/Admin.php:2610
+msgid "Fallback priority"
+msgstr ""
+
+#: src/Admin/Admin.php:2610
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Leave on “—” to keep a provider out of the chain."
+msgstr ""
+
+#: src/Admin/Admin.php:2614
+msgid "—"
+msgstr ""
+
+#: src/Admin/Admin.php:2619
+msgid "1 = try first. Providers with no priority are used only as the active one above."
+msgstr ""
+
+#: src/Admin/Admin.php:2624
+msgid "Model"
+msgstr ""
+
+#: src/Admin/Admin.php:2624
+msgid "Optional. The specific AI model to use (e.g. gpt-4o-mini). Leave empty for a sensible default."
+msgstr ""
+
+#: src/Admin/Admin.php:2635
+msgid "Pick a suggested model or type your own."
+msgstr ""
+
+#: src/Admin/Admin.php:2638
+msgid "Load available models"
+msgstr ""
+
+#: src/Admin/Admin.php:2641
+msgid "Queries this provider with your key and lists the exact models it can use right now."
+msgstr ""
+
+#: src/Admin/Admin.php:2647
+msgid "Check usage"
+msgstr ""
+
+#: src/Admin/Admin.php:2653
+msgid "Usage &amp; limits"
+msgstr ""
+
+#: src/Admin/Admin.php:2653
+msgid "Protect your API spend: cap how many characters are sent to the AI each day, and keep crawlers from triggering paid translation."
+msgstr ""
+
+#: src/Admin/Admin.php:2656
+msgid "Daily character limit"
+msgstr ""
+
+#: src/Admin/Admin.php:2656
+msgid "A safety cap on how many characters can be sent to the AI per day. When the cap is reached, AI translation stops until tomorrow (manual and copy-paste still work). 0 means no limit."
+msgstr ""
+
+#. translators: %s: number of characters used today.
+#: src/Admin/Admin.php:2663
+#, php-format
+msgid "0 = unlimited. Used today: %s characters."
+msgstr ""
+
+#: src/Admin/Admin.php:2671
+msgid "Usage this period"
+msgstr ""
+
+#: src/Admin/Admin.php:2671
+msgid "How much AI translation you’ve used since the counter started — to keep an eye on your provider spend. Reset it whenever you like, or set a monthly reset day below to match your billing."
+msgstr ""
+
+#: src/Admin/Admin.php:2675
+#: src/Admin/Admin.php:2697
+msgid "characters"
+msgstr ""
+
+#: src/Admin/Admin.php:2676
+msgid "requests"
+msgstr ""
+
+#. translators: %s: start date of the current usage period.
+#: src/Admin/Admin.php:2680
+#, php-format
+msgid "(since %s)"
+msgstr ""
+
+#: src/Admin/Admin.php:2685
+msgid "Reset the usage counter to zero?"
+msgstr ""
+
+#: src/Admin/Admin.php:2685
+msgid "Reset counter"
+msgstr ""
+
+#: src/Admin/Admin.php:2689
+msgid "Saved by reuse"
+msgstr ""
+
+#: src/Admin/Admin.php:2689
+msgid "When the same text appears again — on another page, as an image alt, as an interface string, or as a glossary term — TranslateRocket copies the translation you already have instead of paying the AI to translate it again. This is what that translation memory has kept in your pocket."
+msgstr ""
+
+#: src/Admin/Admin.php:2698
+msgid "strings translated for free"
+msgstr ""
+
+#. translators: %s: AI provider name the price estimate refers to.
+#: src/Admin/Admin.php:2704
+#, php-format
+msgid "Estimate at %s list prices — your real saving depends on your plan."
+msgstr ""
+
+#: src/Admin/Admin.php:2712
+msgid "Monthly reset day"
+msgstr ""
+
+#: src/Admin/Admin.php:2712
+msgid "Day of the month the usage counter restarts on its own (e.g. your provider’s billing date). 0 = never reset automatically."
+msgstr ""
+
+#: src/Admin/Admin.php:2715
+msgid "0 = manual only. 1–31 = reset on that day each month (shorter months use their last day)."
+msgstr ""
+
+#: src/Admin/Admin.php:2719
+msgid "Crawlers"
+msgstr ""
+
+#: src/Admin/Admin.php:2719
+msgid "Search engines and other bots visit your pages constantly. With auto-translation on, those visits could trigger paid AI calls for pages no real visitor asked for. Turn this on to ignore known bots, so only real visitors (and you) ever trigger AI translation."
+msgstr ""
+
+#: src/Admin/Admin.php:2723
+msgid "Don’t let bots / crawlers trigger AI translation"
+msgstr ""
+
+#: src/Admin/Admin.php:2725
+msgid "Only matters with auto-translation enabled; recommended on."
+msgstr ""
+
+#: src/Admin/Admin.php:2729
+msgid "Save AI settings"
+msgstr ""
+
+#: src/Admin/Admin.php:2735
+msgid "Bulk auto-translate"
+msgstr ""
+
+#: src/Admin/Admin.php:2735
+msgid "Fill in every missing string for a language at once with the active AI provider. You can refine any result by hand afterwards."
+msgstr ""
+
+#: src/Admin/Admin.php:2736
+msgid "Translate every missing string for a language with the active provider."
+msgstr ""
+
+#: src/Admin/Admin.php:2740
+#: src/Admin/Admin.php:3650
+msgid "Language"
+msgstr ""
+
+#: src/Admin/Admin.php:2741
+#: src/Admin/Admin.php:3646
+#: src/Admin/Admin.php:3651
+#: src/Admin/Admin.php:3886
+msgid "Progress"
+msgstr ""
+
+#: src/Admin/Admin.php:2742
+#: src/Admin/Admin.php:3654
+#: src/Admin/Admin.php:3885
+msgid "Missing"
+msgstr ""
+
+#. translators: %d: missing count.
+#: src/Admin/Admin.php:2766
+#, php-format
+msgid "Translate %d missing"
+msgstr ""
+
+#: src/Admin/Admin.php:2868
+msgid "Exclusions saved."
+msgstr ""
+
+#: src/Admin/Admin.php:2870
+msgid "Keep parts of your site in the original language. One entry per line."
+msgstr ""
+
+#: src/Admin/Admin.php:2876
+msgid "Pages (URL paths)"
+msgstr ""
+
+#: src/Admin/Admin.php:2876
+msgid "Paths that are never translated. Use * as a wildcard, e.g. /checkout/* or /my-account/*."
+msgstr ""
+
+#: src/Admin/Admin.php:2881
+msgid "Elements (CSS selectors)"
+msgstr ""
+
+#: src/Admin/Admin.php:2881
+msgid "Elements left untranslated. Simple selectors only: a tag (code), a class (.notranslate) or an id (#brand)."
+msgstr ""
+
+#: src/Admin/Admin.php:2886
+msgid "Words &amp; phrases"
+msgstr ""
+
+#: src/Admin/Admin.php:2886
+msgid "Exact strings that must stay as-is — brand or product names, etc. Never collected, translated or sent to an AI."
+msgstr ""
+
+#: src/Admin/Admin.php:2897
+msgid "Glossary"
+msgstr ""
+
+#: src/Admin/Admin.php:2897
+msgid "Force a fixed translation for a term, everywhere it appears. One “source = translation” per line. Overrides AI/manual translations for an exact match — great for brand wording, product names or terms that must read the same across the whole site."
+msgstr ""
+
+#: src/Admin/Admin.php:2899
+msgid "Add a target language first (Languages tab) to define glossary terms."
+msgstr ""
+
+#: src/Admin/Admin.php:2914
+msgid "Save exclusions"
+msgstr ""
+
+#: src/Admin/Admin.php:2951
+msgid "PHP version"
+msgstr ""
+
+#. translators: %s: PHP version.
+#: src/Admin/Admin.php:2953
+#, php-format
+msgid "Running PHP %s (7.4 or newer required)."
+msgstr ""
+
+#: src/Admin/Admin.php:2961
+msgid "PHP extensions"
+msgstr ""
+
+#: src/Admin/Admin.php:2963
+msgid "All required extensions are present (dom, mbstring, libxml, json)."
+msgstr ""
+
+#. translators: %s: list of missing extensions.
+#: src/Admin/Admin.php:2965
+#, php-format
+msgid "Missing extensions: %s. Ask your host to enable them."
+msgstr ""
+
+#: src/Admin/Admin.php:2970
+msgid "WordPress version"
+msgstr ""
+
+#. translators: %s: WordPress version.
+#: src/Admin/Admin.php:2972
+#, php-format
+msgid "Running WordPress %s."
+msgstr ""
+
+#: src/Admin/Admin.php:2978
+msgid "Database tables"
+msgstr ""
+
+#: src/Admin/Admin.php:2980
+msgid "All TranslateRocket tables exist."
+msgstr ""
+
+#. translators: %s: list of missing tables.
+#: src/Admin/Admin.php:2982
+#, php-format
+msgid "Missing: %s. Deactivate and reactivate TranslateRocket to recreate them."
+msgstr ""
+
+#. translators: 1: source language code, 2: number of target languages.
+#: src/Admin/Admin.php:2994
+#, php-format
+msgid "Source: %1$s · %2$d target language(s) configured."
+msgstr ""
+
+#: src/Admin/Admin.php:2995
+msgid "No target languages yet. Add at least one on the Languages tab."
+msgstr ""
+
+#: src/Admin/Admin.php:3001
+msgid "Permalinks"
+msgstr ""
+
+#: src/Admin/Admin.php:3003
+msgid "Pretty permalinks are on — language URLs like /it/ will work."
+msgstr ""
+
+#: src/Admin/Admin.php:3004
+msgid "Plain permalinks are on. Language URLs like /it/ need pretty permalinks: go to Settings → Permalinks and choose anything but “Plain”."
+msgstr ""
+
+#: src/Admin/Admin.php:3010
+msgid "AI provider"
+msgstr ""
+
+#. translators: %s: provider name.
+#: src/Admin/Admin.php:3013
+#, php-format
+msgid "Active provider: %s."
+msgstr ""
+
+#: src/Admin/Admin.php:3014
+msgid "No AI provider configured (optional — you can still translate by hand or with the Google links). Add a key on the AI tab."
+msgstr ""
+
+#: src/Admin/Admin.php:3044
+msgid "Log cleared."
+msgstr ""
+
+#: src/Admin/Admin.php:3046
+msgid "A quick health check of your setup, plus anything TranslateRocket has flagged — so nothing fails silently."
+msgstr ""
+
+#: src/Admin/Admin.php:3049
+msgid "System checks"
+msgstr ""
+
+#: src/Admin/Admin.php:3061
+msgid "Provider connection test"
+msgstr ""
+
+#: src/Admin/Admin.php:3061
+msgid "Sends one short word to each configured provider to confirm the key works right now."
+msgstr ""
+
+#: src/Admin/Admin.php:3063
+msgid "No provider keys saved yet. Add one on the AI tab."
+msgstr ""
+
+#: src/Admin/Admin.php:3069
+msgid "Test connection"
+msgstr ""
+
+#: src/Admin/Admin.php:3078
+msgid "Recent issues"
+msgstr ""
+
+#: src/Admin/Admin.php:3078
+msgid "Errors and warnings TranslateRocket recorded, including ones from background tasks."
+msgstr ""
+
+#: src/Admin/Admin.php:3080
+msgid "Nothing to report — no issues logged."
+msgstr ""
+
+#: src/Admin/Admin.php:3085
+msgid "When"
+msgstr ""
+
+#: src/Admin/Admin.php:3086
+msgid "Level"
+msgstr ""
+
+#: src/Admin/Admin.php:3087
+msgid "Area"
+msgstr ""
+
+#: src/Admin/Admin.php:3088
+msgid "Message"
+msgstr ""
+
+#: src/Admin/Admin.php:3104
+msgid "Clear log"
+msgstr ""
+
+#: src/Admin/Admin.php:3110
+msgid "Testing…"
+msgstr ""
+
+#: src/Admin/Admin.php:3232
+msgid "You’re all set!"
+msgstr ""
+
+#: src/Admin/Admin.php:3233
+msgid "Your languages are configured. Now translate your first page — it takes a minute."
+msgstr ""
+
+#: src/Admin/Admin.php:3235
+msgid "Translate my homepage now"
+msgstr ""
+
+#: src/Admin/Admin.php:3236
+msgid "Open the translations list"
+msgstr ""
+
+#: src/Admin/Admin.php:3238
+msgid "Go to settings"
+msgstr ""
+
+#: src/Admin/Admin.php:3257
+msgid "TranslateRocket™ setup"
+msgstr ""
+
+#: src/Admin/Admin.php:3260
+#: src/Admin/MetaBox.php:107
+#: src/Frontend/VisualEditor.php:162
+msgid "Translation"
+msgstr ""
+
+#: src/Admin/Admin.php:3267
+msgid "What languages?"
+msgstr ""
+
+#: src/Admin/Admin.php:3268
+msgid "Pick the language your site is written in, then the languages to translate it into."
+msgstr ""
+
+#: src/Admin/Admin.php:3270
+msgid "My site is written in:"
+msgstr ""
+
+#: src/Admin/Admin.php:3278
+msgid "Translate into:"
+msgstr ""
+
+#: src/Admin/Admin.php:3292
+msgid "How do you want to translate?"
+msgstr ""
+
+#: src/Admin/Admin.php:3293
+msgid "You can let an AI do a first pass automatically, or translate by hand — you can always change this later."
+msgstr ""
+
+#: src/Admin/Admin.php:3296
+msgid "Use an AI provider"
+msgstr ""
+
+#: src/Admin/Admin.php:3296
+msgid "Paste your own API key. You pay the provider directly — TranslateRocket takes nothing."
+msgstr ""
+
+#: src/Admin/Admin.php:3304
+msgid "Paste your API key"
+msgstr ""
+
+#: src/Admin/Admin.php:3308
+msgid "Translate manually"
+msgstr ""
+
+#: src/Admin/Admin.php:3308
+msgid "Type translations yourself, or use the free one-click Google links. No key needed."
+msgstr ""
+
+#: src/Admin/Admin.php:3314
+msgid "Show the language switcher"
+msgstr ""
+
+#: src/Admin/Admin.php:3315
+msgid "How should visitors switch language? You can fine-tune the look later on the Switcher tab."
+msgstr ""
+
+#: src/Admin/Admin.php:3318
+msgid "Floating button"
+msgstr ""
+
+#: src/Admin/Admin.php:3318
+msgid "A small switcher that floats in a corner on every page. Easiest — nothing else to do."
+msgstr ""
+
+#: src/Admin/Admin.php:3322
+msgid "I’ll place it myself"
+msgstr ""
+
+#. translators: %s: shortcode.
+#: src/Admin/Admin.php:3324
+#, php-format
+msgid "Use the block “Language Switcher”, or the shortcode %s, wherever you like."
+msgstr ""
+
+#: src/Admin/Admin.php:3329
+msgid "← Back"
+msgstr ""
+
+#: src/Admin/Admin.php:3331
+msgid "Next →"
+msgstr ""
+
+#: src/Admin/Admin.php:3332
+msgid "Finish & start translating"
+msgstr ""
+
+#: src/Admin/Admin.php:3444
+msgid "Languages &amp; general"
+msgstr ""
+
+#: src/Admin/Admin.php:3448
+msgid "Quick start"
+msgstr ""
+
+#: src/Admin/Admin.php:3450
+msgid "Choose your site language and the languages to translate into — right below."
+msgstr ""
+
+#. translators: %s: AI Translation page link.
+#: src/Admin/Admin.php:3455
+#, php-format
+msgid "Translate: add an AI key in %s for one-click translation, or translate by hand on each page."
+msgstr ""
+
+#. translators: %s: Switcher page link.
+#: src/Admin/Admin.php:3464
+#, php-format
+msgid "Add a language switcher: place the [translaterocket_switcher] shortcode or block, or enable the floating one in %s."
+msgstr ""
+
+#: src/Admin/Admin.php:3474
+msgid "Settings saved."
+msgstr ""
+
+#: src/Admin/Admin.php:3484
+msgid "Site language (source)"
+msgstr ""
+
+#: src/Admin/Admin.php:3484
+msgid "The language your existing content is written in. It stays at the site root with no URL prefix and is never translated."
+msgstr ""
+
+#: src/Admin/Admin.php:3494
+msgid "The language your content is written in. It stays at the site root (no URL prefix)."
+msgstr ""
+
+#: src/Admin/Admin.php:3499
+msgid "Translate into"
+msgstr ""
+
+#: src/Admin/Admin.php:3499
+msgid "The languages visitors can switch to. Each gets its own URL prefix (e.g. /it/) and its own set of translations."
+msgstr ""
+
+#: src/Admin/Admin.php:3501
+msgid "Pick the languages you want to add. Each gets its own URL prefix, e.g. /en/."
+msgstr ""
+
+#. translators: %s: the source language name (flag + label).
+#: src/Admin/Admin.php:3506
+#, php-format
+msgid "Your source language (%s) isn’t listed here — it’s the language you translate from. Change it in “Site language (source)” above."
+msgstr ""
+
+#: src/Admin/Admin.php:3531
+msgid "Custom language"
+msgstr ""
+
+#: src/Admin/Admin.php:3531
+msgid "Not in the list? Add your own: a short code (used in the URL, e.g. /la/), a name, and a flag picked from the list. After saving it appears among the languages above — tick it to enable."
+msgstr ""
+
+#: src/Admin/Admin.php:3539
+msgid "remove"
+msgstr ""
+
+#: src/Admin/Admin.php:3547
+msgid "Code"
+msgstr ""
+
+#: src/Admin/Admin.php:3548
+msgid "e.g. la"
+msgstr ""
+
+#: src/Admin/Admin.php:3551
+msgid "Name"
+msgstr ""
+
+#: src/Admin/Admin.php:3552
+msgid "e.g. Latina"
+msgstr ""
+
+#: src/Admin/Admin.php:3555
+msgid "Flag"
+msgstr ""
+
+#: src/Admin/Admin.php:3557
+msgid "Choose…"
+msgstr ""
+
+#: src/Admin/Admin.php:3559
+msgid "No flag (globe)"
+msgstr ""
+
+#: src/Admin/Admin.php:3563
+msgid "Upload your own…"
+msgstr ""
+
+#: src/Admin/Admin.php:3566
+msgid "+ Add language"
+msgstr ""
+
+#: src/Admin/Admin.php:3568
+msgid "Enter a code (it becomes the URL prefix, e.g. /la/) and a name, then pick a flag: choose one from the list, upload your own image (for a region or language with no country flag), or leave the 🌐 globe."
+msgstr ""
+
+#: src/Admin/Admin.php:3572
+msgid "Choose a flag image"
+msgstr ""
+
+#: src/Admin/Admin.php:3573
+msgid "Use this image"
+msgstr ""
+
+#: src/Admin/Admin.php:3582
+msgid "Who sees the translations"
+msgstr ""
+
+#: src/Admin/Admin.php:3582
+msgid "Preview mode: keep the translated site visible to administrators only, e.g. to review an import from another plugin on the real pages before going live. Visitors keep seeing the default language (language URLs redirect, the switcher is hidden and no hreflang/sitemap signals are sent). Switch back to \"Everyone\" to publish instantly."
+msgstr ""
+
+#: src/Admin/Admin.php:3586
+msgid "Everyone — translations are live"
+msgstr ""
+
+#: src/Admin/Admin.php:3590
+msgid "Administrators only — preview mode, visitors keep seeing the default language"
+msgstr ""
+
+#: src/Admin/Admin.php:3595
+msgid "SEO meta"
+msgstr ""
+
+#: src/Admin/Admin.php:3595
+msgid "Also translate the SEO title and meta description — the text shown in Google results and the browser tab."
+msgstr ""
+
+#: src/Admin/Admin.php:3599
+msgid "Translate SEO title and meta description tags"
+msgstr ""
+
+#: src/Admin/Admin.php:3604
+msgid "Interface language"
+msgstr ""
+
+#: src/Admin/Admin.php:3604
+msgid "Show menus, buttons and theme/plugin labels in the visitor's language using WordPress' own official translations — no AI, nothing to manage. The needed language packs are downloaded automatically. Turn off to leave the interface in the site language."
+msgstr ""
+
+#: src/Admin/Admin.php:3608
+msgid "Use WordPress' own translations for the interface"
+msgstr ""
+
+#: src/Admin/Admin.php:3613
+msgid "Auto-redirect"
+msgstr ""
+
+#: src/Admin/Admin.php:3613
+msgid "On their first visit, send visitors to the version matching their browser language (remembered with a cookie, only once). Never redirects search engines or logged-in users."
+msgstr ""
+
+#: src/Admin/Admin.php:3617
+msgid "Redirect new visitors to their browser language"
+msgstr ""
+
+#: src/Admin/Admin.php:3622
+msgid "Page cache"
+msgstr ""
+
+#: src/Admin/Admin.php:3622
+msgid "Store the finished translated HTML of each page so repeat visits skip the on-the-fly translation — about 2× faster on repeat visits (e.g. ~0.55s → ~0.29s in our test). Only anonymous visitors are served from the cache, it skips dynamic pages (cart, checkout, account), and it clears automatically whenever you change a translation, edit a page, or update settings. On by default — turn it off only if you already use a page-cache plugin (e.g. WP Rocket), which already caches each language’s URL."
+msgstr ""
+
+#: src/Admin/Admin.php:3626
+msgid "Cache translated pages for anonymous visitors"
+msgstr ""
+
+#: src/Admin/Admin.php:3631
+msgid "Powered by badge"
+msgstr ""
+
+#: src/Admin/Admin.php:3631
+msgid "Show a small \"Powered by TranslateRocket\" badge with the logo at the bottom of your site. Off by default and entirely optional — a nice way to support the free plugin. You can also place it anywhere with the [translaterocket_poweredby] shortcode."
+msgstr ""
+
+#: src/Admin/Admin.php:3635
+msgid "Show a \"Powered by TranslateRocket\" badge in the footer"
+msgstr ""
+
+#: src/Admin/Admin.php:3652
+msgid "Detected"
+msgstr ""
+
+#: src/Admin/Admin.php:3653
+#: src/Admin/Admin.php:3884
+msgid "Translated"
+msgstr ""
+
+#: src/Admin/Admin.php:3671
+msgid "Open editor"
+msgstr ""
+
+#: src/Admin/Admin.php:3680
+msgid "Need a hand?"
+msgstr ""
+
+#: src/Admin/Admin.php:3681
+msgid "Want a professional multilingual setup, reviewed translations or a custom feature? I can help — as a service."
+msgstr ""
+
+#: src/Admin/Admin.php:3682
+msgid "Get expert help"
+msgstr ""
+
+#: src/Admin/Admin.php:3687
+msgid "TranslateRocket is 100% free. If it helps you, a small donation keeps it alive and updated."
+msgstr ""
+
+#: src/Admin/Admin.php:3688
+#: src/Admin/Growth.php:220
+msgid "Make a donation"
+msgstr ""
+
+#: src/Admin/Admin.php:3719
+msgid "Translations saved."
+msgstr ""
+
+#: src/Admin/Admin.php:3723
+msgid "Pasted translations imported."
+msgstr ""
+
+#: src/Admin/Admin.php:3727
+msgid "Nothing imported — the paste box was empty, so existing translations were kept."
+msgstr ""
+
+#: src/Admin/Admin.php:3731
+msgid "This page's translations were deleted."
+msgstr ""
+
+#: src/Admin/Admin.php:3735
+msgid "Page removed from the list."
+msgstr ""
+
+#. translators: 1: missing count, 2: total count.
+#: src/Admin/Admin.php:3838
+#, php-format
+msgid "%1$d strings still to translate out of %2$d detected."
+msgstr ""
+
+#: src/Admin/Admin.php:3852
+msgid "Scan site for text"
+msgstr ""
+
+#: src/Admin/Admin.php:3853
+msgid "Automatically visits every published page to detect translatable text — no need to open them one by one."
+msgstr ""
+
+#: src/Admin/Admin.php:3860
+msgid "No pages detected yet. Click “Scan site for text” above, or just browse your site as administrator."
+msgstr ""
+
+#: src/Admin/Admin.php:3867
+msgid "Search pages by name or slug… (spaces count as hyphens)"
+msgstr ""
+
+#. translators: 1: number of visible pages, 2: total pages.
+#: src/Admin/Admin.php:3872
+#, php-format
+msgid "Showing %1$s of %2$d pages"
+msgstr ""
+
+#: src/Admin/Admin.php:3883
+msgid "Strings"
+msgstr ""
+
+#: src/Admin/Admin.php:3914
+msgid "Translate"
+msgstr ""
+
+#: src/Admin/Admin.php:3994
+msgid "Back to all pages"
+msgstr ""
+
+#: src/Admin/Admin.php:4009
+#: src/Admin/MetaBox.php:281
+msgid "redirect to the homepage"
+msgstr ""
+
+#: src/Admin/Admin.php:4010
+#: src/Admin/MetaBox.php:282
+msgid "redirect to a custom URL"
+msgstr ""
+
+#: src/Admin/Admin.php:4011
+#: src/Admin/MetaBox.php:283
+msgid "show a custom message"
+msgstr ""
+
+#: src/Admin/Admin.php:4012
+#: src/Admin/MetaBox.php:284
+msgid "show a 404 (not found)"
+msgstr ""
+
+#. translators: 1: language name, 2: chosen behaviour.
+#: src/Admin/Admin.php:4019
+#, php-format
+msgid "This page is set to %2$s in %1$s, so it is not translated and the editor is hidden."
+msgstr ""
+
+#: src/Admin/Admin.php:4027
+msgid "Change it in the page’s “Language visibility” box."
+msgstr ""
+
+#: src/Admin/Admin.php:4049
+#: src/Admin/MetaBox.php:101
+msgid "Delete all translations of this page for this language?"
+msgstr ""
+
+#: src/Admin/Admin.php:4054
+msgid "Delete this page's translation"
+msgstr ""
+
+#: src/Admin/Admin.php:4058
+msgid "Remove this page from the list? Useful for stale or 404 pages — its translations stay in the database."
+msgstr ""
+
+#: src/Admin/Admin.php:4063
+msgid "Remove this page from the list"
+msgstr ""
+
+#: src/Admin/Admin.php:4089
+msgid "Copy &amp; paste with Google Translate (free)"
+msgstr ""
+
+#: src/Admin/Admin.php:4092
+msgid "No strings on this page yet. Browse it on the front end (as admin) first."
+msgstr ""
+
+#: src/Admin/Admin.php:4095
+msgid "1) Copy the list. 2) Paste it into Google Translate. 3) Paste the result back below — keep the numbers, one item per line."
+msgstr ""
+
+#: src/Admin/Admin.php:4100
+msgid "Open Google Translate"
+msgstr ""
+
+#: src/Admin/Admin.php:4108
+msgid "✅ Everything here is translated — paste a new list below to redo it."
+msgstr ""
+
+#: src/Admin/Admin.php:4110
+msgid "Showing ALL strings — importing will overwrite existing translations."
+msgstr ""
+
+#. translators: %d: number of untranslated strings.
+#: src/Admin/Admin.php:4116
+#, php-format
+msgid "Show only the %d untranslated"
+msgstr ""
+
+#: src/Admin/Admin.php:4122
+msgid "Re-translate everything (include already translated)"
+msgstr ""
+
+#: src/Admin/Admin.php:4126
+msgid "Strings to copy:"
+msgstr ""
+
+#: src/Admin/Admin.php:4133
+msgid "Paste the translated list here:"
+msgstr ""
+
+#: src/Admin/Admin.php:4135
+#: src/Admin/MetaBox.php:105
+msgid "Import pasted translations"
+msgstr ""
+
+#: src/Admin/Admin.php:4151
+msgid "No strings detected for this page yet."
+msgstr ""
+
+#: src/Admin/Admin.php:4169
+msgid "Manual editor"
+msgstr ""
+
+#: src/Admin/Admin.php:4172
+#: src/Admin/MetaBox.php:125
+msgid "Filter by type:"
+msgstr ""
+
+#: src/Admin/Admin.php:4172
+msgid "Narrow the list to one kind of string — visible text, link titles, image alt text, ARIA labels, etc."
+msgstr ""
+
+#: src/Admin/Admin.php:4174
+#: src/Admin/MetaBox.php:126
+msgid "All types"
+msgstr ""
+
+#: src/Admin/Admin.php:4181
+#: src/Admin/MetaBox.php:127
+msgid "Show only missing strings"
+msgstr ""
+
+#: src/Admin/Admin.php:4181
+msgid "Hide strings that already have a translation, so you can focus on what is left."
+msgstr ""
+
+#: src/Admin/Admin.php:4193
+#: src/Admin/MetaBox.php:124
+msgid "Page content"
+msgstr ""
+
+#: src/Admin/Admin.php:4196
+msgid "Save translations"
+msgstr ""
+
+#: src/Admin/Admin.php:4327
+#: src/Admin/MetaBox.php:91
+msgid "Translate this phrase with Google (free)"
+msgstr ""
+
+#: src/Admin/Admin.php:4333
+#: src/Admin/MetaBox.php:92
+msgid "Open this phrase in Google Translate ↗"
+msgstr ""
+
+#: src/Admin/Admin.php:4402
+#: src/Admin/MetaBox.php:116
+msgid "SEO & indexing"
+msgstr ""
+
+#: src/Admin/Admin.php:4407
+#: src/Admin/MetaBox.php:113
+#: src/Frontend/VisualEditor.php:414
+msgid "Slug (URL)"
+msgstr ""
+
+#: src/Admin/Admin.php:4408
+#: src/Admin/MetaBox.php:115
+msgid "The page web address in this language, e.g. /it/chi-siamo/. Leave empty to keep the original."
+msgstr ""
+
+#: src/Admin/Admin.php:4416
+msgid "Available only on single pages and posts (not the home or archives)."
+msgstr ""
+
+#: src/Admin/Admin.php:4421
+#: src/Admin/MetaBox.php:117
+#: src/Frontend/VisualEditor.php:431
+msgid "SEO title"
+msgstr ""
+
+#: src/Admin/Admin.php:4421
+#: src/Admin/MetaBox.php:118
+#: src/Frontend/VisualEditor.php:431
+msgid "Shown in the browser tab and as the clickable title in Google results."
+msgstr ""
+
+#: src/Admin/Admin.php:4422
+#: src/Admin/MetaBox.php:119
+#: src/Frontend/VisualEditor.php:432
+msgid "Meta description"
+msgstr ""
+
+#: src/Admin/Admin.php:4422
+#: src/Admin/MetaBox.php:120
+msgid "The short summary under the title in Google results (only if your theme or SEO plugin outputs one)."
+msgstr ""
+
+#: src/Admin/Admin.php:4427
+#: src/Admin/MetaBox.php:121
+msgid "Meta keywords are intentionally not shown."
+msgstr ""
+
+#: src/Admin/Admin.php:4428
+msgid "Search engines (Google included) dropped meta keywords as a ranking signal years ago, so a keywords field would only add clutter."
+msgstr ""
+
+#: src/Admin/Admin.php:4460
+#: src/Admin/MetaBox.php:123
+msgid "Not detected on this page."
+msgstr ""
+
+#: src/Admin/Admin.php:4472
+msgid "More info"
+msgstr ""
+
+#. translators: 1: language name, 2: source page title (linked).
+#: src/Admin/CopyAdmin.php:130
+#, php-format
+msgid "🚀 This is an independent %1$s copy of %2$s, managed by TranslateRocket. It is served automatically at its %1$s URL — you don't need to publish it."
+msgstr ""
+
+#: src/Admin/CopyAdmin.php:134
+msgid "(the original page)"
+msgstr ""
+
+#: src/Admin/EditorButton.php:79
+msgid "Open the on-page visual editor for this page in a language:"
+msgstr ""
+
+#. translators: %s: language name.
+#: src/Admin/EditorButton.php:81
+#, php-format
+msgid "Translate in %s"
+msgstr ""
+
+#: src/Admin/EditorButton.php:82
+msgid "Opens in a new tab."
+msgstr ""
+
+#: src/Admin/Growth.php:48
+#: src/Admin/Growth.php:49
+#: src/Admin/Growth.php:196
+msgid "Help & Feedback"
+msgstr ""
+
+#. translators: %s: the other translation plugin's name.
+#: src/Admin/Growth.php:145
+#, php-format
+msgid "⚠️ TranslateRocket found another translation plugin active: %s. Running two at once will conflict — please keep only one enabled."
+msgstr ""
+
+#: src/Admin/Growth.php:154
+msgid "Thanks for installing TranslateRocket!"
+msgstr ""
+
+#. translators: %s: settings page link.
+#: src/Admin/Growth.php:157
+#, php-format
+msgid "Pick your languages in %s to get started."
+msgstr ""
+
+#: src/Admin/Growth.php:158
+msgid "TranslateRocket settings"
+msgstr ""
+
+#: src/Admin/Growth.php:160
+msgid "Get tips & updates"
+msgstr ""
+
+#: src/Admin/Growth.php:172
+msgid "Enjoying TranslateRocket? A quick review really helps the project grow. 🙏"
+msgstr ""
+
+#: src/Admin/Growth.php:173
+#: src/Admin/Growth.php:212
+msgid "Leave a review"
+msgstr ""
+
+#: src/Admin/Growth.php:174
+msgid "No thanks"
+msgstr ""
+
+#: src/Admin/Growth.php:182
+msgid "You’ve been translating with TranslateRocket for a while now. It’s free forever — if it saved you a paid plugin, a small donation keeps it alive and growing."
+msgstr ""
+
+#: src/Admin/Growth.php:183
+msgid "Buy me a coffee ☕"
+msgstr ""
+
+#: src/Admin/Growth.php:184
+msgid "Maybe later"
+msgstr ""
+
+#: src/Admin/Growth.php:197
+msgid "Need a hand, want a feature, or just want to say hi? Here’s how."
+msgstr ""
+
+#: src/Admin/Growth.php:200
+msgid "Request a custom setup"
+msgstr ""
+
+#: src/Admin/Growth.php:201
+msgid "Want a professional multilingual setup, reviewed translations, or a custom feature? I can help as a service."
+msgstr ""
+
+#: src/Admin/Growth.php:202
+msgid "Request customization"
+msgstr ""
+
+#: src/Admin/Growth.php:206
+#: src/Admin/Growth.php:208
+msgid "Send feedback"
+msgstr ""
+
+#: src/Admin/Growth.php:207
+msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
+msgstr ""
+
+#: src/Admin/Growth.php:213
+msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
+msgstr ""
+
+#: src/Admin/Growth.php:214
+msgid "Write a review"
+msgstr ""
+
+#: src/Admin/Growth.php:219
+msgid "TranslateRocket is 100% free. A small donation keeps it alive and updated."
+msgstr ""
+
+#: src/Admin/MetaBox.php:94
+msgid "Something went wrong."
+msgstr ""
+
+#: src/Admin/MetaBox.php:95
+msgid "translated"
+msgstr ""
+
+#: src/Admin/MetaBox.php:96
+msgid "to translate"
+msgstr ""
+
+#: src/Admin/MetaBox.php:97
+#: src/Frontend/VisualEditor.php:165
+msgid "Translate with AI"
+msgstr ""
+
+#: src/Admin/MetaBox.php:98
+msgid "Translate with Google"
+msgstr ""
+
+#: src/Admin/MetaBox.php:99
+msgid "Visual editor"
+msgstr ""
+
+#: src/Admin/MetaBox.php:100
+msgid "Delete translations"
+msgstr ""
+
+#: src/Admin/MetaBox.php:102
+msgid "Copy & paste with Google Translate:"
+msgstr ""
+
+#: src/Admin/MetaBox.php:103
+msgid "Open Google Translate ↗"
+msgstr ""
+
+#: src/Admin/MetaBox.php:104
+msgid "Show all strings (re-translate)"
+msgstr ""
+
+#: src/Admin/MetaBox.php:106
+#: src/Frontend/VisualEditor.php:161
+msgid "Original"
+msgstr ""
+
+#: src/Admin/MetaBox.php:109
+#: src/Frontend/VisualEditor.php:190
+msgid "Working…"
+msgstr ""
+
+#: src/Admin/MetaBox.php:111
+msgid "Unsaved changes — click “Save changes”."
+msgstr ""
+
+#: src/Admin/MetaBox.php:112
+msgid "Paste box is empty — nothing changed."
+msgstr ""
+
+#: src/Admin/MetaBox.php:114
+msgid "Suggest from title"
+msgstr ""
+
+#: src/Admin/MetaBox.php:122
+msgid "Search engines dropped meta keywords as a ranking signal years ago, so a keywords field would only add clutter."
+msgstr ""
+
+#: src/Admin/MetaBox.php:141
+msgid "Add target languages in TranslateRocket settings to start."
+msgstr ""
+
+#. translators: %s: chosen visibility behaviour.
+#: src/Admin/MetaBox.php:290
+#, php-format
+msgid "This page is set to %s in this language, so there is nothing to translate. Change it in the “Language visibility” box."
+msgstr ""
+
+#: src/Admin/VisibilityBox.php:44
+msgid "TranslateRocket — Language visibility"
+msgstr ""
+
+#: src/Admin/VisibilityBox.php:63
+#: src/Frontend/VisualEditor.php:351
+msgid "Translate (default)"
+msgstr ""
+
+#: src/Admin/VisibilityBox.php:64
+#: src/Frontend/VisualEditor.php:352
+msgid "Redirect to homepage"
+msgstr ""
+
+#: src/Admin/VisibilityBox.php:65
+#: src/Frontend/VisualEditor.php:353
+msgid "Redirect to a URL"
+msgstr ""
+
+#: src/Admin/VisibilityBox.php:66
+#: src/Frontend/VisualEditor.php:354
+msgid "Show a custom message"
+msgstr ""
+
+#: src/Admin/VisibilityBox.php:67
+#: src/Frontend/VisualEditor.php:355
+msgid "Show 404 (not found)"
+msgstr ""
+
+#: src/Admin/VisibilityBox.php:70
+msgid "What happens when this page is viewed in each language. Use this when a page has no equivalent in another language."
+msgstr ""
+
+#: src/Admin/VisibilityBox.php:86
+msgid "https://… (only for “Redirect to a URL”)"
+msgstr ""
+
+#: src/Admin/VisibilityBox.php:92
+msgid "Custom message (only for “Show a custom message”)"
+msgstr ""
+
+#: src/Database.php:175
+msgid "Database tables could not be created."
+msgstr ""
+
+#: src/Frontend/Gettext.php:228
+msgid "Site interface (themes & plugins)"
+msgstr ""
+
+#: src/Frontend/PoweredBy.php:72
+msgid "Powered by"
+msgstr ""
+
+#: src/Frontend/Switcher.php:526
+#: src/Frontend/VisualEditor.php:167
+msgid "Previous"
+msgstr ""
+
+#: src/Frontend/Switcher.php:527
+msgid "More"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:86
+msgid "Translate visually"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:136
+msgid "Editing"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:137
+msgid "Blocks"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:138
+msgid "Show formatting as numbered [1] [2] markers — the simplest view."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:139
+msgid "HTML"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:140
+msgid "Edit the raw HTML for full control — you see the real <strong>, <a>… tags."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:141
+msgid "⚠ Keep the HTML tags (<strong>, <a>…) intact so the formatting and links survive."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:142
+msgid "Everything on this page is already translated."
+msgstr ""
+
+#. translators: %d: number of strings just translated.
+#: src/Frontend/VisualEditor.php:144
+#, php-format
+msgid "%d translated"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:145
+msgid "⚠ The number of lines does not match the source — check the result."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:146
+msgid "Copied!"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:147
+msgid "Translate page"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:148
+msgid "Translate the whole page"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:149
+msgid "Translate every text on this page at once — automatically, or by pasting into any translator."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:150
+msgid "Show HTML tags (bold, links…) instead of [1] [2]"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:151
+msgid "Auto-translate everything with AI"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:152
+msgid "Auto-translate everything with Google"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:153
+msgid "Add an AI key (or enable free Google) in TranslateRocket settings to auto-translate. Meanwhile, use copy-paste below."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:154
+msgid "Or: copy → translate → paste back"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:155
+msgid "1. Copy the source text"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:156
+msgid "2. Paste it back, keeping the 1. 2. 3. numbers on each line"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:157
+msgid "Copy"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:158
+msgid "Paste the translated text here…"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:159
+msgid "Apply translation"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:160
+msgid "Translating…"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:163
+msgid "Save"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:164
+msgid "Save & next"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:166
+msgid "Google Translate"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:168
+msgid "Next"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:169
+msgid "Select all"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:170
+msgid "Back"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:171
+msgid "Skip translated texts"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:172
+msgid "With the ‹ › arrows, skip texts that already have a translation and stop only on the ones still to translate."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:174
+msgid "Image alt text"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:175
+msgid "Title"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:176
+msgid "Placeholder"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:177
+msgid "ARIA label"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:179
+msgid "Close"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:180
+msgid "Lock the window here (it stays put while you navigate)"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:181
+msgid "Unlock — follow the selected text again"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:182
+msgid "Restore original"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:183
+msgid "Put the original text back (e.g. if the [1] [2] markers got broken), then translate again."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:184
+msgid "Markers like [1] [2] are formatting (bold, links). Keep them where they are."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:185
+msgid "⚠ Keep all the [1] [2] markers so the bold/links can be restored."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:186
+msgid "Already translated"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:187
+msgid "Saved"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:188
+#: src/Frontend/VisualEditor.php:222
+#: src/Frontend/VisualEditor.php:284
+msgid "Done"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:189
+#: src/Frontend/VisualEditor.php:280
+msgid "Click any text to translate it"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:191
+msgid "Switch this page back to runtime translation? Your independent copy is kept (paused), not deleted — you can re-create it later to get your edits back."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:192
+msgid "Delete this independent copy for good? Its edits will be lost and the page goes back to runtime translation."
+msgstr ""
+
+#. translators: %s: source language name.
+#: src/Frontend/VisualEditor.php:218
+#, php-format
+msgid "%s is your source language — pick a language to translate into:"
+msgstr ""
+
+#. translators: %s: language name.
+#: src/Frontend/VisualEditor.php:241
+#, php-format
+msgid "Switch to %s"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:267
+msgid "Visibility"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:273
+msgid "SEO"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:307
+msgid "Delete this independent copy"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:313
+msgid "The source page changed after this copy was made — re-create it to pull in the changes (the copy's edits are lost), or keep editing the copy."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:313
+msgid "Source changed"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:316
+msgid "This page is served from an independent copy."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:316
+#: src/Frontend/VisualEditor.php:334
+msgid "Independent copy"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:319
+msgid "Back to strings"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:327
+msgid "Reactivate the independent copy (your edits are restored)."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:327
+msgid "Reactivate copy"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:333
+msgid "Detach this page into an independent, fully-editable copy, pre-filled with the current translation."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:370
+msgid "https://…"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:371
+msgid "Custom message shown instead of the page."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:378
+msgid "Language visibility for this page"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:379
+msgid "Choose what happens when this page is viewed in each language — translate it, redirect, show a message, or 404."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:382
+msgid "Save visibility"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:416
+msgid "The homepage has no slug — its address is just the language prefix."
+msgstr ""
+
+#. translators: %s: language code, e.g. "it".
+#: src/Frontend/VisualEditor.php:421
+#, php-format
+msgid "The page address in this language, e.g. /%s/about-us/. Leave empty to keep the original."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:432
+msgid "The short summary under the title in Google results."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:436
+msgid "SEO for this page"
+msgstr ""
+
+#. translators: %s: language name, e.g. "Italiano".
+#: src/Frontend/VisualEditor.php:439
+#, php-format
+msgid "What search engines see in %s: the translated URL slug, the page title and the meta description."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:444
+msgid "Save SEO"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:465
+msgid "Not detected on this page yet."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:584
+msgid "No AI provider configured."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:591
+msgid "Translation failed."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php:674
+msgid "Could not create the copy."
+msgstr ""
+
+#: src/Importers/PolylangImporter.php:162
+msgid "Polylang is not configured."
+msgstr ""
+
+#: src/Importers/TranslatePressImporter.php:110
+msgid "TranslatePress is not configured."
+msgstr ""
+
+#: src/Importers/WpmlImporter.php:139
+msgid "WPML is not configured."
+msgstr ""
+
+#: src/Providers/DeepLProvider.php:59
+msgid "DeepL: monthly character quota exhausted — it resets at the start of your DeepL billing cycle."
+msgstr ""
+
+#: src/Translator.php:35
+msgid "Automatic Google translation is turned off."
+msgstr ""
+
+#. translators: %s: language code.
+#: src/Translator.php:80
+#, php-format
+msgid "Google Translate stopped responding while translating into %s."
+msgstr ""
+
+#: src/Translator.php:88
+msgid "Google Translate stopped responding (it may be rate-limiting). Some strings were translated — try again in a moment for the rest."
+msgstr ""
+
+#: src/Translator.php:110
+msgid "No AI provider is configured. Add an API key first."
+msgstr ""
+
+#: src/Translator.php:146
+msgid "Daily AI character limit reached. Raise it in AI settings or wait until tomorrow."
+msgstr ""
+
+#: src/Translator.php:163
+msgid "Daily AI character limit reached."
+msgstr ""
+
+#. translators: %s: language code.
+#: src/Translator.php:200
+#, php-format
+msgid "AI translation failed (→ %s)."
+msgstr ""
+
+#. translators: 1: provider name, 2: error.
+#: src/Translator.php:250
+#, php-format
+msgid "%1$s is unavailable (%2$s) — falling back to the next provider."
+msgstr ""
+
+#: assets/js/switcher-block.js:20
+#: assets/js/switcher-block.js:84
+msgid "Language Switcher"
+msgstr ""
+
+#: assets/js/switcher-block.js:21
+msgid "Let visitors switch language (TranslateRocket)."
+msgstr ""
+
+#: assets/js/switcher-block.js:47
+msgid "Switcher settings"
+msgstr ""
+
+msgid "TranslateRocket has translated %s strings on this site, for free. It has no paid version: reviews are the only thing that helps other people find it. Would you leave one?"
+msgstr ""
+
+msgid "Something is wrong instead"
+msgstr ""
+
+msgid "Border"
+msgstr ""
+
+msgid "No border at all"
+msgstr ""
+
+msgid "Removes the border instead of colouring it. The colour above is then ignored."
+msgstr ""
+
+msgid "Flag + code (EN, IT…)"
+msgstr ""
+
+msgid "Code only (EN, IT…)"
+msgstr ""
+
+msgid "House style"
+msgstr ""
+
+msgid "Extra instruction for the AI"
+msgstr ""
+
+msgid "An extra instruction sent with every AI translation, so the wording sounds like you rather than like a dictionary. Tone, formality, words to keep in the original — anything the model should know about your brand."
+msgstr ""
+
+msgid "Optional, up to %d characters. Sent with every batch, so keep it short. It never overrides the rules that keep translations lined up with your text."
+msgstr ""
+
+msgid "e.g. We are a family-run guesthouse. Keep it warm and informal, use \"tu\" in Italian, and never translate the name Villa Aurora."
+msgstr ""
+
+msgid "Appearance on small screens (when shown): show only flags, or hide it."
+msgstr ""
+
+msgid "Desktop and mobile"
+msgstr ""
+
+msgid "Desktop only"
+msgstr ""
+
+msgid "Mobile only"
+msgstr ""
+
+msgid "Only the AI models can follow this: OpenAI, Claude and Gemini. DeepL and Google Translate are translation APIs with no prompt of their own, so they ignore it."
+msgstr ""
+
+msgid "Show on"
+msgstr ""
+
+msgid "Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The live preview above always shows the desktop appearance."
+msgstr ""
+
+msgid "WooCommerce emails"
+msgstr ""
+
+msgid "Your provider right now is %s, so this instruction will be ignored until you switch to one of those."
+msgstr ""
+
+msgid "You’ve been translating with TranslateRocket for a while now. It’s free forever, and it stays maintained either way — if it saved you a paid plugin, a donation is a nice way to say thanks."
+msgstr ""
+
+msgid "Chrome and Edge on a computer can translate on the device itself. It costs nothing, needs no account, and the text never leaves this machine. Quality is below DeepL and the AI models, and it works through one phrase at a time — so it is the quickest way to get a translated site today, not the best one you can have."
+msgstr ""
+
+msgid "Could not read the translations."
+msgstr ""
+
+msgid "Done — %d strings translated in this browser."
+msgstr ""
+
+msgid "Downloading the language model — this happens once…"
+msgstr ""
+
+msgid "No language given."
+msgstr ""
+
+msgid "Not allowed."
+msgstr ""
+
+msgid "Nothing left to translate in this language."
+msgstr ""
+
+msgid "Nothing to store."
+msgstr ""
+
+msgid "Preparing…"
+msgstr ""
+
+msgid "Reload the page to see the new totals."
+msgstr ""
+
+msgid "Set up an AI provider on the AI page to bulk-translate the missing strings — or use your browser below, which needs no key."
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Stopped."
+msgstr ""
+
+msgid "The browser translator stopped with an error."
+msgstr ""
+
+msgid "The translator built into Chrome and Edge only works over a secure connection. Your admin is on plain http, so it cannot be used here."
+msgstr ""
+
+msgid "Translate %d missing in this browser"
+msgstr ""
+
+msgid "Translate with your browser — no API key"
+msgstr ""
+
+msgid "Translating %1$d of %2$d…"
+msgstr ""
+
+msgid "You can add an API provider later for better quality — what you translate here is kept and never translated again."
+msgstr ""
+
+msgid "Your browser has no built-in translator for %s."
+msgstr ""
+
+msgid "Open the copy &amp; paste tool"
+msgstr ""
+
+msgid "Translate without an API key"
+msgstr ""
+
+msgid "Your browser has no translator of its own — Chrome and Edge on a computer do. You can still work without a key: copy the missing strings out, run them through any translator you like, and paste the result back."
+msgstr ""
+
+msgid "Ask for help"
+msgstr ""
+
+msgid "Attach the report above (recommended — it usually saves a round of questions)"
+msgstr ""
+
+msgid "Check your provider and key"
+msgstr ""
+
+msgid "Copied — now paste it into your message."
+msgstr ""
+
+msgid "Copy the report"
+msgstr ""
+
+msgid "Copy the report below and paste it into your message: it says which versions you are on and what these checks found. Nothing is sent anywhere on its own — you copy it, you decide where it goes. It never contains your API keys."
+msgstr ""
+
+msgid "Could not reach the support site from here. Your host may be blocking outgoing requests — you can still copy the report and write from the browser."
+msgstr ""
+
+msgid "DeepL refused with \"quota exceeded\", but your account still reports %1$s of %2$s characters used. That combination means the key itself is blocked, not the allowance: DeepL does this when the account has no verified payment method. Check your account on deepl.com/account."
+msgstr ""
+
+msgid "DeepL: the monthly character allowance is used up. It resets at the start of your DeepL billing cycle."
+msgstr ""
+
+msgid "Everything is translated"
+msgstr ""
+
+msgid "Give it a subject first."
+msgstr ""
+
+msgid "Give the message a subject, even a short one."
+msgstr ""
+
+msgid "I need an email address to answer you."
+msgstr ""
+
+msgid "In a few words, what is wrong?"
+msgstr ""
+
+msgid "It did not go through."
+msgstr ""
+
+msgid "Leave this field empty"
+msgstr ""
+
+msgid "Needs an API key — set one up in %s, or use your browser below (free)."
+msgstr ""
+
+msgid "No API key for now"
+msgstr ""
+
+msgid "Open a topic on WordPress.org"
+msgstr ""
+
+msgid "Or open the support site"
+msgstr ""
+
+msgid "Or write to me from here. Nothing leaves your site until you press Send, and what gets sent is exactly what you can read on this page — no keys, no page content, no visitor data."
+msgstr ""
+
+msgid "Send to TranslateRocket support"
+msgstr ""
+
+msgid "Sending from here is not available on this install."
+msgstr ""
+
+msgid "Sending…"
+msgstr ""
+
+msgid "Sent — your ticket is #%d. My answer arrives by email."
+msgstr ""
+
+msgid "Start with %s — pick your languages and you are translating."
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "Technical report"
+msgstr ""
+
+msgid "Tell me a little more — what you did, and what happened instead."
+msgstr ""
+
+msgid "That email address does not look right — without it I cannot answer you."
+msgstr ""
+
+msgid "The AI translation could not run"
+msgstr ""
+
+msgid "The support site refused the message. Please copy the report and write from the browser instead."
+msgstr ""
+
+msgid "This is where my answer goes. It is used for nothing else."
+msgstr ""
+
+msgid "This site is not reachable from the internet — it looks like a local or staging install. To be sure a ticket is genuine, the support site has to call your site back once, and it cannot do that here. Copy the report and write from the support page instead."
+msgstr ""
+
+msgid "To be sure a ticket really comes from a WordPress site and not from a spam robot, the support site calls your site back once. This install is local or private, so it cannot be reached from the outside. Copy the report above and write from the support page — it gets to the same place."
+msgstr ""
+
+msgid "Translate all %d missing with AI"
+msgstr ""
+
+msgid "Translate by hand, or let Chrome and Edge translate the whole site for free from the Translations page — the text never leaves your computer. You can add a key later at any time."
+msgstr ""
+
+msgid "Translate only this page with AI"
+msgstr ""
+
+msgid "What happened"
+msgstr ""
+
+msgid "What you were doing, what you expected, and what happened instead."
+msgstr ""
+
+msgid "Write a little more about what happened."
+msgstr ""
+
+msgid "You just sent one. Give it a few minutes before sending another — I read them all."
+msgstr ""
+
+msgid "Your email"
+msgstr ""
+
+msgid "Your name"
+msgstr ""
+
+msgid "or translate in this browser, free and without a key"
+msgstr ""
+
+msgid "the 1-minute setup"
+msgstr ""
+
+msgid "Chrome and Edge on a computer can translate on the device itself: it costs nothing and the text never leaves your machine. Quality is below the AI models."
+msgstr ""
+
+msgid "Translate everything in this browser — no key"
+msgstr ""
+
+msgid "Updating the totals…"
+msgstr ""
+
+msgid "Translate in this browser"
+msgstr ""
+
+msgid "Everyone who helps out is named on the Contributors page."
+msgstr ""
+
+msgid "See who they are"
+msgstr ""

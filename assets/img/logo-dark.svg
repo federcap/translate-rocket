@@ -1,0 +1,28 @@
+<svg width="1086" height="204" viewBox="0 0 1086 204" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>TranslateRocket logo (dark)</title>
+  <desc>Logo TranslateRocket su fondo blu notte stellato: badge arcobaleno + wordmark TranslateRocket (Translate bianco, Rocket a gradiente).</desc>
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&amp;display=swap');</style>
+    <linearGradient id="bg" x1="0" y1="0" x2="1086" y2="204" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#0e1330"/><stop offset="0.6" stop-color="#141a45"/><stop offset="1" stop-color="#1e1b4b"/></linearGradient>
+    <radialGradient id="halo" cx="103" cy="102" r="180" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7c3aed" stop-opacity="0.4"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></radialGradient>
+    <linearGradient id="trbmg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fde047"/><stop offset="0.16" stop-color="#facc15"/><stop offset="0.3" stop-color="#fb7185"/><stop offset="0.44" stop-color="#ff2e9a"/><stop offset="0.58" stop-color="#c026d3"/><stop offset="0.72" stop-color="#7c3aed"/><stop offset="0.86" stop-color="#3b5bf0"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+    <linearGradient id="trwin" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9333ea"/><stop offset=".5" stop-color="#6366f1"/><stop offset="1" stop-color="#3b82f6"/></linearGradient>
+    <linearGradient id="wordR" gradientUnits="userSpaceOnUse" x1="713" y1="0" x2="1074" y2="0"><stop offset="0" stop-color="#ec4899"/><stop offset="0.5" stop-color="#8b5cf6"/><stop offset="1" stop-color="#3b82f6"/></linearGradient>
+  <filter id="wshadow" x="-6%" y="-30%" width="112%" height="170%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.55"/><feDropShadow dx="0" dy="1" stdDeviation="0.6" flood-color="#000" flood-opacity="0.4"/></filter></defs>
+  <rect width="1086" height="204" fill="url(#bg)"/>
+  <ellipse cx="103" cy="102" rx="230" ry="150" fill="url(#halo)"/>
+  <g fill="#ffffff"><circle cx="430" cy="30" r="1.5" opacity="0.55"/><circle cx="980" cy="28" r="1.8" opacity="0.6"/><circle cx="1050" cy="70" r="1.4" opacity="0.5"/><circle cx="600" cy="180" r="1.6" opacity="0.55"/><circle cx="1040" cy="176" r="1.3" opacity="0.5"/><circle cx="520" cy="26" r="1.1" opacity="0.5"/><circle cx="890" cy="182" r="1.4" opacity="0.5"/><circle cx="700" cy="28" r="1.2" opacity="0.5"/><circle cx="1010" cy="120" r="1.3" opacity="0.5"/></g>
+  <g><path d="M470 176 L471 178.2 L473.4 178.4 L471.5 180 L472.1 182.3 L470 181.1 L467.9 182.3 L468.5 180 L466.6 178.4 L469 178.2 Z" fill="#fde047" opacity="0.7"/><circle cx="990" cy="150" r="1.5" fill="#22c55e" opacity="0.6"/><circle cx="640" cy="40" r="1.5" fill="#f472b6" opacity="0.65"/></g>
+  <g transform="translate(7.26,7.26) scale(4.74)">
+    <rect x="1" y="1" width="38" height="38" rx="11.5" fill="url(#trbmg)"/>
+    <path d="M20 23.8c-2.6 1.6-4 4.4-3.1 7.2.6 1.9 1.9 3.2 3.1 4.4 1.2-1.2 2.5-2.5 3.1-4.4.9-2.8-.5-5.6-3.1-7.2z" fill="#fb923c"/>
+    <path d="M20 26.2c-1.4.9-2.2 2.4-1.7 4 .4 1.1 1.1 1.8 1.7 2.4.6-.6 1.3-1.3 1.7-2.4.5-1.6-.3-3.1-1.7-4z" fill="#fde047"/>
+    <path d="M12.8 21.8l-4 6 5-1.8z" fill="#fff"/>
+    <path d="M27.2 21.8l4 6-5-1.8z" fill="#fff"/>
+    <path d="M20 3.6c4.6 3.2 7 8.1 7 13.3v6.4c0 1.7-1.3 3-3 3h-8c-1.7 0-3-1.3-3-3v-6.4C13 11.7 15.4 6.8 20 3.6z" fill="#fff"/>
+    <circle cx="20" cy="14" r="6" fill="url(#trwin)"/>
+    <text x="20" y="16.55" text-anchor="middle" font-family="'Poppins','Segoe UI','Yu Gothic UI','Yu Gothic',sans-serif" font-weight="700" font-size="6.8" letter-spacing="-0.3" fill="#fff">A&#12354;</text>
+  </g>
+  <text filter="url(#wshadow)" x="210" y="140" font-family="'Poppins','Segoe UI',sans-serif" font-weight="800" font-size="104" letter-spacing="-2"><tspan fill="#ffffff">Translate</tspan><tspan fill="url(#wordR)">Rocket</tspan></text>
+  <text filter="url(#wshadow)" x="1084" y="62" text-anchor="end" font-family="'Poppins','Segoe UI',sans-serif" font-weight="700" font-size="30" fill="#ffffff" opacity="0.85">™</text>
+</svg>

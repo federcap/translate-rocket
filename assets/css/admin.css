@@ -1,0 +1,1618 @@
+/* TranslateRocket admin styles */
+
+/* Flag corner pad: a square with a number input at each corner and a centre
+   link that keeps all four equal. */
+.trr-corner-pad {
+	position: relative;
+	width: 154px;
+	height: 98px;
+	border: 2px dashed #c7c4f5;
+	border-radius: 12px;
+	background: #faf9ff;
+	margin: 8px 0;
+}
+
+.trr-corner-pad .trr-corner {
+	position: absolute;
+	width: 48px;
+	text-align: center;
+}
+
+.trr-corner-pad .trr-corner[data-c="tl"] { top: 6px; left: 6px; }
+.trr-corner-pad .trr-corner[data-c="tr"] { top: 6px; right: 6px; }
+.trr-corner-pad .trr-corner[data-c="bl"] { bottom: 6px; left: 6px; }
+.trr-corner-pad .trr-corner[data-c="br"] { bottom: 6px; right: 6px; }
+
+.trr-corner-link {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate( -50%, -50% );
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	border: 1px solid #c7c4f5;
+	background: #fff;
+	color: #787c82;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.12 );
+	transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.trr-corner-link .dashicons {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+}
+
+.trr-corner-link.is-linked {
+	background: #4f46e5;
+	color: #fff;
+	border-color: #4f46e5;
+}
+
+/* Colour field: native swatch + text input side by side. */
+.trr-color-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.trr-color-pick {
+	width: 40px;
+	height: 34px;
+	padding: 2px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+/* Switcher presets: clickable visual thumbnails. */
+.trr-presets {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 6px 0 16px;
+}
+
+.trr-preset {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	width: 168px;
+	padding: 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	/* Checkerboard so a translucent preset background shows as see-through. */
+	background-color: #fff;
+	background-image:
+		linear-gradient( 45deg, #e7e7e7 25%, transparent 25% ),
+		linear-gradient( -45deg, #e7e7e7 25%, transparent 25% ),
+		linear-gradient( 45deg, transparent 75%, #e7e7e7 75% ),
+		linear-gradient( -45deg, transparent 75%, #e7e7e7 75% );
+	background-size: 14px 14px;
+	background-position: 0 0, 0 7px, 7px -7px, -7px 0;
+}
+
+.trr-preset:hover {
+	border-color: #4f46e5;
+	box-shadow: 0 2px 8px rgba( 0, 0, 0, 0.14 );
+}
+
+.trr-preset-chip {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	min-height: 30px;
+	padding: 8px 10px;
+	font-size: 12px;
+	line-height: 1.2;
+	overflow: hidden;
+}
+
+.trr-preset-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #50575e;
+	text-align: center;
+	background: #fff;
+	border-radius: 4px;
+	padding: 2px 0;
+}
+
+.trrocket-wrap h1 .dashicons {
+	font-size: 30px;
+	width: 30px;
+	height: 30px;
+	vertical-align: text-bottom;
+	color: #2271b1;
+}
+
+.trrocket-version {
+	font-size: 12px;
+	font-weight: 400;
+	color: #646970;
+	vertical-align: middle;
+	margin-left: 6px;
+}
+
+.trrocket-tagline {
+	font-size: 14px;
+	color: #50575e;
+	margin-top: -4px;
+}
+
+.trrocket-card {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	padding: 16px 20px;
+	margin: 16px 0;
+	max-width: 100%;
+}
+
+.trrocket-card h2 {
+	margin-top: 0;
+}
+
+.trrocket-roadmap {
+	list-style: none;
+	margin: 8px 0 0;
+	padding: 0;
+	line-height: 2;
+}
+
+.trrocket-donate {
+	border-color: #c3d9ed;
+	background: #f6fafe;
+}
+
+.trrocket-lang-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 6px 16px;
+	margin: 12px 0 4px;
+}
+
+.trrocket-lang-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 6px;
+	border-radius: 4px;
+}
+
+.trrocket-lang-item:hover {
+	background: #f0f6fc;
+}
+
+.trrocket-flag {
+	font-size: 18px;
+	line-height: 1;
+}
+
+/* --- Polish --- */
+.trrocket-wrap h1 {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.trrocket-card {
+	box-shadow: 0 1px 2px rgba( 0, 0, 0, 0.04 );
+}
+
+.trrocket-card h2 {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	border-bottom: 1px solid #f0f0f1;
+	padding-bottom: 10px;
+}
+
+.trrocket-card h3 {
+	margin-bottom: 4px;
+}
+
+/* Accent strip on the first (Languages/main) card */
+.trrocket-card.trrocket-hero {
+	border-top: 3px solid #4f46e5;
+}
+
+/* Switcher live preview: neutralise wp-admin's blue underlined links so every
+   item renders exactly like the front-end (the current-language toggle and the
+   menu items must share one look — colour comes from the profile settings). */
+#trr-sw-preview a {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* Click-to-open "i" info icon + popover, used across all screens */
+.trr-info {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	margin: 0 2px;
+	border: 0;
+	background: none;
+	color: #8a8a8a;
+	cursor: pointer;
+	vertical-align: middle;
+	border-radius: 50%;
+}
+
+.trr-info:hover,
+.trr-info:focus {
+	color: #4f46e5;
+	background: #eef0fb;
+	outline: none;
+}
+
+.trr-info .dashicons {
+	font-size: 17px;
+	width: 17px;
+	height: 17px;
+}
+
+/* Keep a settings-row label and its trailing "i" info icon on the same line. */
+.trrocket-wrap .form-table th {
+	white-space: nowrap;
+}
+
+/* Keep the primary Save button visible while scrolling long settings pages,
+   centred horizontally and vertically in its bar. */
+.trrocket-wrap form .submit {
+	position: sticky;
+	bottom: 0;
+	z-index: 30;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 52px;
+	margin: 16px 0 0;
+	padding: 10px 14px;
+	background: rgba( 255, 255, 255, 0.96 );
+	border: 1px solid #e4e4ec;
+	border-radius: 10px;
+	box-shadow: 0 -3px 14px rgba( 0, 0, 0, 0.08 );
+}
+
+.trrocket-wrap form .submit .button {
+	margin: 0;
+}
+
+/* AI page: keep the active-provider dropdown next to its label. */
+.trr-ai-activerow {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin: 8px 0 6px;
+}
+
+.trr-ai-activerow label {
+	font-weight: 600;
+}
+
+/* AI providers as readable blocks in a responsive grid. */
+.trr-ai-providers {
+	display: grid;
+	grid-template-columns: repeat( auto-fill, minmax( 360px, 1fr ) );
+	gap: 14px;
+	margin: 10px 0 18px;
+}
+
+.trr-ai-provider {
+	border: 1px solid #e4e4ec;
+	border-radius: 10px;
+	padding: 12px 14px;
+	background: #fcfcfe;
+}
+
+.trr-ai-provider.is-active {
+	border-color: #4f46e5;
+	box-shadow: 0 0 0 2px #4f46e5, 0 6px 18px rgba( 79, 70, 229, 0.18 );
+	background: linear-gradient( #f6f5ff, #fff );
+}
+
+.trr-ai-provider.is-active .trr-ai-pname {
+	color: #4f46e5;
+}
+
+.trr-ai-provider .form-table {
+	margin-top: 2px;
+}
+
+.trr-ai-provider .form-table th {
+	width: 78px;
+	padding: 8px 0;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+.trr-ai-provider .form-table td {
+	padding: 8px 0;
+}
+
+/* Keep every field inside its card — no overflowing inputs. */
+.trr-ai-provider .form-table td input[type="password"],
+.trr-ai-provider .form-table td input[type="text"],
+.trr-ai-provider .form-table td select {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.trr-ai-phead {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 2px;
+}
+
+.trr-ai-pname {
+	font-size: 14px;
+}
+
+.trr-ai-badge {
+	font-size: 11px;
+	font-weight: 600;
+	color: #6b6b80;
+	background: #ececf3;
+	border-radius: 999px;
+	padding: 1px 8px;
+}
+
+.trr-ai-badge.is-on {
+	color: #fff;
+	background: #4f46e5;
+}
+
+.trr-ai-pfoot {
+	margin: 8px 0 0;
+}
+
+/* Switcher preview: background swatches. */
+.trr-sw-bgrow {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+	margin: 10px 0 2px;
+}
+
+.trr-sw-bg {
+	width: 24px;
+	height: 24px;
+	border-radius: 6px;
+	border: 1px solid #d0d0d8;
+	cursor: pointer;
+	padding: 0;
+}
+
+.trr-sw-bg.is-on {
+	box-shadow: 0 0 0 2px #4f46e5;
+	border-color: #4f46e5;
+}
+
+.trr-sw-bg-img {
+	background: linear-gradient( 135deg, #667eea, #764ba2 42%, #f093fb ) !important;
+}
+
+.trr-sw-bg-pick {
+	width: 28px;
+	height: 26px;
+	padding: 0;
+	border: 1px solid #d0d0d8;
+	border-radius: 6px;
+	cursor: pointer;
+	background: none;
+}
+
+/* Diagnostics: nav badge. */
+.trr-nav-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 5px;
+	margin-left: 5px;
+	border-radius: 999px;
+	background: #d63638;
+	color: #fff;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.trr-nav-item.has-issues .dashicons {
+	color: #d63638;
+}
+
+/* Diagnostics: system checks. */
+.trr-diag-list {
+	margin: 6px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.trr-diag {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 10px 4px;
+	border-top: 1px solid #f0f0f4;
+}
+
+.trr-diag:first-child {
+	border-top: 0;
+}
+
+.trr-diag .dashicons {
+	flex: 0 0 auto;
+	font-size: 20px;
+	width: 20px;
+	height: 20px;
+	margin-top: 1px;
+}
+
+.trr-diag-ok .dashicons {
+	color: #00a32a;
+}
+
+.trr-diag-warn .dashicons {
+	color: #dba617;
+}
+
+.trr-diag-fail .dashicons {
+	color: #d63638;
+}
+
+.trr-diag-body {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.trr-diag-detail {
+	color: #50575e;
+	font-size: 13px;
+}
+
+/* Diagnostics: provider connection tests. */
+.trr-diag-tests {
+	margin: 6px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.trr-diag-tests li {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 8px 4px;
+	border-top: 1px solid #f0f0f4;
+}
+
+.trr-diag-tests li:first-child {
+	border-top: 0;
+}
+
+.trr-test-name {
+	min-width: 150px;
+	font-weight: 600;
+}
+
+.trr-test-result {
+	font-size: 13px;
+}
+
+.trr-test-result.is-pending {
+	color: #50575e;
+}
+
+.trr-test-result.is-ok {
+	color: #00a32a;
+	font-weight: 600;
+}
+
+.trr-test-result.is-fail {
+	color: #d63638;
+	font-weight: 600;
+}
+
+/* Diagnostics: log table. */
+.trr-log-table {
+	margin-top: 6px;
+}
+
+.trr-log-level {
+	display: inline-block;
+	padding: 1px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.trr-log-error {
+	background: #fce4e4;
+	color: #b32d2e;
+}
+
+.trr-log-warning {
+	background: #fcf3d8;
+	color: #8a6d1a;
+}
+
+.trr-log-info {
+	background: #e6f0fb;
+	color: #2e5aac;
+}
+
+.trr-log-detail {
+	color: #6b6b80;
+	font-size: 12px;
+}
+
+.trr-log-clear {
+	margin-top: 10px;
+}
+
+.trr-diag-empty {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	color: #00a32a;
+	font-weight: 600;
+}
+
+.trr-diag-empty .dashicons {
+	color: #00a32a;
+}
+
+/* Buttons that carry a dashicon (open-Google, back-to-list). */
+.trr-gopen .dashicons,
+.trr-back .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	vertical-align: text-bottom;
+	margin-right: 2px;
+}
+
+.trr-gopen {
+	color: #1a73e8;
+	border-color: #c6dafc;
+}
+
+/* Custom-language adder */
+.trr-custom-langs {
+	margin: 14px 0 4px;
+}
+
+.trr-custom-list {
+	margin: 6px 0 10px;
+	padding: 0;
+	list-style: none;
+}
+
+.trr-custom-list li {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 8px;
+	border: 1px solid #ececf3;
+	border-radius: 6px;
+	max-width: 460px;
+	margin-bottom: 4px;
+}
+
+.trr-custom-list code {
+	color: #6b6b80;
+	background: #f3f3f8;
+	border-radius: 4px;
+	padding: 1px 6px;
+}
+
+.trr-custom-remove {
+	margin-left: auto;
+	font-size: 12px;
+	color: #b32d2e;
+}
+
+.trr-custom-add {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	align-items: flex-end;
+}
+
+.trr-custom-field {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+.trr-custom-flabel {
+	font-size: 11px;
+	font-weight: 600;
+	color: #6b6b80;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+/* One-click flag picker for a custom language. */
+.trr-flagpick-wrap {
+	position: relative;
+}
+
+.trr-flagpick-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.trr-flagpick-preview {
+	display: inline-flex;
+	align-items: center;
+	font-size: 16px;
+	line-height: 1;
+}
+
+.trr-flagpick-preview .trrocket-flag-svg,
+.trr-flagpick-item .trrocket-flag-svg {
+	display: block;
+	border-radius: 2px;
+}
+
+.trr-flagpick {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 50;
+	margin-top: 4px;
+	width: 300px;
+	max-height: 220px;
+	overflow: auto;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	box-shadow: 0 8px 24px rgba( 0, 0, 0, 0.16 );
+	padding: 6px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3px;
+}
+
+.trr-flagpick[hidden] {
+	display: none;
+}
+
+.trr-flagpick-item {
+	border: 1px solid transparent;
+	background: none;
+	cursor: pointer;
+	line-height: 0;
+	padding: 4px;
+	border-radius: 6px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.trr-flagpick-item:hover {
+	background: #eef0fb;
+	border-color: #c7ccf5;
+}
+
+.trr-flagpick-globe {
+	font-size: 18px;
+	line-height: 1;
+}
+
+/* "Upload your own" flag image — full-width action at the bottom of the palette. */
+.trr-flagpick-upload {
+	flex: 1 0 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	margin-top: 6px;
+	padding: 6px;
+	border: 1px dashed #c7ccf5;
+	background: #f7f7fd;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 12px;
+	color: #4f46e5;
+}
+
+.trr-flagpick-upload:hover {
+	background: #eef0fb;
+}
+
+.trr-flagpick-upload .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+}
+
+/* Coloured translation-progress bar (red -> green), reused across screens. */
+.trrocket-wrap .trr-prog {
+	min-width: 120px;
+}
+
+.trrocket-wrap .trr-prog-bar {
+	height: 10px;
+	background: #e6e6ec;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.trrocket-wrap .trr-prog-fill {
+	height: 100%;
+	border-radius: 6px;
+	transition: width 0.3s ease;
+}
+
+.trrocket-wrap .trr-prog-label {
+	font-size: 12px;
+	color: #50575e;
+	margin-top: 3px;
+	font-weight: 600;
+}
+
+.trrocket-wrap .trr-progress-table td {
+	vertical-align: middle;
+}
+
+.trr-locked {
+	border: 1px solid #e2e2e2;
+	background: #fafafa;
+	border-radius: 8px;
+	padding: 14px 16px;
+	max-width: 560px;
+}
+
+.trr-info-pop {
+	position: absolute;
+	z-index: 100000;
+	max-width: 300px;
+	background: #1e1e2e;
+	color: #fff;
+	font-size: 13px;
+	line-height: 1.5;
+	padding: 10px 12px;
+	border-radius: 8px;
+	box-shadow: 0 6px 24px rgba( 0, 0, 0, 0.25 );
+}
+
+.trr-eblockwrap h3,
+.trrocket-card h3 {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+/* Editor missing-row + dot (dashboard) */
+.trr-emissing {
+	background: #fff5f5;
+}
+
+.trr-edot {
+	color: #b32d2e;
+	font-weight: 700;
+}
+
+/* Pages list: search + sortable columns */
+.trr-ptoolbar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin: 10px 0;
+}
+
+.trr-ptoolbar #trr-psearch {
+	min-width: 300px;
+}
+
+th.trr-sortable {
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+th.trr-sortable:hover {
+	color: #4f46e5;
+}
+
+.trr-arrow {
+	color: #4f46e5;
+	font-size: 11px;
+	/* Faint up/down hint shows every sortable column is clickable; the active
+	   column shows a single solid arrow for the current direction. */
+	opacity: 0.3;
+}
+
+.trr-arrow.is-active {
+	opacity: 1;
+}
+
+/* ===================== Branded header + pill nav (v2) ===================== */
+.trrocket-wrap {
+	max-width: 1000px;
+}
+
+/* Wide layout for two-column screens (e.g. the switcher: form + live preview). */
+.trrocket-wrap.trrocket-wide {
+	max-width: 1320px;
+}
+
+.trrocket-wrap.trrocket-wide .trrocket-card {
+	max-width: none;
+}
+
+/* Uniform width: the hero, the nav, every card and every admin notice share the
+   exact same left/right edges (the wrap width). WordPress notices get their own
+   margins by default, so reset them to line up with everything else. */
+.trrocket-wrap .trr-hero,
+.trrocket-wrap .trr-nav,
+.trrocket-wrap .trrocket-card,
+.trrocket-wrap .notice,
+.trrocket-wrap .updated,
+.trrocket-wrap div.error,
+.trrocket-wrap .notice-info,
+.trrocket-wrap .notice-success,
+.trrocket-wrap .notice-warning {
+	margin-left: 0;
+	margin-right: 0;
+	box-sizing: border-box;
+}
+
+/* The hero replaces the per-page brand title; keep page <h1> as a section title. */
+.trr-hero {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin: 16px 0 0;
+	padding: 20px 26px;
+	border-radius: 14px;
+	color: #fff;
+	/* Night sky, same as the one on translaterocket.com: a tiled star field
+	   over a deep blue, with a teal wash on the left and a violet one on the
+	   right. The stars are a data URI, so the plugin ships no extra file. */
+	background-color: #171d47;
+	background-image:
+		url( "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22320%22 viewBox=%220 0 320 320%22><circle cx=%2277.9%22 cy=%2261.0%22 r=%220.7%22 fill=%22white%22 opacity=%220.38%22/><circle cx=%22149.4%22 cy=%2280.0%22 r=%220.7%22 fill=%22white%22 opacity=%220.59%22/><circle cx=%22312.6%22 cy=%22314.9%22 r=%220.9%22 fill=%22white%22 opacity=%220.55%22/><circle cx=%22192.8%22 cy=%2262.6%22 r=%220.9%22 fill=%22white%22 opacity=%220.74%22/><circle cx=%2285.6%22 cy=%2226.2%22 r=%221.3%22 fill=%22white%22 opacity=%220.54%22/><circle cx=%22237.2%22 cy=%22266.7%22 r=%220.9%22 fill=%22white%22 opacity=%220.37%22/><circle cx=%22266.0%22 cy=%2284.7%22 r=%220.6%22 fill=%22white%22 opacity=%220.33%22/><circle cx=%22274.0%22 cy=%22268.8%22 r=%220.8%22 fill=%22white%22 opacity=%220.8%22/><circle cx=%22116.8%22 cy=%2228.2%22 r=%220.8%22 fill=%22white%22 opacity=%220.78%22/><circle cx=%22169.7%22 cy=%22109.5%22 r=%220.8%22 fill=%22white%22 opacity=%220.49%22/><circle cx=%2236.2%22 cy=%2251.4%22 r=%220.7%22 fill=%22white%22 opacity=%220.44%22/><circle cx=%22230.5%22 cy=%22148.6%22 r=%221.0%22 fill=%22white%22 opacity=%220.91%22/><circle cx=%2295.0%22 cy=%22151.8%22 r=%221.3%22 fill=%22white%22 opacity=%220.93%22/><circle cx=%22116.8%22 cy=%22196.5%22 r=%221.0%22 fill=%22white%22 opacity=%220.68%22/><circle cx=%22131.3%22 cy=%2241.4%22 r=%220.6%22 fill=%22white%22 opacity=%220.55%22/><circle cx=%2258.9%22 cy=%22260.5%22 r=%220.7%22 fill=%22white%22 opacity=%220.33%22/><circle cx=%22114.7%22 cy=%22266.5%22 r=%221.3%22 fill=%22white%22 opacity=%220.43%22/><circle cx=%2238.7%22 cy=%22214.3%22 r=%221.0%22 fill=%22white%22 opacity=%220.76%22/><circle cx=%2295.6%22 cy=%22252.1%22 r=%220.9%22 fill=%22white%22 opacity=%220.61%22/><circle cx=%2265.8%22 cy=%2240.6%22 r=%220.8%22 fill=%22white%22 opacity=%220.55%22/><circle cx=%22170.2%22 cy=%2231.6%22 r=%221.0%22 fill=%22white%22 opacity=%220.78%22/><circle cx=%22187.7%22 cy=%22278.8%22 r=%221.0%22 fill=%22white%22 opacity=%220.4%22/><circle cx=%2234.3%22 cy=%220.4%22 r=%220.6%22 fill=%22white%22 opacity=%220.35%22/><circle cx=%22185.3%22 cy=%22298.5%22 r=%221.3%22 fill=%22white%22 opacity=%220.56%22/><circle cx=%22121.1%22 cy=%2259.5%22 r=%220.8%22 fill=%22white%22 opacity=%220.42%22/><circle cx=%2269.2%22 cy=%22272.0%22 r=%221.0%22 fill=%22white%22 opacity=%220.35%22/><circle cx=%22303.7%22 cy=%22293.9%22 r=%220.9%22 fill=%22white%22 opacity=%220.39%22/><circle cx=%2257.8%22 cy=%22180.8%22 r=%220.8%22 fill=%22white%22 opacity=%220.5%22/><circle cx=%2288.6%22 cy=%2230.0%22 r=%220.9%22 fill=%22white%22 opacity=%220.92%22/><circle cx=%2277.3%22 cy=%2237.0%22 r=%220.8%22 fill=%22white%22 opacity=%220.9%22/><circle cx=%22216.9%22 cy=%22151.4%22 r=%221.3%22 fill=%22white%22 opacity=%220.69%22/><circle cx=%2255.1%22 cy=%2241.7%22 r=%220.6%22 fill=%22white%22 opacity=%220.4%22/><circle cx=%2299.6%22 cy=%22103.7%22 r=%221.0%22 fill=%22white%22 opacity=%220.71%22/><circle cx=%2216.3%22 cy=%2210.1%22 r=%221.0%22 fill=%22white%22 opacity=%220.26%22/><circle cx=%22125.3%22 cy=%22275.1%22 r=%220.6%22 fill=%22white%22 opacity=%220.45%22/><circle cx=%2214.3%22 cy=%22260.3%22 r=%220.7%22 fill=%22white%22 opacity=%220.78%22/><circle cx=%2222.2%22 cy=%22227.2%22 r=%221.0%22 fill=%22white%22 opacity=%220.51%22/><circle cx=%2282.3%22 cy=%22190.1%22 r=%221.0%22 fill=%22white%22 opacity=%220.79%22/><circle cx=%22126.7%22 cy=%2274.9%22 r=%220.7%22 fill=%22white%22 opacity=%220.93%22/><circle cx=%2254.5%22 cy=%22224.7%22 r=%220.6%22 fill=%22white%22 opacity=%220.68%22/><circle cx=%22277.0%22 cy=%22204.6%22 r=%220.6%22 fill=%22white%22 opacity=%220.93%22/><circle cx=%22204.7%22 cy=%22122.2%22 r=%221.3%22 fill=%22white%22 opacity=%220.38%22/><circle cx=%227.8%22 cy=%2255.9%22 r=%220.6%22 fill=%22white%22 opacity=%220.76%22/><circle cx=%22272.7%22 cy=%22150.2%22 r=%220.9%22 fill=%22white%22 opacity=%220.63%22/><circle cx=%22217.6%22 cy=%2272.0%22 r=%220.7%22 fill=%22white%22 opacity=%220.34%22/><circle cx=%22294.4%22 cy=%22131.6%22 r=%220.7%22 fill=%22white%22 opacity=%220.65%22/><circle cx=%22137.6%22 cy=%22284.2%22 r=%220.8%22 fill=%22white%22 opacity=%220.85%22/><circle cx=%2272.7%22 cy=%22243.5%22 r=%221.3%22 fill=%22white%22 opacity=%220.58%22/><circle cx=%22226.4%22 cy=%22191.8%22 r=%220.7%22 fill=%22white%22 opacity=%220.61%22/><circle cx=%2272.5%22 cy=%2271.0%22 r=%221.3%22 fill=%22white%22 opacity=%220.26%22/><circle cx=%22147.1%22 cy=%22165.4%22 r=%220.6%22 fill=%22white%22 opacity=%220.36%22/><circle cx=%22225.0%22 cy=%22313.6%22 r=%221.3%22 fill=%22white%22 opacity=%220.42%22/><circle cx=%22183.5%22 cy=%2261.8%22 r=%221.0%22 fill=%22white%22 opacity=%220.28%22/><circle cx=%22148.2%22 cy=%22167.1%22 r=%220.6%22 fill=%22white%22 opacity=%220.37%22/><circle cx=%22291.6%22 cy=%2237.1%22 r=%220.7%22 fill=%22white%22 opacity=%220.68%22/><circle cx=%22308.0%22 cy=%22220.9%22 r=%220.6%22 fill=%22white%22 opacity=%220.64%22/><circle cx=%22110.5%22 cy=%228.2%22 r=%220.9%22 fill=%22white%22 opacity=%220.63%22/><circle cx=%22317.5%22 cy=%2229.7%22 r=%220.9%22 fill=%22white%22 opacity=%220.36%22/></svg>" ),
+		radial-gradient( 90% 200% at 4% 0%, rgba( 20, 78, 104, 0.85 ) 0%, rgba( 20, 78, 104, 0 ) 60% ),
+		radial-gradient( 80% 200% at 97% 100%, rgba( 116, 41, 122, 0.9 ) 0%, rgba( 116, 41, 122, 0 ) 62% ),
+		linear-gradient( 100deg, #12234a 0%, #211a52 48%, #2e1a4b 100% );
+	background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+	box-shadow: 0 14px 34px -16px rgba( 30, 27, 90, 0.7 );
+	text-shadow: 0 1px 2px rgba( 0, 0, 0, 0.18 );
+}
+
+.trr-hero-logo {
+	width: 44px;
+	height: 44px;
+	flex: 0 0 auto;
+	filter: drop-shadow( 0 2px 3px rgba( 0, 0, 0, 0.25 ) );
+}
+
+.trr-hero-name {
+	font-size: 22px;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.trr-hero-ver {
+	font-size: 12px;
+	font-weight: 500;
+	opacity: 0.8;
+}
+
+.trr-hero-tag {
+	font-size: 13px;
+	opacity: 0.92;
+	margin-top: 3px;
+}
+
+.trr-nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 14px 0 20px;
+}
+
+.trr-nav-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	text-decoration: none;
+	color: #50575e;
+	background: #fff;
+	border: 1px solid #e2e2e7;
+	border-radius: 999px;
+	padding: 7px 14px;
+	font-weight: 600;
+	font-size: 13px;
+	box-shadow: 0 1px 2px rgba( 0, 0, 0, 0.04 );
+	transition: transform 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.trr-nav-item:hover {
+	color: #4f46e5;
+	border-color: #c7c4f5;
+	transform: translateY( -1px );
+}
+
+.trr-nav-item .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+}
+
+.trr-nav-item.is-active {
+	color: #fff;
+	background: linear-gradient( 120deg, #4f46e5, #7c3aed );
+	border-color: transparent;
+	box-shadow: 0 6px 14px -6px rgba( 79, 70, 229, 0.7 );
+}
+
+/* Donation link — pink/red so it stands out from the page tabs. */
+.trr-nav-item.trr-nav-support {
+	color: #fff;
+	background: linear-gradient( 120deg, #ec4899, #f43f5e );
+	border-color: transparent;
+	box-shadow: 0 6px 14px -6px rgba( 236, 72, 153, 0.7 );
+}
+
+.trr-nav-item.trr-nav-support:hover {
+	color: #fff;
+	border-color: transparent;
+	transform: translateY( -1px );
+	box-shadow: 0 9px 18px -6px rgba( 236, 72, 153, 0.85 );
+}
+
+.trr-nav-item.trr-nav-support .dashicons {
+	color: #fff;
+}
+
+/* Page section title (the per-page <h1> under the nav) */
+.trrocket-wrap h1.trr-page-title {
+	font-size: 20px;
+	font-weight: 600;
+	margin: 4px 0 2px;
+	color: #1d2327;
+}
+
+/* Cards: rounder, softer shadow, subtle lift on hover */
+.trrocket-card {
+	border-radius: 12px;
+	box-shadow: 0 6px 18px -12px rgba( 0, 0, 0, 0.18 );
+	max-width: 100%;
+	transition: box-shadow 0.15s ease;
+}
+
+.trrocket-card:hover {
+	box-shadow: 0 12px 26px -14px rgba( 0, 0, 0, 0.24 );
+}
+
+.trrocket-card.trrocket-hero {
+	border-top: 3px solid #4f46e5;
+}
+
+/* Primary buttons in the brand accent */
+.trrocket-wrap .button-primary {
+	background: #4f46e5;
+	border-color: #4338ca;
+	box-shadow: none;
+}
+
+.trrocket-wrap .button-primary:hover,
+.trrocket-wrap .button-primary:focus {
+	background: #4338ca;
+	border-color: #3730a3;
+}
+
+/* ---- Setup wizard ---- */
+.trrocket-wizard {
+	max-width: 780px;
+}
+
+.trr-wiz {
+	background: #fff;
+	border: 1px solid #e4e4ec;
+	border-radius: 14px;
+	padding: 0 0 18px;
+	box-shadow: 0 4px 20px rgba( 0, 0, 0, 0.06 );
+	overflow: hidden;
+}
+
+.trr-wiz-head {
+	background: linear-gradient( 120deg, #4f46e5, #7c3aed 55%, #c026d3 );
+	color: #fff;
+	padding: 18px 24px;
+}
+
+.trr-wiz-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 18px;
+	font-weight: 700;
+	margin-bottom: 14px;
+}
+
+.trr-wiz-brand .trr-hero-logo {
+	width: 30px;
+	height: 30px;
+}
+
+.trr-wiz-steps {
+	display: flex;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: wiz;
+}
+
+.trr-wiz-steps li {
+	flex: 1;
+	position: relative;
+	padding-left: 28px;
+	font-size: 13px;
+	opacity: 0.75;
+	counter-increment: wiz;
+}
+
+.trr-wiz-steps li::before {
+	content: counter( wiz );
+	position: absolute;
+	left: 0;
+	top: -1px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: rgba( 255, 255, 255, 0.25 );
+	text-align: center;
+	line-height: 20px;
+	font-weight: 700;
+	font-size: 12px;
+}
+
+.trr-wiz-steps li.is-current {
+	opacity: 1;
+	font-weight: 700;
+}
+
+.trr-wiz-steps li.is-current::before {
+	background: #fff;
+	color: #4f46e5;
+}
+
+.trr-wiz-steps li.is-done::before {
+	content: "✓";
+	background: #fde047;
+	color: #1e1e2e;
+}
+
+.trr-wiz-step {
+	padding: 24px;
+}
+
+.trr-wiz-step h2 {
+	margin: 0 0 6px;
+	font-size: 20px;
+}
+
+.trr-wiz-lead {
+	color: #50575e;
+	margin: 0 0 16px;
+	font-size: 14px;
+}
+
+.trr-wiz-sub {
+	font-weight: 600;
+	margin: 14px 0 8px;
+}
+
+.trr-wiz-srclabel {
+	font-weight: 600;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.trr-wiz-radio {
+	display: flex;
+	gap: 10px;
+	align-items: flex-start;
+	border: 1px solid #e4e4ec;
+	border-radius: 10px;
+	padding: 12px 14px;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.trr-wiz-radio:hover {
+	border-color: #c7ccf5;
+}
+
+.trr-wiz-radio input {
+	margin-top: 3px;
+}
+
+.trr-wiz-ai {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin: -2px 0 12px 30px;
+}
+
+.trr-wiz-nav {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 4px 24px 0;
+}
+
+.trr-wiz-spacer {
+	flex: 1;
+}
+
+.trr-wiz-card {
+	background: #fff;
+	border: 1px solid #e4e4ec;
+	border-radius: 14px;
+	max-width: 640px;
+	margin: 24px auto;
+	box-shadow: 0 4px 20px rgba( 0, 0, 0, 0.06 );
+}
+
+.trr-wiz-done {
+	text-align: center;
+	padding: 44px 28px;
+}
+
+.trr-wiz-check {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	background: #dcfce7;
+	color: #16a34a;
+	font-size: 34px;
+	line-height: 64px;
+	margin: 0 auto 14px;
+}
+
+.trr-wiz-done h1 {
+	margin: 0 0 6px;
+}
+
+.trr-wiz-actions {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin: 18px 0;
+}
+
+/* Compact admin header: transparent lockup left, tagline + info right. */
+.trr-hero {
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px;
+	padding: 14px 24px;
+}
+.trr-hero-full {
+	width: min( 280px, 44% );
+	height: auto;
+	filter: drop-shadow( 0 3px 10px rgba( 0, 0, 0, 0.35 ) );
+}
+.trr-hero-info {
+	text-align: right;
+	line-height: 1.45;
+}
+.trr-hero-info .trr-hero-tag {
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0;
+}
+.trr-hero-sub {
+	font-size: 12px;
+	opacity: 0.85;
+	margin-top: 2px;
+}
+@media ( max-width: 782px ) {
+	.trr-hero { flex-direction: column; text-align: center; gap: 8px; padding: 14px 16px; }
+	.trr-hero-full { width: min( 260px, 86% ); }
+	.trr-hero-info { text-align: center; }
+}
+
+/* Language picker bar: breathing room between wrapped rows of buttons. */
+.trr-langbar .button { margin: 2px 4px 2px 0; }
+
+/* -----------------------------------------------------------------------------
+ * Moved here from inline <style> blocks (WordPress.org: enqueue CSS, don't echo
+ * <style> in markup). Translation-memory editor, per-page manual editor and the
+ * pages-list progress column.
+ * ------------------------------------------------------------------------- */
+.trr-mem td { vertical-align: middle; }
+.trr-mem .trr-emissing { background: #fff5f5; }
+.trr-mem .trr-emissing td:first-child { box-shadow: inset 3px 0 0 #b32d2e; }
+.trr-mem .trr-edot { color: #b32d2e; font-weight: 700; }
+.trr-mem .trr-etype { color: #8a8a8a; font-size: 11px; margin-top: 2px; }
+.trr-mem textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overflow: hidden; min-height: 36px; line-height: 1.5; font: inherit; padding: 6px 8px; display: block; }
+.trr-mem .trr-gt-cell { width: 1%; white-space: nowrap; text-align: center; vertical-align: middle; padding: 0 8px; }
+.trr-mem .trr-gt { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border: 0; background: none; cursor: pointer; padding: 0; border-radius: 4px; color: #1a73e8; text-decoration: none; }
+.trr-mem .trr-gt:hover { background: #e8f0fe; }
+.trr-mem .trr-gt-busy { opacity: .45; cursor: default; }
+.trr-mem .trr-gt .dashicons { font-size: 16px; width: 16px; height: 16px; }
+
+.trr-prog { min-width: 120px; }
+#trr-ptable td .trr-prog { margin: 0; }
+
+.trr-emissing td:first-child { box-shadow: inset 3px 0 0 #b32d2e; }
+.trr-edot { color: #b32d2e; font-weight: 700; }
+.trr-etype { color: #8a8a8a; font-size: 11px; margin-top: 2px; }
+.trr-eblockwrap { margin: 14px 0; }
+.trr-info { color: #787c82; cursor: help; font-size: 16px; line-height: 1; vertical-align: text-bottom; }
+.trr-gt-cell { width: 1%; white-space: nowrap; text-align: center; vertical-align: middle; padding: 0 8px; }
+.trr-gt { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border: 0; background: none; cursor: pointer; padding: 0; border-radius: 4px; color: #1a73e8; text-decoration: none; }
+.trr-gt:hover { background: #e8f0fe; }
+.trr-gt-busy { opacity: .45; cursor: default; }
+.trr-gt .dashicons { font-size: 16px; width: 16px; height: 16px; }
+.trr-esavebar { position: sticky; bottom: 0; z-index: 10; background: #fff; border-top: 1px solid #dcdcde; padding: 12px 0; margin-top: 10px; box-shadow: 0 -2px 6px rgba(0,0,0,.06); }
+textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overflow: hidden; min-height: 36px; line-height: 1.5; font: inherit; padding: 6px 8px; display: block; }
+
+/* Le tre strade per tradurre, in fila: scansione, AI su tutto, browser.
+   Prima erano sparse su due pagine diverse e non si capiva che fossero
+   alternative fra loro. */
+.trr-actionbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin: 6px 0 14px;
+	padding: 10px 12px;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+}
+
+.trr-actionbar-sep {
+	width: 1px;
+	height: 24px;
+	background: #dcdcde;
+	margin: 0 4px;
+}
+
+.trr-actionbar .description {
+	margin: 0;
+}
+
+/* Su schermi stretti il separatore verticale non ha senso: va a capo tutto. */
+@media screen and (max-width: 782px) {
+	.trr-actionbar-sep {
+		display: none;
+	}
+}
+
+.trr-rowactions {
+	white-space: nowrap;
+}
+
+.trr-rowactions .button + .button {
+	margin-left: 4px;
+}
+
+/* WordPress dà a .button un display:inline-block, e una regola d'autore batte
+   l'[hidden] del browser: i pulsanti nascosti via JS restavano quindi a video.
+   Nella procedura guidata si vedevano "← Back" e "Finish & start translating"
+   già al primo passo, accanto a "Next →" — tre pulsanti, due dei quali
+   primari, sulla primissima schermata che uno incontra. */
+.trrocket-wrap [hidden] {
+	display: none !important;
+}
+
+/* Il campo trappola per i robot: fuori dallo schermo, non display:none —
+   qualche robot salta apposta quello che è dichiarato nascosto. */
+.trr-hp {
+	position: absolute;
+	left: -9999px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.trr-tk-ok  { color: #0a7c42; font-weight: 600; }
+.trr-tk-bad { color: #b32d2e; font-weight: 600; }
+
+/* ------------------------------------------------------------------ telefoni
+   Quattro pagine su nove sforavano lo schermo, e sempre per la stessa ragione:
+   le tabelle larghe (progressi per lingua, elenco delle pagine, riepilogo AI).
+   Misurato a 390px: +142, +220, +220, +116 pixel oltre il bordo, con le ultime
+   colonne tagliate via.
+
+   Prima si stringe — meno spaziatura e caratteri piu' piccoli fanno rientrare
+   parecchio — e quello che ancora non ci sta scorre dentro la tabella, invece
+   di spingere fuori tutta la pagina. */
+@media screen and ( max-width: 782px ) {
+	.trrocket-wrap table.widefat th,
+	.trrocket-wrap table.widefat td {
+		padding: 8px 6px;
+		font-size: 12.5px;
+	}
+
+	.trrocket-wrap table.widefat {
+		display: block;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		max-width: 100%;
+	}
+
+	/* La barra di avanzamento dentro le celle non ha bisogno di 360px su un
+	   telefono: senza questo era lei a tenere larga tutta la tabella. */
+	.trrocket-wrap table.widefat .trr-prog {
+		min-width: 92px;
+	}
+}
+
+/* Il pulsante del traduttore del browser su telefono: spento, non sparito.
+   Nascosto, nessuno sapeva che la funzione esistesse. */
+.trrocket-wrap .trr-spento,
+.trrocket-wrap .trr-spento:hover {
+	opacity: .5;
+	filter: grayscale(1);
+	cursor: not-allowed;
+}
+
+/* A setting that does nothing for the current layout is shown switched off, not
+   just annotated: the three dropdown-only options (how it opens, the arrow, the
+   opening animation) do nothing with the "inline" and "list" layouts. A control
+   that looks live but isn't reads as broken. */
+.trrocket-wrap tr.trr-off th,
+.trrocket-wrap tr.trr-off td {
+	opacity: 0.45;
+}
+
+.trrocket-wrap tr.trr-off td .description {
+	font-style: italic;
+}
+
+/* Live preview that stays in view while you scroll the settings.
+   It was already position:sticky and it still scrolled away: sticky only works
+   INSIDE its own container, and the row uses align-items:flex-start, so this
+   column was only as tall as its content (287px against a 3900px page). Once
+   you scrolled past those 287px the card left with it. Stretching the column
+   to the full height of the row gives the card the whole page to travel. */
+.trr-sw-side {
+	flex: 1 1 300px;
+	min-width: 280px;
+	align-self: stretch;
+}
+
+.trr-sw-sticky {
+	position: sticky;
+	top: 40px;
+	/* On a short window the card could be taller than the screen, and a sticky
+	   box taller than the viewport still hides its top: it scrolls inside instead. */
+	max-height: calc( 100vh - 60px );
+	overflow: auto;
+}
+
+/* Stacked layout (narrow screens): the preview sits above the settings, so
+   pinning it would just eat the screen. */
+@media ( max-width: 782px ) {
+	.trr-sw-sticky {
+		position: static;
+		max-height: none;
+		overflow: visible;
+	}
+}
+
+/* "Published, or still being translated?" — one row per chosen language, with
+   how far along it is and the switch that keeps it out of the public site. */
+.trr-lang-state {
+	margin-top: 26px;
+}
+
+.trr-lang-state-table {
+	width: 100%;
+	max-width: 720px;
+	border-collapse: collapse;
+}
+
+.trr-lang-state-table th,
+.trr-lang-state-table td {
+	padding: 10px 12px;
+	border-bottom: 1px solid #e6e7f0;
+	text-align: left;
+	font-weight: 400;
+	vertical-align: middle;
+}
+
+.trr-lang-state-table th code {
+	margin-left: 6px;
+	font-size: 12px;
+	color: #6b7089;
+}
+
+.trr-lang-state-prog {
+	width: 190px;
+	white-space: nowrap;
+}
+
+.trr-lang-state-prog .trr-prog {
+	display: inline-block;
+	width: 120px;
+	vertical-align: middle;
+}
+
+.trr-lang-state-pc {
+	margin-left: 8px;
+	font-variant-numeric: tabular-nums;
+	color: #6b7089;
+}
+
+/* An offline language is dimmed, so a glance at the table tells you which
+   languages your visitors can actually see. */
+.trr-lang-state-table tr.is-offline th,
+.trr-lang-state-table tr.is-offline .trr-lang-state-prog {
+	opacity: 0.5;
+}
+
+/* --- The green/grey switch beside every chosen language ------------------
+   Federico asked for it right there in the language list: green means your
+   visitors see the language, grey means only you do while you translate it. */
+.trr-lang-grid {
+	grid-template-columns: repeat( auto-fill, minmax( 240px, 1fr ) );
+}
+
+.trr-lang-grid .trrocket-lang-item {
+	justify-content: space-between;
+	border: 1px solid transparent;
+}
+
+.trr-lang-grid .trrocket-lang-item.is-chosen {
+	border-color: #dbe6f0;
+	background: #f8fbfe;
+}
+
+.trrocket-lang-pick {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	cursor: pointer;
+}
+
+.trrocket-lang-name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.trrocket-lang-item.is-offline .trrocket-lang-name {
+	color: #787c82;
+}
+
+/* The switch only appears once the language is actually enabled: there is
+   nothing to publish or hide until then. */
+.trr-onoff {
+	position: relative;
+	display: none;
+	align-items: center;
+	gap: 6px;
+	flex: none;
+	cursor: pointer;
+}
+
+.trrocket-lang-item.is-chosen .trr-onoff {
+	display: flex;
+}
+
+.trr-onoff-in {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+}
+
+.trr-onoff-track {
+	position: relative;
+	display: block;
+	width: 34px;
+	height: 18px;
+	border-radius: 9px;
+	background: #22a05b;
+	transition: background 0.15s ease;
+}
+
+.trr-onoff-dot {
+	position: absolute;
+	top: 2px;
+	left: 18px;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 1px 2px rgba( 0, 0, 0, 0.25 );
+	transition: left 0.15s ease;
+}
+
+.trr-onoff-in:checked ~ .trr-onoff-track {
+	background: #a7aaad;
+}
+
+.trr-onoff-in:checked ~ .trr-onoff-track .trr-onoff-dot {
+	left: 2px;
+}
+
+.trr-onoff-in:focus ~ .trr-onoff-track {
+	box-shadow: 0 0 0 2px #2271b1;
+}
+
+.trr-onoff-tag {
+	font-size: 11px;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	color: #1d6b3f;
+}
+
+.trr-onoff-no {
+	display: none;
+	color: #787c82;
+}
+
+.trr-onoff-in:checked ~ .trr-onoff-yes {
+	display: none;
+}
+
+.trr-onoff-in:checked ~ .trr-onoff-no {
+	display: inline;
+}
+
+/* Same state, read-only, in the progress table below. */
+.trr-state-pill {
+	display: inline-block;
+	padding: 1px 9px;
+	border-radius: 10px;
+	font-size: 11px;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	background: #e6f4ec;
+	color: #1d6b3f;
+}
+
+.trr-state-no {
+	display: none;
+	background: #eef0f1;
+	color: #646970;
+}
+
+.trr-lang-state-table tr.is-offline .trr-state-yes {
+	display: none;
+}
+
+.trr-lang-state-table tr.is-offline .trr-state-no {
+	display: inline-block;
+}

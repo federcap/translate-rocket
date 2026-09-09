@@ -1,0 +1,2343 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TranslateRocket\n"
+"Report-Msgid-Bugs-To: https://translaterocket.com/support/\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nl-NL\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+msgid "TranslateRocket"
+msgstr "TranslateRocket"
+
+msgid "https://translaterocket.com"
+msgstr "https://translaterocket.com"
+
+msgid "Free, AI-powered translation for WordPress. Translate your whole site — visible text, image alt tags, titles, placeholders and SEO meta — using your own AI keys (OpenAI, Anthropic, Gemini, DeepL, Google). Untranslated strings are detected automatically as visitors browse."
+msgstr "Gratis vertalen met AI voor WordPress. Vertaal je hele site — zichtbare tekst, alt-tekst van afbeeldingen, titels, tijdelijke teksten en SEO-meta — met je eigen AI-sleutels (OpenAI, Anthropic, Gemini, DeepL, Google). Onvertaalde teksten worden vanzelf gevonden terwijl bezoekers rondkijken."
+
+msgid "federico_dev"
+msgstr "federico_dev"
+
+msgid "https://federicocaputo.dev"
+msgstr "https://federicocaputo.dev"
+
+msgid "TranslateRocket preview mode is on."
+msgstr "De voorbeeldmodus van TranslateRocket staat aan."
+
+msgid "Only administrators can see the translations — visitors get the default language. When you are happy with the result, switch visibility back to \"Everyone\" to publish."
+msgstr "Alleen beheerders zien de vertalingen — bezoekers krijgen de standaardtaal. Als je tevreden bent, zet je de zichtbaarheid terug op \"Iedereen\" om te publiceren."
+
+msgid "Open settings"
+msgstr "Instellingen openen"
+
+msgid "%s is unavailable."
+msgstr "%s is niet beschikbaar."
+
+msgid "Automatic translation is falling back to the next provider in your chain (or stopping if there is none)."
+msgstr "Automatisch vertalen valt terug op de volgende aanbieder in je reeks (of stopt als die er niet is)."
+
+msgid "Dismiss"
+msgstr "Sluiten"
+
+msgid "Google Translate is unavailable right now."
+msgstr "Google Translate is op dit moment niet beschikbaar."
+
+msgid "Translations"
+msgstr "Vertalingen"
+
+msgid "Translation Memory"
+msgstr "Vertaalgeheugen"
+
+msgid "Memory"
+msgstr "Geheugen"
+
+msgid "AI Translation"
+msgstr "AI-vertaling"
+
+msgid "Import"
+msgstr "Importeren"
+
+msgid "Switcher"
+msgstr "Taalwisselaar"
+
+msgid "Exclusions"
+msgstr "Uitsluitingen"
+
+msgid "Independent copies"
+msgstr "Onafhankelijke kopieën"
+
+msgid "Diagnostics"
+msgstr "Diagnostiek"
+
+msgid "Setup wizard"
+msgstr "Installatiewizard"
+
+msgid "Loading…"
+msgstr "Laden…"
+
+msgid "No models found — check the API key for this provider."
+msgstr "Geen modellen gevonden — controleer de API-sleutel van deze aanbieder."
+
+msgid "— pick a model —"
+msgstr "— kies een model —"
+
+msgid "characters used"
+msgstr "gebruikte tekens"
+
+msgid "Scan all published pages to detect translatable text? Keep this tab open until it finishes."
+msgstr "Alle gepubliceerde pagina's scannen op vertaalbare tekst? Houd dit tabblad open tot het klaar is."
+
+msgid "Scanning"
+msgstr "Scannen"
+
+msgid "Scan complete — reloading…"
+msgstr "Scan voltooid — opnieuw laden…"
+
+msgid "No published pages found to scan."
+msgstr "Geen gepubliceerde pagina's gevonden om te scannen."
+
+msgid "Add your DeepL key first."
+msgstr "Voeg eerst je DeepL-sleutel toe."
+
+msgid "Could not reach DeepL — check the key."
+msgstr "DeepL is niet bereikbaar — controleer de sleutel."
+
+msgid "Unexpected response from DeepL."
+msgstr "Onverwacht antwoord van DeepL."
+
+msgid "No AI provider is configured."
+msgstr "Er is geen AI-aanbieder ingesteld."
+
+msgid "Add the API key first."
+msgstr "Voeg eerst de API-sleutel toe."
+
+msgid "Connection test failed for %s."
+msgstr "Verbindingstest mislukt voor %s."
+
+msgid "The provider did not return a translation."
+msgstr "De aanbieder gaf geen vertaling terug."
+
+msgid "Security check failed."
+msgstr "Beveiligingscontrole mislukt."
+
+msgid "Import translations"
+msgstr "Vertalingen importeren"
+
+msgid "Already used another translation plugin? Bring its translations into TranslateRocket so you don’t start over."
+msgstr "Al een andere vertaalplugin gebruikt? Haal die vertalingen naar TranslateRocket, dan hoef je niet opnieuw te beginnen."
+
+msgid "Imported %d translations."
+msgstr "%d vertalingen geïmporteerd."
+
+msgid "Imported %d translations from CSV."
+msgstr "%d vertalingen geïmporteerd uit CSV."
+
+msgid "Could not read the CSV file. Please upload a valid .csv exported from TranslateRocket."
+msgstr "Het CSV-bestand kon niet worden gelezen. Upload een geldig .csv uit TranslateRocket."
+
+msgid "Imported %d translations from TMX."
+msgstr "%d vertalingen geïmporteerd uit TMX."
+
+msgid "Could not read the TMX file. Please upload a valid .tmx (without a DTD)."
+msgstr "Het TMX-bestand kon niet worden gelezen. Upload een geldig .tmx (zonder DTD)."
+
+msgid "Imported %d translations from your Weglot export."
+msgstr "%d vertalingen geïmporteerd uit je Weglot-export."
+
+msgid "%d rows were skipped because their language is not configured as a target here."
+msgstr "%d rijen zijn overgeslagen omdat hun taal hier niet als doeltaal is ingesteld."
+
+msgid "This does not look like a Weglot export: the header has no word_from / word_to columns."
+msgstr "Dit lijkt geen Weglot-export: de kopregel heeft geen kolommen word_from / word_to."
+
+msgid "The file is too large (10 MB maximum). Export from Weglot in smaller batches, e.g. one language at a time."
+msgstr "Het bestand is te groot (maximaal 10 MB). Exporteer uit Weglot in kleinere delen, bijv. één taal per keer."
+
+msgid "Could not read the file. Please upload the .csv exported from your Weglot dashboard."
+msgstr "Het bestand kon niet worden gelezen. Upload de .csv die je uit je Weglot-dashboard hebt geëxporteerd."
+
+msgid "Bring your translations over from another plugin — no need to start from scratch."
+msgstr "Neem je vertalingen mee uit een andere plugin — opnieuw beginnen is niet nodig."
+
+msgid "Existing TranslateRocket translations are kept; imported strings are added or filled in."
+msgstr "Bestaande vertalingen van TranslateRocket blijven behouden; geïmporteerde teksten worden toegevoegd of aangevuld."
+
+msgid "%d translatable strings found."
+msgstr "%d vertaalbare teksten gevonden."
+
+msgid "Import from %s"
+msgstr "Importeren uit %s"
+
+msgid "Detected, but there are no translations to import yet."
+msgstr "Gevonden, maar er zijn nog geen vertalingen om te importeren."
+
+msgid "Not detected (the plugin is not installed or configured)."
+msgstr "Niet gevonden (de plugin is niet geïnstalleerd of ingesteld)."
+
+msgid "Weglot keeps translations in its cloud, so there is nothing to detect locally. Export them from your Weglot dashboard (Translations → Export, CSV format) and upload the file here."
+msgstr "Weglot bewaart vertalingen in zijn cloud, dus er valt lokaal niets te vinden. Exporteer ze uit je Weglot-dashboard (Translations → Export, CSV) en upload het bestand hier."
+
+msgid "Add your target languages in %s first, then upload the export."
+msgstr "Voeg eerst je doeltalen toe bij %s en upload daarna de export."
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Language of the file (used only when the export has no language column):"
+msgstr "Taal van het bestand (alleen gebruikt als de export geen taalkolom heeft):"
+
+msgid "Import from Weglot"
+msgstr "Importeren uit Weglot"
+
+msgid "Note: Polylang and WPML store translations as separate posts, so their import brings over string translations, titles, slugs and matching body text (best effort)."
+msgstr "Let op: Polylang en WPML slaan vertalingen op als aparte berichten, dus hun import neemt tekstvertalingen, titels, slugs en bijbehorende inhoud mee (zo goed als mogelijk)."
+
+msgid "Export & import (CSV)"
+msgstr "Exporteren en importeren (CSV)"
+
+msgid "Download all your translations as a spreadsheet (one column per language) for backup or offline editing, then upload it back."
+msgstr "Download al je vertalingen als spreadsheet (één kolom per taal) voor een reservekopie of offline bewerking, en upload hem daarna terug."
+
+msgid "Export all translations"
+msgstr "Alle vertalingen exporteren"
+
+msgid "A UTF-8 CSV with columns: original, type, context, and one column per language. Opens in Excel, Google Sheets or Numbers."
+msgstr "Een UTF-8-CSV met de kolommen original, type, context en één kolom per taal. Opent in Excel, Google Spreadsheets of Numbers."
+
+msgid "Download CSV"
+msgstr "CSV downloaden"
+
+msgid "Import from CSV"
+msgstr "Importeren uit CSV"
+
+msgid "Upload a CSV in the same format. Non-empty cells update the matching translation; blank cells are left untouched."
+msgstr "Upload een CSV in dezelfde opmaak. Gevulde cellen werken de bijbehorende vertaling bij; lege cellen blijven ongemoeid."
+
+msgid "Import CSV"
+msgstr "CSV importeren"
+
+msgid "Export & import (TMX)"
+msgstr "Exporteren en importeren (TMX)"
+
+msgid "TMX is the standard translation-memory format. Export to back up your memory, move it to another TranslateRocket site, or open it in a CAT tool; import a TMX to load translations."
+msgstr "TMX is het standaardformaat voor vertaalgeheugens. Exporteer om een reservekopie te maken, het naar een andere TranslateRocket-site te verhuizen of in een CAT-tool te openen; importeer een TMX om vertalingen te laden."
+
+msgid "Export translation memory"
+msgstr "Vertaalgeheugen exporteren"
+
+msgid "A standard TMX 1.4 file: one translation unit per source string, one segment per language."
+msgstr "Een standaard TMX 1.4-bestand: één vertaaleenheid per brontekst, één segment per taal."
+
+msgid "Download TMX"
+msgstr "TMX downloaden"
+
+msgid "Import TMX"
+msgstr "TMX importeren"
+
+msgid "Upload a TMX file. Segments are matched by their source-language text, then added or updated."
+msgstr "Upload een TMX-bestand. Segmenten worden gekoppeld op hun brontekst en daarna toegevoegd of bijgewerkt."
+
+msgid "Add target languages to see the preview."
+msgstr "Voeg doeltalen toe om het voorbeeld te zien."
+
+msgid "Language switcher"
+msgstr "Taalwisselaar"
+
+msgid "Switcher saved."
+msgstr "Taalwisselaar opgeslagen."
+
+msgid "Design your switcher — create profiles (e.g. header, footer), each with its own style and a live preview."
+msgstr "Ontwerp je taalwisselaar — maak profielen (bijv. header, footer), elk met een eigen stijl en een live voorbeeld."
+
+msgid "Profile:"
+msgstr "Profiel:"
+
+msgid "Default"
+msgstr "Standaard"
+
+msgid "header, footer…"
+msgstr "header, footer…"
+
+msgid "+ Add profile"
+msgstr "+ Profiel toevoegen"
+
+msgid "Insert with:"
+msgstr "Invoegen met:"
+
+msgid "Delete this profile?"
+msgstr "Dit profiel verwijderen?"
+
+msgid "Delete profile"
+msgstr "Profiel verwijderen"
+
+msgid "Style"
+msgstr "Stijl"
+
+msgid "Layout"
+msgstr "Indeling"
+
+msgid "Inline (horizontal)"
+msgstr "Inline (horizontaal)"
+
+msgid "List (vertical)"
+msgstr "Lijst (verticaal)"
+
+msgid "Dropdown"
+msgstr "Uitklapmenu"
+
+msgid "Scrollable bar (arrows, for many languages)"
+msgstr "Schuifbalk (pijlen, voor veel talen)"
+
+msgid "Show"
+msgstr "Tonen"
+
+msgid "Flag + name"
+msgstr "Vlag + naam"
+
+msgid "Flag only"
+msgstr "Alleen vlag"
+
+msgid "Name only"
+msgstr "Alleen naam"
+
+msgid "Current language"
+msgstr "Huidige taal"
+
+msgid "Hide"
+msgstr "Verbergen"
+
+msgid "Language names"
+msgstr "Taalnamen"
+
+msgid "Show in English (otherwise native)"
+msgstr "In het Engels tonen (anders in de eigen taal)"
+
+msgid "On mobile"
+msgstr "Op mobiel"
+
+msgid "Same as desktop"
+msgstr "Zelfde als desktop"
+
+msgid "Flags only"
+msgstr "Alleen vlaggen"
+
+msgid "Hidden"
+msgstr "Verborgen"
+
+msgid "On small screens (e.g. with a burger menu): show only flags, or hide it."
+msgstr "Op kleine schermen (bijv. met een hamburgermenu): alleen vlaggen tonen of verbergen."
+
+msgid "Open dropdown"
+msgstr "Uitklapmenu openen"
+
+msgid "On click"
+msgstr "Bij klikken"
+
+msgid "On mouse over"
+msgstr "Bij muisaanwijzer"
+
+msgid "Only for the “Dropdown” layout."
+msgstr "Alleen voor de indeling \"Uitklapmenu\"."
+
+msgid "Arrow"
+msgstr "Pijl"
+
+msgid "Show an arrow that flips when the dropdown opens"
+msgstr "Een pijl tonen die omklapt als het menu opengaat"
+
+msgid "Flag corners"
+msgstr "Hoeken van de vlag"
+
+msgid "Top-left corner"
+msgstr "Linksboven"
+
+msgid "Top-right corner"
+msgstr "Rechtsboven"
+
+msgid "Same value for all corners"
+msgstr "Dezelfde waarde voor alle hoeken"
+
+msgid "Bottom-left corner"
+msgstr "Linksonder"
+
+msgid "Bottom-right corner"
+msgstr "Rechtsonder"
+
+msgid "Rounding (px) per corner. The centre link keeps them equal."
+msgstr "Afronding (px) per hoek. De schakel in het midden houdt ze gelijk."
+
+msgid "Width"
+msgstr "Breedte"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Small"
+msgstr "Klein"
+
+msgid "Medium"
+msgstr "Gemiddeld"
+
+msgid "Large"
+msgstr "Groot"
+
+msgid "Custom (px)"
+msgstr "Aangepast (px)"
+
+msgid "Colours"
+msgstr "Kleuren"
+
+msgid "Presets:"
+msgstr "Voorinstellingen:"
+
+msgid "Minimal"
+msgstr "Minimaal"
+
+msgid "Dark"
+msgstr "Donker"
+
+msgid "Gold"
+msgstr "Goud"
+
+msgid "Ocean"
+msgstr "Oceaan"
+
+msgid "Glass"
+msgstr "Glas"
+
+msgid "Pill"
+msgstr "Pil"
+
+msgid "Soft"
+msgstr "Zacht"
+
+msgid "Sunset"
+msgstr "Zonsondergang"
+
+msgid "Forest"
+msgstr "Bos"
+
+msgid "Midnight"
+msgstr "Middernacht"
+
+msgid "Candy"
+msgstr "Snoep"
+
+msgid "Outline"
+msgstr "Omlijning"
+
+msgid "Paper"
+msgstr "Papier"
+
+msgid "Neon"
+msgstr "Neon"
+
+msgid "Frost"
+msgstr "Vorst"
+
+msgid "Smooth"
+msgstr "Vloeiend"
+
+msgid "Text colour"
+msgstr "Tekstkleur"
+
+msgid "Text colour (hover)"
+msgstr "Tekstkleur (zweven)"
+
+msgid "Background colour"
+msgstr "Achtergrondkleur"
+
+msgid "Menu background (dropdown)"
+msgstr "Achtergrond van het menu (uitklap)"
+
+msgid "Background colour (hover)"
+msgstr "Achtergrondkleur (zweven)"
+
+msgid "Border colour"
+msgstr "Randkleur"
+
+msgid "Corner radius"
+msgstr "Hoekafronding"
+
+msgid "Shadow"
+msgstr "Schaduw"
+
+msgid "None"
+msgstr "Geen"
+
+msgid "Light"
+msgstr "Licht"
+
+msgid "Strong"
+msgstr "Sterk"
+
+msgid "Open animation"
+msgstr "Openingsanimatie"
+
+msgid "How the dropdown menu appears when opened."
+msgstr "Hoe het uitklapmenu verschijnt bij het openen."
+
+msgid "Fade"
+msgstr "Vervagen"
+
+msgid "Slide down"
+msgstr "Naar beneden schuiven"
+
+msgid "Scale"
+msgstr "Schaal"
+
+msgid "Hover effect"
+msgstr "Zweefeffect"
+
+msgid "A subtle effect on each language when the visitor hovers it."
+msgstr "Een subtiel effect per taal als de bezoeker eroverheen gaat."
+
+msgid "Lift"
+msgstr "Optillen"
+
+msgid "Grow"
+msgstr "Vergroten"
+
+msgid "Underline"
+msgstr "Onderstrepen"
+
+msgid "Font"
+msgstr "Lettertype"
+
+msgid "Theme default"
+msgstr "Standaard van het thema"
+
+msgid "Text style"
+msgstr "Tekststijl"
+
+msgid "Bold"
+msgstr "Vet"
+
+msgid "UPPERCASE"
+msgstr "HOOFDLETTERS"
+
+msgid "Font size"
+msgstr "Tekengrootte"
+
+msgid "e.g. 14px. Leave empty to inherit from your theme."
+msgstr "bijv. 14px. Laat leeg om die van je thema over te nemen."
+
+msgid "Flag / text divider"
+msgstr "Scheiding vlag / tekst"
+
+msgid "Shown only when both flag and name are visible."
+msgstr "Alleen zichtbaar als vlag én naam getoond worden."
+
+msgid "Background opacity"
+msgstr "Doorzichtigheid achtergrond"
+
+msgid "Affects only the background — the flag and text stay fully visible."
+msgstr "Geldt alleen voor de achtergrond — vlag en tekst blijven volledig zichtbaar."
+
+msgid "Placement"
+msgstr "Plaatsing"
+
+msgid "Choose one: either place the switcher yourself with the shortcode / block, or let the plugin float it for you — not both."
+msgstr "Kies er één: plaats de wisselaar zelf met de shortcode of het blok, of laat de plugin hem laten zweven — niet allebei."
+
+msgid "Where to show the switcher"
+msgstr "Waar de taalwisselaar komt"
+
+msgid "Manual — I add it with the shortcode / block"
+msgstr "Handmatig — ik voeg het toe met de shortcode of het blok"
+
+msgid "Floating — bottom right"
+msgstr "Zwevend — rechtsonder"
+
+msgid "Floating — bottom left"
+msgstr "Zwevend — linksonder"
+
+msgid "Floating — top right"
+msgstr "Zwevend — rechtsboven"
+
+msgid "Floating — top left"
+msgstr "Zwevend — linksboven"
+
+msgid "Floating — custom position (X / Y)"
+msgstr "Zwevend — eigen positie (X / Y)"
+
+msgid "X (from left)"
+msgstr "X (vanaf links)"
+
+msgid "Y (from top)"
+msgstr "Y (vanaf boven)"
+
+msgid "Use % or px, e.g. 10% / 20px."
+msgstr "Gebruik % of px, bijv. 10% / 20px."
+
+msgid "Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block."
+msgstr "Voeg hem toe waar je wilt met de shortcode [translaterocket_switcher] of het blok \"Taalwisselaar\"."
+
+msgid "Save switcher"
+msgstr "Taalwisselaar opslaan"
+
+msgid "Live preview"
+msgstr "Live voorbeeld"
+
+msgid "Preview on:"
+msgstr "Voorbeeld op:"
+
+msgid "White"
+msgstr "Wit"
+
+msgid "Light grey"
+msgstr "Lichtgrijs"
+
+msgid "Brand"
+msgstr "Merk"
+
+msgid "Teal"
+msgstr "Blauwgroen"
+
+msgid "Photo"
+msgstr "Foto"
+
+msgid "Custom background"
+msgstr "Aangepaste achtergrond"
+
+msgid "Colours update live; layout and labels update after you save."
+msgstr "Kleuren veranderen meteen; indeling en labels na het opslaan."
+
+msgid "Translation memory"
+msgstr "Vertaalgeheugen"
+
+msgid "Every string detected across your whole site, in one place. Search a word to find — and fix — it everywhere at once."
+msgstr "Alle teksten van je hele site op één plek. Zoek een woord om het overal tegelijk te vinden — en te verbeteren."
+
+msgid "Add a target language first in TranslateRocket settings."
+msgstr "Voeg eerst een doeltaal toe in de instellingen van TranslateRocket."
+
+msgid "Saved."
+msgstr "Opgeslagen."
+
+msgid "Removed %d unused string."
+msgstr "%d ongebruikte tekst verwijderd."
+
+msgid "AI translation failed — check the AI provider and key, or the daily limit."
+msgstr "AI-vertaling mislukt — controleer de aanbieder en de sleutel, of de daglimiet."
+
+msgid "AI translated %d strings."
+msgstr "AI heeft %d teksten vertaald."
+
+msgid "Language:"
+msgstr "Taal:"
+
+msgid "Delete %d strings (and their translations) not seen on any page in the last 30 days? Run “Scan site for text” first so the pages you still have count as seen."
+msgstr "%d teksten (en hun vertalingen) verwijderen die de laatste 30 dagen op geen enkele pagina zijn gezien? Voer eerst \"Site scannen op tekst\" uit, zodat je bestaande pagina's meetellen."
+
+msgid "🧹 Remove %d unused strings"
+msgstr "🧹 %d ongebruikte teksten verwijderen"
+
+msgid "Removes strings from pages that no longer exist (deleted or changed). Tip: run the site scan first, otherwise pages you simply haven’t opened recently could be counted as unused."
+msgstr "Verwijdert teksten van pagina's die niet meer bestaan (verwijderd of gewijzigd). Tip: voer eerst de scan uit, anders tellen pagina's die je alleen niet recent hebt geopend als ongebruikt."
+
+msgid "Search source or translation…"
+msgstr "Zoek in bron of vertaling…"
+
+msgid "Only missing"
+msgstr "Alleen ontbrekende"
+
+msgid "Search"
+msgstr "Zoeken"
+
+msgid "%d string"
+msgstr "%d tekst"
+
+msgid "Translate %d missing with AI"
+msgstr "%d ontbrekende vertalen met AI"
+
+msgid "Fills every still-missing string for this language using the active AI provider."
+msgstr "Vult alle nog ontbrekende teksten voor deze taal met de actieve AI-aanbieder."
+
+msgid "Set up an AI provider on the AI page to bulk-translate the missing strings."
+msgstr "Stel een AI-aanbieder in op de AI-pagina om alle ontbrekende teksten in één keer te vertalen."
+
+msgid "Save changes"
+msgstr "Wijzigingen opslaan"
+
+msgid "Translate this page with AI"
+msgstr "Deze pagina vertalen met AI"
+
+msgid "Configure an AI provider first in %s."
+msgstr "Stel eerst een AI-aanbieder in bij %s."
+
+msgid "Languages"
+msgstr "Talen"
+
+msgid "AI"
+msgstr "AI"
+
+msgid "Copies"
+msgstr "Kopieën"
+
+msgid "Help"
+msgstr "Help"
+
+msgid "Free, AI-powered translation for WordPress"
+msgstr "Gratis vertalen met AI voor WordPress"
+
+msgid "Unlimited languages · Visual editor · SEO-ready"
+msgstr "Onbeperkt talen · Visuele editor · SEO-klaar"
+
+msgid "TranslateRocket is 100% free. Support development to keep it free — supporters get priority support & custom help."
+msgstr "TranslateRocket is volledig gratis. Steun de ontwikkeling om dat zo te houden — supporters krijgen voorrang bij support en hulp op maat."
+
+msgid "Support the project"
+msgstr "Steun het project"
+
+msgid "Add at least one target language first."
+msgstr "Voeg eerst minstens één doeltaal toe."
+
+msgid "%d page updated."
+msgstr "%d pagina bijgewerkt."
+
+msgid "Detaching a page makes a fast, independent copy (a real, cache-friendly page you edit in WordPress). “Back to strings” reattaches it to the source — the copy is kept (paused), not deleted — so you can re-detach later and keep your edits."
+msgstr "Losmaken maakt een snelle, onafhankelijke kopie (een echte, cachevriendelijke pagina die je in WordPress bewerkt). \"Terug naar de teksten\" koppelt hem weer aan de bron — de kopie blijft bewaard (gepauzeerd), niet verwijderd — zodat je hem later opnieuw kunt losmaken met je bewerkingen erin."
+
+msgid "Create independent copy"
+msgstr "Onafhankelijke kopie maken"
+
+msgid "Back to strings (reattach)"
+msgstr "Terug naar de teksten (opnieuw koppelen)"
+
+msgid "Delete copy"
+msgstr "Kopie verwijderen"
+
+msgid "Apply to selected"
+msgstr "Toepassen op selectie"
+
+msgid "Page"
+msgstr "Pagina"
+
+msgid "Status (%s)"
+msgstr "Status (%s)"
+
+msgid "(no title)"
+msgstr "(geen titel)"
+
+msgid "Independent copy active"
+msgstr "Onafhankelijke kopie actief"
+
+msgid "Edit copy"
+msgstr "Kopie bewerken"
+
+msgid "Copy paused (reattached)"
+msgstr "Kopie gepauzeerd (opnieuw gekoppeld)"
+
+msgid "String translation"
+msgstr "Tekstvertaling"
+
+msgid "Free keys end in “:fx”. Use “Check usage” below for your live monthly quota."
+msgstr "Gratis sleutels eindigen op \":fx\". Gebruik hieronder \"Verbruik bekijken\" voor je actuele maandquotum."
+
+msgid "Pay-as-you-go (needs a few dollars of credit). gpt-4o-mini is cheap and good."
+msgstr "Betalen naar gebruik (een paar dollar tegoed nodig). gpt-4o-mini is goedkoop en goed."
+
+msgid "Google Cloud Translation API key (requires a Google Cloud project with billing)."
+msgstr "API-sleutel van Google Cloud Translation (vereist een Google Cloud-project met facturering)."
+
+msgid "Has a free tier — create a key in Google AI Studio at no cost."
+msgstr "Heeft een gratis niveau — maak kosteloos een sleutel in Google AI Studio."
+
+msgid "Pay-as-you-go on the Anthropic API (separate from a Claude.ai subscription)."
+msgstr "Betalen naar gebruik via de Anthropic-API (los van een abonnement op Claude.ai)."
+
+msgid "AI settings saved."
+msgstr "AI-instellingen opgeslagen."
+
+msgid "Provider &amp; keys"
+msgstr "Aanbieder en sleutels"
+
+msgid "Choose which AI service does the translating and paste its API key. You pay the provider directly — TranslateRocket takes nothing."
+msgstr "Kies welke AI-dienst het vertalen doet en plak de API-sleutel. Je betaalt de aanbieder rechtstreeks — TranslateRocket houdt niets in."
+
+msgid "You bring your own API key. Text is sent only to the provider you choose, only when you ask to translate."
+msgstr "Je gebruikt je eigen API-sleutel. Tekst gaat alleen naar de aanbieder die jij kiest, en alleen als je om een vertaling vraagt."
+
+msgid "Active provider"
+msgstr "Actieve aanbieder"
+
+msgid "The service used when you click “Translate with AI”. Leave on “None” to translate only by hand or copy-paste."
+msgstr "De dienst die wordt gebruikt als je op \"Vertalen met AI\" klikt. Laat op \"Geen\" staan om alleen met de hand of via kopiëren en plakken te vertalen."
+
+msgid "— None —"
+msgstr "— Geen —"
+
+msgid "Active"
+msgstr "Actief"
+
+msgid "Key set"
+msgstr "Sleutel ingesteld"
+
+msgid "API key"
+msgstr "API-sleutel"
+
+msgid "Your secret key from this provider. Stored on your site only, and sent to the provider when translating."
+msgstr "Je geheime sleutel van deze aanbieder. Alleen op je eigen site opgeslagen en bij het vertalen naar de aanbieder gestuurd."
+
+msgid "Quota this cycle: %1$s of %2$s characters (%3$d%%)."
+msgstr "Quotum deze cyclus: %1$s van %2$s tekens (%3$d%%)."
+
+msgid "Exhausted — translations fall back to the next provider in your chain."
+msgstr "Opgebruikt — vertalingen gaan naar de volgende aanbieder in de reeks."
+
+msgid "Almost used up."
+msgstr "Bijna opgebruikt."
+
+msgid "Get a %s API key ↗"
+msgstr "Haal een API-sleutel van %s ↗"
+
+msgid "Fallback priority"
+msgstr "Prioriteit terugval"
+
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Leave on “—” to keep a provider out of the chain."
+msgstr "Optioneel. Geef twee of meer aanbieders een prioriteit om een terugvalreeks te maken: bulk- en automatische vertaling proberen eerst prioriteit 1 en gaan naar 2, 3… zodra er een zonder tegoed valt of de sleutel geweigerd wordt. Laat op \"—\" staan om een aanbieder buiten de reeks te houden."
+
+msgid "—"
+msgstr "—"
+
+msgid "1 = try first. Providers with no priority are used only as the active one above."
+msgstr "1 = als eerste proberen. Aanbieders zonder prioriteit worden alleen gebruikt als de actieve hierboven."
+
+msgid "Model"
+msgstr "Model"
+
+msgid "Optional. The specific AI model to use (e.g. gpt-4o-mini). Leave empty for a sensible default."
+msgstr "Optioneel. Het te gebruiken AI-model (bijv. gpt-4o-mini). Laat leeg voor een verstandige standaard."
+
+msgid "Pick a suggested model or type your own."
+msgstr "Kies een voorgesteld model of typ je eigen model."
+
+msgid "Load available models"
+msgstr "Beschikbare modellen laden"
+
+msgid "Queries this provider with your key and lists the exact models it can use right now."
+msgstr "Bevraagt deze aanbieder met jouw sleutel en toont precies welke modellen nu beschikbaar zijn."
+
+msgid "Check usage"
+msgstr "Verbruik bekijken"
+
+msgid "Usage &amp; limits"
+msgstr "Verbruik en limieten"
+
+msgid "Protect your API spend: cap how many characters are sent to the AI each day, and keep crawlers from triggering paid translation."
+msgstr "Bescherm je API-kosten: begrens hoeveel tekens er per dag naar de AI gaan en voorkom dat crawlers betaalde vertalingen starten."
+
+msgid "Daily character limit"
+msgstr "Daglimiet aan tekens"
+
+msgid "A safety cap on how many characters can be sent to the AI per day. When the cap is reached, AI translation stops until tomorrow (manual and copy-paste still work). 0 means no limit."
+msgstr "Een veiligheidsgrens voor het aantal tekens dat per dag naar de AI mag. Bij het bereiken stopt AI-vertaling tot morgen (handmatig en kopiëren-plakken blijven werken). 0 betekent geen limiet."
+
+msgid "0 = unlimited. Used today: %s characters."
+msgstr "0 = onbeperkt. Vandaag gebruikt: %s tekens."
+
+msgid "Usage this period"
+msgstr "Verbruik deze periode"
+
+msgid "How much AI translation you’ve used since the counter started — to keep an eye on your provider spend. Reset it whenever you like, or set a monthly reset day below to match your billing."
+msgstr "Hoeveel AI-vertaling je hebt gebruikt sinds de teller begon — om je uitgaven bij de aanbieder in de gaten te houden. Zet hem terug wanneer je wilt, of kies hieronder een maanddag die bij je facturering past."
+
+msgid "characters"
+msgstr "tekens"
+
+msgid "requests"
+msgstr "verzoeken"
+
+msgid "(since %s)"
+msgstr "(sinds %s)"
+
+msgid "Reset the usage counter to zero?"
+msgstr "De verbruiksteller op nul zetten?"
+
+msgid "Reset counter"
+msgstr "Teller opnieuw instellen"
+
+msgid "Saved by reuse"
+msgstr "Bespaard door hergebruik"
+
+msgid "When the same text appears again — on another page, as an image alt, as an interface string, or as a glossary term — TranslateRocket copies the translation you already have instead of paying the AI to translate it again. This is what that translation memory has kept in your pocket."
+msgstr "Als dezelfde tekst opnieuw voorkomt — op een andere pagina, als alt-tekst, als interfacetekst of als term uit de woordenlijst — neemt TranslateRocket de bestaande vertaling over in plaats van de AI er opnieuw voor te betalen. Dit is wat dat vertaalgeheugen je heeft bespaard."
+
+msgid "strings translated for free"
+msgstr "teksten gratis vertaald"
+
+msgid "Estimate at %s list prices — your real saving depends on your plan."
+msgstr "Schatting op basis van de tarieven van %s — je werkelijke besparing hangt af van je abonnement."
+
+msgid "Monthly reset day"
+msgstr "Dag van maandelijkse reset"
+
+msgid "Day of the month the usage counter restarts on its own (e.g. your provider’s billing date). 0 = never reset automatically."
+msgstr "De dag van de maand waarop de verbruiksteller vanzelf opnieuw begint (bijv. de factuurdatum van je aanbieder). 0 = nooit automatisch."
+
+msgid "0 = manual only. 1–31 = reset on that day each month (shorter months use their last day)."
+msgstr "0 = alleen handmatig. 1–31 = elke maand op die dag opnieuw instellen (kortere maanden gebruiken hun laatste dag)."
+
+msgid "Crawlers"
+msgstr "Crawlers"
+
+msgid "Search engines and other bots visit your pages constantly. With auto-translation on, those visits could trigger paid AI calls for pages no real visitor asked for. Turn this on to ignore known bots, so only real visitors (and you) ever trigger AI translation."
+msgstr "Zoekmachines en andere bots bezoeken je pagina's voortdurend. Met automatisch vertalen aan kunnen die bezoeken betaalde AI-aanroepen veroorzaken voor pagina's waar geen echte bezoeker om vroeg. Zet dit aan om bekende bots te negeren, zodat alleen echte bezoekers (en jij) een AI-vertaling starten."
+
+msgid "Don’t let bots / crawlers trigger AI translation"
+msgstr "Voorkom dat bots en crawlers AI-vertalingen starten"
+
+msgid "Only matters with auto-translation enabled; recommended on."
+msgstr "Alleen van belang bij automatisch vertalen; aan te raden."
+
+msgid "Save AI settings"
+msgstr "AI-instellingen opslaan"
+
+msgid "Bulk auto-translate"
+msgstr "Alles automatisch vertalen"
+
+msgid "Fill in every missing string for a language at once with the active AI provider. You can refine any result by hand afterwards."
+msgstr "Vul alle ontbrekende teksten van een taal in één keer aan met de actieve AI-aanbieder. Je kunt elk resultaat daarna met de hand bijschaven."
+
+msgid "Translate every missing string for a language with the active provider."
+msgstr "Alle ontbrekende teksten van een taal vertalen met de actieve aanbieder."
+
+msgid "Language"
+msgstr "Taal"
+
+msgid "Progress"
+msgstr "Voortgang"
+
+msgid "Missing"
+msgstr "Ontbrekend"
+
+msgid "Translate %d missing"
+msgstr "%d ontbrekende vertalen"
+
+msgid "Exclusions saved."
+msgstr "Uitsluitingen opgeslagen."
+
+msgid "Keep parts of your site in the original language. One entry per line."
+msgstr "Houd delen van je site in de oorspronkelijke taal. Eén regel per item."
+
+msgid "Pages (URL paths)"
+msgstr "Pagina's (URL-paden)"
+
+msgid "Paths that are never translated. Use * as a wildcard, e.g. /checkout/* or /my-account/*."
+msgstr "Paden die nooit vertaald worden. Gebruik * als jokerteken, bijv. /checkout/* of /my-account/*."
+
+msgid "Elements (CSS selectors)"
+msgstr "Elementen (CSS-selectors)"
+
+msgid "Elements left untranslated. Simple selectors only: a tag (code), a class (.notranslate) or an id (#brand)."
+msgstr "Elementen die onvertaald blijven. Alleen eenvoudige selectors: een tag (code), een klasse (.notranslate) of een id (#brand)."
+
+msgid "Words &amp; phrases"
+msgstr "Woorden en zinnen"
+
+msgid "Exact strings that must stay as-is — brand or product names, etc. Never collected, translated or sent to an AI."
+msgstr "Exacte teksten die onveranderd moeten blijven — merk- of productnamen enz. Worden nooit verzameld, vertaald of naar een AI gestuurd."
+
+msgid "Glossary"
+msgstr "Woordenlijst"
+
+msgid "Force a fixed translation for a term, everywhere it appears. One “source = translation” per line. Overrides AI/manual translations for an exact match — great for brand wording, product names or terms that must read the same across the whole site."
+msgstr "Leg de vertaling van een term overal vast. Eén \"bron = vertaling\" per regel. Gaat bij een exacte overeenkomst vóór AI- en handmatige vertalingen — ideaal voor merkteksten, productnamen of termen die overal hetzelfde moeten luiden."
+
+msgid "Add a target language first (Languages tab) to define glossary terms."
+msgstr "Voeg eerst een doeltaal toe (tabblad Talen) om termen vast te leggen."
+
+msgid "Save exclusions"
+msgstr "Uitsluitingen opslaan"
+
+msgid "PHP version"
+msgstr "PHP-versie"
+
+msgid "Running PHP %s (7.4 or newer required)."
+msgstr "Draait op PHP %s (7.4 of nieuwer vereist)."
+
+msgid "PHP extensions"
+msgstr "PHP-extensies"
+
+msgid "All required extensions are present (dom, mbstring, libxml, json)."
+msgstr "Alle vereiste extensies zijn aanwezig (dom, mbstring, libxml, json)."
+
+msgid "Missing extensions: %s. Ask your host to enable them."
+msgstr "Ontbrekende extensies: %s. Vraag je hostingpartij ze aan te zetten."
+
+msgid "WordPress version"
+msgstr "WordPress-versie"
+
+msgid "Running WordPress %s."
+msgstr "Draait op WordPress %s."
+
+msgid "Database tables"
+msgstr "Databasetabellen"
+
+msgid "All TranslateRocket tables exist."
+msgstr "Alle tabellen van TranslateRocket bestaan."
+
+msgid "Missing: %s. Deactivate and reactivate TranslateRocket to recreate them."
+msgstr "Ontbreekt: %s. Deactiveer en heractiveer TranslateRocket om ze opnieuw aan te maken."
+
+msgid "Source: %1$s · %2$d target language(s) configured."
+msgstr "Bron: %1$s · %2$d doeltaal(en) ingesteld."
+
+msgid "No target languages yet. Add at least one on the Languages tab."
+msgstr "Nog geen doeltalen. Voeg er minstens één toe op het tabblad Talen."
+
+msgid "Permalinks"
+msgstr "Permalinks"
+
+msgid "Pretty permalinks are on — language URLs like /it/ will work."
+msgstr "Mooie permalinks staan aan — taal-URL's zoals /it/ werken."
+
+msgid "Plain permalinks are on. Language URLs like /it/ need pretty permalinks: go to Settings → Permalinks and choose anything but “Plain”."
+msgstr "Eenvoudige permalinks staan aan. Taal-URL's zoals /it/ hebben mooie permalinks nodig: ga naar Instellingen → Permalinks en kies iets anders dan \"Eenvoudig\"."
+
+msgid "AI provider"
+msgstr "AI-aanbieder"
+
+msgid "Active provider: %s."
+msgstr "Actieve aanbieder: %s."
+
+msgid "No AI provider configured (optional — you can still translate by hand or with the Google links). Add a key on the AI tab."
+msgstr "Geen AI-aanbieder ingesteld (optioneel — je kunt nog steeds met de hand of via de Google-links vertalen). Voeg een sleutel toe op het AI-tabblad."
+
+msgid "Log cleared."
+msgstr "Logboek gewist."
+
+msgid "A quick health check of your setup, plus anything TranslateRocket has flagged — so nothing fails silently."
+msgstr "Een snelle controle van je installatie, plus alles wat TranslateRocket heeft gesignaleerd — zodat niets stilletjes misgaat."
+
+msgid "System checks"
+msgstr "Systeemcontroles"
+
+msgid "Provider connection test"
+msgstr "Verbindingstest met de aanbieder"
+
+msgid "Sends one short word to each configured provider to confirm the key works right now."
+msgstr "Stuurt één kort woord naar elke ingestelde aanbieder om te bevestigen dat de sleutel nu werkt."
+
+msgid "No provider keys saved yet. Add one on the AI tab."
+msgstr "Nog geen sleutels opgeslagen. Voeg er een toe op het AI-tabblad."
+
+msgid "Test connection"
+msgstr "Verbinding testen"
+
+msgid "Recent issues"
+msgstr "Recente problemen"
+
+msgid "Errors and warnings TranslateRocket recorded, including ones from background tasks."
+msgstr "Fouten en waarschuwingen die TranslateRocket heeft opgeslagen, ook uit achtergrondtaken."
+
+msgid "Nothing to report — no issues logged."
+msgstr "Niets te melden — geen problemen geregistreerd."
+
+msgid "When"
+msgstr "Wanneer"
+
+msgid "Level"
+msgstr "Niveau"
+
+msgid "Area"
+msgstr "Gebied"
+
+msgid "Message"
+msgstr "Bericht"
+
+msgid "Clear log"
+msgstr "Logboek wissen"
+
+msgid "Testing…"
+msgstr "Testen…"
+
+msgid "You’re all set!"
+msgstr "Alles staat klaar!"
+
+msgid "Your languages are configured. Now translate your first page — it takes a minute."
+msgstr "Je talen staan ingesteld. Vertaal nu je eerste pagina — het kost een minuut."
+
+msgid "Translate my homepage now"
+msgstr "Mijn homepage nu vertalen"
+
+msgid "Open the translations list"
+msgstr "De lijst met vertalingen openen"
+
+msgid "Go to settings"
+msgstr "Naar instellingen"
+
+msgid "TranslateRocket™ setup"
+msgstr "TranslateRocket™ instellen"
+
+msgid "Translation"
+msgstr "Vertaling"
+
+msgid "What languages?"
+msgstr "Welke talen?"
+
+msgid "Pick the language your site is written in, then the languages to translate it into."
+msgstr "Kies de taal waarin je site geschreven is, en daarna de talen om naartoe te vertalen."
+
+msgid "My site is written in:"
+msgstr "Mijn site is geschreven in:"
+
+msgid "Translate into:"
+msgstr "Vertalen naar:"
+
+msgid "How do you want to translate?"
+msgstr "Hoe wil je vertalen?"
+
+msgid "You can let an AI do a first pass automatically, or translate by hand — you can always change this later."
+msgstr "Je kunt een AI een eerste versie laten maken of met de hand vertalen — je kunt dit later altijd wijzigen."
+
+msgid "Use an AI provider"
+msgstr "Een AI-aanbieder gebruiken"
+
+msgid "Paste your own API key. You pay the provider directly — TranslateRocket takes nothing."
+msgstr "Plak je eigen API-sleutel. Je betaalt de aanbieder rechtstreeks — TranslateRocket houdt niets in."
+
+msgid "Paste your API key"
+msgstr "Plak je API-sleutel"
+
+msgid "Translate manually"
+msgstr "Handmatig vertalen"
+
+msgid "Type translations yourself, or use the free one-click Google links. No key needed."
+msgstr "Typ de vertalingen zelf, of gebruik de gratis Google-links met één klik. Geen sleutel nodig."
+
+msgid "Show the language switcher"
+msgstr "De taalwisselaar tonen"
+
+msgid "How should visitors switch language? You can fine-tune the look later on the Switcher tab."
+msgstr "Hoe wisselen bezoekers van taal? Het uiterlijk stel je later bij op het tabblad Taalwisselaar."
+
+msgid "Floating button"
+msgstr "Zwevende knop"
+
+msgid "A small switcher that floats in a corner on every page. Easiest — nothing else to do."
+msgstr "Een kleine wisselaar die op elke pagina in een hoek zweeft. Het eenvoudigst — verder niets te doen."
+
+msgid "I’ll place it myself"
+msgstr "Ik plaats het zelf"
+
+msgid "Use the block “Language Switcher”, or the shortcode %s, wherever you like."
+msgstr "Gebruik het blok \"Taalwisselaar\" of de shortcode %s, waar je maar wilt."
+
+msgid "← Back"
+msgstr "← Terug"
+
+msgid "Next →"
+msgstr "Volgende →"
+
+msgid "Finish & start translating"
+msgstr "Afronden en beginnen met vertalen"
+
+msgid "Languages &amp; general"
+msgstr "Talen en algemeen"
+
+msgid "Quick start"
+msgstr "Snelstart"
+
+msgid "Choose your site language and the languages to translate into — right below."
+msgstr "Kies hieronder de taal van je site en de talen waarnaar je wilt vertalen."
+
+msgid "Translate: add an AI key in %s for one-click translation, or translate by hand on each page."
+msgstr "Vertalen: voeg een AI-sleutel toe bij %s om met één klik te vertalen, of vertaal per pagina met de hand."
+
+msgid "Add a language switcher: place the [translaterocket_switcher] shortcode or block, or enable the floating one in %s."
+msgstr "Voeg een taalwisselaar toe: plaats de shortcode [translaterocket_switcher] of het blok, of zet de zwevende aan bij %s."
+
+msgid "Settings saved."
+msgstr "Instellingen opgeslagen."
+
+msgid "Site language (source)"
+msgstr "Taal van de site (bron)"
+
+msgid "The language your existing content is written in. It stays at the site root with no URL prefix and is never translated."
+msgstr "De taal waarin je bestaande inhoud geschreven is. Die blijft op de hoofdmap staan zonder URL-voorvoegsel en wordt nooit vertaald."
+
+msgid "The language your content is written in. It stays at the site root (no URL prefix)."
+msgstr "De taal waarin je inhoud geschreven is. Die blijft op de hoofdmap staan (geen URL-voorvoegsel)."
+
+msgid "Translate into"
+msgstr "Vertalen naar"
+
+msgid "The languages visitors can switch to. Each gets its own URL prefix (e.g. /it/) and its own set of translations."
+msgstr "De talen waar bezoekers naartoe kunnen wisselen. Elke taal krijgt een eigen URL-voorvoegsel (bijv. /it/) en eigen vertalingen."
+
+msgid "Pick the languages you want to add. Each gets its own URL prefix, e.g. /en/."
+msgstr "Kies de talen die je wilt toevoegen. Elke taal krijgt een eigen URL-voorvoegsel, bijv. /en/."
+
+msgid "Your source language (%s) isn’t listed here — it’s the language you translate from. Change it in “Site language (source)” above."
+msgstr "Je brontaal (%s) staat hier niet — dat is de taal waaruit je vertaalt. Wijzig hem hierboven bij \"Taal van de site (bron)\"."
+
+msgid "Custom language"
+msgstr "Aangepaste taal"
+
+msgid "Not in the list? Add your own: a short code (used in the URL, e.g. /la/), a name, and a flag picked from the list. After saving it appears among the languages above — tick it to enable."
+msgstr "Staat hij er niet bij? Voeg je eigen taal toe: een korte code (voor de URL, bijv. /la/), een naam en een vlag uit de lijst. Na het opslaan verschijnt hij hierboven — vink hem aan om hem te gebruiken."
+
+msgid "remove"
+msgstr "verwijderen"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "e.g. la"
+msgstr "bijv. la"
+
+msgid "Name"
+msgstr "Naam"
+
+msgid "e.g. Latina"
+msgstr "bijv. Latina"
+
+msgid "Flag"
+msgstr "Vlag"
+
+msgid "Choose…"
+msgstr "Kiezen…"
+
+msgid "No flag (globe)"
+msgstr "Geen vlag (wereldbol)"
+
+msgid "Upload your own…"
+msgstr "Upload je eigen…"
+
+msgid "+ Add language"
+msgstr "+ Taal toevoegen"
+
+msgid "Enter a code (it becomes the URL prefix, e.g. /la/) and a name, then pick a flag: choose one from the list, upload your own image (for a region or language with no country flag), or leave the 🌐 globe."
+msgstr "Voer een code in (die wordt het URL-voorvoegsel, bijv. /la/) en een naam, en kies dan een vlag: eentje uit de lijst, je eigen afbeelding (voor een regio of taal zonder landsvlag), of laat de 🌐 wereldbol staan."
+
+msgid "Choose a flag image"
+msgstr "Kies een afbeelding voor de vlag"
+
+msgid "Use this image"
+msgstr "Deze afbeelding gebruiken"
+
+msgid "Who sees the translations"
+msgstr "Wie de vertalingen ziet"
+
+msgid "Preview mode: keep the translated site visible to administrators only, e.g. to review an import from another plugin on the real pages before going live. Visitors keep seeing the default language (language URLs redirect, the switcher is hidden and no hreflang/sitemap signals are sent). Switch back to \"Everyone\" to publish instantly."
+msgstr "Voorbeeldmodus: houd de vertaalde site alleen zichtbaar voor beheerders, bijv. om een import uit een andere plugin op de echte pagina's te controleren voor je live gaat. Bezoekers blijven de standaardtaal zien (taal-URL's sturen door, de wisselaar is verborgen en er gaan geen hreflang- of sitemapsignalen uit). Zet terug op \"Iedereen\" om meteen te publiceren."
+
+msgid "Everyone — translations are live"
+msgstr "Iedereen — de vertalingen staan live"
+
+msgid "Administrators only — preview mode, visitors keep seeing the default language"
+msgstr "Alleen beheerders — voorbeeldmodus, bezoekers blijven de standaardtaal zien"
+
+msgid "SEO meta"
+msgstr "SEO-meta"
+
+msgid "Also translate the SEO title and meta description — the text shown in Google results and the browser tab."
+msgstr "Vertaal ook de SEO-titel en de metabeschrijving — de tekst in Google-resultaten en in het browsertabblad."
+
+msgid "Translate SEO title and meta description tags"
+msgstr "SEO-titel en metabeschrijving mee vertalen"
+
+msgid "Interface language"
+msgstr "Taal van de interface"
+
+msgid "Show menus, buttons and theme/plugin labels in the visitor's language using WordPress' own official translations — no AI, nothing to manage. The needed language packs are downloaded automatically. Turn off to leave the interface in the site language."
+msgstr "Toon menu's, knoppen en labels van thema's en plugins in de taal van de bezoeker met de officiële vertalingen van WordPress zelf — geen AI, niets te beheren. De benodigde taalpakketten worden automatisch gedownload. Zet uit om de interface in de sitetaal te laten."
+
+msgid "Use WordPress' own translations for the interface"
+msgstr "De eigen vertalingen van WordPress voor de interface gebruiken"
+
+msgid "Auto-redirect"
+msgstr "Automatisch doorsturen"
+
+msgid "On their first visit, send visitors to the version matching their browser language (remembered with a cookie, only once). Never redirects search engines or logged-in users."
+msgstr "Stuur bezoekers bij hun eerste bezoek naar de versie die bij hun browsertaal past (onthouden met een cookie, eenmalig). Zoekmachines en ingelogde gebruikers worden nooit doorgestuurd."
+
+msgid "Redirect new visitors to their browser language"
+msgstr "Nieuwe bezoekers naar de taal van hun browser sturen"
+
+msgid "Page cache"
+msgstr "Paginacache"
+
+msgid "Store the finished translated HTML of each page so repeat visits skip the on-the-fly translation — about 2× faster on repeat visits (e.g. ~0.55s → ~0.29s in our test). Only anonymous visitors are served from the cache, it skips dynamic pages (cart, checkout, account), and it clears automatically whenever you change a translation, edit a page, or update settings. On by default — turn it off only if you already use a page-cache plugin (e.g. WP Rocket), which already caches each language’s URL."
+msgstr "Bewaar de afgeronde vertaalde HTML van elke pagina, zodat herhaalbezoeken het live vertalen overslaan — ongeveer 2× sneller bij herhaalbezoek (bijv. ~0,55s → ~0,29s in onze test). Alleen niet-ingelogde bezoekers krijgen de cache, dynamische pagina's (winkelwagen, afrekenen, account) worden overgeslagen, en de cache wordt vanzelf geleegd zodra je een vertaling wijzigt, een pagina bewerkt of instellingen aanpast. Standaard aan — zet uit als je al een paginacacheplugin gebruikt (bijv. WP Rocket), die elke taal-URL al bewaart."
+
+msgid "Cache translated pages for anonymous visitors"
+msgstr "Vertaalde pagina's bewaren voor niet-ingelogde bezoekers"
+
+msgid "Powered by badge"
+msgstr "\"Powered by\"-badge"
+
+msgid "Show a small \"Powered by TranslateRocket\" badge with the logo at the bottom of your site. Off by default and entirely optional — a nice way to support the free plugin. You can also place it anywhere with the [translaterocket_poweredby] shortcode."
+msgstr "Toon onderaan je site een kleine badge \\\"Powered by TranslateRocket\\\" met het logo. Standaard uit en volledig vrijblijvend — een mooie manier om de gratis plugin te steunen. Je kunt hem ook overal plaatsen met de shortcode [translaterocket_poweredby]."
+
+msgid "Show a \"Powered by TranslateRocket\" badge in the footer"
+msgstr "Een badge \"Powered by TranslateRocket\" in de footer tonen"
+
+msgid "Detected"
+msgstr "Gedetecteerd"
+
+msgid "Translated"
+msgstr "Vertaald"
+
+msgid "Open editor"
+msgstr "Editor openen"
+
+msgid "Need a hand?"
+msgstr "Hulp nodig?"
+
+msgid "Want a professional multilingual setup, reviewed translations or a custom feature? I can help — as a service."
+msgstr "Wil je een professionele meertalige opzet, nagekeken vertalingen of een functie op maat? Dat kan ik als dienst verzorgen."
+
+msgid "Get expert help"
+msgstr "Hulp van een expert"
+
+msgid "TranslateRocket is 100% free. If it helps you, a small donation keeps it alive and updated."
+msgstr "TranslateRocket is volledig gratis. Als het je helpt, houdt een kleine donatie het in leven en up-to-date."
+
+msgid "Make a donation"
+msgstr "Doneer"
+
+msgid "Translations saved."
+msgstr "Vertalingen opgeslagen."
+
+msgid "Pasted translations imported."
+msgstr "Geplakte vertalingen geïmporteerd."
+
+msgid "Nothing imported — the paste box was empty, so existing translations were kept."
+msgstr "Niets geïmporteerd — het plakvak was leeg, dus bestaande vertalingen zijn behouden."
+
+msgid "This page's translations were deleted."
+msgstr "De vertalingen van deze pagina zijn verwijderd."
+
+msgid "Page removed from the list."
+msgstr "Pagina uit de lijst verwijderd."
+
+msgid "%1$d strings still to translate out of %2$d detected."
+msgstr "Nog %1$d van de %2$d gevonden teksten te vertalen."
+
+msgid "Scan site for text"
+msgstr "Site scannen op tekst"
+
+msgid "Automatically visits every published page to detect translatable text — no need to open them one by one."
+msgstr "Bezoekt automatisch elke gepubliceerde pagina om vertaalbare tekst te vinden — je hoeft ze niet één voor één te openen."
+
+msgid "No pages detected yet. Click “Scan site for text” above, or just browse your site as administrator."
+msgstr "Nog geen pagina's gevonden. Klik hierboven op \"Site scannen op tekst\", of bekijk je site als beheerder."
+
+msgid "Search pages by name or slug… (spaces count as hyphens)"
+msgstr "Zoek pagina's op naam of slug… (spaties tellen als koppeltekens)"
+
+msgid "Showing %1$s of %2$d pages"
+msgstr "%1$s van %2$d pagina's"
+
+msgid "Strings"
+msgstr "Teksten"
+
+msgid "Translate"
+msgstr "Vertalen"
+
+msgid "Back to all pages"
+msgstr "Terug naar alle pagina's"
+
+msgid "redirect to the homepage"
+msgstr "doorsturen naar de homepage"
+
+msgid "redirect to a custom URL"
+msgstr "doorsturen naar een eigen URL"
+
+msgid "show a custom message"
+msgstr "een eigen bericht tonen"
+
+msgid "show a 404 (not found)"
+msgstr "een 404 tonen (niet gevonden)"
+
+msgid "This page is set to %2$s in %1$s, so it is not translated and the editor is hidden."
+msgstr "Deze pagina staat in %1$s op \"%2$s\", dus hij wordt niet vertaald en de editor is verborgen."
+
+msgid "Change it in the page’s “Language visibility” box."
+msgstr "Wijzig dit in het vak \"Zichtbaarheid per taal\" van de pagina."
+
+msgid "Delete all translations of this page for this language?"
+msgstr "Alle vertalingen van deze pagina voor deze taal verwijderen?"
+
+msgid "Delete this page's translation"
+msgstr "De vertaling van deze pagina verwijderen"
+
+msgid "Remove this page from the list? Useful for stale or 404 pages — its translations stay in the database."
+msgstr "Deze pagina uit de lijst halen? Handig bij verouderde of 404-pagina's — de vertalingen blijven in de database."
+
+msgid "Remove this page from the list"
+msgstr "Deze pagina uit de lijst halen"
+
+msgid "Copy &amp; paste with Google Translate (free)"
+msgstr "Kopiëren en plakken met Google Translate (gratis)"
+
+msgid "No strings on this page yet. Browse it on the front end (as admin) first."
+msgstr "Nog geen teksten op deze pagina. Bekijk hem eerst als beheerder op de site zelf."
+
+msgid "1) Copy the list. 2) Paste it into Google Translate. 3) Paste the result back below — keep the numbers, one item per line."
+msgstr "1) Kopieer de lijst. 2) Plak hem in Google Translate. 3) Plak het resultaat hieronder terug — laat de nummers staan, één item per regel."
+
+msgid "Open Google Translate"
+msgstr "Google Translate openen"
+
+msgid "✅ Everything here is translated — paste a new list below to redo it."
+msgstr "✅ Alles hier is vertaald — plak hieronder een nieuwe lijst om het over te doen."
+
+msgid "Showing ALL strings — importing will overwrite existing translations."
+msgstr "ALLE teksten worden getoond — importeren overschrijft bestaande vertalingen."
+
+msgid "Show only the %d untranslated"
+msgstr "Alleen de %d onvertaalde tonen"
+
+msgid "Re-translate everything (include already translated)"
+msgstr "Alles opnieuw vertalen (ook wat al vertaald is)"
+
+msgid "Strings to copy:"
+msgstr "Te kopiëren teksten:"
+
+msgid "Paste the translated list here:"
+msgstr "Plak de vertaalde lijst hier:"
+
+msgid "Import pasted translations"
+msgstr "Geplakte vertalingen importeren"
+
+msgid "No strings detected for this page yet."
+msgstr "Nog geen teksten gevonden op deze pagina."
+
+msgid "Manual editor"
+msgstr "Handmatige editor"
+
+msgid "Filter by type:"
+msgstr "Filteren op type:"
+
+msgid "Narrow the list to one kind of string — visible text, link titles, image alt text, ARIA labels, etc."
+msgstr "Beperk de lijst tot één soort tekst — zichtbare tekst, linktitels, alt-tekst van afbeeldingen, ARIA-labels enz."
+
+msgid "All types"
+msgstr "Alle typen"
+
+msgid "Show only missing strings"
+msgstr "Alleen ontbrekende teksten tonen"
+
+msgid "Hide strings that already have a translation, so you can focus on what is left."
+msgstr "Verberg teksten die al vertaald zijn, zodat je je op de rest kunt richten."
+
+msgid "Page content"
+msgstr "Pagina-inhoud"
+
+msgid "Save translations"
+msgstr "Vertalingen opslaan"
+
+msgid "Translate this phrase with Google (free)"
+msgstr "Deze zin vertalen met Google (gratis)"
+
+msgid "Open this phrase in Google Translate ↗"
+msgstr "Deze zin openen in Google Translate ↗"
+
+msgid "SEO & indexing"
+msgstr "SEO en indexering"
+
+msgid "Slug (URL)"
+msgstr "Slug (URL)"
+
+msgid "The page web address in this language, e.g. /it/chi-siamo/. Leave empty to keep the original."
+msgstr "Het webadres van de pagina in deze taal, bijv. /it/chi-siamo/. Laat leeg om het origineel te behouden."
+
+msgid "Available only on single pages and posts (not the home or archives)."
+msgstr "Alleen beschikbaar op losse pagina's en berichten (niet op de home of archieven)."
+
+msgid "SEO title"
+msgstr "SEO-titel"
+
+msgid "Shown in the browser tab and as the clickable title in Google results."
+msgstr "Te zien in het browsertabblad en als klikbare titel in Google-resultaten."
+
+msgid "Meta description"
+msgstr "Metabeschrijving"
+
+msgid "The short summary under the title in Google results (only if your theme or SEO plugin outputs one)."
+msgstr "De korte samenvatting onder de titel in Google-resultaten (alleen als je thema of SEO-plugin er een geeft)."
+
+msgid "Meta keywords are intentionally not shown."
+msgstr "Metasleutelwoorden worden bewust niet getoond."
+
+msgid "Search engines (Google included) dropped meta keywords as a ranking signal years ago, so a keywords field would only add clutter."
+msgstr "Zoekmachines (ook Google) gebruiken metasleutelwoorden al jaren niet meer, dus een veld daarvoor zou alleen rommel toevoegen."
+
+msgid "Not detected on this page."
+msgstr "Niet gevonden op deze pagina."
+
+msgid "More info"
+msgstr "Meer info"
+
+msgid "🚀 This is an independent %1$s copy of %2$s, managed by TranslateRocket. It is served automatically at its %1$s URL — you don't need to publish it."
+msgstr "🚀 Dit is een onafhankelijke %1$s-kopie van %2$s, beheerd door TranslateRocket. Hij wordt automatisch geleverd op zijn %1$s-URL — publiceren is niet nodig."
+
+msgid "(the original page)"
+msgstr "(de originele pagina)"
+
+msgid "Open the on-page visual editor for this page in a language:"
+msgstr "Open de visuele editor op deze pagina in een taal:"
+
+msgid "Translate in %s"
+msgstr "Vertalen in %s"
+
+msgid "Opens in a new tab."
+msgstr "Opent in een nieuw tabblad."
+
+msgid "Help & Feedback"
+msgstr "Help en feedback"
+
+msgid "⚠️ TranslateRocket found another translation plugin active: %s. Running two at once will conflict — please keep only one enabled."
+msgstr "⚠️ TranslateRocket vond nog een actieve vertaalplugin: %s. Twee tegelijk geeft conflicten — houd er maar één aan."
+
+msgid "Thanks for installing TranslateRocket!"
+msgstr "Bedankt voor het installeren van TranslateRocket!"
+
+msgid "Pick your languages in %s to get started."
+msgstr "Kies je talen bij %s om te beginnen."
+
+msgid "TranslateRocket settings"
+msgstr "Instellingen van TranslateRocket"
+
+msgid "Get tips & updates"
+msgstr "Tips en updates ontvangen"
+
+msgid "Enjoying TranslateRocket? A quick review really helps the project grow. 🙏"
+msgstr "Bevalt TranslateRocket? Een korte beoordeling helpt het project echt vooruit. 🙏"
+
+msgid "Leave a review"
+msgstr "Laat een beoordeling achter"
+
+msgid "No thanks"
+msgstr "Nee, bedankt"
+
+msgid "You’ve been translating with TranslateRocket for a while now. It’s free forever — if it saved you a paid plugin, a small donation keeps it alive and growing."
+msgstr "Je vertaalt al een tijdje met TranslateRocket. Het blijft voor altijd gratis — als het je een betaalde plugin heeft bespaard, houdt een kleine donatie het in leven en in ontwikkeling."
+
+msgid "Buy me a coffee ☕"
+msgstr "Trakteer me op een koffie ☕"
+
+msgid "Maybe later"
+msgstr "Misschien later"
+
+msgid "Need a hand, want a feature, or just want to say hi? Here’s how."
+msgstr "Hulp nodig, een wens, of even hallo zeggen? Zo bereik je me."
+
+msgid "Request a custom setup"
+msgstr "Een installatie op maat aanvragen"
+
+msgid "Want a professional multilingual setup, reviewed translations, or a custom feature? I can help as a service."
+msgstr "Wil je een professionele meertalige opzet, nagekeken vertalingen of een functie op maat? Dat kan ik als dienst verzorgen."
+
+msgid "Request customization"
+msgstr "Maatwerk aanvragen"
+
+msgid "Send feedback"
+msgstr "Feedback sturen"
+
+msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
+msgstr "Een fout gevonden of een idee? Laat het weten — het bepaalt wat er hierna komt."
+
+msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
+msgstr "Als TranslateRocket je helpt, betekent een beoordeling op WordPress.org veel."
+
+msgid "Write a review"
+msgstr "Schrijf een beoordeling"
+
+msgid "TranslateRocket is 100% free. A small donation keeps it alive and updated."
+msgstr "TranslateRocket is volledig gratis. Een kleine donatie houdt het in leven en up-to-date."
+
+msgid "Something went wrong."
+msgstr "Er is iets misgegaan."
+
+msgid "translated"
+msgstr "vertaald"
+
+msgid "to translate"
+msgstr "te vertalen"
+
+msgid "Translate with AI"
+msgstr "Vertalen met AI"
+
+msgid "Translate with Google"
+msgstr "Vertalen met Google"
+
+msgid "Visual editor"
+msgstr "Visuele editor"
+
+msgid "Delete translations"
+msgstr "Vertalingen verwijderen"
+
+msgid "Copy & paste with Google Translate:"
+msgstr "Kopiëren en plakken met Google Translate:"
+
+msgid "Open Google Translate ↗"
+msgstr "Google Translate openen ↗"
+
+msgid "Show all strings (re-translate)"
+msgstr "Alle teksten tonen (opnieuw vertalen)"
+
+msgid "Original"
+msgstr "Origineel"
+
+msgid "Working…"
+msgstr "Bezig…"
+
+msgid "Unsaved changes — click “Save changes”."
+msgstr "Niet-opgeslagen wijzigingen — klik op \"Wijzigingen opslaan\"."
+
+msgid "Paste box is empty — nothing changed."
+msgstr "Het plakvak is leeg — er is niets gewijzigd."
+
+msgid "Suggest from title"
+msgstr "Voorstellen op basis van de titel"
+
+msgid "Search engines dropped meta keywords as a ranking signal years ago, so a keywords field would only add clutter."
+msgstr "Zoekmachines gebruiken metasleutelwoorden al jaren niet meer, dus een veld daarvoor zou alleen rommel toevoegen."
+
+msgid "Add target languages in TranslateRocket settings to start."
+msgstr "Voeg doeltalen toe in de instellingen van TranslateRocket om te beginnen."
+
+msgid "This page is set to %s in this language, so there is nothing to translate. Change it in the “Language visibility” box."
+msgstr "Deze pagina staat in deze taal op \"%s\", dus er is niets te vertalen. Wijzig dit in het vak \"Zichtbaarheid per taal\"."
+
+msgid "TranslateRocket — Language visibility"
+msgstr "TranslateRocket — zichtbaarheid per taal"
+
+msgid "Translate (default)"
+msgstr "Vertalen (standaard)"
+
+msgid "Redirect to homepage"
+msgstr "Doorsturen naar de homepage"
+
+msgid "Redirect to a URL"
+msgstr "Doorsturen naar een URL"
+
+msgid "Show a custom message"
+msgstr "Een eigen bericht tonen"
+
+msgid "Show 404 (not found)"
+msgstr "404 tonen (niet gevonden)"
+
+msgid "What happens when this page is viewed in each language. Use this when a page has no equivalent in another language."
+msgstr "Wat er gebeurt als deze pagina in elke taal wordt bekeken. Handig als een pagina geen tegenhanger heeft in een andere taal."
+
+msgid "https://… (only for “Redirect to a URL”)"
+msgstr "https://… (alleen voor \"Doorsturen naar een URL\")"
+
+msgid "Custom message (only for “Show a custom message”)"
+msgstr "Eigen bericht (alleen voor \"Een eigen bericht tonen\")"
+
+msgid "Database tables could not be created."
+msgstr "De databasetabellen konden niet worden aangemaakt."
+
+msgid "Site interface (themes & plugins)"
+msgstr "Interface van de site (thema's en plugins)"
+
+msgid "Powered by"
+msgstr "Mogelijk gemaakt door"
+
+msgid "Previous"
+msgstr "Vorige"
+
+msgid "More"
+msgstr "Meer"
+
+msgid "Translate visually"
+msgstr "Visueel vertalen"
+
+msgid "Editing"
+msgstr "Bewerken"
+
+msgid "Blocks"
+msgstr "Blokken"
+
+msgid "Show formatting as numbered [1] [2] markers — the simplest view."
+msgstr "Opmaak tonen als genummerde markeringen [1] [2] — de eenvoudigste weergave."
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Edit the raw HTML for full control — you see the real <strong>, <a>… tags."
+msgstr "Bewerk de ruwe HTML voor volledige controle — je ziet de echte tags <strong>, <a>…"
+
+msgid "⚠ Keep the HTML tags (<strong>, <a>…) intact so the formatting and links survive."
+msgstr "⚠ Laat de HTML-tags (<strong>, <a>…) intact, zodat opmaak en links behouden blijven."
+
+msgid "Everything on this page is already translated."
+msgstr "Alles op deze pagina is al vertaald."
+
+msgid "%d translated"
+msgstr "%d vertaald"
+
+msgid "⚠ The number of lines does not match the source — check the result."
+msgstr "⚠ Het aantal regels komt niet overeen met de bron — controleer het resultaat."
+
+msgid "Copied!"
+msgstr "Gekopieerd!"
+
+msgid "Translate page"
+msgstr "Pagina vertalen"
+
+msgid "Translate the whole page"
+msgstr "De hele pagina vertalen"
+
+msgid "Translate every text on this page at once — automatically, or by pasting into any translator."
+msgstr "Vertaal alle tekst op deze pagina in één keer — automatisch, of door hem in een vertaler te plakken."
+
+msgid "Show HTML tags (bold, links…) instead of [1] [2]"
+msgstr "HTML-tags tonen (vet, links…) in plaats van [1] [2]"
+
+msgid "Auto-translate everything with AI"
+msgstr "Alles automatisch vertalen met AI"
+
+msgid "Auto-translate everything with Google"
+msgstr "Alles automatisch vertalen met Google"
+
+msgid "Add an AI key (or enable free Google) in TranslateRocket settings to auto-translate. Meanwhile, use copy-paste below."
+msgstr "Voeg een AI-sleutel toe (of zet gratis Google aan) in de instellingen om automatisch te vertalen. Gebruik intussen hieronder kopiëren en plakken."
+
+msgid "Or: copy → translate → paste back"
+msgstr "Of: kopiëren → vertalen → terugplakken"
+
+msgid "1. Copy the source text"
+msgstr "1. Kopieer de brontekst"
+
+msgid "2. Paste it back, keeping the 1. 2. 3. numbers on each line"
+msgstr "2. Plak het terug en laat de nummers 1. 2. 3. op elke regel staan"
+
+msgid "Copy"
+msgstr "Kopiëren"
+
+msgid "Paste the translated text here…"
+msgstr "Plak de vertaalde tekst hier…"
+
+msgid "Apply translation"
+msgstr "Vertaling toepassen"
+
+msgid "Translating…"
+msgstr "Vertalen…"
+
+msgid "Save"
+msgstr "Opslaan"
+
+msgid "Save & next"
+msgstr "Opslaan en volgende"
+
+msgid "Google Translate"
+msgstr "Google Translate"
+
+msgid "Next"
+msgstr "Volgende"
+
+msgid "Select all"
+msgstr "Alles selecteren"
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Skip translated texts"
+msgstr "Vertaalde teksten overslaan"
+
+msgid "With the ‹ › arrows, skip texts that already have a translation and stop only on the ones still to translate."
+msgstr "Sla met de pijlen ‹ › teksten over die al vertaald zijn en stop alleen bij wat nog vertaald moet worden."
+
+msgid "Image alt text"
+msgstr "Alt-tekst van afbeelding"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Placeholder"
+msgstr "Tijdelijke tekst"
+
+msgid "ARIA label"
+msgstr "ARIA-label"
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "Lock the window here (it stays put while you navigate)"
+msgstr "Het venster hier vastzetten (het blijft staan terwijl je navigeert)"
+
+msgid "Unlock — follow the selected text again"
+msgstr "Ontgrendelen — de geselecteerde tekst weer volgen"
+
+msgid "Restore original"
+msgstr "Origineel herstellen"
+
+msgid "Put the original text back (e.g. if the [1] [2] markers got broken), then translate again."
+msgstr "Zet de oorspronkelijke tekst terug (bijv. als de markeringen [1] [2] stuk zijn) en vertaal opnieuw."
+
+msgid "Markers like [1] [2] are formatting (bold, links). Keep them where they are."
+msgstr "Markeringen als [1] [2] zijn opmaak (vet, links). Laat ze staan waar ze staan."
+
+msgid "⚠ Keep all the [1] [2] markers so the bold/links can be restored."
+msgstr "⚠ Laat alle markeringen [1] [2] staan, zodat vet en links behouden blijven."
+
+msgid "Already translated"
+msgstr "Al vertaald"
+
+msgid "Saved"
+msgstr "Opgeslagen"
+
+msgid "Done"
+msgstr "Klaar"
+
+msgid "Click any text to translate it"
+msgstr "Klik op een tekst om die te vertalen"
+
+msgid "Switch this page back to runtime translation? Your independent copy is kept (paused), not deleted — you can re-create it later to get your edits back."
+msgstr "Deze pagina terugzetten op live vertalen? Je onafhankelijke kopie blijft bewaard (gepauzeerd), niet verwijderd — je kunt hem later opnieuw maken om je bewerkingen terug te krijgen."
+
+msgid "Delete this independent copy for good? Its edits will be lost and the page goes back to runtime translation."
+msgstr "Deze onafhankelijke kopie definitief verwijderen? De bewerkingen gaan verloren en de pagina wordt weer live vertaald."
+
+msgid "%s is your source language — pick a language to translate into:"
+msgstr "%s is je brontaal — kies een taal om naartoe te vertalen:"
+
+msgid "Switch to %s"
+msgstr "Overschakelen naar %s"
+
+msgid "Visibility"
+msgstr "Zichtbaarheid"
+
+msgid "SEO"
+msgstr "SEO"
+
+msgid "Delete this independent copy"
+msgstr "Deze onafhankelijke kopie verwijderen"
+
+msgid "The source page changed after this copy was made — re-create it to pull in the changes (the copy's edits are lost), or keep editing the copy."
+msgstr "De bronpagina is gewijzigd nadat deze kopie is gemaakt — maak hem opnieuw om de wijzigingen over te nemen (de bewerkingen van de kopie gaan verloren), of blijf de kopie bewerken."
+
+msgid "Source changed"
+msgstr "Bron gewijzigd"
+
+msgid "This page is served from an independent copy."
+msgstr "Deze pagina komt uit een onafhankelijke kopie."
+
+msgid "Independent copy"
+msgstr "Onafhankelijke kopie"
+
+msgid "Back to strings"
+msgstr "Terug naar de teksten"
+
+msgid "Reactivate the independent copy (your edits are restored)."
+msgstr "De onafhankelijke kopie opnieuw activeren (je bewerkingen komen terug)."
+
+msgid "Reactivate copy"
+msgstr "Kopie opnieuw activeren"
+
+msgid "Detach this page into an independent, fully-editable copy, pre-filled with the current translation."
+msgstr "Maak van deze pagina een losse, volledig bewerkbare kopie, alvast gevuld met de huidige vertaling."
+
+msgid "https://…"
+msgstr "https://…"
+
+msgid "Custom message shown instead of the page."
+msgstr "Eigen bericht dat in plaats van de pagina wordt getoond."
+
+msgid "Language visibility for this page"
+msgstr "Zichtbaarheid per taal voor deze pagina"
+
+msgid "Choose what happens when this page is viewed in each language — translate it, redirect, show a message, or 404."
+msgstr "Kies wat er gebeurt als deze pagina in elke taal wordt bekeken — vertalen, doorsturen, een bericht tonen of een 404."
+
+msgid "Save visibility"
+msgstr "Zichtbaarheid opslaan"
+
+msgid "The homepage has no slug — its address is just the language prefix."
+msgstr "De homepage heeft geen slug — het adres is alleen het taalvoorvoegsel."
+
+msgid "The page address in this language, e.g. /%s/about-us/. Leave empty to keep the original."
+msgstr "Het adres van de pagina in deze taal, bijv. /%s/about-us/. Laat leeg om het origineel te behouden."
+
+msgid "The short summary under the title in Google results."
+msgstr "De korte samenvatting onder de titel in Google-resultaten."
+
+msgid "SEO for this page"
+msgstr "SEO voor deze pagina"
+
+msgid "What search engines see in %s: the translated URL slug, the page title and the meta description."
+msgstr "Wat zoekmachines zien in %s: de vertaalde URL-slug, de paginatitel en de metabeschrijving."
+
+msgid "Save SEO"
+msgstr "SEO opslaan"
+
+msgid "Not detected on this page yet."
+msgstr "Nog niet gevonden op deze pagina."
+
+msgid "No AI provider configured."
+msgstr "Geen AI-aanbieder ingesteld."
+
+msgid "Translation failed."
+msgstr "Vertalen is mislukt."
+
+msgid "Could not create the copy."
+msgstr "De kopie kon niet worden gemaakt."
+
+msgid "Polylang is not configured."
+msgstr "Polylang is niet ingesteld."
+
+msgid "TranslatePress is not configured."
+msgstr "TranslatePress is niet ingesteld."
+
+msgid "WPML is not configured."
+msgstr "WPML is niet ingesteld."
+
+msgid "DeepL: monthly character quota exhausted — it resets at the start of your DeepL billing cycle."
+msgstr "DeepL: het maandquotum aan tekens is op — het wordt hersteld bij de start van je DeepL-factuurcyclus."
+
+msgid "Automatic Google translation is turned off."
+msgstr "Automatisch vertalen met Google staat uit."
+
+msgid "Google Translate stopped responding while translating into %s."
+msgstr "Google Translate reageerde niet meer tijdens het vertalen naar %s."
+
+msgid "Google Translate stopped responding (it may be rate-limiting). Some strings were translated — try again in a moment for the rest."
+msgstr "Google Translate reageert niet meer (mogelijk een snelheidslimiet). Sommige teksten zijn vertaald — probeer het zo meteen opnieuw voor de rest."
+
+msgid "No AI provider is configured. Add an API key first."
+msgstr "Er is geen AI-aanbieder ingesteld. Voeg eerst een API-sleutel toe."
+
+msgid "Daily AI character limit reached. Raise it in AI settings or wait until tomorrow."
+msgstr "Daglimiet aan AI-tekens bereikt. Verhoog hem bij de AI-instellingen of wacht tot morgen."
+
+msgid "Daily AI character limit reached."
+msgstr "Daglimiet aan AI-tekens bereikt."
+
+msgid "AI translation failed (→ %s)."
+msgstr "AI-vertaling mislukt (→ %s)."
+
+msgid "%1$s is unavailable (%2$s) — falling back to the next provider."
+msgstr "%1$s is niet beschikbaar (%2$s) — er wordt teruggevallen op de volgende aanbieder."
+
+msgid "Language Switcher"
+msgstr "Taalwisselaar"
+
+msgid "Let visitors switch language (TranslateRocket)."
+msgstr "Bezoekers van taal laten wisselen (TranslateRocket)."
+
+msgid "Switcher settings"
+msgstr "Instellingen taalwisselaar"
+
+msgid "TranslateRocket has translated %s strings on this site, for free. It has no paid version: reviews are the only thing that helps other people find it. Would you leave one?"
+msgstr "TranslateRocket heeft op deze site %s teksten vertaald, gratis. Er is geen betaalde versie: beoordelingen zijn het enige wat anderen helpt het te vinden. Wil je er een achterlaten?"
+
+msgid "Something is wrong instead"
+msgstr "Er is juist iets mis"
+
+msgid "Border"
+msgstr "Rand"
+
+msgid "No border at all"
+msgstr "Helemaal geen rand"
+
+msgid "Removes the border instead of colouring it. The colour above is then ignored."
+msgstr "Haalt de rand weg in plaats van hem te kleuren. De kleur hierboven wordt dan genegeerd."
+
+msgid "Flag + code (EN, IT…)"
+msgstr "Vlag + code (EN, IT…)"
+
+msgid "Code only (EN, IT…)"
+msgstr "Alleen de code (EN, IT…)"
+
+msgid "House style"
+msgstr "Huisstijl"
+
+msgid "Extra instruction for the AI"
+msgstr "Extra instructie voor de AI"
+
+msgid "An extra instruction sent with every AI translation, so the wording sounds like you rather than like a dictionary. Tone, formality, words to keep in the original — anything the model should know about your brand."
+msgstr "Een extra instructie die met elke AI-vertaling meegaat, zodat de woorden naar jou klinken en niet naar een woordenboek. Toon, formaliteit, woorden die in het origineel moeten blijven — alles wat het model over jouw merk zou moeten weten."
+
+msgid "Optional, up to %d characters. Sent with every batch, so keep it short. It never overrides the rules that keep translations lined up with your text."
+msgstr "Optioneel, tot %d tekens. Gaat met elke batch mee, dus houd het kort. Het gaat nooit boven de regels die vertalingen op jouw tekst afgestemd houden."
+
+msgid "e.g. We are a family-run guesthouse. Keep it warm and informal, use \"tu\" in Italian, and never translate the name Villa Aurora."
+msgstr "bijv. Wij zijn een familiepension. Warm en informeel van toon, spreek mensen aan met \"je\", en vertaal de naam Villa Aurora nooit."
+
+msgid "Appearance on small screens (when shown): show only flags, or hide it."
+msgstr "Uiterlijk op kleine schermen (als hij zichtbaar is): alleen vlaggen, of verborgen."
+
+msgid "Desktop and mobile"
+msgstr "Desktop en mobiel"
+
+msgid "Desktop only"
+msgstr "Alleen desktop"
+
+msgid "Mobile only"
+msgstr "Alleen mobiel"
+
+msgid "Only the AI models can follow this: OpenAI, Claude and Gemini. DeepL and Google Translate are translation APIs with no prompt of their own, so they ignore it."
+msgstr "Alleen de AI-modellen kunnen dit volgen: OpenAI, Claude en Gemini. DeepL en Google Translate zijn vertaal-API's zonder eigen prompt, dus die negeren het."
+
+msgid "Show on"
+msgstr "Tonen op"
+
+msgid "Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The live preview above always shows the desktop appearance."
+msgstr "Op welke schermformaten deze schakelaar verschijnt. Maak een profiel \"Alleen desktop\" en een tweede \"Alleen mobiel\" om voor allebei een ander taalmenu te ontwerpen (grens 783px). Het voorbeeld hierboven laat altijd het desktopuiterlijk zien."
+
+msgid "WooCommerce emails"
+msgstr "WooCommerce-e-mails"
+
+msgid "Your provider right now is %s, so this instruction will be ignored until you switch to one of those."
+msgstr "Je aanbieder is nu %s, dus deze instructie wordt genegeerd totdat je overstapt op een van die drie."
+
+msgid "You’ve been translating with TranslateRocket for a while now. It’s free forever, and it stays maintained either way — if it saved you a paid plugin, a donation is a nice way to say thanks."
+msgstr "Je vertaalt al een tijdje met TranslateRocket. Het is voor altijd gratis en het wordt hoe dan ook onderhouden — als het je een betaalde plugin heeft bespaard, is een donatie een aardige manier om bedankt te zeggen."
+
+msgid "Chrome and Edge on a computer can translate on the device itself. It costs nothing, needs no account, and the text never leaves this machine. Quality is below DeepL and the AI models, and it works through one phrase at a time — so it is the quickest way to get a translated site today, not the best one you can have."
+msgstr "Chrome en Edge op een computer kunnen op het apparaat zelf vertalen. Het kost niets, er is geen account voor nodig en de tekst verlaat deze machine nooit. De kwaliteit ligt onder DeepL en de AI-modellen, en het gaat zin voor zin: het is de snelste manier om vandaag een vertaalde site te hebben, niet de beste die je kunt krijgen."
+
+msgid "Could not read the translations."
+msgstr "De vertalingen konden niet gelezen worden."
+
+msgid "Done — %d strings translated in this browser."
+msgstr "Klaar — %d teksten vertaald in deze browser."
+
+msgid "Downloading the language model — this happens once…"
+msgstr "Het taalmodel wordt gedownload — dat gebeurt één keer…"
+
+msgid "No language given."
+msgstr "Geen taal opgegeven."
+
+msgid "Not allowed."
+msgstr "Niet toegestaan."
+
+msgid "Nothing left to translate in this language."
+msgstr "Er is niets meer te vertalen in deze taal."
+
+msgid "Nothing to store."
+msgstr "Niets om op te slaan."
+
+msgid "Preparing…"
+msgstr "Bezig met voorbereiden…"
+
+msgid "Reload the page to see the new totals."
+msgstr "Herlaad de pagina om de nieuwe totalen te zien."
+
+msgid "Set up an AI provider on the AI page to bulk-translate the missing strings — or use your browser below, which needs no key."
+msgstr "Stel op de AI-pagina een aanbieder in om de ontbrekende teksten in bulk te vertalen — of gebruik hieronder je browser, die geen sleutel nodig heeft."
+
+msgid "Stop"
+msgstr "Stoppen"
+
+msgid "Stopped."
+msgstr "Gestopt."
+
+msgid "The browser translator stopped with an error."
+msgstr "De vertaler van de browser is met een fout gestopt."
+
+msgid "The translator built into Chrome and Edge only works over a secure connection. Your admin is on plain http, so it cannot be used here."
+msgstr "De vertaler die in Chrome en Edge zit werkt alleen over een beveiligde verbinding. Jouw beheer draait op gewoon http, dus hier is hij niet te gebruiken."
+
+msgid "Translate %d missing in this browser"
+msgstr "%d ontbrekende vertalen in deze browser"
+
+msgid "Translate with your browser — no API key"
+msgstr "Vertaal met je browser — zonder API-sleutel"
+
+msgid "Translating %1$d of %2$d…"
+msgstr "Bezig met %1$d van %2$d…"
+
+msgid "You can add an API provider later for better quality — what you translate here is kept and never translated again."
+msgstr "Je kunt later een API-aanbieder toevoegen voor betere kwaliteit — wat je hier vertaalt blijft bewaard en wordt nooit opnieuw vertaald."
+
+msgid "Your browser has no built-in translator for %s."
+msgstr "Je browser heeft geen ingebouwde vertaler voor %s."
+
+msgid "Open the copy &amp; paste tool"
+msgstr "Het kopieer- en plakhulpmiddel openen"
+
+msgid "Translate without an API key"
+msgstr "Vertalen zonder API-sleutel"
+
+msgid "Your browser has no translator of its own — Chrome and Edge on a computer do. You can still work without a key: copy the missing strings out, run them through any translator you like, and paste the result back."
+msgstr "Je browser heeft geen eigen vertaler — Chrome en Edge op een computer wel. Zonder sleutel kan het toch: kopieer de ontbrekende teksten eruit, haal ze door een vertaler naar keuze en plak het resultaat terug."
+
+msgid "Ask for help"
+msgstr "Om hulp vragen"
+
+msgid "Attach the report above (recommended — it usually saves a round of questions)"
+msgstr "Het rapport hierboven meesturen (aanbevolen — dat scheelt meestal een ronde vragen)"
+
+msgid "Check your provider and key"
+msgstr "Controleer de aanbieder en de sleutel"
+
+msgid "Copied — now paste it into your message."
+msgstr "Gekopieerd — plak het nu in je bericht."
+
+msgid "Copy the report"
+msgstr "Rapport kopiëren"
+
+msgid "Copy the report below and paste it into your message: it says which versions you are on and what these checks found. Nothing is sent anywhere on its own — you copy it, you decide where it goes. It never contains your API keys."
+msgstr "Kopieer het rapport hieronder en plak het in je bericht: het vertelt op welke versies je zit en wat deze controles hebben gevonden. Er wordt uit zichzelf niets ergens naartoe gestuurd — jij kopieert het, jij bepaalt waar het heen gaat. Je API-sleutels staan er nooit in."
+
+msgid "Could not reach the support site from here. Your host may be blocking outgoing requests — you can still copy the report and write from the browser."
+msgstr "De ondersteuningssite was van hieruit niet bereikbaar. Je hostingpartij blokkeert misschien uitgaande verzoeken — je kunt het rapport nog altijd kopiëren en vanuit de browser schrijven."
+
+msgid "DeepL refused with \"quota exceeded\", but your account still reports %1$s of %2$s characters used. That combination means the key itself is blocked, not the allowance: DeepL does this when the account has no verified payment method. Check your account on deepl.com/account."
+msgstr "DeepL antwoordde met \"quota overschreden\", maar je account meldt nog steeds %1$s van %2$s tekens gebruikt. Die combinatie betekent dat de sleutel geblokkeerd is en niet het tegoed: DeepL doet dat wanneer het account geen geverifieerde betaalmethode heeft. Controleer je account op deepl.com/account."
+
+msgid "DeepL: the monthly character allowance is used up. It resets at the start of your DeepL billing cycle."
+msgstr "DeepL: het aantal tekens voor deze maand is op. Het gaat weer op nul aan het begin van je DeepL-factuurperiode."
+
+msgid "Everything is translated"
+msgstr "Alles is vertaald"
+
+msgid "Give it a subject first."
+msgstr "Geef het eerst een onderwerp."
+
+msgid "Give the message a subject, even a short one."
+msgstr "Geef het bericht een onderwerp, ook al is het kort."
+
+msgid "I need an email address to answer you."
+msgstr "Ik heb een e-mailadres nodig om je te antwoorden."
+
+msgid "In a few words, what is wrong?"
+msgstr "Wat gaat er mis, in een paar woorden?"
+
+msgid "It did not go through."
+msgstr "Het is niet doorgekomen."
+
+msgid "Leave this field empty"
+msgstr "Laat dit veld leeg"
+
+msgid "Needs an API key — set one up in %s, or use your browser below (free)."
+msgstr "Vraagt om een API-sleutel — stel er een in bij %s, of gebruik hieronder je browser (gratis)."
+
+msgid "No API key for now"
+msgstr "Voorlopig geen API-sleutel"
+
+msgid "Open a topic on WordPress.org"
+msgstr "Een onderwerp openen op WordPress.org"
+
+msgid "Or open the support site"
+msgstr "Of de ondersteuningssite openen"
+
+msgid "Or write to me from here. Nothing leaves your site until you press Send, and what gets sent is exactly what you can read on this page — no keys, no page content, no visitor data."
+msgstr "Of schrijf me van hieruit. Er verlaat niets je site tot je op Versturen drukt, en wat er weggaat is precies wat je op deze pagina kunt lezen — geen sleutels, geen pagina-inhoud, geen bezoekersgegevens."
+
+msgid "Send to TranslateRocket support"
+msgstr "Naar de ondersteuning van TranslateRocket sturen"
+
+msgid "Sending from here is not available on this install."
+msgstr "Versturen vanaf hier is op deze installatie niet beschikbaar."
+
+msgid "Sending…"
+msgstr "Bezig met versturen…"
+
+msgid "Sent — your ticket is #%d. My answer arrives by email."
+msgstr "Verstuurd — je ticket is nr. %d. Mijn antwoord komt per e-mail."
+
+msgid "Start with %s — pick your languages and you are translating."
+msgstr "Begin met %s — kies je talen en je bent al aan het vertalen."
+
+msgid "Subject"
+msgstr "Onderwerp"
+
+msgid "Technical report"
+msgstr "Technisch rapport"
+
+msgid "Tell me a little more — what you did, and what happened instead."
+msgstr "Vertel me wat meer — wat je deed, en wat er in plaats daarvan gebeurde."
+
+msgid "That email address does not look right — without it I cannot answer you."
+msgstr "Dat e-mailadres ziet er niet goed uit — zonder dat kan ik je niet antwoorden."
+
+msgid "The AI translation could not run"
+msgstr "De AI-vertaling kon niet draaien"
+
+msgid "The support site refused the message. Please copy the report and write from the browser instead."
+msgstr "De ondersteuningssite heeft het bericht geweigerd. Kopieer het rapport en schrijf vanuit de browser."
+
+msgid "This is where my answer goes. It is used for nothing else."
+msgstr "Hier komt mijn antwoord terecht. Voor iets anders wordt het niet gebruikt."
+
+msgid "This site is not reachable from the internet — it looks like a local or staging install. To be sure a ticket is genuine, the support site has to call your site back once, and it cannot do that here. Copy the report and write from the support page instead."
+msgstr "Deze site is niet bereikbaar vanaf het internet — het lijkt op een lokale of test-installatie. Om zeker te weten dat een ticket echt is, moet de ondersteuningssite je site één keer terugbellen, en dat kan hier niet. Kopieer het rapport en schrijf via de ondersteuningspagina."
+
+msgid "To be sure a ticket really comes from a WordPress site and not from a spam robot, the support site calls your site back once. This install is local or private, so it cannot be reached from the outside. Copy the report above and write from the support page — it gets to the same place."
+msgstr "Om zeker te weten dat een ticket echt van een WordPress-site komt en niet van een spamrobot, belt de ondersteuningssite je site één keer terug. Deze installatie is lokaal of privé en dus van buitenaf niet bereikbaar. Kopieer het rapport hierboven en schrijf via de ondersteuningspagina — het komt op dezelfde plek terecht."
+
+msgid "Translate all %d missing with AI"
+msgstr "Alle %d ontbrekende met AI vertalen"
+
+msgid "Translate by hand, or let Chrome and Edge translate the whole site for free from the Translations page — the text never leaves your computer. You can add a key later at any time."
+msgstr "Vertaal met de hand, of laat Chrome en Edge de hele site gratis vertalen vanaf de pagina Vertalingen — de tekst verlaat je computer nooit. Je kunt later altijd nog een sleutel toevoegen."
+
+msgid "Translate only this page with AI"
+msgstr "Alleen deze pagina met AI vertalen"
+
+msgid "What happened"
+msgstr "Wat er gebeurde"
+
+msgid "What you were doing, what you expected, and what happened instead."
+msgstr "Wat je aan het doen was, wat je verwachtte, en wat er in plaats daarvan gebeurde."
+
+msgid "Write a little more about what happened."
+msgstr "Schrijf wat meer over wat er gebeurd is."
+
+msgid "You just sent one. Give it a few minutes before sending another — I read them all."
+msgstr "Je hebt er net een gestuurd. Wacht een paar minuten voor de volgende — ik lees ze allemaal."
+
+msgid "Your email"
+msgstr "Je e-mailadres"
+
+msgid "Your name"
+msgstr "Je naam"
+
+msgid "or translate in this browser, free and without a key"
+msgstr "of vertaal in deze browser, gratis en zonder sleutel"
+
+msgid "the 1-minute setup"
+msgstr "de instelling van één minuut"
+
+msgid "Chrome and Edge on a computer can translate on the device itself: it costs nothing and the text never leaves your machine. Quality is below the AI models."
+msgstr "Chrome en Edge op een computer kunnen op het apparaat zelf vertalen: het kost niets en de tekst verlaat je machine nooit. De kwaliteit ligt onder die van de AI-modellen."
+
+msgid "Translate everything in this browser — no key"
+msgstr "Alles in deze browser vertalen — zonder sleutel"
+
+msgid "Updating the totals…"
+msgstr "Totalen worden bijgewerkt…"
+
+msgid "Translate in this browser"
+msgstr "In deze browser vertalen"
+
+msgid "Everyone who helps out is named on the Contributors page."
+msgstr "Iedereen die meehelpt, wordt genoemd op de Contributors-pagina."
+
+msgid "See who they are"
+msgstr "Bekijk wie dat zijn"
+
+msgid "Online: your visitors see this language. Click to hide it while you work on it."
+msgstr "Online: je bezoekers zien deze taal. Klik om hem te verbergen terwijl je eraan werkt."
+
+msgid "Offline: only you see this language. Click to publish it."
+msgstr "Offline: alleen jij ziet deze taal. Klik om hem te publiceren."
+
+msgid "online"
+msgstr "online"
+
+msgid "offline"
+msgstr "offline"
+
+msgid "Published, or still being translated?"
+msgstr "Gepubliceerd, of nog in vertaling?"
+
+msgid "A language kept offline is invisible to visitors: it is left out of the language switcher, out of your sitemap and out of the hreflang tags, and anyone landing on one of its URLs is sent to your default language. You keep working on it normally — and you can see it on the real pages, because whoever can preview still sees everything. Put it online when you are happy with it."
+msgstr "Een taal die offline staat is onzichtbaar voor bezoekers: hij blijft buiten de taalwisselaar, buiten je sitemap en buiten de hreflang-tags, en wie op een van zijn URL’s komt, gaat naar je standaardtaal. Jij werkt er gewoon aan verder — en je ziet hem op de echte pagina’s, want wie mag voorbeschouwen ziet nog steeds alles. Zet hem online als je tevreden bent."
+
+msgid "Add a language today, publish it when it is ready. Nothing half-translated ever reaches your visitors or Google."
+msgstr "Voeg vandaag een taal toe en publiceer hem als hij klaar is. Niets half vertaalds bereikt je bezoekers of Google."
+
+msgid "nothing collected yet"
+msgstr "nog niets verzameld"
+
+msgid "(no alt text)"
+msgstr "(geen alt-tekst)"
+
+msgid "(empty)"
+msgstr "(leeg)"
+
+msgid "Alt text"
+msgstr "Alt-tekst"
+
+msgid "Change the photo"
+msgstr "Foto wijzigen"
+
+msgid "Edit"
+msgstr "Bewerken"
+
+msgid "Social title (Open Graph)"
+msgstr "Social titel (Open Graph)"
+
+msgid "The headline people see when the page is shared on Facebook, LinkedIn or WhatsApp."
+msgstr "De kop die te zien is als de pagina op Facebook, LinkedIn of WhatsApp wordt gedeeld."
+
+msgid "Social description (Open Graph)"
+msgstr "Social beschrijving (Open Graph)"
+
+msgid "The text under that headline in the shared preview."
+msgstr "De tekst onder die kop in de gedeelde preview."
+
+msgid "Title for X / Twitter"
+msgstr "Titel voor X / Twitter"
+
+msgid "Used when the page is shared on X."
+msgstr "Wordt gebruikt als de pagina op X wordt gedeeld."
+
+msgid "Description for X / Twitter"
+msgstr "Beschrijving voor X / Twitter"
+
+msgid "The summary in the X preview card."
+msgstr "De samenvatting in de previewkaart van X."
+
+msgid "Alt text of the shared image"
+msgstr "Alt-tekst van de gedeelde afbeelding"
+
+msgid "Describes the preview image for people using a screen reader."
+msgstr "Beschrijft de previewafbeelding voor mensen met een schermlezer."
+
+msgid "Alt text of the X image"
+msgstr "Alt-tekst van de afbeelding op X"
+
+msgid "Describes the preview image on X."
+msgstr "Beschrijft de previewafbeelding op X."
+
+msgid "Site name in shares"
+msgstr "Sitenaam bij delen"
+
+msgid "The name of your site as it appears in the shared preview."
+msgstr "De naam van je site zoals die in de gedeelde preview staat."
+
+msgid "Meta keywords"
+msgstr "Meta keywords"
+
+msgid "Google has ignored these since 2009, but some other engines and directories still read them."
+msgstr "Google negeert ze sinds 2009, maar sommige andere zoekmachines en gidsen lezen ze nog."
+
+msgid "Images on this page"
+msgstr "Afbeeldingen op deze pagina"
+
+msgid "The alt text is what search engines read instead of the picture. Click a line to jump to that photo in the page and edit it."
+msgstr "De alt-tekst is wat zoekmachines lezen in plaats van de afbeelding. Klik op een regel om naar die foto op de pagina te springen en hem te bewerken."
+
+msgid "Other HTML attributes"
+msgstr "Andere HTML-attributen"
+
+msgid "Titles, placeholders and ARIA labels: invisible on screen, but read by search engines and screen readers."
+msgstr "Titles, placeholders en ARIA-labels: onzichtbaar op het scherm, maar gelezen door zoekmachines en schermlezers."
+
+msgid "Everything search engines read in %s, in order: the address, the title and description, the social preview, then the images and attributes inside the page."
+msgstr "Alles wat zoekmachines in %s lezen, op volgorde: het adres, de titel en beschrijving, de social preview, en dan de afbeeldingen en attributen in de pagina."
+
+msgid "A language you add now starts offline: nobody sees it while you translate it. Flip its switch to green when it is ready."
+msgstr "Een taal die je nu toevoegt begint offline: niemand ziet hem terwijl je hem vertaalt. Zet zijn schakelaar op groen als hij klaar is."
+
+msgid "%d page changed since TranslateRocket last read it."
+msgid_plural "%d pages changed since TranslateRocket last read them."
+msgstr[0] "%d pagina is gewijzigd sinds TranslateRocket hem las."
+msgstr[1] "%d pagina’s zijn gewijzigd sinds TranslateRocket ze las."
+
+msgid "Any new text on them has not been detected yet, so it is not in your list of strings to translate — and on the translated pages it is still showing in your source language."
+msgstr "De nieuwe tekst erop is nog niet gedetecteerd en staat dus niet in je lijst met te vertalen teksten — en op de vertaalde pagina’s is hij nog in je brontaal te zien."
+
+msgid "Scan them now"
+msgstr "Scan ze nu"
+
+msgid "⚠ Not saved — your site refused the request. Your text is still here: try again."
+msgstr "⚠ Niet opgeslagen: je site heeft het verzoek geweigerd. Je tekst staat er nog, probeer het opnieuw."
+
+msgid "⚠ Your site did not answer. The text is still here — check your connection, then try again."
+msgstr "⚠ Je site gaf geen antwoord. De tekst staat er nog — controleer je verbinding en probeer het opnieuw."

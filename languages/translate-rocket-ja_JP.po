@@ -1,0 +1,2342 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TranslateRocket\n"
+"Report-Msgid-Bugs-To: https://translaterocket.com/support/\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja-JP\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+
+msgid "TranslateRocket"
+msgstr "TranslateRocket"
+
+msgid "https://translaterocket.com"
+msgstr "https://translaterocket.com"
+
+msgid "Free, AI-powered translation for WordPress. Translate your whole site — visible text, image alt tags, titles, placeholders and SEO meta — using your own AI keys (OpenAI, Anthropic, Gemini, DeepL, Google). Untranslated strings are detected automatically as visitors browse."
+msgstr "WordPressのための無料のAI翻訳。表示テキスト、画像の代替テキスト、タイトル、プレースホルダー、SEOメタまで、サイト全体をご自身のAIキー (OpenAI、Anthropic、Gemini、DeepL、Google) で翻訳できます。未翻訳の文字列は訪問者の閲覧に合わせて自動的に検出されます。"
+
+msgid "federico_dev"
+msgstr "federico_dev"
+
+msgid "https://federicocaputo.dev"
+msgstr "https://federicocaputo.dev"
+
+msgid "TranslateRocket preview mode is on."
+msgstr "TranslateRocketのプレビューモードが有効です。"
+
+msgid "Only administrators can see the translations — visitors get the default language. When you are happy with the result, switch visibility back to \"Everyone\" to publish."
+msgstr "翻訳は管理者にだけ表示され、訪問者には既定の言語が表示されます。結果に納得できたら、公開設定を「全員」に戻して公開してください。"
+
+msgid "Open settings"
+msgstr "設定を開く"
+
+msgid "%s is unavailable."
+msgstr "%sは利用できません。"
+
+msgid "Automatic translation is falling back to the next provider in your chain (or stopping if there is none)."
+msgstr "自動翻訳は次のプロバイダーに切り替わります (次がなければ停止します)。"
+
+msgid "Dismiss"
+msgstr "閉じる"
+
+msgid "Google Translate is unavailable right now."
+msgstr "現在Google翻訳を利用できません。"
+
+msgid "Translations"
+msgstr "翻訳"
+
+msgid "Translation Memory"
+msgstr "翻訳メモリ"
+
+msgid "Memory"
+msgstr "メモリ"
+
+msgid "AI Translation"
+msgstr "AI翻訳"
+
+msgid "Import"
+msgstr "インポート"
+
+msgid "Switcher"
+msgstr "言語切替"
+
+msgid "Exclusions"
+msgstr "除外設定"
+
+msgid "Independent copies"
+msgstr "独立したコピー"
+
+msgid "Diagnostics"
+msgstr "診断"
+
+msgid "Setup wizard"
+msgstr "セットアップウィザード"
+
+msgid "Loading…"
+msgstr "読み込み中…"
+
+msgid "No models found — check the API key for this provider."
+msgstr "モデルが見つかりません — このプロバイダーのAPIキーを確認してください。"
+
+msgid "— pick a model —"
+msgstr "— モデルを選択 —"
+
+msgid "characters used"
+msgstr "使用文字数"
+
+msgid "Scan all published pages to detect translatable text? Keep this tab open until it finishes."
+msgstr "公開済みのすべてのページをスキャンして翻訳できるテキストを検出しますか？ 終わるまでこのタブを開いたままにしてください。"
+
+msgid "Scanning"
+msgstr "スキャン中"
+
+msgid "Scan complete — reloading…"
+msgstr "スキャンが完了しました — 再読み込み中…"
+
+msgid "No published pages found to scan."
+msgstr "スキャンできる公開済みのページがありません。"
+
+msgid "Add your DeepL key first."
+msgstr "先にDeepLのキーを入力してください。"
+
+msgid "Could not reach DeepL — check the key."
+msgstr "DeepLに接続できません — キーを確認してください。"
+
+msgid "Unexpected response from DeepL."
+msgstr "DeepLから予期しない応答がありました。"
+
+msgid "No AI provider is configured."
+msgstr "AIプロバイダーが設定されていません。"
+
+msgid "Add the API key first."
+msgstr "先にAPIキーを入力してください。"
+
+msgid "Connection test failed for %s."
+msgstr "%sへの接続テストに失敗しました。"
+
+msgid "The provider did not return a translation."
+msgstr "プロバイダーから翻訳が返りませんでした。"
+
+msgid "Security check failed."
+msgstr "セキュリティチェックに失敗しました。"
+
+msgid "Import translations"
+msgstr "翻訳をインポート"
+
+msgid "Already used another translation plugin? Bring its translations into TranslateRocket so you don’t start over."
+msgstr "他の翻訳プラグインをお使いでしたか？ その翻訳をTranslateRocketに取り込めば、一からやり直す必要はありません。"
+
+msgid "Imported %d translations."
+msgstr "%d件の翻訳をインポートしました。"
+
+msgid "Imported %d translations from CSV."
+msgstr "CSVから%d件の翻訳をインポートしました。"
+
+msgid "Could not read the CSV file. Please upload a valid .csv exported from TranslateRocket."
+msgstr "CSVファイルを読み込めませんでした。TranslateRocketから書き出した正しい .csv をアップロードしてください。"
+
+msgid "Imported %d translations from TMX."
+msgstr "TMXから%d件の翻訳をインポートしました。"
+
+msgid "Could not read the TMX file. Please upload a valid .tmx (without a DTD)."
+msgstr "TMXファイルを読み込めませんでした。正しい .tmx (DTDなし) をアップロードしてください。"
+
+msgid "Imported %d translations from your Weglot export."
+msgstr "Weglotのエクスポートから%d件の翻訳をインポートしました。"
+
+msgid "%d rows were skipped because their language is not configured as a target here."
+msgstr "%d行は、その言語がここで翻訳先として設定されていないため飛ばされました。"
+
+msgid "This does not look like a Weglot export: the header has no word_from / word_to columns."
+msgstr "Weglotのエクスポートではないようです: 見出しに word_from / word_to の列がありません。"
+
+msgid "The file is too large (10 MB maximum). Export from Weglot in smaller batches, e.g. one language at a time."
+msgstr "ファイルが大きすぎます (最大10MB)。Weglotから小分けに、たとえば1言語ずつ書き出してください。"
+
+msgid "Could not read the file. Please upload the .csv exported from your Weglot dashboard."
+msgstr "ファイルを読み込めませんでした。Weglotの管理画面から書き出した .csv をアップロードしてください。"
+
+msgid "Bring your translations over from another plugin — no need to start from scratch."
+msgstr "他のプラグインから翻訳を引き継げます — 一から作り直す必要はありません。"
+
+msgid "Existing TranslateRocket translations are kept; imported strings are added or filled in."
+msgstr "既存のTranslateRocketの翻訳は残り、インポートした文字列が追加または補完されます。"
+
+msgid "%d translatable strings found."
+msgstr "翻訳できる文字列が%d件見つかりました。"
+
+msgid "Import from %s"
+msgstr "%sからインポート"
+
+msgid "Detected, but there are no translations to import yet."
+msgstr "検出しましたが、インポートできる翻訳がまだありません。"
+
+msgid "Not detected (the plugin is not installed or configured)."
+msgstr "検出されませんでした (プラグインが未インストールか未設定です)。"
+
+msgid "Weglot keeps translations in its cloud, so there is nothing to detect locally. Export them from your Weglot dashboard (Translations → Export, CSV format) and upload the file here."
+msgstr "Weglotは翻訳をクラウドに保存するため、この環境からは検出できません。Weglotの管理画面 (Translations → Export、CSV形式) から書き出して、ここにアップロードしてください。"
+
+msgid "Add your target languages in %s first, then upload the export."
+msgstr "先に%sで翻訳先の言語を追加してから、エクスポートをアップロードしてください。"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Language of the file (used only when the export has no language column):"
+msgstr "ファイルの言語 (エクスポートに言語の列がない場合にだけ使われます):"
+
+msgid "Import from Weglot"
+msgstr "Weglotからインポート"
+
+msgid "Note: Polylang and WPML store translations as separate posts, so their import brings over string translations, titles, slugs and matching body text (best effort)."
+msgstr "補足: PolylangとWPMLは翻訳を別の投稿として保存するため、インポートでは文字列の翻訳、タイトル、スラッグ、対応する本文を可能な範囲で引き継ぎます。"
+
+msgid "Export & import (CSV)"
+msgstr "エクスポートとインポート (CSV)"
+
+msgid "Download all your translations as a spreadsheet (one column per language) for backup or offline editing, then upload it back."
+msgstr "すべての翻訳を表計算ファイル (言語ごとに1列) としてダウンロードし、バックアップやオフライン編集に使ってから、また戻せます。"
+
+msgid "Export all translations"
+msgstr "すべての翻訳をエクスポート"
+
+msgid "A UTF-8 CSV with columns: original, type, context, and one column per language. Opens in Excel, Google Sheets or Numbers."
+msgstr "UTF-8のCSVです。列は original、type、context と、言語ごとに1列。Excel、Googleスプレッドシート、Numbersで開けます。"
+
+msgid "Download CSV"
+msgstr "CSVをダウンロード"
+
+msgid "Import from CSV"
+msgstr "CSVからインポート"
+
+msgid "Upload a CSV in the same format. Non-empty cells update the matching translation; blank cells are left untouched."
+msgstr "同じ形式のCSVをアップロードします。中身のあるセルは該当する翻訳を更新し、空のセルは何も変更しません。"
+
+msgid "Import CSV"
+msgstr "CSVをインポート"
+
+msgid "Export & import (TMX)"
+msgstr "エクスポートとインポート (TMX)"
+
+msgid "TMX is the standard translation-memory format. Export to back up your memory, move it to another TranslateRocket site, or open it in a CAT tool; import a TMX to load translations."
+msgstr "TMXは翻訳メモリの標準形式です。エクスポートすればバックアップ、別のTranslateRocketサイトへの移行、CATツールでの利用ができます。TMXをインポートすれば翻訳を読み込めます。"
+
+msgid "Export translation memory"
+msgstr "翻訳メモリをエクスポート"
+
+msgid "A standard TMX 1.4 file: one translation unit per source string, one segment per language."
+msgstr "標準のTMX 1.4ファイルです: 原文1件につき翻訳単位1つ、言語ごとに1セグメントが入ります。"
+
+msgid "Download TMX"
+msgstr "TMXをダウンロード"
+
+msgid "Import TMX"
+msgstr "TMXをインポート"
+
+msgid "Upload a TMX file. Segments are matched by their source-language text, then added or updated."
+msgstr "TMXファイルをアップロードします。セグメントは翻訳元のテキストで照合され、追加または更新されます。"
+
+msgid "Add target languages to see the preview."
+msgstr "プレビューを見るには翻訳先の言語を追加してください。"
+
+msgid "Language switcher"
+msgstr "言語切替"
+
+msgid "Switcher saved."
+msgstr "言語切替を保存しました。"
+
+msgid "Design your switcher — create profiles (e.g. header, footer), each with its own style and a live preview."
+msgstr "言語切替をデザインします — ヘッダーやフッターなどのプロファイルを作り、それぞれに独自のスタイルとライブプレビューを持たせられます。"
+
+msgid "Profile:"
+msgstr "プロファイル:"
+
+msgid "Default"
+msgstr "デフォルト"
+
+msgid "header, footer…"
+msgstr "ヘッダー、フッターなど"
+
+msgid "+ Add profile"
+msgstr "+ プロファイルを追加"
+
+msgid "Insert with:"
+msgstr "挿入方法:"
+
+msgid "Delete this profile?"
+msgstr "このプロファイルを削除しますか？"
+
+msgid "Delete profile"
+msgstr "プロファイルを削除"
+
+msgid "Style"
+msgstr "スタイル"
+
+msgid "Layout"
+msgstr "レイアウト"
+
+msgid "Inline (horizontal)"
+msgstr "インライン (横)"
+
+msgid "List (vertical)"
+msgstr "リスト (縦)"
+
+msgid "Dropdown"
+msgstr "ドロップダウン"
+
+msgid "Scrollable bar (arrows, for many languages)"
+msgstr "スクロールバー (矢印つき、言語が多いとき向け)"
+
+msgid "Show"
+msgstr "表示"
+
+msgid "Flag + name"
+msgstr "国旗 + 名前"
+
+msgid "Flag only"
+msgstr "国旗のみ"
+
+msgid "Name only"
+msgstr "名前のみ"
+
+msgid "Current language"
+msgstr "現在の言語"
+
+msgid "Hide"
+msgstr "非表示"
+
+msgid "Language names"
+msgstr "言語名"
+
+msgid "Show in English (otherwise native)"
+msgstr "英語で表示する (オフなら現地語)"
+
+msgid "On mobile"
+msgstr "モバイルでの表示"
+
+msgid "Same as desktop"
+msgstr "デスクトップと同じ"
+
+msgid "Flags only"
+msgstr "国旗のみ"
+
+msgid "Hidden"
+msgstr "非表示"
+
+msgid "On small screens (e.g. with a burger menu): show only flags, or hide it."
+msgstr "画面が小さいとき (ハンバーガーメニューなど): 国旗だけ表示するか、非表示にします。"
+
+msgid "Open dropdown"
+msgstr "ドロップダウンを開く"
+
+msgid "On click"
+msgstr "クリック時"
+
+msgid "On mouse over"
+msgstr "マウスオーバー時"
+
+msgid "Only for the “Dropdown” layout."
+msgstr "「ドロップダウン」レイアウトのみで使えます。"
+
+msgid "Arrow"
+msgstr "矢印"
+
+msgid "Show an arrow that flips when the dropdown opens"
+msgstr "ドロップダウンを開くと向きが変わる矢印を表示する"
+
+msgid "Flag corners"
+msgstr "国旗の角"
+
+msgid "Top-left corner"
+msgstr "左上"
+
+msgid "Top-right corner"
+msgstr "右上"
+
+msgid "Same value for all corners"
+msgstr "すべての角に同じ値を使う"
+
+msgid "Bottom-left corner"
+msgstr "左下"
+
+msgid "Bottom-right corner"
+msgstr "右下"
+
+msgid "Rounding (px) per corner. The centre link keeps them equal."
+msgstr "角ごとの丸み (px)。中央のリンクを押すとすべて同じ値になります。"
+
+msgid "Width"
+msgstr "幅"
+
+msgid "Auto"
+msgstr "自動"
+
+msgid "Small"
+msgstr "小"
+
+msgid "Medium"
+msgstr "中"
+
+msgid "Large"
+msgstr "大"
+
+msgid "Custom (px)"
+msgstr "カスタム (px)"
+
+msgid "Colours"
+msgstr "色"
+
+msgid "Presets:"
+msgstr "プリセット:"
+
+msgid "Minimal"
+msgstr "ミニマル"
+
+msgid "Dark"
+msgstr "ダーク"
+
+msgid "Gold"
+msgstr "ゴールド"
+
+msgid "Ocean"
+msgstr "オーシャン"
+
+msgid "Glass"
+msgstr "グラス"
+
+msgid "Pill"
+msgstr "ピル"
+
+msgid "Soft"
+msgstr "柔らかい"
+
+msgid "Sunset"
+msgstr "サンセット"
+
+msgid "Forest"
+msgstr "フォレスト"
+
+msgid "Midnight"
+msgstr "ミッドナイト"
+
+msgid "Candy"
+msgstr "キャンディ"
+
+msgid "Outline"
+msgstr "アウトライン"
+
+msgid "Paper"
+msgstr "ペーパー"
+
+msgid "Neon"
+msgstr "ネオン"
+
+msgid "Frost"
+msgstr "フロスト"
+
+msgid "Smooth"
+msgstr "なめらか"
+
+msgid "Text colour"
+msgstr "文字色"
+
+msgid "Text colour (hover)"
+msgstr "文字色 (ホバー時)"
+
+msgid "Background colour"
+msgstr "背景色"
+
+msgid "Menu background (dropdown)"
+msgstr "メニューの背景 (ドロップダウン)"
+
+msgid "Background colour (hover)"
+msgstr "背景色 (ホバー時)"
+
+msgid "Border colour"
+msgstr "枠線の色"
+
+msgid "Corner radius"
+msgstr "角の丸み"
+
+msgid "Shadow"
+msgstr "影"
+
+msgid "None"
+msgstr "なし"
+
+msgid "Light"
+msgstr "弱"
+
+msgid "Strong"
+msgstr "強"
+
+msgid "Open animation"
+msgstr "開くときのアニメーション"
+
+msgid "How the dropdown menu appears when opened."
+msgstr "ドロップダウンメニューが開くときの見せ方。"
+
+msgid "Fade"
+msgstr "フェード"
+
+msgid "Slide down"
+msgstr "スライドダウン"
+
+msgid "Scale"
+msgstr "拡大縮小"
+
+msgid "Hover effect"
+msgstr "ホバー効果"
+
+msgid "A subtle effect on each language when the visitor hovers it."
+msgstr "訪問者がカーソルを合わせたときに各言語に付く控えめな効果です。"
+
+msgid "Lift"
+msgstr "リフト"
+
+msgid "Grow"
+msgstr "拡大"
+
+msgid "Underline"
+msgstr "下線"
+
+msgid "Font"
+msgstr "フォント"
+
+msgid "Theme default"
+msgstr "テーマの既定"
+
+msgid "Text style"
+msgstr "文字スタイル"
+
+msgid "Bold"
+msgstr "太字"
+
+msgid "UPPERCASE"
+msgstr "大文字"
+
+msgid "Font size"
+msgstr "フォントサイズ"
+
+msgid "e.g. 14px. Leave empty to inherit from your theme."
+msgstr "例: 14px。空欄にするとテーマの設定を引き継ぎます。"
+
+msgid "Flag / text divider"
+msgstr "国旗と文字の区切り"
+
+msgid "Shown only when both flag and name are visible."
+msgstr "国旗と名前の両方を表示しているときだけ使われます。"
+
+msgid "Background opacity"
+msgstr "背景の不透明度"
+
+msgid "Affects only the background — the flag and text stay fully visible."
+msgstr "背景にだけ効果があります — 国旗と文字ははっきり見えたままです。"
+
+msgid "Placement"
+msgstr "配置"
+
+msgid "Choose one: either place the switcher yourself with the shortcode / block, or let the plugin float it for you — not both."
+msgstr "どちらか一方を選んでください: ショートコードやブロックで自分で置くか、プラグインに浮かせてもらうか — 両方は使えません。"
+
+msgid "Where to show the switcher"
+msgstr "言語切替を表示する場所"
+
+msgid "Manual — I add it with the shortcode / block"
+msgstr "手動 — ショートコードまたはブロックで自分で追加する"
+
+msgid "Floating — bottom right"
+msgstr "フローティング — 右下"
+
+msgid "Floating — bottom left"
+msgstr "フローティング — 左下"
+
+msgid "Floating — top right"
+msgstr "フローティング — 右上"
+
+msgid "Floating — top left"
+msgstr "フローティング — 左上"
+
+msgid "Floating — custom position (X / Y)"
+msgstr "フローティング — 位置を指定 (X / Y)"
+
+msgid "X (from left)"
+msgstr "X (左から)"
+
+msgid "Y (from top)"
+msgstr "Y (上から)"
+
+msgid "Use % or px, e.g. 10% / 20px."
+msgstr "%またはpxで指定します。例: 10% / 20px。"
+
+msgid "Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block."
+msgstr "ショートコード [translaterocket_switcher] または「言語切替」ブロックで好きな場所に追加できます。"
+
+msgid "Save switcher"
+msgstr "言語切替を保存"
+
+msgid "Live preview"
+msgstr "ライブプレビュー"
+
+msgid "Preview on:"
+msgstr "プレビュー対象:"
+
+msgid "White"
+msgstr "ホワイト"
+
+msgid "Light grey"
+msgstr "ライトグレー"
+
+msgid "Brand"
+msgstr "ブランド"
+
+msgid "Teal"
+msgstr "ティール"
+
+msgid "Photo"
+msgstr "写真"
+
+msgid "Custom background"
+msgstr "カスタム背景"
+
+msgid "Colours update live; layout and labels update after you save."
+msgstr "色はその場で反映されます。レイアウトとラベルは保存後に反映されます。"
+
+msgid "Translation memory"
+msgstr "翻訳メモリ"
+
+msgid "Every string detected across your whole site, in one place. Search a word to find — and fix — it everywhere at once."
+msgstr "サイト全体で検出したすべての文字列が一か所に集まります。単語で検索すれば、どこにあっても一度に直せます。"
+
+msgid "Add a target language first in TranslateRocket settings."
+msgstr "先にTranslateRocketの設定で翻訳先の言語を追加してください。"
+
+msgid "Saved."
+msgstr "保存しました。"
+
+msgid "Removed %d unused string."
+msgstr "未使用の文字列を%d件削除しました。"
+
+msgid "AI translation failed — check the AI provider and key, or the daily limit."
+msgstr "AI翻訳に失敗しました — AIプロバイダーとキー、または1日の上限を確認してください。"
+
+msgid "AI translated %d strings."
+msgstr "AIが%d件の文字列を翻訳しました。"
+
+msgid "Language:"
+msgstr "言語:"
+
+msgid "Delete %d strings (and their translations) not seen on any page in the last 30 days? Run “Scan site for text” first so the pages you still have count as seen."
+msgstr "過去30日間どのページでも見つからなかった%d件の文字列 (とその翻訳) を削除しますか？ 先に「サイト内のテキストをスキャン」を実行して、現在あるページを認識させてください。"
+
+msgid "🧹 Remove %d unused strings"
+msgstr "🧹 未使用の文字列%d件を削除"
+
+msgid "Removes strings from pages that no longer exist (deleted or changed). Tip: run the site scan first, otherwise pages you simply haven’t opened recently could be counted as unused."
+msgstr "存在しなくなったページ (削除・変更されたもの) の文字列を取り除きます。先にサイトスキャンを実行してください。最近開いていないだけのページが未使用と見なされることがあります。"
+
+msgid "Search source or translation…"
+msgstr "原文または翻訳を検索…"
+
+msgid "Only missing"
+msgstr "未翻訳のみ"
+
+msgid "Search"
+msgstr "検索"
+
+msgid "%d string"
+msgstr "%d件の文字列"
+
+msgid "Translate %d missing with AI"
+msgstr "未翻訳の%d件をAIで翻訳"
+
+msgid "Fills every still-missing string for this language using the active AI provider."
+msgstr "この言語の未翻訳の文字列を、使用中のAIプロバイダーですべて埋めます。"
+
+msgid "Set up an AI provider on the AI page to bulk-translate the missing strings."
+msgstr "未翻訳の文字列をまとめて翻訳するには、AIページでAIプロバイダーを設定してください。"
+
+msgid "Save changes"
+msgstr "変更を保存"
+
+msgid "Translate this page with AI"
+msgstr "このページをAIで翻訳"
+
+msgid "Configure an AI provider first in %s."
+msgstr "先に%sでAIプロバイダーを設定してください。"
+
+msgid "Languages"
+msgstr "言語"
+
+msgid "AI"
+msgstr "AI"
+
+msgid "Copies"
+msgstr "コピー"
+
+msgid "Help"
+msgstr "ヘルプ"
+
+msgid "Free, AI-powered translation for WordPress"
+msgstr "WordPressのための無料のAI翻訳"
+
+msgid "Unlimited languages · Visual editor · SEO-ready"
+msgstr "言語数は無制限 · 画面上で編集 · SEO対応"
+
+msgid "TranslateRocket is 100% free. Support development to keep it free — supporters get priority support & custom help."
+msgstr "TranslateRocketは完全に無料です。無料であり続けるために開発を支援してください — 支援者には優先サポートと個別対応をご用意しています。"
+
+msgid "Support the project"
+msgstr "プロジェクトを支援する"
+
+msgid "Add at least one target language first."
+msgstr "先に翻訳先の言語を少なくとも1つ追加してください。"
+
+msgid "%d page updated."
+msgstr "%d件のページを更新しました。"
+
+msgid "Detaching a page makes a fast, independent copy (a real, cache-friendly page you edit in WordPress). “Back to strings” reattaches it to the source — the copy is kept (paused), not deleted — so you can re-detach later and keep your edits."
+msgstr "ページを切り離すと、高速で独立したコピー (WordPressで編集できる、キャッシュに適した実在のページ) ができます。「文字列一覧に戻る」を押すと元のページに再接続されます — コピーは削除されず停止状態で残るので、後でまた切り離して編集内容を活かせます。"
+
+msgid "Create independent copy"
+msgstr "独立したコピーを作成"
+
+msgid "Back to strings (reattach)"
+msgstr "文字列一覧に戻る (再接続)"
+
+msgid "Delete copy"
+msgstr "コピーを削除"
+
+msgid "Apply to selected"
+msgstr "選択した項目に適用"
+
+msgid "Page"
+msgstr "ページ"
+
+msgid "Status (%s)"
+msgstr "ステータス (%s)"
+
+msgid "(no title)"
+msgstr "(タイトルなし)"
+
+msgid "Independent copy active"
+msgstr "独立したコピーが有効です"
+
+msgid "Edit copy"
+msgstr "コピーを編集"
+
+msgid "Copy paused (reattached)"
+msgstr "コピーを停止しました (再接続済み)"
+
+msgid "String translation"
+msgstr "文字列の翻訳"
+
+msgid "Free keys end in “:fx”. Use “Check usage” below for your live monthly quota."
+msgstr "無料のキーは「:fx」で終わります。今月の残量は下の「使用量を確認」で見られます。"
+
+msgid "Pay-as-you-go (needs a few dollars of credit). gpt-4o-mini is cheap and good."
+msgstr "従量課金です (数ドルのクレジットが必要)。gpt-4o-miniは安価で品質も十分です。"
+
+msgid "Google Cloud Translation API key (requires a Google Cloud project with billing)."
+msgstr "Google Cloud Translation APIのキーです (課金を有効にしたGoogle Cloudプロジェクトが必要)。"
+
+msgid "Has a free tier — create a key in Google AI Studio at no cost."
+msgstr "無料枠があります — Google AI Studioで無料でキーを作成できます。"
+
+msgid "Pay-as-you-go on the Anthropic API (separate from a Claude.ai subscription)."
+msgstr "Anthropic APIの従量課金です (Claude.aiのサブスクリプションとは別です)。"
+
+msgid "AI settings saved."
+msgstr "AI設定を保存しました。"
+
+msgid "Provider &amp; keys"
+msgstr "プロバイダーとキー"
+
+msgid "Choose which AI service does the translating and paste its API key. You pay the provider directly — TranslateRocket takes nothing."
+msgstr "翻訳に使うAIサービスを選び、そのAPIキーを貼り付けてください。料金はプロバイダーに直接支払います — TranslateRocketは一切受け取りません。"
+
+msgid "You bring your own API key. Text is sent only to the provider you choose, only when you ask to translate."
+msgstr "APIキーはご自身のものを使います。テキストは選んだプロバイダーにのみ、翻訳を指示したときにだけ送られます。"
+
+msgid "Active provider"
+msgstr "使用中のプロバイダー"
+
+msgid "The service used when you click “Translate with AI”. Leave on “None” to translate only by hand or copy-paste."
+msgstr "「AIで翻訳」を押したときに使うサービスです。「なし」のままにすると、手動またはコピー＆ペーストだけで翻訳します。"
+
+msgid "— None —"
+msgstr "— なし —"
+
+msgid "Active"
+msgstr "有効"
+
+msgid "Key set"
+msgstr "キー設定済み"
+
+msgid "API key"
+msgstr "APIキー"
+
+msgid "Your secret key from this provider. Stored on your site only, and sent to the provider when translating."
+msgstr "このプロバイダーの秘密キーです。あなたのサイトにのみ保存され、翻訳するときにプロバイダーへ送られます。"
+
+msgid "Quota this cycle: %1$s of %2$s characters (%3$d%%)."
+msgstr "今期の使用量: %2$s文字中%1$s文字 (%3$d%%)。"
+
+msgid "Exhausted — translations fall back to the next provider in your chain."
+msgstr "上限に達しました — 翻訳は次のプロバイダーに引き継がれます。"
+
+msgid "Almost used up."
+msgstr "まもなく上限に達します。"
+
+msgid "Get a %s API key ↗"
+msgstr "%sのAPIキーを取得 ↗"
+
+msgid "Fallback priority"
+msgstr "代替言語の優先順位"
+
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Leave on “—” to keep a provider out of the chain."
+msgstr "任意です。2つ以上のプロバイダーに優先順位を付けると代替の連鎖ができます: 一括翻訳と自動翻訳はまず優先度1を試し、クレジット切れやキーの拒否があれば優先度2、3…へ切り替えます。「—」のままにすると連鎖から外れます。"
+
+msgid "—"
+msgstr "—"
+
+msgid "1 = try first. Providers with no priority are used only as the active one above."
+msgstr "1が最優先です。優先順位のないプロバイダーは、上で選んだ使用中のものとしてのみ使われます。"
+
+msgid "Model"
+msgstr "モデル"
+
+msgid "Optional. The specific AI model to use (e.g. gpt-4o-mini). Leave empty for a sensible default."
+msgstr "任意です。使用するAIモデルを指定します (例: gpt-4o-mini)。空欄にすると適切な既定値が使われます。"
+
+msgid "Pick a suggested model or type your own."
+msgstr "候補からモデルを選ぶか、自分で入力してください。"
+
+msgid "Load available models"
+msgstr "利用できるモデルを読み込む"
+
+msgid "Queries this provider with your key and lists the exact models it can use right now."
+msgstr "あなたのキーでこのプロバイダーに問い合わせ、いま実際に使えるモデルを一覧表示します。"
+
+msgid "Check usage"
+msgstr "使用量を確認"
+
+msgid "Usage &amp; limits"
+msgstr "使用量と上限"
+
+msgid "Protect your API spend: cap how many characters are sent to the AI each day, and keep crawlers from triggering paid translation."
+msgstr "API費用を守ります: 1日にAIへ送る文字数に上限を設け、クローラーによって有料の翻訳が動かないようにします。"
+
+msgid "Daily character limit"
+msgstr "1日あたりの文字数上限"
+
+msgid "A safety cap on how many characters can be sent to the AI per day. When the cap is reached, AI translation stops until tomorrow (manual and copy-paste still work). 0 means no limit."
+msgstr "1日にAIへ送れる文字数の安全上限です。上限に達するとAI翻訳は翌日まで止まります (手動とコピー＆ペーストは使えます)。0にすると無制限です。"
+
+msgid "0 = unlimited. Used today: %s characters."
+msgstr "0で無制限。本日の使用量: %s文字。"
+
+msgid "Usage this period"
+msgstr "今期の使用量"
+
+msgid "How much AI translation you’ve used since the counter started — to keep an eye on your provider spend. Reset it whenever you like, or set a monthly reset day below to match your billing."
+msgstr "カウンター開始からのAI翻訳の使用量です — プロバイダーの費用を把握するために使います。いつでもリセットできますし、下で請求日に合わせた毎月のリセット日も設定できます。"
+
+msgid "characters"
+msgstr "文字"
+
+msgid "requests"
+msgstr "リクエスト"
+
+msgid "(since %s)"
+msgstr "(%s以降)"
+
+msgid "Reset the usage counter to zero?"
+msgstr "使用量カウンターをゼロに戻しますか？"
+
+msgid "Reset counter"
+msgstr "カウンターをリセット"
+
+msgid "Saved by reuse"
+msgstr "再利用による節約額"
+
+msgid "When the same text appears again — on another page, as an image alt, as an interface string, or as a glossary term — TranslateRocket copies the translation you already have instead of paying the AI to translate it again. This is what that translation memory has kept in your pocket."
+msgstr "同じテキストが再び現れたとき — 別のページ、画像の代替テキスト、インターフェースの文字列、用語集の項目として — TranslateRocketはAIに再度支払う代わりに、すでにある翻訳を再利用します。これがその翻訳メモリで節約できた金額です。"
+
+msgid "strings translated for free"
+msgstr "件の文字列を無料で翻訳しました"
+
+msgid "Estimate at %s list prices — your real saving depends on your plan."
+msgstr "%sの定価に基づく概算です — 実際の節約額はご契約のプランによります。"
+
+msgid "Monthly reset day"
+msgstr "毎月のリセット日"
+
+msgid "Day of the month the usage counter restarts on its own (e.g. your provider’s billing date). 0 = never reset automatically."
+msgstr "使用量カウンターが自動でリセットされる日です (プロバイダーの請求日など)。0にすると自動リセットしません。"
+
+msgid "0 = manual only. 1–31 = reset on that day each month (shorter months use their last day)."
+msgstr "0で手動のみ。1〜31は毎月その日にリセットします (日数の少ない月は末日になります)。"
+
+msgid "Crawlers"
+msgstr "クローラー"
+
+msgid "Search engines and other bots visit your pages constantly. With auto-translation on, those visits could trigger paid AI calls for pages no real visitor asked for. Turn this on to ignore known bots, so only real visitors (and you) ever trigger AI translation."
+msgstr "検索エンジンなどのボットは絶えずページを訪れます。自動翻訳が有効だと、実際の訪問者が求めていないページにも有料のAI呼び出しが発生しかねません。これをオンにすると既知のボットを無視し、実際の訪問者 (とあなた) だけがAI翻訳を動かすようになります。"
+
+msgid "Don’t let bots / crawlers trigger AI translation"
+msgstr "ボットやクローラーによってAI翻訳が動かないようにする"
+
+msgid "Only matters with auto-translation enabled; recommended on."
+msgstr "自動翻訳を有効にしている場合にだけ関係します。オンを推奨します。"
+
+msgid "Save AI settings"
+msgstr "AI設定を保存"
+
+msgid "Bulk auto-translate"
+msgstr "まとめて自動翻訳"
+
+msgid "Fill in every missing string for a language at once with the active AI provider. You can refine any result by hand afterwards."
+msgstr "その言語の未翻訳の文字列を、使用中のAIプロバイダーで一度に埋めます。結果は後から手作業で直せます。"
+
+msgid "Translate every missing string for a language with the active provider."
+msgstr "その言語の未翻訳の文字列を、使用中のプロバイダーですべて翻訳します。"
+
+msgid "Language"
+msgstr "言語"
+
+msgid "Progress"
+msgstr "進捗"
+
+msgid "Missing"
+msgstr "未翻訳"
+
+msgid "Translate %d missing"
+msgstr "未翻訳の%d件を翻訳"
+
+msgid "Exclusions saved."
+msgstr "除外設定を保存しました。"
+
+msgid "Keep parts of your site in the original language. One entry per line."
+msgstr "サイトの一部を原文のままにします。1行に1件書いてください。"
+
+msgid "Pages (URL paths)"
+msgstr "ページ (URLパス)"
+
+msgid "Paths that are never translated. Use * as a wildcard, e.g. /checkout/* or /my-account/*."
+msgstr "翻訳しないパスです。* をワイルドカードとして使えます。例: /checkout/* や /my-account/*。"
+
+msgid "Elements (CSS selectors)"
+msgstr "要素 (CSSセレクター)"
+
+msgid "Elements left untranslated. Simple selectors only: a tag (code), a class (.notranslate) or an id (#brand)."
+msgstr "翻訳しない要素です。単純なセレクターのみ: タグ (code)、クラス (.notranslate)、ID (#brand)。"
+
+msgid "Words &amp; phrases"
+msgstr "単語とフレーズ"
+
+msgid "Exact strings that must stay as-is — brand or product names, etc. Never collected, translated or sent to an AI."
+msgstr "そのまま残す必要がある文字列です — ブランド名や製品名など。収集も翻訳もされず、AIにも送られません。"
+
+msgid "Glossary"
+msgstr "用語集"
+
+msgid "Force a fixed translation for a term, everywhere it appears. One “source = translation” per line. Overrides AI/manual translations for an exact match — great for brand wording, product names or terms that must read the same across the whole site."
+msgstr "ある語句の訳を、出てくるすべての場所で固定します。1行に「原文 = 訳文」を1組。完全一致した場合はAIや手動の翻訳より優先されます — ブランドの言い回し、製品名、サイト全体で同じ表記にしたい用語に向いています。"
+
+msgid "Add a target language first (Languages tab) to define glossary terms."
+msgstr "用語集を作るには、先に言語タブで翻訳先の言語を追加してください。"
+
+msgid "Save exclusions"
+msgstr "除外設定を保存"
+
+msgid "PHP version"
+msgstr "PHPバージョン"
+
+msgid "Running PHP %s (7.4 or newer required)."
+msgstr "PHP %sで動作しています (7.4以降が必要です)。"
+
+msgid "PHP extensions"
+msgstr "PHP拡張モジュール"
+
+msgid "All required extensions are present (dom, mbstring, libxml, json)."
+msgstr "必要な拡張モジュールはすべて揃っています (dom, mbstring, libxml, json)。"
+
+msgid "Missing extensions: %s. Ask your host to enable them."
+msgstr "不足している拡張モジュール: %s。サーバー会社に有効化を依頼してください。"
+
+msgid "WordPress version"
+msgstr "WordPressのバージョン"
+
+msgid "Running WordPress %s."
+msgstr "WordPress %sで動作しています。"
+
+msgid "Database tables"
+msgstr "データベーステーブル"
+
+msgid "All TranslateRocket tables exist."
+msgstr "TranslateRocketのテーブルはすべて揃っています。"
+
+msgid "Missing: %s. Deactivate and reactivate TranslateRocket to recreate them."
+msgstr "不足: %s。TranslateRocketを一度停止して再度有効化すると作り直されます。"
+
+msgid "Source: %1$s · %2$d target language(s) configured."
+msgstr "翻訳元: %1$s · 翻訳先の言語を%2$d件設定しています。"
+
+msgid "No target languages yet. Add at least one on the Languages tab."
+msgstr "翻訳先の言語がまだありません。言語タブで少なくとも1つ追加してください。"
+
+msgid "Permalinks"
+msgstr "パーマリンク"
+
+msgid "Pretty permalinks are on — language URLs like /it/ will work."
+msgstr "パーマリンク設定が有効です — /it/ のような言語URLが使えます。"
+
+msgid "Plain permalinks are on. Language URLs like /it/ need pretty permalinks: go to Settings → Permalinks and choose anything but “Plain”."
+msgstr "パーマリンクが「基本」になっています。/it/ のような言語URLには「基本」以外の設定が必要です: 設定 → パーマリンク で変更してください。"
+
+msgid "AI provider"
+msgstr "AIプロバイダー"
+
+msgid "Active provider: %s."
+msgstr "使用中のプロバイダー: %s。"
+
+msgid "No AI provider configured (optional — you can still translate by hand or with the Google links). Add a key on the AI tab."
+msgstr "AIプロバイダーは未設定です (任意です — 手動やGoogleリンクでも翻訳できます)。AIタブでキーを追加できます。"
+
+msgid "Log cleared."
+msgstr "ログを消去しました。"
+
+msgid "A quick health check of your setup, plus anything TranslateRocket has flagged — so nothing fails silently."
+msgstr "設定の簡単な健全性チェックと、TranslateRocketが記録した警告です — 問題が黙って見過ごされないようにします。"
+
+msgid "System checks"
+msgstr "システムチェック"
+
+msgid "Provider connection test"
+msgstr "プロバイダーの接続テスト"
+
+msgid "Sends one short word to each configured provider to confirm the key works right now."
+msgstr "設定済みの各プロバイダーに短い単語を1つ送り、キーがいま有効か確認します。"
+
+msgid "No provider keys saved yet. Add one on the AI tab."
+msgstr "プロバイダーのキーがまだ保存されていません。AIタブで追加してください。"
+
+msgid "Test connection"
+msgstr "接続をテスト"
+
+msgid "Recent issues"
+msgstr "最近の問題"
+
+msgid "Errors and warnings TranslateRocket recorded, including ones from background tasks."
+msgstr "TranslateRocketが記録したエラーと警告です。バックグラウンド処理のものも含みます。"
+
+msgid "Nothing to report — no issues logged."
+msgstr "報告することはありません — 問題は記録されていません。"
+
+msgid "When"
+msgstr "タイミング"
+
+msgid "Level"
+msgstr "レベル"
+
+msgid "Area"
+msgstr "エリア"
+
+msgid "Message"
+msgstr "メッセージ"
+
+msgid "Clear log"
+msgstr "ログを消去"
+
+msgid "Testing…"
+msgstr "テスト中…"
+
+msgid "You’re all set!"
+msgstr "準備が整いました。"
+
+msgid "Your languages are configured. Now translate your first page — it takes a minute."
+msgstr "言語の設定が終わりました。最初のページを翻訳してみましょう — 1分ほどで終わります。"
+
+msgid "Translate my homepage now"
+msgstr "ホームページを今すぐ翻訳"
+
+msgid "Open the translations list"
+msgstr "翻訳の一覧を開く"
+
+msgid "Go to settings"
+msgstr "設定へ移動"
+
+msgid "TranslateRocket™ setup"
+msgstr "TranslateRocket™ のセットアップ"
+
+msgid "Translation"
+msgstr "翻訳"
+
+msgid "What languages?"
+msgstr "対象の言語は？"
+
+msgid "Pick the language your site is written in, then the languages to translate it into."
+msgstr "サイトが書かれている言語を選び、次に翻訳先の言語を選んでください。"
+
+msgid "My site is written in:"
+msgstr "サイトの言語:"
+
+msgid "Translate into:"
+msgstr "翻訳先:"
+
+msgid "How do you want to translate?"
+msgstr "どの方法で翻訳しますか？"
+
+msgid "You can let an AI do a first pass automatically, or translate by hand — you can always change this later."
+msgstr "AIに下訳をさせることも、手作業で翻訳することもできます — 後からいつでも変更できます。"
+
+msgid "Use an AI provider"
+msgstr "AIプロバイダーを使う"
+
+msgid "Paste your own API key. You pay the provider directly — TranslateRocket takes nothing."
+msgstr "自分のAPIキーを貼り付けてください。料金はプロバイダーに直接支払います — TranslateRocketは一切受け取りません。"
+
+msgid "Paste your API key"
+msgstr "APIキーを貼り付けてください"
+
+msgid "Translate manually"
+msgstr "手動で翻訳"
+
+msgid "Type translations yourself, or use the free one-click Google links. No key needed."
+msgstr "自分で入力するか、ワンクリックの無料Googleリンクを使えます。キーは不要です。"
+
+msgid "Show the language switcher"
+msgstr "言語切替を表示する"
+
+msgid "How should visitors switch language? You can fine-tune the look later on the Switcher tab."
+msgstr "訪問者はどうやって言語を切り替えますか？ 見た目は後から言語切替タブで調整できます。"
+
+msgid "Floating button"
+msgstr "フローティングボタン"
+
+msgid "A small switcher that floats in a corner on every page. Easiest — nothing else to do."
+msgstr "すべてのページの隅に浮かぶ小さな言語切替です。いちばん簡単で、他に何もする必要がありません。"
+
+msgid "I’ll place it myself"
+msgstr "自分で配置する"
+
+msgid "Use the block “Language Switcher”, or the shortcode %s, wherever you like."
+msgstr "「言語切替」ブロック、またはショートコード %s を好きな場所に置いてください。"
+
+msgid "← Back"
+msgstr "← 戻る"
+
+msgid "Next →"
+msgstr "次へ →"
+
+msgid "Finish & start translating"
+msgstr "完了して翻訳を始める"
+
+msgid "Languages &amp; general"
+msgstr "言語と全般"
+
+msgid "Quick start"
+msgstr "クイックスタート"
+
+msgid "Choose your site language and the languages to translate into — right below."
+msgstr "すぐ下で、サイトの言語と翻訳先の言語を選んでください。"
+
+msgid "Translate: add an AI key in %s for one-click translation, or translate by hand on each page."
+msgstr "翻訳: %sでAIキーを追加するとワンクリックで翻訳できます。各ページで手動で翻訳することもできます。"
+
+msgid "Add a language switcher: place the [translaterocket_switcher] shortcode or block, or enable the floating one in %s."
+msgstr "言語切替を追加します: ショートコード [translaterocket_switcher] かブロックを置くか、%sでフローティング表示を有効にしてください。"
+
+msgid "Settings saved."
+msgstr "設定を保存しました。"
+
+msgid "Site language (source)"
+msgstr "サイトの言語 (翻訳元)"
+
+msgid "The language your existing content is written in. It stays at the site root with no URL prefix and is never translated."
+msgstr "既存のコンテンツが書かれている言語です。URLの接頭辞なしでサイトのルートに置かれ、翻訳されることはありません。"
+
+msgid "The language your content is written in. It stays at the site root (no URL prefix)."
+msgstr "コンテンツが書かれている言語です。サイトのルートに置かれ、URLの接頭辞は付きません。"
+
+msgid "Translate into"
+msgstr "翻訳先の言語"
+
+msgid "The languages visitors can switch to. Each gets its own URL prefix (e.g. /it/) and its own set of translations."
+msgstr "訪問者が切り替えられる言語です。それぞれに /it/ のようなURLの接頭辞と、独自の翻訳が割り当てられます。"
+
+msgid "Pick the languages you want to add. Each gets its own URL prefix, e.g. /en/."
+msgstr "追加したい言語を選んでください。それぞれに /en/ のようなURLの接頭辞が付きます。"
+
+msgid "Your source language (%s) isn’t listed here — it’s the language you translate from. Change it in “Site language (source)” above."
+msgstr "翻訳元の言語 (%s) はここには表示されません — 翻訳のもとになる言語だからです。上の「サイトの言語 (翻訳元)」で変更できます。"
+
+msgid "Custom language"
+msgstr "カスタム言語"
+
+msgid "Not in the list? Add your own: a short code (used in the URL, e.g. /la/), a name, and a flag picked from the list. After saving it appears among the languages above — tick it to enable."
+msgstr "一覧にない言語は自分で追加できます: 短いコード (URLで使われます。例: /la/)、名前、そして一覧から選んだ国旗。保存すると上の言語一覧に現れるので、チェックを入れて有効にしてください。"
+
+msgid "remove"
+msgstr "削除"
+
+msgid "Code"
+msgstr "コード"
+
+msgid "e.g. la"
+msgstr "例: la"
+
+msgid "Name"
+msgstr "名前"
+
+msgid "e.g. Latina"
+msgstr "例: Latina"
+
+msgid "Flag"
+msgstr "国旗"
+
+msgid "Choose…"
+msgstr "選択…"
+
+msgid "No flag (globe)"
+msgstr "国旗なし (地球アイコン)"
+
+msgid "Upload your own…"
+msgstr "自分の画像をアップロード…"
+
+msgid "+ Add language"
+msgstr "+ 言語を追加"
+
+msgid "Enter a code (it becomes the URL prefix, e.g. /la/) and a name, then pick a flag: choose one from the list, upload your own image (for a region or language with no country flag), or leave the 🌐 globe."
+msgstr "コード (URLの接頭辞になります。例: /la/) と名前を入力し、国旗を選んでください: 一覧から選ぶ、自分の画像をアップロードする (国旗のない地域や言語向け)、または🌐のままにする。"
+
+msgid "Choose a flag image"
+msgstr "国旗の画像を選ぶ"
+
+msgid "Use this image"
+msgstr "この画像を使う"
+
+msgid "Who sees the translations"
+msgstr "翻訳を見られる人"
+
+msgid "Preview mode: keep the translated site visible to administrators only, e.g. to review an import from another plugin on the real pages before going live. Visitors keep seeing the default language (language URLs redirect, the switcher is hidden and no hreflang/sitemap signals are sent). Switch back to \"Everyone\" to publish instantly."
+msgstr "プレビューモード: 翻訳されたサイトを管理者だけに見せます。たとえば他のプラグインからのインポート結果を実際のページで確認してから公開する場合に使います。訪問者には既定の言語が表示されます (言語URLはリダイレクトされ、言語切替は隠れ、hreflangやサイトマップの情報も送られません)。「全員」に戻せばすぐに公開できます。"
+
+msgid "Everyone — translations are live"
+msgstr "全員 — 翻訳は公開中です"
+
+msgid "Administrators only — preview mode, visitors keep seeing the default language"
+msgstr "管理者のみ — プレビューモードです。訪問者には既定の言語が表示されます"
+
+msgid "SEO meta"
+msgstr "SEOメタ"
+
+msgid "Also translate the SEO title and meta description — the text shown in Google results and the browser tab."
+msgstr "SEOタイトルとメタディスクリプションも翻訳します — Googleの検索結果とブラウザーのタブに出る文字です。"
+
+msgid "Translate SEO title and meta description tags"
+msgstr "SEOタイトルとメタディスクリプションを翻訳する"
+
+msgid "Interface language"
+msgstr "管理画面の言語"
+
+msgid "Show menus, buttons and theme/plugin labels in the visitor's language using WordPress' own official translations — no AI, nothing to manage. The needed language packs are downloaded automatically. Turn off to leave the interface in the site language."
+msgstr "メニュー、ボタン、テーマやプラグインのラベルを、WordPress公式の翻訳を使って訪問者の言語で表示します — AIも管理も不要です。必要な言語パックは自動でダウンロードされます。オフにするとインターフェースはサイトの言語のままになります。"
+
+msgid "Use WordPress' own translations for the interface"
+msgstr "インターフェースにWordPress自身の翻訳を使う"
+
+msgid "Auto-redirect"
+msgstr "自動リダイレクト"
+
+msgid "On their first visit, send visitors to the version matching their browser language (remembered with a cookie, only once). Never redirects search engines or logged-in users."
+msgstr "初めての訪問時に、ブラウザーの言語に合う版へ案内します (Cookieで記憶し、1回だけ)。検索エンジンとログイン中のユーザーは対象外です。"
+
+msgid "Redirect new visitors to their browser language"
+msgstr "初めての訪問者をブラウザーの言語へ誘導する"
+
+msgid "Page cache"
+msgstr "ページキャッシュ"
+
+msgid "Store the finished translated HTML of each page so repeat visits skip the on-the-fly translation — about 2× faster on repeat visits (e.g. ~0.55s → ~0.29s in our test). Only anonymous visitors are served from the cache, it skips dynamic pages (cart, checkout, account), and it clears automatically whenever you change a translation, edit a page, or update settings. On by default — turn it off only if you already use a page-cache plugin (e.g. WP Rocket), which already caches each language’s URL."
+msgstr "各ページの翻訳済みHTMLを保存し、次回以降の表示でその場の翻訳処理を省きます — 再訪問時はおよそ2倍の速さです (テストでは約0.55秒→約0.29秒)。キャッシュが使われるのはログインしていない訪問者だけで、動的なページ (カート、購入手続き、アカウント) は対象外です。翻訳の変更、ページの編集、設定の更新があると自動で消去されます。既定はオンです — WP Rocketなどのページキャッシュプラグインをすでに使っている場合のみオフにしてください。そちらが言語ごとのURLをキャッシュします。"
+
+msgid "Cache translated pages for anonymous visitors"
+msgstr "ログインしていない訪問者向けに翻訳ページをキャッシュする"
+
+msgid "Powered by badge"
+msgstr "「Powered by」バッジ"
+
+msgid "Show a small \"Powered by TranslateRocket\" badge with the logo at the bottom of your site. Off by default and entirely optional — a nice way to support the free plugin. You can also place it anywhere with the [translaterocket_poweredby] shortcode."
+msgstr "サイトの下部にロゴ入りの小さな「Powered by TranslateRocket」バッジを表示します。既定はオフで完全に任意です — 無料プラグインを応援する方法のひとつです。ショートコード [translaterocket_poweredby] で好きな場所にも置けます。"
+
+msgid "Show a \"Powered by TranslateRocket\" badge in the footer"
+msgstr "フッターに「Powered by TranslateRocket」のバッジを表示する"
+
+msgid "Detected"
+msgstr "検出済み"
+
+msgid "Translated"
+msgstr "翻訳済み"
+
+msgid "Open editor"
+msgstr "エディターを開く"
+
+msgid "Need a hand?"
+msgstr "お困りですか？"
+
+msgid "Want a professional multilingual setup, reviewed translations or a custom feature? I can help — as a service."
+msgstr "本格的な多言語サイトの構築、翻訳の校正、独自機能の開発をお考えですか？ 有償でお手伝いできます。"
+
+msgid "Get expert help"
+msgstr "専門家に相談する"
+
+msgid "TranslateRocket is 100% free. If it helps you, a small donation keeps it alive and updated."
+msgstr "TranslateRocketは完全に無料です。お役に立てたなら、少額の寄付が開発と更新の支えになります。"
+
+msgid "Make a donation"
+msgstr "寄付する"
+
+msgid "Translations saved."
+msgstr "翻訳を保存しました。"
+
+msgid "Pasted translations imported."
+msgstr "貼り付けた翻訳をインポートしました。"
+
+msgid "Nothing imported — the paste box was empty, so existing translations were kept."
+msgstr "何もインポートされませんでした — 貼り付け欄が空だったため、既存の翻訳はそのままです。"
+
+msgid "This page's translations were deleted."
+msgstr "このページの翻訳を削除しました。"
+
+msgid "Page removed from the list."
+msgstr "ページを一覧から削除しました。"
+
+msgid "%1$d strings still to translate out of %2$d detected."
+msgstr "検出した%2$d件のうち、%1$d件がまだ未翻訳です。"
+
+msgid "Scan site for text"
+msgstr "サイト内のテキストをスキャン"
+
+msgid "Automatically visits every published page to detect translatable text — no need to open them one by one."
+msgstr "公開済みのすべてのページを自動で訪問して翻訳できるテキストを検出します — 1ページずつ開く必要はありません。"
+
+msgid "No pages detected yet. Click “Scan site for text” above, or just browse your site as administrator."
+msgstr "まだページが検出されていません。上の「サイト内のテキストをスキャン」を押すか、管理者としてサイトを見て回ってください。"
+
+msgid "Search pages by name or slug… (spaces count as hyphens)"
+msgstr "名前またはスラッグでページを検索… (スペースはハイフンとして扱われます)"
+
+msgid "Showing %1$s of %2$d pages"
+msgstr "%2$d件中%1$s件を表示"
+
+msgid "Strings"
+msgstr "文字列"
+
+msgid "Translate"
+msgstr "翻訳"
+
+msgid "Back to all pages"
+msgstr "すべてのページに戻る"
+
+msgid "redirect to the homepage"
+msgstr "ホームページへリダイレクトする"
+
+msgid "redirect to a custom URL"
+msgstr "指定したURLへリダイレクトする"
+
+msgid "show a custom message"
+msgstr "カスタムメッセージを表示する"
+
+msgid "show a 404 (not found)"
+msgstr "404 (見つかりません) を表示する"
+
+msgid "This page is set to %2$s in %1$s, so it is not translated and the editor is hidden."
+msgstr "このページは%1$sで「%2$s」に設定されているため翻訳されず、エディターも表示されません。"
+
+msgid "Change it in the page’s “Language visibility” box."
+msgstr "ページの「言語別の公開設定」で変更できます。"
+
+msgid "Delete all translations of this page for this language?"
+msgstr "この言語について、このページの翻訳をすべて削除しますか？"
+
+msgid "Delete this page's translation"
+msgstr "このページの翻訳を削除"
+
+msgid "Remove this page from the list? Useful for stale or 404 pages — its translations stay in the database."
+msgstr "このページを一覧から削除しますか？ 古いページや404のページに便利です — 翻訳はデータベースに残ります。"
+
+msgid "Remove this page from the list"
+msgstr "このページを一覧から削除"
+
+msgid "Copy &amp; paste with Google Translate (free)"
+msgstr "Google翻訳でコピー＆ペースト (無料)"
+
+msgid "No strings on this page yet. Browse it on the front end (as admin) first."
+msgstr "このページにはまだ文字列がありません。先に管理者としてサイト側で表示してください。"
+
+msgid "1) Copy the list. 2) Paste it into Google Translate. 3) Paste the result back below — keep the numbers, one item per line."
+msgstr "1) リストをコピーします。2) Google翻訳に貼り付けます。3) 結果を下に貼り戻します — 番号は残し、1行に1件にしてください。"
+
+msgid "Open Google Translate"
+msgstr "Google翻訳を開く"
+
+msgid "✅ Everything here is translated — paste a new list below to redo it."
+msgstr "✅ ここはすべて翻訳済みです — やり直すには下に新しいリストを貼り付けてください。"
+
+msgid "Showing ALL strings — importing will overwrite existing translations."
+msgstr "すべての文字列を表示しています — インポートすると既存の翻訳が上書きされます。"
+
+msgid "Show only the %d untranslated"
+msgstr "未翻訳の%d件だけを表示"
+
+msgid "Re-translate everything (include already translated)"
+msgstr "すべてを翻訳し直す (翻訳済みも含む)"
+
+msgid "Strings to copy:"
+msgstr "コピーする文字列:"
+
+msgid "Paste the translated list here:"
+msgstr "翻訳したリストをここに貼り付けてください:"
+
+msgid "Import pasted translations"
+msgstr "貼り付けた翻訳をインポート"
+
+msgid "No strings detected for this page yet."
+msgstr "このページではまだ文字列が検出されていません。"
+
+msgid "Manual editor"
+msgstr "手動エディター"
+
+msgid "Filter by type:"
+msgstr "種類で絞り込む:"
+
+msgid "Narrow the list to one kind of string — visible text, link titles, image alt text, ARIA labels, etc."
+msgstr "文字列の種類で絞り込みます — 表示テキスト、リンクのタイトル、画像の代替テキスト、ARIAラベルなど。"
+
+msgid "All types"
+msgstr "すべての種類"
+
+msgid "Show only missing strings"
+msgstr "未翻訳の文字列だけを表示"
+
+msgid "Hide strings that already have a translation, so you can focus on what is left."
+msgstr "翻訳済みの文字列を隠して、残りの作業に集中できます。"
+
+msgid "Page content"
+msgstr "ページ本文"
+
+msgid "Save translations"
+msgstr "翻訳を保存"
+
+msgid "Translate this phrase with Google (free)"
+msgstr "このフレーズをGoogle翻訳で翻訳 (無料)"
+
+msgid "Open this phrase in Google Translate ↗"
+msgstr "このフレーズをGoogle翻訳で開く ↗"
+
+msgid "SEO & indexing"
+msgstr "SEOとインデックス"
+
+msgid "Slug (URL)"
+msgstr "スラッグ (URL)"
+
+msgid "The page web address in this language, e.g. /it/chi-siamo/. Leave empty to keep the original."
+msgstr "この言語でのページのURLです。例: /it/chi-siamo/。空欄にすると元のままになります。"
+
+msgid "Available only on single pages and posts (not the home or archives)."
+msgstr "個別のページと投稿でのみ使えます (ホームやアーカイブでは使えません)。"
+
+msgid "SEO title"
+msgstr "SEOタイトル"
+
+msgid "Shown in the browser tab and as the clickable title in Google results."
+msgstr "ブラウザーのタブと、Googleの検索結果のリンク見出しに表示されます。"
+
+msgid "Meta description"
+msgstr "メタディスクリプション"
+
+msgid "The short summary under the title in Google results (only if your theme or SEO plugin outputs one)."
+msgstr "Googleの検索結果でタイトルの下に出る短い説明です (テーマやSEOプラグインが出力している場合のみ)。"
+
+msgid "Meta keywords are intentionally not shown."
+msgstr "メタキーワードは意図的に表示していません。"
+
+msgid "Search engines (Google included) dropped meta keywords as a ranking signal years ago, so a keywords field would only add clutter."
+msgstr "検索エンジン (Googleを含む) は何年も前にメタキーワードを順位の判断材料から外したため、キーワード欄は煩わしいだけです。"
+
+msgid "Not detected on this page."
+msgstr "このページでは検出されませんでした。"
+
+msgid "More info"
+msgstr "詳細"
+
+msgid "🚀 This is an independent %1$s copy of %2$s, managed by TranslateRocket. It is served automatically at its %1$s URL — you don't need to publish it."
+msgstr "🚀 これは%2$sの独立した%1$sのコピーで、TranslateRocketが管理しています。%1$sのURLで自動的に表示されるため、公開する必要はありません。"
+
+msgid "(the original page)"
+msgstr "(元のページ)"
+
+msgid "Open the on-page visual editor for this page in a language:"
+msgstr "このページを画面上で編集します。言語を選んでください:"
+
+msgid "Translate in %s"
+msgstr "%sで翻訳"
+
+msgid "Opens in a new tab."
+msgstr "新しいタブで開きます。"
+
+msgid "Help & Feedback"
+msgstr "ヘルプとフィードバック"
+
+msgid "⚠️ TranslateRocket found another translation plugin active: %s. Running two at once will conflict — please keep only one enabled."
+msgstr "⚠️ 他の翻訳プラグインが有効になっています: %s。2つ同時に動かすと競合します — どちらか一方だけを有効にしてください。"
+
+msgid "Thanks for installing TranslateRocket!"
+msgstr "TranslateRocketをインストールしていただきありがとうございます。"
+
+msgid "Pick your languages in %s to get started."
+msgstr "まず%sで言語を選んでください。"
+
+msgid "TranslateRocket settings"
+msgstr "TranslateRocketの設定"
+
+msgid "Get tips & updates"
+msgstr "お知らせとヒントを受け取る"
+
+msgid "Enjoying TranslateRocket? A quick review really helps the project grow. 🙏"
+msgstr "TranslateRocketは気に入っていただけましたか？ 短いレビューがプロジェクトの大きな支えになります。🙏"
+
+msgid "Leave a review"
+msgstr "レビューを書く"
+
+msgid "No thanks"
+msgstr "結構です"
+
+msgid "You’ve been translating with TranslateRocket for a while now. It’s free forever — if it saved you a paid plugin, a small donation keeps it alive and growing."
+msgstr "TranslateRocketをお使いいただいてしばらく経ちました。これからもずっと無料です — 有料プラグインの費用を節約できたなら、少額の寄付が開発の支えになります。"
+
+msgid "Buy me a coffee ☕"
+msgstr "コーヒーを一杯おごる ☕"
+
+msgid "Maybe later"
+msgstr "後で"
+
+msgid "Need a hand, want a feature, or just want to say hi? Here’s how."
+msgstr "お困りのこと、ほしい機能、ひとことでも歓迎です。連絡方法はこちら。"
+
+msgid "Request a custom setup"
+msgstr "個別の設定を依頼する"
+
+msgid "Want a professional multilingual setup, reviewed translations, or a custom feature? I can help as a service."
+msgstr "本格的な多言語サイトの構築、翻訳の校正、独自機能の開発をお考えですか？ 有償でお手伝いできます。"
+
+msgid "Request customization"
+msgstr "カスタマイズを依頼する"
+
+msgid "Send feedback"
+msgstr "フィードバックを送る"
+
+msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
+msgstr "不具合やアイデアがあれば教えてください — 次に作るものの参考にします。"
+
+msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
+msgstr "TranslateRocketがお役に立てたなら、WordPress.orgでのレビューがとても励みになります。"
+
+msgid "Write a review"
+msgstr "レビューを書く"
+
+msgid "TranslateRocket is 100% free. A small donation keeps it alive and updated."
+msgstr "TranslateRocketは完全に無料です。少額の寄付が開発と更新の支えになります。"
+
+msgid "Something went wrong."
+msgstr "問題が発生しました。"
+
+msgid "translated"
+msgstr "翻訳済み"
+
+msgid "to translate"
+msgstr "翻訳対象"
+
+msgid "Translate with AI"
+msgstr "AIで翻訳"
+
+msgid "Translate with Google"
+msgstr "Google翻訳で翻訳"
+
+msgid "Visual editor"
+msgstr "ビジュアルエディター"
+
+msgid "Delete translations"
+msgstr "翻訳を削除"
+
+msgid "Copy & paste with Google Translate:"
+msgstr "Google翻訳でコピー＆ペースト:"
+
+msgid "Open Google Translate ↗"
+msgstr "Google翻訳を開く ↗"
+
+msgid "Show all strings (re-translate)"
+msgstr "すべての文字列を表示 (再翻訳)"
+
+msgid "Original"
+msgstr "原文"
+
+msgid "Working…"
+msgstr "処理中…"
+
+msgid "Unsaved changes — click “Save changes”."
+msgstr "未保存の変更があります —「変更を保存」を押してください。"
+
+msgid "Paste box is empty — nothing changed."
+msgstr "貼り付け欄が空です — 何も変更されていません。"
+
+msgid "Suggest from title"
+msgstr "タイトルから生成"
+
+msgid "Search engines dropped meta keywords as a ranking signal years ago, so a keywords field would only add clutter."
+msgstr "検索エンジンは何年も前にメタキーワードを順位の判断材料から外したため、キーワード欄は煩わしいだけです。"
+
+msgid "Add target languages in TranslateRocket settings to start."
+msgstr "まずTranslateRocketの設定で翻訳先の言語を追加してください。"
+
+msgid "This page is set to %s in this language, so there is nothing to translate. Change it in the “Language visibility” box."
+msgstr "このページはこの言語で「%s」に設定されているため、翻訳するものがありません。「言語別の公開設定」で変更できます。"
+
+msgid "TranslateRocket — Language visibility"
+msgstr "TranslateRocket — 言語別の公開設定"
+
+msgid "Translate (default)"
+msgstr "翻訳する (既定)"
+
+msgid "Redirect to homepage"
+msgstr "ホームページへリダイレクト"
+
+msgid "Redirect to a URL"
+msgstr "指定したURLへリダイレクト"
+
+msgid "Show a custom message"
+msgstr "カスタムメッセージを表示"
+
+msgid "Show 404 (not found)"
+msgstr "404 (見つかりません) を表示"
+
+msgid "What happens when this page is viewed in each language. Use this when a page has no equivalent in another language."
+msgstr "このページが各言語で表示されたときの動作です。他の言語に対応するページがない場合に使います。"
+
+msgid "https://… (only for “Redirect to a URL”)"
+msgstr "https://… (「指定したURLへリダイレクト」の場合のみ)"
+
+msgid "Custom message (only for “Show a custom message”)"
+msgstr "カスタムメッセージ (「カスタムメッセージを表示」の場合のみ)"
+
+msgid "Database tables could not be created."
+msgstr "データベーステーブルを作成できませんでした。"
+
+msgid "Site interface (themes & plugins)"
+msgstr "サイトのインターフェース (テーマとプラグイン)"
+
+msgid "Powered by"
+msgstr "提供元表示"
+
+msgid "Previous"
+msgstr "前へ"
+
+msgid "More"
+msgstr "もっと見る"
+
+msgid "Translate visually"
+msgstr "画面上で翻訳"
+
+msgid "Editing"
+msgstr "編集中"
+
+msgid "Blocks"
+msgstr "ブロック"
+
+msgid "Show formatting as numbered [1] [2] markers — the simplest view."
+msgstr "書式を [1] [2] の番号で表示します — いちばん簡単な表示です。"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Edit the raw HTML for full control — you see the real <strong>, <a>… tags."
+msgstr "HTMLを直接編集して細かく制御できます — <strong> や <a> などのタグがそのまま見えます。"
+
+msgid "⚠ Keep the HTML tags (<strong>, <a>…) intact so the formatting and links survive."
+msgstr "⚠ 書式とリンクを保つため、HTMLタグ (<strong>、<a> など) はそのまま残してください。"
+
+msgid "Everything on this page is already translated."
+msgstr "このページはすべて翻訳済みです。"
+
+msgid "%d translated"
+msgstr "%d件翻訳済み"
+
+msgid "⚠ The number of lines does not match the source — check the result."
+msgstr "⚠ 行数が原文と一致しません — 結果を確認してください。"
+
+msgid "Copied!"
+msgstr "コピーしました"
+
+msgid "Translate page"
+msgstr "ページを翻訳"
+
+msgid "Translate the whole page"
+msgstr "ページ全体を翻訳"
+
+msgid "Translate every text on this page at once — automatically, or by pasting into any translator."
+msgstr "このページのテキストをまとめて翻訳します — 自動でも、好きな翻訳ツールに貼り付けても構いません。"
+
+msgid "Show HTML tags (bold, links…) instead of [1] [2]"
+msgstr "[1] [2] の代わりにHTMLタグ (太字やリンク) を表示する"
+
+msgid "Auto-translate everything with AI"
+msgstr "すべてをAIで自動翻訳"
+
+msgid "Auto-translate everything with Google"
+msgstr "すべてをGoogle翻訳で自動翻訳"
+
+msgid "Add an AI key (or enable free Google) in TranslateRocket settings to auto-translate. Meanwhile, use copy-paste below."
+msgstr "自動翻訳するには、TranslateRocketの設定でAIキーを追加するか、無料のGoogleを有効にしてください。それまでは下のコピー＆ペーストをお使いください。"
+
+msgid "Or: copy → translate → paste back"
+msgstr "または: コピー → 翻訳 → 貼り戻す"
+
+msgid "1. Copy the source text"
+msgstr "1. 原文をコピーします"
+
+msgid "2. Paste it back, keeping the 1. 2. 3. numbers on each line"
+msgstr "2. 各行の 1. 2. 3. の番号を残したまま貼り戻します"
+
+msgid "Copy"
+msgstr "コピー"
+
+msgid "Paste the translated text here…"
+msgstr "翻訳したテキストをここに貼り付けてください…"
+
+msgid "Apply translation"
+msgstr "翻訳を適用"
+
+msgid "Translating…"
+msgstr "翻訳中…"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Save & next"
+msgstr "保存して次へ"
+
+msgid "Google Translate"
+msgstr "Google翻訳"
+
+msgid "Next"
+msgstr "次へ"
+
+msgid "Select all"
+msgstr "すべて選択"
+
+msgid "Back"
+msgstr "戻る"
+
+msgid "Skip translated texts"
+msgstr "翻訳済みのテキストを飛ばす"
+
+msgid "With the ‹ › arrows, skip texts that already have a translation and stop only on the ones still to translate."
+msgstr "‹ › の矢印で移動するとき、翻訳済みのテキストを飛ばして未翻訳のものだけで止まります。"
+
+msgid "Image alt text"
+msgstr "画像の代替テキスト"
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Placeholder"
+msgstr "プレースホルダー"
+
+msgid "ARIA label"
+msgstr "ARIAラベル"
+
+msgid "Close"
+msgstr "閉じる"
+
+msgid "Lock the window here (it stays put while you navigate)"
+msgstr "ウィンドウをここに固定する (移動しても位置が変わりません)"
+
+msgid "Unlock — follow the selected text again"
+msgstr "ロックを解除 — 選択したテキストに再び追従します"
+
+msgid "Restore original"
+msgstr "原文に戻す"
+
+msgid "Put the original text back (e.g. if the [1] [2] markers got broken), then translate again."
+msgstr "原文を元に戻してから ([1] [2] の印が壊れた場合など)、もう一度翻訳します。"
+
+msgid "Markers like [1] [2] are formatting (bold, links). Keep them where they are."
+msgstr "[1] [2] のような印は書式 (太字やリンク) です。位置を変えずに残してください。"
+
+msgid "⚠ Keep all the [1] [2] markers so the bold/links can be restored."
+msgstr "⚠ 太字やリンクを復元するため、[1] [2] の印はすべて残してください。"
+
+msgid "Already translated"
+msgstr "翻訳済み"
+
+msgid "Saved"
+msgstr "保存しました"
+
+msgid "Done"
+msgstr "完了"
+
+msgid "Click any text to translate it"
+msgstr "テキストをクリックすると翻訳できます"
+
+msgid "Switch this page back to runtime translation? Your independent copy is kept (paused), not deleted — you can re-create it later to get your edits back."
+msgstr "このページを実行時翻訳に戻しますか？ 独立したコピーは削除されず停止状態で残ります — 後で作り直せば編集内容を取り戻せます。"
+
+msgid "Delete this independent copy for good? Its edits will be lost and the page goes back to runtime translation."
+msgstr "この独立したコピーを完全に削除しますか？ 編集内容は失われ、ページは実行時翻訳に戻ります。"
+
+msgid "%s is your source language — pick a language to translate into:"
+msgstr "%sは翻訳元の言語です — 翻訳先の言語を選んでください:"
+
+msgid "Switch to %s"
+msgstr "%sに切り替え"
+
+msgid "Visibility"
+msgstr "表示設定"
+
+msgid "SEO"
+msgstr "SEO"
+
+msgid "Delete this independent copy"
+msgstr "この独立したコピーを削除"
+
+msgid "The source page changed after this copy was made — re-create it to pull in the changes (the copy's edits are lost), or keep editing the copy."
+msgstr "このコピーを作った後に元のページが変更されました — 作り直すと変更を取り込めます (コピーの編集内容は失われます)。このままコピーを編集し続けることもできます。"
+
+msgid "Source changed"
+msgstr "原文が変更されました"
+
+msgid "This page is served from an independent copy."
+msgstr "このページは独立したコピーから表示されています。"
+
+msgid "Independent copy"
+msgstr "独立したコピー"
+
+msgid "Back to strings"
+msgstr "文字列一覧に戻る"
+
+msgid "Reactivate the independent copy (your edits are restored)."
+msgstr "独立したコピーを再び有効にする (編集内容は元に戻ります)。"
+
+msgid "Reactivate copy"
+msgstr "コピーを再度有効にする"
+
+msgid "Detach this page into an independent, fully-editable copy, pre-filled with the current translation."
+msgstr "このページを、現在の翻訳を入れた状態で、自由に編集できる独立したコピーとして切り離します。"
+
+msgid "https://…"
+msgstr "https://…"
+
+msgid "Custom message shown instead of the page."
+msgstr "ページの代わりに表示するメッセージ。"
+
+msgid "Language visibility for this page"
+msgstr "このページの言語別の公開設定"
+
+msgid "Choose what happens when this page is viewed in each language — translate it, redirect, show a message, or 404."
+msgstr "このページが各言語で表示されたときの動作を選びます — 翻訳する、リダイレクトする、メッセージを表示する、404を返す。"
+
+msgid "Save visibility"
+msgstr "表示設定を保存"
+
+msgid "The homepage has no slug — its address is just the language prefix."
+msgstr "ホームページにはスラッグがありません — アドレスは言語の接頭辞だけです。"
+
+msgid "The page address in this language, e.g. /%s/about-us/. Leave empty to keep the original."
+msgstr "この言語でのページのアドレスです。例: /%s/about-us/。空欄にすると元のままになります。"
+
+msgid "The short summary under the title in Google results."
+msgstr "Googleの検索結果でタイトルの下に出る短い説明です。"
+
+msgid "SEO for this page"
+msgstr "このページのSEO"
+
+msgid "What search engines see in %s: the translated URL slug, the page title and the meta description."
+msgstr "%sで検索エンジンが見る内容です: 翻訳されたURLスラッグ、ページタイトル、メタディスクリプション。"
+
+msgid "Save SEO"
+msgstr "SEOを保存"
+
+msgid "Not detected on this page yet."
+msgstr "このページではまだ検出されていません。"
+
+msgid "No AI provider configured."
+msgstr "AIプロバイダーが設定されていません。"
+
+msgid "Translation failed."
+msgstr "翻訳に失敗しました。"
+
+msgid "Could not create the copy."
+msgstr "コピーを作成できませんでした。"
+
+msgid "Polylang is not configured."
+msgstr "Polylangが設定されていません。"
+
+msgid "TranslatePress is not configured."
+msgstr "TranslatePressが設定されていません。"
+
+msgid "WPML is not configured."
+msgstr "WPMLが設定されていません。"
+
+msgid "DeepL: monthly character quota exhausted — it resets at the start of your DeepL billing cycle."
+msgstr "DeepL: 今月の文字数の上限に達しました — DeepLの請求サイクルの開始時にリセットされます。"
+
+msgid "Automatic Google translation is turned off."
+msgstr "Google翻訳による自動翻訳は無効です。"
+
+msgid "Google Translate stopped responding while translating into %s."
+msgstr "%sへの翻訳中にGoogle翻訳が応答しなくなりました。"
+
+msgid "Google Translate stopped responding (it may be rate-limiting). Some strings were translated — try again in a moment for the rest."
+msgstr "Google翻訳が応答しなくなりました (回数制限の可能性があります)。一部は翻訳されました — 残りは少し待ってからもう一度お試しください。"
+
+msgid "No AI provider is configured. Add an API key first."
+msgstr "AIプロバイダーが設定されていません。先にAPIキーを追加してください。"
+
+msgid "Daily AI character limit reached. Raise it in AI settings or wait until tomorrow."
+msgstr "1日あたりのAI文字数上限に達しました。AI設定で上限を引き上げるか、明日までお待ちください。"
+
+msgid "Daily AI character limit reached."
+msgstr "1日あたりのAI文字数上限に達しました。"
+
+msgid "AI translation failed (→ %s)."
+msgstr "AI翻訳に失敗しました (→ %s)。"
+
+msgid "%1$s is unavailable (%2$s) — falling back to the next provider."
+msgstr "%1$sを利用できません (%2$s) — 次のプロバイダーに切り替えます。"
+
+msgid "Language Switcher"
+msgstr "言語切替"
+
+msgid "Let visitors switch language (TranslateRocket)."
+msgstr "訪問者が言語を切り替えられるようにする (TranslateRocket)。"
+
+msgid "Switcher settings"
+msgstr "言語切替の設定"
+
+msgid "TranslateRocket has translated %s strings on this site, for free. It has no paid version: reviews are the only thing that helps other people find it. Would you leave one?"
+msgstr "TranslateRocketはこのサイトで%s件の文字列を無料で翻訳しました。有料版はありません。他の人に見つけてもらう手立てはレビューだけです。ひとこと書いていただけませんか？"
+
+msgid "Something is wrong instead"
+msgstr "逆に問題があるとき"
+
+msgid "Border"
+msgstr "枠線"
+
+msgid "No border at all"
+msgstr "枠線をなくす"
+
+msgid "Removes the border instead of colouring it. The colour above is then ignored."
+msgstr "枠線に色を付けるのではなく、枠線そのものをなくします。上の色は無視されます。"
+
+msgid "Flag + code (EN, IT…)"
+msgstr "国旗 + 言語コード（EN、IT…）"
+
+msgid "Code only (EN, IT…)"
+msgstr "言語コードのみ（EN、IT…）"
+
+msgid "House style"
+msgstr "文体の指定"
+
+msgid "Extra instruction for the AI"
+msgstr "AI への追加指示"
+
+msgid "An extra instruction sent with every AI translation, so the wording sounds like you rather than like a dictionary. Tone, formality, words to keep in the original — anything the model should know about your brand."
+msgstr "AI による翻訳のたびに一緒に送られる追加の指示です。辞書のような訳ではなく、あなたらしい言葉づかいになります。トーン、丁寧さ、原文のまま残したい語など、ブランドについてモデルに伝えておきたいことを書いてください。"
+
+msgid "Optional, up to %d characters. Sent with every batch, so keep it short. It never overrides the rules that keep translations lined up with your text."
+msgstr "任意、最大 %d 文字です。バッチごとに毎回送られるので短くしてください。翻訳を原文に対応させるための規則を上書きすることはありません。"
+
+msgid "e.g. We are a family-run guesthouse. Keep it warm and informal, use \"tu\" in Italian, and never translate the name Villa Aurora."
+msgstr "例: 家族経営の小さな宿です。あたたかく、くだけた調子で。Villa Aurora という名前は訳さないでください。"
+
+msgid "Appearance on small screens (when shown): show only flags, or hide it."
+msgstr "小さな画面での見え方（表示する場合）: 国旗だけにするか、隠します。"
+
+msgid "Desktop and mobile"
+msgstr "パソコンとスマートフォン"
+
+msgid "Desktop only"
+msgstr "パソコンのみ"
+
+msgid "Mobile only"
+msgstr "スマートフォンのみ"
+
+msgid "Only the AI models can follow this: OpenAI, Claude and Gemini. DeepL and Google Translate are translation APIs with no prompt of their own, so they ignore it."
+msgstr "これに従えるのは AI モデルだけです: OpenAI、Claude、Gemini。DeepL と Google 翻訳はプロンプトを持たない翻訳 API なので、無視されます。"
+
+msgid "Show on"
+msgstr "表示する画面"
+
+msgid "Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The live preview above always shows the desktop appearance."
+msgstr "この切り替えスイッチを表示する画面の大きさです。「パソコンのみ」のプロファイルと「スマートフォンのみ」のプロファイルを作れば、それぞれに別の言語メニューを用意できます（境目は 783px）。上のプレビューは常にパソコンでの見え方を表示します。"
+
+msgid "WooCommerce emails"
+msgstr "WooCommerce のメール"
+
+msgid "Your provider right now is %s, so this instruction will be ignored until you switch to one of those."
+msgstr "現在のプロバイダーは %s なので、そのいずれかに切り替えるまでこの指示は無視されます。"
+
+msgid "You’ve been translating with TranslateRocket for a while now. It’s free forever, and it stays maintained either way — if it saved you a paid plugin, a donation is a nice way to say thanks."
+msgstr "TranslateRocket をお使いいただいて、しばらく経ちました。ずっと無料で、どちらにしても手入れは続けます。有料プラグインの代わりになったのなら、寄付はお礼を伝える気持ちのよい方法です。"
+
+msgid "Chrome and Edge on a computer can translate on the device itself. It costs nothing, needs no account, and the text never leaves this machine. Quality is below DeepL and the AI models, and it works through one phrase at a time — so it is the quickest way to get a translated site today, not the best one you can have."
+msgstr "パソコンの Chrome と Edge は、端末の中だけで翻訳できます。費用はかからず、アカウントも要らず、文章がこのパソコンから出ることもありません。品質は DeepL や AI モデルより下で、一文ずつ進みます。今日のうちに翻訳されたサイトを手に入れる一番速い方法であって、いちばん良い方法ではありません。"
+
+msgid "Could not read the translations."
+msgstr "翻訳を読み取れませんでした。"
+
+msgid "Done — %d strings translated in this browser."
+msgstr "完了しました — このブラウザーで %d 件の文字列を翻訳しました。"
+
+msgid "Downloading the language model — this happens once…"
+msgstr "言語モデルをダウンロードしています。これは最初の一度だけです…"
+
+msgid "No language given."
+msgstr "言語が指定されていません。"
+
+msgid "Not allowed."
+msgstr "許可されていません。"
+
+msgid "Nothing left to translate in this language."
+msgstr "この言語で翻訳するものは残っていません。"
+
+msgid "Nothing to store."
+msgstr "保存するものがありません。"
+
+msgid "Preparing…"
+msgstr "準備しています…"
+
+msgid "Reload the page to see the new totals."
+msgstr "新しい集計を見るにはページを再読み込みしてください。"
+
+msgid "Set up an AI provider on the AI page to bulk-translate the missing strings — or use your browser below, which needs no key."
+msgstr "足りない文字列をまとめて翻訳するには、AI ページでプロバイダーを設定してください。または下のブラウザー翻訳をお使いください。こちらはキーが要りません。"
+
+msgid "Stop"
+msgstr "停止"
+
+msgid "Stopped."
+msgstr "停止しました。"
+
+msgid "The browser translator stopped with an error."
+msgstr "ブラウザーの翻訳機能がエラーで停止しました。"
+
+msgid "The translator built into Chrome and Edge only works over a secure connection. Your admin is on plain http, so it cannot be used here."
+msgstr "Chrome と Edge に内蔵された翻訳機能は、安全な接続でしか動きません。管理画面が通常の http のため、ここでは使えません。"
+
+msgid "Translate %d missing in this browser"
+msgstr "未翻訳の %d 件をこのブラウザーで翻訳"
+
+msgid "Translate with your browser — no API key"
+msgstr "ブラウザーで翻訳 — API キー不要"
+
+msgid "Translating %1$d of %2$d…"
+msgstr "%2$d 件中 %1$d 件を翻訳しています…"
+
+msgid "You can add an API provider later for better quality — what you translate here is kept and never translated again."
+msgstr "あとから API プロバイダーを追加すれば品質を上げられます。ここで翻訳したものはそのまま残り、二度と翻訳し直されません。"
+
+msgid "Your browser has no built-in translator for %s."
+msgstr "お使いのブラウザーには %s 用の翻訳機能がありません。"
+
+msgid "Open the copy &amp; paste tool"
+msgstr "コピー＆ペーストの画面を開く"
+
+msgid "Translate without an API key"
+msgstr "API キーなしで翻訳"
+
+msgid "Your browser has no translator of its own — Chrome and Edge on a computer do. You can still work without a key: copy the missing strings out, run them through any translator you like, and paste the result back."
+msgstr "お使いのブラウザーには翻訳機能がありません。パソコンの Chrome と Edge にはあります。キーがなくても作業はできます。足りない文字列をコピーして、好きな翻訳サービスにかけ、結果を貼り戻してください。"
+
+msgid "Ask for help"
+msgstr "サポートに問い合わせる"
+
+msgid "Attach the report above (recommended — it usually saves a round of questions)"
+msgstr "上のレポートを添付する（推奨 — たいてい質問のやり取りが一往復減ります）"
+
+msgid "Check your provider and key"
+msgstr "プロバイダーとキーを確認してください"
+
+msgid "Copied — now paste it into your message."
+msgstr "コピーしました — メッセージに貼り付けてください。"
+
+msgid "Copy the report"
+msgstr "レポートをコピー"
+
+msgid "Copy the report below and paste it into your message: it says which versions you are on and what these checks found. Nothing is sent anywhere on its own — you copy it, you decide where it goes. It never contains your API keys."
+msgstr "下のレポートをコピーしてメッセージに貼り付けてください。使用中のバージョンと、これらのチェックで見つかった内容が書かれています。勝手にどこかへ送信されることはありません。コピーするのはあなたで、どこへ送るかを決めるのもあなたです。API キーが含まれることは決してありません。"
+
+msgid "Could not reach the support site from here. Your host may be blocking outgoing requests — you can still copy the report and write from the browser."
+msgstr "ここからサポートサイトに接続できませんでした。ホスティング側が外部への通信を遮断している可能性があります。レポートをコピーしてブラウザーから送ることはできます。"
+
+msgid "DeepL refused with \"quota exceeded\", but your account still reports %1$s of %2$s characters used. That combination means the key itself is blocked, not the allowance: DeepL does this when the account has no verified payment method. Check your account on deepl.com/account."
+msgstr "DeepL は「クォータ超過」と応答しましたが、アカウントは今も %2$s 文字中 %1$s 文字使用と報告しています。この組み合わせは、上限ではなくキー自体がブロックされていることを意味します。DeepL はアカウントに確認済みの支払い方法がないときにこうします。deepl.com/account でアカウントを確認してください。"
+
+msgid "DeepL: the monthly character allowance is used up. It resets at the start of your DeepL billing cycle."
+msgstr "DeepL: 今月の文字数を使い切りました。DeepL の請求サイクルの開始時にリセットされます。"
+
+msgid "Everything is translated"
+msgstr "すべて翻訳済みです"
+
+msgid "Give it a subject first."
+msgstr "先に件名を入力してください。"
+
+msgid "Give the message a subject, even a short one."
+msgstr "短くてかまいませんので、メッセージに件名を付けてください。"
+
+msgid "I need an email address to answer you."
+msgstr "返信するにはメールアドレスが必要です。"
+
+msgid "In a few words, what is wrong?"
+msgstr "ひとことで言うと、何が問題ですか？"
+
+msgid "It did not go through."
+msgstr "送信できませんでした。"
+
+msgid "Leave this field empty"
+msgstr "この欄は空のままにしてください"
+
+msgid "Needs an API key — set one up in %s, or use your browser below (free)."
+msgstr "API キーが必要です — %s で設定するか、下のブラウザー翻訳をお使いください（無料）。"
+
+msgid "No API key for now"
+msgstr "今は API キーなしで"
+
+msgid "Open a topic on WordPress.org"
+msgstr "WordPress.org でトピックを開く"
+
+msgid "Or open the support site"
+msgstr "またはサポートサイトを開く"
+
+msgid "Or write to me from here. Nothing leaves your site until you press Send, and what gets sent is exactly what you can read on this page — no keys, no page content, no visitor data."
+msgstr "あるいはここから私に書いてください。送信を押すまで、あなたのサイトからは何も出ていきません。出ていくのはこのページで読める内容そのものだけです — キーも、ページの中身も、訪問者のデータも含まれません。"
+
+msgid "Send to TranslateRocket support"
+msgstr "TranslateRocket のサポートに送る"
+
+msgid "Sending from here is not available on this install."
+msgstr "このインストールではここからの送信は利用できません。"
+
+msgid "Sending…"
+msgstr "送信中…"
+
+msgid "Sent — your ticket is #%d. My answer arrives by email."
+msgstr "送信しました — チケット番号は #%d です。返信はメールで届きます。"
+
+msgid "Start with %s — pick your languages and you are translating."
+msgstr "%s から始めてください — 言語を選べば、もう翻訳が始まります。"
+
+msgid "Subject"
+msgstr "件名"
+
+msgid "Technical report"
+msgstr "技術レポート"
+
+msgid "Tell me a little more — what you did, and what happened instead."
+msgstr "もう少し詳しく教えてください — 何をして、代わりに何が起きたのかを。"
+
+msgid "That email address does not look right — without it I cannot answer you."
+msgstr "そのメールアドレスは正しくないようです — これがないと返信できません。"
+
+msgid "The AI translation could not run"
+msgstr "AI 翻訳を実行できませんでした"
+
+msgid "The support site refused the message. Please copy the report and write from the browser instead."
+msgstr "サポートサイトがメッセージを受け付けませんでした。レポートをコピーしてブラウザーから送ってください。"
+
+msgid "This is where my answer goes. It is used for nothing else."
+msgstr "私の返信はここに届きます。ほかの用途には使いません。"
+
+msgid "This site is not reachable from the internet — it looks like a local or staging install. To be sure a ticket is genuine, the support site has to call your site back once, and it cannot do that here. Copy the report and write from the support page instead."
+msgstr "このサイトはインターネットから到達できません — ローカルまたはステージング環境のようです。チケットが本物であることを確かめるため、サポートサイトはあなたのサイトへ一度だけ折り返し接続する必要がありますが、ここではそれができません。レポートをコピーして、サポートページから送ってください。"
+
+msgid "To be sure a ticket really comes from a WordPress site and not from a spam robot, the support site calls your site back once. This install is local or private, so it cannot be reached from the outside. Copy the report above and write from the support page — it gets to the same place."
+msgstr "チケットがスパムロボットではなく本当に WordPress サイトから来たことを確かめるため、サポートサイトはあなたのサイトへ一度だけ折り返し接続します。このインストールはローカルまたは非公開なので、外部から到達できません。上のレポートをコピーして、サポートページから送ってください — 届く先は同じです。"
+
+msgid "Translate all %d missing with AI"
+msgstr "未翻訳の %d 件をすべて AI で翻訳"
+
+msgid "Translate by hand, or let Chrome and Edge translate the whole site for free from the Translations page — the text never leaves your computer. You can add a key later at any time."
+msgstr "手作業で翻訳するか、翻訳ページから Chrome と Edge にサイト全体を無料で翻訳させることもできます — テキストがあなたのパソコンから出ることはありません。キーは後からいつでも追加できます。"
+
+msgid "Translate only this page with AI"
+msgstr "このページだけを AI で翻訳"
+
+msgid "What happened"
+msgstr "何が起きたか"
+
+msgid "What you were doing, what you expected, and what happened instead."
+msgstr "何をしていて、何を期待し、代わりに何が起きたのか。"
+
+msgid "Write a little more about what happened."
+msgstr "何が起きたのかをもう少し詳しく書いてください。"
+
+msgid "You just sent one. Give it a few minutes before sending another — I read them all."
+msgstr "たった今ひとつ送信しました。次を送るまで数分待ってください — すべて読んでいます。"
+
+msgid "Your email"
+msgstr "あなたのメールアドレス"
+
+msgid "Your name"
+msgstr "あなたのお名前"
+
+msgid "or translate in this browser, free and without a key"
+msgstr "またはこのブラウザーで翻訳（無料・キー不要）"
+
+msgid "the 1-minute setup"
+msgstr "1 分でできる初期設定"
+
+msgid "Chrome and Edge on a computer can translate on the device itself: it costs nothing and the text never leaves your machine. Quality is below the AI models."
+msgstr "パソコンの Chrome と Edge は端末の中だけで翻訳できます。費用はかからず、テキストがあなたのパソコンから出ることもありません。品質は AI モデルより劣ります。"
+
+msgid "Translate everything in this browser — no key"
+msgstr "このブラウザーですべて翻訳 — キー不要"
+
+msgid "Updating the totals…"
+msgstr "集計を更新しています…"
+
+msgid "Translate in this browser"
+msgstr "このブラウザーで翻訳"
+
+msgid "Everyone who helps out is named on the Contributors page."
+msgstr "協力してくれた方は Contributors ページでご紹介しています。"
+
+msgid "See who they are"
+msgstr "誰なのか見る"
+
+msgid "Online: your visitors see this language. Click to hide it while you work on it."
+msgstr "公開中: 訪問者にこの言語が表示されます。作業中に隠すにはクリックしてください。"
+
+msgid "Offline: only you see this language. Click to publish it."
+msgstr "非公開: この言語はあなただけに表示されます。公開するにはクリックしてください。"
+
+msgid "online"
+msgstr "公開中"
+
+msgid "offline"
+msgstr "非公開"
+
+msgid "Published, or still being translated?"
+msgstr "公開済みですか、まだ翻訳中ですか?"
+
+msgid "A language kept offline is invisible to visitors: it is left out of the language switcher, out of your sitemap and out of the hreflang tags, and anyone landing on one of its URLs is sent to your default language. You keep working on it normally — and you can see it on the real pages, because whoever can preview still sees everything. Put it online when you are happy with it."
+msgstr "非公開にした言語は訪問者には見えません。言語切り替え、サイトマップ、hreflang タグから外れ、その URL を開いた人は既定の言語に案内されます。作業はそのまま続けられます — プレビューできる人には実際のページでも見えるからです。納得できたら公開してください。"
+
+msgid "Add a language today, publish it when it is ready. Nothing half-translated ever reaches your visitors or Google."
+msgstr "今日言語を追加して、準備ができたら公開しましょう。中途半端な翻訳が訪問者や Google に届くことはありません。"
+
+msgid "nothing collected yet"
+msgstr "まだ何も収集されていません"
+
+msgid "(no alt text)"
+msgstr "(代替テキストなし)"
+
+msgid "(empty)"
+msgstr "(空)"
+
+msgid "Alt text"
+msgstr "代替テキスト"
+
+msgid "Change the photo"
+msgstr "写真を変更"
+
+msgid "Edit"
+msgstr "編集"
+
+msgid "Social title (Open Graph)"
+msgstr "SNS 用タイトル (Open Graph)"
+
+msgid "The headline people see when the page is shared on Facebook, LinkedIn or WhatsApp."
+msgstr "Facebook や LinkedIn、WhatsApp でページが共有されたときに表示される見出しです。"
+
+msgid "Social description (Open Graph)"
+msgstr "SNS 用の説明 (Open Graph)"
+
+msgid "The text under that headline in the shared preview."
+msgstr "共有プレビューでその見出しの下に出る文章です。"
+
+msgid "Title for X / Twitter"
+msgstr "X / Twitter 用タイトル"
+
+msgid "Used when the page is shared on X."
+msgstr "X でページが共有されたときに使われます。"
+
+msgid "Description for X / Twitter"
+msgstr "X / Twitter 用の説明"
+
+msgid "The summary in the X preview card."
+msgstr "X のプレビューカードに出る要約です。"
+
+msgid "Alt text of the shared image"
+msgstr "共有画像の代替テキスト"
+
+msgid "Describes the preview image for people using a screen reader."
+msgstr "スクリーンリーダーを使う人にプレビュー画像を説明します。"
+
+msgid "Alt text of the X image"
+msgstr "X の画像の代替テキスト"
+
+msgid "Describes the preview image on X."
+msgstr "X のプレビュー画像を説明します。"
+
+msgid "Site name in shares"
+msgstr "共有時のサイト名"
+
+msgid "The name of your site as it appears in the shared preview."
+msgstr "共有プレビューに表示されるサイト名です。"
+
+msgid "Meta keywords"
+msgstr "メタキーワード"
+
+msgid "Google has ignored these since 2009, but some other engines and directories still read them."
+msgstr "Google は 2009 年から無視していますが、ほかの検索エンジンやディレクトリでは今も読まれています。"
+
+msgid "Images on this page"
+msgstr "このページの画像"
+
+msgid "The alt text is what search engines read instead of the picture. Click a line to jump to that photo in the page and edit it."
+msgstr "代替テキストは、画像の代わりに検索エンジンが読む文章です。行をクリックすると、ページ内のその写真に移動して編集できます。"
+
+msgid "Other HTML attributes"
+msgstr "その他の HTML 属性"
+
+msgid "Titles, placeholders and ARIA labels: invisible on screen, but read by search engines and screen readers."
+msgstr "title、プレースホルダー、ARIA ラベル: 画面には見えませんが、検索エンジンやスクリーンリーダーが読み取ります。"
+
+msgid "Everything search engines read in %s, in order: the address, the title and description, the social preview, then the images and attributes inside the page."
+msgstr "%s で検索エンジンが読むものすべてを順に: アドレス、タイトルと説明、SNS プレビュー、そしてページ内の画像と属性。"
+
+msgid "A language you add now starts offline: nobody sees it while you translate it. Flip its switch to green when it is ready."
+msgstr "今追加した言語は非公開から始まります。翻訳しているあいだは誰にも見えません。準備ができたらスイッチを緑にしてください。"
+
+msgid "%d page changed since TranslateRocket last read it."
+msgid_plural "%d pages changed since TranslateRocket last read them."
+msgstr[0] "TranslateRocket が最後に読んでから %d ページが変わりました。"
+
+msgid "Any new text on them has not been detected yet, so it is not in your list of strings to translate — and on the translated pages it is still showing in your source language."
+msgstr "そこに増えた文章はまだ検出されていないため、翻訳するテキストの一覧に入っていません。翻訳済みのページでは、元の言語のまま表示されたままです。"
+
+msgid "Scan them now"
+msgstr "今すぐスキャン"
+
+msgid "⚠ Not saved — your site refused the request. Your text is still here: try again."
+msgstr "⚠ 保存できませんでした。サイトがリクエストを拒否しました。入力した文章はそのまま残っています。もう一度お試しください。"
+
+msgid "⚠ Your site did not answer. The text is still here — check your connection, then try again."
+msgstr "⚠ サイトから応答がありませんでした。入力した文章はそのまま残っています。接続を確認して、もう一度お試しください。"

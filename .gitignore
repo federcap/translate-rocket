@@ -1,0 +1,63 @@
+# ---------------------------------------------------------------------------
+# TranslateRocket — public repository
+#
+# This repo contains the plugin and nothing else. Everything below is either
+# a build artefact, a local development leftover, or something that must never
+# be published. When in doubt, add it here first and commit later.
+# ---------------------------------------------------------------------------
+
+# --- secrets: never, under any circumstance -------------------------------
+*.pem
+*.key
+*.ppk
+*.pfx
+*.p12
+id_rsa*
+id_ed25519*
+.env
+.env.*
+credenziali*
+credentials*
+password*
+INFO.txt
+*INFO*.txt
+wp-config.php
+auth.json
+.htpasswd
+
+# --- databases and dumps ---------------------------------------------------
+*.sql
+*.sql.gz
+*.sql.zip
+*.sqlite
+
+# --- backups and archives --------------------------------------------------
+/backup/
+/backups/
+/_backup*/
+*.zip
+*.tar
+*.tar.gz
+*.bak
+*~
+
+# --- local development -----------------------------------------------------
+/_ssh/
+/_svn/
+/_chat-backup/
+/tools/
+/scripts/
+/graphify-out/
+/node_modules/
+/vendor/
+.phpunit.result.cache
+*.stackdump
+*.log
+
+# --- editors and OS --------------------------------------------------------
+.vscode/
+.idea/
+*.sublime-*
+.DS_Store
+Thumbs.db
+desktop.ini

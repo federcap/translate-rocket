@@ -1,0 +1,2344 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TranslateRocket\n"
+"Report-Msgid-Bugs-To: https://translaterocket.com/support/\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru-RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+
+msgid "TranslateRocket"
+msgstr "TranslateRocket"
+
+msgid "https://translaterocket.com"
+msgstr "https://translaterocket.com"
+
+msgid "Free, AI-powered translation for WordPress. Translate your whole site — visible text, image alt tags, titles, placeholders and SEO meta — using your own AI keys (OpenAI, Anthropic, Gemini, DeepL, Google). Untranslated strings are detected automatically as visitors browse."
+msgstr "Бесплатный перевод для WordPress с помощью ИИ. Переводите весь сайт — видимый текст, альт-теги изображений, заголовки, подсказки в полях и SEO-мета — своими ключами ИИ (OpenAI, Anthropic, Gemini, DeepL, Google). Непереведённые строки находятся автоматически, пока посетители ходят по сайту."
+
+msgid "federico_dev"
+msgstr "federico_dev"
+
+msgid "https://federicocaputo.dev"
+msgstr "https://federicocaputo.dev"
+
+msgid "TranslateRocket preview mode is on."
+msgstr "Включён режим предпросмотра TranslateRocket."
+
+msgid "Only administrators can see the translations — visitors get the default language. When you are happy with the result, switch visibility back to \"Everyone\" to publish."
+msgstr "Переводы видят только администраторы — посетителям показывается язык по умолчанию. Когда результат вас устроит, верните видимость на «Все», чтобы опубликовать."
+
+msgid "Open settings"
+msgstr "Открыть настройки"
+
+msgid "%s is unavailable."
+msgstr "%s недоступен."
+
+msgid "Automatic translation is falling back to the next provider in your chain (or stopping if there is none)."
+msgstr "Автоперевод переходит к следующему поставщику в цепочке (или останавливается, если его нет)."
+
+msgid "Dismiss"
+msgstr "Скрыть"
+
+msgid "Google Translate is unavailable right now."
+msgstr "Google Переводчик сейчас недоступен."
+
+msgid "Translations"
+msgstr "Переводы"
+
+msgid "Translation Memory"
+msgstr "Память переводов"
+
+msgid "Memory"
+msgstr "Память"
+
+msgid "AI Translation"
+msgstr "Перевод с ИИ"
+
+msgid "Import"
+msgstr "Импорт"
+
+msgid "Switcher"
+msgstr "Переключатель"
+
+msgid "Exclusions"
+msgstr "Исключения"
+
+msgid "Independent copies"
+msgstr "Независимые копии"
+
+msgid "Diagnostics"
+msgstr "Диагностика"
+
+msgid "Setup wizard"
+msgstr "Мастер настройки"
+
+msgid "Loading…"
+msgstr "Загрузка…"
+
+msgid "No models found — check the API key for this provider."
+msgstr "Модели не найдены — проверьте ключ API этого поставщика."
+
+msgid "— pick a model —"
+msgstr "— выберите модель —"
+
+msgid "characters used"
+msgstr "символов использовано"
+
+msgid "Scan all published pages to detect translatable text? Keep this tab open until it finishes."
+msgstr "Просканировать все опубликованные страницы для поиска переводимого текста? Не закрывайте вкладку до конца."
+
+msgid "Scanning"
+msgstr "Сканирование"
+
+msgid "Scan complete — reloading…"
+msgstr "Сканирование завершено — перезагрузка…"
+
+msgid "No published pages found to scan."
+msgstr "Опубликованных страниц для сканирования не найдено."
+
+msgid "Add your DeepL key first."
+msgstr "Сначала добавьте ключ DeepL."
+
+msgid "Could not reach DeepL — check the key."
+msgstr "Не удалось связаться с DeepL — проверьте ключ."
+
+msgid "Unexpected response from DeepL."
+msgstr "Неожиданный ответ от DeepL."
+
+msgid "No AI provider is configured."
+msgstr "Поставщик ИИ не настроен."
+
+msgid "Add the API key first."
+msgstr "Сначала добавьте ключ API."
+
+msgid "Connection test failed for %s."
+msgstr "Проверка связи с %s не удалась."
+
+msgid "The provider did not return a translation."
+msgstr "Поставщик не вернул перевод."
+
+msgid "Security check failed."
+msgstr "Проверка безопасности не пройдена."
+
+msgid "Import translations"
+msgstr "Импорт переводов"
+
+msgid "Already used another translation plugin? Bring its translations into TranslateRocket so you don’t start over."
+msgstr "Уже пользовались другим плагином перевода? Перенесите его переводы в TranslateRocket, чтобы не начинать заново."
+
+msgid "Imported %d translations."
+msgstr "Импортировано %d переводов."
+
+msgid "Imported %d translations from CSV."
+msgstr "Импортировано %d переводов из CSV."
+
+msgid "Could not read the CSV file. Please upload a valid .csv exported from TranslateRocket."
+msgstr "Не удалось прочитать файл CSV. Загрузите корректный .csv, выгруженный из TranslateRocket."
+
+msgid "Imported %d translations from TMX."
+msgstr "Импортировано %d переводов из TMX."
+
+msgid "Could not read the TMX file. Please upload a valid .tmx (without a DTD)."
+msgstr "Не удалось прочитать файл TMX. Загрузите корректный .tmx (без DTD)."
+
+msgid "Imported %d translations from your Weglot export."
+msgstr "Импортировано %d переводов из вашего экспорта Weglot."
+
+msgid "%d rows were skipped because their language is not configured as a target here."
+msgstr "Пропущено %d строк: их язык не настроен здесь как язык перевода."
+
+msgid "This does not look like a Weglot export: the header has no word_from / word_to columns."
+msgstr "Это не похоже на экспорт Weglot: в заголовке нет колонок word_from / word_to."
+
+msgid "The file is too large (10 MB maximum). Export from Weglot in smaller batches, e.g. one language at a time."
+msgstr "Файл слишком большой (максимум 10 МБ). Выгружайте из Weglot частями, напр. по одному языку."
+
+msgid "Could not read the file. Please upload the .csv exported from your Weglot dashboard."
+msgstr "Не удалось прочитать файл. Загрузите .csv, выгруженный из панели Weglot."
+
+msgid "Bring your translations over from another plugin — no need to start from scratch."
+msgstr "Перенесите переводы из другого плагина — не придётся начинать заново."
+
+msgid "Existing TranslateRocket translations are kept; imported strings are added or filled in."
+msgstr "Существующие переводы TranslateRocket сохраняются, импортированные строки добавляются или дополняют их."
+
+msgid "%d translatable strings found."
+msgstr "Найдено %d строк для перевода."
+
+msgid "Import from %s"
+msgstr "Импорт из %s"
+
+msgid "Detected, but there are no translations to import yet."
+msgstr "Обнаружен, но переводов для импорта пока нет."
+
+msgid "Not detected (the plugin is not installed or configured)."
+msgstr "Не обнаружен (плагин не установлен или не настроен)."
+
+msgid "Weglot keeps translations in its cloud, so there is nothing to detect locally. Export them from your Weglot dashboard (Translations → Export, CSV format) and upload the file here."
+msgstr "Weglot хранит переводы в своём облаке, поэтому локально их не найти. Выгрузите их в панели Weglot (Translations → Export, формат CSV) и загрузите файл сюда."
+
+msgid "Add your target languages in %s first, then upload the export."
+msgstr "Сначала добавьте языки перевода в %s, затем загрузите экспорт."
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Language of the file (used only when the export has no language column):"
+msgstr "Язык файла (используется, только если в экспорте нет колонки языка):"
+
+msgid "Import from Weglot"
+msgstr "Импорт из Weglot"
+
+msgid "Note: Polylang and WPML store translations as separate posts, so their import brings over string translations, titles, slugs and matching body text (best effort)."
+msgstr "Примечание: Polylang и WPML хранят переводы отдельными записями, поэтому импорт переносит переводы строк, заголовки, слаги и соответствующий текст — насколько это возможно."
+
+msgid "Export & import (CSV)"
+msgstr "Экспорт и импорт (CSV)"
+
+msgid "Download all your translations as a spreadsheet (one column per language) for backup or offline editing, then upload it back."
+msgstr "Скачайте все переводы таблицей (по колонке на язык) для резервной копии или правки офлайн, затем загрузите обратно."
+
+msgid "Export all translations"
+msgstr "Экспортировать все переводы"
+
+msgid "A UTF-8 CSV with columns: original, type, context, and one column per language. Opens in Excel, Google Sheets or Numbers."
+msgstr "CSV в UTF-8 с колонками original, type, context и по одной колонке на язык. Открывается в Excel, Google Таблицах или Numbers."
+
+msgid "Download CSV"
+msgstr "Скачать CSV"
+
+msgid "Import from CSV"
+msgstr "Импорт из CSV"
+
+msgid "Upload a CSV in the same format. Non-empty cells update the matching translation; blank cells are left untouched."
+msgstr "Загрузите CSV того же формата. Заполненные ячейки обновляют соответствующий перевод, пустые ничего не меняют."
+
+msgid "Import CSV"
+msgstr "Импорт CSV"
+
+msgid "Export & import (TMX)"
+msgstr "Экспорт и импорт (TMX)"
+
+msgid "TMX is the standard translation-memory format. Export to back up your memory, move it to another TranslateRocket site, or open it in a CAT tool; import a TMX to load translations."
+msgstr "TMX — стандартный формат памяти переводов. Экспортируйте для резервной копии, переноса на другой сайт с TranslateRocket или работы в CAT-инструменте; импортируйте TMX, чтобы загрузить переводы."
+
+msgid "Export translation memory"
+msgstr "Экспортировать память переводов"
+
+msgid "A standard TMX 1.4 file: one translation unit per source string, one segment per language."
+msgstr "Стандартный файл TMX 1.4: одна единица перевода на исходную строку, один сегмент на язык."
+
+msgid "Download TMX"
+msgstr "Скачать TMX"
+
+msgid "Import TMX"
+msgstr "Импорт TMX"
+
+msgid "Upload a TMX file. Segments are matched by their source-language text, then added or updated."
+msgstr "Загрузите файл TMX. Сегменты сопоставляются по исходному тексту, затем добавляются или обновляются."
+
+msgid "Add target languages to see the preview."
+msgstr "Добавьте языки перевода, чтобы увидеть предпросмотр."
+
+msgid "Language switcher"
+msgstr "Переключатель языков"
+
+msgid "Switcher saved."
+msgstr "Переключатель сохранён."
+
+msgid "Design your switcher — create profiles (e.g. header, footer), each with its own style and a live preview."
+msgstr "Оформите переключатель — создайте профили (напр. шапка, подвал), у каждого свой стиль и живой предпросмотр."
+
+msgid "Profile:"
+msgstr "Профиль:"
+
+msgid "Default"
+msgstr "По умолчанию"
+
+msgid "header, footer…"
+msgstr "шапка, подвал…"
+
+msgid "+ Add profile"
+msgstr "+ Добавить профиль"
+
+msgid "Insert with:"
+msgstr "Вставить с помощью:"
+
+msgid "Delete this profile?"
+msgstr "Удалить этот профиль?"
+
+msgid "Delete profile"
+msgstr "Удалить профиль"
+
+msgid "Style"
+msgstr "Стиль"
+
+msgid "Layout"
+msgstr "Вид"
+
+msgid "Inline (horizontal)"
+msgstr "В строку (горизонтально)"
+
+msgid "List (vertical)"
+msgstr "Список (вертикально)"
+
+msgid "Dropdown"
+msgstr "Выпадающий список"
+
+msgid "Scrollable bar (arrows, for many languages)"
+msgstr "Прокручиваемая полоса (со стрелками, для многих языков)"
+
+msgid "Show"
+msgstr "Показать"
+
+msgid "Flag + name"
+msgstr "Флаг + название"
+
+msgid "Flag only"
+msgstr "Только флаг"
+
+msgid "Name only"
+msgstr "Только название"
+
+msgid "Current language"
+msgstr "Текущий язык"
+
+msgid "Hide"
+msgstr "Скрыть"
+
+msgid "Language names"
+msgstr "Названия языков"
+
+msgid "Show in English (otherwise native)"
+msgstr "Показывать по-английски (иначе на родном языке)"
+
+msgid "On mobile"
+msgstr "На мобильных"
+
+msgid "Same as desktop"
+msgstr "Как на компьютере"
+
+msgid "Flags only"
+msgstr "Только флаги"
+
+msgid "Hidden"
+msgstr "Скрыто"
+
+msgid "On small screens (e.g. with a burger menu): show only flags, or hide it."
+msgstr "На маленьких экранах (напр. с меню-гамбургером): показывать только флаги или скрыть."
+
+msgid "Open dropdown"
+msgstr "Открытие списка"
+
+msgid "On click"
+msgstr "По клику"
+
+msgid "On mouse over"
+msgstr "При наведении мыши"
+
+msgid "Only for the “Dropdown” layout."
+msgstr "Только для вида «Выпадающий список»."
+
+msgid "Arrow"
+msgstr "Стрелка"
+
+msgid "Show an arrow that flips when the dropdown opens"
+msgstr "Показывать стрелку, которая переворачивается при открытии"
+
+msgid "Flag corners"
+msgstr "Углы флага"
+
+msgid "Top-left corner"
+msgstr "Левый верхний угол"
+
+msgid "Top-right corner"
+msgstr "Правый верхний угол"
+
+msgid "Same value for all corners"
+msgstr "Одно значение для всех углов"
+
+msgid "Bottom-left corner"
+msgstr "Левый нижний угол"
+
+msgid "Bottom-right corner"
+msgstr "Правый нижний угол"
+
+msgid "Rounding (px) per corner. The centre link keeps them equal."
+msgstr "Скругление (px) для каждого угла. Значок в центре делает их одинаковыми."
+
+msgid "Width"
+msgstr "Ширина"
+
+msgid "Auto"
+msgstr "Авто"
+
+msgid "Small"
+msgstr "Маленький"
+
+msgid "Medium"
+msgstr "Средняя"
+
+msgid "Large"
+msgstr "Большой"
+
+msgid "Custom (px)"
+msgstr "Своё значение (px)"
+
+msgid "Colours"
+msgstr "Цвета"
+
+msgid "Presets:"
+msgstr "Заготовки:"
+
+msgid "Minimal"
+msgstr "Минимальный"
+
+msgid "Dark"
+msgstr "Тёмная"
+
+msgid "Gold"
+msgstr "Золотая"
+
+msgid "Ocean"
+msgstr "Океан"
+
+msgid "Glass"
+msgstr "Стекло"
+
+msgid "Pill"
+msgstr "Капсула"
+
+msgid "Soft"
+msgstr "Мягкая"
+
+msgid "Sunset"
+msgstr "Закат"
+
+msgid "Forest"
+msgstr "Лес"
+
+msgid "Midnight"
+msgstr "Полночь"
+
+msgid "Candy"
+msgstr "Карамель"
+
+msgid "Outline"
+msgstr "Контур"
+
+msgid "Paper"
+msgstr "Бумага"
+
+msgid "Neon"
+msgstr "Неон"
+
+msgid "Frost"
+msgstr "Иней"
+
+msgid "Smooth"
+msgstr "Плавная"
+
+msgid "Text colour"
+msgstr "Цвет текста"
+
+msgid "Text colour (hover)"
+msgstr "Цвет текста (при наведении)"
+
+msgid "Background colour"
+msgstr "Цвет фона"
+
+msgid "Menu background (dropdown)"
+msgstr "Фон меню (выпадающий список)"
+
+msgid "Background colour (hover)"
+msgstr "Цвет фона (при наведении)"
+
+msgid "Border colour"
+msgstr "Цвет рамки"
+
+msgid "Corner radius"
+msgstr "Скругление углов"
+
+msgid "Shadow"
+msgstr "Тень"
+
+msgid "None"
+msgstr "Нет"
+
+msgid "Light"
+msgstr "Слабая"
+
+msgid "Strong"
+msgstr "Сильная"
+
+msgid "Open animation"
+msgstr "Анимация открытия"
+
+msgid "How the dropdown menu appears when opened."
+msgstr "Как появляется выпадающее меню при открытии."
+
+msgid "Fade"
+msgstr "Затухание"
+
+msgid "Slide down"
+msgstr "Выезд сверху вниз"
+
+msgid "Scale"
+msgstr "Масштаб"
+
+msgid "Hover effect"
+msgstr "Эффект при наведении"
+
+msgid "A subtle effect on each language when the visitor hovers it."
+msgstr "Лёгкий эффект для каждого языка при наведении курсора."
+
+msgid "Lift"
+msgstr "Подъём"
+
+msgid "Grow"
+msgstr "Увеличение"
+
+msgid "Underline"
+msgstr "Подчёркивание"
+
+msgid "Font"
+msgstr "Шрифт"
+
+msgid "Theme default"
+msgstr "Как в теме"
+
+msgid "Text style"
+msgstr "Стиль текста"
+
+msgid "Bold"
+msgstr "Жирный"
+
+msgid "UPPERCASE"
+msgstr "ПРОПИСНЫЕ"
+
+msgid "Font size"
+msgstr "Размер шрифта"
+
+msgid "e.g. 14px. Leave empty to inherit from your theme."
+msgstr "напр. 14px. Оставьте пустым, чтобы взять из темы."
+
+msgid "Flag / text divider"
+msgstr "Разделитель флага и текста"
+
+msgid "Shown only when both flag and name are visible."
+msgstr "Показывается, только когда видны и флаг, и название."
+
+msgid "Background opacity"
+msgstr "Прозрачность фона"
+
+msgid "Affects only the background — the flag and text stay fully visible."
+msgstr "Влияет только на фон — флаг и текст остаются полностью видимыми."
+
+msgid "Placement"
+msgstr "Размещение"
+
+msgid "Choose one: either place the switcher yourself with the shortcode / block, or let the plugin float it for you — not both."
+msgstr "Выберите одно: либо разместите переключатель сами шорткодом или блоком, либо пусть плагин сделает его плавающим — но не оба варианта."
+
+msgid "Where to show the switcher"
+msgstr "Где показывать переключатель"
+
+msgid "Manual — I add it with the shortcode / block"
+msgstr "Вручную — добавлю сам шорткодом или блоком"
+
+msgid "Floating — bottom right"
+msgstr "Плавающий — справа внизу"
+
+msgid "Floating — bottom left"
+msgstr "Плавающий — слева внизу"
+
+msgid "Floating — top right"
+msgstr "Плавающий — справа вверху"
+
+msgid "Floating — top left"
+msgstr "Плавающий — слева вверху"
+
+msgid "Floating — custom position (X / Y)"
+msgstr "Плавающий — своё положение (X / Y)"
+
+msgid "X (from left)"
+msgstr "X (слева)"
+
+msgid "Y (from top)"
+msgstr "Y (сверху)"
+
+msgid "Use % or px, e.g. 10% / 20px."
+msgstr "Используйте % или px, напр. 10% / 20px."
+
+msgid "Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block."
+msgstr "Добавьте его куда нужно шорткодом [translaterocket_switcher] или блоком «Переключатель языков»."
+
+msgid "Save switcher"
+msgstr "Сохранить переключатель"
+
+msgid "Live preview"
+msgstr "Живой предпросмотр"
+
+msgid "Preview on:"
+msgstr "Предпросмотр на:"
+
+msgid "White"
+msgstr "Белая"
+
+msgid "Light grey"
+msgstr "Светло-серая"
+
+msgid "Brand"
+msgstr "Бренд"
+
+msgid "Teal"
+msgstr "Бирюзовая"
+
+msgid "Photo"
+msgstr "Фото"
+
+msgid "Custom background"
+msgstr "Свой фон"
+
+msgid "Colours update live; layout and labels update after you save."
+msgstr "Цвета меняются сразу, вид и подписи — после сохранения."
+
+msgid "Translation memory"
+msgstr "Память переводов"
+
+msgid "Every string detected across your whole site, in one place. Search a word to find — and fix — it everywhere at once."
+msgstr "Все строки со всего сайта в одном месте. Найдите слово поиском — и исправьте его сразу везде."
+
+msgid "Add a target language first in TranslateRocket settings."
+msgstr "Сначала добавьте язык перевода в настройках TranslateRocket."
+
+msgid "Saved."
+msgstr "Сохранено."
+
+msgid "Removed %d unused string."
+msgstr "Удалена %d неиспользуемая строка."
+
+msgid "AI translation failed — check the AI provider and key, or the daily limit."
+msgstr "Перевод с ИИ не удался — проверьте поставщика и ключ или дневной лимит."
+
+msgid "AI translated %d strings."
+msgstr "ИИ перевёл %d строк."
+
+msgid "Language:"
+msgstr "Язык:"
+
+msgid "Delete %d strings (and their translations) not seen on any page in the last 30 days? Run “Scan site for text” first so the pages you still have count as seen."
+msgstr "Удалить %d строк (и их переводы), не встречавшихся ни на одной странице за последние 30 дней? Сначала запустите «Сканировать сайт на текст», чтобы существующие страницы были учтены."
+
+msgid "🧹 Remove %d unused strings"
+msgstr "🧹 Удалить %d неиспользуемых строк"
+
+msgid "Removes strings from pages that no longer exist (deleted or changed). Tip: run the site scan first, otherwise pages you simply haven’t opened recently could be counted as unused."
+msgstr "Удаляет строки со страниц, которых больше нет (удалены или изменены). Совет: сначала запустите сканирование, иначе страницы, которые вы просто давно не открывали, сочтутся неиспользуемыми."
+
+msgid "Search source or translation…"
+msgstr "Искать в оригинале или переводе…"
+
+msgid "Only missing"
+msgstr "Только непереведённые"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "%d string"
+msgstr "%d строка"
+
+msgid "Translate %d missing with AI"
+msgstr "Перевести %d непереведённых с ИИ"
+
+msgid "Fills every still-missing string for this language using the active AI provider."
+msgstr "Заполняет все непереведённые строки этого языка активным поставщиком ИИ."
+
+msgid "Set up an AI provider on the AI page to bulk-translate the missing strings."
+msgstr "Настройте поставщика ИИ на странице ИИ, чтобы перевести все непереведённые строки сразу."
+
+msgid "Save changes"
+msgstr "Сохранить изменения"
+
+msgid "Translate this page with AI"
+msgstr "Перевести эту страницу с ИИ"
+
+msgid "Configure an AI provider first in %s."
+msgstr "Сначала настройте поставщика ИИ в %s."
+
+msgid "Languages"
+msgstr "Языки"
+
+msgid "AI"
+msgstr "ИИ"
+
+msgid "Copies"
+msgstr "Копии"
+
+msgid "Help"
+msgstr "Помощь"
+
+msgid "Free, AI-powered translation for WordPress"
+msgstr "Бесплатный перевод для WordPress с помощью ИИ"
+
+msgid "Unlimited languages · Visual editor · SEO-ready"
+msgstr "Без ограничения языков · Визуальный редактор · Готов к SEO"
+
+msgid "TranslateRocket is 100% free. Support development to keep it free — supporters get priority support & custom help."
+msgstr "TranslateRocket полностью бесплатен. Поддержите разработку, чтобы он таким и остался — сторонники получают приоритетную поддержку и помощь."
+
+msgid "Support the project"
+msgstr "Поддержать проект"
+
+msgid "Add at least one target language first."
+msgstr "Сначала добавьте хотя бы один язык перевода."
+
+msgid "%d page updated."
+msgstr "Обновлена %d страница."
+
+msgid "Detaching a page makes a fast, independent copy (a real, cache-friendly page you edit in WordPress). “Back to strings” reattaches it to the source — the copy is kept (paused), not deleted — so you can re-detach later and keep your edits."
+msgstr "Отделение создаёт быструю независимую копию (настоящую страницу WordPress, удобную для кэширования). «Назад к строкам» снова связывает её с оригиналом — копия сохраняется (приостановлена), а не удаляется, — поэтому позже её можно отделить снова вместе с правками."
+
+msgid "Create independent copy"
+msgstr "Создать независимую копию"
+
+msgid "Back to strings (reattach)"
+msgstr "Назад к строкам (связать снова)"
+
+msgid "Delete copy"
+msgstr "Удалить копию"
+
+msgid "Apply to selected"
+msgstr "Применить к выбранным"
+
+msgid "Page"
+msgstr "Страница"
+
+msgid "Status (%s)"
+msgstr "Статус (%s)"
+
+msgid "(no title)"
+msgstr "(без заголовка)"
+
+msgid "Independent copy active"
+msgstr "Независимая копия включена"
+
+msgid "Edit copy"
+msgstr "Изменить копию"
+
+msgid "Copy paused (reattached)"
+msgstr "Копия приостановлена (снова связана)"
+
+msgid "String translation"
+msgstr "Перевод строк"
+
+msgid "Free keys end in “:fx”. Use “Check usage” below for your live monthly quota."
+msgstr "Бесплатные ключи заканчиваются на «:fx». Текущий месячный расход — по кнопке «Проверить расход» ниже."
+
+msgid "Pay-as-you-go (needs a few dollars of credit). gpt-4o-mini is cheap and good."
+msgstr "Оплата по факту (нужно несколько долларов на счету). gpt-4o-mini дёшев и хорош."
+
+msgid "Google Cloud Translation API key (requires a Google Cloud project with billing)."
+msgstr "Ключ API Google Cloud Translation (нужен проект Google Cloud с оплатой)."
+
+msgid "Has a free tier — create a key in Google AI Studio at no cost."
+msgstr "Есть бесплатный тариф — создайте ключ в Google AI Studio бесплатно."
+
+msgid "Pay-as-you-go on the Anthropic API (separate from a Claude.ai subscription)."
+msgstr "Оплата по факту через API Anthropic (отдельно от подписки Claude.ai)."
+
+msgid "AI settings saved."
+msgstr "Настройки ИИ сохранены."
+
+msgid "Provider &amp; keys"
+msgstr "Поставщик и ключи"
+
+msgid "Choose which AI service does the translating and paste its API key. You pay the provider directly — TranslateRocket takes nothing."
+msgstr "Выберите, какой сервис ИИ будет переводить, и вставьте его ключ API. Вы платите поставщику напрямую — TranslateRocket не берёт ничего."
+
+msgid "You bring your own API key. Text is sent only to the provider you choose, only when you ask to translate."
+msgstr "Вы используете свой ключ API. Текст отправляется только выбранному поставщику и только когда вы запрашиваете перевод."
+
+msgid "Active provider"
+msgstr "Активный поставщик"
+
+msgid "The service used when you click “Translate with AI”. Leave on “None” to translate only by hand or copy-paste."
+msgstr "Сервис, который используется при нажатии «Перевести с ИИ». Оставьте «Нет», чтобы переводить только вручную или копированием."
+
+msgid "— None —"
+msgstr "— Нет —"
+
+msgid "Active"
+msgstr "Активен"
+
+msgid "Key set"
+msgstr "Ключ задан"
+
+msgid "API key"
+msgstr "Ключ API"
+
+msgid "Your secret key from this provider. Stored on your site only, and sent to the provider when translating."
+msgstr "Ваш секретный ключ от этого поставщика. Хранится только на вашем сайте и отправляется поставщику при переводе."
+
+msgid "Quota this cycle: %1$s of %2$s characters (%3$d%%)."
+msgstr "Расход за цикл: %1$s из %2$s символов (%3$d%%)."
+
+msgid "Exhausted — translations fall back to the next provider in your chain."
+msgstr "Исчерпано — переводы переходят к следующему поставщику в цепочке."
+
+msgid "Almost used up."
+msgstr "Почти исчерпано."
+
+msgid "Get a %s API key ↗"
+msgstr "Получить ключ API для %s ↗"
+
+msgid "Fallback priority"
+msgstr "Приоритет замены"
+
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Leave on “—” to keep a provider out of the chain."
+msgstr "Необязательно. Задайте приоритет двум и более поставщикам, чтобы построить цепочку замены: массовый и автоматический перевод сначала пробуют приоритет 1 и переходят к 2, 3… как только у одного кончается счёт или ключ отклоняется. Оставьте «—», чтобы исключить поставщика из цепочки."
+
+msgid "—"
+msgstr "—"
+
+msgid "1 = try first. Providers with no priority are used only as the active one above."
+msgstr "1 — пробовать первым. Поставщики без приоритета используются только как активный выше."
+
+msgid "Model"
+msgstr "Модель"
+
+msgid "Optional. The specific AI model to use (e.g. gpt-4o-mini). Leave empty for a sensible default."
+msgstr "Необязательно. Конкретная модель ИИ (напр. gpt-4o-mini). Оставьте пустым для разумного значения по умолчанию."
+
+msgid "Pick a suggested model or type your own."
+msgstr "Выберите модель из списка или введите свою."
+
+msgid "Load available models"
+msgstr "Загрузить доступные модели"
+
+msgid "Queries this provider with your key and lists the exact models it can use right now."
+msgstr "Обращается к поставщику с вашим ключом и показывает, какие модели доступны прямо сейчас."
+
+msgid "Check usage"
+msgstr "Проверить расход"
+
+msgid "Usage &amp; limits"
+msgstr "Расход и ограничения"
+
+msgid "Protect your API spend: cap how many characters are sent to the AI each day, and keep crawlers from triggering paid translation."
+msgstr "Берегите бюджет на API: ограничьте число символов, отправляемых ИИ за день, и не давайте роботам запускать платный перевод."
+
+msgid "Daily character limit"
+msgstr "Дневной лимит символов"
+
+msgid "A safety cap on how many characters can be sent to the AI per day. When the cap is reached, AI translation stops until tomorrow (manual and copy-paste still work). 0 means no limit."
+msgstr "Защитный предел на число символов, отправляемых ИИ за сутки. При достижении перевод с ИИ останавливается до завтра (ручной перевод и копирование работают). 0 — без ограничений."
+
+msgid "0 = unlimited. Used today: %s characters."
+msgstr "0 — без ограничений. Сегодня использовано: %s символов."
+
+msgid "Usage this period"
+msgstr "Расход за период"
+
+msgid "How much AI translation you’ve used since the counter started — to keep an eye on your provider spend. Reset it whenever you like, or set a monthly reset day below to match your billing."
+msgstr "Сколько перевода с ИИ израсходовано с момента запуска счётчика — чтобы следить за тратами у поставщика. Сбрасывайте когда угодно или задайте ниже день ежемесячного сброса под ваш расчётный период."
+
+msgid "characters"
+msgstr "символов"
+
+msgid "requests"
+msgstr "запросов"
+
+msgid "(since %s)"
+msgstr "(с %s)"
+
+msgid "Reset the usage counter to zero?"
+msgstr "Обнулить счётчик расхода?"
+
+msgid "Reset counter"
+msgstr "Сбросить счётчик"
+
+msgid "Saved by reuse"
+msgstr "Сэкономлено на повторах"
+
+msgid "When the same text appears again — on another page, as an image alt, as an interface string, or as a glossary term — TranslateRocket copies the translation you already have instead of paying the AI to translate it again. This is what that translation memory has kept in your pocket."
+msgstr "Когда тот же текст встречается снова — на другой странице, в альт-теге, в интерфейсе или в глоссарии — TranslateRocket берёт уже готовый перевод вместо того, чтобы снова платить ИИ. Вот сколько сберегла эта память переводов."
+
+msgid "strings translated for free"
+msgstr "строк переведено бесплатно"
+
+msgid "Estimate at %s list prices — your real saving depends on your plan."
+msgstr "Оценка по прайсу %s — реальная экономия зависит от вашего тарифа."
+
+msgid "Monthly reset day"
+msgstr "День ежемесячного сброса"
+
+msgid "Day of the month the usage counter restarts on its own (e.g. your provider’s billing date). 0 = never reset automatically."
+msgstr "День месяца, когда счётчик расхода обнуляется сам (напр. дата счёта у поставщика). 0 — никогда не обнулять автоматически."
+
+msgid "0 = manual only. 1–31 = reset on that day each month (shorter months use their last day)."
+msgstr "0 — только вручную. 1–31 — сброс в этот день каждый месяц (в коротких месяцах — в последний день)."
+
+msgid "Crawlers"
+msgstr "Поисковые роботы"
+
+msgid "Search engines and other bots visit your pages constantly. With auto-translation on, those visits could trigger paid AI calls for pages no real visitor asked for. Turn this on to ignore known bots, so only real visitors (and you) ever trigger AI translation."
+msgstr "Поисковые системы и другие роботы заходят на страницы постоянно. При включённом автопереводе такие визиты могут вызывать платные обращения к ИИ для страниц, которые никто не запрашивал. Включите это, чтобы известные роботы игнорировались и перевод запускали только живые посетители (и вы)."
+
+msgid "Don’t let bots / crawlers trigger AI translation"
+msgstr "Не давать ботам и поисковым роботам запускать перевод с ИИ"
+
+msgid "Only matters with auto-translation enabled; recommended on."
+msgstr "Имеет значение только при включённом автопереводе; рекомендуется включить."
+
+msgid "Save AI settings"
+msgstr "Сохранить настройки ИИ"
+
+msgid "Bulk auto-translate"
+msgstr "Массовый автоперевод"
+
+msgid "Fill in every missing string for a language at once with the active AI provider. You can refine any result by hand afterwards."
+msgstr "Заполнить все непереведённые строки языка сразу активным поставщиком ИИ. Любой результат потом можно поправить вручную."
+
+msgid "Translate every missing string for a language with the active provider."
+msgstr "Перевести все непереведённые строки языка активным поставщиком."
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Progress"
+msgstr "Прогресс"
+
+msgid "Missing"
+msgstr "Не переведено"
+
+msgid "Translate %d missing"
+msgstr "Перевести %d непереведённых"
+
+msgid "Exclusions saved."
+msgstr "Исключения сохранены."
+
+msgid "Keep parts of your site in the original language. One entry per line."
+msgstr "Оставить часть сайта на исходном языке. По одной записи в строке."
+
+msgid "Pages (URL paths)"
+msgstr "Страницы (пути URL)"
+
+msgid "Paths that are never translated. Use * as a wildcard, e.g. /checkout/* or /my-account/*."
+msgstr "Пути, которые никогда не переводятся. * заменяет любую часть, напр. /checkout/* или /my-account/*."
+
+msgid "Elements (CSS selectors)"
+msgstr "Элементы (CSS-селекторы)"
+
+msgid "Elements left untranslated. Simple selectors only: a tag (code), a class (.notranslate) or an id (#brand)."
+msgstr "Элементы, которые не переводятся. Только простые селекторы: тег (code), класс (.notranslate) или идентификатор (#brand)."
+
+msgid "Words &amp; phrases"
+msgstr "Слова и выражения"
+
+msgid "Exact strings that must stay as-is — brand or product names, etc. Never collected, translated or sent to an AI."
+msgstr "Точные строки, которые должны остаться как есть — названия брендов, продуктов и т. п. Никогда не собираются, не переводятся и не отправляются ИИ."
+
+msgid "Glossary"
+msgstr "Глоссарий"
+
+msgid "Force a fixed translation for a term, everywhere it appears. One “source = translation” per line. Overrides AI/manual translations for an exact match — great for brand wording, product names or terms that must read the same across the whole site."
+msgstr "Закрепить перевод термина везде, где он встречается. По одной паре «оригинал = перевод» в строке. При точном совпадении имеет приоритет над переводом ИИ и ручным — удобно для формулировок бренда, названий продуктов и терминов, которые должны звучать одинаково по всему сайту."
+
+msgid "Add a target language first (Languages tab) to define glossary terms."
+msgstr "Сначала добавьте язык перевода (вкладка «Языки»), чтобы задать термины."
+
+msgid "Save exclusions"
+msgstr "Сохранить исключения"
+
+msgid "PHP version"
+msgstr "Версия PHP"
+
+msgid "Running PHP %s (7.4 or newer required)."
+msgstr "Работает на PHP %s (нужна версия 7.4 или новее)."
+
+msgid "PHP extensions"
+msgstr "Расширения PHP"
+
+msgid "All required extensions are present (dom, mbstring, libxml, json)."
+msgstr "Все нужные расширения на месте (dom, mbstring, libxml, json)."
+
+msgid "Missing extensions: %s. Ask your host to enable them."
+msgstr "Не хватает расширений: %s. Попросите хостинг включить их."
+
+msgid "WordPress version"
+msgstr "Версия WordPress"
+
+msgid "Running WordPress %s."
+msgstr "Работает на WordPress %s."
+
+msgid "Database tables"
+msgstr "Таблицы базы данных"
+
+msgid "All TranslateRocket tables exist."
+msgstr "Все таблицы TranslateRocket на месте."
+
+msgid "Missing: %s. Deactivate and reactivate TranslateRocket to recreate them."
+msgstr "Не хватает: %s. Отключите и снова включите TranslateRocket, чтобы создать их заново."
+
+msgid "Source: %1$s · %2$d target language(s) configured."
+msgstr "Исходный язык: %1$s · настроено языков перевода: %2$d."
+
+msgid "No target languages yet. Add at least one on the Languages tab."
+msgstr "Языков перевода пока нет. Добавьте хотя бы один на вкладке «Языки»."
+
+msgid "Permalinks"
+msgstr "Постоянные ссылки"
+
+msgid "Pretty permalinks are on — language URLs like /it/ will work."
+msgstr "Человекопонятные ссылки включены — адреса вида /it/ будут работать."
+
+msgid "Plain permalinks are on. Language URLs like /it/ need pretty permalinks: go to Settings → Permalinks and choose anything but “Plain”."
+msgstr "Включены простые постоянные ссылки. Для адресов вида /it/ нужны человекопонятные: зайдите в «Настройки → Постоянные ссылки» и выберите любой вариант, кроме «Простые»."
+
+msgid "AI provider"
+msgstr "Поставщик ИИ"
+
+msgid "Active provider: %s."
+msgstr "Активный поставщик: %s."
+
+msgid "No AI provider configured (optional — you can still translate by hand or with the Google links). Add a key on the AI tab."
+msgstr "Поставщик ИИ не настроен (это необязательно — можно переводить вручную или по ссылкам Google). Добавьте ключ на вкладке ИИ."
+
+msgid "Log cleared."
+msgstr "Журнал очищен."
+
+msgid "A quick health check of your setup, plus anything TranslateRocket has flagged — so nothing fails silently."
+msgstr "Быстрая проверка вашей установки и всё, что отметил TranslateRocket — чтобы ничего не ломалось незаметно."
+
+msgid "System checks"
+msgstr "Проверки системы"
+
+msgid "Provider connection test"
+msgstr "Проверка связи с поставщиком"
+
+msgid "Sends one short word to each configured provider to confirm the key works right now."
+msgstr "Отправляет одно короткое слово каждому настроенному поставщику, чтобы проверить ключ."
+
+msgid "No provider keys saved yet. Add one on the AI tab."
+msgstr "Ключи поставщиков ещё не сохранены. Добавьте ключ на вкладке ИИ."
+
+msgid "Test connection"
+msgstr "Проверить соединение"
+
+msgid "Recent issues"
+msgstr "Последние проблемы"
+
+msgid "Errors and warnings TranslateRocket recorded, including ones from background tasks."
+msgstr "Ошибки и предупреждения, записанные TranslateRocket, в том числе из фоновых задач."
+
+msgid "Nothing to report — no issues logged."
+msgstr "Сообщать не о чем — проблем не зафиксировано."
+
+msgid "When"
+msgstr "Когда"
+
+msgid "Level"
+msgstr "Уровень"
+
+msgid "Area"
+msgstr "Область"
+
+msgid "Message"
+msgstr "Сообщение"
+
+msgid "Clear log"
+msgstr "Очистить журнал"
+
+msgid "Testing…"
+msgstr "Проверка…"
+
+msgid "You’re all set!"
+msgstr "Всё готово!"
+
+msgid "Your languages are configured. Now translate your first page — it takes a minute."
+msgstr "Языки настроены. Теперь переведите первую страницу — это займёт минуту."
+
+msgid "Translate my homepage now"
+msgstr "Перевести главную сейчас"
+
+msgid "Open the translations list"
+msgstr "Открыть список переводов"
+
+msgid "Go to settings"
+msgstr "Перейти к настройкам"
+
+msgid "TranslateRocket™ setup"
+msgstr "Настройка TranslateRocket™"
+
+msgid "Translation"
+msgstr "Перевод"
+
+msgid "What languages?"
+msgstr "Какие языки?"
+
+msgid "Pick the language your site is written in, then the languages to translate it into."
+msgstr "Выберите язык, на котором написан сайт, а затем языки для перевода."
+
+msgid "My site is written in:"
+msgstr "Мой сайт написан на:"
+
+msgid "Translate into:"
+msgstr "Переводить на:"
+
+msgid "How do you want to translate?"
+msgstr "Как вы хотите переводить?"
+
+msgid "You can let an AI do a first pass automatically, or translate by hand — you can always change this later."
+msgstr "Можно доверить черновой перевод ИИ или переводить вручную — это всегда можно изменить позже."
+
+msgid "Use an AI provider"
+msgstr "Использовать поставщика ИИ"
+
+msgid "Paste your own API key. You pay the provider directly — TranslateRocket takes nothing."
+msgstr "Вставьте свой ключ API. Вы платите поставщику напрямую — TranslateRocket не берёт ничего."
+
+msgid "Paste your API key"
+msgstr "Вставьте свой ключ API"
+
+msgid "Translate manually"
+msgstr "Перевести вручную"
+
+msgid "Type translations yourself, or use the free one-click Google links. No key needed."
+msgstr "Вводите переводы сами или пользуйтесь бесплатными ссылками Google в один клик. Ключ не нужен."
+
+msgid "Show the language switcher"
+msgstr "Показывать переключатель языков"
+
+msgid "How should visitors switch language? You can fine-tune the look later on the Switcher tab."
+msgstr "Как посетители будут менять язык? Внешний вид настроите позже на вкладке «Переключатель»."
+
+msgid "Floating button"
+msgstr "Плавающая кнопка"
+
+msgid "A small switcher that floats in a corner on every page. Easiest — nothing else to do."
+msgstr "Небольшой переключатель, плавающий в углу на каждой странице. Самый простой вариант — больше ничего не нужно."
+
+msgid "I’ll place it myself"
+msgstr "Размещу сам"
+
+msgid "Use the block “Language Switcher”, or the shortcode %s, wherever you like."
+msgstr "Используйте блок «Переключатель языков» или шорткод %s там, где вам удобно."
+
+msgid "← Back"
+msgstr "← Назад"
+
+msgid "Next →"
+msgstr "Далее →"
+
+msgid "Finish & start translating"
+msgstr "Завершить и начать перевод"
+
+msgid "Languages &amp; general"
+msgstr "Языки и общие настройки"
+
+msgid "Quick start"
+msgstr "Быстрый старт"
+
+msgid "Choose your site language and the languages to translate into — right below."
+msgstr "Ниже выберите язык сайта и языки, на которые переводить."
+
+msgid "Translate: add an AI key in %s for one-click translation, or translate by hand on each page."
+msgstr "Перевод: добавьте ключ ИИ в %s для перевода в один клик или переводите вручную на каждой странице."
+
+msgid "Add a language switcher: place the [translaterocket_switcher] shortcode or block, or enable the floating one in %s."
+msgstr "Добавьте переключатель языков: вставьте шорткод [translaterocket_switcher] или блок либо включите плавающий в %s."
+
+msgid "Settings saved."
+msgstr "Настройки сохранены."
+
+msgid "Site language (source)"
+msgstr "Язык сайта (исходный)"
+
+msgid "The language your existing content is written in. It stays at the site root with no URL prefix and is never translated."
+msgstr "Язык, на котором написано ваше содержимое. Он остаётся в корне сайта без префикса и никогда не переводится."
+
+msgid "The language your content is written in. It stays at the site root (no URL prefix)."
+msgstr "Язык, на котором написано содержимое. Он остаётся в корне сайта (без префикса в адресе)."
+
+msgid "Translate into"
+msgstr "Переводить на"
+
+msgid "The languages visitors can switch to. Each gets its own URL prefix (e.g. /it/) and its own set of translations."
+msgstr "Языки, на которые могут переключаться посетители. У каждого свой префикс в адресе (напр. /it/) и свой набор переводов."
+
+msgid "Pick the languages you want to add. Each gets its own URL prefix, e.g. /en/."
+msgstr "Выберите языки для добавления. У каждого будет свой префикс в адресе, напр. /en/."
+
+msgid "Your source language (%s) isn’t listed here — it’s the language you translate from. Change it in “Site language (source)” above."
+msgstr "Вашего исходного языка (%s) здесь нет — это язык, с которого вы переводите. Измените его выше, в поле «Язык сайта (исходный)»."
+
+msgid "Custom language"
+msgstr "Свой язык"
+
+msgid "Not in the list? Add your own: a short code (used in the URL, e.g. /la/), a name, and a flag picked from the list. After saving it appears among the languages above — tick it to enable."
+msgstr "Нет в списке? Добавьте свой: короткий код (используется в адресе, напр. /la/), название и флаг из списка. После сохранения язык появится выше — отметьте его, чтобы включить."
+
+msgid "remove"
+msgstr "удалить"
+
+msgid "Code"
+msgstr "Код"
+
+msgid "e.g. la"
+msgstr "напр. la"
+
+msgid "Name"
+msgstr "Название"
+
+msgid "e.g. Latina"
+msgstr "напр. Latina"
+
+msgid "Flag"
+msgstr "Флаг"
+
+msgid "Choose…"
+msgstr "Выбрать…"
+
+msgid "No flag (globe)"
+msgstr "Без флага (глобус)"
+
+msgid "Upload your own…"
+msgstr "Загрузить своё…"
+
+msgid "+ Add language"
+msgstr "+ Добавить язык"
+
+msgid "Enter a code (it becomes the URL prefix, e.g. /la/) and a name, then pick a flag: choose one from the list, upload your own image (for a region or language with no country flag), or leave the 🌐 globe."
+msgstr "Введите код (он станет префиксом адреса, напр. /la/) и название, затем выберите флаг: возьмите его из списка, загрузите своё изображение (для региона или языка без государственного флага) или оставьте 🌐."
+
+msgid "Choose a flag image"
+msgstr "Выберите изображение флага"
+
+msgid "Use this image"
+msgstr "Использовать это изображение"
+
+msgid "Who sees the translations"
+msgstr "Кто видит переводы"
+
+msgid "Preview mode: keep the translated site visible to administrators only, e.g. to review an import from another plugin on the real pages before going live. Visitors keep seeing the default language (language URLs redirect, the switcher is hidden and no hreflang/sitemap signals are sent). Switch back to \"Everyone\" to publish instantly."
+msgstr "Режим предпросмотра: переведённый сайт виден только администраторам — например, чтобы проверить импорт из другого плагина на настоящих страницах перед публикацией. Посетители видят язык по умолчанию (языковые адреса перенаправляют, переключатель скрыт, сигналы hreflang и карты сайта не отправляются). Верните «Все», чтобы опубликовать сразу."
+
+msgid "Everyone — translations are live"
+msgstr "Все — переводы опубликованы"
+
+msgid "Administrators only — preview mode, visitors keep seeing the default language"
+msgstr "Только администраторы — режим предпросмотра, посетители видят язык по умолчанию"
+
+msgid "SEO meta"
+msgstr "SEO-мета"
+
+msgid "Also translate the SEO title and meta description — the text shown in Google results and the browser tab."
+msgstr "Переводить также SEO-заголовок и мета-описание — текст в результатах Google и во вкладке браузера."
+
+msgid "Translate SEO title and meta description tags"
+msgstr "Переводить SEO-заголовок и мета-описание"
+
+msgid "Interface language"
+msgstr "Язык интерфейса"
+
+msgid "Show menus, buttons and theme/plugin labels in the visitor's language using WordPress' own official translations — no AI, nothing to manage. The needed language packs are downloaded automatically. Turn off to leave the interface in the site language."
+msgstr "Показывать меню, кнопки и подписи тем и плагинов на языке посетителя, используя официальные переводы самого WordPress — без ИИ и без настройки. Нужные языковые пакеты скачиваются автоматически. Отключите, чтобы интерфейс остался на языке сайта."
+
+msgid "Use WordPress' own translations for the interface"
+msgstr "Использовать для интерфейса собственные переводы WordPress"
+
+msgid "Auto-redirect"
+msgstr "Автоперенаправление"
+
+msgid "On their first visit, send visitors to the version matching their browser language (remembered with a cookie, only once). Never redirects search engines or logged-in users."
+msgstr "При первом заходе направлять посетителей на версию, совпадающую с языком их браузера (запоминается в cookie, один раз). Поисковые системы и вошедших пользователей никогда не перенаправляет."
+
+msgid "Redirect new visitors to their browser language"
+msgstr "Направлять новых посетителей на язык их браузера"
+
+msgid "Page cache"
+msgstr "Кэш страниц"
+
+msgid "Store the finished translated HTML of each page so repeat visits skip the on-the-fly translation — about 2× faster on repeat visits (e.g. ~0.55s → ~0.29s in our test). Only anonymous visitors are served from the cache, it skips dynamic pages (cart, checkout, account), and it clears automatically whenever you change a translation, edit a page, or update settings. On by default — turn it off only if you already use a page-cache plugin (e.g. WP Rocket), which already caches each language’s URL."
+msgstr "Сохранять готовый переведённый HTML каждой страницы, чтобы при повторных заходах не переводить заново — примерно вдвое быстрее (в нашем тесте ~0,55 с → ~0,29 с). Из кэша обслуживаются только неавторизованные посетители, динамические страницы (корзина, оформление заказа, личный кабинет) пропускаются, а кэш очищается сам при изменении перевода, правке страницы или смене настроек. Включено по умолчанию — отключайте, только если уже используете плагин кэширования страниц (напр. WP Rocket), который кэширует адрес каждого языка."
+
+msgid "Cache translated pages for anonymous visitors"
+msgstr "Кэшировать переведённые страницы для гостей"
+
+msgid "Powered by badge"
+msgstr "Значок «Powered by»"
+
+msgid "Show a small \"Powered by TranslateRocket\" badge with the logo at the bottom of your site. Off by default and entirely optional — a nice way to support the free plugin. You can also place it anywhere with the [translaterocket_poweredby] shortcode."
+msgstr "Показывать внизу сайта небольшой значок «Powered by TranslateRocket» с логотипом. По умолчанию выключено и совершенно необязательно — приятный способ поддержать бесплатный плагин. Его можно разместить где угодно шорткодом [translaterocket_poweredby]."
+
+msgid "Show a \"Powered by TranslateRocket\" badge in the footer"
+msgstr "Показывать значок «Powered by TranslateRocket» в подвале"
+
+msgid "Detected"
+msgstr "Обнаружено"
+
+msgid "Translated"
+msgstr "Переведено"
+
+msgid "Open editor"
+msgstr "Открыть редактор"
+
+msgid "Need a hand?"
+msgstr "Нужна помощь?"
+
+msgid "Want a professional multilingual setup, reviewed translations or a custom feature? I can help — as a service."
+msgstr "Нужен профессиональный многоязычный сайт, вычитанные переводы или своя функция? Могу помочь на платной основе."
+
+msgid "Get expert help"
+msgstr "Помощь специалиста"
+
+msgid "TranslateRocket is 100% free. If it helps you, a small donation keeps it alive and updated."
+msgstr "TranslateRocket полностью бесплатен. Если он вам помогает, небольшое пожертвование поможет его развивать."
+
+msgid "Make a donation"
+msgstr "Поддержать деньгами"
+
+msgid "Translations saved."
+msgstr "Переводы сохранены."
+
+msgid "Pasted translations imported."
+msgstr "Вставленные переводы импортированы."
+
+msgid "Nothing imported — the paste box was empty, so existing translations were kept."
+msgstr "Ничего не импортировано — поле было пустым, существующие переводы сохранены."
+
+msgid "This page's translations were deleted."
+msgstr "Переводы этой страницы удалены."
+
+msgid "Page removed from the list."
+msgstr "Страница удалена из списка."
+
+msgid "%1$d strings still to translate out of %2$d detected."
+msgstr "Осталось перевести %1$d строк из %2$d найденных."
+
+msgid "Scan site for text"
+msgstr "Сканировать сайт на текст"
+
+msgid "Automatically visits every published page to detect translatable text — no need to open them one by one."
+msgstr "Автоматически заходит на каждую опубликованную страницу и ищет переводимый текст — не нужно открывать их вручную."
+
+msgid "No pages detected yet. Click “Scan site for text” above, or just browse your site as administrator."
+msgstr "Страниц пока не найдено. Нажмите «Сканировать сайт на текст» выше или просто походите по сайту как администратор."
+
+msgid "Search pages by name or slug… (spaces count as hyphens)"
+msgstr "Поиск страниц по названию или слагу… (пробелы считаются дефисами)"
+
+msgid "Showing %1$s of %2$d pages"
+msgstr "Показано %1$s из %2$d страниц"
+
+msgid "Strings"
+msgstr "Строки"
+
+msgid "Translate"
+msgstr "Перевести"
+
+msgid "Back to all pages"
+msgstr "Ко всем страницам"
+
+msgid "redirect to the homepage"
+msgstr "перенаправить на главную"
+
+msgid "redirect to a custom URL"
+msgstr "перенаправить на свой адрес"
+
+msgid "show a custom message"
+msgstr "показать своё сообщение"
+
+msgid "show a 404 (not found)"
+msgstr "показать 404 (не найдено)"
+
+msgid "This page is set to %2$s in %1$s, so it is not translated and the editor is hidden."
+msgstr "Для языка %1$s эта страница помечена как «%2$s», поэтому она не переводится, а редактор скрыт."
+
+msgid "Change it in the page’s “Language visibility” box."
+msgstr "Измените это в блоке «Видимость по языкам» на странице."
+
+msgid "Delete all translations of this page for this language?"
+msgstr "Удалить все переводы этой страницы для этого языка?"
+
+msgid "Delete this page's translation"
+msgstr "Удалить перевод этой страницы"
+
+msgid "Remove this page from the list? Useful for stale or 404 pages — its translations stay in the database."
+msgstr "Убрать страницу из списка? Удобно для устаревших страниц и 404 — переводы останутся в базе данных."
+
+msgid "Remove this page from the list"
+msgstr "Убрать эту страницу из списка"
+
+msgid "Copy &amp; paste with Google Translate (free)"
+msgstr "Скопировать и вставить через Google Переводчик (бесплатно)"
+
+msgid "No strings on this page yet. Browse it on the front end (as admin) first."
+msgstr "На этой странице пока нет строк. Сначала откройте её на сайте как администратор."
+
+msgid "1) Copy the list. 2) Paste it into Google Translate. 3) Paste the result back below — keep the numbers, one item per line."
+msgstr "1) Скопируйте список. 2) Вставьте его в Google Переводчик. 3) Вставьте результат ниже — сохраните номера, по одному пункту в строке."
+
+msgid "Open Google Translate"
+msgstr "Открыть Google Переводчик"
+
+msgid "✅ Everything here is translated — paste a new list below to redo it."
+msgstr "✅ Здесь всё переведено — вставьте новый список ниже, чтобы переделать."
+
+msgid "Showing ALL strings — importing will overwrite existing translations."
+msgstr "Показаны ВСЕ строки — импорт перезапишет существующие переводы."
+
+msgid "Show only the %d untranslated"
+msgstr "Показать только %d непереведённых"
+
+msgid "Re-translate everything (include already translated)"
+msgstr "Перевести всё заново (включая уже переведённое)"
+
+msgid "Strings to copy:"
+msgstr "Строки для копирования:"
+
+msgid "Paste the translated list here:"
+msgstr "Вставьте переведённый список сюда:"
+
+msgid "Import pasted translations"
+msgstr "Импортировать вставленные переводы"
+
+msgid "No strings detected for this page yet."
+msgstr "На этой странице пока не найдено строк."
+
+msgid "Manual editor"
+msgstr "Ручной редактор"
+
+msgid "Filter by type:"
+msgstr "Фильтр по типу:"
+
+msgid "Narrow the list to one kind of string — visible text, link titles, image alt text, ARIA labels, etc."
+msgstr "Сузить список до одного типа строк — видимый текст, заголовки ссылок, альт-текст изображений, метки ARIA и т. д."
+
+msgid "All types"
+msgstr "Все типы"
+
+msgid "Show only missing strings"
+msgstr "Показывать только непереведённые"
+
+msgid "Hide strings that already have a translation, so you can focus on what is left."
+msgstr "Скрыть уже переведённые строки, чтобы сосредоточиться на оставшихся."
+
+msgid "Page content"
+msgstr "Содержимое страницы"
+
+msgid "Save translations"
+msgstr "Сохранить переводы"
+
+msgid "Translate this phrase with Google (free)"
+msgstr "Перевести эту фразу через Google (бесплатно)"
+
+msgid "Open this phrase in Google Translate ↗"
+msgstr "Открыть эту фразу в Google Переводчике ↗"
+
+msgid "SEO & indexing"
+msgstr "SEO и индексация"
+
+msgid "Slug (URL)"
+msgstr "Слаг (URL)"
+
+msgid "The page web address in this language, e.g. /it/chi-siamo/. Leave empty to keep the original."
+msgstr "Веб-адрес страницы на этом языке, напр. /it/chi-siamo/. Оставьте пустым, чтобы сохранить исходный."
+
+msgid "Available only on single pages and posts (not the home or archives)."
+msgstr "Доступно только на отдельных страницах и записях (не на главной и не в архивах)."
+
+msgid "SEO title"
+msgstr "SEO-заголовок"
+
+msgid "Shown in the browser tab and as the clickable title in Google results."
+msgstr "Показывается во вкладке браузера и как кликабельный заголовок в результатах Google."
+
+msgid "Meta description"
+msgstr "Мета-описание"
+
+msgid "The short summary under the title in Google results (only if your theme or SEO plugin outputs one)."
+msgstr "Краткое описание под заголовком в результатах Google (только если его выводит ваша тема или SEO-плагин)."
+
+msgid "Meta keywords are intentionally not shown."
+msgstr "Мета-ключевые слова намеренно не показываются."
+
+msgid "Search engines (Google included) dropped meta keywords as a ranking signal years ago, so a keywords field would only add clutter."
+msgstr "Поисковые системы (включая Google) много лет назад перестали учитывать мета-ключевые слова, поэтому такое поле только мешало бы."
+
+msgid "Not detected on this page."
+msgstr "На этой странице не найдено."
+
+msgid "More info"
+msgstr "Подробнее"
+
+msgid "🚀 This is an independent %1$s copy of %2$s, managed by TranslateRocket. It is served automatically at its %1$s URL — you don't need to publish it."
+msgstr "🚀 Это независимая копия страницы %2$s на языке %1$s под управлением TranslateRocket. Она отдаётся автоматически по своему адресу на %1$s — публиковать её не нужно."
+
+msgid "(the original page)"
+msgstr "(исходная страница)"
+
+msgid "Open the on-page visual editor for this page in a language:"
+msgstr "Открыть визуальный редактор для этой страницы на языке:"
+
+msgid "Translate in %s"
+msgstr "Перевести на %s"
+
+msgid "Opens in a new tab."
+msgstr "Откроется в новой вкладке."
+
+msgid "Help & Feedback"
+msgstr "Помощь и отзывы"
+
+msgid "⚠️ TranslateRocket found another translation plugin active: %s. Running two at once will conflict — please keep only one enabled."
+msgstr "⚠️ TranslateRocket обнаружил другой активный плагин перевода: %s. Два одновременно будут конфликтовать — оставьте включённым только один."
+
+msgid "Thanks for installing TranslateRocket!"
+msgstr "Спасибо, что установили TranslateRocket!"
+
+msgid "Pick your languages in %s to get started."
+msgstr "Выберите языки в %s, чтобы начать."
+
+msgid "TranslateRocket settings"
+msgstr "Настройки TranslateRocket"
+
+msgid "Get tips & updates"
+msgstr "Советы и новости"
+
+msgid "Enjoying TranslateRocket? A quick review really helps the project grow. 🙏"
+msgstr "Нравится TranslateRocket? Короткий отзыв очень помогает проекту расти. 🙏"
+
+msgid "Leave a review"
+msgstr "Оставить отзыв"
+
+msgid "No thanks"
+msgstr "Нет, спасибо"
+
+msgid "You’ve been translating with TranslateRocket for a while now. It’s free forever — if it saved you a paid plugin, a small donation keeps it alive and growing."
+msgstr "Вы уже некоторое время переводите с TranslateRocket. Он бесплатен навсегда — если он избавил вас от платного плагина, небольшое пожертвование поможет ему жить и развиваться."
+
+msgid "Buy me a coffee ☕"
+msgstr "Угостить кофе ☕"
+
+msgid "Maybe later"
+msgstr "Может быть позже"
+
+msgid "Need a hand, want a feature, or just want to say hi? Here’s how."
+msgstr "Нужна помощь, хотите новую функцию или просто поздороваться? Вот как связаться."
+
+msgid "Request a custom setup"
+msgstr "Заказать настройку под себя"
+
+msgid "Want a professional multilingual setup, reviewed translations, or a custom feature? I can help as a service."
+msgstr "Нужен профессиональный многоязычный сайт, вычитанные переводы или своя функция? Могу помочь на платной основе."
+
+msgid "Request customization"
+msgstr "Заказать доработку"
+
+msgid "Send feedback"
+msgstr "Отправить отзыв"
+
+msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
+msgstr "Нашли ошибку или есть идея? Напишите — это определяет, что появится дальше."
+
+msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
+msgstr "Если TranslateRocket вам помогает, отзыв на WordPress.org очень важен."
+
+msgid "Write a review"
+msgstr "Написать отзыв"
+
+msgid "TranslateRocket is 100% free. A small donation keeps it alive and updated."
+msgstr "TranslateRocket полностью бесплатен. Небольшое пожертвование помогает его развивать."
+
+msgid "Something went wrong."
+msgstr "Что-то пошло не так."
+
+msgid "translated"
+msgstr "переведено"
+
+msgid "to translate"
+msgstr "к переводу"
+
+msgid "Translate with AI"
+msgstr "Перевести с ИИ"
+
+msgid "Translate with Google"
+msgstr "Перевести через Google"
+
+msgid "Visual editor"
+msgstr "Визуальный редактор"
+
+msgid "Delete translations"
+msgstr "Удалить переводы"
+
+msgid "Copy & paste with Google Translate:"
+msgstr "Скопировать и вставить через Google Переводчик:"
+
+msgid "Open Google Translate ↗"
+msgstr "Открыть Google Переводчик ↗"
+
+msgid "Show all strings (re-translate)"
+msgstr "Показать все строки (перевести заново)"
+
+msgid "Original"
+msgstr "Оригинал"
+
+msgid "Working…"
+msgstr "Обработка…"
+
+msgid "Unsaved changes — click “Save changes”."
+msgstr "Есть несохранённые изменения — нажмите «Сохранить изменения»."
+
+msgid "Paste box is empty — nothing changed."
+msgstr "Поле для вставки пустое — ничего не изменилось."
+
+msgid "Suggest from title"
+msgstr "Предложить из заголовка"
+
+msgid "Search engines dropped meta keywords as a ranking signal years ago, so a keywords field would only add clutter."
+msgstr "Поисковые системы много лет назад перестали учитывать мета-ключевые слова, поэтому такое поле только мешало бы."
+
+msgid "Add target languages in TranslateRocket settings to start."
+msgstr "Добавьте языки перевода в настройках TranslateRocket, чтобы начать."
+
+msgid "This page is set to %s in this language, so there is nothing to translate. Change it in the “Language visibility” box."
+msgstr "Для этого языка страница помечена как «%s», поэтому переводить нечего. Измените это в блоке «Видимость по языкам»."
+
+msgid "TranslateRocket — Language visibility"
+msgstr "TranslateRocket — видимость по языкам"
+
+msgid "Translate (default)"
+msgstr "Переводить (по умолчанию)"
+
+msgid "Redirect to homepage"
+msgstr "Перенаправить на главную"
+
+msgid "Redirect to a URL"
+msgstr "Перенаправить на адрес"
+
+msgid "Show a custom message"
+msgstr "Показать своё сообщение"
+
+msgid "Show 404 (not found)"
+msgstr "Показать 404 (не найдено)"
+
+msgid "What happens when this page is viewed in each language. Use this when a page has no equivalent in another language."
+msgstr "Что происходит при открытии страницы на каждом языке. Пригодится, когда у страницы нет аналога на другом языке."
+
+msgid "https://… (only for “Redirect to a URL”)"
+msgstr "https://… (только для «Перенаправить на адрес»)"
+
+msgid "Custom message (only for “Show a custom message”)"
+msgstr "Своё сообщение (только для «Показать своё сообщение»)"
+
+msgid "Database tables could not be created."
+msgstr "Не удалось создать таблицы базы данных."
+
+msgid "Site interface (themes & plugins)"
+msgstr "Интерфейс сайта (темы и плагины)"
+
+msgid "Powered by"
+msgstr "Работает на"
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "More"
+msgstr "Ещё"
+
+msgid "Translate visually"
+msgstr "Перевести на странице"
+
+msgid "Editing"
+msgstr "Редактирование"
+
+msgid "Blocks"
+msgstr "Блоки"
+
+msgid "Show formatting as numbered [1] [2] markers — the simplest view."
+msgstr "Показывать форматирование метками [1] [2] — самый простой вид."
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Edit the raw HTML for full control — you see the real <strong>, <a>… tags."
+msgstr "Правьте HTML напрямую для полного контроля — видны настоящие теги <strong>, <a>…"
+
+msgid "⚠ Keep the HTML tags (<strong>, <a>…) intact so the formatting and links survive."
+msgstr "⚠ Не трогайте HTML-теги (<strong>, <a>…), чтобы форматирование и ссылки сохранились."
+
+msgid "Everything on this page is already translated."
+msgstr "На этой странице уже всё переведено."
+
+msgid "%d translated"
+msgstr "%d переведено"
+
+msgid "⚠ The number of lines does not match the source — check the result."
+msgstr "⚠ Число строк не совпадает с оригиналом — проверьте результат."
+
+msgid "Copied!"
+msgstr "Скопировано!"
+
+msgid "Translate page"
+msgstr "Перевести страницу"
+
+msgid "Translate the whole page"
+msgstr "Перевести всю страницу"
+
+msgid "Translate every text on this page at once — automatically, or by pasting into any translator."
+msgstr "Перевести весь текст страницы сразу — автоматически или вставив его в любой переводчик."
+
+msgid "Show HTML tags (bold, links…) instead of [1] [2]"
+msgstr "Показывать HTML-теги (жирный, ссылки) вместо [1] [2]"
+
+msgid "Auto-translate everything with AI"
+msgstr "Перевести всё автоматически с ИИ"
+
+msgid "Auto-translate everything with Google"
+msgstr "Перевести всё автоматически через Google"
+
+msgid "Add an AI key (or enable free Google) in TranslateRocket settings to auto-translate. Meanwhile, use copy-paste below."
+msgstr "Добавьте ключ ИИ (или включите бесплатный Google) в настройках, чтобы переводить автоматически. Пока пользуйтесь копированием ниже."
+
+msgid "Or: copy → translate → paste back"
+msgstr "Или: скопировать → перевести → вставить обратно"
+
+msgid "1. Copy the source text"
+msgstr "1. Скопируйте исходный текст"
+
+msgid "2. Paste it back, keeping the 1. 2. 3. numbers on each line"
+msgstr "2. Вставьте обратно, сохранив номера 1. 2. 3. в каждой строке"
+
+msgid "Copy"
+msgstr "Копировать"
+
+msgid "Paste the translated text here…"
+msgstr "Вставьте переведённый текст сюда…"
+
+msgid "Apply translation"
+msgstr "Применить перевод"
+
+msgid "Translating…"
+msgstr "Перевод…"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Save & next"
+msgstr "Сохранить и далее"
+
+msgid "Google Translate"
+msgstr "Google Переводчик"
+
+msgid "Next"
+msgstr "Далее"
+
+msgid "Select all"
+msgstr "Выбрать всё"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Skip translated texts"
+msgstr "Пропускать переведённые тексты"
+
+msgid "With the ‹ › arrows, skip texts that already have a translation and stop only on the ones still to translate."
+msgstr "При переходе стрелками ‹ › пропускать уже переведённые тексты и останавливаться только на непереведённых."
+
+msgid "Image alt text"
+msgstr "Альт-текст изображения"
+
+msgid "Title"
+msgstr "Заголовок"
+
+msgid "Placeholder"
+msgstr "Подсказка в поле"
+
+msgid "ARIA label"
+msgstr "Метка ARIA"
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Lock the window here (it stays put while you navigate)"
+msgstr "Закрепить окно здесь (останется на месте при переходах)"
+
+msgid "Unlock — follow the selected text again"
+msgstr "Разблокировать — снова следовать за выбранным текстом"
+
+msgid "Restore original"
+msgstr "Вернуть оригинал"
+
+msgid "Put the original text back (e.g. if the [1] [2] markers got broken), then translate again."
+msgstr "Вернуть исходный текст (напр. если метки [1] [2] испортились) и перевести заново."
+
+msgid "Markers like [1] [2] are formatting (bold, links). Keep them where they are."
+msgstr "Метки вида [1] [2] — это форматирование (жирный, ссылки). Оставьте их на месте."
+
+msgid "⚠ Keep all the [1] [2] markers so the bold/links can be restored."
+msgstr "⚠ Сохраните все метки [1] [2], чтобы жирный шрифт и ссылки восстановились."
+
+msgid "Already translated"
+msgstr "Уже переведено"
+
+msgid "Saved"
+msgstr "Сохранено"
+
+msgid "Done"
+msgstr "Готово"
+
+msgid "Click any text to translate it"
+msgstr "Нажмите на любой текст, чтобы перевести его"
+
+msgid "Switch this page back to runtime translation? Your independent copy is kept (paused), not deleted — you can re-create it later to get your edits back."
+msgstr "Вернуть страницу к переводу на лету? Независимая копия сохранится (приостановлена), а не удалится — позже её можно пересоздать и вернуть правки."
+
+msgid "Delete this independent copy for good? Its edits will be lost and the page goes back to runtime translation."
+msgstr "Удалить эту независимую копию навсегда? Правки будут потеряны, страница вернётся к переводу на лету."
+
+msgid "%s is your source language — pick a language to translate into:"
+msgstr "%s — ваш исходный язык. Выберите язык, на который переводить:"
+
+msgid "Switch to %s"
+msgstr "Переключить на %s"
+
+msgid "Visibility"
+msgstr "Видимость"
+
+msgid "SEO"
+msgstr "SEO"
+
+msgid "Delete this independent copy"
+msgstr "Удалить эту независимую копию"
+
+msgid "The source page changed after this copy was made — re-create it to pull in the changes (the copy's edits are lost), or keep editing the copy."
+msgstr "Исходная страница изменилась после создания копии — пересоздайте её, чтобы подтянуть изменения (правки копии будут потеряны), или продолжайте править копию."
+
+msgid "Source changed"
+msgstr "Оригинал изменён"
+
+msgid "This page is served from an independent copy."
+msgstr "Эта страница отдаётся из независимой копии."
+
+msgid "Independent copy"
+msgstr "Независимая копия"
+
+msgid "Back to strings"
+msgstr "Назад к строкам"
+
+msgid "Reactivate the independent copy (your edits are restored)."
+msgstr "Снова включить независимую копию (ваши правки вернутся)."
+
+msgid "Reactivate copy"
+msgstr "Снова включить копию"
+
+msgid "Detach this page into an independent, fully-editable copy, pre-filled with the current translation."
+msgstr "Отделить страницу в независимую, полностью редактируемую копию с уже готовым переводом."
+
+msgid "https://…"
+msgstr "https://…"
+
+msgid "Custom message shown instead of the page."
+msgstr "Своё сообщение вместо страницы."
+
+msgid "Language visibility for this page"
+msgstr "Видимость этой страницы по языкам"
+
+msgid "Choose what happens when this page is viewed in each language — translate it, redirect, show a message, or 404."
+msgstr "Выберите, что происходит при открытии страницы на каждом языке — перевод, перенаправление, сообщение или 404."
+
+msgid "Save visibility"
+msgstr "Сохранить видимость"
+
+msgid "The homepage has no slug — its address is just the language prefix."
+msgstr "У главной страницы нет слага — её адрес состоит только из префикса языка."
+
+msgid "The page address in this language, e.g. /%s/about-us/. Leave empty to keep the original."
+msgstr "Адрес страницы на этом языке, напр. /%s/about-us/. Оставьте пустым, чтобы сохранить исходный."
+
+msgid "The short summary under the title in Google results."
+msgstr "Краткое описание под заголовком в результатах Google."
+
+msgid "SEO for this page"
+msgstr "SEO этой страницы"
+
+msgid "What search engines see in %s: the translated URL slug, the page title and the meta description."
+msgstr "Что видят поисковые системы на языке %s: переведённый слаг, заголовок страницы и мета-описание."
+
+msgid "Save SEO"
+msgstr "Сохранить SEO"
+
+msgid "Not detected on this page yet."
+msgstr "Пока не найдено на этой странице."
+
+msgid "No AI provider configured."
+msgstr "Поставщик ИИ не настроен."
+
+msgid "Translation failed."
+msgstr "Не удалось перевести."
+
+msgid "Could not create the copy."
+msgstr "Не удалось создать копию."
+
+msgid "Polylang is not configured."
+msgstr "Polylang не настроен."
+
+msgid "TranslatePress is not configured."
+msgstr "TranslatePress не настроен."
+
+msgid "WPML is not configured."
+msgstr "WPML не настроен."
+
+msgid "DeepL: monthly character quota exhausted — it resets at the start of your DeepL billing cycle."
+msgstr "DeepL: месячный лимит символов исчерпан — он обновится в начале вашего расчётного периода DeepL."
+
+msgid "Automatic Google translation is turned off."
+msgstr "Автоматический перевод через Google отключён."
+
+msgid "Google Translate stopped responding while translating into %s."
+msgstr "Google Переводчик перестал отвечать при переводе на %s."
+
+msgid "Google Translate stopped responding (it may be rate-limiting). Some strings were translated — try again in a moment for the rest."
+msgstr "Google Переводчик перестал отвечать (возможно, ограничение частоты). Часть строк переведена — повторите попытку чуть позже для остальных."
+
+msgid "No AI provider is configured. Add an API key first."
+msgstr "Поставщик ИИ не настроен. Сначала добавьте ключ API."
+
+msgid "Daily AI character limit reached. Raise it in AI settings or wait until tomorrow."
+msgstr "Достигнут дневной лимит символов. Увеличьте его в настройках ИИ или подождите до завтра."
+
+msgid "Daily AI character limit reached."
+msgstr "Достигнут дневной лимит символов для ИИ."
+
+msgid "AI translation failed (→ %s)."
+msgstr "Перевод с ИИ не удался (→ %s)."
+
+msgid "%1$s is unavailable (%2$s) — falling back to the next provider."
+msgstr "%1$s недоступен (%2$s) — переходим к следующему поставщику."
+
+msgid "Language Switcher"
+msgstr "Переключатель языков"
+
+msgid "Let visitors switch language (TranslateRocket)."
+msgstr "Разрешить посетителям менять язык (TranslateRocket)."
+
+msgid "Switcher settings"
+msgstr "Настройки переключателя"
+
+msgid "TranslateRocket has translated %s strings on this site, for free. It has no paid version: reviews are the only thing that helps other people find it. Would you leave one?"
+msgstr "TranslateRocket перевёл на этом сайте %s строк — бесплатно. Платной версии нет: отзывы — единственное, что помогает другим его найти. Не оставите ли вы отзыв?"
+
+msgid "Something is wrong instead"
+msgstr "Наоборот, что-то не так"
+
+msgid "Border"
+msgstr "Рамка"
+
+msgid "No border at all"
+msgstr "Без рамки"
+
+msgid "Removes the border instead of colouring it. The colour above is then ignored."
+msgstr "Убирает рамку, а не закрашивает её. Цвет выше в этом случае не используется."
+
+msgid "Flag + code (EN, IT…)"
+msgstr "Флаг + код (EN, IT…)"
+
+msgid "Code only (EN, IT…)"
+msgstr "Только код (EN, IT…)"
+
+msgid "House style"
+msgstr "Стиль вашего бренда"
+
+msgid "Extra instruction for the AI"
+msgstr "Дополнительная инструкция для ИИ"
+
+msgid "An extra instruction sent with every AI translation, so the wording sounds like you rather than like a dictionary. Tone, formality, words to keep in the original — anything the model should know about your brand."
+msgstr "Дополнительная инструкция, которая отправляется с каждым переводом, чтобы текст звучал как ваш, а не как словарная статья. Тон, степень формальности, слова, которые нужно оставить как есть, — всё, что модели стоит знать о вашем бренде."
+
+msgid "Optional, up to %d characters. Sent with every batch, so keep it short. It never overrides the rules that keep translations lined up with your text."
+msgstr "Необязательно, до %d символов. Отправляется с каждой партией, поэтому пишите коротко. Она никогда не отменяет правила, благодаря которым перевод соответствует вашему тексту."
+
+msgid "e.g. We are a family-run guesthouse. Keep it warm and informal, use \"tu\" in Italian, and never translate the name Villa Aurora."
+msgstr "Например: Мы — семейный гостевой дом. Тон тёплый и неформальный, обращение на «ты», а название Villa Aurora не переводить."
+
+msgid "Appearance on small screens (when shown): show only flags, or hide it."
+msgstr "Вид на маленьких экранах (когда переключатель показан): только флаги или скрыть."
+
+msgid "Desktop and mobile"
+msgstr "Компьютер и телефон"
+
+msgid "Desktop only"
+msgstr "Только компьютер"
+
+msgid "Mobile only"
+msgstr "Только телефон"
+
+msgid "Only the AI models can follow this: OpenAI, Claude and Gemini. DeepL and Google Translate are translation APIs with no prompt of their own, so they ignore it."
+msgstr "Следовать ей могут только модели ИИ: OpenAI, Claude и Gemini. DeepL и Google Translate — это API перевода без собственного промпта, поэтому они её игнорируют."
+
+msgid "Show on"
+msgstr "Показывать на"
+
+msgid "Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The live preview above always shows the desktop appearance."
+msgstr "На каких размерах экрана показывать этот переключатель. Сделайте один профиль «Только компьютер», а второй «Только телефон», чтобы оформить для каждого своё языковое меню (граница 783px). Предпросмотр выше всегда показывает вид на компьютере."
+
+msgid "WooCommerce emails"
+msgstr "Письма WooCommerce"
+
+msgid "Your provider right now is %s, so this instruction will be ignored until you switch to one of those."
+msgstr "Сейчас у вас провайдер %s, поэтому эта инструкция будет игнорироваться, пока вы не перейдёте на один из тех."
+
+msgid "You’ve been translating with TranslateRocket for a while now. It’s free forever, and it stays maintained either way — if it saved you a paid plugin, a donation is a nice way to say thanks."
+msgstr "Вы переводите с TranslateRocket уже некоторое время. Он бесплатен навсегда и будет поддерживаться в любом случае — если он избавил вас от платного плагина, пожертвование это приятный способ сказать спасибо."
+
+msgid "Chrome and Edge on a computer can translate on the device itself. It costs nothing, needs no account, and the text never leaves this machine. Quality is below DeepL and the AI models, and it works through one phrase at a time — so it is the quickest way to get a translated site today, not the best one you can have."
+msgstr "Chrome и Edge на компьютере умеют переводить прямо на устройстве. Это ничего не стоит, не требует учётной записи, и текст никогда не покидает эту машину. Качество ниже, чем у DeepL и моделей ИИ, и идёт по одной фразе: это самый быстрый способ получить переведённый сайт сегодня, а не самый лучший из возможных."
+
+msgid "Could not read the translations."
+msgstr "Не удалось прочитать переводы."
+
+msgid "Done — %d strings translated in this browser."
+msgstr "Готово — в этом браузере переведено строк: %d."
+
+msgid "Downloading the language model — this happens once…"
+msgstr "Загружается языковая модель — это происходит один раз…"
+
+msgid "No language given."
+msgstr "Язык не указан."
+
+msgid "Not allowed."
+msgstr "Не разрешено."
+
+msgid "Nothing left to translate in this language."
+msgstr "На этом языке переводить больше нечего."
+
+msgid "Nothing to store."
+msgstr "Нечего сохранять."
+
+msgid "Preparing…"
+msgstr "Подготовка…"
+
+msgid "Reload the page to see the new totals."
+msgstr "Перезагрузите страницу, чтобы увидеть новые итоги."
+
+msgid "Set up an AI provider on the AI page to bulk-translate the missing strings — or use your browser below, which needs no key."
+msgstr "Чтобы перевести недостающие строки пачкой, настройте провайдера на странице ИИ — или возьмите браузер ниже, ему не нужен ключ."
+
+msgid "Stop"
+msgstr "Остановить"
+
+msgid "Stopped."
+msgstr "Остановлено."
+
+msgid "The browser translator stopped with an error."
+msgstr "Переводчик браузера остановился с ошибкой."
+
+msgid "The translator built into Chrome and Edge only works over a secure connection. Your admin is on plain http, so it cannot be used here."
+msgstr "Переводчик, встроенный в Chrome и Edge, работает только по защищённому соединению. Ваша админка на обычном http, поэтому здесь им воспользоваться нельзя."
+
+msgid "Translate %d missing in this browser"
+msgstr "Перевести %d недостающих в этом браузере"
+
+msgid "Translate with your browser — no API key"
+msgstr "Перевести своим браузером — без ключа API"
+
+msgid "Translating %1$d of %2$d…"
+msgstr "Переводится %1$d из %2$d…"
+
+msgid "You can add an API provider later for better quality — what you translate here is kept and never translated again."
+msgstr "Позже можно добавить провайдера с API ради качества: то, что вы переведёте здесь, сохранится и не будет переведено заново."
+
+msgid "Your browser has no built-in translator for %s."
+msgstr "В вашем браузере нет встроенного переводчика для языка %s."
+
+msgid "Open the copy &amp; paste tool"
+msgstr "Открыть копирование и вставку"
+
+msgid "Translate without an API key"
+msgstr "Перевести без ключа API"
+
+msgid "Your browser has no translator of its own — Chrome and Edge on a computer do. You can still work without a key: copy the missing strings out, run them through any translator you like, and paste the result back."
+msgstr "В вашем браузере нет собственного переводчика — в Chrome и Edge на компьютере он есть. Работать без ключа всё равно можно: скопируйте недостающие строки, прогоните их через любой переводчик и вставьте результат обратно."
+
+msgid "Ask for help"
+msgstr "Попросить помощи"
+
+msgid "Attach the report above (recommended — it usually saves a round of questions)"
+msgstr "Приложить отчёт выше (рекомендуется — обычно экономит один круг вопросов)"
+
+msgid "Check your provider and key"
+msgstr "Проверьте провайдера и ключ"
+
+msgid "Copied — now paste it into your message."
+msgstr "Скопировано — теперь вставьте это в своё сообщение."
+
+msgid "Copy the report"
+msgstr "Скопировать отчёт"
+
+msgid "Copy the report below and paste it into your message: it says which versions you are on and what these checks found. Nothing is sent anywhere on its own — you copy it, you decide where it goes. It never contains your API keys."
+msgstr "Скопируйте отчёт ниже и вставьте его в своё сообщение: он говорит, какие у вас версии и что нашли эти проверки. Сам по себе он никуда не отправляется — вы его копируете, вы решаете, куда он пойдёт. Ваши ключи API в него не попадают никогда."
+
+msgid "Could not reach the support site from here. Your host may be blocking outgoing requests — you can still copy the report and write from the browser."
+msgstr "Отсюда не удалось связаться с сайтом поддержки. Возможно, ваш хостинг блокирует исходящие запросы — вы всё равно можете скопировать отчёт и написать из браузера."
+
+msgid "DeepL refused with \"quota exceeded\", but your account still reports %1$s of %2$s characters used. That combination means the key itself is blocked, not the allowance: DeepL does this when the account has no verified payment method. Check your account on deepl.com/account."
+msgstr "DeepL ответил «квота исчерпана», но ваш аккаунт по-прежнему сообщает: использовано %1$s из %2$s символов. Такое сочетание означает, что заблокирован сам ключ, а не квота: DeepL делает так, когда в аккаунте нет подтверждённого способа оплаты. Проверьте свой аккаунт на deepl.com/account."
+
+msgid "DeepL: the monthly character allowance is used up. It resets at the start of your DeepL billing cycle."
+msgstr "DeepL: месячный лимит символов исчерпан. Он обнуляется в начале вашего расчётного периода DeepL."
+
+msgid "Everything is translated"
+msgstr "Всё переведено"
+
+msgid "Give it a subject first."
+msgstr "Сначала укажите тему."
+
+msgid "Give the message a subject, even a short one."
+msgstr "Дайте сообщению тему, пусть даже короткую."
+
+msgid "I need an email address to answer you."
+msgstr "Мне нужен адрес электронной почты, чтобы вам ответить."
+
+msgid "In a few words, what is wrong?"
+msgstr "В двух словах: что не так?"
+
+msgid "It did not go through."
+msgstr "Отправить не удалось."
+
+msgid "Leave this field empty"
+msgstr "Оставьте это поле пустым"
+
+msgid "Needs an API key — set one up in %s, or use your browser below (free)."
+msgstr "Нужен ключ API — настройте его в %s или используйте ниже свой браузер (бесплатно)."
+
+msgid "No API key for now"
+msgstr "Пока без ключа API"
+
+msgid "Open a topic on WordPress.org"
+msgstr "Открыть тему на WordPress.org"
+
+msgid "Or open the support site"
+msgstr "Или открыть сайт поддержки"
+
+msgid "Or write to me from here. Nothing leaves your site until you press Send, and what gets sent is exactly what you can read on this page — no keys, no page content, no visitor data."
+msgstr "Или напишите мне отсюда. Ничего не покидает ваш сайт, пока вы не нажмёте «Отправить», и уходит ровно то, что вы читаете на этой странице — никаких ключей, никакого содержимого страниц, никаких данных посетителей."
+
+msgid "Send to TranslateRocket support"
+msgstr "Отправить в поддержку TranslateRocket"
+
+msgid "Sending from here is not available on this install."
+msgstr "Отправка отсюда на этой установке недоступна."
+
+msgid "Sending…"
+msgstr "Отправка…"
+
+msgid "Sent — your ticket is #%d. My answer arrives by email."
+msgstr "Отправлено — ваш запрос № %d. Мой ответ придёт по электронной почте."
+
+msgid "Start with %s — pick your languages and you are translating."
+msgstr "Начните с %s — выберите языки, и вы уже переводите."
+
+msgid "Subject"
+msgstr "Тема"
+
+msgid "Technical report"
+msgstr "Технический отчёт"
+
+msgid "Tell me a little more — what you did, and what happened instead."
+msgstr "Расскажите чуть подробнее — что вы делали и что произошло вместо этого."
+
+msgid "That email address does not look right — without it I cannot answer you."
+msgstr "Этот адрес почты выглядит неправильно — без него я не смогу вам ответить."
+
+msgid "The AI translation could not run"
+msgstr "Перевод с помощью ИИ не удалось запустить"
+
+msgid "The support site refused the message. Please copy the report and write from the browser instead."
+msgstr "Сайт поддержки отклонил сообщение. Скопируйте отчёт и напишите из браузера."
+
+msgid "This is where my answer goes. It is used for nothing else."
+msgstr "Именно сюда придёт мой ответ. Больше он ни для чего не используется."
+
+msgid "This site is not reachable from the internet — it looks like a local or staging install. To be sure a ticket is genuine, the support site has to call your site back once, and it cannot do that here. Copy the report and write from the support page instead."
+msgstr "Этот сайт недоступен из интернета — похоже на локальную или тестовую установку. Чтобы убедиться, что запрос настоящий, сайт поддержки должен один раз обратиться к вашему сайту, а здесь он этого не может. Скопируйте отчёт и напишите со страницы поддержки."
+
+msgid "To be sure a ticket really comes from a WordPress site and not from a spam robot, the support site calls your site back once. This install is local or private, so it cannot be reached from the outside. Copy the report above and write from the support page — it gets to the same place."
+msgstr "Чтобы убедиться, что запрос действительно пришёл с сайта WordPress, а не от спам-робота, сайт поддержки один раз обращается к вашему сайту. Эта установка локальная или закрытая, поэтому снаружи до неё не достучаться. Скопируйте отчёт выше и напишите со страницы поддержки — он попадёт туда же."
+
+msgid "Translate all %d missing with AI"
+msgstr "Перевести с ИИ все %d недостающих"
+
+msgid "Translate by hand, or let Chrome and Edge translate the whole site for free from the Translations page — the text never leaves your computer. You can add a key later at any time."
+msgstr "Переводите вручную или дайте Chrome и Edge бесплатно перевести весь сайт со страницы «Переводы» — текст никогда не покидает ваш компьютер. Ключ можно добавить позже, когда захотите."
+
+msgid "Translate only this page with AI"
+msgstr "Перевести с ИИ только эту страницу"
+
+msgid "What happened"
+msgstr "Что случилось"
+
+msgid "What you were doing, what you expected, and what happened instead."
+msgstr "Что вы делали, чего ожидали и что произошло вместо этого."
+
+msgid "Write a little more about what happened."
+msgstr "Напишите чуть подробнее о том, что случилось."
+
+msgid "You just sent one. Give it a few minutes before sending another — I read them all."
+msgstr "Вы только что отправили один. Подождите несколько минут перед следующим — я читаю все."
+
+msgid "Your email"
+msgstr "Ваша электронная почта"
+
+msgid "Your name"
+msgstr "Ваше имя"
+
+msgid "or translate in this browser, free and without a key"
+msgstr "или переведите в этом браузере, бесплатно и без ключа"
+
+msgid "the 1-minute setup"
+msgstr "настройка за минуту"
+
+msgid "Chrome and Edge on a computer can translate on the device itself: it costs nothing and the text never leaves your machine. Quality is below the AI models."
+msgstr "Chrome и Edge на компьютере умеют переводить прямо на устройстве: это ничего не стоит, и текст не покидает вашу машину. Качество ниже, чем у моделей ИИ."
+
+msgid "Translate everything in this browser — no key"
+msgstr "Перевести всё в этом браузере — без ключа"
+
+msgid "Updating the totals…"
+msgstr "Обновляю итоги…"
+
+msgid "Translate in this browser"
+msgstr "Перевести в этом браузере"
+
+msgid "Everyone who helps out is named on the Contributors page."
+msgstr "Все, кто помогает, названы на странице Contributors."
+
+msgid "See who they are"
+msgstr "Посмотрите, кто это"
+
+msgid "Online: your visitors see this language. Click to hide it while you work on it."
+msgstr "Онлайн: посетители видят этот язык. Нажмите, чтобы скрыть его, пока вы над ним работаете."
+
+msgid "Offline: only you see this language. Click to publish it."
+msgstr "Офлайн: этот язык видите только вы. Нажмите, чтобы опубликовать его."
+
+msgid "online"
+msgstr "онлайн"
+
+msgid "offline"
+msgstr "офлайн"
+
+msgid "Published, or still being translated?"
+msgstr "Опубликован или ещё переводится?"
+
+msgid "A language kept offline is invisible to visitors: it is left out of the language switcher, out of your sitemap and out of the hreflang tags, and anyone landing on one of its URLs is sent to your default language. You keep working on it normally — and you can see it on the real pages, because whoever can preview still sees everything. Put it online when you are happy with it."
+msgstr "Язык, оставленный офлайн, невидим для посетителей: он не попадает ни в переключатель языков, ни в карту сайта, ни в теги hreflang, а тот, кто откроет один из его адресов, попадёт на язык по умолчанию. Вы спокойно продолжаете над ним работать — и видите его на настоящих страницах, потому что у кого есть предпросмотр, тот по-прежнему видит всё. Опубликуйте его, когда будете довольны."
+
+msgid "Add a language today, publish it when it is ready. Nothing half-translated ever reaches your visitors or Google."
+msgstr "Добавьте язык сегодня, опубликуйте, когда он будет готов. Ничего наполовину переведённого не попадёт ни к посетителям, ни в Google."
+
+msgid "nothing collected yet"
+msgstr "пока ничего не собрано"
+
+msgid "(no alt text)"
+msgstr "(нет alt-текста)"
+
+msgid "(empty)"
+msgstr "(пусто)"
+
+msgid "Alt text"
+msgstr "Alt-текст"
+
+msgid "Change the photo"
+msgstr "Заменить фото"
+
+msgid "Edit"
+msgstr "Изменить"
+
+msgid "Social title (Open Graph)"
+msgstr "Заголовок для соцсетей (Open Graph)"
+
+msgid "The headline people see when the page is shared on Facebook, LinkedIn or WhatsApp."
+msgstr "Заголовок, который видят при публикации страницы в Facebook, LinkedIn или WhatsApp."
+
+msgid "Social description (Open Graph)"
+msgstr "Описание для соцсетей (Open Graph)"
+
+msgid "The text under that headline in the shared preview."
+msgstr "Текст под этим заголовком в превью при публикации."
+
+msgid "Title for X / Twitter"
+msgstr "Заголовок для X / Twitter"
+
+msgid "Used when the page is shared on X."
+msgstr "Используется при публикации страницы в X."
+
+msgid "Description for X / Twitter"
+msgstr "Описание для X / Twitter"
+
+msgid "The summary in the X preview card."
+msgstr "Краткое описание в карточке предпросмотра X."
+
+msgid "Alt text of the shared image"
+msgstr "Alt-текст изображения при публикации"
+
+msgid "Describes the preview image for people using a screen reader."
+msgstr "Описывает изображение предпросмотра для тех, кто пользуется программой чтения с экрана."
+
+msgid "Alt text of the X image"
+msgstr "Alt-текст изображения в X"
+
+msgid "Describes the preview image on X."
+msgstr "Описывает изображение предпросмотра в X."
+
+msgid "Site name in shares"
+msgstr "Название сайта при публикации"
+
+msgid "The name of your site as it appears in the shared preview."
+msgstr "Название вашего сайта в превью при публикации."
+
+msgid "Meta keywords"
+msgstr "Meta keywords"
+
+msgid "Google has ignored these since 2009, but some other engines and directories still read them."
+msgstr "Google игнорирует их с 2009 года, но некоторые другие поисковики и каталоги их ещё читают."
+
+msgid "Images on this page"
+msgstr "Изображения на этой странице"
+
+msgid "The alt text is what search engines read instead of the picture. Click a line to jump to that photo in the page and edit it."
+msgstr "Alt-текст — это то, что поисковики читают вместо картинки. Нажмите на строку, чтобы перейти к этому фото на странице и изменить его."
+
+msgid "Other HTML attributes"
+msgstr "Другие атрибуты HTML"
+
+msgid "Titles, placeholders and ARIA labels: invisible on screen, but read by search engines and screen readers."
+msgstr "Title, placeholder и ARIA-метки: на экране их не видно, но их читают поисковики и программы чтения с экрана."
+
+msgid "Everything search engines read in %s, in order: the address, the title and description, the social preview, then the images and attributes inside the page."
+msgstr "Всё, что поисковики читают на языке %s, по порядку: адрес, заголовок и описание, превью для соцсетей, затем изображения и атрибуты внутри страницы."
+
+msgid "A language you add now starts offline: nobody sees it while you translate it. Flip its switch to green when it is ready."
+msgstr "Язык, который вы добавляете сейчас, начинается офлайн: пока вы его переводите, его никто не видит. Переведите его переключатель на зелёный, когда он будет готов."
+
+msgid "%d page changed since TranslateRocket last read it."
+msgid_plural "%d pages changed since TranslateRocket last read them."
+msgstr[0] "%d страница изменилась с тех пор, как TranslateRocket её прочитал."
+msgstr[1] "%d страницы изменились с тех пор, как TranslateRocket их прочитал."
+msgstr[2] "%d страниц изменились с тех пор, как TranslateRocket их прочитал."
+
+msgid "Any new text on them has not been detected yet, so it is not in your list of strings to translate — and on the translated pages it is still showing in your source language."
+msgstr "Новый текст на них ещё не обнаружен, поэтому его нет в списке строк для перевода — а на переведённых страницах он по-прежнему показывается на исходном языке."
+
+msgid "Scan them now"
+msgstr "Просканировать их сейчас"
+
+msgid "⚠ Not saved — your site refused the request. Your text is still here: try again."
+msgstr "⚠ Не сохранено: ваш сайт отклонил запрос. Текст никуда не делся — попробуйте ещё раз."
+
+msgid "⚠ Your site did not answer. The text is still here — check your connection, then try again."
+msgstr "⚠ Ваш сайт не ответил. Текст никуда не делся — проверьте соединение и попробуйте снова."

@@ -1,0 +1,1399 @@
+/* TranslateRocket visual editor (front-end, edit mode only). */
+
+/* Use our own toolbar instead of the WP admin bar. */
+#wpadminbar {
+	display: none !important;
+}
+
+html {
+	margin-top: 0 !important;
+}
+
+body {
+	padding-top: 46px !important;
+}
+
+#trrocket-ve-bar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 46px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 0 16px;
+	background: linear-gradient( 90deg, #4f46e5, #7c3aed );
+	color: #fff;
+	font: 600 14px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	z-index: 2147483646;
+	box-shadow: 0 2px 8px rgba( 0, 0, 0, 0.2 );
+}
+
+#trrocket-ve-bar .trrocket-ve-brand {
+	font-weight: 700;
+}
+
+#trrocket-ve-bar .trrocket-ve-mode strong {
+	font-weight: 700;
+}
+
+#trrocket-ve-bar .trrocket-ve-hint {
+	opacity: 0.85;
+	font-weight: 400;
+	/* La scritta era nascosta solo sotto i 720px, ma la barra non ci sta fino a
+	   circa 1400: nel mezzo andava a capo e veniva tagliata a meta'. */
+	white-space: nowrap;
+	overflow: hidden;
+	flex: 0 1 auto;
+	min-width: 0;
+}
+
+@media ( max-width: 1400px ) {
+	#trrocket-ve-bar .trrocket-ve-hint {
+		display: none;
+	}
+}
+
+#trrocket-ve-bar .trrocket-ve-exit {
+	margin-left: auto;
+	background: rgba( 255, 255, 255, 0.16 );
+	color: #fff;
+	text-decoration: none;
+	padding: 7px 16px;
+	border-radius: 6px;
+}
+
+#trrocket-ve-bar .trrocket-ve-exit:hover {
+	background: rgba( 255, 255, 255, 0.28 );
+}
+
+#trrocket-ve-bar .trrocket-ve-pick {
+	background: rgba( 255, 255, 255, 0.18 );
+	color: #fff;
+	text-decoration: none;
+	padding: 6px 14px;
+	border-radius: 6px;
+	font-weight: 700;
+	margin-right: 4px;
+}
+
+#trrocket-ve-bar .trrocket-ve-pick:hover {
+	background: rgba( 255, 255, 255, 0.32 );
+}
+
+/* "From → to" flags in the bar (source flag, arrow, clickable target flags). */
+#trrocket-ve-bar .trrocket-ve-langs {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+#trrocket-ve-bar .trrocket-ve-lang {
+	display: inline-flex;
+	align-items: center;
+	padding: 3px;
+	border-radius: 5px;
+	line-height: 0;
+	text-decoration: none;
+	border: 1px solid transparent;
+	opacity: 0.8;
+}
+
+#trrocket-ve-bar a.trrocket-ve-lang:hover {
+	background: rgba( 255, 255, 255, 0.22 );
+	opacity: 1;
+}
+
+#trrocket-ve-bar .trrocket-ve-lang.is-current {
+	background: rgba( 255, 255, 255, 0.24 );
+	border-color: rgba( 255, 255, 255, 0.6 );
+	opacity: 1;
+}
+
+#trrocket-ve-bar .trrocket-ve-lang-src {
+	opacity: 1;
+}
+
+#trrocket-ve-bar .trrocket-ve-langarrow {
+	display: inline-flex;
+	align-items: center;
+	opacity: 0.85;
+}
+
+#trrocket-ve-bar .trrocket-ve-lang .trrocket-flag-svg {
+	display: block;
+	border-radius: 2px;
+}
+
+/* Clickable text. */
+.trrocket-ed {
+	cursor: pointer;
+	outline: 1px dashed transparent;
+	outline-offset: 1px;
+	border-radius: 2px;
+	/* Persistent hint so every detected string looks clickable — not only on hover.
+	   This is what tells the user "you can translate this". */
+	text-decoration: underline dotted rgba( 79, 70, 229, 0.45 );
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+	transition: outline-color 0.1s ease, background 0.1s ease;
+}
+
+.trrocket-ed:hover {
+	outline-color: #4f46e5;
+	background: rgba( 79, 70, 229, 0.12 );
+	text-decoration-color: #4f46e5;
+}
+
+.trrocket-ed.trrocket-ed-active {
+	outline: 2px solid #4f46e5;
+	background: rgba( 79, 70, 229, 0.14 );
+}
+
+/* Text still showing the original (no translation yet): stronger amber hint so the
+   "still to do" strings clearly stand out from the already-translated ones. */
+.trrocket-ed.trrocket-ed-untr {
+	text-decoration: underline dotted #d97706;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 2px;
+	background: rgba( 217, 119, 6, 0.09 );
+}
+
+/* Whole-paragraph (block) editor: hint explaining the [1] [2] markers. */
+.trrocket-ve-pop .trrocket-ve-blockhint {
+	font-size: 11.5px;
+	line-height: 1.4;
+	color: #6b6b80;
+	background: #f5f5fb;
+	border-radius: 6px;
+	padding: 5px 8px;
+	margin-top: 6px;
+}
+
+/* Elements with a translatable attribute (image alt, link title, placeholder…). */
+.trrocket-ed-attr {
+	cursor: pointer;
+}
+
+.trrocket-ed-attr:hover {
+	outline: 2px dashed #7c3aed;
+	outline-offset: 2px;
+}
+
+.trrocket-ed-attr.trrocket-ed-active {
+	outline: 2px solid #7c3aed;
+	outline-offset: 2px;
+}
+
+.trrocket-ve-pop .trrocket-ve-attrhead {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.trrocket-ve-pop .trrocket-ve-attrlabel {
+	font-weight: 700;
+	font-size: 13px;
+	color: #1e1e2e;
+}
+
+/* Inline editor popup. */
+.trrocket-ve-pop {
+	position: fixed;
+	z-index: 2147483647;
+	width: 380px;
+	max-width: 92vw;
+	background: #fff;
+	border: 1px solid #d6d6e6;
+	border-radius: 10px;
+	box-shadow: 0 10px 34px rgba( 0, 0, 0, 0.2 );
+	padding: 12px;
+	font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	color: #1e1e2e;
+}
+
+/* Gradient title bar = drag handle (4-arrow cursor), with lock + close inside. */
+.trrocket-ve-pop .trrocket-ve-bar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: -12px -12px 10px;
+	padding: 7px 8px 7px 10px;
+	border-radius: 10px 10px 0 0;
+	background: linear-gradient( 120deg, #4f46e5 0%, #7c3aed 55%, #c026d3 100% );
+	color: #fff;
+	cursor: move;
+	user-select: none;
+}
+
+.trrocket-ve-pop .trrocket-ve-grip {
+	display: inline-flex;
+	opacity: 0.55;
+	transition: opacity 0.12s ease;
+}
+
+.trrocket-ve-pop .trrocket-ve-bar:hover .trrocket-ve-grip {
+	opacity: 1;
+}
+
+.trrocket-ve-pop .trrocket-ve-bartitle {
+	flex: 1;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.trrocket-ve-pop .trrocket-ve-bar .trrocket-ve-lock,
+.trrocket-ve-pop .trrocket-ve-bar .trrocket-ve-close {
+	position: static;
+	flex: 0 0 auto;
+	width: 24px;
+	height: 24px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: 0;
+	background: rgba( 255, 255, 255, 0.14 );
+	color: #fff;
+	cursor: pointer;
+	border-radius: 6px;
+	line-height: 1;
+}
+
+.trrocket-ve-pop .trrocket-ve-bar .trrocket-ve-close {
+	font-size: 20px;
+}
+
+.trrocket-ve-pop .trrocket-ve-bar .trrocket-ve-lock:hover,
+.trrocket-ve-pop .trrocket-ve-bar .trrocket-ve-close:hover {
+	background: rgba( 255, 255, 255, 0.30 );
+}
+
+.trrocket-ve-pop .trrocket-ve-bar .trrocket-ve-lock.is-locked {
+	background: #fde047;
+	color: #1e1e2e;
+}
+
+.trrocket-ve-pop .trrocket-ve-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 8px;
+}
+
+.trrocket-ve-pop .trrocket-ve-nav {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.trrocket-ve-pop .trrocket-ve-prev,
+.trrocket-ve-pop .trrocket-ve-next {
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	font-size: 18px;
+	line-height: 1;
+	border: 1px solid #d6d6e6;
+	background: #fff;
+	color: #4f46e5;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+.trrocket-ve-pop .trrocket-ve-prev:hover:not( :disabled ),
+.trrocket-ve-pop .trrocket-ve-next:hover:not( :disabled ) {
+	background: #eef0fb;
+}
+
+.trrocket-ve-pop .trrocket-ve-prev:disabled,
+.trrocket-ve-pop .trrocket-ve-next:disabled {
+	opacity: 0.35;
+	cursor: default;
+}
+
+.trrocket-ve-pop .trrocket-ve-count {
+	font-size: 12px;
+	font-weight: 600;
+	color: #50575e;
+	min-width: 56px;
+	text-align: center;
+}
+
+.trrocket-ve-pop .trrocket-ve-onlytodo {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12px;
+	color: #50575e;
+	margin: 0;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.trrocket-ve-pop .trrocket-ve-tools {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 16px;
+	margin: 2px 0 6px;
+}
+
+.trrocket-ve-pop .trrocket-ve-selall,
+.trrocket-ve-pop .trrocket-ve-restore,
+.trrocket-ve-pop .trrocket-ve-histback {
+	font-size: 12px;
+	color: #4f46e5;
+	cursor: pointer;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+}
+
+.trrocket-ve-pop .trrocket-ve-restore,
+.trrocket-ve-pop .trrocket-ve-histback {
+	color: #6b6b80;
+}
+
+.trrocket-ve-pop .trrocket-ve-histback[hidden] {
+	display: none;
+}
+
+.trrocket-ve-pop .trrocket-ve-selall:hover,
+.trrocket-ve-pop .trrocket-ve-restore:hover,
+.trrocket-ve-pop .trrocket-ve-histback:hover {
+	text-decoration: underline;
+}
+
+.trrocket-ve-pop .trrocket-ve-blockhint {
+	display: flex;
+	align-items: flex-start;
+	gap: 6px;
+}
+
+.trrocket-ve-pop .trrocket-ve-hint-ico {
+	color: #d97706;
+	flex: 0 0 auto;
+	margin-top: 1px;
+}
+
+/* Block-editor view toggle: numbered [1] [2] markers vs raw HTML (full control). */
+.trrocket-ve-pop .trrocket-ve-modes {
+	display: inline-flex;
+	margin: 0 0 8px;
+	border: 1px solid #d6d6e6;
+	border-radius: 7px;
+	overflow: hidden;
+}
+
+.trrocket-ve-pop .trrocket-ve-modes button {
+	border: 0;
+	border-radius: 0;
+	background: #fff;
+	color: #50575e;
+	font-size: 12px;
+	font-weight: 600;
+	padding: 6px 16px;
+}
+
+.trrocket-ve-pop .trrocket-ve-modes button + button {
+	border-left: 1px solid #d6d6e6;
+}
+
+.trrocket-ve-pop .trrocket-ve-modes button.is-active {
+	background: #4f46e5;
+	color: #fff;
+}
+
+.trrocket-ve-pop .trrocket-ve-modes button:not( .is-active ):hover {
+	background: #eef0fb;
+}
+
+#trrocket-ve-bar .trrocket-ve-progress {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background: rgba( 255, 255, 255, 0.18 );
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-weight: 700;
+	font-size: 13px;
+}
+
+#trrocket-ve-bar .trrocket-ve-progbar {
+	width: 90px;
+	height: 7px;
+	background: rgba( 255, 255, 255, 0.32 );
+	border-radius: 999px;
+	overflow: hidden;
+}
+
+#trrocket-ve-bar .trrocket-ve-progfill {
+	display: block;
+	height: 100%;
+	width: 0;
+	border-radius: 999px;
+	transition: width 0.35s ease, background 0.35s ease;
+}
+
+#trrocket-ve-bar .trrocket-ve-proglabel {
+	white-space: nowrap;
+}
+
+/* "From → to" flags inside the small draggable popup title bar. */
+.trrocket-ve-pop .trrocket-ve-baflags {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	flex: 0 0 auto;
+}
+
+.trrocket-ve-pop .trrocket-ve-baflags .trrocket-flag-svg {
+	display: block;
+	border-radius: 2px;
+}
+
+.trrocket-ve-pop .trrocket-ve-baarrow {
+	display: inline-flex;
+	align-items: center;
+	opacity: 0.85;
+}
+
+.trrocket-ve-pop .trrocket-ve-src {
+	font-size: 12px;
+	color: #555;
+	background: #f5f5fb;
+	border-radius: 6px;
+	padding: 6px 8px;
+	margin-bottom: 8px;
+	max-height: 90px;
+	overflow: auto;
+}
+
+.trrocket-ve-pop textarea {
+	width: 100%;
+	box-sizing: border-box;
+	min-height: 66px;
+	border: 1px solid #c8c8d8;
+	border-radius: 6px;
+	padding: 7px 9px;
+	font: inherit;
+	resize: vertical;
+}
+
+.trrocket-ve-pop .trrocket-ve-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 9px;
+	align-items: center;
+}
+
+.trrocket-ve-pop .trrocket-ve-row1 {
+	justify-content: center;
+}
+
+/* Save & Next grows to fill the row (so its label stays on ONE line); Save is only
+   as wide as its own label. Together they span the full popup width. */
+.trrocket-ve-pop .trrocket-ve-row1 .trrocket-ve-save {
+	flex: 1 1 auto;
+	white-space: nowrap;
+}
+
+.trrocket-ve-pop .trrocket-ve-row1 .trrocket-ve-saveonly {
+	flex: 0 0 auto;
+	white-space: nowrap;
+}
+
+.trrocket-ve-pop .trrocket-ve-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 8px;
+}
+
+.trrocket-ve-pop .trrocket-ve-stack button {
+	width: 100%;
+}
+
+.trrocket-ve-pop button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	font: inherit;
+	cursor: pointer;
+	border-radius: 6px;
+	padding: 7px 14px;
+	border: 1px solid transparent;
+}
+
+.trrocket-ve-pop .trrocket-ve-row button svg {
+	flex: 0 0 auto;
+}
+
+.trrocket-ve-pop .trrocket-ve-save {
+	background: #4f46e5;
+	color: #fff;
+}
+
+.trrocket-ve-pop .trrocket-ve-save:hover {
+	background: #4338ca;
+}
+
+.trrocket-ve-pop .trrocket-ve-ai {
+	background: #fff;
+	border-color: #c8c8d8;
+	color: #333;
+}
+
+.trrocket-ve-pop .trrocket-ve-ai:hover {
+	border-color: #4f46e5;
+	color: #4f46e5;
+}
+
+.trrocket-ve-pop .trrocket-ve-saveonly {
+	background: #fff;
+	border-color: #c8c8d8;
+	color: #333;
+}
+
+.trrocket-ve-pop .trrocket-ve-saveonly:hover {
+	border-color: #4f46e5;
+	color: #4f46e5;
+}
+
+.trrocket-ve-pop .trrocket-ve-ai {
+	min-width: 200px;
+}
+
+.trrocket-ve-pop .trrocket-ve-gt {
+	background: #fff;
+	border-color: #c8c8d8;
+	color: #1a73e8;
+}
+
+.trrocket-ve-pop .trrocket-ve-gt:hover {
+	border-color: #1a73e8;
+	background: #e8f0fe;
+}
+
+.trrocket-ve-pop .trrocket-ve-msgrow {
+	min-height: 16px;
+	margin-top: 7px;
+	text-align: center;
+}
+
+.trrocket-ve-pop .trrocket-ve-msg {
+	font-size: 12px;
+	color: #1a7f37;
+}
+
+/* Small spinner shown inside a button while it works (save / AI / Google). */
+.trrocket-ve-spin {
+	display: inline-block;
+	width: 13px;
+	height: 13px;
+	border: 2px solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	vertical-align: middle;
+	animation: trrocket-ve-spin 0.6s linear infinite;
+}
+
+.trrocket-ve-pop button.is-busy svg {
+	display: none;
+}
+
+.trrocket-ve-pop button.is-busy {
+	cursor: default;
+}
+
+@keyframes trrocket-ve-spin {
+	to {
+		transform: rotate( 360deg );
+	}
+}
+
+/* "Visibility" toggle button in the top bar + its collapsible panel. */
+#trrocket-ve-bar .trrocket-ve-visbtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+	background: rgba( 255, 255, 255, 0.16 );
+	color: #fff;
+	border: 0;
+	cursor: pointer;
+	padding: 7px 14px;
+	border-radius: 6px;
+	font: inherit;
+	font-weight: 600;
+}
+
+/* When the Visibility button is present it takes the margin-left:auto, so the Done
+   link sits right after it instead of being pushed to the far right. */
+#trrocket-ve-bar .trrocket-ve-visbtn ~ .trrocket-ve-exit {
+	margin-left: 0;
+}
+
+#trrocket-ve-bar .trrocket-ve-visbtn:hover,
+#trrocket-ve-bar .trrocket-ve-visbtn.is-open {
+	background: rgba( 255, 255, 255, 0.30 );
+}
+
+#trrocket-ve-vispanel {
+	position: fixed;
+	top: 52px;
+	right: 12px;
+	z-index: 2147483646;
+	box-sizing: border-box;
+	width: 340px;
+	max-width: 94vw;
+	max-height: calc( 100vh - 64px );
+	overflow: auto;
+	background: #fff;
+	color: #1e1e2e;
+	border: 1px solid #d6d6e6;
+	border-radius: 10px;
+	box-shadow: 0 10px 34px rgba( 0, 0, 0, 0.22 );
+	padding: 14px;
+	font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#trrocket-ve-vispanel[hidden] {
+	display: none;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-vishead {
+	font-weight: 700;
+	font-size: 13.5px;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-visdesc {
+	font-size: 11.5px;
+	line-height: 1.4;
+	color: #6b6b80;
+	margin: 4px 0 6px;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-visrow {
+	border-top: 1px solid #ececf3;
+	padding-top: 9px;
+	margin-top: 9px;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-vislabel {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-weight: 700;
+	font-size: 13px;
+	margin-bottom: 5px;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-vislabel .trrocket-flag-svg {
+	display: block;
+	border-radius: 2px;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-vismode,
+#trrocket-ve-vispanel .trrocket-ve-visurl,
+#trrocket-ve-vispanel .trrocket-ve-vismsg {
+	width: 100%;
+	box-sizing: border-box;
+	border: 1px solid #c8c8d8;
+	border-radius: 6px;
+	padding: 7px 9px;
+	font: inherit;
+	margin-top: 5px;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-vismsg {
+	min-height: 48px;
+	resize: vertical;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-visurl[hidden],
+#trrocket-ve-vispanel .trrocket-ve-vismsg[hidden] {
+	display: none;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-visfoot {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 14px;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-vismsgout {
+	font-size: 12px;
+	font-weight: 600;
+	color: #1a7f37;
+	margin-right: auto;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-vissave {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: #4f46e5;
+	color: #fff;
+	border: 0;
+	border-radius: 6px;
+	padding: 8px 16px;
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+#trrocket-ve-vispanel .trrocket-ve-vissave:hover {
+	background: #4338ca;
+}
+
+/* "SEO" toggle button in the top bar + its collapsible panel (slug, SEO title,
+   meta description). Sits just before Visibility, sharing its look; whichever of
+   the two comes first takes the margin-left:auto that pushes the group right. */
+#trrocket-ve-bar .trrocket-ve-seobtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+	background: rgba( 255, 255, 255, 0.16 );
+	color: #fff;
+	border: 0;
+	cursor: pointer;
+	padding: 7px 14px;
+	border-radius: 6px;
+	font: inherit;
+	font-weight: 600;
+}
+
+#trrocket-ve-bar .trrocket-ve-seobtn ~ .trrocket-ve-visbtn,
+#trrocket-ve-bar .trrocket-ve-seobtn ~ .trrocket-ve-exit {
+	margin-left: 0;
+}
+
+#trrocket-ve-bar .trrocket-ve-seobtn:hover,
+#trrocket-ve-bar .trrocket-ve-seobtn.is-open {
+	background: rgba( 255, 255, 255, 0.30 );
+}
+
+#trrocket-ve-seopanel {
+	position: fixed;
+	top: 52px;
+	right: 12px;
+	z-index: 2147483646;
+	box-sizing: border-box;
+	width: 340px;
+	max-width: 94vw;
+	max-height: calc( 100vh - 64px );
+	overflow: auto;
+	background: #fff;
+	color: #1e1e2e;
+	border: 1px solid #d6d6e6;
+	border-radius: 10px;
+	box-shadow: 0 10px 34px rgba( 0, 0, 0, 0.22 );
+	padding: 14px;
+	font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#trrocket-ve-seopanel[hidden] {
+	display: none;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-vishead {
+	font-weight: 700;
+	font-size: 13.5px;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-visdesc {
+	font-size: 11.5px;
+	line-height: 1.4;
+	color: #6b6b80;
+	margin: 4px 0 6px;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seorow {
+	border-top: 1px solid #ececf3;
+	padding-top: 9px;
+	margin-top: 9px;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seolabel {
+	display: block;
+	font-weight: 700;
+	font-size: 13px;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seohint {
+	font-size: 11.5px;
+	line-height: 1.4;
+	color: #6b6b80;
+	margin: 2px 0 5px;
+}
+
+/* The source text the translation refers to. */
+#trrocket-ve-seopanel .trrocket-ve-seosrc {
+	font-size: 12px;
+	line-height: 1.4;
+	color: #40405a;
+	background: #f4f4f9;
+	border-radius: 6px;
+	padding: 6px 8px;
+	margin-bottom: 5px;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seosrc.is-missing {
+	color: #8a6d3b;
+	background: #fdf6e3;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seoslugwrap {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seoslugwrap span {
+	color: #6b6b80;
+	font-size: 12.5px;
+	font-weight: 600;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seoslug,
+#trrocket-ve-seopanel .trrocket-ve-seotr {
+	width: 100%;
+	box-sizing: border-box;
+	border: 1px solid #c8c8d8;
+	border-radius: 6px;
+	padding: 7px 9px;
+	font: inherit;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seotr {
+	min-height: 40px;
+	resize: vertical;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-visfoot {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 14px;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-vismsgout {
+	font-size: 12px;
+	font-weight: 600;
+	color: #1a7f37;
+	margin-right: auto;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-vissave {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: #4f46e5;
+	color: #fff;
+	border: 0;
+	border-radius: 6px;
+	padding: 8px 16px;
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-vissave:hover {
+	background: #4338ca;
+}
+
+/* Independent-copy controls in the top bar. */
+#trrocket-ve-bar .trrocket-ve-copy-create {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: rgba( 255, 255, 255, 0.16 );
+	color: #fff;
+	border: 0;
+	cursor: pointer;
+	padding: 7px 14px;
+	border-radius: 6px;
+	font: inherit;
+	font-weight: 600;
+}
+
+#trrocket-ve-bar .trrocket-ve-copy-create:hover {
+	background: rgba( 255, 255, 255, 0.30 );
+}
+
+#trrocket-ve-bar .trrocket-ve-copy.is-active {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+#trrocket-ve-bar .trrocket-ve-copy-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-weight: 700;
+	background: rgba( 253, 224, 71, 0.22 );
+	color: #fde047;
+	padding: 5px 10px;
+	border-radius: 6px;
+}
+
+#trrocket-ve-bar .trrocket-ve-copy-edit {
+	color: #fff;
+	text-decoration: none;
+	background: rgba( 255, 255, 255, 0.18 );
+	padding: 6px 12px;
+	border-radius: 6px;
+	font-weight: 600;
+}
+
+#trrocket-ve-bar .trrocket-ve-copy-edit:hover {
+	background: rgba( 255, 255, 255, 0.32 );
+}
+
+#trrocket-ve-bar .trrocket-ve-copy-revert {
+	background: transparent;
+	color: #fff;
+	border: 1px solid rgba( 255, 255, 255, 0.5 );
+	cursor: pointer;
+	padding: 6px 12px;
+	border-radius: 6px;
+	font: inherit;
+}
+
+#trrocket-ve-bar .trrocket-ve-copy-revert:hover {
+	background: rgba( 255, 255, 255, 0.16 );
+}
+
+#trrocket-ve-bar .trrocket-ve-copy-delete {
+	background: transparent;
+	color: #fecaca;
+	border: 1px solid rgba( 248, 113, 113, 0.6 );
+	cursor: pointer;
+	padding: 6px 12px;
+	border-radius: 6px;
+	font: inherit;
+}
+
+#trrocket-ve-bar .trrocket-ve-copy-delete:hover {
+	background: rgba( 248, 113, 113, 0.22 );
+	color: #fff;
+}
+
+#trrocket-ve-bar .trrocket-ve-copy-drift {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-weight: 700;
+	background: rgba( 251, 146, 60, 0.26 );
+	color: #fed7aa;
+	padding: 5px 10px;
+	border-radius: 6px;
+}
+
+/* "Translate page" bulk button (top bar) + panel. */
+#trrocket-ve-bar .trrocket-ve-bulkbtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: rgba( 255, 255, 255, 0.16 );
+	color: #fff;
+	border: 0;
+	cursor: pointer;
+	padding: 7px 14px;
+	border-radius: 6px;
+	font: inherit;
+	font-weight: 600;
+}
+
+#trrocket-ve-bar .trrocket-ve-bulkbtn:hover,
+#trrocket-ve-bar .trrocket-ve-bulkbtn.is-open {
+	background: rgba( 255, 255, 255, 0.30 );
+}
+
+#trrocket-ve-bulkpanel {
+	position: fixed;
+	top: 52px;
+	right: 12px;
+	z-index: 2147483646;
+	box-sizing: border-box;
+	width: 420px;
+	max-width: 94vw;
+	max-height: calc( 100vh - 64px );
+	overflow: auto;
+	background: #fff;
+	color: #1e1e2e;
+	border: 1px solid #d6d6e6;
+	border-radius: 10px;
+	box-shadow: 0 10px 34px rgba( 0, 0, 0, 0.22 );
+	padding: 16px;
+	font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#trrocket-ve-bulkpanel[hidden] { display: none; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-head { font-weight: 700; font-size: 15px; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-desc { font-size: 12px; color: #6b6b80; margin: 4px 0 10px; line-height: 1.4; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-opt { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: #50575e; margin-bottom: 12px; cursor: pointer; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-auto { display: flex; flex-direction: column; gap: 8px; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-auto button {
+	display: block; width: 100%; text-align: center;
+	background: linear-gradient( 90deg, #4f46e5, #7c3aed ); color: #fff;
+	border: 0; border-radius: 8px; padding: 11px 14px; font: inherit; font-weight: 700; cursor: pointer;
+}
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-auto button:hover { filter: brightness( 1.08 ); }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-gt { background: linear-gradient( 90deg, #1a73e8, #4f46e5 ) !important; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-note { font-size: 12.5px; color: #6b6b80; background: #f5f5fb; border-radius: 8px; padding: 10px; line-height: 1.45; }
+/* Prima di ogni regola di display: senza questo, un elemento marcato hidden
+   resta a video perche' una regola d'autore batte l'[hidden] del browser. La
+   barra di avanzamento si vedeva sempre, vuota, come una striscia grigia in
+   mezzo al pannello. */
+#trrocket-ve-bulkpanel [hidden] { display: none !important; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-prog { display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-progbar { flex: 1; height: 8px; background: #ececf3; border-radius: 999px; overflow: hidden; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-progfill { display: block; height: 100%; width: 0; background: #4f46e5; border-radius: 999px; transition: width 0.25s ease; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-progtxt { font-size: 12px; font-weight: 600; color: #50575e; white-space: nowrap; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-sub { font-weight: 700; font-size: 13px; margin: 16px 0 8px; padding-top: 14px; border-top: 1px solid #ececf3; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-step { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #50575e; margin: 8px 0 5px; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-step span { flex: 1; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-copy { background: #4f46e5; color: #fff; border: 0; border-radius: 6px; padding: 5px 12px; font: inherit; font-weight: 600; cursor: pointer; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-gopen { color: #1a73e8; text-decoration: none; font-size: 12px; white-space: nowrap; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-gopen:hover { text-decoration: underline; }
+#trrocket-ve-bulkpanel textarea {
+	width: 100%; box-sizing: border-box; border: 1px solid #c8c8d8; border-radius: 8px;
+	padding: 8px 10px; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; resize: vertical;
+}
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-srctext { background: #f8f8fc; color: #444; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-foot { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-msg { flex: 1; font-size: 12px; font-weight: 600; color: #1a7f37; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-apply { background: #16a34a; color: #fff; border: 0; border-radius: 8px; padding: 9px 18px; font: inherit; font-weight: 700; cursor: pointer; }
+#trrocket-ve-bulkpanel .trrocket-ve-bulk-apply:hover { background: #15803d; }
+
+/* -----------------------------------------------------------------------------
+ * Mobile: the toolbar packs many controls (source→target flags, page actions,
+ * SEO, visibility, exit) into one fixed row. On a phone they overflow the
+ * viewport and the flags/buttons on the right become unreachable. Let the whole
+ * bar scroll horizontally (swipe) so every target-language flag and every action
+ * stays reachable, and drop the decorative brand to free up room.
+ * ------------------------------------------------------------------------- */
+@media ( max-width: 720px ) {
+	/* Su telefono la barra andava a capo mai e scorreva sempre: con quattro
+	   lingue piu' i comandi sono oltre mille pixel dentro trecentosettanta, e
+	   per arrivare a "Done" bisognava trascinarla. Meglio due righe che una
+	   riga da rincorrere. L'altezza non e' piu' fissa, quindi lo scostamento
+	   della pagina lo misura il JS (adeguaSpazioBarra). */
+	#trrocket-ve-bar {
+		gap: 8px;
+		row-gap: 6px;
+		padding: 7px 10px;
+		height: auto;
+		min-height: 46px;
+		flex-wrap: wrap;
+		overflow: visible;
+		justify-content: flex-start;
+	}
+	#trrocket-ve-bar::-webkit-scrollbar {
+		display: none;
+	}
+	#trrocket-ve-bar > * {
+		flex: 0 0 auto;
+	}
+	#trrocket-ve-bar .trrocket-ve-brand,
+	#trrocket-ve-bar .trrocket-ve-hint {
+		display: none;
+	}
+	/* La frase "X e' la tua lingua di partenza — scegline una in cui tradurre"
+	   e' l'istruzione che rende comprensibile la barra: non va nascosta, va
+	   messa su una riga sua. Con il flex: 0 0 auto ereditato prendeva la sua
+	   larghezza naturale e sfondava lo schermo, tagliata a meta'. */
+	#trrocket-ve-bar .trrocket-ve-mode {
+		flex: 1 1 100%;
+		white-space: normal;
+		font-size: 12.5px;
+		font-weight: 500;
+		line-height: 1.35;
+	}
+	#trrocket-ve-bar .trrocket-ve-exit {
+		margin-left: 4px;
+	}
+	#trrocket-ve-bar .trrocket-ve-langs {
+		gap: 5px;
+	}
+}
+
+/* --- il traduttore del browser sul telefono ------------------------------
+   Li' non esiste (Chrome ed Edge lo hanno solo su computer). Il pulsante non
+   sparisce piu': si mostra spento, cosi' chi apre l'editor dal telefono sa che
+   la funzione c'e' e dove usarla. Nascosto, nessuno lo sapeva. */
+.trrocket-spento {
+	opacity: .45;
+	cursor: not-allowed;
+	filter: grayscale(1);
+}
+.trrocket-spento:hover,
+.trrocket-spento:focus {
+	opacity: .55;
+}
+
+/* Il cartello che compare quando lo si tocca lo stesso. */
+.trrocket-solopc {
+	position: fixed;
+	inset: 0;
+	z-index: 2147483646;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	background: rgba(12, 10, 32, .62);
+	backdrop-filter: blur(3px);
+}
+.trrocket-solopc[hidden] { display: none !important; }
+.trrocket-solopc-card {
+	max-width: 420px;
+	padding: 24px 26px 20px;
+	border-radius: 16px;
+	background: #fff;
+	color: #1d2327;
+	box-shadow: 0 24px 60px rgba(0, 0, 0, .4);
+	font: 400 14px/1.55 -apple-system, "Segoe UI", Roboto, sans-serif;
+	text-align: left;
+}
+.trrocket-solopc-card b {
+	display: block;
+	margin-bottom: 10px;
+	font-size: 18px;
+	font-weight: 700;
+}
+.trrocket-solopc-card p { margin: 0 0 18px; }
+.trrocket-solopc-card button {
+	display: block;
+	margin-left: auto;
+	padding: 9px 22px;
+	border: 0;
+	border-radius: 999px;
+	background: #4f46e5;
+	color: #fff;
+	font-weight: 600;
+	font-size: 14px;
+	cursor: pointer;
+}
+.trrocket-solopc-card button:hover { background: #4338ca; }
+
+/* --- un'immagine diversa per lingua ---------------------------------------
+   Il pannello che si apre cliccando una foto in modalita' editor. Stessa
+   veste degli altri, ma con l'anteprima: si sceglie un'immagine guardandola,
+   non leggendo un indirizzo. */
+.trrocket-ve-imgpop { width: 320px; }
+.trrocket-ve-imgtxt {
+	margin: 0 0 10px;
+	font-size: 12px;
+	line-height: 1.45;
+	color: #50575e;
+}
+.trrocket-ve-imgprev {
+	position: relative;
+	margin-bottom: 10px;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	overflow: hidden;
+	background: repeating-conic-gradient(#f0f0f1 0% 25%, #fff 0% 50%) 50% / 16px 16px;
+}
+.trrocket-ve-imgprev img {
+	display: block;
+	width: 100%;
+	max-height: 190px;
+	object-fit: contain;
+}
+.trrocket-ve-imglab {
+	position: absolute;
+	left: 8px;
+	bottom: 8px;
+	padding: 3px 9px;
+	border-radius: 999px;
+	background: rgba(12, 10, 32, .78);
+	color: #fff;
+	font-size: 11px;
+	font-weight: 600;
+}
+.trrocket-ve-imgurl {
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 7px 9px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	font-size: 12px;
+	font-family: Consolas, Monaco, monospace;
+}
+.trrocket-ve-imgbtns {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.trrocket-ve-imgbtns button {
+	flex: 1 1 auto;
+	padding: 8px 12px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	background: #fff;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+}
+.trrocket-ve-imgbtns .trrocket-ve-imgsave {
+	border-color: #4f46e5;
+	background: #4f46e5;
+	color: #fff;
+}
+.trrocket-ve-imgbtns button:hover { filter: brightness(.96); }
+
+/* In modalita' editor le immagini si fanno riconoscere come cliccabili, come
+   gia' fanno i testi. */
+.trrocket-ed-img {
+	cursor: pointer;
+	outline: 2px dashed rgba(79, 70, 229, .45);
+	outline-offset: 2px;
+}
+.trrocket-ed-img:hover { outline-color: rgba(79, 70, 229, .9); }
+
+/* Il pulsantino che apre il selettore, appoggiato sull'immagine.
+   Serve perche' un'immagine coperta da un testo (le hero con il titolo sopra)
+   non si potrebbe cliccare: il clic arriverebbe al testo. */
+#trrocket-ve-imgbadges { position: fixed; inset: 0; pointer-events: none; z-index: 2147483000; }
+.trrocket-ve-imgbadge {
+	position: fixed;
+	pointer-events: auto;
+	padding: 5px 11px;
+	border: 0;
+	border-radius: 999px;
+	background: rgba(79, 70, 229, .95);
+	color: #fff;
+	font: 600 11px/1 -apple-system, "Segoe UI", Roboto, sans-serif;
+	letter-spacing: .01em;
+	cursor: pointer;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+}
+.trrocket-ve-imgbadge:hover { background: #4338ca; }
+
+/* --- The SEO panel's page lists: images and translatable attributes -------
+   Built from the live page, so what you read here is what is really served. */
+#trrocket-ve-seopanel .trrocket-ve-seocount {
+	font-weight: 400;
+	color: #6b6b80;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seogroup {
+	margin: 8px 0 3px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: #6b6b80;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seoitem {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	padding: 5px 0;
+	border-top: 1px solid #f1f1f7;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seothumb {
+	flex: none;
+	width: 34px;
+	height: 34px;
+	object-fit: cover;
+	border-radius: 5px;
+	background: #f4f4f9;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seoitxt {
+	flex: 1 1 auto;
+	min-width: 0;
+	font-size: 12px;
+	line-height: 1.35;
+	color: #40405a;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seoitxt > span:not( .trrocket-ve-seobadge ) {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seoitxt .is-empty {
+	color: #a3603c;
+	font-style: italic;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seobadge {
+	display: inline-block;
+	margin-top: 2px;
+	padding: 0 6px;
+	border-radius: 8px;
+	font-size: 10px;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seobadge.is-done {
+	background: #e7f5ec;
+	color: #1a7f37;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seobadge.is-todo {
+	background: #fdf3e3;
+	color: #8a6d3b;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seoacts {
+	flex: none;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seogo {
+	border: 1px solid #c8c8d8;
+	border-radius: 5px;
+	background: #fff;
+	color: #35357a;
+	font: 600 11px/1.6 inherit;
+	padding: 0 7px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+#trrocket-ve-seopanel .trrocket-ve-seogo:hover {
+	background: #f0f0fa;
+	border-color: #9a9ac8;
+}
+
+/* A short flash on the element you were sent to, so you can see where you landed. */
+.trrocket-ve-seoflash {
+	outline: 3px solid #7b5cff !important;
+	outline-offset: 2px;
+	animation: trrocket-ve-seoflash 1.4s ease-out;
+}
+
+@keyframes trrocket-ve-seoflash {
+	0%   { outline-color: #7b5cff; }
+	70%  { outline-color: #7b5cff; }
+	100% { outline-color: rgba( 123, 92, 255, 0 ); }
+}
