@@ -181,18 +181,3 @@ https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 = 1.1.4 =
 Cosmetic release: the plugin's own admin header is redrawn in CSS as a night sky, so the logo reads clearly and nothing extra is downloaded. Translation behaviour is unchanged.
-
-= 0.5.0 =
-Adds an SEO panel (slug, title, meta description) to the visual editor and a dropdown-menu background option to the switcher.
-
-= 0.4.0 =
-Adds an optional "Powered by TranslateRocket" badge (shortcode + footer option), off by default.
-
-= 0.3.0 =
-Translates content injected by JavaScript after load (cookie banners, popups, AJAX) for better compatibility with popular plugins.
-
-= 0.2.0 =
-Adds a scrollable language switcher, raw HTML editing in the visual editor, and one-click whole-page translation.
-
-= 0.1.0 =
-First public release.
