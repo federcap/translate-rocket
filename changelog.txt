@@ -1,0 +1,227 @@
+TranslateRocket - full changelog
+
+The readme.txt shipped with the plugin lists recent releases only, because
+the WordPress.org plugin directory truncates a changelog past 5,000 words.
+The complete history, from the first public release, is kept here.
+
+= 1.1.4 =
+* The plugin's own header now sits on a night sky instead of the rainbow band, the same one used on the project website. The stars are drawn in CSS, so nothing extra is downloaded and the logo finally stands clear of its background.
+
+= 1.1.3 =
+* Fix: opening the media library to pick an image for a language left the little "Choose image" buttons — and the image window itself — floating on top of it, over an apparently empty panel. They now step out of the way while the library is open and come back when it closes, Escape included.
+
+= 1.1.2 =
+* Fix: **a save that got no answer used to spin for ever.** If your site did not reply — a proxy holding the connection, a dropped network, a security layer swallowing the request — the buttons kept turning with nothing on screen to explain it, and the sentence you had just written was lost if you gave up and closed the box. Requests now stop waiting after thirty seconds, your text stays in the box, and the message tells you whether the site refused the request (with the code) or did not answer at all.
+* Fix: the window for swapping an image now opens **in the middle of the screen and can be dragged**, with the same title bar as the text editor. It used to appear glued to the picture — which for a full-width photo at the top of a page meant squashed against the top edge — and its header was drawn with styles that did not exist, so the title, the move handle and the close button ran into each other.
+
+= 1.1.1 =
+* New: **a language you add now starts offline.** Until now, ticking a language and pressing save made it public that same second — in the switcher, in your sitemap, in your hreflang tags — with nothing translated in it yet. Now it arrives with its switch grey, and you turn it green when you are ready. A language that was already on your site keeps the state it had.
+* New: **the dashboard tells you when a page changed after it was last read.** Text is detected while you look at a page while logged in — so if you edited a page in the block editor and never opened it again, its new sentences were never collected: they did not show up in your list of strings to translate, and on the translated pages they quietly stayed in your source language. That silence is over: the pages are listed by name, with a scan one click away, and the warning clears itself as soon as each page is read.
+* Fix: on the Languages screen the per-language progress bar was drawn without a colour, so it looked empty even at 98%. It now runs red to green like every other bar in the plugin.
+
+= 1.1.0 =
+* New: **add a language now, publish it when it is ready.** Next to every language you enable there is a switch: green means your visitors see it, grey means only you do. While a language is offline it stays out of the switcher, out of your sitemap and out of the hreflang tags, and anyone landing on one of its URLs is sent to your default language — but you keep working on it on the real pages, because whoever can preview still sees everything. Nothing half-translated ever reaches your visitors or Google.
+* New: **the SEO panel in the visual editor now holds everything search engines read**, in one order: the address, the page title, the meta description, the social preview (Open Graph and X), the keywords, then every image on the page and every translatable attribute — titles, placeholders, ARIA labels. Each line takes you to the element: the page scrolls to it, it flashes, and the right editor opens. For a photo that means the image chooser; for its alt text, the text editor.
+* Fix: **the social texts were never translated.** If a SEO plugin such as Yoast or Rank Math set an `og:title`, an `og:description` or a `twitter:` card of its own — a different text from the page title, which is the normal case — that text was never collected, so it could never be translated: every share of a translated page went out in the source language. Those texts are now collected like any other, and they show up in the SEO panel.
+* Thanks to Simona, for the first donation TranslateRocket ever received.
+
+= 1.0.0 =
+* New: import from **Bogo**. It keeps one post per language, linked by two post meta values, so the pairing is exact — title, excerpt and body all come across.
+* New: import from **Multilanguage by BestWebSoft**, read straight from its two tables, including category and tag names.
+* New: import the translations you wrote **by hand with Loco Translate** — the `.po`/`.mo` files in `wp-content/languages/loco/`. Only your own work is read, not the language packs WordPress downloads by itself: those are thousands of strings nobody on your site chose, and they would bury the useful ones. Entries still marked "fuzzy" are skipped, because nobody has checked them yet.
+* New: **a different image for each language.** In the visual editor every picture carries a small button: click it and choose another image from the media library for that language. The picture is swapped on the translated page, `srcset` included — without that the browser quietly reloads the original and the change looks broken. Image addresses are kept apart from the text and are never sent to a translator: a URL comes back mangled and the picture disappears from the page.
+* Fix: the Import screen no longer scans every post each time it is opened. It asked each importer whether it had anything, and the qTranslate one had to look inside the posts to answer — on a large site that made the screen crawl. The answer is now remembered for an hour.
+* Fix: in the switcher's live preview the dropdown was stuck open. You could see the menu's colours, but never how it opens — which is half of what a dropdown does. The preview now uses the same markup and CSS as the real switcher, so it opens and closes on click exactly like the one on your site.
+* Fix: the three settings that only apply to the dropdown layout — how it opens, the arrow, the opening animation — are now switched off when you choose the inline or list layout, instead of looking live while doing nothing. Their values are kept, so changing layout no longer resets them.
+* Fix: the live preview now follows you as you scroll the switcher settings, instead of scrolling away after the first section.
+* With this release the plugin imports from ten other plugins, plus CSV and TMX.
+
+= 0.10.0 =
+* New: import from the qTranslate family — qTranslate-X, qTranslate-XT, WPGlobus and WP Multilang. These keep every language inside the post itself, separated by markers, so the translations are read from your posts and not from the other plugin's tables: the import works even on sites whose plugin was deactivated or deleted years ago, which is the usual case for qTranslate. All four marker styles are recognised, including the HTML-escaped one. Titles, excerpts and body text come across; a post with no section in your source language is left alone rather than guessed at.
+
+= 0.9.9 =
+* Change: on a phone the "translate in this browser" button is now shown but switched off, instead of hidden. Chrome and Edge only carry the on-device translator on a desktop, so the button cannot work there — but hiding it meant nobody browsing from a phone knew the feature existed at all. Tapping it now explains where to use it, and the copy-and-paste route beside it still works on a phone.
+
+= 0.9.8 =
+* Fix: a browser translation run could reach the end of the progress bar having saved almost nothing. Chrome sometimes discards the on-device translator while a long run is going; from that moment every remaining phrase failed, silently. Measured on a 58-phrase page: 5 translated and 53 failed. The translator is now rebuilt on the first failure and the phrase retried, so the same run finishes 57 of 58 even when the browser drops it eleven times. On the bulk page the counter used to freeze ("Translating 5 of 498...") for the rest of the run; it now keeps going.
+
+= 0.9.7 =
+* Fix: the "translate in this browser" button was offered on phones, where it cannot work — the browser translation API only exists on desktop Chrome and Edge. It showed up in the visual editor toolbar, in the phrase popup and on the bulk page, and tapping it got you nothing. The button is now hidden on phones and tablets; on the bulk page the copy-and-paste route stays available, since that one works everywhere.
+
+= 0.9.6 =
+* Fix: on a phone, four of the plugin's nine screens ran off the side and the last columns of the tables were simply gone — progress per language, the list of pages, the AI summary. Measured at 390 pixels they overflowed by 116 to 220 pixels. The tables now use less padding and a smaller type on narrow screens, and whatever still does not fit scrolls inside the table itself instead of pushing the whole page sideways.
+
+= 0.9.5 =
+* Fix: on a phone, the line that tells you which language your site is written in ran off the right edge of the toolbar, cut in half. It is the sentence that makes the whole bar make sense, so it now gets a row of its own and wraps like ordinary text instead of being clipped.
+
+= 0.9.4 =
+* Fix: on a phone the editor toolbar had to be dragged sideways to reach its own buttons — with four languages and the controls it ran past a thousand pixels inside a screen of under four hundred. It now wraps onto as many rows as it needs, and the page below shifts by the toolbar's real height instead of a fixed 46 pixels.
+* Change: the Live Preview demo is built for phones too — the cover text no longer sits on top of the photo, where it overflowed the frame and clipped the title and the second button.
+
+= 0.9.3 =
+* New: the translator built into Chrome and Edge is now offered on the single phrase too, in the popup of the visual editor — next to Google Translate and "Translate with AI". It was already there for a whole page and for a whole language; the one place it was missing was the one you are looking at while you correct a single line. No key, and the phrase never leaves your computer.
+
+= 0.9.2 =
+* Fix: after translating in the browser from the bulk screen, the table underneath still showed the old "0 translated" figures. The message said to reload the page, but the numbers sitting right below it said the opposite — so the work looked like it had gone nowhere. It had not: the translations were saved all along. The screen now refreshes its own totals when it finishes.
+* Change: the plugin's description on WordPress.org now leads with the thing that makes it unusual — that Chrome and Edge can translate the whole site on your own computer, with no key, no account and nothing sent anywhere.
+* Change: the Live Preview demo is a proper hotel landing page now, not a stack of paragraphs.
+
+= 0.9.1 =
+* New: the visual editor can now translate a whole page with the translator built into Chrome and Edge — the same engine the bulk screen has had since 0.8.9, which until now was missing from the one place you are most likely to be standing when you want it. It needs no key and no account, the text never leaves your computer, and the button only appears where the browser can actually do it.
+* Fix: the "Translate page" panel always showed an empty grey strip in the middle. It was the progress bar, which is marked hidden but was being shown anyway by one of the editor's own style rules — the same trap that had "Back" and "Finish" visible on the wizard's first step.
+* Change: when no AI key is set, the panel no longer just says "add a key, meanwhile use copy-paste". If the browser can translate, it offers to do it.
+
+= 0.9.0 =
+* New: ask for help without leaving WordPress. The Diagnostics screen now carries a form that opens a support ticket straight from your site — the technical report goes with it if you want, the answer comes back to you by email, and you can follow the whole thread from a link. Nothing is sent until you press the button, and the page shows you exactly what leaves. If your site cannot be reached from the outside, it says so and points you at the ordinary support page instead.
+* New: the three ways to translate now sit side by side on the Translations screen — scan the site for text, hand the whole language to the AI, or let Chrome and Edge do it for free. Each page in the list also gained its own one-click AI button next to Translate, so a single page can be filled in without touching the rest.
+* Fix: the setup wizard showed "← Back" and "Finish & start translating" on the very first step, next to "Next →". They were meant to be hidden; WordPress's own button styling was overriding the browser's hidden attribute, so all three were on screen at once.
+* Fix: the welcome notice appeared on top of the setup wizard telling you to go elsewhere to pick your languages — which is what the wizard was already asking you to do. It now stays out of the way there, and elsewhere it points at the wizard until you have been through it.
+* Fix: the Translations screen counted only the strings already queued for the language you were looking at, so a freshly added language could read "0 still to translate out of 0 detected" while the site was full of untranslated text.
+
+= 0.8.9 =
+* New: translate without an API key at all. Chrome and Edge on a computer carry a translator that runs on the device itself, and the bulk screen can now drive it: install the plugin, pick your languages, press the button. It costs nothing, needs no account, and the text never leaves the machine. Quality sits below DeepL and the AI models and it works one phrase at a time, so it is the fastest way to a translated site rather than the best one — and everything it translates is kept, so adding a provider later never repeats the work. It needs a desktop Chrome or Edge and an admin served over https. Where that is not the case — Firefox, Safari, a phone, an admin on plain http — the same panel now says so and points at the copy-and-paste round trip instead, which works in any browser and still needs no key.
+
+= 0.8.8 =
+* New: an extra instruction you can give the AI, in your own words — the tone of voice, the words your business does or does not use, names that must stay as they are. It is sent with every translation. The rules about the output format still come last and still win, so a note that goes too far cannot break a batch. Only the AI models read it: OpenAI, Claude and Gemini. DeepL and Google Translate are translation APIs with no prompt of their own, and the settings page says so when one of them is the provider in use.
+* New: two more ways to show a language in the switcher — the short code on its own (EN, IT, ES) and the flag with the short code. Full names wrap onto a second line as soon as a horizontal menu carries more than a few languages; "FR" and "PT" do not.
+* New: a "No border at all" option for the switcher. Until now the border could only be recoloured, so the only way to hide it was to paint it the colour of the background — which stops working the moment the background is not plain.
+* Change: the donation notice says more plainly that the plugin is free forever and stays maintained either way.
+
+Thanks to Nicholas, who wrote in with all three of these suggestions.
+
+= 0.8.7 =
+* Fix: with "Redirect new visitors to their browser language" on, picking a language from the switcher was undone straight away and the visitor was sent back. The redirect remembered its decision in a cookie, and Varnish — the cache in front of Cloudways and many other hosts — strips cookies it does not recognise, so that decision never reached PHP and the redirect fired again on every page. The mirror image was true too: on a cached page PHP never runs, so the redirect did not happen there at all. The decision now happens in the browser, which no cache can interfere with, and it works on cached pages for the first time. Clicking a language in the switcher is recorded, so a deliberate choice always wins over the browser's preference.
+* Fix: the on-page editor's toolbar followed the language you were translating into. Editing the Dutch version turned the toolbar Dutch. It now follows the language of the person using it, falling back to the site's and then to English — while the page underneath stays in the language being edited.
+* Fix: browsing a translated page as an administrator filed WordPress' own already-translated interface as new source text — "Insert/edit link" and friends were recorded in Arabic, Dutch, Romanian and more, waiting to be "translated" into English. Strings are now collected only where the text really is the source language. Site pages still discover everything, and the site scan walks those.
+* Fix: in the on-page editor the toolbar hint was cut off mid-word on any screen between 720 and 1400px wide, which is most laptops.
+
+= 0.8.6 =
+* New: the admin is now translated into nine languages besides English — Japanese, Dutch, Russian and Polish join Italian, German, Spanish, French and Brazilian Portuguese. The four new ones are complete.
+* Fix: the plugin shipped complete Italian, German, Spanish, French and Brazilian Portuguese catalogues and not one of them was ever loaded. For a plugin hosted on WordPress.org, WordPress only reads translations from the language pack in wp-content/languages/plugins; a plugin's own /languages folder is ignored unless the plugin registers it. It now does, so those languages work immediately. If a language pack is published later it still takes priority, so nothing is overridden.
+* Fix: only Italian had a compiled .mo. The others shipped as .po only, which PHP cannot read at runtime — they are all compiled now.
+* Fix: 136 mistranslations in the German, Spanish, French and Portuguese catalogues, all of the same kind — an English word with two meanings, machine-translated into the wrong one. "API key" had become the key on a keyboard, "Strings" the strings of a musical instrument, "Slug" the mollusc, and Spanish "Save" meant saving money. Nobody had ever seen them, because nothing loaded them.
+* Fix: in the on-page editor the toolbar hint was cut off mid-word on any screen between 720 and 1400px wide — which is most laptops.
+* Screenshots on the plugin page redone: they were captured too wide, and WordPress.org resizes to 900px before serving, so the text arrived unreadable.
+
+= 0.8.5 =
+* Fix: the review request never reached most sites. Dismissing the welcome notice with the standard "x" was not recorded, so the notice returned on every page and the later notices never got their turn. The "x" now sticks, and the welcome steps aside on its own after a week.
+* Change: the review is asked for after the plugin has actually done something — at least 25 strings translated and five days in — instead of on day 14 regardless of use. The message says how many strings were translated on that site, and offers a link to support for anyone who has a problem rather than a compliment.
+* Fix: four links in the admin notices and on the Help & Feedback screen pointed to pages that do not exist on translaterocket.com and returned a 404 ("Get tips & updates", "Something is wrong", "Send feedback", "Request customization"). They now point to the news and support pages.
+
+= 0.8.4 =
+* New: WooCommerce email wording is now translatable. The engine learns strings while you browse your site, which meant phrases WooCommerce only ever prints inside an email — "Thank you for your order", "Quantity", "Price" — could never be collected, so order emails came out only partly translated. Customer emails are now scanned as they are sent and their wording is filed under "WooCommerce emails" in the translation screens, ready to translate by hand or with AI. Scanning happens once per template, not once per order.
+
+= 0.8.3 =
+* Compatible with WordPress 7.1.
+* Fix: the language switcher block now uses Block API version 3. WordPress 7.1 always runs the post editor inside an iframe, and a block still declaring version 2 made the whole editor fall back to the old non-iframed mode — for every block on the site, not just this one. Editing is unchanged, the editor simply keeps its modern behaviour.
+
+= 0.8.2 =
+* Fix (important): on translated pages, markup written inside `<script>`, `<style>` and `<textarea>` could lose its closing tags. Inline JavaScript that builds HTML (`'<span><i></i></span>'`, `.append('<li>…</li>')`, `document.write(…)`) came out broken, and CSS using inline SVG data URIs (`mask-image`, `background-image`) lost the closing `</svg>`, so the shape silently failed to render. The page HTML parser treats those elements as raw text, and any `</name>` inside them was being dropped; their contents are now passed through untouched.
+
+= 0.8.1 =
+* New: per-switcher device visibility. Each switcher profile has a "Show on" option — Desktop and mobile, Desktop only, or Mobile only — so you can design one language menu for desktop and a different one for mobile, each hidden on the other (breakpoint 783px).
+* Fix: importing from WPML/Polylang/TranslatePress on a large site could hit the host's execution-time limit and silently do nothing. The migration importer now raises the time limit (as the CSV/Weglot importers already did) and clears caches when finished, so imported translations show up right away.
+* Fix: the multilingual sitemap is now served with a 200 status. Some setups returned a 404 for it, which made search engines skip the sitemap.
+
+= 0.8.0 =
+* New: Weglot importer. Export your translations from the Weglot dashboard (Translations → Export, CSV) and upload the file in TranslateRocket → Import: word_from/word_to columns are detected automatically, language columns are mapped to your configured target languages, and rows for unconfigured languages are skipped and reported.
+* New: DeepL quota meter. When a DeepL key is set, the AI page shows the character usage for the current cycle (with a warning as it approaches the limit) straight from DeepL's usage API.
+* New: provider outage notice. When a provider runs out of quota or its key is refused mid-run, wp-admin now shows a dismissible warning explaining that the fallback chain took over — previously the switch was silent.
+* Improved: DeepL's "HTTP 456" error now reads as a clear "monthly character quota exhausted" message in the visual editor and logs.
+* Fixed: Italian translation of "Live preview" in the bundled catalogue.
+
+= 0.7.9 =
+* New: Preview mode ("Who sees the translations" in Settings). Keep the translated site visible to administrators only while you review it — visitors keep seeing the default language: language URLs redirect to their default-language page, the switcher is hidden and no hreflang/sitemap signals are sent. Perfect for checking an import from TranslatePress, Polylang or WPML on the real rendered pages before going live. A standing admin notice reminds you while it is on, and the `trrocket_preview_capability` filter lets you open the preview to other roles.
+
+= 0.7.8 =
+* The WPML importer is now properly documented (it has been in the plugin all along): bring over WPML's string translations and post-based translations (titles, slugs, matching body text) from TranslateRocket → Import. It reads straight from WPML's tables, so it works even with WPML already deactivated.
+* Shipped es/fr/de/pt-BR translation catalogs and a refreshed .pot.
+
+= 0.7.7 =
+* Fixed a 0.7.6 regression: the content-link localization also rewrote the language switcher's own default-language link (which is unprefixed by design), so visitors couldn't switch back to the source language. The plugin's own UI and `translate="no"` regions are now excluded from link localization.
+
+= 0.7.6 =
+* Internal links hardcoded in post content (root-relative like `/about/`, or absolute with the site's own domain — common on migrated sites) are now localized on translated pages, so visitors no longer drop back into the source language on the first click. System paths (`/wp-*`), direct file links and URLs already carrying a language prefix are left untouched. Disable with the `trrocket_localize_content_links` filter.
+
+= 0.7.5 =
+* Fixed: explicit switcher colors from the customizer are now emitted with !important, so dropdown menu items stay readable inside colored theme headers (theme anchor palettes could override them, causing white-on-white text).
+
+= 0.7.4 =
+* Fixed: URL localization could double the language prefix (e.g. /it/it/) on canonical, feed and oEmbed links when an already-localized URL passed through home_url() again. A re-entrancy guard now leaves localized URLs untouched.
+
+= 0.7.3 =
+* Replaced every external-service URL in the readme and admin with its canonical, redirect-free address (DeepL privacy/service pages, OpenAI privacy page, translaterocket.com privacy/donate pages) so all declared links resolve directly.
+
+= 0.7.2 =
+* Security & code-quality hardening (WordPress.org review): every admin and front-end output is now late-escaped with `wp_kses()` and an allowlist covering the plugin's SVG flags, icons and controls; the switcher's colour and size settings are validated at save time (hex colours, numeric-only sizes) so a value can never inject CSS; and the bulk string/translation deletes build their `IN()`/`LIKE` clauses through `$wpdb->prepare()`.
+* Fixed a dead Author URI and "Get expert help" link.
+
+= 0.7.1 =
+* Visual editor: the "original text" preview no longer showed the source in the target language. The plugin's own dynamic-content translator was rewriting the editor's source preview; the popup is now marked so neither it nor the browser touches the editor chrome, so the source text always stays in the original language while you edit.
+
+= 0.7.0 =
+* Every feature that ships is now free and fully functional: removed the optional target-language cap and removed the background auto-translation of new content. On-request AI translation is unchanged — translate a page, or a whole language, on demand with your own provider key. A `trrocket_page_collected` action is available for add-ons.
+* Removed the switcher "Custom CSS" field (arbitrary CSS insertion); style the switcher with the built-in colour/shape options or your theme's stylesheet.
+* Admin CSS and JavaScript are now enqueued with the WordPress functions (`wp_enqueue_*`, `wp_add_inline_script`, `wp_add_inline_style`) instead of being printed inline.
+* Removed the deprecated `libxml_disable_entity_loader()` call and the no-longer-needed `load_plugin_textdomain()` (WordPress loads translations automatically).
+* The front-end page buffer is now closed explicitly on shutdown.
+
+= 0.6.4 =
+* TranslatePress import: strings are now imported in decoded form. TranslatePress stores its segments with HTML entities ("Bed &amp;amp; Breakfast", "pi&amp;ugrave;"), which never matched the page text and could print entities literally — those strings stayed untranslated after an import. Found while migrating a real site.
+
+= 0.6.3 =
+* Fixed: on a translated URL, a page whose slug merely starts with the language code 404ed (e.g. /de/demo/, /it/items/, /es/estimate/) — WordPress stripped the language prefix a second time from the slug itself while parsing the request. Found by translating our own site.
+
+= 0.6.2 =
+* Editing a translation now also clears your host / CDN page cache: on a cache flush the plugin signals the common cache and CDN plugins (Breeze, WP Rocket, W3 Total Cache, WP Super Cache, WP Fastest Cache, LiteSpeed, SG Optimizer, Cache Enabler, Nginx Helper, WP-Optimize) plus a `trrocket_flush_caches` action for anything else — so a changed translation appears right away instead of waiting out their TTL.
+* Admin: the language picker now keeps a small gap between rows when it wraps, so the buttons don't touch on sites with many languages.
+* Passes Plugin Check with zero errors.
+
+= 0.6.1 =
+* Provider fallback chain: give two or more AI providers a priority on the AI page and bulk / automatic translation tries them in order — when one runs out of credit or its key is refused, the next one takes over automatically, so a big job can span several accounts without stopping. Free, in the core.
+* Serialize translated pages from the document root node, fixing a literal "&#9662;" (and other characters) showing up inside CSS on translated pages.
+
+= 0.6.0 =
+* Huge-site engine ("huge-safe"): on sites with more than ~20,000 detected strings the plugin stops loading the whole language map per request and switches to indexed per-page batch lookups — constant memory, whether your site has 500 strings or 500,000. Small sites keep the exact same fast path as before.
+* New indexed text hash on stored strings (schema v3, migrated automatically in the background).
+* WooCommerce, forms, dynamic-content, page-copy and term-slug translation all use the new size-aware lookups.
+* Translation memory now saves you money before every AI call: a text already translated anywhere on the site (another page, an image alt, an interface string, a glossary term) is copied for free instead of being sent to the API again, and duplicate texts in one batch are only paid once.
+* New "Saved by reuse" counter on the AI page: characters and strings translated for free, with a cost estimate at your provider's list prices.
+
+= 0.5.5 =
+* Admin: a pink "Support the project" link in the navigation — the plugin is 100% free; supporters get priority help.
+
+= 0.5.4 =
+* Dropdown switcher: reliable tap-to-close on touch devices (sticky hover/focus no longer keeps the menu open).
+* Scroll switcher: the current language now wears a single thin neutral ring.
+* Sharper admin banner: the logo wordmark gained a crisp shadow for readability.
+
+= 0.5.3 =
+* Scroll switcher: the current language starts centred in the strip and is highlighted with a tinted pill and brand-coloured ring.
+
+= 0.5.2 =
+* Branding: ™ added to the TranslateRocket logos and product name across the plugin UI.
+
+= 0.5.1 =
+* Security (full code audit): password-protected pages now keep their password form when an independent copy is active (the copy also inherits the password); CSV export shields cells against spreadsheet formula injection (and the import transparently removes the shield); the language-redirect cookie is now HttpOnly/Secure/SameSite=Lax.
+* SEO: the multilingual sitemap no longer advertises hreflang alternates for languages a page is excluded from (redirect / 404 / custom message).
+
+= 0.5.0 =
+* **SEO panel in the visual editor:** a new "SEO" button in the editor toolbar opens the translated URL slug, the SEO title and the meta description for the current language — edit search-facing fields right from the live page.
+* Switcher: new per-profile **"Menu background (dropdown)"** option to style the dropdown panel (with backdrop blur) independently from the toggle.
+* Switcher customizer: the live preview now renders the dropdown toggle and menu items with exactly the front-end styling (colours, radius, shadow) — no more mismatched items.
+
+= 0.4.0 =
+* New optional **"Powered by TranslateRocket"** badge (with logo). Off by default; enable it in Settings to show it in the footer, or place it anywhere with the `[translaterocket_poweredby]` shortcode.
+
+= 0.3.0 =
+* **Dynamic content translation:** text added by JavaScript after the page loads — cookie/consent banners (Complianz, CookieYes, Borlabs…), popups, AJAX-loaded results — is now translated automatically, reusing your existing translations (no extra AI calls). Better out-of-the-box compatibility with the most common plugins.
+
+= 0.2.0 =
+* New **Scrollable bar** switcher layout: a horizontal, fixed-width switcher with ‹ › arrows (hover an arrow to scroll continuously) — ideal when you have many languages. Width configurable in px or %.
+* Visual editor: toggle any string between the numbered-block view and raw **HTML editing**.
+* New **Translate page** button in the editor toolbar — auto-translate the whole page in one click (your AI provider or free Google), or use the guided copy & paste.
+* Language switcher arrow visibility and sizing fixes.
+
+= 0.1.0 =
+* Initial public release: detection engine, per-page and in-editor translators, on-page visual editor (click-to-edit in a draggable popup, with Prev/Next, progress and skip-translated), free Google Translate links and copy & paste, AI providers (DeepL, OpenAI, Gemini, Anthropic, Google), translated slugs and hreflang, theme/plugin interface strings, per-page language visibility, TranslatePress & Polylang import, language switcher (shortcode, block, widget) with SVG flags, 36 built-in languages, Italian UI translation.
