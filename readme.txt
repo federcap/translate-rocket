@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,9 @@ Open the page and use the "Language visibility" box to redirect it, show a custo
 
 == Changelog ==
 
+= 1.1.5 =
+* Documentation only, no code changes. The changelog had grown past the 5,000-word limit the WordPress.org directory allows, so it was being cut off halfway down this page. Releases from 1.0.0 onwards stay here; the full history from 0.1.0 now lives in changelog.txt, shipped with the plugin.
+
 = 1.1.4 =
 * The plugin's own header now sits on a night sky instead of the rainbow band, the same one used on the project website. The stars are drawn in CSS, so nothing extra is downloaded and the logo finally stands clear of its background.
 
@@ -178,6 +181,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.1.5 =
+Documentation only: the changelog was too long for the plugin directory and was being truncated. Nothing in the plugin itself has changed, so there is no hurry to update.
 
 = 1.1.4 =
 Cosmetic release: the plugin's own admin header is redrawn in CSS as a night sky, so the logo reads clearly and nothing extra is downloaded. Translation behaviour is unchanged.
