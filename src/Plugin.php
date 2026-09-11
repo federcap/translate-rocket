@@ -79,6 +79,12 @@ final class Plugin {
 		// Optional "Powered by TranslateRocket" badge (shortcode + opt-in footer).
 		( new \TranslateRocket\Frontend\PoweredBy() )->boot();
 
+		// Content shown only in some languages: the [translaterocket_language]
+		// shortcode, and the trrocket-only-xx / trrocket-hide-xx classes on blocks.
+		( new \TranslateRocket\Frontend\LanguageOnly() )->boot();
+		// Menu items limited to some languages (checkboxes in Appearance > Menus).
+		( new \TranslateRocket\MenuLanguages() )->register();
+
 		// Which pages changed after the engine last read them. Booted here and
 		// not in the admin branch on purpose: the block editor saves over the
 		// REST API, where is_admin() is false — hooking it there would miss

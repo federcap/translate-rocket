@@ -2345,3 +2345,31 @@ msgstr "⚠ Nicht gespeichert: Ihre Website hat die Anfrage abgelehnt. Ihr Text 
 
 msgid "⚠ Your site did not answer. The text is still here — check your connection, then try again."
 msgstr "⚠ Ihre Website hat nicht geantwortet. Der Text ist noch da — prüfen Sie die Verbindung und versuchen Sie es erneut."
+
+#: src/Frontend/VisualEditor.php
+msgid "Or translate it in ChatGPT or Gemini"
+msgstr "Oder in ChatGPT oder Gemini übersetzen"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copy with a translation prompt"
+msgstr "Mit Übersetzungs-Prompt kopieren"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copied — paste it into the chat"
+msgstr "Kopiert – in den Chat einfügen"
+
+#: src/Frontend/VisualEditor.php
+msgid "How does this work?"
+msgstr "Wie funktioniert das?"
+
+#: src/Frontend/VisualEditor.php
+msgid "The button copies the text of this page together with a translation prompt written for your site: your two languages, the words you never translate, your glossary and your house style. The prompt asks the AI to give every numbered line back with the same number and to leave the [1] [2] markers exactly where they are, which is what lets the translation be put back in place. Paste it into the chat, copy the reply with the copy button of its code block, and paste it in box 2 below."
+msgstr "Die Schaltfläche kopiert den Text dieser Seite zusammen mit einem Übersetzungs-Prompt, der für Ihre Website geschrieben ist: Ihre beiden Sprachen, die Wörter, die Sie nie übersetzen, Ihr Glossar und Ihr Stil. Der Prompt bittet die KI, jede nummerierte Zeile mit derselben Nummer zurückzugeben und die Markierungen [1] [2] genau dort zu lassen, wo sie sind – nur so lässt sich die Übersetzung wieder an die richtige Stelle setzen. Fügen Sie ihn in den Chat ein, kopieren Sie die Antwort mit der Kopieren-Schaltfläche ihres Codeblocks und fügen Sie sie unten in Feld 2 ein."
+
+#: src/MenuLanguages.php
+msgid "Show in"
+msgstr "Anzeigen in"
+
+#: src/MenuLanguages.php
+msgid "None ticked: the item appears in every language."
+msgstr "Keine ausgewählt: Der Eintrag erscheint in allen Sprachen."

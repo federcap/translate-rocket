@@ -2342,3 +2342,31 @@ msgstr "⚠ Не сохранено: ваш сайт отклонил запро
 
 msgid "⚠ Your site did not answer. The text is still here — check your connection, then try again."
 msgstr "⚠ Ваш сайт не ответил. Текст никуда не делся — проверьте соединение и попробуйте снова."
+
+#: src/Frontend/VisualEditor.php
+msgid "Or translate it in ChatGPT or Gemini"
+msgstr "Или переведите в ChatGPT или Gemini"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copy with a translation prompt"
+msgstr "Скопировать с промптом для перевода"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copied — paste it into the chat"
+msgstr "Скопировано — вставьте в чат"
+
+#: src/Frontend/VisualEditor.php
+msgid "How does this work?"
+msgstr "Как это работает?"
+
+#: src/Frontend/VisualEditor.php
+msgid "The button copies the text of this page together with a translation prompt written for your site: your two languages, the words you never translate, your glossary and your house style. The prompt asks the AI to give every numbered line back with the same number and to leave the [1] [2] markers exactly where they are, which is what lets the translation be put back in place. Paste it into the chat, copy the reply with the copy button of its code block, and paste it in box 2 below."
+msgstr "Кнопка копирует текст этой страницы вместе с промптом для перевода, составленным для вашего сайта: ваши два языка, слова, которые вы никогда не переводите, ваш глоссарий и ваш стиль. Промпт просит ИИ вернуть каждую пронумерованную строку с тем же номером и оставить маркеры [1] [2] точно на своих местах — именно это позволяет вернуть перевод на место. Вставьте его в чат, скопируйте ответ кнопкой копирования в его блоке кода и вставьте в поле 2 ниже."
+
+#: src/MenuLanguages.php
+msgid "Show in"
+msgstr "Показывать на"
+
+#: src/MenuLanguages.php
+msgid "None ticked: the item appears in every language."
+msgstr "Ничего не отмечено: пункт отображается на всех языках."

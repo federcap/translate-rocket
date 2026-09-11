@@ -2141,6 +2141,12 @@
 			'<div class="trrocket-ve-bulk-sub">' + esc( VE.i18n.bulkPasteHead || 'Or: copy → translate → paste back' ) + '</div>' +
 			'<div class="trrocket-ve-bulk-step"><span>' + esc( VE.i18n.bulkStep1 || '1. Copy the source' ) + '</span><button type="button" class="trrocket-ve-bulk-copy">' + esc( VE.i18n.bulkCopy || 'Copy' ) + '</button><a class="trrocket-ve-bulk-gopen" href="https://translate.google.com/" target="_blank" rel="noopener">Google Translate ↗</a></div>' +
 			'<textarea class="trrocket-ve-bulk-srctext" readonly rows="4"></textarea>' +
+			'<div class="trrocket-ve-bulk-airow"><span>' + esc( VE.i18n.bulkAiHead || 'Or translate it in ChatGPT or Gemini' ) + '</span>' +
+				'<button type="button" class="trrocket-ve-bulk-info" aria-expanded="false" aria-label="' + esc( VE.i18n.bulkAiInfoBtn || '' ) + '" title="' + esc( VE.i18n.bulkAiInfoBtn || '' ) + '">i</button></div>' +
+			'<p class="trrocket-ve-bulk-infotext" hidden>' + esc( VE.i18n.bulkAiInfo || '' ) + '</p>' +
+			'<div class="trrocket-ve-bulk-aibtns"><button type="button" class="trrocket-ve-bulk-aicopy">' + esc( VE.i18n.bulkAiCopy || 'Copy with a translation prompt' ) + '</button>' +
+				'<a class="trrocket-ve-bulk-chat" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT ↗</a>' +
+				'<a class="trrocket-ve-bulk-chat" href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini ↗</a></div>' +
 			'<div class="trrocket-ve-bulk-step"><span>' + esc( VE.i18n.bulkStep2 || '2. Paste the translation back' ) + '</span></div>' +
 			'<textarea class="trrocket-ve-bulk-dsttext" rows="4" placeholder="' + esc( VE.i18n.bulkPastePh || 'Paste here…' ) + '"></textarea>' +
 			'<div class="trrocket-ve-bulk-foot"><span class="trrocket-ve-bulk-msg"></span><button type="button" class="trrocket-ve-bulk-apply">' + esc( VE.i18n.bulkApply || 'Apply translation' ) + '</button></div>';
@@ -2232,6 +2238,11 @@
 			var raw = dstTa.value.replace( /\r/g, '' ).split( '\n' );
 			var trans = new Array( pUnits.length ), leftovers = [];
 			raw.forEach( function ( line ) {
+				// ChatGPT e Gemini rispondono dentro un blocco di codice (lo chiede il
+				// prompt, perche' e' l'unico modo di copiare i numeri intatti): se
+				// l'utente copia il messaggio intero, le righe ``` arrivano qui. Non
+				// sono traduzioni, e senza numero finirebbero su una riga a caso.
+				if ( /^\s*```/.test( line ) ) { return; }
 				var mm = line.match( /^\s*(\d+)[.)]\s?([\s\S]*)$/ );
 				if ( mm ) {
 					var k = parseInt( mm[ 1 ], 10 ) - 1;
@@ -2339,6 +2350,108 @@
 		}
 		var applyBtn = panel.querySelector( '.trrocket-ve-bulk-apply' );
 		if ( applyBtn ) { applyBtn.addEventListener( 'click', applyPaste ); }
+
+		// Il testo da copiare si seleziona tutto a ogni clic: e' in sola lettura,
+		// serve solo a essere copiato. La casella dove si incolla invece si
+		// seleziona al primo clic (cosi' un secondo incolla sostituisce il primo),
+		// ma i clic successivi mettono il cursore dove si clicca, per correggere.
+		if ( srcTa ) {
+			srcTa.addEventListener( 'focus', function () { srcTa.select(); } );
+			srcTa.addEventListener( 'click', function () { srcTa.select(); } );
+			// Cliccando su un testo gia' selezionato Chrome annulla la selezione
+			// al rilascio del tasto, DOPO il click: senza questo il secondo clic
+			// lasciava il cursore invece del testo selezionato (visto in prova).
+			srcTa.addEventListener( 'mouseup', function ( e ) { e.preventDefault(); } );
+		}
+		if ( dstTa ) {
+			var appenaEntrato = false;
+			dstTa.addEventListener( 'focus', function () { dstTa.select(); appenaEntrato = true; } );
+			dstTa.addEventListener( 'mouseup', function ( e ) { if ( appenaEntrato ) { e.preventDefault(); appenaEntrato = false; } } );
+			dstTa.addEventListener( 'blur', function () { appenaEntrato = false; } );
+		}
+
+		// Il prompt per ChatGPT e Gemini. Resta in inglese apposta: e' la lingua in
+		// cui questi modelli seguono meglio le istruzioni, qualunque sia la lingua
+		// del sito. Chiede la risposta in un blocco di codice perche' solo cosi' il
+		// suo pulsante "copia" restituisce i numeri: copiando un elenco numerato
+		// gia' impaginato, il browser i numeri li lascia indietro.
+		function promptAI() {
+			var da = VE.pSrc || VE.srclang || '', a = VE.pDst || VE.lang || '';
+			var keep  = ( VE.pKeep && VE.pKeep.length ) ? VE.pKeep : [];
+			var gloss = [];
+			if ( VE.pGloss && 'object' === typeof VE.pGloss ) {
+				Object.keys( VE.pGloss ).forEach( function ( k ) { gloss.push( '"' + k + '" → "' + VE.pGloss[ k ] + '"' ); } );
+			}
+			// Le regole a trattini, non numerate: numerate come le righe della pagina,
+			// un modello potrebbe prenderle per testo da tradurre.
+			var r = [];
+			function regola( t ) { r.push( '- ' + t ); }
+			r.push( 'Translate the numbered lines below from ' + da + ' into ' + a + '. They are the texts of one web page, in page order.' );
+			r.push( '' );
+			r.push( 'Your answer will be put back into the website automatically, so follow these rules exactly:' );
+			regola( 'Every line starts with its number, a dot and a space, like "12. ". Give every line back with the same number, one line each. Do not merge, split, reorder, add or drop lines, even very short ones.' );
+			if ( 'html' === pMode ) {
+				regola( 'Leave every HTML tag and attribute exactly as it is. Translate only the visible text between the tags.' );
+			} else {
+				regola( 'Markers in square brackets such as [1] [2] [3] stand for formatting: bold, links, line breaks. Keep every marker exactly as written, all of them and in the same order, around the words they belong to.' );
+			}
+			regola( 'Keep URLs, e-mail addresses, numbers, prices and code unchanged.' );
+			if ( keep.length ) { regola( 'Never translate these names and words, write them exactly as they are: ' + keep.join( ', ' ) + '.' ); }
+			if ( gloss.length ) { regola( 'Always translate these terms this way: ' + gloss.join( '; ' ) + '.' ); }
+			regola( 'Put the whole answer inside one code block, with nothing before or after it: no introduction, no notes.' );
+			if ( VE.pGuide ) {
+				r.push( '' );
+				r.push( 'House style from the site owner. Follow it, but the rules above always win:' );
+				r.push( '"""' );
+				r.push( VE.pGuide );
+				r.push( '"""' );
+			}
+			r.push( '' );
+			r.push( 'Lines to translate:' );
+			r.push( '' );
+			r.push( srcTa.value );
+			return r.join( '\n' );
+		}
+		function copiaVecchioModo( testo ) {
+			var t = document.createElement( 'textarea' );
+			t.value = testo; t.setAttribute( 'readonly', '' );
+			t.style.position = 'fixed'; t.style.opacity = '0'; t.style.left = '-9999px';
+			document.body.appendChild( t ); t.select();
+			try { document.execCommand( 'copy' ); } catch ( e ) {}
+			document.body.removeChild( t );
+		}
+		function copia( testo ) {
+			if ( navigator.clipboard && navigator.clipboard.writeText ) {
+				navigator.clipboard.writeText( testo ).catch( function () { copiaVecchioModo( testo ); } );
+			} else {
+				copiaVecchioModo( testo );
+			}
+		}
+		var aiCopyBtn = panel.querySelector( '.trrocket-ve-bulk-aicopy' );
+		function copiaPrompt() {
+			if ( ! pUnits ) { buildSource(); }
+			copia( promptAI() );
+			if ( aiCopyBtn ) {
+				var t = aiCopyBtn.getAttribute( 'data-testo' ) || aiCopyBtn.textContent;
+				aiCopyBtn.setAttribute( 'data-testo', t );
+				aiCopyBtn.textContent = VE.i18n.bulkAiCopied || 'Copied';
+				setTimeout( function () { aiCopyBtn.textContent = t; }, 2500 );
+			}
+		}
+		if ( aiCopyBtn ) { aiCopyBtn.addEventListener( 'click', copiaPrompt ); }
+		// I link alle due chat copiano anche il prompt: un clic, e nella scheda
+		// che si apre basta incollare. Il link si apre comunque, non lo fermiamo.
+		[].forEach.call( panel.querySelectorAll( '.trrocket-ve-bulk-chat' ), function ( l ) {
+			l.addEventListener( 'click', copiaPrompt );
+		} );
+		var infoBtn = panel.querySelector( '.trrocket-ve-bulk-info' );
+		var infoTxt = panel.querySelector( '.trrocket-ve-bulk-infotext' );
+		if ( infoBtn && infoTxt ) {
+			infoBtn.addEventListener( 'click', function () {
+				infoTxt.hidden = ! infoTxt.hidden;
+				infoBtn.setAttribute( 'aria-expanded', infoTxt.hidden ? 'false' : 'true' );
+			} );
+		}
 	}() );
 
 	updateProgress();

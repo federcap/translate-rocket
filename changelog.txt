@@ -4,6 +4,14 @@ The readme.txt shipped with the plugin lists recent releases only, because
 the WordPress.org plugin directory truncates a changelog past 5,000 words.
 The complete history, from the first public release, is kept here.
 
+= 1.2.0 =
+* New: show content in some languages only. Wrap it in `[translaterocket_language lang="it,de"]…[/translaterocket_language]`, or use `not="it"` to hide it in some; in the block editor, add the class `trrocket-only-it` or `trrocket-hide-it` to any block, navigation links included. Content limited to a language is shown exactly as you wrote it and never re-translated.
+* New: menu items for some languages only. Every item in Appearance → Menus has a "Show in" row of language checkboxes. Nothing ticked means every language, so existing menus look exactly as before; an item that is hidden takes its sub-items with it.
+* New: translate a whole page in ChatGPT or Gemini, with no API key. In the visual editor's "Translate page" panel, one button copies the text of the page together with a prompt written for your site — your languages, the words you never translate, your glossary and your house style. The prompt asks the AI to keep the line numbers and the formatting markers, so its reply goes straight back into place.
+* The box you copy from now selects everything with one click, and the box you paste into selects its content on the first click, so a second paste replaces the first.
+* The changelog had grown past the 5,000-word limit of the plugin directory and was being cut off: releases from 1.0.0 onwards stay here, and the full history is in changelog.txt, shipped with the plugin.
+* Small tidy-ups: a clearer example in the "Words & phrases" exclusion box, and the LICENSE file now carries the plain GPLv2 text.
+
 = 1.1.4 =
 * The plugin's own header now sits on a night sky instead of the rainbow band, the same one used on the project website. The stars are drawn in CSS, so nothing extra is downloaded and the logo finally stands clear of its background.
 

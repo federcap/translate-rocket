@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.5
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,7 @@ You translate however you like:
 * 🖱️ **On the live page** — switch on the visual editor and click any text to translate it in a small, draggable popup, with Previous/Next, a progress bar and a "skip already-translated" mode.
 * 🆓 **Free with Google Translate (no key)** — every field has a link that opens Google Translate prefilled, so you translate for free on Google's own site and paste the result back.
 * ✍️ **By hand**, in a clear per-page editor (also inside the post/page screen) with red highlighting for what's still missing — plus a copy & paste box for bulk Google translation.
+* 💬 **With ChatGPT or Gemini, no key** — one button copies the whole page with a translation prompt written for your site; paste the answer back and every line goes to its place.
 * 🤖 **With AI** — bring your own key for DeepL, OpenAI, Google Gemini, Anthropic (Claude) or Google Cloud Translate. Text is sent only to the provider you choose, only when you ask.
 
 = Highlights =
@@ -44,6 +45,7 @@ You translate however you like:
 * 🎌 **Flexible language switcher** as a shortcode `[translaterocket_switcher]`, a Gutenberg block, or a widget — inline, dropdown, or a **scrollable bar with ‹ › arrows** for many languages — with original SVG flags that render everywhere (including Windows). Show a switcher on desktop only, on mobile only, or both, to style a different menu for each.
 * 📥 **One-click import from ten other plugins** — TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft and Loco Translate — plus CSV and TMX for everything else. Read straight from the tables, the posts or the `.po` files, so it works even when the other plugin is gone.
 * 🖼️ **A different image for each language** — swap any picture for a translated one: switch on the visual editor, click the button on the image and pick another from your media library. For text baked into a picture, a screenshot of your own interface, or a photo that only makes sense in one country.
+* 🎯 **Different content and menus per language** — show a paragraph, a block or a menu item only in some languages: with a shortcode, a class on any block, or a checkbox in Appearance → Menus.
 * 🛒 **WooCommerce aware**: product and category slugs per language, the AJAX mini-cart and JS strings translated too, and customer emails rendered in the language the order was placed in.
 * 👀 **Preview mode**: review new translations or a fresh import on the real pages while visitors still see the default language — publish with one click when ready.
 * 🚦 **Add a language now, publish it when it is ready**: each language has a switch — green and your visitors see it, grey and only you do. While it is offline it stays out of the switcher, out of your sitemap and out of the `hreflang` tags, and its URLs send visitors to your default language, while you keep working on the real pages. Nothing half-translated ever reaches your visitors or Google.
@@ -122,6 +124,18 @@ To review the result safely, turn on **Preview mode** ("Who sees the translation
 
 Open the page and use the "Language visibility" box to redirect it, show a custom message, or return a 404 — per language.
 
+= Can I show something in one language only? =
+
+Yes. Wrap it in `[translaterocket_language lang="it"]…[/translaterocket_language]` — several languages work too, as `lang="it,de"` — or use `not="it"` to show it everywhere except Italian. In the block editor you do not need the shortcode: add the class `trrocket-only-it` or `trrocket-hide-it` in "Advanced → Additional CSS class(es)" of any block, navigation links included. Content limited with `lang=` or `trrocket-only-` is taken to be written in that language, and is shown exactly as you wrote it.
+
+= Can a menu item appear only in some languages? =
+
+Yes. In Appearance → Menus every item has a "Show in" row with one checkbox per language; nothing ticked means every language. Hiding an item hides its sub-items too. Block themes build menus with the Navigation block instead: there, give a link the class `trrocket-only-it` or `trrocket-hide-it`.
+
+= Can I translate with ChatGPT or Gemini without an API key? =
+
+Yes. Open a page in the visual editor, click "Translate page" and use "Copy with a translation prompt" — or the ChatGPT and Gemini links, which copy the same thing. The prompt carries your languages, the words you never translate, your glossary and your house style, and asks for the reply in a code block with the line numbers intact. Paste the reply in box 2 and apply it.
+
 == Screenshots ==
 
 1. Translate without an API key at all: Chrome and Edge carry a translator that runs on the device itself, and one button puts it to work on everything still missing. Nothing is sent anywhere, nothing is charged, and what it translates is kept for good.
@@ -139,8 +153,12 @@ Open the page and use the "Language visibility" box to redirect it, show a custo
 
 == Changelog ==
 
-= 1.1.5 =
-* Housekeeping release, nothing in the translation engine has changed. The changelog had grown past the 5,000-word limit the plugin directory allows and was being cut off halfway down this page: releases from 1.0.0 onwards stay here, and the full history from 0.1.0 now lives in changelog.txt, shipped with the plugin.
+= 1.2.0 =
+* New: show content in some languages only. Wrap it in `[translaterocket_language lang="it,de"]…[/translaterocket_language]`, or use `not="it"` to hide it in some; in the block editor, add the class `trrocket-only-it` or `trrocket-hide-it` to any block, navigation links included. Content limited to a language is shown exactly as you wrote it and never re-translated.
+* New: menu items for some languages only. Every item in Appearance → Menus has a "Show in" row of language checkboxes. Nothing ticked means every language, so existing menus look exactly as before; an item that is hidden takes its sub-items with it.
+* New: translate a whole page in ChatGPT or Gemini, with no API key. In the visual editor's "Translate page" panel, one button copies the text of the page together with a prompt written for your site — your languages, the words you never translate, your glossary and your house style. The prompt asks the AI to keep the line numbers and the formatting markers, so its reply goes straight back into place.
+* The box you copy from now selects everything with one click, and the box you paste into selects its content on the first click, so a second paste replaces the first.
+* The changelog had grown past the 5,000-word limit of the plugin directory and was being cut off: releases from 1.0.0 onwards stay here, and the full history is in changelog.txt, shipped with the plugin.
 * Small tidy-ups: a clearer example in the "Words & phrases" exclusion box, and the LICENSE file now carries the plain GPLv2 text.
 
 = 1.1.4 =
@@ -183,8 +201,5 @@ https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
 
-= 1.1.5 =
-Housekeeping: the changelog was too long for the plugin directory and was being truncated. Small tidy-ups in the settings and the LICENSE file. The translation engine is untouched.
-
-= 1.1.4 =
-Cosmetic release: the plugin's own admin header is redrawn in CSS as a night sky, so the logo reads clearly and nothing extra is downloaded. Translation behaviour is unchanged.
+= 1.2.0 =
+Content and menu items for some languages only, and whole-page translation in ChatGPT or Gemini with a prompt made for your site. Existing pages and menus are unchanged until you use the new options.

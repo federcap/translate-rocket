@@ -2340,3 +2340,31 @@ msgstr "⚠ 保存できませんでした。サイトがリクエストを拒�
 
 msgid "⚠ Your site did not answer. The text is still here — check your connection, then try again."
 msgstr "⚠ サイトから応答がありませんでした。入力した文章はそのまま残っています。接続を確認して、もう一度お試しください。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Or translate it in ChatGPT or Gemini"
+msgstr "または ChatGPT や Gemini で翻訳"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copy with a translation prompt"
+msgstr "翻訳プロンプト付きでコピー"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copied — paste it into the chat"
+msgstr "コピーしました — チャットに貼り付けてください"
+
+#: src/Frontend/VisualEditor.php
+msgid "How does this work?"
+msgstr "使い方"
+
+#: src/Frontend/VisualEditor.php
+msgid "The button copies the text of this page together with a translation prompt written for your site: your two languages, the words you never translate, your glossary and your house style. The prompt asks the AI to give every numbered line back with the same number and to leave the [1] [2] markers exactly where they are, which is what lets the translation be put back in place. Paste it into the chat, copy the reply with the copy button of its code block, and paste it in box 2 below."
+msgstr "このボタンは、このページのテキストを、あなたのサイト向けに作られた翻訳プロンプトと一緒にコピーします。プロンプトには 2 つの言語、翻訳しない語句、用語集、文体の指定が含まれます。AI には、番号付きの各行を同じ番号のまま返し、[1] [2] のマーカーを元の位置にそのまま残すよう指示します。これにより翻訳を正しい場所に戻せます。チャットに貼り付け、返答をコードブロックのコピーボタンでコピーして、下のボックス 2 に貼り付けてください。"
+
+#: src/MenuLanguages.php
+msgid "Show in"
+msgstr "表示する言語"
+
+#: src/MenuLanguages.php
+msgid "None ticked: the item appears in every language."
+msgstr "チェックなし：すべての言語に表示されます。"

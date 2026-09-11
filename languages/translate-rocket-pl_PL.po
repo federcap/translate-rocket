@@ -2342,3 +2342,31 @@ msgstr "⚠ Nie zapisano: Twoja witryna odrzuciła żądanie. Tekst wciąż tu j
 
 msgid "⚠ Your site did not answer. The text is still here — check your connection, then try again."
 msgstr "⚠ Twoja witryna nie odpowiedziała. Tekst wciąż tu jest — sprawdź połączenie i spróbuj ponownie."
+
+#: src/Frontend/VisualEditor.php
+msgid "Or translate it in ChatGPT or Gemini"
+msgstr "Albo przetłumacz w ChatGPT lub Gemini"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copy with a translation prompt"
+msgstr "Kopiuj z promptem tłumaczenia"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copied — paste it into the chat"
+msgstr "Skopiowano — wklej na czacie"
+
+#: src/Frontend/VisualEditor.php
+msgid "How does this work?"
+msgstr "Jak to działa?"
+
+#: src/Frontend/VisualEditor.php
+msgid "The button copies the text of this page together with a translation prompt written for your site: your two languages, the words you never translate, your glossary and your house style. The prompt asks the AI to give every numbered line back with the same number and to leave the [1] [2] markers exactly where they are, which is what lets the translation be put back in place. Paste it into the chat, copy the reply with the copy button of its code block, and paste it in box 2 below."
+msgstr "Przycisk kopiuje tekst tej strony razem z promptem tłumaczenia przygotowanym dla Twojej witryny: Twoje dwa języki, słowa, których nigdy nie tłumaczysz, Twój glosariusz i Twój styl. Prompt prosi AI, aby zwróciła każdy numerowany wiersz z tym samym numerem i zostawiła znaczniki [1] [2] dokładnie tam, gdzie są — dzięki temu tłumaczenie można wstawić z powrotem na miejsce. Wklej go na czacie, skopiuj odpowiedź przyciskiem kopiowania w jej bloku kodu i wklej ją poniżej w polu 2."
+
+#: src/MenuLanguages.php
+msgid "Show in"
+msgstr "Pokaż w"
+
+#: src/MenuLanguages.php
+msgid "None ticked: the item appears in every language."
+msgstr "Nic nie zaznaczono: pozycja pojawia się we wszystkich językach."

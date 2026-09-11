@@ -49,13 +49,14 @@ in **your** database and can be edited by hand at any time.
 - **🌍 36 built-in languages** including RTL (Arabic, Hebrew, Persian), plus unlimited
   custom language codes.
 
-## 🛠️ Four ways to translate
+## 🛠️ Five ways to translate
 
 | Method | Key needed? | Best for |
 |--------|:-----------:|----------|
 | **In the browser** (Chrome/Edge, on-device) | no | translating a whole site with nothing to set up |
 | **Visual editor** (click text on the page) | no | quick fixes, seeing context |
 | **Google Translate link** (per phrase) | no | one-off phrases, decent quality |
+| **ChatGPT or Gemini** (copy with a ready-made prompt) | no | a whole page in a chat you already use |
 | **AI auto-translate** (batch) | yes (yours) | the best quality, a whole site at once |
 
 Every machine translation is just a starting point — review and edit anything in the
@@ -73,6 +74,10 @@ per-page editor, where missing strings are highlighted in red.
   block, or a widget — with original SVG flags that render everywhere (Windows
   included) — inline, dropdown, or a **scrollable bar with ‹ › arrows** for many
   languages.
+- **Content and menus per language:** show a paragraph, a block or a menu item only
+  in some languages — `[translaterocket_language lang="it"]…[/translaterocket_language]`,
+  a `trrocket-only-it` / `trrocket-hide-it` class on any block, or a "Show in" checkbox
+  on every item in Appearance → Menus.
 - **Per-page visibility:** if a page has no equivalent in a language, choose to
   redirect it, show a custom message, or return a 404 — per page, per language.
 - **Publish a language when it's ready:** each language has an online/offline switch.
@@ -128,6 +133,7 @@ translate-rocket/
     ├── GoogleFree.php          # Google Translate links (+ opt-in auto-fill helper)
     ├── Copies.php              # per-language images and media swaps
     ├── Savings.php             # counts the API calls reuse avoided
+    ├── MenuLanguages.php       # "Show in" checkboxes on menu items
     ├── Frontend/
     │   ├── Engine.php          # detect + replace strings on the front end
     │   ├── VisualEditor.php    # on-page click-to-edit popup + SEO panel
@@ -135,7 +141,8 @@ translate-rocket/
     │   ├── DynamicContent.php  # JS-injected text (banners, popups, AJAX)
     │   ├── WooCommerce.php     # cart, checkout, order e-mails, product slugs
     │   ├── Sitemap.php         # per-language sitemaps and hreflang
-    │   └── Visibility.php      # per-page, per-language redirect / message / 404
+    │   ├── Visibility.php      # per-page, per-language redirect / message / 404
+    │   └── LanguageOnly.php    # [translaterocket_language] + trrocket-only-* classes
     ├── Providers/              # AI adapters: DeepL, OpenAI, Google, Gemini, Anthropic
     ├── Importers/              # ten plugin importers + CSV/TMX
     └── Admin/                  # settings, page editor, in-post metabox, browser engine

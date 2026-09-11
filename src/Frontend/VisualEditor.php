@@ -213,6 +213,16 @@ class VisualEditor {
 				// video: qui passiamo solo i codici lingua nel formato che vuole lui.
 				'srcBcp'   => \TranslateRocket\Admin\BrowserEngine::bcp47( (string) ( Settings::get()['source_language'] ?? 'en' ) ),
 				'dstBcp'   => \TranslateRocket\Admin\BrowserEngine::bcp47( $lang ),
+				// Per il prompt da incollare in ChatGPT o Gemini: le stesse cose che l'AI
+				// integrata riceve gia' (lo stile scritto dal proprietario) piu' le parole da
+				// non tradurre e il glossario di questa lingua. L'editor si carica solo per
+				// chi ha manage_options, quindi non escono dalle mani dell'amministratore.
+				// Nomi inglesi: il prompt e' in inglese, e 'into Italian' si legge meglio di 'into Italiano'.
+				'pSrc'     => Languages::english_label( (string) ( Settings::get()['source_language'] ?? 'en' ) ),
+				'pDst'     => Languages::english_label( $lang ),
+				'pGuide'   => mb_substr( trim( (string) ( Settings::get()['ai_guidance'] ?? '' ) ), 0, \TranslateRocket\Providers\LlmProvider::GUIDANCE_MAX ),
+				'pKeep'    => array_slice( array_values( array_filter( array_map( 'strval', (array) ( Settings::get()['exclude_strings'] ?? array() ) ), 'strlen' ) ), 0, 60 ),
+				'pGloss'   => array_slice( Settings::glossary( $lang ), 0, 60, true ),
 				'i18n'    => array(
 					'editing' => __( 'Editing', 'translate-rocket' ),
 					'modeBlocks'    => __( 'Blocks', 'translate-rocket' ),
@@ -257,6 +267,11 @@ class VisualEditor {
 					'bulkStep1'      => __( '1. Copy the source text', 'translate-rocket' ),
 					'bulkStep2'      => __( '2. Paste it back, keeping the 1. 2. 3. numbers on each line', 'translate-rocket' ),
 					'bulkCopy'       => __( 'Copy', 'translate-rocket' ),
+					'bulkAiHead'     => __( 'Or translate it in ChatGPT or Gemini', 'translate-rocket' ),
+					'bulkAiCopy'     => __( 'Copy with a translation prompt', 'translate-rocket' ),
+					'bulkAiCopied'   => __( 'Copied — paste it into the chat', 'translate-rocket' ),
+					'bulkAiInfoBtn'  => __( 'How does this work?', 'translate-rocket' ),
+					'bulkAiInfo'     => __( 'The button copies the text of this page together with a translation prompt written for your site: your two languages, the words you never translate, your glossary and your house style. The prompt asks the AI to give every numbered line back with the same number and to leave the [1] [2] markers exactly where they are, which is what lets the translation be put back in place. Paste it into the chat, copy the reply with the copy button of its code block, and paste it in box 2 below.', 'translate-rocket' ),
 					'bulkPastePh'    => __( 'Paste the translated text here…', 'translate-rocket' ),
 					'bulkApply'      => __( 'Apply translation', 'translate-rocket' ),
 					'bulkRun'       => __( 'Translating…', 'translate-rocket' ),

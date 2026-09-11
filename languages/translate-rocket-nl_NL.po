@@ -2341,3 +2341,31 @@ msgstr "⚠ Niet opgeslagen: je site heeft het verzoek geweigerd. Je tekst staat
 
 msgid "⚠ Your site did not answer. The text is still here — check your connection, then try again."
 msgstr "⚠ Je site gaf geen antwoord. De tekst staat er nog — controleer je verbinding en probeer het opnieuw."
+
+#: src/Frontend/VisualEditor.php
+msgid "Or translate it in ChatGPT or Gemini"
+msgstr "Of vertaal het in ChatGPT of Gemini"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copy with a translation prompt"
+msgstr "Kopiëren met een vertaalprompt"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copied — paste it into the chat"
+msgstr "Gekopieerd — plak het in de chat"
+
+#: src/Frontend/VisualEditor.php
+msgid "How does this work?"
+msgstr "Hoe werkt dit?"
+
+#: src/Frontend/VisualEditor.php
+msgid "The button copies the text of this page together with a translation prompt written for your site: your two languages, the words you never translate, your glossary and your house style. The prompt asks the AI to give every numbered line back with the same number and to leave the [1] [2] markers exactly where they are, which is what lets the translation be put back in place. Paste it into the chat, copy the reply with the copy button of its code block, and paste it in box 2 below."
+msgstr "De knop kopieert de tekst van deze pagina samen met een vertaalprompt die voor je site is geschreven: je twee talen, de woorden die je nooit vertaalt, je woordenlijst en je schrijfstijl. De prompt vraagt de AI om elke genummerde regel met hetzelfde nummer terug te geven en de markeringen [1] [2] precies op hun plek te laten: zo kan de vertaling weer op de juiste plaats worden gezet. Plak hem in de chat, kopieer het antwoord met de kopieerknop van het codeblok en plak het hieronder in vak 2."
+
+#: src/MenuLanguages.php
+msgid "Show in"
+msgstr "Tonen in"
+
+#: src/MenuLanguages.php
+msgid "None ticked: the item appears in every language."
+msgstr "Niets aangevinkt: het item verschijnt in alle talen."
