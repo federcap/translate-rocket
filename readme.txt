@@ -141,8 +141,7 @@ Open the page and use the "Language visibility" box to redirect it, show a custo
 
 = 1.1.5 =
 * Housekeeping release, nothing in the translation engine has changed. The changelog had grown past the 5,000-word limit the plugin directory allows and was being cut off halfway down this page: releases from 1.0.0 onwards stay here, and the full history from 0.1.0 now lives in changelog.txt, shipped with the plugin.
-* The LICENSE file was a copy of WordPress own license.txt, which credited the copyright to the WordPress contributors. It is now the plain GPLv2 text.
-* The example in the "Words & phrases" exclusion box used a real business name. It now uses the plugin own name.
+* Small tidy-ups: a clearer example in the "Words & phrases" exclusion box, and the LICENSE file now carries the plain GPLv2 text.
 
 = 1.1.4 =
 * The plugin's own header now sits on a night sky instead of the rainbow band, the same one used on the project website. The stars are drawn in CSS, so nothing extra is downloaded and the logo finally stands clear of its background.
@@ -185,7 +184,7 @@ https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 == Upgrade Notice ==
 
 = 1.1.5 =
-Housekeeping: the changelog was too long for the plugin directory and was being truncated, the LICENSE file now carries the plain GPLv2 text, and an example in the settings no longer uses a real business name. The translation engine is untouched.
+Housekeeping: the changelog was too long for the plugin directory and was being truncated. Small tidy-ups in the settings and the LICENSE file. The translation engine is untouched.
 
 = 1.1.4 =
 Cosmetic release: the plugin's own admin header is redrawn in CSS as a night sky, so the logo reads clearly and nothing extra is downloaded. Translation behaviour is unchanged.
