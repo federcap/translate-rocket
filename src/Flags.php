@@ -99,7 +99,7 @@ class Flags {
 			'pl'    => '<rect width="30" height="20" fill="#fff"/><rect y="10" width="30" height="10" fill="#DC143C"/>',
 			'uk'    => '<rect width="30" height="20" fill="#FFD500"/><rect width="30" height="10" fill="#005BBB"/>',
 			'ja'    => '<rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="5.5" fill="#BC002D"/>',
-			'zh'    => '<rect width="30" height="20" fill="#EE1C25"/><polygon points="6.5,2.6 7.6,5.5 10.7,5.5 8.2,7.4 9.1,10.4 6.5,8.6 3.9,10.4 4.8,7.4 2.3,5.5 5.4,5.5" fill="#FFFF00"/>',
+			'zh'    => '<rect width="30" height="20" fill="#EE1C25"/><polygon points="5.00,2.00 5.67,4.07 7.85,4.07 6.09,5.35 6.76,7.43 5.00,6.15 3.24,7.43 3.91,5.35 2.15,4.07 4.33,4.07" fill="#FFDE00"/><polygon points="9.14,2.51 9.62,1.97 9.25,1.34 9.91,1.63 10.39,1.08 10.33,1.80 11.00,2.09 10.29,2.25 10.22,2.97 9.85,2.35" fill="#FFDE00"/><polygon points="11.01,4.14 11.66,3.82 11.56,3.10 12.07,3.62 12.72,3.30 12.38,3.95 12.88,4.47 12.17,4.34 11.83,4.99 11.73,4.27" fill="#FFDE00"/><polygon points="11.04,6.73 11.76,6.70 11.96,6.00 12.21,6.68 12.94,6.66 12.37,7.10 12.62,7.79 12.01,7.38 11.44,7.83 11.64,7.13" fill="#FFDE00"/><polygon points="9.22,8.38 9.90,8.63 10.35,8.06 10.32,8.79 11.00,9.05 10.30,9.24 10.26,9.96 9.87,9.36 9.16,9.55 9.62,8.98" fill="#FFDE00"/>',
 			'sv'    => '<rect width="30" height="20" fill="#006AA7"/><rect x="9" width="4" height="20" fill="#FECC00"/><rect y="8" width="30" height="4" fill="#FECC00"/>',
 			'da'    => '<rect width="30" height="20" fill="#C8102E"/><rect x="9" width="4" height="20" fill="#fff"/><rect y="8" width="30" height="4" fill="#fff"/>',
 			'no'    => '<rect width="30" height="20" fill="#BA0C2F"/><rect x="8" width="6" height="20" fill="#fff"/><rect y="7" width="30" height="6" fill="#fff"/><rect x="9.5" width="3" height="20" fill="#00205B"/><rect y="8.5" width="30" height="3" fill="#00205B"/>',
@@ -112,7 +112,13 @@ class Flags {
 			'cs'    => '<rect width="30" height="20" fill="#fff"/><rect y="10" width="30" height="10" fill="#D7141A"/><polygon points="0,0 15,10 0,20" fill="#11457E"/>',
 			'el'    => '<rect width="30" height="20" fill="#0D5EAF"/><rect y="2.22" width="30" height="2.22" fill="#fff"/><rect y="6.67" width="30" height="2.22" fill="#fff"/><rect y="11.11" width="30" height="2.22" fill="#fff"/><rect y="15.56" width="30" height="2.22" fill="#fff"/><rect width="11.11" height="11.11" fill="#0D5EAF"/><rect x="4.44" width="2.22" height="11.11" fill="#fff"/><rect y="4.44" width="11.11" height="2.22" fill="#fff"/>',
 			'tr'    => '<rect width="30" height="20" fill="#E30A17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.6" cy="10" r="4" fill="#E30A17"/><polygon points="18,7.7 18.54,9.26 20.19,9.29 18.87,10.28 19.35,11.86 18,10.92 16.65,11.86 17.12,10.28 15.81,9.29 17.46,9.26" fill="#fff"/>',
-			'ar'    => '<rect width="30" height="20" fill="#006C35"/><rect x="5" y="6" width="20" height="1.1" rx="0.3" fill="#fff"/><rect x="4" y="13.1" width="22" height="1.3" rx="0.3" fill="#fff"/>',
+			// Arabic deliberately has NO national flag. It is official in more than twenty
+			// countries, so no single flag is right; and the one usually chosen for it, Saudi
+			// Arabia's, carries the shahada — the Islamic declaration of faith — which should
+			// not be redrawn, simplified or used as decoration. A neutral code chip is honest
+			// and offends nobody. Site owners who do want a country flag can still set one per
+			// language (custom flag: "svg:xx", an emoji, or "url:…").
+			'ar'    => '<rect width="30" height="20" rx="3" fill="#334155"/><text x="15" y="14.3" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif" font-size="11.5" font-weight="700" letter-spacing="0.5" fill="#f1f5f9">AR</text>',
 			'he'    => '<rect width="30" height="20" fill="#fff"/><rect y="3" width="30" height="2.3" fill="#0038B8"/><rect y="14.7" width="30" height="2.3" fill="#0038B8"/><polygon points="15,6.4 12.1,11.4 17.9,11.4" fill="none" stroke="#0038B8" stroke-width="0.7"/><polygon points="15,13.6 12.1,8.6 17.9,8.6" fill="none" stroke="#0038B8" stroke-width="0.7"/>',
 			'hi'    => '<rect width="30" height="20" fill="#fff"/><rect width="30" height="6.67" fill="#FF9933"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><circle cx="15" cy="10" r="2.3" fill="none" stroke="#000080" stroke-width="0.5"/><circle cx="15" cy="10" r="0.4" fill="#000080"/><path d="M15,7.7V12.3M12.7,10H17.3M13.4,8.4 16.6,11.6M16.6,8.4 13.4,11.6" stroke="#000080" stroke-width="0.3"/>',
 			'ko'    => '<rect width="30" height="20" fill="#fff"/><path d="M15,5 a5,5 0 0,1 0,10 a2.5,2.5 0 0,1 0,-5 a2.5,2.5 0 0,0 0,-5 z" fill="#CD2E3A"/><path d="M15,5 a5,5 0 0,0 0,10 a2.5,2.5 0 0,0 0,-5 a2.5,2.5 0 0,1 0,-5 z" fill="#0047A0"/>',

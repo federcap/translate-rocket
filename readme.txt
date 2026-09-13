@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,11 +13,11 @@ Translate your whole site with no API key — Chrome and Edge do it on your own 
 
 == Description ==
 
-https://www.youtube.com/watch?v=NV0vFwFus4w
+https://www.youtube.com/watch?v=FgrO7Fqun4U
 
 **TranslateRocket makes your site multilingual, and everything it does is free.** No word limits, no charge per language, and nothing switched off to push you towards an upgrade — it is not a trimmed-down version of a paid plugin.
 
-**You do not need an API key at all.** Chrome and Edge on a computer carry a translator that runs on the device itself, and TranslateRocket can drive it: install the plugin, pick your languages, press one button and the site is translated. It costs nothing, needs no account, and the text never leaves your machine. Quality sits below DeepL and the AI models and it works one phrase at a time — so it is the fastest way to a translated site rather than the finest one — and everything it translates is kept, so adding a provider later never repeats the work.
+**You do not need an API key at all.** Chrome and Edge on a computer carry a translator that runs on the device itself, and TranslateRocket can drive it: install the plugin, pick your languages, press one button and the site is translated. It costs nothing, needs no account, and the text never leaves your machine. It is the fastest way to a translated site. When you want fluent, idiomatic copy, the same pages can go through DeepL or an AI model with your own key (OpenAI, Anthropic, Gemini — you pay the provider directly), through ChatGPT or Gemini with a ready-made prompt at no cost, or through your own hands, line by line — and everything already translated is kept, so nothing is ever done twice.
 
 **Switching from another translation plugin? Your existing translations come with you.** One click imports everything you have already paid for or typed by hand — from **TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft and Loco Translate**, plus CSV and TMX for anything else. Most are read straight from the tables, the posts or the files, so the import still works after the other plugin has been deactivated or even deleted — which is the usual state of a site that is moving on.
 
@@ -152,6 +152,12 @@ Yes. Open a page in the visual editor, click "Translate page" and use "Copy with
 
 
 == Changelog ==
+
+= 1.2.1 =
+* New: structured data is translated too. The FAQ questions and answers, article headlines and descriptions that themes and SEO plugins put in JSON-LD for search engines used to stay in the source language on every translated page, and an article on /de/ still declared itself English. They are now collected like the page title and description, translated in every language, and "inLanguage" states the language of the page. Names of people, companies, software and the site are never translated, a video keeps the language it was recorded in, and addresses, dates and prices are left exactly as they are. The data is read and rewritten as JSON, so a translation can never break it.
+* Fix: the flag shown for Chinese had a single star, which made it look like another country's flag. It now has the large star with the four small ones beside it.
+* Change: Arabic no longer shows a national flag. It is official in more than twenty countries, so no single flag is right for it, and the one usually chosen for it carries a religious inscription that should not be redrawn or used as decoration. Arabic now shows a neutral "AR" marker. If you would rather have a flag, you can still choose one for that language in the custom flag field.
+* Fix: a floating language switcher placed along the bottom of the page opens upwards, so its menu is no longer cut off by the edge of the window.
 
 = 1.2.0 =
 * New: show content in some languages only. Wrap it in `[translaterocket_language lang="it,de"]…[/translaterocket_language]`, or use `not="it"` to hide it in some; in the block editor, add the class `trrocket-only-it` or `trrocket-hide-it` to any block, navigation links included. Content limited to a language is shown exactly as you wrote it and never re-translated.

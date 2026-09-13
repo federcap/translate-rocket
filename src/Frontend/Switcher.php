@@ -305,6 +305,9 @@ class Switcher {
 		if ( '' !== $radius ) {
 			$rv   = self::css_len( (string) $radius );
 			$out .= $scope . ' .trrocket-dd-menu{border-radius:0 0 ' . $rv . ' ' . $rv . ';}';
+			// Opening upwards the two surfaces meet the other way round.
+			$out .= $scope . '.trrocket-dd-up .trrocket-dd-menu{border-radius:' . $rv . ' ' . $rv . ' 0 0;}';
+			$out .= $scope . '.trrocket-dd-up .trrocket-dd.is-open .trrocket-dd-toggle{border-radius:0 0 ' . $rv . ' ' . $rv . ';}';
 		}
 
 		// Per-profile device visibility: hide this switcher entirely on one
@@ -475,6 +478,13 @@ class Switcher {
 			}
 		}
 		$dd_extra = ( 'dropdown' === ( $s['type'] ?? '' ) ) ? ' trrocket-floating-dd' : '';
+		// Anchored to the bottom of the screen, a dropdown that opens downwards
+		// puts the whole list below the fold, where no visitor can reach it: it
+		// has to open upwards. Custom positions count when anchored from the bottom.
+		$in_basso = in_array( $pos, array( 'bottom-right', 'bottom-left' ), true ) || ( 'custom' === $pos && false !== strpos( $style, 'bottom:' ) );
+		if ( '' !== $dd_extra && $in_basso ) {
+			$dd_extra .= ' trrocket-dd-up';
+		}
 		$attr     = '' !== $style ? ' style="' . esc_attr( $style ) . '"' : '';
 		echo wp_kses( '<div class="trrocket-floating' . $dd_extra . ' trrocket-sw-default trrocket-pos-' . esc_attr( $pos ) . '" translate="no"' . $attr . '>' . $html . '</div>' , \TranslateRocket\Kses::html_rules() );
 	}

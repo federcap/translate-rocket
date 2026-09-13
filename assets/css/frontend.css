@@ -310,10 +310,44 @@
 	}
 }
 
+/* A floating dropdown anchored to the bottom of the screen opens UPWARDS: the
+   list used to open below the toggle, entirely off-screen and unreachable.
+   The class comes from Switcher.php (bottom positions, or custom from bottom). */
+.trrocket-dd-up .trrocket-dd-menu {
+	top: auto;
+	bottom: 100%;
+	border-top: 1px solid #e2e2e2;
+	border-bottom: 0;
+	box-shadow: 0 -6px 14px rgba( 0, 0, 0, 0.14 );
+}
+
+/* The chevron says where the list will appear: up when closed, down when open. */
+.trrocket-dd-up .trrocket-dd-caret svg {
+	transform: rotate( 180deg );
+}
+
+.trrocket-dd-up .trrocket-dd.is-open .trrocket-dd-caret svg {
+	transform: none;
+}
+
+@media ( hover: hover ) {
+	.trrocket-dd-up .trrocket-dd-hover:hover .trrocket-dd-caret svg {
+		transform: none;
+	}
+}
+
 /* When open, the toggle's bottom flows straight into the menu (one surface). */
 .trrocket-dd.is-open .trrocket-dd-toggle {
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
+}
+
+/* Opening upwards it is the toggle's TOP that meets the menu. */
+.trrocket-dd-up .trrocket-dd.is-open .trrocket-dd-toggle {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
 }
 
 @media ( hover: hover ) {

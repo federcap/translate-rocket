@@ -76,6 +76,15 @@ class Engine {
 	private $raw_blocks = array();
 
 	/**
+	 * Placeholders (keys of $raw_blocks) that hold a JSON-LD body, in page order.
+	 * Those are the only script bodies the engine reads — through Schema, on the
+	 * decoded data, never on the raw text.
+	 *
+	 * @var string[]
+	 */
+	private $schema_tokens = array();
+
+	/**
 	 * Elements whose body the HTML spec treats as raw text / RCDATA: the browser
 	 * reads their content as text, never as markup. libxml does not, and quietly
 	 * DROPS any "</name>" sequence it finds inside them — so a perfectly valid
@@ -97,7 +106,8 @@ class Engine {
 	 * @param string $html Page HTML.
 	 */
 	private function mask_raw_text( string $html ): string {
-		$this->raw_blocks = array();
+		$this->raw_blocks    = array();
+		$this->schema_tokens = array();
 
 		// One random salt per request: a placeholder must never collide with text
 		// that legitimately appears on the page.
@@ -121,6 +131,10 @@ class Engine {
 				}
 				$token                      = 'TRROCKETRAW' . $salt . count( $this->raw_blocks ) . 'END';
 				$this->raw_blocks[ $token ] = $m[3];
+				// Structured data is the one script body worth reading (see Schema).
+				if ( 'script' === strtolower( $m[2] ) && preg_match( '#\btype\s*=\s*(["\']?)application/ld\+json\1#i', $m[1] ) ) {
+					$this->schema_tokens[] = $token;
+				}
 				return $m[1] . $token . $m[4];
 			},
 			$html
@@ -422,9 +436,23 @@ class Engine {
 		$social_nodes = iterator_to_array( $xpath->query( '//meta[@property="og:title" or @property="og:description" or @property="og:site_name" or @property="og:image:alt" or @name="twitter:title" or @name="twitter:description" or @name="twitter:image:alt" or @name="keywords"]/@content' ) );
 		$title_nodes  = iterator_to_array( $xpath->query( '//head/title' ) );
 
+		// Structured data: the prose inside JSON-LD (FAQ questions and answers, article
+		// headlines, descriptions). Read from the decoded data, per placeholder.
+		$schema_texts = array();
+		foreach ( $this->schema_tokens as $token ) {
+			if ( isset( $this->raw_blocks[ $token ] ) ) {
+				$schema_texts[ $token ] = Schema::strings( $this->raw_blocks[ $token ] );
+			}
+		}
+
 		$map = array();
 		if ( $this->is_secondary ) {
 			$candidates = array();
+			foreach ( $schema_texts as $texts ) {
+				foreach ( $texts as $text ) {
+					$candidates[] = $text;
+				}
+			}
 			foreach ( $text_nodes as $node ) {
 				$candidates[] = trim( (string) $node->nodeValue );
 			}
@@ -643,6 +671,32 @@ class Engine {
 				}
 				$title_el->appendChild( $dom->createTextNode( $map[ $value ] ) );
 				$changed = true;
+			}
+		}
+
+		// Structured data (JSON-LD). Collected as meta strings with the "schema" context,
+		// so they are listed and machine-translated like the title and description; on a
+		// translated page the decoded data is rewritten and "inLanguage" corrected. The
+		// body is only replaced when something actually changed.
+		foreach ( $schema_texts as $token => $texts ) {
+			if ( $this->do_collect ) {
+				foreach ( $texts as $text ) {
+					if ( NoTranslate::text_excluded( $text ) ) {
+						continue;
+					}
+					$collected[] = array(
+						'original' => $text,
+						'type'     => 'meta',
+						'context'  => 'schema',
+					);
+				}
+			}
+			if ( $this->is_secondary && isset( $this->raw_blocks[ $token ] ) ) {
+				$translated = Schema::translate( $this->raw_blocks[ $token ], $map, $this->current );
+				if ( null !== $translated ) {
+					$this->raw_blocks[ $token ] = $translated;
+					$changed                    = true;
+				}
 			}
 		}
 

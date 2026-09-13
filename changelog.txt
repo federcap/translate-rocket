@@ -4,6 +4,12 @@ The readme.txt shipped with the plugin lists recent releases only, because
 the WordPress.org plugin directory truncates a changelog past 5,000 words.
 The complete history, from the first public release, is kept here.
 
+= 1.2.1 =
+* New: structured data is translated too. The FAQ questions and answers, article headlines and descriptions that themes and SEO plugins put in JSON-LD for search engines used to stay in the source language on every translated page, and an article on /de/ still declared itself English. They are now collected like the page title and description, translated in every language, and "inLanguage" states the language of the page. Names of people, companies, software and the site are never translated, a video keeps the language it was recorded in, and addresses, dates and prices are left exactly as they are. The data is read and rewritten as JSON, so a translation can never break it.
+* Fix: the flag shown for Chinese had a single star, which made it look like another country's flag. It now has the large star with the four small ones beside it.
+* Change: Arabic no longer shows a national flag. It is official in more than twenty countries, so no single flag is right for it, and the one usually chosen for it carries a religious inscription that should not be redrawn or used as decoration. Arabic now shows a neutral "AR" marker. If you would rather have a flag, you can still choose one for that language in the custom flag field.
+* Fix: a floating language switcher placed along the bottom of the page opens upwards, so its menu is no longer cut off by the edge of the window.
+
 = 1.2.0 =
 * New: show content in some languages only. Wrap it in `[translaterocket_language lang="it,de"]…[/translaterocket_language]`, or use `not="it"` to hide it in some; in the block editor, add the class `trrocket-only-it` or `trrocket-hide-it` to any block, navigation links included. Content limited to a language is shown exactly as you wrote it and never re-translated.
 * New: menu items for some languages only. Every item in Appearance → Menus has a "Show in" row of language checkboxes. Nothing ticked means every language, so existing menus look exactly as before; an item that is hidden takes its sub-items with it.
