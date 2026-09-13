@@ -1224,6 +1224,14 @@ class Admin {
 	 * Render the import (migrate from another plugin) page.
 	 */
 	public function render_import_page(): void {
+		$copies_of = CopyCleanupAdmin::requested();
+		if ( $copies_of ) {
+			echo '<div class="wrap trrocket-wrap">';
+			self::header( 'translate-rocket-import' );
+			CopyCleanupAdmin::render( $copies_of );
+			echo '</div>';
+			return;
+		}
 		?>
 		<div class="wrap trrocket-wrap">
 			<?php self::header( 'translate-rocket-import' ); ?>
@@ -1325,6 +1333,11 @@ class Admin {
 					<?php else : ?>
 						<p class="description"><?php esc_html_e( 'Not detected (the plugin is not installed or configured).', 'translate-rocket' ); ?></p>
 					<?php endif; ?>
+					<?php
+					if ( $available ) {
+						CopyCleanupAdmin::intro( $importer );
+					}
+					?>
 				<?php endforeach; ?>
 
 				<h3>Weglot</h3>

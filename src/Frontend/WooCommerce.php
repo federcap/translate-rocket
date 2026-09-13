@@ -71,6 +71,9 @@ class WooCommerce {
 		add_action( 'woocommerce_email_order_details', array( $this, 'capture_email_language' ), 1, 4 );
 		add_filter( 'woocommerce_mail_content', array( $this, 'email_content' ), 20 );
 
+		// Send the customer back to the thank-you page in the language they ordered in.
+		add_filter( 'woocommerce_get_checkout_order_received_url', array( $this, 'order_received_url' ), 20, 2 );
+
 		// Per-request extras (translated page or front-end AJAX): JS strings +
 		// cart fragments. These need the current request to be a secondary language.
 		$router = Plugin::instance()->router();
@@ -144,6 +147,40 @@ class WooCommerce {
 		if ( 'woocommerce_store_api_checkout_order_processed' === current_action() && method_exists( $order, 'save' ) ) {
 			$order->save();
 		}
+	}
+
+	/**
+	 * Put the order's language prefix on the "Order received" URL.
+	 *
+	 * The block checkout places the order through the Store API, whose own URL has
+	 * no language prefix, so WooCommerce builds the thank-you link in the default
+	 * language: a customer who shopped in Italian landed on an English page.
+	 *
+	 * @param mixed $url   Thank-you page URL.
+	 * @param mixed $order WC_Order.
+	 * @return mixed
+	 */
+	public function order_received_url( $url, $order = null ) {
+		if ( ! is_string( $url ) || '' === $url ) {
+			return $url;
+		}
+		$router = Plugin::instance()->router();
+		$lang   = ( is_object( $order ) && method_exists( $order, 'get_meta' ) ) ? (string) $order->get_meta( '_trrocket_lang' ) : '';
+		if ( '' === $lang ) {
+			$lang = $router->request_language();
+		}
+		if ( '' === $lang || $router->is_default( $lang ) || ! in_array( $lang, $router->secondary_languages(), true ) ) {
+			return $url;
+		}
+		$home = rtrim( (string) get_option( 'home' ), '/' );
+		if ( 0 !== strpos( $url, $home . '/' ) ) {
+			return $url;
+		}
+		$rest = substr( $url, strlen( $home ) );
+		if ( preg_match( '#^/' . preg_quote( $lang, '#' ) . '(/|$)#', $rest ) ) {
+			return $url; // Already localised (e.g. built on a translated page).
+		}
+		return $home . '/' . $lang . $rest;
 	}
 
 	/**

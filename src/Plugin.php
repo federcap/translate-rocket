@@ -115,6 +115,7 @@ final class Plugin {
 			( new \TranslateRocket\Admin\MetaBox() )->register();
 			( new \TranslateRocket\Admin\VisibilityBox() )->register();
 			( new \TranslateRocket\Admin\CopyAdmin() )->register();
+			( new \TranslateRocket\Admin\CopyCleanupAdmin() )->register();
 			( new \TranslateRocket\Admin\EditorButton() )->register();
 			( new \TranslateRocket\Admin\Growth() )->register();
 			( new \TranslateRocket\Admin\BrowserEngine() )->register();
@@ -127,6 +128,8 @@ final class Plugin {
 			// Serve an independent page copy (if one is active) in place of runtime
 			// translation — must boot before the Engine so its stand-down check holds.
 			( new \TranslateRocket\Frontend\CopyServer() )->boot();
+			// Old addresses of Polylang/WPML/Bogo pages tidied up after an import -> 301.
+			( new \TranslateRocket\Frontend\MovedCopies() )->boot();
 			// Detect strings (admin) and replace them per language.
 			( new \TranslateRocket\Frontend\Engine() )->boot();
 			// Interface (menus, buttons, theme/plugin labels): use WordPress' own

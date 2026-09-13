@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -152,6 +152,14 @@ Yes. Open a page in the visual editor, click "Translate page" and use "Copy with
 
 
 == Changelog ==
+
+= 1.3.0 =
+* New: tidy up the pages Polylang, WPML or Bogo left behind. Those plugins keep a separate page for every language; once their translations are imported, TranslateRocket translates the original page itself, so each copy is a second place to edit the same page. Under the importer, "Review the separate pages" lists every copy with what was found: copies whose text is all in TranslateRocket can go to the Trash, copies with text laid out differently can be kept as independent copies, and nothing is offered for the Trash before the import or while its language is not active. Nothing is deleted — pages go to the Trash — and the old address of each copy sends visitors and search engines to the translated page with a 301.
+* Fix: on a page opened through its translated address (for example /it/chi-siamo/), the hreflang links and the language switcher reused that Italian slug for every language, so they pointed at addresses that do not exist (/chi-siamo/, /es/chi-siamo/). Each language now gets its own address — the original slug, or its own translated one — exactly as the sitemap already did.
+* Fix: hreflang links no longer repeat the query string of the visit (?utm_source=…); they name the clean address of each version.
+* Fix: a page that does not exist (404) no longer prints hreflang links to the same missing address in every language.
+* Fix: WooCommerce block checkout — after placing an order in a translated language, customers landed on the "Order received" page in the site's default language. They now stay in the language they shopped in, as the order e-mail already did.
+* Fix: translated addresses now work for WooCommerce products and every other custom post type. A translated slug on a product (/it/product/colazione-in-terrazza/) returned "page not found", while the language switcher and hreflang already pointed there; product links in shop pages now use the translated slug too.
 
 = 1.2.1 =
 * New: structured data is translated too. The FAQ questions and answers, article headlines and descriptions that themes and SEO plugins put in JSON-LD for search engines used to stay in the source language on every translated page, and an article on /de/ still declared itself English. They are now collected like the page title and description, translated in every language, and "inLanguage" states the language of the page. Names of people, companies, software and the site are never translated, a video keeps the language it was recorded in, and addresses, dates and prices are left exactly as they are. The data is read and rewritten as JSON, so a translation can never break it.

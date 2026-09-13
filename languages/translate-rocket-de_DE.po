@@ -2373,3 +2373,123 @@ msgstr "Anzeigen in"
 #: src/MenuLanguages.php
 msgid "None ticked: the item appears in every language."
 msgstr "Keine ausgewählt: Der Eintrag erscheint in allen Sprachen."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%1$s also keeps %2$d separate page for another language. Once imported, TranslateRocket translates the original page itself, so you can tidy it up."
+msgid_plural "%1$s also keeps %2$d separate pages for other languages. Once imported, TranslateRocket translates the original pages themselves, so you can tidy them up."
+msgstr[0] "%1$s behält außerdem %2$d separate Seite für eine andere Sprache. Nach dem Import übersetzt TranslateRocket die Originalseite selbst, du kannst also aufräumen."
+msgstr[1] "%1$s behält außerdem %2$d separate Seiten für andere Sprachen. Nach dem Import übersetzt TranslateRocket die Originalseiten selbst, du kannst also aufräumen."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Review the separate pages"
+msgstr "Separate Seiten prüfen"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Back to Import"
+msgstr "Zurück zum Import"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Separate pages left by %s"
+msgstr "Von %s hinterlassene separate Seiten"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%s kept a separate page for each language. TranslateRocket translates the original page itself, so each of these is now a second place to edit the same page — and a second page for search engines to find."
+msgstr "%s hat für jede Sprache eine separate Seite angelegt. TranslateRocket übersetzt die Originalseite selbst, daher ist jede davon jetzt ein zweiter Ort, an dem dieselbe Seite bearbeitet wird — und eine zweite Seite, die Suchmaschinen finden."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Nothing is deleted: pages go to the Trash, where you can restore them, and their old address sends visitors and search engines to the translated page."
+msgstr "Nichts wird gelöscht: Die Seiten kommen in den Papierkorb, wo du sie wiederherstellen kannst, und ihre alte Adresse leitet Besucher und Suchmaschinen zur übersetzten Seite."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "There are no separate pages left to review."
+msgstr "Es sind keine separaten Seiten mehr zu prüfen."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%1$d of %2$d can go to the Trash right away. The others are set to be kept — read why next to each one."
+msgstr "%1$d von %2$d können sofort in den Papierkorb. Die anderen werden behalten — warum, steht jeweils daneben."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Apply these choices? Pages set to \"Move to Trash\" can be restored from the Trash."
+msgstr "Diese Auswahl anwenden? Seiten mit „In den Papierkorb verschieben“ lassen sich aus dem Papierkorb wiederherstellen."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Original page"
+msgstr "Originalseite"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Separate page"
+msgstr "Separate Seite"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "What we found"
+msgstr "Was wir gefunden haben"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "What to do"
+msgstr "Was tun"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Apply"
+msgstr "Anwenden"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Leave it as it is"
+msgstr "So lassen"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Move to Trash"
+msgstr "In den Papierkorb verschieben"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Keep as independent copy"
+msgstr "Als unabhängige Kopie behalten"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Everything it says is already in TranslateRocket."
+msgstr "Alles, was darauf steht, ist schon in TranslateRocket."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Its text is laid out differently from the original, so it could not be matched line by line. Keep it as an independent copy to keep that text."
+msgstr "Ihr Text ist anders aufgebaut als das Original und ließ sich daher nicht Zeile für Zeile zuordnen. Behalte sie als unabhängige Kopie, um diesen Text zu bewahren."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%d text is not in TranslateRocket yet. Run the import first."
+msgid_plural "%d texts are not in TranslateRocket yet. Run the import first."
+msgstr[0] "%d Text ist noch nicht in TranslateRocket. Führe zuerst den Import aus."
+msgstr[1] "%d Texte sind noch nicht in TranslateRocket. Führe zuerst den Import aus."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%s is not one of your TranslateRocket languages: moving this page to the Trash would take it off the site. Add the language in Settings first."
+msgstr "%s ist keine deiner TranslateRocket-Sprachen: Diese Seite in den Papierkorb zu verschieben, würde sie von der Website nehmen. Füge die Sprache zuerst in den Einstellungen hinzu."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "This page already has an independent copy in this language."
+msgstr "Diese Seite hat in dieser Sprache bereits eine unabhängige Kopie."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "In the menu: %s. The item disappears from that menu if the page goes to the Trash."
+msgstr "Im Menü: %s. Der Eintrag verschwindet aus diesem Menü, wenn die Seite in den Papierkorb kommt."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Linked from %d page: the link will lead to the translated page."
+msgid_plural "Linked from %d pages: the links will lead to the translated page."
+msgstr[0] "Verlinkt von %d Seite: Der Link führt dann zur übersetzten Seite."
+msgstr[1] "Verlinkt von %d Seiten: Die Links führen dann zur übersetzten Seite."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "View"
+msgstr "Ansehen"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Moved to the Trash: %1$d. Kept as independent copies: %2$d."
+msgstr "In den Papierkorb verschoben: %1$d. Als unabhängige Kopien behalten: %2$d."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "You can restore them from the Trash of Pages or Posts; their old addresses now lead to the translated pages."
+msgstr "Du kannst sie aus dem Papierkorb von Seiten oder Beiträgen wiederherstellen; ihre alten Adressen führen jetzt zu den übersetzten Seiten."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%d page was left alone because it changed in the meantime — check it below."
+msgid_plural "%d pages were left alone because they changed in the meantime — check them below."
+msgstr[0] "%d Seite wurde nicht angetastet, weil sie sich inzwischen geändert hat — prüfe sie unten."
+msgstr[1] "%d Seiten wurden nicht angetastet, weil sie sich inzwischen geändert haben — prüfe sie unten."

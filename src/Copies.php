@@ -150,6 +150,37 @@ class Copies {
 	}
 
 	/**
+	 * Adopt an existing post as the independent copy of a source — used for the
+	 * per-language pages another plugin (Polylang, WPML, Bogo) left behind, whose
+	 * text could not be imported line by line. The post keeps its content and meta;
+	 * it becomes a draft, like every copy, and is served at the source's /xx/ URL.
+	 * Returns false when the source already has a copy in that language.
+	 */
+	public static function adopt( int $source_id, int $copy_id, string $lang ): bool {
+		if ( $source_id <= 0 || $copy_id <= 0 || $source_id === $copy_id || ! Languages::exists( $lang )
+			|| ! ( get_post( $source_id ) instanceof \WP_Post ) || ! ( get_post( $copy_id ) instanceof \WP_Post )
+			|| self::copy_id( $source_id, $lang ) > 0 || self::is_copy( $copy_id ) ) {
+			return false;
+		}
+
+		update_post_meta( $copy_id, self::META_SOURCE, $source_id );
+		update_post_meta( $copy_id, self::META_LANG, $lang );
+		if ( 'draft' !== get_post_status( $copy_id ) ) {
+			wp_update_post(
+				array(
+					'ID'          => $copy_id,
+					'post_status' => 'draft',
+				)
+			);
+		}
+
+		update_post_meta( $source_id, self::META_COPY . $lang, $copy_id );
+		update_post_meta( $source_id, self::META_SYNCED . $lang, (int) get_post_modified_time( 'U', true, $source_id ) );
+		self::set_active( $source_id, $lang, true );
+		return true;
+	}
+
+	/**
 	 * Copy a source post's meta onto a fresh copy so it keeps the same layout —
 	 * featured image, page template, theme header/footer/sidebar choices and
 	 * page-builder data. Skips internal/editor meta and our own copy/visibility keys.

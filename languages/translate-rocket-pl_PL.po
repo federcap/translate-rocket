@@ -2370,3 +2370,127 @@ msgstr "Pokaż w"
 #: src/MenuLanguages.php
 msgid "None ticked: the item appears in every language."
 msgstr "Nic nie zaznaczono: pozycja pojawia się we wszystkich językach."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%1$s also keeps %2$d separate page for another language. Once imported, TranslateRocket translates the original page itself, so you can tidy it up."
+msgid_plural "%1$s also keeps %2$d separate pages for other languages. Once imported, TranslateRocket translates the original pages themselves, so you can tidy them up."
+msgstr[0] "%1$s przechowuje też %2$d osobną stronę dla innego języka. Po imporcie TranslateRocket tłumaczy samą stronę oryginalną, więc możesz zrobić porządek."
+msgstr[1] "%1$s przechowuje też %2$d osobne strony dla innych języków. Po imporcie TranslateRocket tłumaczy same strony oryginalne, więc możesz zrobić porządek."
+msgstr[2] "%1$s przechowuje też %2$d osobnych stron dla innych języków. Po imporcie TranslateRocket tłumaczy same strony oryginalne, więc możesz zrobić porządek."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Review the separate pages"
+msgstr "Przejrzyj osobne strony"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Back to Import"
+msgstr "Wróć do importu"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Separate pages left by %s"
+msgstr "Osobne strony pozostawione przez %s"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%s kept a separate page for each language. TranslateRocket translates the original page itself, so each of these is now a second place to edit the same page — and a second page for search engines to find."
+msgstr "%s trzymał osobną stronę dla każdego języka. TranslateRocket tłumaczy samą stronę oryginalną, więc każda z nich to teraz drugie miejsce do edycji tej samej strony — i druga strona do znalezienia przez wyszukiwarki."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Nothing is deleted: pages go to the Trash, where you can restore them, and their old address sends visitors and search engines to the translated page."
+msgstr "Nic nie jest usuwane: strony trafiają do Kosza, skąd możesz je przywrócić, a ich stary adres kieruje odwiedzających i wyszukiwarki na przetłumaczoną stronę."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "There are no separate pages left to review."
+msgstr "Nie ma już osobnych stron do przejrzenia."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%1$d of %2$d can go to the Trash right away. The others are set to be kept — read why next to each one."
+msgstr "%1$d z %2$d może od razu trafić do Kosza. Pozostałe są ustawione do zachowania — powód jest przy każdej z nich."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Apply these choices? Pages set to \"Move to Trash\" can be restored from the Trash."
+msgstr "Zastosować te wybory? Strony ustawione na „Przenieś do Kosza” można przywrócić z Kosza."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Original page"
+msgstr "Strona oryginalna"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Separate page"
+msgstr "Osobna strona"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "What we found"
+msgstr "Co znaleźliśmy"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "What to do"
+msgstr "Co zrobić"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Apply"
+msgstr "Zastosuj"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Leave it as it is"
+msgstr "Zostaw bez zmian"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Move to Trash"
+msgstr "Przenieś do Kosza"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Keep as independent copy"
+msgstr "Zachowaj jako niezależną kopię"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Everything it says is already in TranslateRocket."
+msgstr "Wszystko, co zawiera, jest już w TranslateRocket."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Its text is laid out differently from the original, so it could not be matched line by line. Keep it as an independent copy to keep that text."
+msgstr "Jej tekst jest ułożony inaczej niż w oryginale, więc nie dało się go dopasować wiersz po wierszu. Zachowaj ją jako niezależną kopię, aby zachować ten tekst."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%d text is not in TranslateRocket yet. Run the import first."
+msgid_plural "%d texts are not in TranslateRocket yet. Run the import first."
+msgstr[0] "%d tekst nie jest jeszcze w TranslateRocket. Najpierw uruchom import."
+msgstr[1] "%d teksty nie są jeszcze w TranslateRocket. Najpierw uruchom import."
+msgstr[2] "%d tekstów nie ma jeszcze w TranslateRocket. Najpierw uruchom import."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%s is not one of your TranslateRocket languages: moving this page to the Trash would take it off the site. Add the language in Settings first."
+msgstr "%s nie jest jednym z Twoich języków TranslateRocket: przeniesienie tej strony do Kosza usunęłoby ją z witryny. Najpierw dodaj ten język w Ustawieniach."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "This page already has an independent copy in this language."
+msgstr "Ta strona ma już niezależną kopię w tym języku."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "In the menu: %s. The item disappears from that menu if the page goes to the Trash."
+msgstr "W menu: %s. Pozycja zniknie z tego menu, jeśli strona trafi do Kosza."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Linked from %d page: the link will lead to the translated page."
+msgid_plural "Linked from %d pages: the links will lead to the translated page."
+msgstr[0] "Linkuje do niej %d strona: link poprowadzi do przetłumaczonej strony."
+msgstr[1] "Linkują do niej %d strony: linki poprowadzą do przetłumaczonej strony."
+msgstr[2] "Linkuje do niej %d stron: linki poprowadzą do przetłumaczonej strony."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "View"
+msgstr "Zobacz"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Moved to the Trash: %1$d. Kept as independent copies: %2$d."
+msgstr "Przeniesione do Kosza: %1$d. Zachowane jako niezależne kopie: %2$d."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "You can restore them from the Trash of Pages or Posts; their old addresses now lead to the translated pages."
+msgstr "Możesz je przywrócić z Kosza Stron lub Wpisów; ich stare adresy prowadzą teraz do przetłumaczonych stron."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%d page was left alone because it changed in the meantime — check it below."
+msgid_plural "%d pages were left alone because they changed in the meantime — check them below."
+msgstr[0] "%d strona została pominięta, bo w międzyczasie się zmieniła — sprawdź ją poniżej."
+msgstr[1] "%d strony zostały pominięte, bo w międzyczasie się zmieniły — sprawdź je poniżej."
+msgstr[2] "%d stron zostało pominiętych, bo w międzyczasie się zmieniły — sprawdź je poniżej."

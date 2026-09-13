@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *  - body text, paired by position only when both posts share the same structure
  *    (best effort; unmatched pairs are simply never used, so it's harmless).
  */
-class PolylangImporter implements ImporterInterface {
+class PolylangImporter implements ProvidesCopies {
 
 	public function id(): string {
 		return 'polylang';
@@ -238,5 +238,46 @@ class PolylangImporter implements ImporterInterface {
 			'count' => $count,
 			'error' => '',
 		);
+	}
+
+	/**
+	 * The same groups the import walks: Polylang's post_translations terms, each a
+	 * language slug => post id map, with the default-language post as the original.
+	 *
+	 * @return array<int,array{source:int,copies:array<string,int>}>
+	 */
+	public function copy_groups(): array {
+		global $wpdb;
+		$default = $this->default_lang();
+		if ( '' === $default ) {
+			return array();
+		}
+		$our_default = Plugin::instance()->router()->default_language();
+
+		$out    = array();
+		$groups = $wpdb->get_col( "SELECT description FROM {$wpdb->term_taxonomy} WHERE taxonomy = 'post_translations'" ); // phpcs:ignore WordPress.DB
+		foreach ( $groups as $group ) {
+			$map = $this->unserialize_map( $group );
+			if ( empty( $map[ $default ] ) ) {
+				continue;
+			}
+			$source = (int) $map[ $default ];
+			$copies = array();
+			foreach ( $map as $slug => $pid ) {
+				$lang = $this->map_lang( (string) $slug );
+				if ( $slug === $default || (int) $pid <= 0 || (int) $pid === $source
+					|| ! Languages::exists( $lang ) || $lang === $our_default ) {
+					continue;
+				}
+				$copies[ $lang ] = (int) $pid;
+			}
+			if ( ! empty( $copies ) ) {
+				$out[] = array(
+					'source' => $source,
+					'copies' => $copies,
+				);
+			}
+		}
+		return $out;
 	}
 }

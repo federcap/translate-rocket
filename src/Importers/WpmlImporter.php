@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *     when both posts share the same structure (best effort; unmatched pairs are
  *     simply never used, so they're harmless).
  */
-class WpmlImporter implements ImporterInterface {
+class WpmlImporter implements ProvidesCopies {
 
 	public function id(): string {
 		return 'wpml';
@@ -260,5 +260,58 @@ class WpmlImporter implements ImporterInterface {
 			}
 		}
 		return $count;
+	}
+
+	/**
+	 * The same `trid` groups the content import walks: the post with no source
+	 * language is the original, the others are its copies.
+	 *
+	 * @return array<int,array{source:int,copies:array<string,int>}>
+	 */
+	public function copy_groups(): array {
+		global $wpdb;
+		$tr = $wpdb->prefix . 'icl_translations';
+		if ( '' === $this->default_lang() || ! $this->table_exists( $tr ) ) {
+			return array();
+		}
+		$our_default = Plugin::instance()->router()->default_language();
+
+		$rows = $wpdb->get_results(
+			"SELECT trid, element_type, element_id, language_code, source_language_code FROM `{$tr}`
+			 WHERE element_type LIKE 'post\\_%'"
+		); // phpcs:ignore WordPress.DB
+
+		$groups = array();
+		foreach ( $rows as $row ) {
+			$trid = (int) $row->trid;
+			$src  = $row->source_language_code;
+			if ( null === $src || '' === (string) $src ) {
+				$groups[ $trid ]['source'] = (int) $row->element_id;
+			} else {
+				$groups[ $trid ]['trans'][ (string) $row->language_code ] = (int) $row->element_id;
+			}
+		}
+
+		$out = array();
+		foreach ( $groups as $group ) {
+			if ( empty( $group['source'] ) || empty( $group['trans'] ) ) {
+				continue;
+			}
+			$copies = array();
+			foreach ( $group['trans'] as $code => $pid ) {
+				$lang = $this->map_lang( (string) $code );
+				if ( $pid <= 0 || $pid === $group['source'] || ! Languages::exists( $lang ) || $lang === $our_default ) {
+					continue;
+				}
+				$copies[ $lang ] = $pid;
+			}
+			if ( ! empty( $copies ) ) {
+				$out[] = array(
+					'source' => (int) $group['source'],
+					'copies' => $copies,
+				);
+			}
+		}
+		return $out;
 	}
 }

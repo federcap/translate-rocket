@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Reads Bogo's one-post-per-locale layout.
  */
-class BogoImporter implements ImporterInterface {
+class BogoImporter implements ProvidesCopies {
 
 	private const BLOCCO = 200;
 	// Solo per il conteggio, che e' la parte cara. Cinque minuti: abbastanza
@@ -146,5 +146,52 @@ class BogoImporter implements ImporterInterface {
 		}
 
 		return $totale;
+	}
+
+	/**
+	 * Gli stessi gruppi di cammina(): l'originale e' il membro nella nostra lingua
+	 * di partenza, gli altri sono le sue copie.
+	 *
+	 * @return array<int,array{source:int,copies:array<string,int>}>
+	 */
+	public function copy_groups(): array {
+		$nostra_partenza = (string) ( Settings::get()['source_language'] ?? 'en' );
+
+		$gruppi = array();
+		foreach ( $this->membri() as $r ) {
+			$gruppi[ (string) $r->gruppo ][] = $r;
+		}
+
+		$fuori = array();
+		foreach ( $gruppi as $membri ) {
+			if ( count( $membri ) < 2 ) {
+				continue;
+			}
+			$origine = 0;
+			foreach ( $membri as $m ) {
+				if ( Comune::lingua( (string) $m->locale ) === $nostra_partenza ) {
+					$origine = (int) $m->post;
+					break;
+				}
+			}
+			if ( $origine <= 0 ) {
+				continue;
+			}
+			$copie = array();
+			foreach ( $membri as $m ) {
+				$lingua = Comune::lingua( (string) $m->locale );
+				if ( $lingua === $nostra_partenza || (int) $m->post === $origine || ! Languages::exists( $lingua ) ) {
+					continue;
+				}
+				$copie[ $lingua ] = (int) $m->post;
+			}
+			if ( ! empty( $copie ) ) {
+				$fuori[] = array(
+					'source' => $origine,
+					'copies' => $copie,
+				);
+			}
+		}
+		return $fuori;
 	}
 }

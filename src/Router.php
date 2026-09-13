@@ -53,6 +53,7 @@ class Router {
 			add_action( 'wp_head', array( $this, 'og_locale_tags' ), 6 );
 			add_filter( 'page_link', array( $this, 'filter_page_link' ), 20, 2 );
 			add_filter( 'post_link', array( $this, 'filter_post_link' ), 20, 2 );
+			add_filter( 'post_type_link', array( $this, 'filter_post_link' ), 20, 2 );
 			add_filter( 'term_link', array( $this, 'filter_term_link' ), 20, 3 );
 			add_filter( 'request', array( $this, 'resolve_request' ) );
 			add_filter( 'redirect_canonical', array( $this, 'filter_canonical' ) );
@@ -222,17 +223,23 @@ class Router {
 	/**
 	 * Build the URL of the current page in a given language.
 	 */
-	public function url_for_language( string $lang ): string {
+	public function url_for_language( string $lang, bool $with_query = true ): string {
 		$lang   = strtolower( $lang );
 		$base   = rtrim( (string) get_option( 'home' ), '/' );
 		$prefix = $this->is_default( $lang ) ? '' : '/' . $lang;
 		$path   = '' === $this->clean_path ? '/' : $this->clean_path;
+		// On a page reached through a translated slug (/it/albergo-aurora/) the request path
+		// carries THAT language's slug: every other language needs its own, or hreflang and the
+		// switcher point at addresses that don't exist (/albergo-aurora/, /es/albergo-aurora/).
+		$path = $this->maybe_translate_post_path( $path, $lang );
 		// On a term archive, use that language's translated term slug so the switcher,
 		// hreflang and canonical all agree on the same URL.
 		$path = $this->maybe_translate_term_path( $path, $lang );
 
 		$url = $base . $prefix . $path;
-		if ( '' !== $this->query ) {
+		// hreflang must name the canonical address of each version: a query string from
+		// this request (?utm_source=…) does not belong there. The switcher keeps it.
+		if ( $with_query && '' !== $this->query ) {
 			$url .= '?' . $this->query;
 		}
 		return $url;
@@ -416,6 +423,11 @@ class Router {
 		if ( \TranslateRocket\Frontend\Preview::hidden() ) {
 			return;
 		}
+		// A page that doesn't exist has no versions in other languages: alternates on a 404
+		// point search engines at more 404s.
+		if ( function_exists( 'is_404' ) && is_404() ) {
+			return;
+		}
 		// Solo le lingue pubblicate: una lingua ancora in lavorazione non va
 		// annunciata ai motori di ricerca, se no la indicizzano mezza tradotta.
 		$langs = $this->public_languages();
@@ -435,12 +447,12 @@ class Router {
 			$out .= sprintf(
 				'<link rel="alternate" hreflang="%s" href="%s" />' . "\n",
 				esc_attr( self::hreflang_code( $code ) ),
-				esc_url( $this->url_for_language( $code ) )
+				esc_url( $this->url_for_language( $code, false ) )
 			);
 		}
 		$out .= sprintf(
 			'<link rel="alternate" hreflang="x-default" href="%s" />' . "\n",
-			esc_url( $this->url_for_language( $this->default_language() ) )
+			esc_url( $this->url_for_language( $this->default_language(), false ) )
 		);
 
 		echo wp_kses( $out , \TranslateRocket\Kses::head_rules() );
@@ -567,6 +579,47 @@ class Router {
 	}
 
 	/**
+	 * On a single post or page, rebuild the post's own slug for the target language: the
+	 * translated slug for a secondary language that has one, the real slug otherwise. The
+	 * request path can hold either the real slug or the current language's translated one,
+	 * so whichever is there is replaced — parents and /page/2/ stay as they are.
+	 */
+	private function maybe_translate_post_path( string $path, string $lang ): string {
+		if ( ! function_exists( 'is_singular' ) || ! is_singular() ) {
+			return $path;
+		}
+		$post_id = (int) get_queried_object_id();
+		// An independent copy is served in place of its source: the slugs belong to the source.
+		if ( $post_id > 0 && Copies::is_copy( $post_id ) ) {
+			$post_id = Copies::source_of( $post_id );
+		}
+		$post = $post_id > 0 ? get_post( $post_id ) : null;
+		if ( ! ( $post instanceof \WP_Post ) || '' === (string) $post->post_name ) {
+			return $path;
+		}
+		$real   = (string) $post->post_name;
+		$target = $real;
+		if ( ! $this->is_default( $lang ) ) {
+			$t = Slugs::get( $post_id, $lang );
+			if ( '' !== $t ) {
+				$target = $t;
+			}
+		}
+		$from = array();
+		if ( ! $this->is_default( $this->current_language() ) ) {
+			$from[] = Slugs::get( $post_id, $this->current_language() );
+		}
+		$from[] = $real;
+		foreach ( array_unique( array_filter( $from, 'strlen' ) ) as $slug ) {
+			$swapped = $this->replace_last_segment( $path, $slug, $target );
+			if ( $swapped !== $path || $slug === $target ) {
+				return $swapped;
+			}
+		}
+		return $path;
+	}
+
+	/**
 	 * On a term archive, swap the queried term's slug for its translation in a path, so
 	 * url_for_language() (hreflang, switcher) matches the translated links.
 	 */
@@ -678,6 +731,14 @@ class Router {
 			$query_vars['name']      = $post->post_name;
 			$query_vars['post_type'] = $post->post_type;
 			unset( $query_vars['pagename'] );
+			// Custom post types (WooCommerce products, portfolios, events…) also carry their
+			// own query var — /it/product/colazione/ parses to product=colazione as well as
+			// name=colazione. Left holding the translated slug, it still sent the visitor to
+			// a 404.
+			$type = get_post_type_object( $post->post_type );
+			if ( $type && is_string( $type->query_var ) && '' !== $type->query_var && ! empty( $query_vars[ $type->query_var ] ) ) {
+				$query_vars[ $type->query_var ] = is_post_type_hierarchical( $post->post_type ) ? get_page_uri( $id ) : $post->post_name;
+			}
 		}
 		return $query_vars;
 	}
