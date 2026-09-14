@@ -36,6 +36,12 @@ class Preview {
 	 * capability (filterable, so e.g. editors can be allowed to review too).
 	 */
 	public static function hidden(): bool {
+		// Side by side with another translation plugin: nothing of TranslateRocket
+		// reaches the public site — no switcher, hreflang, sitemap or redirect — for
+		// anyone. The administrator previews through ?trr-preview=xx instead.
+		if ( \TranslateRocket\Coexistence::on() ) {
+			return true;
+		}
 		$settings = Settings::get();
 		if ( 'admins' !== ( $settings['serve_mode'] ?? 'everyone' ) ) {
 			return false;
@@ -84,7 +90,8 @@ class Preview {
 	 * Hook into the front end.
 	 */
 	public function boot(): void {
-		if ( is_admin() ) {
+		// Side by side the language URLs are the other plugin's: nothing to bounce.
+		if ( is_admin() || \TranslateRocket\Coexistence::on() ) {
 			return;
 		}
 		// Priority -1: before Visibility (0), the Engine and its page cache (1)

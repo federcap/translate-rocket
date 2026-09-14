@@ -70,13 +70,16 @@ class Redirect {
 		}
 
 		$router = Plugin::instance()->router();
-		$active = $router->active_languages();
-		if ( count( $active ) < 2 ) {
+		// Only the languages visitors may see: a language kept offline while it is
+		// translated would bounce them straight back to the default language.
+		// Logged-in users never get here, so this is always the visitors' list.
+		$langs = $router->public_languages();
+		if ( count( $langs ) < 2 ) {
 			return;
 		}
 
 		$urls = array();
-		foreach ( $active as $code ) {
+		foreach ( $langs as $code ) {
 			$urls[ $code ] = $router->url_for_language( $code );
 		}
 

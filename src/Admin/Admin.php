@@ -69,6 +69,11 @@ class Admin {
 		if ( ! current_user_can( 'manage_options' ) || ! \TranslateRocket\Frontend\Preview::enabled() ) {
 			return;
 		}
+		// Just after the other translation plugin was deactivated, Coexistence shows
+		// the "go online" step instead: one banner, not two saying the same thing.
+		if ( get_option( \TranslateRocket\Coexistence::PENDING ) ) {
+			return;
+		}
 		printf(
 			'<div class="notice notice-warning"><p><strong>%s</strong> %s <a href="%s">%s</a></p></div>',
 			esc_html__( 'TranslateRocket preview mode is on.', 'translate-rocket' ),
@@ -3584,6 +3589,7 @@ JS;
 			}
 		}
 		$source  = (string) ( $settings['source_language'] ?? 'en' );
+		$prima   = (array) ( $settings['target_languages'] ?? array() );
 		$targets = array();
 		if ( isset( $_POST['target_languages'] ) && is_array( $_POST['target_languages'] ) ) {
 			foreach ( wp_unslash( $_POST['target_languages'] ) as $t ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
@@ -3594,6 +3600,24 @@ JS;
 			}
 		}
 		$settings['target_languages'] = array_values( array_unique( $targets ) );
+
+		// Come nella pagina Lingue (assets/js/lang-online.js): una lingua aggiunta
+		// adesso parte OFFLINE, altrimenti appena salvato una lingua ancora tutta da
+		// tradurre e' gia' nel selettore, nella sitemap e negli hreflang. Una lingua
+		// che c'era gia' tiene lo stato che aveva; una lingua tolta smette di essere
+		// offline.
+		$offline = array();
+		foreach ( (array) ( $settings['offline_languages'] ?? array() ) as $code ) {
+			if ( in_array( (string) $code, $settings['target_languages'], true ) ) {
+				$offline[] = (string) $code;
+			}
+		}
+		foreach ( $settings['target_languages'] as $code ) {
+			if ( ! in_array( $code, $prima, true ) ) {
+				$offline[] = $code;
+			}
+		}
+		$settings['offline_languages'] = array_values( array_unique( $offline ) );
 
 		if ( 'ai' === ( isset( $_POST['trr_method'] ) ? sanitize_key( $_POST['trr_method'] ) : 'manual' ) ) {
 			$pid = isset( $_POST['wiz_provider'] ) ? sanitize_key( $_POST['wiz_provider'] ) : '';
@@ -3645,6 +3669,9 @@ JS;
 					<div class="trr-wiz-check">✓</div>
 					<h1><?php esc_html_e( 'You’re all set!', 'translate-rocket' ); ?></h1>
 					<p class="trr-wiz-lead"><?php esc_html_e( 'Your languages are configured. Now translate your first page — it takes a minute.', 'translate-rocket' ); ?></p>
+					<?php if ( ! empty( $router->offline_languages() ) ) : ?>
+						<p><?php esc_html_e( 'New languages start offline: only you see them while you translate. When a language is ready, switch it online on the Languages page.', 'translate-rocket' ); ?></p>
+					<?php endif; ?>
 					<div class="trr-wiz-actions">
 						<a class="button button-primary button-hero" href="<?php echo esc_url( $edit_url ); ?>"><?php esc_html_e( 'Translate my homepage now', 'translate-rocket' ); ?></a>
 						<a class="button button-hero" href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-strings' ) ); ?>"><?php esc_html_e( 'Open the translations list', 'translate-rocket' ); ?></a>

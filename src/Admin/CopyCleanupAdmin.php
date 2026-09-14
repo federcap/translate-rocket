@@ -65,6 +65,10 @@ class CopyCleanupAdmin {
 		if ( $n <= 0 ) {
 			return;
 		}
+		if ( \TranslateRocket\Coexistence::importer_active( $importer->id() ) ) {
+			self::still_active( $importer->label() );
+			return;
+		}
 		echo '<p>';
 		printf(
 			/* translators: 1: source plugin name, 2: number of pages. */
@@ -75,6 +79,21 @@ class CopyCleanupAdmin {
 		echo '</p><p><a class="button" href="' . esc_url( self::review_url( $importer->id() ) ) . '">';
 		esc_html_e( 'Review the separate pages', 'translate-rocket' );
 		echo '</a></p>';
+	}
+
+	/**
+	 * Why the separate pages cannot be tidied up yet.
+	 *
+	 * @param string $label Source plugin name.
+	 */
+	private static function still_active( string $label ): void {
+		echo '<p>';
+		printf(
+			/* translators: %1$s: source plugin name, e.g. "Polylang". */
+			esc_html__( '%1$s is still active, so its separate pages are still the ones your visitors see in the other languages. Deactivate %1$s first, then come back here to tidy them up.', 'translate-rocket' ),
+			esc_html( $label )
+		);
+		echo '</p>';
 	}
 
 	/**
@@ -96,6 +115,15 @@ class CopyCleanupAdmin {
 		</h1>
 
 		<?php self::done_notice(); ?>
+
+		<?php
+		if ( \TranslateRocket\Coexistence::importer_active( $importer->id() ) ) {
+			echo '<div class="trrocket-card">';
+			self::still_active( $label );
+			echo '</div>';
+			return;
+		}
+		?>
 
 		<div class="trrocket-card">
 			<p>
@@ -299,6 +327,10 @@ class CopyCleanupAdmin {
 		$id       = isset( $_POST['importer'] ) ? sanitize_key( wp_unslash( $_POST['importer'] ) ) : '';
 		$importer = Importers::get( $id );
 		if ( ! ( $importer instanceof ProvidesCopies ) || ! $importer->is_available() ) {
+			return;
+		}
+		// While that plugin runs, its separate pages are still the ones visitors see.
+		if ( \TranslateRocket\Coexistence::importer_active( $id ) ) {
 			return;
 		}
 

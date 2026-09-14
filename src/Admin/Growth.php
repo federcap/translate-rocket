@@ -119,29 +119,6 @@ class Growth {
 	}
 
 	/**
-	 * Name of another active translation plugin, or '' if none. Detected by each
-	 * plugin's own constant/class so it works regardless of the folder name.
-	 */
-	private function conflicting_plugin(): string {
-		if ( class_exists( 'TRP_Translate_Press' ) ) {
-			return 'TranslatePress';
-		}
-		if ( defined( 'POLYLANG_VERSION' ) || defined( 'POLYLANG_BASENAME' ) ) {
-			return 'Polylang';
-		}
-		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-			return 'WPML';
-		}
-		if ( defined( 'WEGLOT_VERSION' ) ) {
-			return 'Weglot';
-		}
-		if ( defined( 'GTRANSLATE_VERSION' ) ) {
-			return 'GTranslate';
-		}
-		return '';
-	}
-
-	/**
 	 * How many strings this site has actually translated.
 	 *
 	 * Asking for a review on day 14 regardless of use means asking people who
@@ -216,16 +193,9 @@ class Growth {
 			return;
 		}
 
-		// Two translation plugins fighting over the same output cause conflicts.
-		$conflict = $this->conflicting_plugin();
-		if ( '' !== $conflict ) {
-			echo '<div class="notice notice-warning"><p>';
-			printf(
-				/* translators: %s: the other translation plugin's name. */
-				esc_html__( '⚠️ TranslateRocket found another translation plugin active: %s. Running two at once will conflict — please keep only one enabled.', 'translate-rocket' ),
-				'<strong>' . esc_html( $conflict ) . '</strong>'
-			);
-			echo '</p></div>';
+		// Side by side with another translation plugin, or just after it was
+		// deactivated: Coexistence has the one message that matters right now.
+		if ( \TranslateRocket\Coexistence::on() || get_option( \TranslateRocket\Coexistence::PENDING ) ) {
 			return;
 		}
 

@@ -2686,3 +2686,59 @@ msgid "%d page was left alone because it changed in the meantime — check it be
 msgid_plural "%d pages were left alone because they changed in the meantime — check them below."
 msgstr[0] "%d pagina è stata lasciata com’era perché nel frattempo è cambiata — controllala qui sotto."
 msgstr[1] "%d pagine sono state lasciate com’erano perché nel frattempo sono cambiate — controllale qui sotto."
+
+#: src/Coexistence.php
+msgid "%1$s and %2$s"
+msgstr "%1$s e %2$s"
+
+#: src/Coexistence.php
+msgid "TranslateRocket is online."
+msgstr "TranslateRocket è online."
+
+#: src/Coexistence.php
+msgid "Visitors now see the translations, the language switcher and the translated addresses."
+msgstr "Ora i visitatori vedono le traduzioni, il selettore di lingua e gli indirizzi tradotti."
+
+#: src/Coexistence.php
+msgid "TranslateRocket is running side by side — your site is not affected."
+msgstr "TranslateRocket è in modalità affiancata — il tuo sito non viene toccato."
+
+#: src/Coexistence.php
+msgid "%s is active, so your visitors keep seeing the site exactly as before: TranslateRocket does not change addresses, languages, menus or the language switcher while it is on."
+msgstr "%s è attivo, quindi i tuoi visitatori continuano a vedere il sito esattamente come prima: finché resta acceso, TranslateRocket non cambia indirizzi, lingue, menu o selettore di lingua."
+
+#: src/Coexistence.php
+msgid "Meanwhile you can import its translations, complete them and preview any page. When you deactivate it, you can put TranslateRocket online with one click."
+msgstr "Intanto puoi importare le sue traduzioni, completarle e vedere l’anteprima di qualsiasi pagina. Quando lo disattivi, metti online TranslateRocket con un clic."
+
+#: src/Coexistence.php
+msgid "Preview the translated site"
+msgstr "Anteprima del sito tradotto"
+
+#: src/Coexistence.php
+msgid "Choose your languages"
+msgstr "Scegli le tue lingue"
+
+#: src/Coexistence.php
+msgid "%s is deactivated. TranslateRocket has taken over the translated pages — visible only to administrators for now."
+msgstr "%s è disattivato. TranslateRocket ha preso in carico le pagine tradotte — per ora le vedono solo gli amministratori."
+
+#: src/Coexistence.php
+msgid "Visitors still see the original language. Look at a few pages on their real addresses, then put the translations online for everyone."
+msgstr "I visitatori vedono ancora la lingua originale. Guarda qualche pagina sui suoi indirizzi veri, poi metti le traduzioni online per tutti."
+
+#: src/Coexistence.php
+msgid "Go online"
+msgstr "Vai online"
+
+#: src/Coexistence.php
+msgid "Check the translated pages"
+msgstr "Controlla le pagine tradotte"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%1$s is still active, so its separate pages are still the ones your visitors see in the other languages. Deactivate %1$s first, then come back here to tidy them up."
+msgstr "%1$s è ancora attivo, quindi le sue pagine separate sono ancora quelle che i visitatori vedono nelle altre lingue. Prima disattiva %1$s, poi torna qui per fare ordine."
+
+#: src/Admin/Admin.php
+msgid "New languages start offline: only you see them while you translate. When a language is ready, switch it online on the Languages page."
+msgstr "Le lingue nuove partono offline: le vedi solo tu mentre traduci. Quando una lingua è pronta, mettila online nella pagina Lingue."

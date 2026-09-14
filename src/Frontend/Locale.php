@@ -71,6 +71,12 @@ class Locale {
 			return $locale;
 		}
 		$router = Plugin::instance()->router();
+		// No language to translate into yet (a fresh install): nothing is translated,
+		// so the site keeps its own locale. Before this, activating the plugin alone
+		// switched every public page to the default source language's locale.
+		if ( empty( $router->secondary_languages() ) ) {
+			return $locale;
+		}
 		$target = Languages::locale( $router->current_language() );
 		return '' !== $target ? $target : $locale;
 	}

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -153,6 +153,15 @@ Yes. Open a page in the visual editor, click "Translate page" and use "Copy with
 
 == Changelog ==
 
+= 1.4.0 =
+* New: side-by-side mode. TranslateRocket can now be activated next to WPML, Polylang, TranslatePress, Weglot, GTranslate, qTranslate-XT, WPGlobus, WP Multilang, Bogo or Multilanguage without changing anything on your public site. While the other plugin is active, visitors see the site exactly as before — the same addresses, language switcher, sitemap and language. Meanwhile you can import its translations, complete them and preview any page as an administrator by adding ?trr-preview= and a language code to the address (for example ?trr-preview=it).
+* New: going online is your decision. When the other translation plugin is deactivated, the translations are shown to administrators only, on their real addresses, until you have checked them and click "Go online".
+* Change: "Review the separate pages", which tidies up the copies Polylang, WPML or Bogo left behind, stays locked while that plugin is still active, so no page is taken off a site that is still using it.
+* Change: the languages you choose in the setup wizard now start offline, as they already did on the Languages page: only you see them while you translate, and you put each one online when it is ready.
+* Fix: activating the plugin no longer switches the site's interface language (for example to Italian) before you have chosen any language to translate into.
+* Fix: on a new installation the source language is now the language of the site, instead of Italian.
+* Fix: the first-visit redirect to the visitor's browser language no longer sends visitors to a language that is still offline.
+
 = 1.3.0 =
 * New: tidy up the pages Polylang, WPML or Bogo left behind. Those plugins keep a separate page for every language; once their translations are imported, TranslateRocket translates the original page itself, so each copy is a second place to edit the same page. Under the importer, "Review the separate pages" lists every copy with what was found: copies whose text is all in TranslateRocket can go to the Trash, copies with text laid out differently can be kept as independent copies, and nothing is offered for the Trash before the import or while its language is not active. Nothing is deleted — pages go to the Trash — and the old address of each copy sends visitors and search engines to the translated page with a 301.
 * Fix: on a page opened through its translated address (for example /it/chi-siamo/), the hreflang links and the language switcher reused that Italian slug for every language, so they pointed at addresses that do not exist (/chi-siamo/, /es/chi-siamo/). Each language now gets its own address — the original slug, or its own translated one — exactly as the sitemap already did.
@@ -214,6 +223,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+Side-by-side mode: activate TranslateRocket next to WPML, Polylang, TranslatePress or another translation plugin without changing your public site, preview the translations as an administrator and go online when you are ready.
 
 = 1.2.0 =
 Content and menu items for some languages only, and whole-page translation in ChatGPT or Gemini with a prompt made for your site. Existing pages and menus are unchanged until you use the new options.

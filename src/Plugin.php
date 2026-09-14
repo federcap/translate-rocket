@@ -60,11 +60,19 @@ final class Plugin {
 		// automatic loading WordPress does for wordpress.org plugins only reads
 		// the language-pack folder, never the catalogues we ship ourselves.
 
+		// Another translation plugin active (WPML, Polylang, TranslatePress…)? Then
+		// TranslateRocket runs side by side: the public site stays exactly as that
+		// plugin serves it until it is deactivated. See Coexistence.
+		$coexist = Coexistence::on();
+		Coexistence::boot();
+
 		// Language routing runs on both front end and admin (admin uses helpers).
+		// Side by side it reads no language from the address (see Router::boot).
 		$this->router = new Router();
 		$this->router->boot();
 
-		// Language switcher shortcode [translaterocket_switcher].
+		// Language switcher shortcode [translaterocket_switcher]. Side by side it
+		// renders nothing (Preview::hidden), but the shortcode stays registered.
 		( new \TranslateRocket\Frontend\Switcher() )->boot();
 		// Language switcher Gutenberg block + block-based widget.
 		( new \TranslateRocket\Frontend\SwitcherBlock() )->register();
@@ -72,18 +80,23 @@ final class Plugin {
 		// Front-end visual editor (also registers its AJAX endpoints on admin).
 		( new \TranslateRocket\Frontend\VisualEditor() )->boot();
 
-		// Dynamic (JS-injected) content: cookie banners, popups, AJAX-loaded markup.
-		// Registers its AJAX endpoint always; enqueues the observer only on the front end.
-		( new \TranslateRocket\Frontend\DynamicContent() )->boot();
+		if ( ! $coexist ) {
+			// Dynamic (JS-injected) content: cookie banners, popups, AJAX-loaded markup.
+			// Registers its AJAX endpoint always; enqueues the observer only on the front end.
+			( new \TranslateRocket\Frontend\DynamicContent() )->boot();
 
-		// Optional "Powered by TranslateRocket" badge (shortcode + opt-in footer).
-		( new \TranslateRocket\Frontend\PoweredBy() )->boot();
+			// Optional "Powered by TranslateRocket" badge (shortcode + opt-in footer).
+			( new \TranslateRocket\Frontend\PoweredBy() )->boot();
+		}
 
 		// Content shown only in some languages: the [translaterocket_language]
 		// shortcode, and the trrocket-only-xx / trrocket-hide-xx classes on blocks.
 		( new \TranslateRocket\Frontend\LanguageOnly() )->boot();
 		// Menu items limited to some languages (checkboxes in Appearance > Menus).
-		( new \TranslateRocket\MenuLanguages() )->register();
+		// Side by side the menus are the other plugin's: only the settings screen.
+		if ( ! $coexist || is_admin() ) {
+			( new \TranslateRocket\MenuLanguages() )->register();
+		}
 
 		// Which pages changed after the engine last read them. Booted here and
 		// not in the admin branch on purpose: the block editor saves over the
@@ -106,7 +119,7 @@ final class Plugin {
 			// Front-end-originated AJAX (e.g. WooCommerce cart fragments) runs through
 			// admin-ajax; switch its locale and translate Woo fragments so they come
 			// back in the visitor's language.
-			if ( Router::is_frontend_ajax() ) {
+			if ( ! $coexist && Router::is_frontend_ajax() ) {
 				( new \TranslateRocket\Frontend\Locale() )->boot();
 				( new \TranslateRocket\Frontend\WooCommerce() )->boot();
 			}
@@ -119,6 +132,10 @@ final class Plugin {
 			( new \TranslateRocket\Admin\EditorButton() )->register();
 			( new \TranslateRocket\Admin\Growth() )->register();
 			( new \TranslateRocket\Admin\BrowserEngine() )->register();
+		} elseif ( $coexist ) {
+			// Side by side: nothing reaches visitors. Only the administrator's
+			// string collection while browsing, and ?trr-preview=xx pages.
+			( new \TranslateRocket\Frontend\Engine() )->boot();
 		} else {
 			// Preview mode: if translations are for administrators only, bounce
 			// other visitors off language URLs before anything else runs.

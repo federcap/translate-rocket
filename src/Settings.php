@@ -20,13 +20,31 @@ class Settings {
 	const OPTION = 'trrocket_settings';
 
 	/**
+	 * The site's own language as a TranslateRocket code, for a fresh install.
+	 *
+	 * Read straight from the WPLANG option: get_locale() goes through the locale
+	 * filter, and Languages reads these very settings — either would loop back here.
+	 * Before this the default was Italian whatever the site spoke.
+	 */
+	private static function site_language(): string {
+		$wplang = strtolower( str_replace( '_', '-', (string) get_option( 'WPLANG', '' ) ) );
+		if ( '' === $wplang ) {
+			return 'en';
+		}
+		if ( 'pt-br' === $wplang ) {
+			return 'pt-br';
+		}
+		return (string) strtok( $wplang, '-' );
+	}
+
+	/**
 	 * Default settings shape.
 	 *
 	 * @return array<string, mixed>
 	 */
 	public static function defaults(): array {
 		return array(
-			'source_language'           => 'it',
+			'source_language'           => self::site_language(),
 			'target_languages'         => array(),
 			// Languages added but not published yet: hidden from the switcher,
 			// the sitemap and hreflang, and their URLs send visitors to the

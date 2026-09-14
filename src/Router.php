@@ -45,6 +45,13 @@ class Router {
 	 * Hook into WordPress.
 	 */
 	public function boot(): void {
+		// Side by side with another translation plugin: that plugin owns the
+		// language addresses (/it/…). Nothing is read from the path and nothing is
+		// added to links; an administrator previews a language with ?trr-preview=xx.
+		if ( Coexistence::on() ) {
+			$this->detect_preview();
+			return;
+		}
 		$this->detect_and_strip();
 		add_filter( 'home_url', array( $this, 'filter_home_url' ), 10, 2 );
 
@@ -225,6 +232,15 @@ class Router {
 	 */
 	public function url_for_language( string $lang, bool $with_query = true ): string {
 		$lang   = strtolower( $lang );
+		if ( Coexistence::on() ) {
+			// Side by side, a language is a preview of the same address.
+			$url = rtrim( (string) get_option( 'home' ), '/' ) . ( '' === $this->clean_path ? '/' : $this->clean_path );
+			if ( $with_query && '' !== $this->query ) {
+				$url .= '?' . $this->query;
+			}
+			$url = remove_query_arg( Coexistence::PARAM, $url );
+			return $this->is_default( $lang ) ? $url : add_query_arg( Coexistence::PARAM, $lang, $url );
+		}
 		$base   = rtrim( (string) get_option( 'home' ), '/' );
 		$prefix = $this->is_default( $lang ) ? '' : '/' . $lang;
 		$path   = '' === $this->clean_path ? '/' : $this->clean_path;
@@ -253,6 +269,34 @@ class Router {
 		$base   = rtrim( (string) get_option( 'home' ), '/' );
 		$prefix = $this->is_default( $lang ) ? '' : '/' . $lang;
 		return $base . $prefix . '/';
+	}
+
+	/**
+	 * Side by side: the language comes only from ?trr-preview=xx, for an
+	 * administrator. REQUEST_URI is left exactly as it is — the other plugin routes
+	 * the request.
+	 */
+	private function detect_preview(): void {
+		$this->current = $this->default_language();
+
+		$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/'; // phpcs:ignore
+		$request_path = wp_parse_url( $request_uri, PHP_URL_PATH );
+		$request_path = is_string( $request_path ) ? $request_path : '/';
+		$query        = wp_parse_url( $request_uri, PHP_URL_QUERY );
+		$this->query  = is_string( $query ) ? $query : '';
+
+		$base_path = wp_parse_url( get_option( 'home' ), PHP_URL_PATH );
+		$base_path = is_string( $base_path ) ? rtrim( $base_path, '/' ) : '';
+		$relative  = $request_path;
+		if ( '' !== $base_path && 0 === strpos( $request_path, $base_path ) ) {
+			$relative = substr( $request_path, strlen( $base_path ) );
+		}
+		$this->clean_path = '/' . ltrim( (string) $relative, '/' );
+
+		$lang = Coexistence::preview_language();
+		if ( '' !== $lang ) {
+			$this->current = $lang;
+		}
 	}
 
 	/**
