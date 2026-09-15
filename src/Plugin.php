@@ -123,6 +123,12 @@ final class Plugin {
 				( new \TranslateRocket\Frontend\Locale() )->boot();
 				( new \TranslateRocket\Frontend\WooCommerce() )->boot();
 			}
+			// Forminator submits and loads forms through admin-ajax: its messages and
+			// e-mail notifications follow the language of the page the form is on
+			// (read from a hidden field, so a missing referer doesn't matter).
+			if ( ! $coexist && wp_doing_ajax() ) {
+				( new \TranslateRocket\Frontend\Forminator() )->boot();
+			}
 			$this->admin = new Admin();
 			$this->admin->register();
 			( new \TranslateRocket\Admin\MetaBox() )->register();
@@ -156,6 +162,8 @@ final class Plugin {
 			( new \TranslateRocket\Frontend\WooCommerce() )->boot();
 			// Form plugins: translate JS-inserted validation/notice messages.
 			( new \TranslateRocket\Frontend\Forms() )->boot();
+			// Forminator: hidden language field, server messages, e-mail notifications.
+			( new \TranslateRocket\Frontend\Forminator() )->boot();
 			// Multilingual XML sitemap (hreflang alternates for every language).
 			( new \TranslateRocket\Frontend\Sitemap() )->boot();
 			// Optional first-visit redirect to the visitor's browser language.

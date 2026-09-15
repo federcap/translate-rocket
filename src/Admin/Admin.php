@@ -638,6 +638,10 @@ class Admin {
 		$settings['show_poweredby']      = ! empty( $_POST['show_poweredby'] );
 
 		Settings::update( $settings );
+		// The visibility just chosen here supersedes a pending "Go online" step.
+		if ( get_option( \TranslateRocket\Coexistence::PENDING ) ) {
+			delete_option( \TranslateRocket\Coexistence::PENDING );
+		}
 		// Any settings change can alter the output — drop any cached pages.
 		\TranslateRocket\Cache::flush();
 
@@ -3660,9 +3664,15 @@ JS;
 					break;
 				}
 			}
-			$edit_url = ( '' !== $first )
-				? add_query_arg( \TranslateRocket\Frontend\VisualEditor::PARAM, '1', $router->home_for_language( $first ) )
-				: home_url( '/' );
+			if ( '' === $first ) {
+				$edit_url = home_url( '/' );
+			} elseif ( \TranslateRocket\Coexistence::on() ) {
+				// Side by side: /xx/ belongs to the other plugin — preview on the source address.
+				$edit_url = add_query_arg( \TranslateRocket\Coexistence::PARAM, $first, home_url( '/' ) );
+				$edit_url = add_query_arg( \TranslateRocket\Frontend\VisualEditor::PARAM, '1', $edit_url );
+			} else {
+				$edit_url = add_query_arg( \TranslateRocket\Frontend\VisualEditor::PARAM, '1', $router->home_for_language( $first ) );
+			}
 			?>
 			<div class="wrap trrocket-wrap trrocket-wizard">
 				<div class="trr-wiz-card trr-wiz-done">

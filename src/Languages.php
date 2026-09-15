@@ -54,7 +54,7 @@ class Languages {
 	 *
 	 * @return array<string, array{0:string,1:string,2:string}>
 	 */
-	private static function builtin(): array {
+	public static function builtin(): array {
 		return array(
 			'en'    => array( 'English', 'English', '🇬🇧' ),
 			'it'    => array( 'Italiano', 'Italian', '🇮🇹' ),

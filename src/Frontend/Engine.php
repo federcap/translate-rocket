@@ -204,6 +204,14 @@ class Engine {
 		if ( $this->do_collect && $this->is_secondary && Locale::$active ) {
 			$this->do_collect = false;
 		}
+		// Side by side, the other plugin serves its own translated pages on its
+		// own addresses (/en/about/): their text is not the source language. Collect
+		// only where WordPress still runs in the source language.
+		if ( $this->do_collect && \TranslateRocket\Coexistence::on() && '' === \TranslateRocket\Coexistence::preview_language()
+			&& function_exists( 'determine_locale' )
+			&& determine_locale() !== \TranslateRocket\Languages::locale( $router->default_language() ) ) {
+			$this->do_collect = false;
+		}
 
 		// An independent copy is being served for this page: it's already a real,
 		// target-language post, so the engine must not translate or collect it.

@@ -2550,3 +2550,43 @@ msgstr "%1$s jest nadal aktywny, więc jego osobne strony to wciąż te, które 
 #: src/Admin/Admin.php
 msgid "New languages start offline: only you see them while you translate. When a language is ready, switch it online on the Languages page."
 msgstr "Nowe języki startują offline: widzisz je tylko Ty, dopóki tłumaczysz. Gdy język jest gotowy, włącz go online na stronie Języki."
+
+#: src/Frontend/Forminator.php
+msgid "Forms: messages and e-mails"
+msgstr "Formularze: komunikaty i e-maile"
+
+#: src/Admin/Admin.php
+msgid "%1$d of %2$d translated"
+msgstr "Przetłumaczono %1$d z %2$d"
+
+#: src/Admin/Growth.php
+msgid "Want a hand with your site? I can do it for you"
+msgstr "Potrzebujesz pomocy ze swoją witryną? Mogę to zrobić za Ciebie"
+
+#: src/Admin/Growth.php
+msgid "I wrote this plugin, and building WordPress sites is my day job — that is how it stays free, and how I make a living. A site built from scratch, a design put right, a multilingual setup done properly, custom development, reviewed translations, or a migration away from a plugin that charges you every month: tell me what you need and I will tell you honestly whether I am the right person for it."
+msgstr "To ja napisałem tę wtyczkę, a budowanie stron WordPress to moja praca – dzięki temu wtyczka pozostaje darmowa, a ja zarabiam na życie. Strona od zera, projekt do poprawienia, porządnie zrobiona wersja wielojęzyczna, programowanie na zamówienie, sprawdzone tłumaczenia albo migracja z wtyczki, która co miesiąc każe płacić: powiedz, czego potrzebujesz, a szczerze odpowiem, czy jestem właściwą osobą."
+
+#: src/Admin/Growth.php
+msgid "Ask me about your site"
+msgstr "Zapytaj mnie o swoją witrynę"
+
+#: src/Coexistence.php
+msgid "Still offline, so not visible yet: %s. Switch each one on when it is ready, on the Languages page."
+msgstr "Nadal offline, więc jeszcze niewidoczne: %s. Włącz każdy z nich online, gdy będzie gotowy, na stronie Języki."
+
+#: src/Coexistence.php
+msgid "Open the Languages page"
+msgstr "Otwórz stronę Języki"
+
+#: src/Coexistence.php
+msgid "%s is active, and TranslateRocket keeps serving your translated pages as before."
+msgstr "%s jest aktywny, a TranslateRocket nadal wyświetla Twoje przetłumaczone strony jak dotąd."
+
+#: src/Coexistence.php
+msgid "Two translation plugins on the same addresses will get in each other’s way. To try the other plugin safely, run TranslateRocket side by side: it steps back from the public site, your translations stay, and you can put it back online with one click when you deactivate the other plugin."
+msgstr "Dwie wtyczki tłumaczące pod tymi samymi adresami będą sobie przeszkadzać. Aby bezpiecznie wypróbować drugą wtyczkę, uruchom TranslateRocket równolegle: usuwa się z publicznej witryny, Twoje tłumaczenia zostają, a gdy wyłączysz drugą wtyczkę, przywrócisz go online jednym kliknięciem."
+
+#: src/Coexistence.php
+msgid "Run side by side"
+msgstr "Uruchom równolegle"

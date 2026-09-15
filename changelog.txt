@@ -4,6 +4,23 @@ The readme.txt shipped with the plugin lists recent releases only, because
 the WordPress.org plugin directory truncates a changelog past 5,000 words.
 The complete history, from the first public release, is kept here.
 
+= 1.4.1 =
+* Fix: validation and "message sent" messages of forms added with the Elementor widget, the Forminator block, a widget area or a template stayed in the source language; the message translator was loaded only when the form was a shortcode in the page content. It is now loaded whenever a Forminator, Contact Form 7, WPForms, Gravity Forms, SureForms, Formidable or Ninja Forms form actually appears on a translated page.
+* New: Forminator messages returned by the server (thank-you message, invalid form, field errors) and forms loaded with "Load form using AJAX" are shown in the visitor's language.
+* New: Forminator e-mail notifications are sent in the language of the page the form was submitted from. Their subject and body, and the form's messages, are listed under "Forms: messages and e-mails" in the translation screens. The `trrocket_forminator_translate_notification` filter keeps a notification in the source language.
+* New: PHP functions for developers, `trrocket_current_language()` and `trrocket_default_language()`.
+* Fix: side-by-side mode no longer switches itself on when another translation plugin is activated on a site that TranslateRocket was already serving: the translated addresses stay online, and a notice offers "Run side by side" instead.
+* Fix: when the other translation plugin goes away without anyone opening wp-admin (WP-CLI, a folder removed, another site of a network), the translations are still shown to administrators only until "Go online".
+* Fix: after "Go online", languages that are still offline are named in the notice, with a link to switch them on.
+* Fix: side by side, the pages served by the other plugin in its own languages are no longer collected as source text.
+* Fix: side by side, blocks and menu items limited to some languages are not hidden on the other plugin's pages.
+* Fix: on a previewed page (?trr-preview=xx) the links keep the preview; the "Translate my homepage now" button of the setup wizard opens a preview instead of the other plugin's address. Preview pages also send noindex and no-cache headers.
+* Fix: on a fresh install the source language is derived correctly for Norwegian (nb_NO, nn_NO) and Traditional Chinese (zh_TW, zh_HK) sites, and falls back to English for locales the catalogue does not have instead of a code that matches nothing.
+* Fix: the forms message translator and Forminator only use languages that are online for visitors; an offline language stays private to administrators.
+* Fix: a form message, e-mail body or AJAX-loaded form containing a stray closing tag is left untouched instead of being cut short.
+* Fix: uninstalling with "delete data" also removes the side-by-side, wizard, log and cache options.
+* Fix: three interface strings that shipped untranslated ("%1$d of %2$d translated", the "Want a hand with your site?" card).
+
 = 1.4.0 =
 * New: side-by-side mode. TranslateRocket can now be activated next to WPML, Polylang, TranslatePress, Weglot, GTranslate, qTranslate-XT, WPGlobus, WP Multilang, Bogo or Multilanguage without changing anything on your public site. While the other plugin is active, visitors see the site exactly as before — the same addresses, language switcher, sitemap and language. Meanwhile you can import its translations, complete them and preview any page as an administrator by adding ?trr-preview= and a language code to the address (for example ?trr-preview=it).
 * New: going online is your decision. When the other translation plugin is deactivated, the translations are shown to administrators only, on their real addresses, until you have checked them and click "Go online".

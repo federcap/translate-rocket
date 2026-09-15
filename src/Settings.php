@@ -31,10 +31,22 @@ class Settings {
 		if ( '' === $wplang ) {
 			return 'en';
 		}
-		if ( 'pt-br' === $wplang ) {
-			return 'pt-br';
+		// Locales whose short code is not the catalogue's, or would be the wrong variant.
+		$special = array(
+			'pt-br' => 'pt-br',
+			'nb-no' => 'no',
+			'nn-no' => 'no',
+			'zh-tw' => 'zh-tw',
+			'zh-hk' => 'zh-tw',
+		);
+		if ( isset( $special[ $wplang ] ) ) {
+			return $special[ $wplang ];
 		}
-		return (string) strtok( $wplang, '-' );
+		$code = (string) strtok( $wplang, '-' );
+		// A locale the catalogue does not have (sr_RS, ca, eu, …): English, which is
+		// at least selectable in the wizard, rather than a code nothing can match.
+		// Built-in list only: the custom languages live in these very settings.
+		return isset( Languages::builtin()[ $code ] ) ? $code : 'en';
 	}
 
 	/**

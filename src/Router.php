@@ -396,10 +396,21 @@ class Router {
 	 */
 	private function referer_language(): string {
 		$ref = isset( $_SERVER['HTTP_REFERER'] ) ? (string) wp_unslash( $_SERVER['HTTP_REFERER'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		if ( '' === $ref ) {
+		return $this->language_of_url( $ref );
+	}
+
+	/**
+	 * The secondary language a front-end URL belongs to (its /xx/ prefix), or the
+	 * default language. Used where a request carries the address of the page it
+	 * came from — a referer, or a form's "current page" field.
+	 *
+	 * @param string $url Absolute or root-relative URL.
+	 */
+	public function language_of_url( string $url ): string {
+		if ( '' === $url ) {
 			return $this->default_language();
 		}
-		$path = (string) wp_parse_url( $ref, PHP_URL_PATH );
+		$path = (string) wp_parse_url( $url, PHP_URL_PATH );
 
 		$base_path = wp_parse_url( get_option( 'home' ), PHP_URL_PATH );
 		$base_path = is_string( $base_path ) ? rtrim( $base_path, '/' ) : '';

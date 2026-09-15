@@ -43,4 +43,19 @@ if ( is_array( $trrocket_settings ) && ! empty( $trrocket_settings['delete_data_
 	delete_option( 'trrocket_donate_dismissed' );
 	delete_option( 'trrocket_ai_usage' );
 	delete_option( 'trrocket_savings' );
+	delete_option( 'trrocket_wizard_done' );
+	delete_option( 'trrocket_log' );
+	delete_option( 'trrocket_log_seen' );
+	delete_option( 'trrocket_pending_scan' );
+	delete_option( 'trrocket_cache_ver' );
+	delete_option( 'trrocket_moved_copies' );
+	// Side-by-side mode (1.4.0).
+	delete_option( 'trrocket_coexist_seen' );
+	delete_option( 'trrocket_golive_pending' );
+	delete_option( 'trrocket_flush_rewrites' );
+
+	// Transients held by a persistent object cache are not in the options table.
+	if ( function_exists( 'wp_cache_flush' ) ) {
+		wp_cache_flush();
+	}
 }

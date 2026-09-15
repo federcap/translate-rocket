@@ -43,7 +43,11 @@ class Preview {
 			return true;
 		}
 		$settings = Settings::get();
-		if ( 'admins' !== ( $settings['serve_mode'] ?? 'everyone' ) ) {
+		// The other plugin has just gone, maybe without any admin request yet
+		// (WP-CLI, a folder removed): administrators only, until "Go online" —
+		// the state Coexistence::takeover() records as soon as it runs.
+		$pending_takeover = get_option( \TranslateRocket\Coexistence::SEEN ) && empty( \TranslateRocket\Coexistence::active() );
+		if ( 'admins' !== ( $settings['serve_mode'] ?? 'everyone' ) && ! $pending_takeover ) {
 			return false;
 		}
 		/**

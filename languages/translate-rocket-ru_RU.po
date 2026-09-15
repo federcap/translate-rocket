@@ -2550,3 +2550,43 @@ msgstr "%1$s всё ещё активен, поэтому его отдельн�
 #: src/Admin/Admin.php
 msgid "New languages start offline: only you see them while you translate. When a language is ready, switch it online on the Languages page."
 msgstr "Новые языки начинают работу офлайн: пока вы переводите, их видите только вы. Когда язык готов, включите его на странице «Языки»."
+
+#: src/Frontend/Forminator.php
+msgid "Forms: messages and e-mails"
+msgstr "Формы: сообщения и письма"
+
+#: src/Admin/Admin.php
+msgid "%1$d of %2$d translated"
+msgstr "Переведено %1$d из %2$d"
+
+#: src/Admin/Growth.php
+msgid "Want a hand with your site? I can do it for you"
+msgstr "Нужна помощь с сайтом? Я могу сделать это за вас"
+
+#: src/Admin/Growth.php
+msgid "I wrote this plugin, and building WordPress sites is my day job — that is how it stays free, and how I make a living. A site built from scratch, a design put right, a multilingual setup done properly, custom development, reviewed translations, or a migration away from a plugin that charges you every month: tell me what you need and I will tell you honestly whether I am the right person for it."
+msgstr "Этот плагин написал я, а создание сайтов на WordPress — моя основная работа: именно поэтому плагин остаётся бесплатным, и этим я зарабатываю на жизнь. Сайт с нуля, доработка дизайна, грамотно настроенная многоязычность, разработка под заказ, вычитанные переводы или переезд с плагина, который берёт деньги каждый месяц: расскажите, что вам нужно, и я честно скажу, подхожу ли я для этой задачи."
+
+#: src/Admin/Growth.php
+msgid "Ask me about your site"
+msgstr "Спросите меня о вашем сайте"
+
+#: src/Coexistence.php
+msgid "Still offline, so not visible yet: %s. Switch each one on when it is ready, on the Languages page."
+msgstr "Пока офлайн и поэтому ещё не видны: %s. Включайте каждый язык на странице «Языки», когда он будет готов."
+
+#: src/Coexistence.php
+msgid "Open the Languages page"
+msgstr "Открыть страницу «Языки»"
+
+#: src/Coexistence.php
+msgid "%s is active, and TranslateRocket keeps serving your translated pages as before."
+msgstr "%s активен, а TranslateRocket по-прежнему показывает ваши переведённые страницы, как и раньше."
+
+#: src/Coexistence.php
+msgid "Two translation plugins on the same addresses will get in each other’s way. To try the other plugin safely, run TranslateRocket side by side: it steps back from the public site, your translations stay, and you can put it back online with one click when you deactivate the other plugin."
+msgstr "Два плагина перевода на одних и тех же адресах будут мешать друг другу. Чтобы безопасно попробовать другой плагин, запустите TranslateRocket параллельно: он отойдёт от публичного сайта, ваши переводы сохранятся, а когда вы отключите другой плагин, вернёте его одним щелчком."
+
+#: src/Coexistence.php
+msgid "Run side by side"
+msgstr "Запустить параллельно"

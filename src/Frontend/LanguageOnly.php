@@ -43,7 +43,9 @@ class LanguageOnly {
 		add_shortcode( self::TAG, array( $this, 'shortcode' ) );
 		add_shortcode( strtoupper( self::TAG ), array( $this, 'shortcode' ) );
 
-		if ( ! is_admin() ) {
+		// Side by side, the pages are the other plugin's: nothing is hidden by
+		// language (the shortcodes stay registered and simply show their content).
+		if ( ! is_admin() && ! \TranslateRocket\Coexistence::on() ) {
 			add_filter( 'render_block', array( $this, 'render_block' ), 10, 2 );
 		}
 	}
@@ -72,6 +74,9 @@ class LanguageOnly {
 	 * @param string[] $hide Languages it must not appear in.
 	 */
 	public static function visible( array $only, array $hide ): bool {
+		if ( \TranslateRocket\Coexistence::on() && '' === \TranslateRocket\Coexistence::preview_language() ) {
+			return true;
+		}
 		$current = str_replace( '_', '-', strtolower( Plugin::instance()->router()->current_language() ) );
 		if ( ! empty( $only ) && ! in_array( $current, $only, true ) ) {
 			return false;

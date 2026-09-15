@@ -465,9 +465,15 @@ class Strings {
 	 * @return array<string,string>
 	 */
 	public static function map_for_language( string $lang ): array {
+		// Per request: unserializing the transient again on every lookup adds up
+		// on a submission that translates messages, then e-mails, then labels.
+		if ( isset( self::$map_cache[ $lang ] ) ) {
+			return self::$map_cache[ $lang ];
+		}
 		$key    = 'trrocket_map_' . $lang;
 		$cached = get_transient( $key );
 		if ( is_array( $cached ) ) {
+			self::$map_cache[ $lang ] = $cached;
 			return $cached;
 		}
 
@@ -500,6 +506,7 @@ class Strings {
 		}
 
 		set_transient( $key, $map, self::MAP_TTL );
+		self::$map_cache[ $lang ] = $map;
 		return $map;
 	}
 
@@ -524,6 +531,13 @@ class Strings {
 	 * @var array<string,array<string,?string>>
 	 */
 	private static $lookup_cache = array();
+
+	/**
+	 * Per-request copy of the whole-language maps: lang => [ original => translation ].
+	 *
+	 * @var array<string,array<string,string>>
+	 */
+	private static $map_cache = array();
 
 	/**
 	 * Whether the site has enough strings that loading a whole language map per
@@ -704,7 +718,7 @@ class Strings {
 				$wpdb->esc_like( '_transient_timeout_trrocket_pmap_' ) . $suffix
 			)
 		); // phpcs:ignore WordPress.DB
-		unset( self::$lookup_cache[ $lang ] );
+		unset( self::$lookup_cache[ $lang ], self::$map_cache[ $lang ] );
 	}
 
 	/**

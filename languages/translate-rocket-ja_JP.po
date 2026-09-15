@@ -2540,3 +2540,43 @@ msgstr "%1$s はまだ有効なので、別ページは今も他の言語で訪�
 #: src/Admin/Admin.php
 msgid "New languages start offline: only you see them while you translate. When a language is ready, switch it online on the Languages page."
 msgstr "新しい言語はオフラインで始まります。翻訳中はあなただけに表示されます。準備ができたら、「言語」ページで公開してください。"
+
+#: src/Frontend/Forminator.php
+msgid "Forms: messages and e-mails"
+msgstr "フォーム：メッセージとメール"
+
+#: src/Admin/Admin.php
+msgid "%1$d of %2$d translated"
+msgstr "%2$d 件中 %1$d 件を翻訳済み"
+
+#: src/Admin/Growth.php
+msgid "Want a hand with your site? I can do it for you"
+msgstr "サイトのことで手助けが必要ですか？私が代わりに対応します"
+
+#: src/Admin/Growth.php
+msgid "I wrote this plugin, and building WordPress sites is my day job — that is how it stays free, and how I make a living. A site built from scratch, a design put right, a multilingual setup done properly, custom development, reviewed translations, or a migration away from a plugin that charges you every month: tell me what you need and I will tell you honestly whether I am the right person for it."
+msgstr "このプラグインを書いたのは私で、WordPress サイトの制作が本業です。だからこそプラグインは無料のままで、私はそれで生計を立てています。ゼロからのサイト制作、デザインの手直し、きちんとした多言語化、カスタム開発、翻訳のチェック、毎月課金されるプラグインからの移行など、必要なことを教えてください。私が適任かどうか、正直にお答えします。"
+
+#: src/Admin/Growth.php
+msgid "Ask me about your site"
+msgstr "サイトについて相談する"
+
+#: src/Coexistence.php
+msgid "Still offline, so not visible yet: %s. Switch each one on when it is ready, on the Languages page."
+msgstr "まだオフラインのため表示されていません: %s。準備ができたら「言語」ページでそれぞれ公開してください。"
+
+#: src/Coexistence.php
+msgid "Open the Languages page"
+msgstr "「言語」ページを開く"
+
+#: src/Coexistence.php
+msgid "%s is active, and TranslateRocket keeps serving your translated pages as before."
+msgstr "%s が有効ですが、TranslateRocket はこれまでどおり翻訳済みページを配信しています。"
+
+#: src/Coexistence.php
+msgid "Two translation plugins on the same addresses will get in each other’s way. To try the other plugin safely, run TranslateRocket side by side: it steps back from the public site, your translations stay, and you can put it back online with one click when you deactivate the other plugin."
+msgstr "同じアドレスで 2 つの翻訳プラグインを動かすと互いに干渉します。もう一方のプラグインを安全に試すには、TranslateRocket を並行モードにしてください。公開サイトから一歩引き、翻訳はそのまま残り、もう一方のプラグインを無効にしたらワンクリックで再公開できます。"
+
+#: src/Coexistence.php
+msgid "Run side by side"
+msgstr "並行モードにする"

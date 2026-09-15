@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -116,6 +116,14 @@ Yes. Each language lives under its own URL (e.g. `/it/`), so page caches store e
 
 Yes. Product pages, categories and attributes are translated like any other content, and slugs are translated per language. It also covers the parts WooCommerce renders outside the page HTML, which a page-only engine misses: the AJAX mini-cart fragments, strings passed to JavaScript (such as the "View cart" link), and transactional emails — the order's language is recorded at checkout (classic and block/Store API) and the customer email is rendered in that language. Wording that only ever appears inside an email (WooCommerce's own "Thank you for your order", "Quantity", "Price") is picked up automatically the first time such an email is sent and filed under "WooCommerce emails" in the translation screens, so you can translate it like anything else. Multi-currency is out of scope: TranslateRocket translates, it does not convert prices.
 
+= Does it translate forms (Forminator, Contact Form 7, WPForms…)? =
+
+Yes. Labels, placeholders, options and buttons are translated with the rest of the page, whether the form is added with a shortcode, a block, a widget or a page builder such as Elementor. The messages the form plugin adds with JavaScript — validation errors, "message sent" — are translated too, on Forminator, Contact Form 7, WPForms, Gravity Forms, SureForms, Formidable and Ninja Forms. With Forminator, the thank-you message, forms loaded with "Load form using AJAX" and the e-mail notifications follow the language of the page the form was sent from; the wording of the form settings and e-mails appears under "Forms: messages and e-mails" in the translation screens once an administrator has viewed the form or a notification has been sent. To keep a notification (for example the copy for the site owner) in the source language, return false from the `trrocket_forminator_translate_notification` filter.
+
+= Is there a PHP function that returns the current language? =
+
+Yes, for theme and plugin code that needs it (the equivalent of Polylang's `pll_current_language()`): `trrocket_current_language()` returns the code of the language of the current request, such as `en`, `fr` or `pt-br` — also in AJAX requests sent from a translated page — and `trrocket_default_language()` returns the site's source language. Wrap calls in `function_exists()` so your code keeps working if the plugin is deactivated.
+
 = Which plugins can I import my translations from? =
 
 Yes — use **TranslateRocket → Import** to bring over your existing translations. The WPML import covers both its string translations and its post-based translations (titles, slugs and matching body text), and reads directly from WPML's tables, so it works even when WPML is already deactivated. Coming from Weglot (a hosted service)? Export your translations from the Weglot dashboard as a CSV and upload the file on the same Import screen — the columns are detected automatically and mapped to your target languages.
@@ -154,6 +162,23 @@ Yes. Open a page in the visual editor, click "Translate page" and use "Copy with
 
 
 == Changelog ==
+
+= 1.4.1 =
+* Fix: validation and "message sent" messages of forms added with the Elementor widget, the Forminator block, a widget area or a template stayed in the source language; the message translator was loaded only when the form was a shortcode in the page content. It is now loaded whenever a Forminator, Contact Form 7, WPForms, Gravity Forms, SureForms, Formidable or Ninja Forms form actually appears on a translated page.
+* New: Forminator messages returned by the server (thank-you message, invalid form, field errors) and forms loaded with "Load form using AJAX" are shown in the visitor's language.
+* New: Forminator e-mail notifications are sent in the language of the page the form was submitted from. Their subject and body, and the form's messages, are listed under "Forms: messages and e-mails" in the translation screens. The `trrocket_forminator_translate_notification` filter keeps a notification in the source language.
+* New: PHP functions for developers, `trrocket_current_language()` and `trrocket_default_language()`.
+* Fix: side-by-side mode no longer switches itself on when another translation plugin is activated on a site that TranslateRocket was already serving: the translated addresses stay online, and a notice offers "Run side by side" instead.
+* Fix: when the other translation plugin goes away without anyone opening wp-admin (WP-CLI, a folder removed, another site of a network), the translations are still shown to administrators only until "Go online".
+* Fix: after "Go online", languages that are still offline are named in the notice, with a link to switch them on.
+* Fix: side by side, the pages served by the other plugin in its own languages are no longer collected as source text.
+* Fix: side by side, blocks and menu items limited to some languages are not hidden on the other plugin's pages.
+* Fix: on a previewed page (?trr-preview=xx) the links keep the preview; the "Translate my homepage now" button of the setup wizard opens a preview instead of the other plugin's address. Preview pages also send noindex and no-cache headers.
+* Fix: on a fresh install the source language is derived correctly for Norwegian (nb_NO, nn_NO) and Traditional Chinese (zh_TW, zh_HK) sites, and falls back to English for locales the catalogue does not have instead of a code that matches nothing.
+* Fix: the forms message translator and Forminator only use languages that are online for visitors; an offline language stays private to administrators.
+* Fix: a form message, e-mail body or AJAX-loaded form containing a stray closing tag is left untouched instead of being cut short.
+* Fix: uninstalling with "delete data" also removes the side-by-side, wizard, log and cache options.
+* Fix: three interface strings that shipped untranslated ("%1$d of %2$d translated", the "Want a hand with your site?" card).
 
 = 1.4.0 =
 * New: side-by-side mode. TranslateRocket can now be activated next to WPML, Polylang, TranslatePress, Weglot, GTranslate, qTranslate-XT, WPGlobus, WP Multilang, Bogo or Multilanguage without changing anything on your public site. While the other plugin is active, visitors see the site exactly as before — the same addresses, language switcher, sitemap and language. Meanwhile you can import its translations, complete them and preview any page as an administrator by adding ?trr-preview= and a language code to the address (for example ?trr-preview=it).
@@ -225,6 +250,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+Forms in the visitor’s language wherever they are placed, Forminator e-mails in the language of the page, and side-by-side fixes: the mode no longer switches itself on over a site TranslateRocket is already serving.
 
 = 1.4.0 =
 Side-by-side mode: activate TranslateRocket next to WPML, Polylang, TranslatePress or another translation plugin without changing your public site, preview the translations as an administrator and go online when you are ready.

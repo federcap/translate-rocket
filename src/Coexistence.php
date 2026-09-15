@@ -20,6 +20,10 @@ defined( 'ABSPATH' ) || exit;
  * When the other plugin is deactivated, TranslateRocket takes over the language
  * addresses in preview mode (translations visible to administrators only) and
  * offers one button to put them online for everyone.
+ *
+ * The other way round — TranslateRocket already serving translations, and
+ * another translation plugin activated afterwards — nothing changes by itself:
+ * the site keeps its addresses and a notice offers to run side by side.
  */
 final class Coexistence {
 
@@ -29,7 +33,7 @@ final class Coexistence {
 	const PARAM = 'trr-preview';
 
 	/**
-	 * Translation plugins seen active on the last admin request.
+	 * Translation plugins seen active while running side by side.
 	 */
 	const SEEN = 'trrocket_coexist_seen';
 
@@ -44,11 +48,31 @@ final class Coexistence {
 	const FLUSH = 'trrocket_flush_rewrites';
 
 	/**
+	 * The administrator chose side by side although TranslateRocket was already
+	 * serving translations when the other plugin appeared.
+	 */
+	const ACCEPTED = 'trrocket_coexist_accepted';
+
+	/**
 	 * Active plugins for this request.
 	 *
 	 * @var array<string,string>|null
 	 */
 	private static $active = null;
+
+	/**
+	 * on() for this request.
+	 *
+	 * @var bool|null
+	 */
+	private static $on = null;
+
+	/**
+	 * preview_language() for this request.
+	 *
+	 * @var string|null
+	 */
+	private static $preview = null;
 
 	/**
 	 * Every translation plugin TranslateRocket knows, with how to tell it is running.
@@ -67,7 +91,7 @@ final class Coexistence {
 			'gtranslate'     => array( 'GTranslate', defined( 'GTRANSLATE_VERSION' ) || class_exists( 'GTranslate', false ) ),
 			'qtranslate'     => array( 'qTranslate-XT', defined( 'QTX_VERSION' ) ),
 			'wpglobus'       => array( 'WPGlobus', defined( 'WPGLOBUS_VERSION' ) ),
-			'wpm'            => array( 'WP Multilang', defined( 'WPM_PLUGIN_FILE' ) || class_exists( 'WP_Multilang', false ) ),
+			'wpm'            => array( 'WP Multilang', defined( 'WPM_PLUGIN_FILE' ) || class_exists( 'WPM\Includes\WP_Multilang', false ) ),
 			'bogo'           => array( 'Bogo', defined( 'BOGO_VERSION' ) ),
 			'multilanguage'  => array( 'Multilanguage', function_exists( 'mltlngg_init' ) ),
 		);
@@ -102,9 +126,45 @@ final class Coexistence {
 
 	/**
 	 * Is TranslateRocket running side by side with another translation plugin?
+	 *
+	 * Yes when one is active and TranslateRocket was not already serving
+	 * translations to visitors — a fresh install next to Polylang — or was, and the
+	 * administrator chose side by side. A site live on TranslateRocket that tries
+	 * another plugin must not lose its language addresses on the spot.
 	 */
 	public static function on(): bool {
-		return ! empty( self::active() );
+		if ( null !== self::$on ) {
+			return self::$on;
+		}
+		if ( empty( self::active() ) ) {
+			self::$on = false;
+		} elseif ( get_option( self::SEEN ) || get_option( self::ACCEPTED ) ) {
+			self::$on = true;
+		} else {
+			self::$on = ! self::is_public();
+		}
+		return self::$on;
+	}
+
+	/**
+	 * Another translation plugin is active while TranslateRocket keeps serving
+	 * the site: the administrator has not chosen side by side (yet).
+	 */
+	public static function undecided(): bool {
+		return ! empty( self::active() ) && ! self::on();
+	}
+
+	/**
+	 * TranslateRocket shows at least one language to visitors.
+	 */
+	private static function is_public(): bool {
+		$settings = Settings::get();
+		if ( 'admins' === ( $settings['serve_mode'] ?? 'everyone' ) ) {
+			return false;
+		}
+		$targets = array_map( 'strtolower', (array) ( $settings['target_languages'] ?? array() ) );
+		$offline = array_map( 'strtolower', (array) ( $settings['offline_languages'] ?? array() ) );
+		return ! empty( array_diff( $targets, $offline ) );
 	}
 
 	/**
@@ -119,6 +179,10 @@ final class Coexistence {
 	 * Language an administrator is previewing with ?trr-preview=xx, or ''.
 	 */
 	public static function preview_language(): string {
+		if ( null !== self::$preview ) {
+			return self::$preview;
+		}
+		self::$preview = '';
 		if ( ! self::on() || is_admin() || empty( $_GET[ self::PARAM ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only preview switch.
 			return '';
 		}
@@ -128,7 +192,10 @@ final class Coexistence {
 		}
 		$lang    = strtolower( sanitize_text_field( wp_unslash( $_GET[ self::PARAM ] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$targets = array_map( 'strtolower', (array) ( Settings::get()['target_languages'] ?? array() ) );
-		return in_array( $lang, $targets, true ) ? $lang : '';
+		if ( in_array( $lang, $targets, true ) ) {
+			self::$preview = $lang;
+		}
+		return self::$preview;
 	}
 
 	/**
@@ -141,12 +208,21 @@ final class Coexistence {
 			add_filter( 'trrocket_localize_content_links', '__return_false' );
 			if ( ! is_admin() ) {
 				add_action( 'wp_head', array( __CLASS__, 'noindex_preview' ), 1 );
+				add_action( 'template_redirect', array( __CLASS__, 'preview_headers' ), 1 );
+				// Links on a previewed page keep the preview: menus, permalinks and
+				// content links all go through home_url.
+				add_filter( 'home_url', array( __CLASS__, 'preview_link' ), 20, 2 );
 			}
 		}
 		if ( is_admin() ) {
 			add_action( 'admin_init', array( __CLASS__, 'track' ) );
 			add_action( 'admin_init', array( __CLASS__, 'maybe_go_live' ) );
+			add_action( 'admin_init', array( __CLASS__, 'maybe_accept' ) );
 			add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
+		} else {
+			// The other plugin may go away without anyone opening wp-admin (WP-CLI,
+			// a folder removed by FTP, another site of a network): take over here too.
+			add_action( 'init', array( __CLASS__, 'takeover' ), 98 );
 		}
 		add_action( 'init', array( __CLASS__, 'maybe_flush_rewrites' ), 99 );
 	}
@@ -161,7 +237,39 @@ final class Coexistence {
 	}
 
 	/**
-	 * Notice the moment the other plugin goes away.
+	 * Same for crawlers that read headers, and no page cache for a preview.
+	 */
+	public static function preview_headers(): void {
+		if ( '' !== self::preview_language() && ! headers_sent() ) {
+			header( 'X-Robots-Tag: noindex, nofollow', true );
+			nocache_headers();
+		}
+	}
+
+	/**
+	 * Keep ?trr-preview=xx on the links of a previewed page.
+	 *
+	 * @param mixed $url  Home URL.
+	 * @param mixed $path Path appended to it.
+	 * @return mixed
+	 */
+	public static function preview_link( $url, $path = '' ) {
+		$lang = self::preview_language();
+		if ( '' === $lang || ! is_string( $url ) || '' === $url ) {
+			return $url;
+		}
+		// REST, feeds and files are not pages to preview.
+		if ( is_string( $path ) && preg_match( '#^/?(wp-json|feed|wp-content|wp-includes|wp-admin)(/|$)#', ltrim( $path, '/' ) ) ) {
+			return $url;
+		}
+		if ( preg_match( '#\.(xml|json|js|css|png|jpe?g|gif|svg|webp|ico|pdf)(\?|$)#i', $url ) ) {
+			return $url;
+		}
+		return add_query_arg( self::PARAM, $lang, $url );
+	}
+
+	/**
+	 * Record the plugins TranslateRocket runs beside; notice the moment they go away.
 	 *
 	 * WordPress deactivates a plugin and then reloads the Plugins screen, where the
 	 * plugin's code is no longer loaded: that is the first request that can tell.
@@ -172,31 +280,44 @@ final class Coexistence {
 		}
 		$active = self::active();
 		if ( ! empty( $active ) ) {
-			if ( get_option( self::SEEN ) !== $active ) {
-				update_option( self::SEEN, $active, false );
+			if ( self::on() && get_option( self::SEEN ) !== $active ) {
+				update_option( self::SEEN, $active, true );
 			}
-			delete_option( self::PENDING );
+			if ( get_option( self::PENDING ) ) {
+				delete_option( self::PENDING );
+			}
 			return;
 		}
+		self::takeover();
+	}
 
+	/**
+	 * The other plugin is gone: take over the language addresses, but show the
+	 * translations to administrators only until someone has looked at them.
+	 */
+	public static function takeover(): void {
+		if ( ! empty( self::active() ) ) {
+			return;
+		}
 		$seen = get_option( self::SEEN );
 		if ( empty( $seen ) || ! is_array( $seen ) ) {
 			return;
 		}
 		delete_option( self::SEEN );
+		if ( get_option( self::ACCEPTED ) ) {
+			delete_option( self::ACCEPTED );
+		}
 
 		$settings = Settings::get();
 		if ( empty( $settings['target_languages'] ) ) {
 			return; // Nothing prepared in TranslateRocket: nothing to put online.
 		}
-		// Take over the language addresses, but show the translations to
-		// administrators only until someone has looked at them.
 		if ( 'admins' !== ( $settings['serve_mode'] ?? 'everyone' ) ) {
 			$settings['serve_mode'] = 'admins';
 			update_option( Settings::OPTION, $settings );
 		}
-		update_option( self::PENDING, array_values( $seen ), false );
-		update_option( self::FLUSH, 1, false );
+		update_option( self::PENDING, array_values( $seen ), true );
+		update_option( self::FLUSH, 1, true );
 		Cache::flush();
 	}
 
@@ -216,10 +337,31 @@ final class Coexistence {
 		$settings['serve_mode'] = 'everyone';
 		update_option( Settings::OPTION, $settings );
 		delete_option( self::PENDING );
-		update_option( self::FLUSH, 1, false );
+		update_option( self::FLUSH, 1, true );
 		Cache::flush();
 
 		wp_safe_redirect( add_query_arg( 'trrocket_live', '1', remove_query_arg( array( 'trrocket_golive', '_wpnonce' ) ) ) );
+		exit;
+	}
+
+	/**
+	 * The "run side by side" button, for a site that was already live on
+	 * TranslateRocket when the other plugin was activated.
+	 */
+	public static function maybe_accept(): void {
+		if ( empty( $_GET['trrocket_coexist'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked below.
+			return;
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		check_admin_referer( 'trrocket_coexist' );
+
+		update_option( self::ACCEPTED, 1, true );
+		update_option( self::SEEN, self::active(), true );
+		Cache::flush();
+
+		wp_safe_redirect( remove_query_arg( array( 'trrocket_coexist', '_wpnonce' ) ) );
 		exit;
 	}
 
@@ -258,7 +400,8 @@ final class Coexistence {
 	}
 
 	/**
-	 * Admin notices for the three moments: side by side, just deactivated, online.
+	 * Admin notices: side by side, another plugin found on a live site, just
+	 * deactivated, online.
 	 */
 	public static function notices(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -266,11 +409,41 @@ final class Coexistence {
 		}
 
 		if ( isset( $_GET['trrocket_live'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display only.
+			$offline = Plugin::instance()->router()->offline_languages();
+			echo '<div class="notice notice-success is-dismissible"><p><strong>';
+			esc_html_e( 'TranslateRocket is online.', 'translate-rocket' );
+			echo '</strong> ';
+			esc_html_e( 'Visitors now see the translations, the language switcher and the translated addresses.', 'translate-rocket' );
+			if ( ! empty( $offline ) ) {
+				$labels = array();
+				foreach ( $offline as $code ) {
+					$labels[] = Languages::label( $code );
+				}
+				echo ' ';
+				printf(
+					/* translators: %s: language names, e.g. "Italiano, Español". */
+					esc_html__( 'Still offline, so not visible yet: %s. Switch each one on when it is ready, on the Languages page.', 'translate-rocket' ),
+					esc_html( implode( ', ', $labels ) )
+				);
+				echo ' <a href="' . esc_url( admin_url( 'admin.php?page=translate-rocket' ) ) . '">' . esc_html__( 'Open the Languages page', 'translate-rocket' ) . '</a>';
+			}
+			echo '</p></div>';
+		}
+
+		if ( self::undecided() ) {
+			$names = self::join_names( self::active() );
+			echo '<div class="notice notice-warning"><p><strong>';
 			printf(
-				'<div class="notice notice-success is-dismissible"><p><strong>%s</strong> %s</p></div>',
-				esc_html__( 'TranslateRocket is online.', 'translate-rocket' ),
-				esc_html__( 'Visitors now see the translations, the language switcher and the translated addresses.', 'translate-rocket' )
+				/* translators: %s: the other translation plugin(s), e.g. "Polylang". */
+				esc_html__( '%s is active, and TranslateRocket keeps serving your translated pages as before.', 'translate-rocket' ),
+				esc_html( $names )
 			);
+			echo '</strong> ';
+			esc_html_e( 'Two translation plugins on the same addresses will get in each other’s way. To try the other plugin safely, run TranslateRocket side by side: it steps back from the public site, your translations stay, and you can put it back online with one click when you deactivate the other plugin.', 'translate-rocket' );
+			echo '</p><p><a class="button button-primary" href="' . esc_url( wp_nonce_url( add_query_arg( 'trrocket_coexist', '1' ), 'trrocket_coexist' ) ) . '">';
+			esc_html_e( 'Run side by side', 'translate-rocket' );
+			echo '</a></p></div>';
+			return;
 		}
 
 		if ( self::on() ) {
