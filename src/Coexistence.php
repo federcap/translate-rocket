@@ -206,6 +206,10 @@ final class Coexistence {
 			// Links inside a previewed page must not be rewritten to /xx/: those
 			// addresses belong to the other plugin.
 			add_filter( 'trrocket_localize_content_links', '__return_false' );
+			// The preview must be one click away, not an address to type.
+			add_action( 'admin_bar_menu', array( __CLASS__, 'admin_bar' ), 90 );
+			add_filter( 'page_row_actions', array( __CLASS__, 'row_actions' ), 10, 2 );
+			add_filter( 'post_row_actions', array( __CLASS__, 'row_actions' ), 10, 2 );
 			if ( ! is_admin() ) {
 				add_action( 'wp_head', array( __CLASS__, 'noindex_preview' ), 1 );
 				add_action( 'template_redirect', array( __CLASS__, 'preview_headers' ), 1 );
@@ -225,6 +229,139 @@ final class Coexistence {
 			add_action( 'init', array( __CLASS__, 'takeover' ), 98 );
 		}
 		add_action( 'init', array( __CLASS__, 'maybe_flush_rewrites' ), 99 );
+	}
+
+	/**
+	 * May the current user open side-by-side previews?
+	 */
+	public static function can_preview(): bool {
+		/** This filter is documented in src/Frontend/Preview.php */
+		return current_user_can( apply_filters( 'trrocket_preview_capability', 'manage_options' ) );
+	}
+
+	/**
+	 * The languages that can be previewed (every target language, online or not).
+	 *
+	 * @return string[]
+	 */
+	public static function preview_targets(): array {
+		$targets = array_map( 'strtolower', array_map( 'strval', (array) ( Settings::get()['target_languages'] ?? array() ) ) );
+		return array_values( array_unique( array_filter( $targets ) ) );
+	}
+
+	/**
+	 * An address opened as a preview in a language (the home page by default).
+	 *
+	 * @param string $lang Language code.
+	 * @param string $url  Address to preview.
+	 */
+	public static function preview_url( string $lang, string $url = '' ): string {
+		$url = '' === $url ? home_url( '/' ) : $url;
+		return add_query_arg( self::PARAM, rawurlencode( $lang ), remove_query_arg( self::PARAM, $url ) );
+	}
+
+	/**
+	 * The other translation plugin(s), named for a sentence.
+	 */
+	public static function active_names(): string {
+		return self::join_names( self::active() );
+	}
+
+	/**
+	 * Admin bar: "Preview" with one entry per language. On the site it opens the
+	 * page being viewed; in wp-admin, the home page in a new tab.
+	 *
+	 * @param mixed $bar WP_Admin_Bar.
+	 */
+	public static function admin_bar( $bar ): void {
+		if ( ! is_object( $bar ) || ! method_exists( $bar, 'add_node' ) || ! self::can_preview() ) {
+			return;
+		}
+		$targets = self::preview_targets();
+		if ( empty( $targets ) ) {
+			return;
+		}
+		$current = self::preview_language();
+		$router  = is_admin() ? null : Plugin::instance()->router();
+		$meta    = is_admin() ? array( 'target' => '_blank', 'rel' => 'noopener' ) : array();
+		$link    = static function ( string $code ) use ( $router ): string {
+			return $router ? $router->url_for_language( $code ) : self::preview_url( $code );
+		};
+		$bar->add_node(
+			array(
+				'id'    => 'trrocket-preview',
+				/* translators: %s: language name, e.g. "Português". */
+				'title' => '👁 ' . esc_html( '' !== $current ? sprintf( __( 'Preview: %s', 'translate-rocket' ), Languages::label( $current ) ) : __( 'Preview translations', 'translate-rocket' ) ),
+				'href'   => $link( '' !== $current ? $current : $targets[0] ),
+				'meta'   => $meta,
+			)
+		);
+		foreach ( $targets as $code ) {
+			$bar->add_node(
+				array(
+					'parent' => 'trrocket-preview',
+					'id'     => 'trrocket-preview-' . sanitize_key( $code ),
+					'title'  => esc_html( trim( Languages::flag( $code ) . ' ' . Languages::label( $code ) ) . ( $code === $current ? ' ✓' : '' ) ),
+					'href'   => $link( $code ),
+					'meta'   => $meta,
+				)
+			);
+		}
+		if ( '' !== $current ) {
+			$bar->add_node(
+				array(
+					'parent' => 'trrocket-preview',
+					'id'     => 'trrocket-preview-exit',
+					'title'  => esc_html__( 'Back to the live site', 'translate-rocket' ),
+					'href'   => remove_query_arg( self::PARAM, $link( $current ) ),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Pages and Posts lists: "Preview: PT ES" on each published row.
+	 *
+	 * @param mixed $actions Row actions.
+	 * @param mixed $post    The row's post.
+	 * @return mixed
+	 */
+	public static function row_actions( $actions, $post ) {
+		if ( ! is_array( $actions ) || ! $post instanceof \WP_Post || 'publish' !== $post->post_status || ! is_post_type_viewable( $post->post_type ) || ! self::can_preview() ) {
+			return $actions;
+		}
+		$targets = self::preview_targets();
+		$url     = get_permalink( $post );
+		if ( empty( $targets ) || ! is_string( $url ) || '' === $url || self::other_plugin_copy( $url, $targets ) ) {
+			return $actions;
+		}
+		$links = array();
+		foreach ( array_slice( $targets, 0, 8 ) as $code ) {
+			$links[] = '<a href="' . esc_url( self::preview_url( $code, $url ) ) . '" target="_blank" rel="noopener" title="' . esc_attr( Languages::label( $code ) ) . '">' . esc_html( strtoupper( $code ) ) . '</a>';
+		}
+		$actions['trrocket_preview'] = esc_html__( 'Preview:', 'translate-rocket' ) . ' ' . implode( ' ', $links );
+		return $actions;
+	}
+
+	/**
+	 * Is this address one of the other plugin's own language copies (/pt/…, ?lang=pt)?
+	 * Previewing it would show the other plugin's page, not TranslateRocket's.
+	 *
+	 * @param string   $url     Permalink.
+	 * @param string[] $targets Target language codes.
+	 */
+	private static function other_plugin_copy( string $url, array $targets ): bool {
+		$query = (string) wp_parse_url( $url, PHP_URL_QUERY );
+		parse_str( $query, $args );
+		if ( isset( $args['lang'] ) && is_string( $args['lang'] ) && in_array( strtolower( $args['lang'] ), $targets, true ) ) {
+			return true;
+		}
+		$base = wp_parse_url( home_url( '/' ), PHP_URL_PATH );
+		$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+		if ( is_string( $base ) && '/' !== $base && 0 === strpos( $path, rtrim( $base, '/' ) ) ) {
+			$path = substr( $path, strlen( rtrim( $base, '/' ) ) );
+		}
+		return (bool) preg_match( '#^/([a-z]{2}(?:-[a-z]{2,4})?)(/|$)#i', '/' . ltrim( $path, '/' ), $m ) && in_array( strtolower( $m[1] ), $targets, true );
 	}
 
 	/**

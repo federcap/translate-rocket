@@ -4,6 +4,10 @@ The readme.txt shipped with the plugin lists recent releases only, because
 the WordPress.org plugin directory truncates a changelog past 5,000 words.
 The complete history, from the first public release, is kept here.
 
+= 1.4.2 =
+* New: side by side, the preview is one click away. The Languages page shows a Preview panel with a button for each language, the admin bar has a Preview menu that opens the page you are looking at in another language (and a way back to the live site), and every published row in Pages and Posts has a Preview link. Before, the preview meant typing ?trr-preview= into the address.
+* Change: when the browser cannot translate, the panel now says what the translator built into Chrome and Edge needs (Windows 10 or 11, macOS 13+, Linux or ChromeOS but not Windows Server, 16 GB of RAM or a graphics card with more than 4 GB, 22 GB of free disk space, Edge 148+, https), instead of only saying that the browser has no translator.
+
 = 1.4.1 =
 * Fix: validation and "message sent" messages of forms added with the Elementor widget, the Forminator block, a widget area or a template stayed in the source language; the message translator was loaded only when the form was a shortcode in the page content. It is now loaded whenever a Forminator, Contact Form 7, WPForms, Gravity Forms, SureForms, Formidable or Ninja Forms form actually appears on a translated page.
 * New: Forminator messages returned by the server (thank-you message, invalid form, field errors) and forms loaded with "Load form using AJAX" are shown in the visitor's language.

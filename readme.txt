@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,8 @@ I build websites for a living, and I use TranslateRocket on every multilingual s
 
 No — and without one you are not limited to typing by hand. **Chrome and Edge on a computer carry a translator that runs on the device itself, and one button puts it to work on your whole site.** It costs nothing, needs no account and no signup, and the text never leaves your machine. Quality sits below DeepL and the AI models, so it is the quickest way to a translated site rather than the finest one — but everything it translates is kept, so adding a provider later never repeats the work.
 
+It needs Chrome, or Edge 148 or later, on a computer that can run the built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM or a graphics card with more than 4 GB, and 22 GB of free disk space, with the admin on https. Anywhere else, the copy-and-paste route works in any browser and still needs no key.
+
 Beyond that you can click any text on the live page and type its translation, edit it again later, and publish it. Every field also offers a free Google Translate link you can paste back from. AI keys are optional and only used at the moment you ask for one.
 
 = Do my translations stay on my site? =
@@ -162,6 +164,10 @@ Yes. Open a page in the visual editor, click "Translate page" and use "Copy with
 
 
 == Changelog ==
+
+= 1.4.2 =
+* New: side by side, the preview is one click away. The Languages page shows a Preview panel with a button for each language, the admin bar has a Preview menu that opens the page you are looking at in another language (and a way back to the live site), and every published row in Pages and Posts has a Preview link. Before, the preview meant typing ?trr-preview= into the address.
+* Change: when the browser cannot translate, the panel now says what the translator built into Chrome and Edge needs (Windows 10 or 11, macOS 13+, Linux or ChromeOS but not Windows Server, 16 GB of RAM or a graphics card with more than 4 GB, 22 GB of free disk space, Edge 148+, https), instead of only saying that the browser has no translator.
 
 = 1.4.1 =
 * Fix: validation and "message sent" messages of forms added with the Elementor widget, the Forminator block, a widget area or a template stayed in the source language; the message translator was loaded only when the form was a shortcode in the page content. It is now loaded whenever a Forminator, Contact Form 7, WPForms, Gravity Forms, SureForms, Formidable or Ninja Forms form actually appears on a translated page.
@@ -250,6 +256,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.4.2 =
+Side by side, the preview is now one click away: a Preview panel on the Languages page, a Preview menu in the admin bar and a Preview link in Pages and Posts.
 
 = 1.4.1 =
 Forms in the visitor’s language wherever they are placed, Forminator e-mails in the language of the page, and side-by-side fixes: the mode no longer switches itself on over a site TranslateRocket is already serving.

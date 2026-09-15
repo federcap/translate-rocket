@@ -3921,6 +3921,29 @@ JS;
 				</div>
 			<?php endif; ?>
 
+			<?php if ( ! empty( $targets ) && \TranslateRocket\Coexistence::on() && \TranslateRocket\Coexistence::can_preview() ) : ?>
+				<div class="trrocket-card trr-coex-preview" style="border-left:4px solid #0ea5e9">
+					<h2>👁 <?php esc_html_e( 'Preview', 'translate-rocket' ); ?></h2>
+					<p>
+						<?php
+						printf(
+							/* translators: %s: the other translation plugin(s), e.g. "Polylang". */
+							esc_html__( '%s is still serving your public site. Open it in a language to see the translations TranslateRocket will show when it goes online: only administrators see these previews, while visitors and search engines keep the site as it is.', 'translate-rocket' ),
+							esc_html( \TranslateRocket\Coexistence::active_names() )
+						);
+						?>
+					</p>
+					<p style="display:flex;flex-wrap:wrap;gap:8px">
+						<?php foreach ( \TranslateRocket\Coexistence::preview_targets() as $code ) : ?>
+							<a class="button" target="_blank" rel="noopener" href="<?php echo esc_url( \TranslateRocket\Coexistence::preview_url( $code ) ); ?>">
+								<?php echo esc_html( trim( Languages::flag( $code ) . ' ' . Languages::label( $code ) ) ); ?> ↗
+							</a>
+						<?php endforeach; ?>
+					</p>
+					<p class="description"><?php esc_html_e( 'To preview a specific page, open it on your site and use Preview in the admin bar, or the Preview link under each page in Pages and Posts.', 'translate-rocket' ); ?></p>
+				</div>
+			<?php endif; ?>
+
 			<?php if ( isset( $_GET['updated'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
 				<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Settings saved.', 'translate-rocket' ); ?></p></div>
 			<?php endif; ?>

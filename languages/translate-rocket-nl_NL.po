@@ -2585,3 +2585,35 @@ msgstr "Twee vertaalplugins op dezelfde adressen zitten elkaar in de weg. Wil je
 #: src/Coexistence.php
 msgid "Run side by side"
 msgstr "Naast elkaar draaien"
+
+#: src/Coexistence.php
+msgid "Preview translations"
+msgstr "Voorbeeld van vertalingen"
+
+#: src/Coexistence.php
+msgid "Preview: %s"
+msgstr "Voorbeeld: %s"
+
+#: src/Coexistence.php
+msgid "Back to the live site"
+msgstr "Terug naar de live site"
+
+#: src/Coexistence.php
+msgid "Preview:"
+msgstr "Voorbeeld:"
+
+#: src/Admin/Admin.php
+msgid "Preview"
+msgstr "Voorbeeld"
+
+#: src/Admin/Admin.php
+msgid "%s is still serving your public site. Open it in a language to see the translations TranslateRocket will show when it goes online: only administrators see these previews, while visitors and search engines keep the site as it is."
+msgstr "%s levert je openbare site nog steeds. Open hem in een taal om de vertalingen te zien die TranslateRocket toont zodra het online gaat: alleen beheerders zien deze voorbeelden, bezoekers en zoekmachines zien de site zoals hij is."
+
+#: src/Admin/Admin.php
+msgid "To preview a specific page, open it on your site and use Preview in the admin bar, or the Preview link under each page in Pages and Posts."
+msgstr "Wil je een bepaalde pagina bekijken, open haar dan op je site en gebruik Voorbeeld in de adminbalk, of de link Voorbeeld onder elke pagina bij Pagina’s en Berichten."
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge translate on the device only on a computer that can run their built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM with 4 CPU cores or a graphics card with more than 4 GB, and 22 GB of free disk space. Edge needs version 148 or later, and the admin must be on https or localhost."
+msgstr "Chrome en Edge vertalen alleen op het apparaat zelf op een computer die hun ingebouwde model kan draaien: Windows 10 of 11, macOS 13 of nieuwer, Linux of ChromeOS (geen Windows Server), 16 GB RAM met 4 processorkernen of een videokaart met meer dan 4 GB, en 22 GB vrije schijfruimte. Edge moet versie 148 of nieuwer zijn, en het beheer moet via https of localhost draaien."

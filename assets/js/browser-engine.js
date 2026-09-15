@@ -219,7 +219,7 @@
 				setTimeout( function () { window.location.reload(); }, 1200 );
 			}
 		} ).catch( function ( e ) {
-			say( C.i18n.failed + ' ' + ( e && e.message ? e.message : '' ) );
+			say( C.i18n.failed + ' ' + ( e && e.message ? e.message : '' ) + ' ' + ( C.i18n.needs || '' ) );
 		} ).then( function () {
 			go.disabled = false;
 			stopBtn.style.display = 'none';

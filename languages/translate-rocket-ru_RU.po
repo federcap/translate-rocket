@@ -2590,3 +2590,35 @@ msgstr "Два плагина перевода на одних и тех же а
 #: src/Coexistence.php
 msgid "Run side by side"
 msgstr "Запустить параллельно"
+
+#: src/Coexistence.php
+msgid "Preview translations"
+msgstr "Предпросмотр переводов"
+
+#: src/Coexistence.php
+msgid "Preview: %s"
+msgstr "Предпросмотр: %s"
+
+#: src/Coexistence.php
+msgid "Back to the live site"
+msgstr "Вернуться к рабочему сайту"
+
+#: src/Coexistence.php
+msgid "Preview:"
+msgstr "Предпросмотр:"
+
+#: src/Admin/Admin.php
+msgid "Preview"
+msgstr "Предпросмотр"
+
+#: src/Admin/Admin.php
+msgid "%s is still serving your public site. Open it in a language to see the translations TranslateRocket will show when it goes online: only administrators see these previews, while visitors and search engines keep the site as it is."
+msgstr "%s по-прежнему обслуживает ваш публичный сайт. Откройте его на нужном языке, чтобы увидеть переводы, которые TranslateRocket покажет после запуска: эти предпросмотры видят только администраторы, а посетители и поисковые системы видят сайт без изменений."
+
+#: src/Admin/Admin.php
+msgid "To preview a specific page, open it on your site and use Preview in the admin bar, or the Preview link under each page in Pages and Posts."
+msgstr "Чтобы посмотреть конкретную страницу, откройте её на сайте и выберите «Предпросмотр» в панели администратора или ссылку «Предпросмотр» под каждой страницей в разделах «Страницы» и «Записи»."
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge translate on the device only on a computer that can run their built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM with 4 CPU cores or a graphics card with more than 4 GB, and 22 GB of free disk space. Edge needs version 148 or later, and the admin must be on https or localhost."
+msgstr "Chrome и Edge переводят на самом устройстве только на компьютере, способном запустить их встроенную модель: Windows 10 или 11, macOS 13 или новее, Linux или ChromeOS (не Windows Server), 16 ГБ ОЗУ и 4 ядра процессора или видеокарта с памятью более 4 ГБ, а также 22 ГБ свободного места на диске. Edge нужен версии 148 или новее, а панель администратора должна работать по https или на localhost."

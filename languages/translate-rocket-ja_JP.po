@@ -2580,3 +2580,35 @@ msgstr "同じアドレスで 2 つの翻訳プラグインを動かすと互い
 #: src/Coexistence.php
 msgid "Run side by side"
 msgstr "並行モードにする"
+
+#: src/Coexistence.php
+msgid "Preview translations"
+msgstr "翻訳をプレビュー"
+
+#: src/Coexistence.php
+msgid "Preview: %s"
+msgstr "プレビュー: %s"
+
+#: src/Coexistence.php
+msgid "Back to the live site"
+msgstr "公開中のサイトに戻る"
+
+#: src/Coexistence.php
+msgid "Preview:"
+msgstr "プレビュー:"
+
+#: src/Admin/Admin.php
+msgid "Preview"
+msgstr "プレビュー"
+
+#: src/Admin/Admin.php
+msgid "%s is still serving your public site. Open it in a language to see the translations TranslateRocket will show when it goes online: only administrators see these previews, while visitors and search engines keep the site as it is."
+msgstr "%s が引き続き公開サイトを配信しています。言語を選んで開くと、TranslateRocket が公開後に表示する翻訳を確認できます。このプレビューは管理者にしか表示されず、訪問者や検索エンジンには今のサイトがそのまま表示されます。"
+
+#: src/Admin/Admin.php
+msgid "To preview a specific page, open it on your site and use Preview in the admin bar, or the Preview link under each page in Pages and Posts."
+msgstr "特定のページをプレビューするには、サイトでそのページを開いて管理バーの「プレビュー」を使うか、「固定ページ」と「投稿」の各ページの下にある「プレビュー」リンクを使ってください。"
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge translate on the device only on a computer that can run their built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM with 4 CPU cores or a graphics card with more than 4 GB, and 22 GB of free disk space. Edge needs version 148 or later, and the admin must be on https or localhost."
+msgstr "Chrome と Edge がデバイス上で翻訳できるのは、内蔵モデルを実行できるパソコンだけです: Windows 10 または 11、macOS 13 以降、Linux または ChromeOS(Windows Server は非対応)、16 GB 以上の RAM と 4 コア以上の CPU、または 4 GB を超えるメモリのグラフィックカード、そして 22 GB の空きディスク容量が必要です。Edge はバージョン 148 以降が必要で、管理画面は https または localhost で開いている必要があります。"

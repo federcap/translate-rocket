@@ -148,6 +148,14 @@ class BrowserEngine {
 	}
 
 	/**
+	 * What the browser's own translator needs, said wherever it turns out not to work:
+	 * "no translator" alone left people on Windows Server or an http copy of their site guessing.
+	 */
+	private static function needs(): string {
+		return __( 'Chrome and Edge translate on the device only on a computer that can run their built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM with 4 CPU cores or a graphics card with more than 4 GB, and 22 GB of free disk space. Edge needs version 148 or later, and the admin must be on https or localhost.', 'translate-rocket' );
+	}
+
+	/**
 	 * The button and its progress area, for the bulk screen.
 	 *
 	 * Printed for everyone; the script hides it again when the browser turns out
@@ -187,6 +195,7 @@ class BrowserEngine {
 			</p>
 			<p id="trr-browser-status" style="margin:0;min-height:1.4em" aria-live="polite"></p>
 			<div id="trr-browser-fallback" hidden>
+				<p class="description" style="margin:0 0 10px" id="trr-browser-needs"><?php echo esc_html( self::needs() ); ?></p>
 				<p class="description" style="margin:0 0 10px">
 					<?php esc_html_e( 'Your browser has no translator of its own — Chrome and Edge on a computer do. You can still work without a key: copy the missing strings out, run them through any translator you like, and paste the result back.', 'translate-rocket' ); ?>
 				</p>
@@ -237,6 +246,7 @@ class BrowserEngine {
 					'nothing'     => __( 'Nothing left to translate in this language.', 'translate-rocket' ),
 					'stopped'     => __( 'Stopped.', 'translate-rocket' ),
 					'failed'      => __( 'The browser translator stopped with an error.', 'translate-rocket' ),
+					'needs'       => self::needs(),
 					'reload'      => __( 'Reload the page to see the new totals.', 'translate-rocket' ),
 					'refreshing'  => __( 'Updating the totals…', 'translate-rocket' ),
 				),
