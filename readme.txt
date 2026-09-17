@@ -126,6 +126,10 @@ It needs Chrome, or Edge 148 or later, on a computer that can run the built-in m
 
 Beyond that you can click any text on the live page and type its translation, edit it again later, and publish it. Every field also offers a free Google Translate link you can paste back from. AI keys are optional and only used at the moment you ask for one.
 
+Two minutes, filmed on a real site: translating a page with no key at all.
+
+https://www.youtube.com/watch?v=J0TxlZBKaWc
+
 = Do my translations stay on my site? =
 
 Yes. Translations are stored in your own WordPress database. Text is only sent to the AI provider you configure, at the moment you ask for a translation.
@@ -137,6 +141,10 @@ Yes. Each language lives under its own URL (e.g. `/it/`), so page caches store e
 = Does it work with WooCommerce? =
 
 Yes. Product pages, categories and attributes are translated like any other content, and slugs are translated per language. It also covers the parts WooCommerce renders outside the page HTML, which a page-only engine misses: the AJAX mini-cart fragments, strings passed to JavaScript (such as the "View cart" link), and transactional emails — the order's language is recorded at checkout (classic and block/Store API) and the customer email is rendered in that language. Wording that only ever appears inside an email (WooCommerce's own "Thank you for your order", "Quantity", "Price") is picked up automatically the first time such an email is sent and filed under "WooCommerce emails" in the translation screens, so you can translate it like anything else. Multi-currency is out of scope: TranslateRocket translates, it does not convert prices.
+
+The whole shop translated, from the product page to the order e-mail:
+
+https://www.youtube.com/watch?v=kU0TConiT20
 
 = Does it translate forms (Forminator, Contact Form 7, WPForms…)? =
 
@@ -151,6 +159,10 @@ Yes, for theme and plugin code that needs it (the equivalent of Polylang's `pll_
 Yes — use **TranslateRocket → Import** to bring over your existing translations. The WPML import covers both its string translations and its post-based translations (titles, slugs and matching body text), and reads directly from WPML's tables, so it works even when WPML is already deactivated. Coming from Weglot (a hosted service)? Export your translations from the Weglot dashboard as a CSV and upload the file on the same Import screen — the columns are detected automatically and mapped to your target languages.
 
 To review the result safely, turn on **Preview mode** ("Who sees the translations" in Settings): you browse the fully translated site while visitors keep seeing the default language, and one click publishes it when you are happy.
+
+Safer still: run TranslateRocket next to your current plugin, import, and switch only when you are happy. Two minutes:
+
+https://www.youtube.com/watch?v=K5qmxn3_4po
 
 = What if a page shouldn't exist in another language? =
 
@@ -184,6 +196,10 @@ Yes. Open a page in the visual editor, click "Translate page" and use "Copy with
 
 
 == Changelog ==
+
+And when a machine translation gets a word wrong, fixing it takes ten seconds:
+
+https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 = 1.4.3 =
 * New: in the visual editor, text that JavaScript adds to the page - a consent banner, a pop-up - can now be clicked and translated like the rest of the page. Until now only the text printed by the server could be clicked; the banner had to be translated from the Translations list. Tested with Complianz, CookieYes, GDPR Cookie Compliance and Cookie Notice.
