@@ -13,7 +13,7 @@ Translate your whole site with no API key — Chrome and Edge do it on your own 
 
 == Description ==
 
-https://www.youtube.com/watch?v=FgrO7Fqun4U
+https://www.youtube.com/watch?v=WsLpAISB_vo
 
 **TranslateRocket makes your site multilingual, and everything it does is free.** No word limits, no charge per language, and nothing switched off to push you towards an upgrade — it is not a trimmed-down version of a paid plugin.
 
@@ -70,6 +70,8 @@ TranslateRocket translates the page your site actually sends to the browser, so 
 * **Caching and optimisation:** Cache Enabler, Autoptimize, WP Fastest Cache.
 * **Side by side with, and importing from:** WPML, Polylang, TranslatePress, Weglot, Bogo and others.
 
+The full list, with what was checked and the date of the last test: https://translaterocket.com/compatibility/
+
 Something missing, or not behaving? Tell me from https://translaterocket.com/support/ and I will test it.
 
 = Need a hand with your site? =
@@ -99,6 +101,10 @@ This plugin can connect to third-party services, but only with your involvement:
 3. Go to **TranslateRocket → Settings** and pick your source language and the languages to translate into.
 4. Browse your site to detect content, then translate from **TranslateRocket → Translations** (by hand, copy & paste, or AI).
 5. Add the language switcher anywhere with the `[translaterocket_switcher]` shortcode, the block, or the widget.
+
+First steps, filmed from installation to the first translated page:
+
+https://www.youtube.com/watch?v=FgrO7Fqun4U
 
 == Frequently Asked Questions ==
 
