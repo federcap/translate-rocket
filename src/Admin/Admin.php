@@ -34,6 +34,7 @@ class Admin {
 		add_action( 'admin_init', array( $this, 'maybe_auto_translate' ) );
 		add_action( 'admin_init', array( $this, 'maybe_delete_page_translations' ) );
 		add_action( 'admin_init', array( $this, 'maybe_forget_page' ) );
+		add_action( 'admin_init', array( $this, 'maybe_undo_reset' ) );
 		add_action( 'admin_init', array( $this, 'maybe_import_external' ) );
 		add_action( 'admin_init', array( $this, 'maybe_export_csv' ) );
 		add_action( 'admin_init', array( $this, 'maybe_import_csv' ) );
@@ -817,8 +818,31 @@ class Admin {
 			return;
 		}
 
-		Strings::reset_page( $loc, $lang );
+		\TranslateRocket\PageReset::reset( $loc, $lang );
 		$this->redirect_editor( $lang, 'reset' );
+	}
+
+	/**
+	 * Put back the translations removed by "Translate again".
+	 */
+	public function maybe_undo_reset(): void {
+		if ( ! isset( $_GET['trrocket_undo'] ) || ! current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked right below.
+			return;
+		}
+		$id = sanitize_key( wp_unslash( $_GET['trrocket_undo'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		check_admin_referer( 'trrocket_undo_' . $id );
+		$n    = \TranslateRocket\PageReset::undo( $id );
+		$lang = isset( $_GET['lang'] ) ? strtolower( sanitize_text_field( wp_unslash( $_GET['lang'] ) ) ) : '';
+		$args = array(
+			'page'   => 'translate-rocket-strings',
+			'lang'   => $lang,
+			'undone' => null === $n ? '0' : (string) (int) $n,
+		);
+		if ( isset( $_GET['loc'] ) ) {
+			$args['loc'] = sanitize_text_field( wp_unslash( $_GET['loc'] ) );
+		}
+		wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php' ) ) );
+		exit;
 	}
 
 	/**
@@ -4292,7 +4316,31 @@ JS;
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification
 		if ( isset( $_GET['reset'] ) ) {
-			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( "This page's translations were deleted.", 'translate-rocket' ) . '</p></div>';
+			$loc_r  = isset( $_GET['loc'] ) ? sanitize_text_field( wp_unslash( $_GET['loc'] ) ) : '';
+			$lang_r = isset( $_GET['lang'] ) ? strtolower( sanitize_text_field( wp_unslash( $_GET['lang'] ) ) ) : '';
+			$ultimo = '' !== $loc_r ? \TranslateRocket\PageReset::latest( $loc_r, $lang_r ) : null;
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( "This page's translations and translated address were removed: translate it again below, with AI, in your browser or by hand.", 'translate-rocket' );
+			if ( $ultimo && (int) ( $ultimo['kept'] ?? 0 ) > 0 ) {
+				echo ' ' . esc_html( sprintf(
+					/* translators: %d: number of sentences. */
+					_n( '%d sentence also used on other pages kept its translation.', '%d sentences also used on other pages kept their translation.', (int) $ultimo['kept'], 'translate-rocket' ),
+					(int) $ultimo['kept']
+				) );
+			}
+			if ( $ultimo ) {
+				$undo = wp_nonce_url( add_query_arg( array( 'page' => 'translate-rocket-strings', 'lang' => $lang_r, 'loc' => $loc_r, 'trrocket_undo' => $ultimo['id'] ), admin_url( 'admin.php' ) ), 'trrocket_undo_' . $ultimo['id'] );
+				echo ' <a href="' . esc_url( $undo ) . '"><strong>' . esc_html__( 'Undo', 'translate-rocket' ) . '</strong></a>';
+			}
+			echo '</p></div>';
+		}
+		// phpcs:ignore WordPress.Security.NonceVerification
+		if ( isset( $_GET['undone'] ) ) {
+			$n_u = (int) $_GET['undone']; // phpcs:ignore WordPress.Security.NonceVerification
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( sprintf(
+				/* translators: %d: number of translations put back. */
+				_n( 'Put back: %d translation, and the translated address.', 'Put back: %d translations, and the translated address.', $n_u, 'translate-rocket' ),
+				$n_u
+			) ) . '</p></div>';
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification
 		if ( isset( $_GET['forgotten'] ) ) {
@@ -4495,6 +4543,15 @@ JS;
 			<?php wp_nonce_field( 'trrocket_auto_translate', 'trrocket_auto_nonce' ); ?>
 			<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
 		</form>
+		<?php // «Translate again» e «Remove from the list» per ogni riga: due moduli per tutta la tabella, il pulsante porta il «loc». ?>
+		<form id="trr-reset-onepage" method="post" action="" style="display:none">
+			<?php wp_nonce_field( 'trrocket_delete_page', 'trrocket_delete_nonce' ); ?>
+			<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
+		</form>
+		<form id="trr-forget-onepage" method="post" action="" style="display:none">
+			<?php wp_nonce_field( 'trrocket_forget_page', 'trrocket_forget_nonce' ); ?>
+			<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
+		</form>
 		<table class="widefat striped" id="trr-ptable">
 			<thead>
 				<tr>
@@ -4538,6 +4595,16 @@ JS;
 									value="<?php echo esc_attr( $page->url_hash ); ?>"
 									title="<?php esc_attr_e( 'Translate only this page with AI', 'translate-rocket' ); ?>">&#10024; <?php esc_html_e( 'AI', 'translate-rocket' ); ?></button>
 							<?php endif; ?>
+							<?php if ( $translated > 0 ) : ?>
+								<button type="submit" form="trr-reset-onepage" class="button button-small" name="loc"
+									value="<?php echo esc_attr( $page->url_hash ); ?>"
+									onclick="return confirm(<?php echo esc_attr( (string) wp_json_encode( __( 'Translate this page again? Its translations and translated address for this language are removed, so it can be translated from scratch. You can undo this.', 'translate-rocket' ) ) ); ?>);"
+									title="<?php esc_attr_e( 'Translate again: remove the translations and the translated address of this page, then redo them (undo available)', 'translate-rocket' ); ?>">&#8635; <?php esc_html_e( 'Redo', 'translate-rocket' ); ?></button>
+							<?php endif; ?>
+							<button type="submit" form="trr-forget-onepage" class="button button-small" name="loc"
+								value="<?php echo esc_attr( $page->url_hash ); ?>"
+								onclick="return confirm(<?php echo esc_attr( (string) wp_json_encode( __( 'Remove this page from the list? Its translations stay in the database; the page comes back the next time it is read.', 'translate-rocket' ) ) ); ?>);"
+								title="<?php esc_attr_e( 'Remove this page from the list (its translations stay)', 'translate-rocket' ); ?>">&#10006;</button>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -4673,12 +4740,12 @@ JS;
 		$this->render_string_table( $lang, $all_rows, $loc, $post_id );
 		?>
 		<form method="post" action="" style="margin-top:18px"
-			onsubmit="return confirm('<?php echo esc_js( __( 'Delete all translations of this page for this language?', 'translate-rocket' ) ); ?>');">
+			onsubmit="return confirm('<?php echo esc_js( __( 'Translate this page again? Its translations and translated address for this language are removed, so it can be translated from scratch. You can undo this.', 'translate-rocket' ) ); ?>');">
 			<?php wp_nonce_field( 'trrocket_delete_page', 'trrocket_delete_nonce' ); ?>
 			<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
 			<input type="hidden" name="loc" value="<?php echo esc_attr( $loc ); ?>" />
 			<button type="submit" class="button button-link-delete" style="color:#b32d2e">
-				&#128465; <?php esc_html_e( "Delete this page's translation", 'translate-rocket' ); ?>
+				&#8635; <?php esc_html_e( "Translate again: remove this page's translations and translated address (undo available)", 'translate-rocket' ); ?>
 			</button>
 		</form>
 		<form method="post" action="" style="margin-top:6px"

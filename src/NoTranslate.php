@@ -20,6 +20,33 @@ defined( 'ABSPATH' ) || exit;
 class NoTranslate {
 
 	/**
+	 * Prefixes of ids and classes that belong to administrator tooling shown on the
+	 * front end — debug bars, page-builder helpers, comment/notes apps — never to the
+	 * page itself. Text inside them is neither collected nor translated.
+	 *
+	 * @return string[]
+	 */
+	public static function tool_prefixes(): array {
+		/**
+		 * Id/class prefixes of front-end tooling to leave alone.
+		 *
+		 * @param string[] $prefixes Defaults cover Query Monitor, Debug Bar, Elementor's
+		 *                           editor helpers and notes, and the block editor.
+		 */
+		return (array) apply_filters(
+			'trrocket_tool_prefixes',
+			array(
+				'query-monitor', 'qm-', 'debug-bar', 'querylist',
+				'elementor-notes', 'e-notes', 'elementor-admin-bar', 'elementor-editor', 'elementor-panel',
+				'elementor-template-library', 'elementor-hidden', 'elementor-navigator', 'elementor-preview',
+				'elementor-document-handle', 'elementor-add-section', 'elementor-add-new-section', 'elementor-first-add',
+				'elementor-select-preset', 'e-con-select-', 'customize-partial-edit-shortcut',
+				'wp-admin-bar', 'edit-post-', 'interface-',
+			)
+		);
+	}
+
+	/**
 	 * @return string[]
 	 */
 	public static function paths(): array {

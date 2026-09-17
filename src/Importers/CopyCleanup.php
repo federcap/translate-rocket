@@ -108,6 +108,54 @@ class CopyCleanup {
 	}
 
 	/**
+	 * Transient holding the map of leftover copies (10 minutes).
+	 */
+	const LEFTOVERS = 'trrocket_copy_leftovers';
+
+	/**
+	 * Every copy still lying around from a plugin that is no longer active, keyed by
+	 * post id: [source id, language, plugin label, importer id]. What the Pages list
+	 * needs to label them, cheap enough to run on every admin screen thanks to the cache.
+	 *
+	 * @return array<int,array{0:int,1:string,2:string,3:string}>
+	 */
+	public static function leftovers(): array {
+		// A plugin switched on or off changes the answer: part of the cache key, and the
+		// activation hooks below throw the cache away too.
+		$key    = self::LEFTOVERS . '_' . substr( md5( wp_json_encode( array_values( (array) get_option( 'active_plugins', array() ) ) ) ), 0, 12 );
+		$cached = get_transient( $key );
+		if ( is_array( $cached ) ) {
+			return $cached;
+		}
+		$map = array();
+		foreach ( Importers::all() as $importer ) {
+			if ( ! ( $importer instanceof ProvidesCopies ) || ! $importer->is_available()
+				|| \TranslateRocket\Coexistence::importer_active( $importer->id() ) ) {
+				continue;
+			}
+			foreach ( self::pairs( $importer ) as $pair ) {
+				if ( null === $pair ) {
+					continue;
+				}
+				$map[ (int) $pair['copy']->ID ] = array( (int) $pair['source']->ID, (string) $pair['lang'], $importer->label(), $importer->id() );
+			}
+		}
+		set_transient( $key, $map, 10 * MINUTE_IN_SECONDS );
+		update_option( self::LEFTOVERS . '_key', $key, false );
+		return $map;
+	}
+
+	/**
+	 * Forget the cached map (a page changed, a plugin was switched, choices were applied).
+	 */
+	public static function forget_leftovers(): void {
+		$key = (string) get_option( self::LEFTOVERS . '_key', '' );
+		if ( '' !== $key ) {
+			delete_transient( $key );
+		}
+	}
+
+	/**
 	 * Apply the owner's choices. Every choice is checked again against a fresh
 	 * review, so a copy that changed since the screen was loaded is skipped rather
 	 * than trashed on stale information.
@@ -171,6 +219,7 @@ class CopyCleanup {
 			$moved = array_slice( $moved, -self::MAX_MOVED, null, true );
 		}
 		update_option( self::OPTION_MOVED, $moved, false );
+		self::forget_leftovers();
 		Cache::flush();
 
 		return $done;

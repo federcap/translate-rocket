@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,20 @@ You translate however you like:
 = Languages =
 
 Translate your site into the languages your visitors actually speak: Spanish, French, German, Italian, Portuguese and Brazilian Portuguese, Dutch, Polish, Russian, Ukrainian, Turkish, Romanian, Greek, Arabic, Hindi, Indonesian, Vietnamese, Thai, Chinese, Japanese, Korean — 36 languages ship built in, and you can add unlimited custom ones (any language code works). The plugin's own admin interface is translated into nine languages besides English: Japanese, Spanish, German, French, Brazilian Portuguese, Italian, Dutch, Russian and Polish.
+
+= Works with =
+
+TranslateRocket translates the page your site actually sends to the browser, so it is not tied to a theme or a page builder. Every release is tested on a real site with the plugins below (tested means installed, configured and checked from the visitor's side, not only read about):
+
+* **Page builders:** Elementor and Elementor Pro (theme builder headers and footers included), the block editor. While a builder is editing a page - Elementor, Beaver Builder, Divi, Bricks, Oxygen, Breakdance, Brizy, WPBakery, Thrive Architect, the Customizer - TranslateRocket stays out of its way.
+* **Shops:** WooCommerce - product pages, cart, checkout and the order e-mails, in the customer's language.
+* **Forms:** Forminator, Contact Form 7, WPForms, Gravity Forms, SureForms, Formidable, Ninja Forms.
+* **Cookie and consent banners:** Complianz, CookieYes, GDPR Cookie Compliance, Cookie Notice - the banner text is collected, can be clicked in the visual editor and reaches visitors translated.
+* **SEO:** Yoast SEO, Rank Math - translated titles, descriptions and social tags.
+* **Caching and optimisation:** Cache Enabler, Autoptimize, WP Fastest Cache.
+* **Side by side with, and importing from:** WPML, Polylang, TranslatePress, Weglot, Bogo and others.
+
+Something missing, or not behaving? Tell me from https://translaterocket.com/support/ and I will test it.
 
 = Need a hand with your site? =
 
@@ -165,6 +179,17 @@ Yes. Open a page in the visual editor, click "Translate page" and use "Copy with
 
 == Changelog ==
 
+= 1.4.3 =
+* New: in the visual editor, text that JavaScript adds to the page - a consent banner, a pop-up - can now be clicked and translated like the rest of the page. Until now only the text printed by the server could be clicked; the banner had to be translated from the Translations list. Tested with Complianz, CookieYes, GDPR Cookie Compliance and Cookie Notice.
+* Fix: consent banners that build themselves the moment the page is ready (CookieYes among them) are now collected too - the collector was starting a few milliseconds after them. Tested with CookieYes, GDPR Cookie Compliance and Cookie Notice: the banner text reaches the translation screens and visitors see it translated.
+* Fix: page builders at work are left alone. When Elementor, Beaver Builder, Divi, Bricks, Oxygen, Breakdance, Brizy, WPBakery, Thrive Architect or the Customizer load a page to edit or preview it, TranslateRocket no longer collects their interface text ("Edit Header", "Drag widget here"...), no longer translates the canvas and hides the floating switcher there. Header, footer and popup templates opened on their own are not filed as pages either. New filters: `trrocket_builder_request`, `trrocket_builder_template_types`.
+* Fix: text meant for administrators only is no longer collected as page text. Debug panels, page-builder helpers and notes tools (Query Monitor, Elementor's editor helpers and Notes, the admin bar) are left alone, both in the page and in the text JavaScript adds later; and text JavaScript adds while hidden - dialogs, templates, collapsed helpers - is not collected until it is actually shown. The `trrocket_tool_prefixes` filter extends the list.
+* New: the separate pages left by Polylang, WPML or Bogo are now easy to spot. Once that plugin is deactivated, each copy is labelled in Pages and Posts ("Left by Polylang · Français — original: About us"), and a notice on those screens and on the Dashboard counts them and leads to "Review the separate pages".
+* New: "Translate again" for one page. In the Translations list every page now has a Redo button (and an X to remove it from the list): it removes that page's translations and its translated address for the language, so the page is translated from scratch with AI, in the browser or by hand. Nothing is lost: an Undo link puts everything back, and the last ten removals are kept.
+* Change: "Review the separate pages" says clearly that a page restored from the Trash is back at its old address at once.
+* Fix: text that JavaScript adds after the page has loaded - cookie and consent banners, pop-ups, AJAX results - now reaches the translation screens. When an administrator views a page in the source language, that text is filed with the page like the rest, so it can be translated and is then shown translated to visitors. Before, only text already translated elsewhere could be shown, so most cookie banners stayed in the source language.
+* Thanks to Alain, who tested every beta of this release on a real Polylang + Elementor + Forminator site and reported each of these issues with patience and precision.
+
 = 1.4.2 =
 * New: side by side, the preview is one click away. The Languages page shows a Preview panel with a button for each language, the admin bar has a Preview menu that opens the page you are looking at in another language (and a way back to the live site), and every published row in Pages and Posts has a Preview link. Before, the preview meant typing ?trr-preview= into the address.
 * Change: when the browser cannot translate, the panel now says what the translator built into Chrome and Edge needs (Windows 10 or 11, macOS 13+, Linux or ChromeOS but not Windows Server, 16 GB of RAM or a graphics card with more than 4 GB, 22 GB of free disk space, Edge 148+, https), instead of only saying that the browser has no translator.
@@ -256,6 +281,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.4.3 =
+Cookie and consent banners (Complianz, CookieYes and others) are now collected and can be clicked in the visual editor; page builders are left alone while you edit; "Translate again" for a single page, with undo; pages left behind by Polylang, WPML or Bogo are labelled.
 
 = 1.4.2 =
 Side by side, the preview is now one click away: a Preview panel on the Languages page, a Preview menu in the admin bar and a Preview link in Pages and Posts.

@@ -3376,3 +3376,105 @@ msgstr ""
 #: src/Admin/BrowserEngine.php
 msgid "Chrome and Edge translate on the device only on a computer that can run their built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM with 4 CPU cores or a graphics card with more than 4 GB, and 22 GB of free disk space. Edge needs version 148 or later, and the admin must be on https or localhost."
 msgstr ""
+
+#: src/Admin/Admin.php
+msgid "%d sentence also used on other pages kept its translation."
+msgid_plural "%d sentences also used on other pages kept their translation."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/Admin.php
+msgid "Undo"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Put back: %d translation, and the translated address."
+msgid_plural "Put back: %d translations, and the translated address."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/Admin.php
+msgid "Translate this page again? Its translations and translated address for this language are removed, so it can be translated from scratch. You can undo this."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Translate again: remove the translations and the translated address of this page, then redo them (undo available)"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Redo"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Remove this page from the list? Its translations stay in the database; the page comes back the next time it is read."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Remove this page from the list (its translations stay)"
+msgstr ""
+
+#: src/Admin/BrowserEngine.php
+msgid "Translating in the browser needs Chrome or Edge on a computer: on phones and tablets the built-in translator does not exist. Open this page on a computer, or use the copy-and-paste route below, which works here too."
+msgstr ""
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Left by %1$s · %2$s — original: %3$s"
+msgstr ""
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%1$d page left by %2$s is still published in another language"
+msgid_plural "%1$d pages left by %2$s are still published in other languages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "They are marked in the list. TranslateRocket translates the original pages itself, so these copies can go to the Trash (never deleted, restorable) or be kept as independent copies."
+msgstr ""
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Review the pages left by %s"
+msgstr ""
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Changed your mind? Restore a page from the Trash and it is back at its old address at once, exactly as before."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "This one needs a computer"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Chrome and Edge carry a translator that runs on the device itself, but only on a desktop computer — on phones and tablets it does not exist. Open this page on a computer to translate with no key. Everything else here works on a phone as usual."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Got it"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Image for this language"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Show a different image to readers of this language. The original is untouched, and every other language keeps it."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Choose image"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Choose the image for this language"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Back to the original"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown in this language"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "The media library did not load, so paste an image address instead."
+msgstr ""

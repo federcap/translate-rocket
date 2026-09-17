@@ -40,11 +40,14 @@ class DynamicContent {
 		// up regardless of context; the enqueue side only runs on the front end.
 		add_action( 'wp_ajax_trrocket_dyn', array( $this, 'ajax' ) );
 		add_action( 'wp_ajax_nopriv_trrocket_dyn', array( $this, 'ajax' ) );
+		// Administrators only: text added by JavaScript after the page loaded.
+		add_action( 'wp_ajax_trrocket_dyn_collect', array( $this, 'ajax_collect' ) );
 
 		if ( is_admin() ) {
 			return;
 		}
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue' ), 20 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_collector' ), 5 );
 	}
 
 	/**
@@ -63,7 +66,9 @@ class DynamicContent {
 			return;
 		}
 		// Nothing translated for this language yet: don't chatter with the server.
-		if ( ! Strings::has_translations( $lang ) ) {
+		// The visual editor still needs it, to make injected text clickable.
+		$editing = VisualEditor::is_editing();
+		if ( ! $editing && ! Strings::has_translations( $lang ) ) {
 			return;
 		}
 
@@ -81,9 +86,117 @@ class DynamicContent {
 			array(
 				'ajax' => admin_url( 'admin-ajax.php' ),
 				'lang' => $lang,
+				'edit' => $editing,
 			)
 		);
 		wp_enqueue_script( $handle );
+	}
+
+	/**
+	 * Attributes worth collecting from injected markup (the same the lookup handles).
+	 */
+	private const ATTRS = array( 'alt', 'title', 'placeholder', 'aria-label' );
+
+	/**
+	 * Most strings one administrator page view may file this way.
+	 */
+	private const MAX_COLLECT = 300;
+
+	/**
+	 * The collector: on a source-language page an administrator is reading, watch for
+	 * text that JavaScript adds after load (cookie and consent banners, pop-ups, AJAX
+	 * results) and file it with the page, like the engine files server-rendered text.
+	 * Without it those texts never reach the translation screens, so the lookup below
+	 * has nothing to return and the banner stays in the source language.
+	 */
+	public function maybe_enqueue_collector(): void {
+		if ( ! Engine::$collect_injected ) {
+			return;
+		}
+		$router = Plugin::instance()->router();
+		$qid    = ( function_exists( 'is_singular' ) && is_singular() ) ? (int) get_queried_object_id() : 0;
+		$page   = $qid > 0 ? $router->canonical_path( $qid ) : $router->current_clean_path();
+		$title  = function_exists( 'wp_get_document_title' ) ? wp_strip_all_tags( wp_get_document_title() ) : '';
+
+		$handle = 'trrocket-dynamic-collect';
+		// In the head: the observer must be listening before other plugins inject
+		// their banners on DOMContentLoaded.
+		wp_register_script( $handle, TRROCKET_URL . 'assets/js/dynamic-collect.js', array(), Plugin::asset_ver( 'assets/js/dynamic-collect.js' ), false );
+		wp_localize_script(
+			$handle,
+			'trrocketDynCollect',
+			array(
+				'ajax'  => admin_url( 'admin-ajax.php' ),
+				'nonce' => wp_create_nonce( 'trrocket_dyn_collect' ),
+				'page'  => $page,
+				'sig'   => wp_hash( 'trrocket_dyn_collect|' . $page ),
+				'title' => $title,
+				'tools' => array_values( \TranslateRocket\NoTranslate::tool_prefixes() ),
+			)
+		);
+		wp_enqueue_script( $handle );
+	}
+
+	/**
+	 * AJAX: file text added by JavaScript on a page an administrator viewed.
+	 */
+	public function ajax_collect(): void {
+		check_ajax_referer( 'trrocket_dyn_collect', 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( null, 403 );
+		}
+		$page = isset( $_POST['page'] ) ? sanitize_text_field( wp_unslash( $_POST['page'] ) ) : '';
+		$sig  = isset( $_POST['sig'] ) ? sanitize_text_field( wp_unslash( $_POST['sig'] ) ) : '';
+		// The page key comes back from the browser: it must be the one we handed out.
+		if ( '' === $page || ! hash_equals( wp_hash( 'trrocket_dyn_collect|' . $page ), $sig ) ) {
+			wp_send_json_error( null, 400 );
+		}
+		$title = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+		$raw   = isset( $_POST['items'] ) ? json_decode( (string) wp_unslash( $_POST['items'] ), true ) : null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- decoded and checked item by item below.
+		if ( ! is_array( $raw ) ) {
+			wp_send_json_error( null, 400 );
+		}
+
+		$items = array();
+		$seen  = array();
+		foreach ( array_slice( $raw, 0, self::MAX_COLLECT ) as $row ) {
+			if ( ! is_array( $row ) || ! isset( $row[0] ) || ! is_string( $row[0] ) ) {
+				continue;
+			}
+			$text = trim( wp_strip_all_tags( $row[0] ) );
+			$attr = isset( $row[1] ) && is_string( $row[1] ) ? $row[1] : '';
+			if ( '' === $text || strlen( $text ) > 2000 || ! preg_match( '/\p{L}/u', $text ) ) {
+				continue;
+			}
+			if ( Engine::is_noise( $text ) || \TranslateRocket\NoTranslate::text_excluded( $text ) ) {
+				continue;
+			}
+			if ( '' !== $attr && ! in_array( $attr, self::ATTRS, true ) ) {
+				continue;
+			}
+			$key = $attr . '|' . $text;
+			if ( isset( $seen[ $key ] ) ) {
+				continue;
+			}
+			$seen[ $key ] = true;
+			$items[]      = '' === $attr
+				? array(
+					'original' => $text,
+					'type'     => 'text',
+					'context'  => null,
+				)
+				: array(
+					'original' => $text,
+					'type'     => 'attribute',
+					'context'  => $attr,
+				);
+		}
+
+		$secondary = Plugin::instance()->router()->secondary_languages();
+		if ( ! empty( $items ) && ! empty( $secondary ) ) {
+			Strings::remember_batch( $items, $secondary, $page, $title );
+		}
+		wp_send_json_success( array( 'filed' => count( $items ) ) );
 	}
 
 	/**

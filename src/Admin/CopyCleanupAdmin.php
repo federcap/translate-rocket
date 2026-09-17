@@ -27,6 +27,92 @@ class CopyCleanupAdmin {
 	 */
 	public function register(): void {
 		add_action( 'admin_init', array( $this, 'maybe_apply' ) );
+		// The copies a deactivated plugin left behind look like any other page in the
+		// Pages list: label them, and say where to tidy them up.
+		add_filter( 'display_post_states', array( $this, 'post_states' ), 10, 2 );
+		add_action( 'admin_notices', array( $this, 'leftovers_notice' ) );
+		add_action( 'transition_post_status', array( __CLASS__, 'forget_cache' ) );
+		add_action( 'activated_plugin', array( __CLASS__, 'forget_cache' ) );
+		add_action( 'deactivated_plugin', array( __CLASS__, 'forget_cache' ) );
+	}
+
+	/**
+	 * A page changed status (trashed, restored, published): the cached map is stale.
+	 */
+	public static function forget_cache(): void {
+		CopyCleanup::forget_leftovers();
+	}
+
+	/**
+	 * "Left by Polylang · Português — original: About us" next to a leftover copy.
+	 *
+	 * @param mixed $states Post states.
+	 * @param mixed $post   The row's post.
+	 * @return mixed
+	 */
+	public function post_states( $states, $post ) {
+		if ( ! is_array( $states ) || ! $post instanceof \WP_Post || ! current_user_can( 'manage_options' ) ) {
+			return $states;
+		}
+		$map = CopyCleanup::leftovers();
+		if ( ! isset( $map[ (int) $post->ID ] ) ) {
+			return $states;
+		}
+		list( $source_id, $lang, $label ) = $map[ (int) $post->ID ];
+		$title = get_the_title( $source_id );
+		$states['trrocket_copy'] = sprintf(
+			/* translators: 1: plugin name, 2: language name, 3: title of the original page. */
+			__( 'Left by %1$s · %2$s — original: %3$s', 'translate-rocket' ),
+			$label,
+			Languages::label( $lang ),
+			'' !== $title ? $title : '#' . (int) $source_id
+		);
+		return $states;
+	}
+
+	/**
+	 * On the Pages/Posts lists and the Dashboard: how many leftover copies there are,
+	 * and the button that leads to the review.
+	 */
+	public function leftovers_notice(): void {
+		if ( ! current_user_can( 'manage_options' ) || ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+		$screen = get_current_screen();
+		if ( ! $screen || ! in_array( $screen->base, array( 'edit', 'dashboard' ), true ) ) {
+			return;
+		}
+		$map = CopyCleanup::leftovers();
+		if ( empty( $map ) ) {
+			return;
+		}
+		$by = array();
+		foreach ( $map as $row ) {
+			$by[ $row[3] ] = array( $row[2], ( $by[ $row[3] ][1] ?? 0 ) + 1 );
+		}
+		echo '<div class="notice notice-info"><p><strong>TranslateRocket</strong> — ';
+		$parts = array();
+		foreach ( $by as $id => $info ) {
+			$parts[] = sprintf(
+				/* translators: 1: number of pages, 2: plugin name. */
+				esc_html( _n( '%1$d page left by %2$s is still published in another language', '%1$d pages left by %2$s are still published in other languages', (int) $info[1], 'translate-rocket' ) ),
+				(int) $info[1],
+				esc_html( $info[0] )
+			);
+		}
+		echo implode( '; ', $parts ) . '. '; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+		esc_html_e( 'They are marked in the list. TranslateRocket translates the original pages itself, so these copies can go to the Trash (never deleted, restorable) or be kept as independent copies.', 'translate-rocket' );
+		echo '</p><p>';
+		foreach ( $by as $id => $info ) {
+			echo '<a class="button button-primary" style="margin-right:8px" href="' . esc_url( self::review_url( (string) $id ) ) . '">';
+			printf(
+				/* translators: %s: plugin name. */
+				esc_html__( 'Review the pages left by %s', 'translate-rocket' ),
+				esc_html( $info[0] )
+			);
+			echo '</a>';
+		}
+		echo '</p></div>';
 	}
 
 	/**
@@ -132,7 +218,8 @@ class CopyCleanupAdmin {
 				printf( esc_html__( '%s kept a separate page for each language. TranslateRocket translates the original page itself, so each of these is now a second place to edit the same page — and a second page for search engines to find.', 'translate-rocket' ), esc_html( $label ) );
 				?>
 			</p>
-			<p><?php esc_html_e( 'Nothing is deleted: pages go to the Trash, where you can restore them, and their old address sends visitors and search engines to the translated page.', 'translate-rocket' ); ?></p>
+			<p><?php esc_html_e( 'Nothing is deleted: pages go to the Trash, where you can restore them, and their old address sends visitors and search engines to the translated page.', 'translate-rocket' ); ?>
+			<?php esc_html_e( 'Changed your mind? Restore a page from the Trash and it is back at its old address at once, exactly as before.', 'translate-rocket' ); ?></p>
 
 			<?php if ( empty( $rows ) ) : ?>
 				<p><strong><?php esc_html_e( 'There are no separate pages left to review.', 'translate-rocket' ); ?></strong></p>

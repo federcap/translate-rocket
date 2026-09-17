@@ -28,7 +28,8 @@
 
 	// Warm the cache from this tab's session (instant re-translation on revisit).
 	try {
-		var saved = window.sessionStorage.getItem( storeKey );
+		// Not while editing: a translation saved a moment ago must show up at once.
+		var saved = cfg.edit ? null : window.sessionStorage.getItem( storeKey );
 		if ( saved ) {
 			cache = JSON.parse( saved ) || {};
 		}
@@ -56,6 +57,15 @@
 			// translate="no", but match by class/id too so a stripped attribute can
 			// never reintroduce the bug.
 			if ( el.classList && el.classList.contains( 'trrocket-ve-pop' ) ) {
+				return true;
+			}
+			// Text the visual editor already handles (marked by the server, or by us
+			// below): the editor rewrites it as you save, and that is not new text.
+			if ( cfg.edit && el.classList && el.classList.contains( 'trrocket-ed' ) ) {
+				return true;
+			}
+			// Badges, progress marks and every other piece of the editor's own interface.
+			if ( cfg.edit && ( ( typeof el.className === 'string' && /(^|\s)trrocket-ve-/.test( el.className ) ) || ( el.id && el.id.indexOf( 'trrocket-ve-' ) === 0 ) ) ) {
 				return true;
 			}
 			if ( el.id === 'trrocket-ve-bulkpanel' || el.id === 'trrocket-ve-vispanel' || el.id === 'trrocket-ve-seopanel' ) {
@@ -90,6 +100,7 @@
 			if ( cache[ orig ] ) {
 				applyText( node, orig, cache[ orig ] );
 			}
+			mark( node, orig, !! cache[ orig ] );
 			return;
 		}
 		pendingNodes.push( { node: node, orig: orig } );
@@ -154,6 +165,24 @@
 
 	// Swap a text node's source text for its translation, only if it still shows
 	// the source (so we never clobber a later re-render).
+	// In the visual editor, text added by JavaScript (a consent banner, a pop-up) gets
+	// the same marker the server puts on the page's own text, so it can be clicked
+	// and translated like everything else.
+	function mark( node, orig, translated ) {
+		if ( ! cfg.edit || ! node || ! node.isConnected || ! node.parentNode ) {
+			return;
+		}
+		var parent = node.parentNode;
+		if ( parent.nodeType !== 1 || ( parent.classList && parent.classList.contains( 'trrocket-ed' ) ) ) {
+			return;
+		}
+		var span = document.createElement( 'span' );
+		span.className = 'trrocket-ed trrocket-ed-dyn' + ( translated ? '' : ' trrocket-ed-untr' );
+		span.setAttribute( 'data-trr-src', encodeURIComponent( orig ) );
+		parent.replaceChild( span, node );
+		span.appendChild( node );
+	}
+
 	function applyText( node, orig, trans ) {
 		if ( ! node || ! node.isConnected || ! trans ) {
 			return;
@@ -234,6 +263,7 @@
 				continue;
 			}
 			applyText( p.node, p.orig, cache[ p.orig ] );
+			mark( p.node, p.orig, !! cache[ p.orig ] );
 		}
 		pendingNodes = keepN;
 

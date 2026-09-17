@@ -53,6 +53,15 @@ class Engine {
 	private $do_collect = false;
 
 	/**
+	 * This request collects source text, on a source-language page. Read by the
+	 * collector for text that JavaScript adds after the page has loaded (cookie
+	 * banners, pop-ups), which the engine itself never sees.
+	 *
+	 * @var bool
+	 */
+	public static $collect_injected = false;
+
+	/**
 	 * Whether to store this request's output in the page cache on the way out.
 	 *
 	 * @var bool
@@ -170,7 +179,7 @@ class Engine {
 	 * collected or translated: "16px", "1.4em", "100%", "1.5rem", "inherit"…
 	 * (these typically leak in from typography / style-guide demo blocks).
 	 */
-	private static function is_noise( string $text ): bool {
+	public static function is_noise( string $text ): bool {
 		if ( preg_match( '/^[\d.,\s]+(px|em|rem|pt|ex|ch|vh|vw|vmin|vmax|fr|%)$/i', $text ) ) {
 			return true;
 		}
@@ -191,6 +200,11 @@ class Engine {
 	 * Decide whether to buffer this request and start it.
 	 */
 	public function maybe_start(): void {
+		// A page builder editing this page (Elementor, Beaver Builder, Divi...): the
+		// page is its canvas, full of its own tools. Leave it exactly as it is.
+		if ( \TranslateRocket\BuilderMode::active() ) {
+			return;
+		}
 		$router             = Plugin::instance()->router();
 		$this->current      = $router->current_language();
 		$this->secondary    = $router->secondary_languages();
@@ -202,6 +216,11 @@ class Engine {
 		// be translated. Source pages still discover everything.
 		$this->do_collect   = current_user_can( 'manage_options' ) && ! empty( $this->secondary );
 		if ( $this->do_collect && $this->is_secondary && Locale::$active ) {
+			$this->do_collect = false;
+		}
+		// A header, footer or popup template opened on its own: its text is collected
+		// on the pages that use it, not filed as a page of its own.
+		if ( $this->do_collect && \TranslateRocket\BuilderMode::template_view() ) {
 			$this->do_collect = false;
 		}
 		// Side by side, the other plugin serves its own translated pages on its
@@ -226,6 +245,9 @@ class Engine {
 		if ( NoTranslate::path_excluded( $router->current_clean_path() ) ) {
 			return;
 		}
+		// Only on source pages: on a translated page the observer would see our own
+		// translations being written in, and file them as source text.
+		self::$collect_injected = $this->do_collect && ! $this->is_secondary;
 
 		// Page cache: serve a stored translated page to anonymous visitors, or mark
 		// this request to be stored once it has been built.
@@ -408,6 +430,13 @@ class Engine {
 		}
 		$skip   .= "ancestor::*[@id='wpadminbar'] or ancestor::*[@id='trrocket-ve-bar'] or ancestor::*[@translate='no']";
 		$skip_el = "ancestor-or-self::*[@id='wpadminbar'] or ancestor-or-self::*[@id='trrocket-ve-bar'] or ancestor-or-self::*[@translate='no']";
+		// Tooling that only administrators see (debug panels, page-builder helpers): not
+		// page content, so never collected — and never translated either.
+		foreach ( NoTranslate::tool_prefixes() as $prefix ) {
+			$p        = str_replace( "'", '', (string) $prefix );
+			$skip    .= " or ancestor::*[starts-with(@id,'{$p}')] or ancestor::*[contains(concat(' ',normalize-space(@class),' '),' {$p}')] or ancestor::*[starts-with(@class,'{$p}')]";
+			$skip_el .= " or ancestor-or-self::*[starts-with(@id,'{$p}')] or ancestor-or-self::*[contains(concat(' ',normalize-space(@class),' '),' {$p}')] or ancestor-or-self::*[starts-with(@class,'{$p}')]";
+		}
 
 		// User-configured CSS selectors to leave untranslated.
 		$extra = NoTranslate::xpath_skip();

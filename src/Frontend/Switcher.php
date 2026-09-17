@@ -434,7 +434,7 @@ class Switcher {
 	 * Floating switcher in a fixed corner (enabled from settings).
 	 */
 	public function floating(): void {
-		if ( Preview::hidden() ) {
+		if ( Preview::hidden() || \TranslateRocket\BuilderMode::active() ) {
 			return;
 		}
 		$s = self::settings();

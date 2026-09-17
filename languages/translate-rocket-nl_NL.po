@@ -2617,3 +2617,105 @@ msgstr "Wil je een bepaalde pagina bekijken, open haar dan op je site en gebruik
 #: src/Admin/BrowserEngine.php
 msgid "Chrome and Edge translate on the device only on a computer that can run their built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM with 4 CPU cores or a graphics card with more than 4 GB, and 22 GB of free disk space. Edge needs version 148 or later, and the admin must be on https or localhost."
 msgstr "Chrome en Edge vertalen alleen op het apparaat zelf op een computer die hun ingebouwde model kan draaien: Windows 10 of 11, macOS 13 of nieuwer, Linux of ChromeOS (geen Windows Server), 16 GB RAM met 4 processorkernen of een videokaart met meer dan 4 GB, en 22 GB vrije schijfruimte. Edge moet versie 148 of nieuwer zijn, en het beheer moet via https of localhost draaien."
+
+#: src/Admin/Admin.php
+msgid "%d sentence also used on other pages kept its translation."
+msgid_plural "%d sentences also used on other pages kept their translation."
+msgstr[0] "%d zin die ook op andere pagina’s voorkomt, heeft zijn vertaling behouden."
+msgstr[1] "%d zinnen die ook op andere pagina’s voorkomen, hebben hun vertaling behouden."
+
+#: src/Admin/Admin.php
+msgid "Undo"
+msgstr "Ongedaan maken"
+
+#: src/Admin/Admin.php
+msgid "Put back: %d translation, and the translated address."
+msgid_plural "Put back: %d translations, and the translated address."
+msgstr[0] "Teruggezet: %d vertaling en het vertaalde adres."
+msgstr[1] "Teruggezet: %d vertalingen en het vertaalde adres."
+
+#: src/Admin/Admin.php
+msgid "Translate this page again? Its translations and translated address for this language are removed, so it can be translated from scratch. You can undo this."
+msgstr "Deze pagina opnieuw vertalen? De vertalingen en het vertaalde adres voor deze taal worden verwijderd, zodat je helemaal opnieuw kunt beginnen. Je kunt dit ongedaan maken."
+
+#: src/Admin/Admin.php
+msgid "Translate again: remove the translations and the translated address of this page, then redo them (undo available)"
+msgstr "Opnieuw vertalen: verwijdert de vertalingen en het vertaalde adres van deze pagina om ze opnieuw te maken (ongedaan maken mogelijk)"
+
+#: src/Admin/Admin.php
+msgid "Redo"
+msgstr "Opnieuw"
+
+#: src/Admin/Admin.php
+msgid "Remove this page from the list? Its translations stay in the database; the page comes back the next time it is read."
+msgstr "Deze pagina uit de lijst halen? De vertalingen blijven in de database; de pagina komt terug zodra ze opnieuw wordt gelezen."
+
+#: src/Admin/Admin.php
+msgid "Remove this page from the list (its translations stay)"
+msgstr "Deze pagina uit de lijst halen (de vertalingen blijven)"
+
+#: src/Admin/BrowserEngine.php
+msgid "Translating in the browser needs Chrome or Edge on a computer: on phones and tablets the built-in translator does not exist. Open this page on a computer, or use the copy-and-paste route below, which works here too."
+msgstr "Vertalen in de browser vraagt Chrome of Edge op een computer: op telefoons en tablets bestaat de ingebouwde vertaler niet. Open deze pagina op een computer, of gebruik hieronder de route met kopiëren en plakken, die ook hier werkt."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Left by %1$s · %2$s — original: %3$s"
+msgstr "Achtergelaten door %1$s · %2$s — origineel: %3$s"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%1$d page left by %2$s is still published in another language"
+msgid_plural "%1$d pages left by %2$s are still published in other languages"
+msgstr[0] "%1$d pagina achtergelaten door %2$s staat nog gepubliceerd in een andere taal"
+msgstr[1] "%1$d pagina’s achtergelaten door %2$s staan nog gepubliceerd in andere talen"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "They are marked in the list. TranslateRocket translates the original pages itself, so these copies can go to the Trash (never deleted, restorable) or be kept as independent copies."
+msgstr "Ze zijn gemarkeerd in de lijst. TranslateRocket vertaalt de originele pagina’s zelf, dus deze kopieën kunnen naar de prullenbak (nooit verwijderd, terug te zetten) of blijven bestaan als onafhankelijke kopieën."
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Review the pages left by %s"
+msgstr "Bekijk de pagina’s achtergelaten door %s"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Changed your mind? Restore a page from the Trash and it is back at its old address at once, exactly as before."
+msgstr "Van gedachten veranderd? Zet een pagina terug uit de prullenbak en ze staat meteen weer op haar oude adres, precies zoals voorheen."
+
+#: src/Frontend/VisualEditor.php
+msgid "This one needs a computer"
+msgstr "Hiervoor is een computer nodig"
+
+#: src/Frontend/VisualEditor.php
+msgid "Chrome and Edge carry a translator that runs on the device itself, but only on a desktop computer — on phones and tablets it does not exist. Open this page on a computer to translate with no key. Everything else here works on a phone as usual."
+msgstr "Chrome en Edge hebben een vertaler die op het apparaat zelf draait, maar alleen op een desktopcomputer — op telefoons en tablets bestaat hij niet. Open deze pagina op een computer om zonder sleutel te vertalen. Al het andere werkt hier op een telefoon zoals altijd."
+
+#: src/Frontend/VisualEditor.php
+msgid "Got it"
+msgstr "Begrepen"
+
+#: src/Frontend/VisualEditor.php
+msgid "Image for this language"
+msgstr "Afbeelding voor deze taal"
+
+#: src/Frontend/VisualEditor.php
+msgid "Show a different image to readers of this language. The original is untouched, and every other language keeps it."
+msgstr "Toon lezers van deze taal een andere afbeelding. Het origineel blijft onaangeroerd en alle andere talen houden het."
+
+#: src/Frontend/VisualEditor.php
+msgid "Choose image"
+msgstr "Afbeelding kiezen"
+
+#: src/Frontend/VisualEditor.php
+msgid "Choose the image for this language"
+msgstr "Kies de afbeelding voor deze taal"
+
+#: src/Frontend/VisualEditor.php
+msgid "Back to the original"
+msgstr "Terug naar het origineel"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown in this language"
+msgstr "Getoond in deze taal"
+
+#: src/Frontend/VisualEditor.php
+msgid "The media library did not load, so paste an image address instead."
+msgstr "De mediabibliotheek is niet geladen: plak in plaats daarvan het adres van een afbeelding."

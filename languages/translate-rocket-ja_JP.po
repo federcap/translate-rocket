@@ -2612,3 +2612,102 @@ msgstr "特定のページをプレビューするには、サイトでそのペ
 #: src/Admin/BrowserEngine.php
 msgid "Chrome and Edge translate on the device only on a computer that can run their built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM with 4 CPU cores or a graphics card with more than 4 GB, and 22 GB of free disk space. Edge needs version 148 or later, and the admin must be on https or localhost."
 msgstr "Chrome と Edge がデバイス上で翻訳できるのは、内蔵モデルを実行できるパソコンだけです: Windows 10 または 11、macOS 13 以降、Linux または ChromeOS(Windows Server は非対応)、16 GB 以上の RAM と 4 コア以上の CPU、または 4 GB を超えるメモリのグラフィックカード、そして 22 GB の空きディスク容量が必要です。Edge はバージョン 148 以降が必要で、管理画面は https または localhost で開いている必要があります。"
+
+#: src/Admin/Admin.php
+msgid "%d sentence also used on other pages kept its translation."
+msgid_plural "%d sentences also used on other pages kept their translation."
+msgstr[0] "他のページでも使われている %d 件の文は、翻訳をそのまま残しました。"
+
+#: src/Admin/Admin.php
+msgid "Undo"
+msgstr "元に戻す"
+
+#: src/Admin/Admin.php
+msgid "Put back: %d translation, and the translated address."
+msgid_plural "Put back: %d translations, and the translated address."
+msgstr[0] "元に戻しました: 翻訳 %d 件と、翻訳済みのアドレス。"
+
+#: src/Admin/Admin.php
+msgid "Translate this page again? Its translations and translated address for this language are removed, so it can be translated from scratch. You can undo this."
+msgstr "このページをもう一度翻訳しますか？この言語の翻訳と翻訳済みアドレスを削除し、最初から翻訳し直せるようにします。元に戻すこともできます。"
+
+#: src/Admin/Admin.php
+msgid "Translate again: remove the translations and the translated address of this page, then redo them (undo available)"
+msgstr "再翻訳: このページの翻訳と翻訳済みアドレスを削除して、やり直します（元に戻せます）"
+
+#: src/Admin/Admin.php
+msgid "Redo"
+msgstr "やり直す"
+
+#: src/Admin/Admin.php
+msgid "Remove this page from the list? Its translations stay in the database; the page comes back the next time it is read."
+msgstr "このページを一覧から外しますか？翻訳はデータベースに残り、ページは次に読み込まれたときに一覧へ戻ります。"
+
+#: src/Admin/Admin.php
+msgid "Remove this page from the list (its translations stay)"
+msgstr "このページを一覧から外す（翻訳は残ります）"
+
+#: src/Admin/BrowserEngine.php
+msgid "Translating in the browser needs Chrome or Edge on a computer: on phones and tablets the built-in translator does not exist. Open this page on a computer, or use the copy-and-paste route below, which works here too."
+msgstr "ブラウザでの翻訳には、パソコンの Chrome または Edge が必要です。スマートフォンやタブレットには内蔵の翻訳機能がありません。このページをパソコンで開くか、下のコピー＆ペーストの方法をお使いください。こちらはここでも使えます。"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Left by %1$s · %2$s — original: %3$s"
+msgstr "%1$s が残したページ · %2$s — 元のページ: %3$s"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "%1$d page left by %2$s is still published in another language"
+msgid_plural "%1$d pages left by %2$s are still published in other languages"
+msgstr[0] "%2$s が残した %1$d 件のページが、まだ別の言語で公開されています"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "They are marked in the list. TranslateRocket translates the original pages itself, so these copies can go to the Trash (never deleted, restorable) or be kept as independent copies."
+msgstr "一覧に印が付いています。TranslateRocket は元のページそのものを翻訳するため、これらのコピーはゴミ箱へ移す（削除はされず、復元できます）か、独立したコピーとして残せます。"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Review the pages left by %s"
+msgstr "%s が残したページを確認"
+
+#: src/Admin/CopyCleanupAdmin.php
+msgid "Changed your mind? Restore a page from the Trash and it is back at its old address at once, exactly as before."
+msgstr "気が変わりましたか？ゴミ箱からページを復元すれば、すぐに元のアドレスへ、以前とまったく同じ状態で戻ります。"
+
+#: src/Frontend/VisualEditor.php
+msgid "This one needs a computer"
+msgstr "これにはパソコンが必要です"
+
+#: src/Frontend/VisualEditor.php
+msgid "Chrome and Edge carry a translator that runs on the device itself, but only on a desktop computer — on phones and tablets it does not exist. Open this page on a computer to translate with no key. Everything else here works on a phone as usual."
+msgstr "Chrome と Edge にはデバイス上で動く翻訳機能がありますが、使えるのはパソコンだけで、スマートフォンやタブレットにはありません。キーなしで翻訳するには、このページをパソコンで開いてください。それ以外の機能は、スマートフォンでもいつもどおり使えます。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Got it"
+msgstr "わかりました"
+
+#: src/Frontend/VisualEditor.php
+msgid "Image for this language"
+msgstr "この言語用の画像"
+
+#: src/Frontend/VisualEditor.php
+msgid "Show a different image to readers of this language. The original is untouched, and every other language keeps it."
+msgstr "この言語の読者には別の画像を表示します。元の画像は変更されず、他の言語ではそのまま使われます。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Choose image"
+msgstr "画像を選ぶ"
+
+#: src/Frontend/VisualEditor.php
+msgid "Choose the image for this language"
+msgstr "この言語用の画像を選んでください"
+
+#: src/Frontend/VisualEditor.php
+msgid "Back to the original"
+msgstr "元の画像に戻す"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown in this language"
+msgstr "この言語で表示中"
+
+#: src/Frontend/VisualEditor.php
+msgid "The media library did not load, so paste an image address instead."
+msgstr "メディアライブラリを読み込めませんでした。代わりに画像のアドレスを貼り付けてください。"
