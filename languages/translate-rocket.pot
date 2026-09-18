@@ -3478,3 +3478,179 @@ msgstr ""
 #: src/Frontend/VisualEditor.php
 msgid "The media library did not load, so paste an image address instead."
 msgstr ""
+
+msgid "Online: your visitors see this language. Click to hide it while you work on it."
+msgstr ""
+
+msgid "Offline: only you see this language. Click to publish it."
+msgstr ""
+
+msgid "online"
+msgstr ""
+
+msgid "offline"
+msgstr ""
+
+msgid "Published, or still being translated?"
+msgstr ""
+
+msgid "A language kept offline is invisible to visitors: it is left out of the language switcher, out of your sitemap and out of the hreflang tags, and anyone landing on one of its URLs is sent to your default language. You keep working on it normally — and you can see it on the real pages, because whoever can preview still sees everything. Put it online when you are happy with it."
+msgstr ""
+
+msgid "Add a language today, publish it when it is ready. Nothing half-translated ever reaches your visitors or Google."
+msgstr ""
+
+msgid "nothing collected yet"
+msgstr ""
+
+msgid "(no alt text)"
+msgstr ""
+
+msgid "(empty)"
+msgstr ""
+
+msgid "Alt text"
+msgstr ""
+
+msgid "Change the photo"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Social title (Open Graph)"
+msgstr ""
+
+msgid "The headline people see when the page is shared on Facebook, LinkedIn or WhatsApp."
+msgstr ""
+
+msgid "Social description (Open Graph)"
+msgstr ""
+
+msgid "The text under that headline in the shared preview."
+msgstr ""
+
+msgid "Title for X / Twitter"
+msgstr ""
+
+msgid "Used when the page is shared on X."
+msgstr ""
+
+msgid "Description for X / Twitter"
+msgstr ""
+
+msgid "The summary in the X preview card."
+msgstr ""
+
+msgid "Alt text of the shared image"
+msgstr ""
+
+msgid "Describes the preview image for people using a screen reader."
+msgstr ""
+
+msgid "Alt text of the X image"
+msgstr ""
+
+msgid "Describes the preview image on X."
+msgstr ""
+
+msgid "Site name in shares"
+msgstr ""
+
+msgid "The name of your site as it appears in the shared preview."
+msgstr ""
+
+msgid "Meta keywords"
+msgstr ""
+
+msgid "Google has ignored these since 2009, but some other engines and directories still read them."
+msgstr ""
+
+msgid "Images on this page"
+msgstr ""
+
+msgid "The alt text is what search engines read instead of the picture. Click a line to jump to that photo in the page and edit it."
+msgstr ""
+
+msgid "Other HTML attributes"
+msgstr ""
+
+msgid "Titles, placeholders and ARIA labels: invisible on screen, but read by search engines and screen readers."
+msgstr ""
+
+msgid "Everything search engines read in %s, in order: the address, the title and description, the social preview, then the images and attributes inside the page."
+msgstr ""
+
+msgid "A language you add now starts offline: nobody sees it while you translate it. Flip its switch to green when it is ready."
+msgstr ""
+
+msgid "%d page changed since TranslateRocket last read it."
+msgid_plural "%d pages changed since TranslateRocket last read them."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Any new text on them has not been detected yet, so it is not in your list of strings to translate — and on the translated pages it is still showing in your source language."
+msgstr ""
+
+msgid "Scan them now"
+msgstr ""
+
+msgid "⚠ Not saved — your site refused the request. Your text is still here: try again."
+msgstr ""
+
+msgid "⚠ Your site did not answer. The text is still here — check your connection, then try again."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Text inside pop-ups and cookie banners appears here once you have opened it yourself, as an administrator, on a page in your source language."
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "%1$d %2$s"
+msgid_plural "%1$d %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "You have %1$s, one per language — %2$s needs them, because it serves a different page for each language. TranslateRocket does not: it translates the header and footer you already have, in every language. After the import, keep the ones in your source language, put a single TranslateRocket switcher in the header, and the copies can go."
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "header"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "headers"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "footer"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "footers"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "single-post template"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "single-post templates"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "archive template"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "archive templates"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "pop-up"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "pop-ups"
+msgstr ""

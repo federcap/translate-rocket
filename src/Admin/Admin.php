@@ -1369,6 +1369,10 @@ class Admin {
 					<?php
 					if ( $available ) {
 						CopyCleanupAdmin::intro( $importer );
+						$avviso_modelli = \TranslateRocket\Importers\BuilderTemplates::notice( $importer->label() );
+						if ( '' !== $avviso_modelli ) {
+							echo '<p class="description trr-modelli-lingua">' . esc_html( $avviso_modelli ) . '</p>';
+						}
 					}
 					?>
 				<?php endforeach; ?>
@@ -4288,6 +4292,10 @@ JS;
 		echo '<div class="wrap trrocket-wrap">';
 		self::header( 'translate-rocket-strings' );
 		echo '<h1 class="trr-page-title">' . esc_html__( 'Translations', 'translate-rocket' ) . '</h1>';
+		// Chiesto da chi migra: i testi che il JavaScript aggiunge (banner dei cookie, pop-up,
+		// menu dentro un pop-up) non esistono finche' non si aprono, quindi qui non compaiono
+		// e sembra che il plugin non li veda.
+		echo '<p class="trrocket-tagline">' . esc_html__( 'Text inside pop-ups and cookie banners appears here once you have opened it yourself, as an administrator, on a page in your source language.', 'translate-rocket' ) . '</p>';
 
 		if ( empty( $targets ) ) {
 			echo '<p>' . esc_html__( 'Add a target language first in TranslateRocket settings.', 'translate-rocket' ) . '</p></div>';

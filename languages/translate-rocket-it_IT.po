@@ -2912,3 +2912,57 @@ msgstr "Mostrata in questa lingua"
 #: src/Frontend/VisualEditor.php
 msgid "The media library did not load, so paste an image address instead."
 msgstr "La libreria dei media non si è caricata: incolla qui l’indirizzo di un’immagine."
+
+#: src/Admin/Admin.php
+msgid "Text inside pop-ups and cookie banners appears here once you have opened it yourself, as an administrator, on a page in your source language."
+msgstr "Il testo dentro i pop-up e i banner dei cookie compare qui dopo che l’hai aperto tu, da amministratore, su una pagina nella lingua di partenza."
+
+#: src/Importers/BuilderTemplates.php
+msgid "%1$d %2$s"
+msgid_plural "%1$d %2$s"
+msgstr[0] "%1$d %2$s"
+msgstr[1] "%1$d %2$s"
+
+#: src/Importers/BuilderTemplates.php
+msgid "You have %1$s, one per language — %2$s needs them, because it serves a different page for each language. TranslateRocket does not: it translates the header and footer you already have, in every language. After the import, keep the ones in your source language, put a single TranslateRocket switcher in the header, and the copies can go."
+msgstr "Hai %1$s, una copia per lingua — a %2$s servono, perché mostra una pagina diversa per ogni lingua. A TranslateRocket no: traduce l’intestazione e il piè di pagina che hai già, in ogni lingua. Dopo l’importazione tieni quelle nella lingua di partenza, metti nell’intestazione un solo selettore di TranslateRocket, e le copie possono andare via."
+
+#: src/Importers/BuilderTemplates.php
+msgid "header"
+msgstr "intestazione"
+
+#: src/Importers/BuilderTemplates.php
+msgid "headers"
+msgstr "intestazioni"
+
+#: src/Importers/BuilderTemplates.php
+msgid "footer"
+msgstr "piè di pagina"
+
+#: src/Importers/BuilderTemplates.php
+msgid "footers"
+msgstr "piè di pagina"
+
+#: src/Importers/BuilderTemplates.php
+msgid "single-post template"
+msgstr "modello per gli articoli"
+
+#: src/Importers/BuilderTemplates.php
+msgid "single-post templates"
+msgstr "modelli per gli articoli"
+
+#: src/Importers/BuilderTemplates.php
+msgid "archive template"
+msgstr "modello di archivio"
+
+#: src/Importers/BuilderTemplates.php
+msgid "archive templates"
+msgstr "modelli di archivio"
+
+#: src/Importers/BuilderTemplates.php
+msgid "pop-up"
+msgstr "pop-up"
+
+#: src/Importers/BuilderTemplates.php
+msgid "pop-ups"
+msgstr "pop-up"

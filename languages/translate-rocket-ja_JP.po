@@ -2711,3 +2711,56 @@ msgstr "この言語で表示中"
 #: src/Frontend/VisualEditor.php
 msgid "The media library did not load, so paste an image address instead."
 msgstr "メディアライブラリを読み込めませんでした。代わりに画像のアドレスを貼り付けてください。"
+
+#: src/Admin/Admin.php
+msgid "Text inside pop-ups and cookie banners appears here once you have opened it yourself, as an administrator, on a page in your source language."
+msgstr "ポップアップや Cookie バナーの中の文は、管理者としてご自身が元の言語のページで開いたあとに、ここに表示されます。"
+
+#: src/Importers/BuilderTemplates.php
+msgid "%1$d %2$s"
+msgid_plural "%1$d %2$s"
+msgstr[0] "%1$d %2$s"
+
+#: src/Importers/BuilderTemplates.php
+msgid "You have %1$s, one per language — %2$s needs them, because it serves a different page for each language. TranslateRocket does not: it translates the header and footer you already have, in every language. After the import, keep the ones in your source language, put a single TranslateRocket switcher in the header, and the copies can go."
+msgstr "%1$s があり、言語ごとに 1 つずつです — %2$s にはそれが必要です。言語ごとに別のページを表示するからです。TranslateRocket には必要ありません。すでにあるヘッダーとフッターを、どの言語でも翻訳します。取り込みが終わったら元の言語のものだけ残し、ヘッダーに TranslateRocket の言語切り替えを 1 つ置けば、コピーは片づけてかまいません。"
+
+#: src/Importers/BuilderTemplates.php
+msgid "header"
+msgstr "ヘッダー"
+
+#: src/Importers/BuilderTemplates.php
+msgid "headers"
+msgstr "ヘッダー"
+
+#: src/Importers/BuilderTemplates.php
+msgid "footer"
+msgstr "フッター"
+
+#: src/Importers/BuilderTemplates.php
+msgid "footers"
+msgstr "フッター"
+
+#: src/Importers/BuilderTemplates.php
+msgid "single-post template"
+msgstr "投稿テンプレート"
+
+#: src/Importers/BuilderTemplates.php
+msgid "single-post templates"
+msgstr "投稿テンプレート"
+
+#: src/Importers/BuilderTemplates.php
+msgid "archive template"
+msgstr "アーカイブテンプレート"
+
+#: src/Importers/BuilderTemplates.php
+msgid "archive templates"
+msgstr "アーカイブテンプレート"
+
+#: src/Importers/BuilderTemplates.php
+msgid "pop-up"
+msgstr "ポップアップ"
+
+#: src/Importers/BuilderTemplates.php
+msgid "pop-ups"
+msgstr "ポップアップ"

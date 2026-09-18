@@ -198,12 +198,17 @@
 		}
 		var i, a;
 		for ( i = 0; i < records.length; i++ ) {
+			if ( records[ i ].type === 'characterData' ) {
+				// Text rewritten in place. Consent plugins print a placeholder in the page
+				// ("{title}") and fill it in from their own settings once the script runs:
+				// watching additions only, we never saw those words at all.
+				walk( records[ i ].target );
+				continue;
+			}
 			for ( a = 0; a < records[ i ].addedNodes.length; a++ ) {
 				walk( records[ i ].addedNodes[ a ] );
 			}
 		}
 	} );
-	// Only additions: a text node rewritten in place is usually a counter or a
-	// timer, not a sentence to translate.
-	observer.observe( document.documentElement, { childList: true, subtree: true } );
+	observer.observe( document.documentElement, { childList: true, subtree: true, characterData: true } );
 }() );

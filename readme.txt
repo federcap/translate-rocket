@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,10 @@ Yes. In Appearance → Menus every item has a "Show in" row with one checkbox pe
 
 Yes. Open a page in the visual editor, click "Translate page" and use "Copy with a translation prompt" — or the ChatGPT and Gemini links, which copy the same thing. The prompt carries your languages, the words you never translate, your glossary and your house style, and asks for the reply in a code block with the line numbers intact. Paste the reply in box 2 and apply it.
 
+And when a machine translation gets a word wrong, fixing it takes ten seconds:
+
+https://www.youtube.com/watch?v=Bc83GXh1NvI
+
 == Screenshots ==
 
 1. Translate without an API key at all: Chrome and Edge carry a translator that runs on the device itself, and one button puts it to work on everything still missing. Nothing is sent anywhere, nothing is charged, and what it translates is kept for good.
@@ -197,9 +201,10 @@ Yes. Open a page in the visual editor, click "Translate page" and use "Copy with
 
 == Changelog ==
 
-And when a machine translation gets a word wrong, fixing it takes ten seconds:
-
-https://www.youtube.com/watch?v=Bc83GXh1NvI
+= 1.4.4 =
+* Fix: words that a script writes into a placeholder already on the page are collected too. Consent plugins do exactly that - Complianz prints "{title}" in the banner and fills in the names of your privacy and legal pages when the script runs - and those two links could not be translated at all, because TranslateRocket was only watching for text that gets added, not for text rewritten in place. Reported with a screenshot, which is the only way it could have been found.
+* New: coming from Polylang or WPML with a header and a footer per language? The Import screen now says so, and says what to do: TranslateRocket translates the one header and the one footer you already have, so the copies can go and a single switcher replaces the three language menus. Text inside a duplicated template could never be translated - it was a second template that had never been in the source language - and nothing explained why.
+* Change: the Translations screen now says where the text of pop-ups and cookie banners comes from: it appears once you have opened the pop-up yourself, as an administrator, on a page in your source language.
 
 = 1.4.3 =
 * New: in the visual editor, text that JavaScript adds to the page - a consent banner, a pop-up - can now be clicked and translated like the rest of the page. Until now only the text printed by the server could be clicked; the banner had to be translated from the Translations list. Tested with Complianz, CookieYes, GDPR Cookie Compliance and Cookie Notice.
@@ -303,6 +308,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.4.4 =
+The two links at the bottom of a Complianz banner can be translated at last, plus two things the screens never explained: what to do with the header and footer Polylang or WPML duplicated per language, and where the text of pop-ups comes from.
 
 = 1.4.3 =
 Cookie and consent banners (Complianz, CookieYes and others) are now collected and can be clicked in the visual editor; page builders are left alone while you edit; "Translate again" for a single page, with undo; pages left behind by Polylang, WPML or Bogo are labelled.

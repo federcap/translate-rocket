@@ -2727,3 +2727,58 @@ msgstr "Показывается на этом языке"
 #: src/Frontend/VisualEditor.php
 msgid "The media library did not load, so paste an image address instead."
 msgstr "Медиатека не загрузилась: вставьте вместо этого адрес изображения."
+
+#: src/Admin/Admin.php
+msgid "Text inside pop-ups and cookie banners appears here once you have opened it yourself, as an administrator, on a page in your source language."
+msgstr "Текст во всплывающих окнах и баннерах cookie появляется здесь после того, как вы сами, как администратор, откроете его на странице на исходном языке."
+
+#: src/Importers/BuilderTemplates.php
+msgid "%1$d %2$s"
+msgid_plural "%1$d %2$s"
+msgstr[0] "%1$d %2$s"
+msgstr[1] "%1$d %2$s"
+msgstr[2] "%1$d %2$s"
+
+#: src/Importers/BuilderTemplates.php
+msgid "You have %1$s, one per language — %2$s needs them, because it serves a different page for each language. TranslateRocket does not: it translates the header and footer you already have, in every language. After the import, keep the ones in your source language, put a single TranslateRocket switcher in the header, and the copies can go."
+msgstr "У вас %1$s, по одной копии на язык — %2$s они нужны, потому что он отдаёт для каждого языка отдельную страницу. TranslateRocket — нет: он переводит шапку и подвал, которые у вас уже есть, на все языки. После импорта оставьте те, что на исходном языке, поставьте в шапку один переключатель TranslateRocket, и копии можно убрать."
+
+#: src/Importers/BuilderTemplates.php
+msgid "header"
+msgstr "шапка"
+
+#: src/Importers/BuilderTemplates.php
+msgid "headers"
+msgstr "шапки"
+
+#: src/Importers/BuilderTemplates.php
+msgid "footer"
+msgstr "подвал"
+
+#: src/Importers/BuilderTemplates.php
+msgid "footers"
+msgstr "подвала"
+
+#: src/Importers/BuilderTemplates.php
+msgid "single-post template"
+msgstr "шаблон записи"
+
+#: src/Importers/BuilderTemplates.php
+msgid "single-post templates"
+msgstr "шаблона записи"
+
+#: src/Importers/BuilderTemplates.php
+msgid "archive template"
+msgstr "шаблон архива"
+
+#: src/Importers/BuilderTemplates.php
+msgid "archive templates"
+msgstr "шаблона архива"
+
+#: src/Importers/BuilderTemplates.php
+msgid "pop-up"
+msgstr "всплывающее окно"
+
+#: src/Importers/BuilderTemplates.php
+msgid "pop-ups"
+msgstr "всплывающих окна"
