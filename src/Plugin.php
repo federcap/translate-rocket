@@ -103,6 +103,18 @@ final class Plugin {
 		// REST API, where is_admin() is false — hooking it there would miss
 		// exactly the edits people make most.
 		\TranslateRocket\Rescan::boot();
+		// Same reason for the page cache: a page edited in the block editor is
+		// saved over REST, and until 1.4.4 the cached translated page survived
+		// the edit (visitors kept seeing the old text for up to six hours).
+		add_action( 'save_post', array( 'TranslateRocket\\Cache', 'post_changed' ), 10, 2 );
+		add_action( 'deleted_post', array( 'TranslateRocket\\Cache', 'post_changed' ), 10, 2 );
+		add_action( 'trashed_post', array( 'TranslateRocket\\Cache', 'post_changed' ) );
+		add_action( 'untrashed_post', array( 'TranslateRocket\\Cache', 'post_changed' ) );
+		// Text that is on every page and is saved outside the post screens: block
+		// widgets (REST), the customizer, menus, products edited through the store API.
+		foreach ( array( 'rest_after_save_widget', 'customize_save_after', 'wp_update_nav_menu', 'woocommerce_update_product', 'woocommerce_new_product', 'switch_theme' ) as $gancio ) {
+			add_action( $gancio, array( 'TranslateRocket\\Cache', 'content_changed' ) );
+		}
 
 		// Schema upgrades must run before any code path that writes strings — the
 		// front-end collection pass included (an admin can browse the site before

@@ -41,6 +41,60 @@ class Cache {
 	}
 
 	/**
+	 * A post was saved, trashed or deleted: what the engine sees may have changed,
+	 * so every cached translated page goes. Revisions and autosaves are skipped —
+	 * the block editor autosaves every minute while someone is typing, and each
+	 * flush also asks the host cache and CDN plugins to purge.
+	 *
+	 * Hooked from the plugin bootstrap, not the admin branch: the block editor
+	 * saves over the REST API, where is_admin() is false.
+	 *
+	 * Only posts a visitor can see, plus the templates that shape every page
+	 * (Site Editor parts, Elementor and HFE templates). Now that the hook runs on
+	 * every request, an order placed at checkout or a form entry stored as a post
+	 * must not purge the whole site.
+	 *
+	 * @param int           $post_id Post id.
+	 * @param \WP_Post|null $post    The post, when the hook provides it.
+	 */
+	public static function post_changed( $post_id, $post = null ): void {
+		$post_id = (int) $post_id;
+		if ( ! $post_id || wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+			return;
+		}
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+		if ( ! $post instanceof \WP_Post ) {
+			$post = get_post( $post_id );
+		}
+		$type = $post instanceof \WP_Post ? (string) $post->post_type : '';
+		if ( '' === $type ) {
+			return;
+		}
+		$templates = apply_filters( 'trrocket_cache_template_types', array( 'wp_template', 'wp_template_part', 'wp_navigation', 'wp_block', 'wp_global_styles', 'elementor_library', 'elementor-hf' ) );
+		$tipo      = get_post_type_object( $type );
+		if ( ! in_array( $type, (array) $templates, true ) && ( ! $tipo || empty( $tipo->public ) ) ) {
+			return;
+		}
+		self::content_changed();
+	}
+
+	/**
+	 * Something shown on every page changed (a widget, a menu, the customizer…):
+	 * flush once per request, however many hooks fire — saving the widgets screen
+	 * fires one per widget, and every flush also purges the host cache.
+	 */
+	public static function content_changed(): void {
+		static $done = false;
+		if ( $done ) {
+			return;
+		}
+		$done = true;
+		self::flush();
+	}
+
+	/**
 	 * Invalidate every cached page. The version bump retires all keys instantly
 	 * (and is the only thing that works with a persistent object cache); we also
 	 * delete the stored transients so the options table doesn't accumulate garbage

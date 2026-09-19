@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -201,6 +201,10 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 == Changelog ==
 
+= 1.4.5 =
+* Fix: a page edited in the block editor now reaches visitors at once. The block editor saves over the REST API, and the cache of translated pages was only being cleared from the classic admin screens, so visitors kept seeing the old translated page for up to six hours while the administrator - never served from the cache - saw the new one. The same happened to a product renamed through the store API and to a header or footer edited in the Site Editor of a block theme. Reported by a site that put a page back into separate blocks and kept seeing the old single block on the translated pages.
+* Change: the cache of translated pages is also cleared when a page is trashed or restored, and when widgets, menus, the customizer or a product are saved outside the admin screens. Autosaves and revisions never clear it, since every clearing also purges the host cache.
+
 = 1.4.4 =
 * Fix: words that a script writes into a placeholder already on the page are collected too. Consent plugins do exactly that - Complianz prints "{title}" in the banner and fills in the names of your privacy and legal pages when the script runs - and those two links could not be translated at all, because TranslateRocket was only watching for text that gets added, not for text rewritten in place. Reported with a screenshot, which is the only way it could have been found.
 * New: coming from Polylang or WPML with a header and a footer per language? The Import screen now says so, and says what to do: TranslateRocket translates the one header and the one footer you already have, so the copies can go and a single switcher replaces the three language menus. Text inside a duplicated template could never be translated - it was a second template that had never been in the source language - and nothing explained why.
@@ -308,6 +312,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.4.5 =
+A page edited in the block editor, a product renamed through the store API or a footer edited in the Site Editor now reaches visitors at once, instead of up to six hours later.
 
 = 1.4.4 =
 The two links at the bottom of a Complianz banner can be translated at last, plus two things the screens never explained: what to do with the header and footer Polylang or WPML duplicated per language, and where the text of pop-ups comes from.

@@ -52,9 +52,8 @@ class Admin {
 		add_action( 'admin_init', array( $this, 'maybe_clear_log' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_wizard' ) );
 		add_action( 'admin_init', array( $this, 'maybe_wizard_redirect' ) );
-		// Editing a page's content can change what the engine sees -> drop the cache.
-		add_action( 'save_post', array( 'TranslateRocket\\Cache', 'flush' ) );
-		add_action( 'deleted_post', array( 'TranslateRocket\\Cache', 'flush' ) );
+		// Editing a page's content drops the page cache: hooked in Plugin::boot()
+		// (Cache::post_changed), because the block editor saves over REST.
 		// Standing reminder while translations are in admin-only preview mode.
 		add_action( 'admin_notices', array( $this, 'preview_mode_notice' ) );
 		add_action( 'admin_notices', array( $this, 'provider_down_notice' ) );
