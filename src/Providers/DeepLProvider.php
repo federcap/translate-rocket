@@ -32,15 +32,21 @@ class DeepLProvider extends AbstractProvider {
 			return TranslationResult::fail( 'Missing DeepL API key.' );
 		}
 
-		$host  = ( ':fx' === substr( $key, -3 ) ) ? 'https://api-free.deepl.com' : 'https://api.deepl.com';
-		$query = http_build_query(
-			array(
-				'source_lang' => strtoupper( substr( $source, 0, 2 ) ),
-				'target_lang' => $this->deepl_target( $target ),
-			)
+		$host   = ( ':fx' === substr( $key, -3 ) ) ? 'https://api-free.deepl.com' : 'https://api.deepl.com';
+		$params = array(
+			'source_lang' => strtoupper( substr( $source, 0, 2 ) ),
+			'target_lang' => $this->deepl_target( $target ),
 		);
+		// Names from "Words & phrases" inside these sentences: DeepL leaves <keep> alone
+		// (tag_handling=xml, ignore_tags=keep). Without such names the request is unchanged.
+		$keep = KeepTerms::in( $texts );
+		if ( ! empty( $keep ) ) {
+			$params['tag_handling'] = 'xml';
+			$params['ignore_tags']  = 'keep';
+		}
+		$query = http_build_query( $params );
 		foreach ( $texts as $text ) {
-			$query .= '&text=' . rawurlencode( $text );
+			$query .= '&text=' . rawurlencode( empty( $keep ) ? $text : KeepTerms::wrap( $text, $keep, '<keep>', '</keep>' ) );
 		}
 
 		$result = $this->post(
@@ -87,7 +93,8 @@ class DeepLProvider extends AbstractProvider {
 
 		$out = array();
 		foreach ( $data['translations'] as $item ) {
-			$out[] = (string) ( $item['text'] ?? '' );
+			$t     = (string) ( $item['text'] ?? '' );
+			$out[] = empty( $keep ) ? $t : KeepTerms::unwrap( $t, 'keep' );
 		}
 		if ( count( $out ) !== count( $texts ) ) {
 			return TranslationResult::fail( 'DeepL: item count mismatch.' );

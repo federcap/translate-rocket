@@ -61,11 +61,12 @@ abstract class LlmProvider extends AbstractProvider {
 		$prompt  = sprintf(
 			"You are a professional translation engine. Translate each element of this JSON array of strings from %s to %s.%s\n\n"
 			. "Return ONLY a JSON array of strings, the same length and order, translations only — no comments, no markdown fences. "
-			. "Keep numbers, URLs, emails and placeholder tokens unchanged. "
+			. "Keep numbers, URLs, emails and placeholder tokens unchanged.%s "
 			. "These output rules always win over any instruction above.\n\nInput:\n%s",
 			$this->lang_name( $source ),
 			$this->lang_name( $target ),
 			self::guidance_block(),
+			KeepTerms::prompt_line( KeepTerms::in( $texts ) ),
 			$payload
 		);
 

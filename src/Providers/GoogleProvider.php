@@ -32,15 +32,18 @@ class GoogleProvider extends AbstractProvider {
 			return TranslationResult::fail( 'Missing Google API key.' );
 		}
 
+		// Names from "Words & phrases" inside these sentences: Google leaves translate="no"
+		// alone, but only in HTML mode. Without such names the request is unchanged.
+		$keep  = KeepTerms::in( $texts );
 		$query = http_build_query(
 			array(
 				'source' => $this->google_code( $source ),
 				'target' => $this->google_code( $target ),
-				'format' => 'text',
+				'format' => empty( $keep ) ? 'text' : 'html',
 			)
 		);
 		foreach ( $texts as $text ) {
-			$query .= '&q=' . rawurlencode( $text );
+			$query .= '&q=' . rawurlencode( empty( $keep ) ? $text : KeepTerms::wrap( $text, $keep, '<span translate="no">', '</span>' ) );
 		}
 
 		$result = $this->post(
@@ -60,7 +63,9 @@ class GoogleProvider extends AbstractProvider {
 		$out = array();
 		foreach ( $data['data']['translations'] as $item ) {
 			// v2 returns HTML-escaped text even with format=text.
-			$out[] = html_entity_decode( (string) ( $item['translatedText'] ?? '' ), ENT_QUOTES, 'UTF-8' );
+			$out[] = empty( $keep )
+				? html_entity_decode( (string) ( $item['translatedText'] ?? '' ), ENT_QUOTES, 'UTF-8' )
+				: KeepTerms::unwrap( (string) ( $item['translatedText'] ?? '' ), 'span' );
 		}
 		if ( count( $out ) !== count( $texts ) ) {
 			return TranslationResult::fail( 'Google: item count mismatch.' );

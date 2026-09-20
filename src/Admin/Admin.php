@@ -3147,7 +3147,7 @@ JS
 				</div>
 
 				<div class="trrocket-card">
-					<h2><?php esc_html_e( 'Words &amp; phrases', 'translate-rocket' ); ?> <?php $this->info( __( 'Exact strings that must stay as-is — brand or product names, etc. Never collected, translated or sent to an AI.', 'translate-rocket' ) ); ?></h2>
+					<h2><?php esc_html_e( 'Words &amp; phrases', 'translate-rocket' ); ?> <?php $this->info( __( 'Names that must stay as they are, such as your brand or product names. A text that is only the name is never translated; inside a sentence, DeepL, Google Cloud and the AI models are told to leave the name unchanged.', 'translate-rocket' ) ); ?></h2>
 					<textarea name="exclude_strings" rows="6" class="large-text code" placeholder="TranslateRocket&#10;WordPress&#10;WooCommerce"><?php echo esc_textarea( $box( $settings['exclude_strings'] ?? array() ) ); ?></textarea>
 				</div>
 

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -201,6 +201,9 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 == Changelog ==
 
+= 1.4.6 =
+* New: the names in "Words & phrases" (Exclusions screen) now stay as they are inside sentences too. Until now a name was protected only when the whole text was the name: "LifeStyle-Shop" alone stayed, but "Willkommen im LifeStyle-Shop" came back from DeepL as "Benvenuti nel negozio LifeStyle". Now DeepL receives the name marked with its own "do not translate" tag, Google Cloud with translate="no", and the AI models are told which names to copy exactly. Sentences without a protected name are sent exactly as before. Sentences already translated keep their translation: correct them in the visual editor, or use Redo on the page to translate it again. Asked for by a shop owner in Switzerland.
+
 = 1.4.5 =
 * Fix: a page edited in the block editor now reaches visitors at once. The block editor saves over the REST API, and the cache of translated pages was only being cleared from the classic admin screens, so visitors kept seeing the old translated page for up to six hours while the administrator - never served from the cache - saw the new one. The same happened to a product renamed through the store API and to a header or footer edited in the Site Editor of a block theme. Reported by a site that put a page back into separate blocks and kept seeing the old single block on the translated pages.
 * Change: the cache of translated pages is also cleared when a page is trashed or restored, and when widgets, menus, the customizer or a product are saved outside the admin screens. Autosaves and revisions never clear it, since every clearing also purges the host cache.
@@ -312,6 +315,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.4.6 =
+Brand and product names in "Words & phrases" now stay as they are inside sentences too, with DeepL, Google Cloud and the AI models.
 
 = 1.4.5 =
 A page edited in the block editor, a product renamed through the store API or a footer edited in the Site Editor now reaches visitors at once, instead of up to six hours later.

@@ -2782,3 +2782,7 @@ msgstr "wyskakujące okienko"
 #: src/Importers/BuilderTemplates.php
 msgid "pop-ups"
 msgstr "wyskakujące okienka"
+
+#: src/Admin/Admin.php
+msgid "Names that must stay as they are, such as your brand or product names. A text that is only the name is never translated; inside a sentence, DeepL, Google Cloud and the AI models are told to leave the name unchanged."
+msgstr "Nazwy, które mają pozostać bez zmian, na przykład nazwa marki lub produktów. Tekst składający się wyłącznie z nazwy nigdy nie jest tłumaczony; wewnątrz zdania DeepL, Google Cloud i modele AI dostają polecenie, aby zostawić nazwę bez zmian."

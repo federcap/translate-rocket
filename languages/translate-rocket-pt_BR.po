@@ -2777,3 +2777,7 @@ msgstr "pop-up"
 #: src/Importers/BuilderTemplates.php
 msgid "pop-ups"
 msgstr "pop-ups"
+
+#: src/Admin/Admin.php
+msgid "Names that must stay as they are, such as your brand or product names. A text that is only the name is never translated; inside a sentence, DeepL, Google Cloud and the AI models are told to leave the name unchanged."
+msgstr "Nomes que devem ficar como estão, por exemplo o nome da sua marca ou dos seus produtos. Um texto que é só o nome nunca é traduzido; dentro de uma frase, o DeepL, o Google Cloud e os modelos de IA recebem a instrução de deixar o nome inalterado."
