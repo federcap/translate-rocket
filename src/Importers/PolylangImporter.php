@@ -179,7 +179,7 @@ class PolylangImporter implements ProvidesCopies {
 			if ( is_array( $pairs ) ) {
 				foreach ( $pairs as $pair ) {
 					if ( is_array( $pair ) && isset( $pair[0], $pair[1] )
-						&& Strings::store_imported( (string) $pair[0], $lang, (string) $pair[1] ) ) {
+						&& Comune::coppia( (string) $pair[0], $lang, (string) $pair[1], true ) ) {
 						++$count;
 					}
 				}
@@ -211,11 +211,11 @@ class PolylangImporter implements ProvidesCopies {
 					continue;
 				}
 
-				if ( Strings::store_imported( (string) $source->post_title, $lang, (string) $tpost->post_title ) ) {
+				if ( Comune::coppia( (string) $source->post_title, $lang, (string) $tpost->post_title, true ) ) {
 					++$count;
 				}
 				if ( '' !== trim( (string) $source->post_excerpt ) && '' !== trim( (string) $tpost->post_excerpt )
-					&& Strings::store_imported( (string) $source->post_excerpt, $lang, (string) $tpost->post_excerpt ) ) {
+					&& Comune::coppia( (string) $source->post_excerpt, $lang, (string) $tpost->post_excerpt, true ) ) {
 					++$count;
 				}
 				if ( '' !== (string) $tpost->post_name ) {
@@ -226,11 +226,15 @@ class PolylangImporter implements ProvidesCopies {
 				$tr_chunks  = $this->chunks( (string) $tpost->post_content );
 				if ( ! empty( $src_chunks ) && count( $src_chunks ) === count( $tr_chunks ) ) {
 					foreach ( $src_chunks as $i => $chunk ) {
-						if ( Strings::store_imported( $chunk, $lang, $tr_chunks[ $i ] ) ) {
+						if ( Comune::coppia( $chunk, $lang, $tr_chunks[ $i ], true ) ) {
 							++$count;
 						}
 					}
 				}
+
+				// A page built with a page builder keeps its words in a meta, not
+				// in post_content: without this such a site imports no page text.
+				$count += Comune::builder( $source, $tpost, $lang, true );
 			}
 		}
 

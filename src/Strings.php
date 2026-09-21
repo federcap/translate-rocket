@@ -753,13 +753,52 @@ class Strings {
 	}
 
 	/**
-	 * Save (upsert) one human translation and invalidate the cached map.
+	 * The original text of several strings at once, by id.
+	 *
+	 * @param int[] $ids String ids.
+	 * @return array<int,string> id => original
 	 */
-	public static function save_translation( int $string_id, string $lang, string $translation, int $status = 2, ?string $provider = null ): void {
+	public static function originals( array $ids ): array {
+		global $wpdb;
+		$ids = array_values( array_unique( array_filter( array_map( 'intval', $ids ) ) ) );
+		if ( ! $ids ) {
+			return array();
+		}
+		$table = Database::strings_table();
+		$in    = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, original FROM {$table} WHERE id IN ({$in})", $ids ) );
+		$out  = array();
+		foreach ( (array) $rows as $row ) {
+			$out[ (int) $row->id ] = (string) $row->original;
+		}
+		return $out;
+	}
+
+	/**
+	 * Save (upsert) one human translation and invalidate the cached map.
+	 *
+	 * A sentence that holds a link or a bold word travels with numbered marks in
+	 * it (see InlineText). A translation that lost them, or grew new ones, cannot
+	 * be put back into the page: it would leave the visitor looking at the
+	 * original text with nobody able to say why. Such a translation is refused
+	 * here, whoever sent it, and the caller is told so it can say something.
+	 *
+	 * @return bool False when the translation was refused.
+	 */
+	public static function save_translation( int $string_id, string $lang, string $translation, int $status = 2, ?string $provider = null ): bool {
 		global $wpdb;
 		$translations = Database::translations_table();
 
 		$translation = trim( $translation );
+		if ( '' !== $translation ) {
+			$originali = self::originals( array( $string_id ) );
+			$originale = $originali[ $string_id ] ?? '';
+			if ( \TranslateRocket\Frontend\InlineText::has_parts( $originale )
+				&& ! \TranslateRocket\Frontend\InlineText::parts_ok( $originale, $translation ) ) {
+				return false;
+			}
+		}
 		$status      = ( '' === $translation ) ? 0 : $status; // 1 = machine, 2 = human.
 
 		$wpdb->query(
@@ -777,6 +816,9 @@ class Strings {
 		); // phpcs:ignore WordPress.DB
 
 		self::flush_maps( $lang );
+		// Un passo del pannello puo' essersi chiuso proprio adesso.
+		\TranslateRocket\Admin\NextSteps::forget();
+		return true;
 	}
 
 	/**
@@ -897,10 +939,29 @@ class Strings {
 		// inline formatting; scripts and event handlers are removed. Site
 		// administrators with the unfiltered_html capability keep full freedom.
 		if ( ! current_user_can( 'unfiltered_html' ) ) {
-			$translation = trim( Kses::translation( $translation ) );
+			// A whole sentence carries numbered marks where its links and bold words
+			// are ("<1>booking conditions</1>"). The cleaning would take them for
+			// broken tags and throw them away, leaving a translation that can never
+			// be put back into the page: they are set aside first and restored after.
+			// Only those numbered marks come back, never a real tag.
+			$con_parti   = \TranslateRocket\Frontend\InlineText::has_parts( $translation );
+			$pulita      = Kses::translation( $con_parti ? \TranslateRocket\Frontend\InlineText::mask_parts( $translation ) : $translation );
+			$translation = trim( $con_parti ? \TranslateRocket\Frontend\InlineText::unmask_parts( $pulita ) : $pulita );
 			if ( '' === $translation ) {
 				return false;
 			}
+		}
+
+		// The engine writes a translation into the page as TEXT, so an entity in it
+		// is shown literally: "cozinha &amp; banho" appeared as "&amp;" on the
+		// translated page (21/09/2026). Entities come from the other plugin's saved
+		// HTML (the block editor stores & as &amp;) and from the cleaning above,
+		// which encodes a bare &. When the translation holds no markup at all, it is
+		// stored decoded; with markup it is left exactly as cleaned, so nothing that
+		// was escaped can turn into a tag.
+		$decodificata = html_entity_decode( $translation, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		if ( $decodificata !== $translation && false === strpbrk( $translation, '<>' ) && false === strpbrk( $decodificata, '<>' ) ) {
+			$translation = trim( $decodificata );
 		}
 
 		global $wpdb;
@@ -1018,7 +1079,8 @@ class Strings {
 		if ( ! $id ) {
 			return false;
 		}
-		self::save_translation( $id, $lang, $translation, 2, 'visual' );
-		return true;
+		// Torna false anche quando la traduzione c'e' ma non e' utilizzabile (i segni
+		// dei link persi per strada): chi l'ha mandata deve saperlo.
+		return self::save_translation( $id, $lang, $translation, 2, 'visual' );
 	}
 }

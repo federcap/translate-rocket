@@ -7,6 +7,8 @@
 
 namespace TranslateRocket\Providers;
 
+use TranslateRocket\Frontend\InlineText;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -31,6 +33,27 @@ abstract class LlmProvider extends AbstractProvider {
 	/** Longest house-style note we will send. Every batch carries it, so it is
 	 * capped to keep the added cost small and predictable. */
 	const GUIDANCE_MAX = 1000;
+
+	/**
+	 * A sentence broken by a link or a bold word travels whole, with numbered
+	 * placeholders where the tags were (see InlineText). The model has to keep
+	 * them, and may move them: that is the point, since word order changes from
+	 * one language to another. Nothing is added when no sentence has placeholders,
+	 * so those requests stay exactly as they were.
+	 *
+	 * @param string[] $texts Texts about to be sent.
+	 */
+	protected static function parts_line( array $texts ): string {
+		foreach ( $texts as $text ) {
+			if ( InlineText::has_parts( (string) $text ) ) {
+				return ' Some strings contain numbered placeholders such as <1>...</1> or <2/>: they mark where a link or a'
+					. ' formatted word sits inside the sentence. Keep every placeholder exactly as it is, with the same number,'
+					. ' and keep the words that belong inside a pair inside it. Move them where the target language needs them.'
+					. ' Never add, drop, renumber or translate a placeholder, and never write any other tag.';
+			}
+		}
+		return '';
+	}
 
 	/**
 	 * The site owner's own note about tone and style, ready to drop in a prompt.
@@ -61,12 +84,13 @@ abstract class LlmProvider extends AbstractProvider {
 		$prompt  = sprintf(
 			"You are a professional translation engine. Translate each element of this JSON array of strings from %s to %s.%s\n\n"
 			. "Return ONLY a JSON array of strings, the same length and order, translations only — no comments, no markdown fences. "
-			. "Keep numbers, URLs, emails and placeholder tokens unchanged.%s "
+			. "Keep numbers, URLs, emails and placeholder tokens unchanged.%s%s "
 			. "These output rules always win over any instruction above.\n\nInput:\n%s",
 			$this->lang_name( $source ),
 			$this->lang_name( $target ),
 			self::guidance_block(),
 			KeepTerms::prompt_line( KeepTerms::in( $texts ) ),
+			self::parts_line( $texts ),
 			$payload
 		);
 

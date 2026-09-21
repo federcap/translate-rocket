@@ -668,8 +668,8 @@ class VisualEditor {
 				if ( ! is_array( $it ) ) {
 					continue;
 				}
-				$src = isset( $it['src'] ) ? sanitize_textarea_field( (string) $it['src'] ) : '';
-				$tr  = isset( $it['translation'] ) ? sanitize_textarea_field( (string) $it['translation'] ) : '';
+				$src = isset( $it['src'] ) ? InlineText::sanitize( (string) $it['src'] ) : '';
+				$tr  = isset( $it['translation'] ) ? InlineText::sanitize( (string) $it['translation'] ) : '';
 				// ⚠️ L'elenco dei contesti ammessi deve stare al passo con le righe
 				// che il pannello disegna: un campo che si vede ma che il
 				// salvataggio scarta in silenzio e' peggio di un campo assente.
@@ -706,8 +706,8 @@ class VisualEditor {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( 'forbidden', 403 );
 		}
-		$src   = isset( $_POST['src'] ) ? sanitize_textarea_field( wp_unslash( $_POST['src'] ) ) : '';
-		$trans = isset( $_POST['translation'] ) ? sanitize_textarea_field( wp_unslash( $_POST['translation'] ) ) : '';
+		$src   = isset( $_POST['src'] ) ? InlineText::sanitize( (string) wp_unslash( $_POST['src'] ) ) : '';
+		$trans = isset( $_POST['translation'] ) ? InlineText::sanitize( (string) wp_unslash( $_POST['translation'] ) ) : '';
 		$lang  = isset( $_POST['lang'] ) ? sanitize_text_field( wp_unslash( $_POST['lang'] ) ) : '';
 		// Optional: editing an attribute (alt/title/…) instead of page text.
 		// 'image' e' un tipo a se': serve a tenere gli indirizzi delle immagini
@@ -730,7 +730,14 @@ class VisualEditor {
 		if ( '' === $src || '' === $lang || ! Languages::exists( $lang ) ) {
 			wp_send_json_error( 'invalid' );
 		}
-		Strings::save_by_source( $src, $lang, $trans, $type, $ctx );
+		if ( ! Strings::save_by_source( $src, $lang, $trans, $type, $ctx ) && '' !== trim( $trans ) ) {
+			// Frase che contiene un link o una parola in grassetto: i segni che dicono
+			// dove vanno sono spariti dalla traduzione, e cosi' non si puo' rimetterla
+			// nella pagina. Meglio dirlo subito che salvare qualcosa che non si vedra'.
+			wp_send_json_error(
+				__( 'Not saved: this sentence holds a link or a formatted word, and the marks that say where they go are missing or changed. Keep every mark, with its number, anywhere in the sentence.', 'translate-rocket' )
+			);
+		}
 		\TranslateRocket\Cache::flush();
 		wp_send_json_success( array( 'translation' => $trans ) );
 	}
@@ -753,20 +760,38 @@ class VisualEditor {
 		if ( ! is_array( $items ) ) {
 			wp_send_json_error( 'invalid' );
 		}
-		$count = 0;
+		$count     = 0;
+		$rifiutate = 0;
 		foreach ( $items as $it ) {
 			if ( ! is_array( $it ) ) {
 				continue;
 			}
-			$src = isset( $it['src'] ) ? sanitize_textarea_field( (string) $it['src'] ) : '';
-			$tr  = isset( $it['translation'] ) ? sanitize_textarea_field( (string) $it['translation'] ) : '';
+			$src = isset( $it['src'] ) ? InlineText::sanitize( (string) $it['src'] ) : '';
+			$tr  = isset( $it['translation'] ) ? InlineText::sanitize( (string) $it['translation'] ) : '';
 			if ( '' === $src ) {
 				continue;
 			}
-			Strings::save_by_source( $src, $lang, $tr, 'text', null );
-			++$count;
+			if ( Strings::save_by_source( $src, $lang, $tr, 'text', null ) ) {
+				++$count;
+			} elseif ( '' !== trim( $tr ) ) {
+				++$rifiutate;
+			}
 		}
 		\TranslateRocket\Cache::flush();
+		if ( $rifiutate > 0 ) {
+			wp_send_json_error(
+				sprintf(
+					/* translators: %d: number of sentences that were not saved. */
+					_n(
+						'%d sentence was not saved: it holds a link or a formatted word, and the marks that say where they go were missing or changed. Keep every mark, with its number, anywhere in the sentence.',
+						'%d sentences were not saved: they hold a link or a formatted word, and the marks that say where they go were missing or changed. Keep every mark, with its number, anywhere in the sentence.',
+						$rifiutate,
+						'translate-rocket'
+					),
+					$rifiutate
+				)
+			);
+		}
 		wp_send_json_success( array( 'count' => $count ) );
 	}
 
@@ -778,7 +803,7 @@ class VisualEditor {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( 'forbidden', 403 );
 		}
-		$src  = isset( $_POST['src'] ) ? sanitize_textarea_field( wp_unslash( $_POST['src'] ) ) : '';
+		$src  = isset( $_POST['src'] ) ? InlineText::sanitize( (string) wp_unslash( $_POST['src'] ) ) : '';
 		$lang = isset( $_POST['lang'] ) ? sanitize_text_field( wp_unslash( $_POST['lang'] ) ) : '';
 		if ( '' === $src || '' === $lang ) {
 			wp_send_json_error( 'invalid' );
@@ -807,7 +832,7 @@ class VisualEditor {
 		if ( ! \TranslateRocket\GoogleFree::auto_enabled() ) {
 			wp_send_json_error( 'disabled' );
 		}
-		$src  = isset( $_POST['src'] ) ? sanitize_textarea_field( wp_unslash( $_POST['src'] ) ) : '';
+		$src  = isset( $_POST['src'] ) ? InlineText::sanitize( (string) wp_unslash( $_POST['src'] ) ) : '';
 		$lang = isset( $_POST['lang'] ) ? sanitize_text_field( wp_unslash( $_POST['lang'] ) ) : '';
 		if ( '' === $src || '' === $lang ) {
 			wp_send_json_error( 'invalid' );

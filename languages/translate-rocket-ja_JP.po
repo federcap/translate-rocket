@@ -2768,3 +2768,370 @@ msgstr "ポップアップ"
 #: src/Admin/Admin.php
 msgid "Names that must stay as they are, such as your brand or product names. A text that is only the name is never translated; inside a sentence, DeepL, Google Cloud and the AI models are told to leave the name unchanged."
 msgstr "ブランド名や商品名など、そのままにしておく名前です。名前だけの文は翻訳されません。文の中では、DeepL、Google Cloud、AI モデルに名前を変えないよう指示します。"
+
+#: src/Translator.php
+msgid "A sentence came back from the translation service without the marks that say where its links go, so it was not saved. It will be translated again next time."
+msgstr "文にリンクの位置を示す目印が付かないまま翻訳サービスから返ってきたため、保存されませんでした。次回あらためて翻訳します。"
+
+#: src/Admin/Farewell.php
+msgid "I could not get it to work"
+msgstr "うまく動かせませんでした"
+
+#: src/Admin/Farewell.php
+msgid "What did you try, and what happened?"
+msgstr "何を試して、どうなりましたか。"
+
+#: src/Admin/Farewell.php
+msgid "The translations were not good enough"
+msgstr "翻訳の品質が十分ではありませんでした"
+
+#: src/Admin/Farewell.php
+msgid "Which language, and what was wrong with it?"
+msgstr "どの言語で、どこがおかしかったですか。"
+
+#: src/Admin/Farewell.php
+msgid "It broke something on my site"
+msgstr "サイトの何かが壊れました"
+
+#: src/Admin/Farewell.php
+msgid "What broke? This is the one I most want to hear about."
+msgstr "何が壊れましたか。いちばん知りたいのはここです。"
+
+#: src/Admin/Farewell.php
+msgid "Something I need is missing"
+msgstr "必要な機能が足りません"
+
+#: src/Admin/Farewell.php
+msgid "What were you looking for?"
+msgstr "何をお探しでしたか。"
+
+#: src/Admin/Farewell.php
+msgid "Too complicated to set up"
+msgstr "設定が複雑すぎました"
+
+#: src/Admin/Farewell.php
+msgid "Where did you get stuck?"
+msgstr "どこでつまずきましたか。"
+
+#: src/Admin/Farewell.php
+msgid "I am switching to another plugin"
+msgstr "別のプラグインに移ります"
+
+#: src/Admin/Farewell.php
+msgid "Which one, and what does it do better?"
+msgstr "どのプラグインで、どこが優れていますか。"
+
+#: src/Admin/Farewell.php
+msgid "Only turning it off for a moment"
+msgstr "少しのあいだ止めるだけです"
+
+#: src/Admin/Farewell.php
+msgid "Something else"
+msgstr "その他の理由"
+
+#: src/Admin/Farewell.php
+msgid "Tell me in your own words."
+msgstr "ご自身の言葉で教えてください。"
+
+#: src/Admin/Farewell.php
+msgid "Before you go: what went wrong?"
+msgstr "お別れの前に、何がうまくいきませんでしたか。"
+
+#: src/Admin/Farewell.php
+msgid "TranslateRocket is written by one person. Almost everybody who leaves does it in silence, so the same mistake stays in the plugin. One line here would help a lot. Answering is optional, and the plugin deactivates either way."
+msgstr "TranslateRocket は一人で開発しています。離れていく方のほとんどは何も言わずに去るため、同じ不具合がそのまま残ります。一行だけでも大きな助けになります。回答は任意で、どちらを選んでもプラグインは無効化されます。"
+
+#: src/Admin/Farewell.php
+msgid "Your answer stays on this site. The plugin does not send anything anywhere. If you would like me to see it, use the copy button and paste it in the support forum: it is the fastest way to get an answer, too."
+msgstr "回答はこのサイト内に保存されます。プラグインがどこかに送信することはありません。読んでほしい場合は、コピーボタンを使ってサポートフォーラムに貼り付けてください。返事がいちばん早い方法でもあります。"
+
+#: src/Admin/Farewell.php
+msgid "What the copy button puts on your clipboard"
+msgstr "コピーボタンでクリップボードに入る内容"
+
+#: src/Admin/Farewell.php
+msgid "Your answer above, and these numbers. Nothing else: no site address, no name, no e-mail, no page or translation content."
+msgstr "上の回答と、これらの数値だけです。サイトのアドレス、氏名、メールアドレス、ページや翻訳の内容は含まれません。"
+
+#: src/Admin/Farewell.php
+msgid "Copy and deactivate"
+msgstr "コピーして無効化"
+
+#: src/Admin/Farewell.php
+msgid "Skip and deactivate"
+msgstr "スキップして無効化"
+
+#: src/Admin/Farewell.php
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/Admin/Farewell.php
+msgid "Open the support forum in a new tab"
+msgstr "サポートフォーラムを新しいタブで開く"
+
+#: src/Coexistence.php
+msgid "Only you can see this. TranslateRocket is standing aside while %s runs the languages here, so this page looks exactly as your visitors see it. Nothing is broken."
+msgstr "これはあなたにだけ表示されています。ここでは %s が言語を担当しているため、TranslateRocket は動作を控えています。このページは訪問者が見ているものとまったく同じです。壊れているものはありません。"
+
+#: src/Coexistence.php
+msgid "See this page in %s"
+msgstr "このページを %s で見る"
+
+#: src/Coexistence.php
+msgid "How this works"
+msgstr "仕組みを見る"
+
+#: src/Coexistence.php
+msgid "Hide until I come back"
+msgstr "次に来るまで隠す"
+
+#: src/Admin/Admin.php
+msgid "Three more things that turn days into hours"
+msgstr "何日もかかる調査を数時間に変える、あと三つのこと"
+
+#: src/Admin/Admin.php
+msgid "The report above says what your site is running. It cannot say what you are seeing. Send what you can, a screenshot on its own is already a lot, but when a message has these, the answer is usually a fix instead of a question."
+msgstr "上のレポートはサイトで動いているものを示しますが、あなたに何が見えているかは分かりません。送れるものだけで十分です。スクリーンショット一枚でも大きな助けになります。ただしこの三つが揃うと、返事は質問ではなく修正になります。"
+
+#: src/Admin/Admin.php
+msgid "The address of a page where it happens. A test or staging site is perfect. If the site is not public, a screenshot instead."
+msgstr "その症状が出るページのアドレス。テスト用サイトでかまいません。公開していない場合はスクリーンショットでも十分です。"
+
+#: src/Admin/Admin.php
+msgid "The exact words that stay untranslated or come back wrong, copied and pasted. Two words are enough to find them."
+msgstr "翻訳されずに残る、あるいはおかしな訳で返ってくる文言を、そのままコピーして貼り付けてください。二語もあれば見つけられます。"
+
+#: src/Admin/Admin.php
+msgid "The piece of the page that misbehaves, as code. In Chrome, Edge or Firefox: right-click the text, choose Inspect, then right-click the highlighted line in the panel and pick Copy, then Copy outer HTML. It looks cryptic and it is the single most useful thing you can send: it shows exactly what your theme or plugin builds, which cannot be guessed from another site."
+msgstr "問題が起きている部分のコードです。Chrome、Edge、Firefox で、その文字を右クリックして「検証」を選び、開いたパネルで強調表示された行を右クリックし、「コピー」から「outerHTML をコピー」を選んでください。暗号のように見えますが、送っていただけるもののなかで最も役に立ちます。あなたのテーマやプラグインが実際に何を出力しているかが分かり、これは他のサイトからは推測できません。"
+
+#: src/Admin/Admin.php
+msgid "If a \"Fatal error\" line appeared anywhere, copy that whole line too, with the file name and the number at the end."
+msgstr "どこかに «Fatal error» の行が出ていたら、その行もファイル名と末尾の数字ごと、まるごとコピーしてください。"
+
+#: src/Frontend/InlineText.php
+msgid "This mark holds the place of a link or a formatted word. Keep it, with its number: you can move it where your language needs it."
+msgstr "この印はリンクや装飾された語の位置を示しています。番号ごと残してください。訳文に合わせて位置を動かすのは自由です。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Not saved: this sentence holds a link or a formatted word, and the marks that say where they go are missing or changed. Keep every mark, with its number, anywhere in the sentence."
+msgstr "保存していません。この文にはリンクまたは装飾された語が含まれていますが、その位置を示す印が欠けているか変更されています。印は番号ごと、文中のどこでもよいので必ず残してください。"
+
+#: src/Admin/NextSteps.php
+msgid "Where you are, and what to do next"
+msgstr "現在の状況と次にすること"
+
+#: src/Admin/NextSteps.php
+msgid "%1$d of %2$d done"
+msgstr "%2$d 件中 %1$d 件完了"
+
+#: src/Admin/NextSteps.php
+msgid "Nothing is waiting for you. Add or change content and come back: new text shows up here."
+msgstr "待っている作業はありません。コンテンツを追加または変更してから戻ると、新しい文がここに表示されます。"
+
+#: src/Admin/NextSteps.php
+msgid "You have not chosen your languages yet. Everything else waits for that."
+msgstr "まだ言語を選んでいません。ほかのすべてはこの選択を待っています。"
+
+#: src/Admin/NextSteps.php
+msgid "%s is running the languages on your site. TranslateRocket is standing aside: your visitors see exactly what they saw before, and nothing you do here touches the live site until you say so."
+msgstr "サイトの言語は %s が担当しています。TranslateRocket は動作を控えています。訪問者にはこれまでどおりのページが表示され、ここでの操作は、あなたが指示するまで公開サイトに一切影響しません。"
+
+#: src/Admin/NextSteps.php
+msgid "TranslateRocket is in charge of the languages, but none of them is online yet: only you can see them."
+msgstr "言語は TranslateRocket が管理していますが、まだどれも公開されていません。今のところ見えるのはあなただけです。"
+
+#: src/Admin/NextSteps.php
+msgid "Which language your site is written in, and which ones you want it to speak."
+msgstr "サイトがどの言語で書かれていて、どの言語を話してほしいか。"
+
+#: src/Admin/NextSteps.php
+msgid "Open the setup"
+msgstr "設定を開く"
+
+#: src/Admin/NextSteps.php
+msgid "Your languages"
+msgstr "あなたの言語"
+
+#: src/Admin/NextSteps.php
+msgid "Change them"
+msgstr "変更する"
+
+#: src/Admin/NextSteps.php
+msgid "You are running side by side with %s"
+msgstr "%s と並行して動作しています"
+
+#: src/Admin/NextSteps.php
+msgid "This is on purpose, and nothing is broken: your public site is untouched. Look at the translated pages with Preview. When you are happy, deactivate the other plugin and a button here will put TranslateRocket online."
+msgstr "これは意図した動作で、壊れているものはありません。公開サイトはそのままです。翻訳されたページはプレビューで確認してください。納得できたら、もう一方のプラグインを無効化すると、ここに TranslateRocket を公開するボタンが表示されます。"
+
+#: src/Admin/NextSteps.php
+msgid "Preview a page"
+msgstr "プレビューを見る"
+
+#: src/Admin/NextSteps.php
+msgid "They are yours: importing copies them here, and the other plugin keeps its own."
+msgstr "これらはあなたのものです。取り込むとここに複製され、もう一方のプラグインの側もそのまま残ります。"
+
+#: src/Admin/NextSteps.php
+msgid "Import them"
+msgstr "取り込む"
+
+#: src/Admin/NextSteps.php
+msgid "Translations imported from %s"
+msgstr "%s から翻訳を取り込み済み"
+
+#: src/Admin/NextSteps.php
+msgid "There is nothing left to bring over."
+msgstr "取り込むものはもう残っていません。"
+
+#: src/Admin/NextSteps.php
+msgid "With your browser, with an AI key, or by hand. You can do a page at a time."
+msgstr "ブラウザーで、AI のキーで、あるいは手作業で。1 ページずつ進めてもかまいません。"
+
+#: src/Admin/NextSteps.php
+msgid "Go to the translations"
+msgstr "翻訳の一覧へ"
+
+#: src/Admin/NextSteps.php
+msgid "Every phrase found on your site has a translation in every language."
+msgstr "サイト内で見つかったすべての文に、すべての言語の訳があります。"
+
+#: src/Admin/NextSteps.php
+msgid "The language switcher is on"
+msgstr "言語切り替えが有効です"
+
+#: src/Admin/NextSteps.php
+msgid "Visitors can change language. You can move it or restyle it whenever you like."
+msgstr "訪問者が言語を切り替えられます。位置や見た目はいつでも変更できます。"
+
+#: src/Admin/NextSteps.php
+msgid "Change how it looks"
+msgstr "見た目を変える"
+
+#: src/Admin/NextSteps.php
+msgid "Put a language switcher on your site"
+msgstr "サイトに言語切り替えを置く"
+
+#: src/Admin/NextSteps.php
+msgid "Without it, a visitor has no way to reach the other languages except by guessing the address."
+msgstr "これがないと、訪問者はアドレスを推測する以外に他の言語へ行く手段がありません。"
+
+#: src/Admin/NextSteps.php
+msgid "Set it up"
+msgstr "設定する"
+
+#: src/Admin/NextSteps.php
+msgid "Put %s online"
+msgstr "%s を公開する"
+
+#: src/Admin/NextSteps.php
+msgid "Ready and waiting: only you can see these languages at the moment."
+msgstr "準備はできています。今のところ、これらの言語が見えるのはあなただけです。"
+
+#: src/Admin/NextSteps.php
+msgid "Choose what is online"
+msgstr "公開するものを選ぶ"
+
+#: src/Admin/NextSteps.php
+msgid "All your languages are online"
+msgstr "すべての言語が公開されています"
+
+#: src/Admin/NextSteps.php
+msgid "Visitors and search engines can reach every one of them."
+msgstr "訪問者も検索エンジンも、そのすべてにたどり着けます。"
+
+#: src/Admin/NextSteps.php
+msgid "One page per language is how the other plugin worked. Each one can go to the Trash, where it stays recoverable and its old address keeps working, or you can keep it. Nothing is ever deleted."
+msgstr "言語ごとに 1 ページというのが、もう一方のプラグインのやり方でした。各ページはゴミ箱に移せます。ゴミ箱からは元に戻せ、古いアドレスも働き続けます。そのまま残してもかまいません。完全に削除されることはありません。"
+
+#: src/Admin/NextSteps.php
+msgid "Look them over"
+msgstr "確認する"
+
+#: src/Admin/NextSteps.php
+msgid "Your menus in other languages: nothing to do"
+msgstr "他の言語のメニュー: 何もする必要はありません"
+
+#: src/Admin/NextSteps.php
+msgid "Your headers and footers per language: nothing to do"
+msgstr "言語ごとのヘッダーとフッター: 何もする必要はありません"
+
+#: src/Admin/NextSteps.php
+msgid "Could not read what the other translation plugin left behind. The rest of the list is fine."
+msgstr "もう一方の翻訳プラグインが残したものを読み取れませんでした。一覧のほかの項目は問題ありません。"
+
+#: src/Admin/NextSteps.php
+msgid "The \"what to do next\" panel could not be built this time. Everything else works as usual."
+msgstr "今回は「次にすること」のパネルを組み立てられませんでした。ほかの機能はふだんどおり動きます。"
+
+#: src/Admin/NextSteps.php
+msgid "From %1$s into %2$s."
+msgstr "%1$s から %2$s へ。"
+
+#: src/Admin/NextSteps.php
+msgid "and"
+msgstr "と"
+
+#: src/Importers/BuilderTemplates.php
+msgid "You have %1$s, one per language — %2$s needs them, because it serves a different page for each language. TranslateRocket does not: it translates the one header and the one footer you already have, into every language. You do not have to change anything: leaving them as they are works. If one day you want a single header, do it one step at a time — put a TranslateRocket switcher in the one in your source language, look at the site in every language, and only then move one extra copy to the Trash and look again. From the Trash they come straight back. When in doubt, leave them: they do no harm."
+msgstr "%1$s が言語ごとに 1 つずつあります。%2$s は言語ごとに別のページを出すため、これが必要です。TranslateRocket では不要で、すでにある 1 つのヘッダーと 1 つのフッターをすべての言語に翻訳します。何も変える必要はありません。そのままで動きます。将来ヘッダーを 1 つにまとめたくなったら、一歩ずつ進めてください。元の言語のヘッダーに TranslateRocket の言語切り替えを置き、各言語でサイトを確認し、それから余分なコピーを 1 つだけゴミ箱へ移して、また確認します。ゴミ箱からはすぐ戻せます。迷ったらそのままに。残していても害はありません。"
+
+#: src/Admin/NextSteps.php
+msgid "Bring in the %1$d translations you already have in %2$s"
+msgstr "%2$s にすでにある %1$d 件の翻訳を取り込む"
+
+#: src/Admin/Admin.php
+msgid "%d translation was not saved: the marks that hold the place of a link or a bold word were missing or changed. Open that line again and keep every mark, with its number, anywhere in the sentence."
+msgid_plural "%d translations were not saved: the marks that hold the place of a link or a bold word were missing or changed. Open those lines again and keep every mark, with its number, anywhere in the sentence."
+msgstr[0] "%d 件の翻訳を保存しませんでした。リンクや太字の語の位置を示す印が、欠けているか変更されていました。その行をもう一度開き、印は番号ごと、文中のどこでもよいので必ず残してください。"
+
+#: src/Admin/NextSteps.php
+msgid "Your site is live in %1$d language out of the %2$d you set up."
+msgid_plural "Your site is live in %1$d languages out of the %2$d you set up."
+msgstr[0] "設定した %2$d 言語のうち %1$d 言語が公開されています。"
+
+#: src/Admin/NextSteps.php
+msgid "Translate the %d phrase that is still missing"
+msgid_plural "Translate the %d phrases that are still missing"
+msgstr[0] "まだ訳されていない %d 件の文を翻訳する"
+
+#: src/Admin/NextSteps.php
+msgid "Look over the %1$d page %2$s left behind"
+msgid_plural "Look over the %1$d pages %2$s left behind"
+msgstr[0] "%2$s が残した %1$d 件のページを確認する"
+
+#: src/Frontend/VisualEditor.php
+msgid "%d sentence was not saved: it holds a link or a formatted word, and the marks that say where they go were missing or changed. Keep every mark, with its number, anywhere in the sentence."
+msgid_plural "%d sentences were not saved: they hold a link or a formatted word, and the marks that say where they go were missing or changed. Keep every mark, with its number, anywhere in the sentence."
+msgstr[0] "%d 件の文を保存しませんでした。リンクや装飾された語が含まれているのに、その位置を示す印が欠けているか変更されていました。印は番号ごと、文中のどこでもよいので必ず残してください。"
+
+#: src/Importers/BuilderTemplates.php
+msgid "You also have %1$d menu in another language (%3$s), kept by %2$s. You can leave it exactly where it is: when %2$s is switched off, WordPress keeps the menu of your main language in every position and this one simply stops being used. Nothing disappears from your site, and nothing needs deleting."
+msgid_plural "You also have %1$d menus in other languages (%3$s), kept by %2$s. You can leave them exactly where they are: when %2$s is switched off, WordPress keeps the menu of your main language in every position and these simply stop being used. Nothing disappears from your site, and nothing needs deleting."
+msgstr[0] "%2$s が管理している、ほかの言語のメニューも %1$d 件あります (%3$s)。そのままにしておいてかまいません。%2$s を無効化すると、WordPress は各位置にメインの言語のメニューを残し、これらは単に使われなくなるだけです。サイトから何かが消えることはなく、削除する必要もありません。"
+
+#: src/Admin/Admin.php
+msgid "Next steps"
+msgstr "次にすること"
+
+#: src/Admin/Admin.php
+msgid "What to do next"
+msgstr "次に何をするか"
+
+#: src/Admin/NextSteps.php
+msgid "This list is worked out from your site every time you open it, so it is always the truth of this moment. Come back whenever you are not sure what is left."
+msgstr "この一覧は開くたびにサイトから計算し直すので、つねに今この瞬間の状態を示します。何が残っているか分からなくなったら、いつでも見に来てください。"
+
+#: src/Admin/NextSteps.php
+msgid "%d thing is waiting for you"
+msgid_plural "%d things are waiting for you"
+msgstr[0] "%d 件あなたを待っています"
+
+#: src/Admin/NextSteps.php
+msgid "Nothing is waiting for you"
+msgstr "待っている作業はありません"
+
+#: src/Admin/NextSteps.php
+msgid "see what is left"
+msgstr "残りを見る"

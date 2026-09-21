@@ -156,8 +156,9 @@ class Kses {
 	 * @return string
 	 */
 	public static function translation( $translation ) {
-		return wp_kses( (string) $translation, self::translation_rules() );
+		return \TranslateRocket\Frontend\InlineText::unmask_parts( wp_kses( \TranslateRocket\Frontend\InlineText::mask_parts( (string) $translation ), self::translation_rules() ) );
 	}
+
 
 	/**
 	 * The inline-only allowlist for imported translation content.

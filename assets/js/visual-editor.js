@@ -452,6 +452,11 @@
 		if ( res && res.muto ) {
 			return VE.i18n.noAnswer || '⚠';
 		}
+		// Quando il server spiega cosa non va (per esempio: mancano i segni che
+		// dicono dove va un link), si fa vedere quello, non un generico «errore».
+		if ( res && 'string' === typeof res.data && res.data.length > 12 ) {
+			return res.data;
+		}
 		if ( res && res.stato && 200 !== res.stato ) {
 			return ( VE.i18n.saveFailed || '⚠' ) + ' (' + res.stato + ')';
 		}
@@ -826,7 +831,17 @@
 		pop.querySelector( '.trrocket-ve-src' ).textContent = src;
 		pop.querySelector( '.trrocket-ve-count' ).textContent = ( idx >= 0 ? ( idx + 1 ) : '?' ) + ' / ' + items.length;
 		var ta = pop.querySelector( '.trrocket-ve-tr' );
-		ta.value = trimEdge( el.textContent );
+		// Una frase intera (con un link o del grassetto dentro) ha dei segnaposto: sulla
+		// pagina non si vedono, quindi il testo visibile NON si puo' usare per riempire il
+		// riquadro — chi corregge si vedrebbe rifiutare il salvataggio senza capire il
+		// perche'. Si usa la traduzione vera, segnaposto compresi.
+		var conParti = el.getAttribute( 'data-trr-parts' );
+		if ( conParti ) {
+			var cur = el.getAttribute( 'data-trr-cur' );
+			ta.value = cur ? decodeURIComponent( cur ) : '';
+		} else {
+			ta.value = trimEdge( el.textContent );
+		}
 		pop.querySelector( '.trrocket-ve-save' ).innerHTML = btn( ICONS.check, VE.i18n.savenext );
 		pop.querySelector( '.trrocket-ve-save' ).title = 'Ctrl+Enter';
 		pop.querySelector( '.trrocket-ve-saveonly' ).innerHTML = btn( ICONS.save, VE.i18n.save );
@@ -871,6 +886,16 @@
 			api( 'trrocket_ve_save', { src: src, translation: val }, function ( res ) {
 				busyAll( pop, false );
 				if ( res && res.success ) {
+					if ( target && target.getAttribute( 'data-trr-parts' ) ) {
+						// Qui il testo contiene segnaposto: rimetterlo cosi' com'e' farebbe
+						// vedere «<1>» e sparire il link. Si aggiorna quello che serve e si
+						// rilegge la pagina, che e' l'unico modo di rimontare i tag veri.
+						target.setAttribute( 'data-trr-cur', encodeURIComponent( val ) );
+						target.classList.toggle( 'trrocket-ed-untr', '' === val.trim() );
+						msg.textContent = VE.i18n.saved;
+						setTimeout( function () { window.location.reload(); }, 400 );
+						return;
+					}
 					if ( target ) {
 						if ( '' === val.trim() ) {
 							target.textContent = src;

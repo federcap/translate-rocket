@@ -211,6 +211,11 @@ final class Coexistence {
 			add_filter( 'page_row_actions', array( __CLASS__, 'row_actions' ), 10, 2 );
 			add_filter( 'post_row_actions', array( __CLASS__, 'row_actions' ), 10, 2 );
 			if ( ! is_admin() ) {
+				// Chi guarda il proprio sito pubblico mentre siamo affiancati non vede
+				// nessun cambiamento: ed e' giusto. Ma «funziona come deve» e «e' rotto»
+				// si assomigliano troppo, e si perdono ore a cercare un guasto che non
+				// c'e'. Una riga, visibile SOLO all'amministratore, lo dice.
+				add_action( 'wp_footer', array( __CLASS__, 'front_notice' ), 99 );
 				add_action( 'wp_head', array( __CLASS__, 'noindex_preview' ), 1 );
 				add_action( 'template_redirect', array( __CLASS__, 'preview_headers' ), 1 );
 				// Links on a previewed page keep the preview: menus, permalinks and
@@ -229,6 +234,76 @@ final class Coexistence {
 			add_action( 'init', array( __CLASS__, 'takeover' ), 98 );
 		}
 		add_action( 'init', array( __CLASS__, 'maybe_flush_rewrites' ), 99 );
+	}
+
+	/**
+	 * The line an administrator sees at the foot of the public site while another
+	 * translation plugin is running the languages. Visitors never see it, and it
+	 * is not printed on a preview: there the admin bar already says where they are.
+	 */
+	public static function front_notice(): void {
+		if ( ! self::can_preview() || '' !== self::preview_language() ) {
+			return;
+		}
+		$targets = self::preview_targets();
+		if ( empty( $targets ) ) {
+			return;
+		}
+		$altro   = self::active_names();
+		$vedi    = Plugin::instance()->router()->url_for_language( $targets[0] );
+		$bacheca = admin_url( 'admin.php?page=translate-rocket' );
+		?>
+		<div class="trr-affiancato" id="trr-affiancato" role="status">
+			<span class="trr-affiancato-t">
+				<?php
+				printf(
+					/* translators: %s: the other translation plugin, e.g. "Polylang". */
+					esc_html__( 'Only you can see this. TranslateRocket is standing aside while %s runs the languages here, so this page looks exactly as your visitors see it. Nothing is broken.', 'translate-rocket' ),
+					esc_html( $altro )
+				);
+				?>
+			</span>
+			<a class="trr-affiancato-b" href="<?php echo esc_url( $vedi ); ?>">
+				<?php
+				printf(
+					/* translators: %s: language name, e.g. "Português". */
+					esc_html__( 'See this page in %s', 'translate-rocket' ),
+					esc_html( Languages::label( $targets[0] ) )
+				);
+				?>
+			</a>
+			<a class="trr-affiancato-l" href="<?php echo esc_url( $bacheca ); ?>"><?php esc_html_e( 'How this works', 'translate-rocket' ); ?></a>
+			<button type="button" class="trr-affiancato-x" aria-label="<?php esc_attr_e( 'Hide until I come back', 'translate-rocket' ); ?>">&times;</button>
+		</div>
+		<style>
+			#trr-affiancato{position:fixed;left:16px;right:16px;bottom:16px;z-index:99998;display:flex;gap:12px;
+				align-items:center;flex-wrap:wrap;background:#14243d;color:#eaf0fb;border-radius:10px;
+				padding:12px 16px;font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+				box-shadow:0 8px 28px rgba(0,0,0,.28);max-width:980px;margin:0 auto}
+			#trr-affiancato .trr-affiancato-t{flex:1 1 320px}
+			#trr-affiancato a{color:#fff;text-decoration:none}
+			#trr-affiancato .trr-affiancato-b{background:#2f6df6;padding:7px 14px;border-radius:7px;font-weight:600;white-space:nowrap}
+			#trr-affiancato .trr-affiancato-l{text-decoration:underline;opacity:.85;white-space:nowrap}
+			#trr-affiancato .trr-affiancato-x{background:none;border:0;color:#eaf0fb;font-size:20px;line-height:1;
+				cursor:pointer;padding:0 2px;opacity:.7}
+			@media (max-width:600px){#trr-affiancato{left:8px;right:8px;bottom:8px;font-size:13px}}
+		</style>
+		<script>
+		( function () {
+			var b = document.getElementById( 'trr-affiancato' );
+			if ( ! b ) { return; }
+			try {
+				if ( 'si' === sessionStorage.getItem( 'trrAffiancatoVia' ) ) { b.style.display = 'none'; }
+			} catch ( e ) {}
+			b.querySelector( '.trr-affiancato-x' ).addEventListener( 'click', function () {
+				b.style.display = 'none';
+				// Solo per questa visita: alla prossima torna, perche' e' un'informazione
+				// che serve finche' la situazione e' quella.
+				try { sessionStorage.setItem( 'trrAffiancatoVia', 'si' ); } catch ( e ) {}
+			} );
+		}() );
+		</script>
+		<?php
 	}
 
 	/**

@@ -2781,3 +2781,377 @@ msgstr "Pop-ups"
 #: src/Admin/Admin.php
 msgid "Names that must stay as they are, such as your brand or product names. A text that is only the name is never translated; inside a sentence, DeepL, Google Cloud and the AI models are told to leave the name unchanged."
 msgstr "Namen, die unverändert bleiben sollen, zum Beispiel Ihr Marken- oder Produktname. Ein Text, der nur aus dem Namen besteht, wird nie übersetzt; innerhalb eines Satzes werden DeepL, Google Cloud und die KI-Modelle angewiesen, den Namen unverändert zu lassen."
+
+#: src/Translator.php
+msgid "A sentence came back from the translation service without the marks that say where its links go, so it was not saved. It will be translated again next time."
+msgstr "Ein Satz kam vom Übersetzungsdienst ohne die Markierungen zurück, die angeben, wo seine Links stehen, und wurde deshalb nicht gespeichert. Er wird beim nächsten Mal erneut übersetzt."
+
+#: src/Admin/Farewell.php
+msgid "I could not get it to work"
+msgstr "Ich habe es nicht zum Laufen gebracht"
+
+#: src/Admin/Farewell.php
+msgid "What did you try, and what happened?"
+msgstr "Was haben Sie versucht, und was ist passiert?"
+
+#: src/Admin/Farewell.php
+msgid "The translations were not good enough"
+msgstr "Die Übersetzungen waren nicht gut genug"
+
+#: src/Admin/Farewell.php
+msgid "Which language, and what was wrong with it?"
+msgstr "Welche Sprache, und was stimmte nicht?"
+
+#: src/Admin/Farewell.php
+msgid "It broke something on my site"
+msgstr "Es hat etwas auf meiner Website kaputt gemacht"
+
+#: src/Admin/Farewell.php
+msgid "What broke? This is the one I most want to hear about."
+msgstr "Was war kaputt? Das ist es, was ich am dringendsten wissen möchte."
+
+#: src/Admin/Farewell.php
+msgid "Something I need is missing"
+msgstr "Etwas, das ich brauche, fehlt"
+
+#: src/Admin/Farewell.php
+msgid "What were you looking for?"
+msgstr "Wonach haben Sie gesucht?"
+
+#: src/Admin/Farewell.php
+msgid "Too complicated to set up"
+msgstr "Zu kompliziert einzurichten"
+
+#: src/Admin/Farewell.php
+msgid "Where did you get stuck?"
+msgstr "Wo sind Sie stecken geblieben?"
+
+#: src/Admin/Farewell.php
+msgid "I am switching to another plugin"
+msgstr "Ich wechsle zu einem anderen Plugin"
+
+#: src/Admin/Farewell.php
+msgid "Which one, and what does it do better?"
+msgstr "Welches, und was macht es besser?"
+
+#: src/Admin/Farewell.php
+msgid "Only turning it off for a moment"
+msgstr "Ich schalte es nur kurz aus"
+
+#: src/Admin/Farewell.php
+msgid "Something else"
+msgstr "Etwas anderes"
+
+#: src/Admin/Farewell.php
+msgid "Tell me in your own words."
+msgstr "Sagen Sie es mit Ihren eigenen Worten."
+
+#: src/Admin/Farewell.php
+msgid "Before you go: what went wrong?"
+msgstr "Bevor Sie gehen: Was hat nicht funktioniert?"
+
+#: src/Admin/Farewell.php
+msgid "TranslateRocket is written by one person. Almost everybody who leaves does it in silence, so the same mistake stays in the plugin. One line here would help a lot. Answering is optional, and the plugin deactivates either way."
+msgstr "TranslateRocket wird von einer einzigen Person geschrieben. Fast alle, die gehen, gehen wortlos, und so bleibt derselbe Fehler im Plugin. Eine Zeile hier hilft sehr. Die Antwort ist freiwillig, das Plugin wird so oder so deaktiviert."
+
+#: src/Admin/Farewell.php
+msgid "Your answer stays on this site. The plugin does not send anything anywhere. If you would like me to see it, use the copy button and paste it in the support forum: it is the fastest way to get an answer, too."
+msgstr "Ihre Antwort bleibt auf dieser Website. Das Plugin sendet nichts irgendwohin. Wenn ich sie lesen soll, kopieren Sie sie mit der Schaltfläche und fügen Sie sie im Supportforum ein: Das ist auch der schnellste Weg zu einer Antwort."
+
+#: src/Admin/Farewell.php
+msgid "What the copy button puts on your clipboard"
+msgstr "Was die Kopieren-Schaltfläche in die Zwischenablage legt"
+
+#: src/Admin/Farewell.php
+msgid "Your answer above, and these numbers. Nothing else: no site address, no name, no e-mail, no page or translation content."
+msgstr "Ihre Antwort von oben und diese Zahlen. Sonst nichts: keine Adresse der Website, kein Name, keine E-Mail, keine Seiten- oder Übersetzungsinhalte."
+
+#: src/Admin/Farewell.php
+msgid "Copy and deactivate"
+msgstr "Kopieren und deaktivieren"
+
+#: src/Admin/Farewell.php
+msgid "Skip and deactivate"
+msgstr "Überspringen und deaktivieren"
+
+#: src/Admin/Farewell.php
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/Admin/Farewell.php
+msgid "Open the support forum in a new tab"
+msgstr "Das Supportforum in einem neuen Tab öffnen"
+
+#: src/Coexistence.php
+msgid "Only you can see this. TranslateRocket is standing aside while %s runs the languages here, so this page looks exactly as your visitors see it. Nothing is broken."
+msgstr "Das sehen nur Sie. TranslateRocket hält sich zurück, weil hier %s die Sprachen verwaltet. Diese Seite sieht also genau so aus, wie Ihre Besucher sie sehen. Es ist nichts kaputt."
+
+#: src/Coexistence.php
+msgid "See this page in %s"
+msgstr "Diese Seite auf %s ansehen"
+
+#: src/Coexistence.php
+msgid "How this works"
+msgstr "Wie das funktioniert"
+
+#: src/Coexistence.php
+msgid "Hide until I come back"
+msgstr "Bis zum nächsten Besuch ausblenden"
+
+#: src/Admin/Admin.php
+msgid "Three more things that turn days into hours"
+msgstr "Drei weitere Dinge, die aus Tagen Stunden machen"
+
+#: src/Admin/Admin.php
+msgid "The report above says what your site is running. It cannot say what you are seeing. Send what you can, a screenshot on its own is already a lot, but when a message has these, the answer is usually a fix instead of a question."
+msgstr "Der Bericht oben sagt, was auf Ihrer Website läuft. Er kann nicht sagen, was Sie sehen. Schicken Sie, was Sie können: schon ein Screenshot allein ist viel. Wenn eine Nachricht diese Dinge enthält, ist die Antwort meist eine Korrektur statt einer Rückfrage."
+
+#: src/Admin/Admin.php
+msgid "The address of a page where it happens. A test or staging site is perfect. If the site is not public, a screenshot instead."
+msgstr "Die Adresse einer Seite, auf der es passiert. Eine Test- oder Staging-Seite ist ideal. Ist die Seite nicht öffentlich, genügt ein Screenshot."
+
+#: src/Admin/Admin.php
+msgid "The exact words that stay untranslated or come back wrong, copied and pasted. Two words are enough to find them."
+msgstr "Die genauen Wörter, die unübersetzt bleiben oder falsch zurückkommen, kopiert und eingefügt. Zwei Wörter genügen, um sie zu finden."
+
+#: src/Admin/Admin.php
+msgid "The piece of the page that misbehaves, as code. In Chrome, Edge or Firefox: right-click the text, choose Inspect, then right-click the highlighted line in the panel and pick Copy, then Copy outer HTML. It looks cryptic and it is the single most useful thing you can send: it shows exactly what your theme or plugin builds, which cannot be guessed from another site."
+msgstr "Der Teil der Seite, der sich falsch verhält, als Code. In Chrome, Edge oder Firefox: Rechtsklick auf den Text, «Untersuchen», dann Rechtsklick auf die markierte Zeile im Panel und «Kopieren», danach «Äußeres HTML kopieren». Es sieht kryptisch aus und ist das Nützlichste, was Sie schicken können: Es zeigt genau, was Ihr Theme oder Plugin erzeugt, und das lässt sich von einer anderen Website aus nicht erraten."
+
+#: src/Admin/Admin.php
+msgid "If a \"Fatal error\" line appeared anywhere, copy that whole line too, with the file name and the number at the end."
+msgstr "Falls irgendwo eine Zeile mit «Fatal error» aufgetaucht ist, kopieren Sie auch diese komplett, mit Dateinamen und der Zahl am Ende."
+
+#: src/Frontend/InlineText.php
+msgid "This mark holds the place of a link or a formatted word. Keep it, with its number: you can move it where your language needs it."
+msgstr "Diese Markierung hält den Platz eines Links oder eines hervorgehobenen Wortes. Behalten Sie sie samt Nummer: Sie dürfen sie dorthin verschieben, wo Ihre Sprache sie braucht."
+
+#: src/Frontend/VisualEditor.php
+msgid "Not saved: this sentence holds a link or a formatted word, and the marks that say where they go are missing or changed. Keep every mark, with its number, anywhere in the sentence."
+msgstr "Nicht gespeichert: Dieser Satz enthält einen Link oder ein hervorgehobenes Wort, und die Markierungen, die deren Platz angeben, fehlen oder wurden verändert. Behalten Sie alle Markierungen samt Nummer, an beliebiger Stelle im Satz."
+
+#: src/Admin/NextSteps.php
+msgid "Where you are, and what to do next"
+msgstr "Wo Sie stehen und was als Nächstes zu tun ist"
+
+#: src/Admin/NextSteps.php
+msgid "%1$d of %2$d done"
+msgstr "%1$d von %2$d erledigt"
+
+#: src/Admin/NextSteps.php
+msgid "Nothing is waiting for you. Add or change content and come back: new text shows up here."
+msgstr "Es wartet nichts auf Sie. Fügen Sie Inhalte hinzu oder ändern Sie sie und kommen Sie zurück: Neuer Text erscheint hier."
+
+#: src/Admin/NextSteps.php
+msgid "You have not chosen your languages yet. Everything else waits for that."
+msgstr "Sie haben Ihre Sprachen noch nicht gewählt. Alles andere wartet darauf."
+
+#: src/Admin/NextSteps.php
+msgid "%s is running the languages on your site. TranslateRocket is standing aside: your visitors see exactly what they saw before, and nothing you do here touches the live site until you say so."
+msgstr "Die Sprachen Ihrer Website verwaltet %s. TranslateRocket hält sich zurück: Ihre Besucher sehen genau das, was sie vorher sahen, und nichts, was Sie hier tun, berührt die Live-Website, bis Sie es sagen."
+
+#: src/Admin/NextSteps.php
+msgid "TranslateRocket is in charge of the languages, but none of them is online yet: only you can see them."
+msgstr "TranslateRocket verwaltet die Sprachen, aber noch ist keine online: Vorerst sehen nur Sie sie."
+
+#: src/Admin/NextSteps.php
+msgid "Which language your site is written in, and which ones you want it to speak."
+msgstr "In welcher Sprache Ihre Website geschrieben ist und welche sie sprechen soll."
+
+#: src/Admin/NextSteps.php
+msgid "Open the setup"
+msgstr "Einrichtung öffnen"
+
+#: src/Admin/NextSteps.php
+msgid "Your languages"
+msgstr "Ihre Sprachen"
+
+#: src/Admin/NextSteps.php
+msgid "Change them"
+msgstr "Ändern"
+
+#: src/Admin/NextSteps.php
+msgid "You are running side by side with %s"
+msgstr "Sie laufen Seite an Seite mit %s"
+
+#: src/Admin/NextSteps.php
+msgid "This is on purpose, and nothing is broken: your public site is untouched. Look at the translated pages with Preview. When you are happy, deactivate the other plugin and a button here will put TranslateRocket online."
+msgstr "Das ist Absicht und nichts ist kaputt: Ihre öffentliche Website bleibt unberührt. Sehen Sie sich die übersetzten Seiten in der Vorschau an. Wenn Sie zufrieden sind, deaktivieren Sie das andere Plugin, und hier erscheint eine Schaltfläche, um TranslateRocket online zu stellen."
+
+#: src/Admin/NextSteps.php
+msgid "Preview a page"
+msgstr "Seite in der Vorschau ansehen"
+
+#: src/Admin/NextSteps.php
+msgid "They are yours: importing copies them here, and the other plugin keeps its own."
+msgstr "Sie gehören Ihnen: Beim Import werden sie hierher kopiert, das andere Plugin behält seine."
+
+#: src/Admin/NextSteps.php
+msgid "Import them"
+msgstr "Importieren"
+
+#: src/Admin/NextSteps.php
+msgid "Translations imported from %s"
+msgstr "Übersetzungen aus %s importiert"
+
+#: src/Admin/NextSteps.php
+msgid "There is nothing left to bring over."
+msgstr "Es gibt nichts mehr zu übernehmen."
+
+#: src/Admin/NextSteps.php
+msgid "With your browser, with an AI key, or by hand. You can do a page at a time."
+msgstr "Mit dem Browser, mit einem KI-Schlüssel oder von Hand. Sie können Seite für Seite vorgehen."
+
+#: src/Admin/NextSteps.php
+msgid "Go to the translations"
+msgstr "Zu den Übersetzungen"
+
+#: src/Admin/NextSteps.php
+msgid "Every phrase found on your site has a translation in every language."
+msgstr "Jeder auf Ihrer Website gefundene Satz hat eine Übersetzung in jeder Sprache."
+
+#: src/Admin/NextSteps.php
+msgid "The language switcher is on"
+msgstr "Der Sprachumschalter ist aktiv"
+
+#: src/Admin/NextSteps.php
+msgid "Visitors can change language. You can move it or restyle it whenever you like."
+msgstr "Besucher können die Sprache wechseln. Sie können ihn jederzeit verschieben oder umgestalten."
+
+#: src/Admin/NextSteps.php
+msgid "Change how it looks"
+msgstr "Aussehen ändern"
+
+#: src/Admin/NextSteps.php
+msgid "Put a language switcher on your site"
+msgstr "Setzen Sie einen Sprachumschalter auf Ihre Website"
+
+#: src/Admin/NextSteps.php
+msgid "Without it, a visitor has no way to reach the other languages except by guessing the address."
+msgstr "Ohne ihn hat ein Besucher keine Möglichkeit, die anderen Sprachen zu erreichen, außer die Adresse zu erraten."
+
+#: src/Admin/NextSteps.php
+msgid "Set it up"
+msgstr "Einrichten"
+
+#: src/Admin/NextSteps.php
+msgid "Put %s online"
+msgstr "%s online stellen"
+
+#: src/Admin/NextSteps.php
+msgid "Ready and waiting: only you can see these languages at the moment."
+msgstr "Bereit und wartend: Diese Sprachen sehen im Moment nur Sie."
+
+#: src/Admin/NextSteps.php
+msgid "Choose what is online"
+msgstr "Wählen, was online ist"
+
+#: src/Admin/NextSteps.php
+msgid "All your languages are online"
+msgstr "Alle Ihre Sprachen sind online"
+
+#: src/Admin/NextSteps.php
+msgid "Visitors and search engines can reach every one of them."
+msgstr "Besucher und Suchmaschinen erreichen jede einzelne davon."
+
+#: src/Admin/NextSteps.php
+msgid "One page per language is how the other plugin worked. Each one can go to the Trash, where it stays recoverable and its old address keeps working, or you can keep it. Nothing is ever deleted."
+msgstr "Eine Seite pro Sprache war die Arbeitsweise des anderen Plugins. Jede kann in den Papierkorb, wo sie wiederherstellbar bleibt und ihre alte Adresse weiter funktioniert, oder Sie behalten sie. Gelöscht wird nie etwas."
+
+#: src/Admin/NextSteps.php
+msgid "Look them over"
+msgstr "Ansehen"
+
+#: src/Admin/NextSteps.php
+msgid "Your menus in other languages: nothing to do"
+msgstr "Ihre Menüs in anderen Sprachen: nichts zu tun"
+
+#: src/Admin/NextSteps.php
+msgid "Your headers and footers per language: nothing to do"
+msgstr "Ihre Kopf- und Fußzeilen pro Sprache: nichts zu tun"
+
+#: src/Admin/NextSteps.php
+msgid "Could not read what the other translation plugin left behind. The rest of the list is fine."
+msgstr "Was das andere Übersetzungs-Plugin hinterlassen hat, konnte nicht gelesen werden. Der Rest der Liste ist in Ordnung."
+
+#: src/Admin/NextSteps.php
+msgid "The \"what to do next\" panel could not be built this time. Everything else works as usual."
+msgstr "Das Panel «Was als Nächstes zu tun ist» konnte diesmal nicht aufgebaut werden. Alles andere funktioniert wie gewohnt."
+
+#: src/Admin/NextSteps.php
+msgid "From %1$s into %2$s."
+msgstr "Von %1$s nach %2$s."
+
+#: src/Admin/NextSteps.php
+msgid "and"
+msgstr "und"
+
+#: src/Importers/BuilderTemplates.php
+msgid "You have %1$s, one per language — %2$s needs them, because it serves a different page for each language. TranslateRocket does not: it translates the one header and the one footer you already have, into every language. You do not have to change anything: leaving them as they are works. If one day you want a single header, do it one step at a time — put a TranslateRocket switcher in the one in your source language, look at the site in every language, and only then move one extra copy to the Trash and look again. From the Trash they come straight back. When in doubt, leave them: they do no harm."
+msgstr "Sie haben %1$s, eine pro Sprache: %2$s braucht sie, weil es für jede Sprache eine andere Seite ausliefert. TranslateRocket nicht: Es übersetzt die eine Kopfzeile und die eine Fußzeile, die Sie schon haben, in jede Sprache. Sie müssen nichts ändern, so lassen funktioniert. Wenn Sie eines Tages nur eine Kopfzeile wollen, gehen Sie Schritt für Schritt vor: Setzen Sie einen TranslateRocket-Umschalter in die Ihrer Ausgangssprache, sehen Sie sich die Website in jeder Sprache an, und verschieben Sie erst dann eine weitere Kopie in den Papierkorb und schauen Sie erneut. Aus dem Papierkorb kommen sie sofort zurück. Im Zweifel lassen Sie sie: Sie schaden nicht."
+
+#: src/Admin/NextSteps.php
+msgid "Bring in the %1$d translations you already have in %2$s"
+msgstr "Holen Sie die %1$d Übersetzungen her, die Sie schon in %2$s haben"
+
+#: src/Admin/Admin.php
+msgid "%d translation was not saved: the marks that hold the place of a link or a bold word were missing or changed. Open that line again and keep every mark, with its number, anywhere in the sentence."
+msgid_plural "%d translations were not saved: the marks that hold the place of a link or a bold word were missing or changed. Open those lines again and keep every mark, with its number, anywhere in the sentence."
+msgstr[0] "%d Übersetzung wurde nicht gespeichert: Die Markierungen, die den Platz eines Links oder eines fetten Wortes halten, fehlten oder waren verändert. Öffnen Sie diese Zeile erneut und behalten Sie alle Markierungen samt Nummer, an beliebiger Stelle im Satz."
+msgstr[1] "%d Übersetzungen wurden nicht gespeichert: Die Markierungen, die den Platz eines Links oder eines fetten Wortes halten, fehlten oder waren verändert. Öffnen Sie diese Zeilen erneut und behalten Sie alle Markierungen samt Nummer, an beliebiger Stelle im Satz."
+
+#: src/Admin/NextSteps.php
+msgid "Your site is live in %1$d language out of the %2$d you set up."
+msgid_plural "Your site is live in %1$d languages out of the %2$d you set up."
+msgstr[0] "Ihre Website ist in %1$d von %2$d eingerichteten Sprachen online."
+msgstr[1] "Ihre Website ist in %1$d von %2$d eingerichteten Sprachen online."
+
+#: src/Admin/NextSteps.php
+msgid "Translate the %d phrase that is still missing"
+msgid_plural "Translate the %d phrases that are still missing"
+msgstr[0] "Übersetzen Sie den %d Satz, der noch fehlt"
+msgstr[1] "Übersetzen Sie die %d Sätze, die noch fehlen"
+
+#: src/Admin/NextSteps.php
+msgid "Look over the %1$d page %2$s left behind"
+msgid_plural "Look over the %1$d pages %2$s left behind"
+msgstr[0] "Sehen Sie sich die %1$d Seite an, die %2$s hinterlassen hat"
+msgstr[1] "Sehen Sie sich die %1$d Seiten an, die %2$s hinterlassen hat"
+
+#: src/Frontend/VisualEditor.php
+msgid "%d sentence was not saved: it holds a link or a formatted word, and the marks that say where they go were missing or changed. Keep every mark, with its number, anywhere in the sentence."
+msgid_plural "%d sentences were not saved: they hold a link or a formatted word, and the marks that say where they go were missing or changed. Keep every mark, with its number, anywhere in the sentence."
+msgstr[0] "%d Satz wurde nicht gespeichert: Er enthält einen Link oder ein hervorgehobenes Wort, und die Markierungen, die deren Platz angeben, fehlten oder waren verändert. Behalten Sie alle Markierungen samt Nummer, an beliebiger Stelle im Satz."
+msgstr[1] "%d Sätze wurden nicht gespeichert: Sie enthalten einen Link oder ein hervorgehobenes Wort, und die Markierungen, die deren Platz angeben, fehlten oder waren verändert. Behalten Sie alle Markierungen samt Nummer, an beliebiger Stelle im Satz."
+
+#: src/Importers/BuilderTemplates.php
+msgid "You also have %1$d menu in another language (%3$s), kept by %2$s. You can leave it exactly where it is: when %2$s is switched off, WordPress keeps the menu of your main language in every position and this one simply stops being used. Nothing disappears from your site, and nothing needs deleting."
+msgid_plural "You also have %1$d menus in other languages (%3$s), kept by %2$s. You can leave them exactly where they are: when %2$s is switched off, WordPress keeps the menu of your main language in every position and these simply stop being used. Nothing disappears from your site, and nothing needs deleting."
+msgstr[0] "Sie haben außerdem %1$d Menü in einer anderen Sprache (%3$s), von %2$s verwaltet. Sie können es genau dort lassen, wo es ist: Wird %2$s abgeschaltet, behält WordPress an jeder Position das Menü Ihrer Hauptsprache, und dieses wird einfach nicht mehr verwendet. Von Ihrer Website verschwindet nichts, und es muss nichts gelöscht werden."
+msgstr[1] "Sie haben außerdem %1$d Menüs in anderen Sprachen (%3$s), von %2$s verwaltet. Sie können sie genau dort lassen, wo sie sind: Wird %2$s abgeschaltet, behält WordPress an jeder Position das Menü Ihrer Hauptsprache, und diese werden einfach nicht mehr verwendet. Von Ihrer Website verschwindet nichts, und es muss nichts gelöscht werden."
+
+#: src/Admin/Admin.php
+msgid "Next steps"
+msgstr "Nächste Schritte"
+
+#: src/Admin/Admin.php
+msgid "What to do next"
+msgstr "Was als Nächstes zu tun ist"
+
+#: src/Admin/NextSteps.php
+msgid "This list is worked out from your site every time you open it, so it is always the truth of this moment. Come back whenever you are not sure what is left."
+msgstr "Diese Liste wird bei jedem Öffnen aus Ihrer Website ermittelt und zeigt daher immer den Stand von genau jetzt. Kommen Sie wieder, wann immer Sie unsicher sind, was noch offen ist."
+
+#: src/Admin/NextSteps.php
+msgid "%d thing is waiting for you"
+msgid_plural "%d things are waiting for you"
+msgstr[0] "%d Sache wartet auf Sie"
+msgstr[1] "%d Sachen warten auf Sie"
+
+#: src/Admin/NextSteps.php
+msgid "Nothing is waiting for you"
+msgstr "Nichts wartet auf Sie"
+
+#: src/Admin/NextSteps.php
+msgid "see what is left"
+msgstr "sehen, was noch offen ist"

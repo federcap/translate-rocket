@@ -169,6 +169,11 @@ class Translator {
 				foreach ( $hit['translations'] as $i => $translation ) {
 					$translation = (string) $translation;
 					if ( isset( $texts[ $i ] ) && '' !== trim( $translation ) ) {
+						// Le differenze innocue (<1></1> al posto di <1/>) si rimettono in riga
+						// prima di decidere: altrimenti si butterebbe via una traduzione buona.
+						$translation = \TranslateRocket\Frontend\InlineText::normalize( $texts[ $i ], $translation );
+					}
+					if ( isset( $texts[ $i ] ) && '' !== trim( $translation ) && self::parts_kept( $texts[ $i ], $translation ) ) {
 						self::save_group( $pending[ $texts[ $i ] ], $lang, $translation, $hit['provider'], $texts[ $i ], $count );
 					}
 				}
@@ -402,6 +407,26 @@ class Translator {
 			'saved'   => $saved,
 			'skipped' => $skipped,
 		);
+	}
+
+	/**
+	 * A whole sentence travels with numbered placeholders where its links and bold
+	 * words are (see InlineText). If a service sends back a sentence that lost one,
+	 * that translation can never be put back into the page: better to leave the
+	 * string untranslated and try again later than to save something unusable.
+	 *
+	 * @param string $original    The text that was sent.
+	 * @param string $translation What came back.
+	 */
+	private static function parts_kept( string $original, string $translation ): bool {
+		if ( ! \TranslateRocket\Frontend\InlineText::has_parts( $original ) ) {
+			return true;
+		}
+		if ( \TranslateRocket\Frontend\InlineText::parts_ok( $original, $translation ) ) {
+			return true;
+		}
+		Logger::warning( 'translation', __( 'A sentence came back from the translation service without the marks that say where its links go, so it was not saved. It will be translated again next time.', 'translate-rocket' ) );
+		return false;
 	}
 
 	/**

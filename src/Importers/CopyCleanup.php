@@ -326,19 +326,43 @@ class CopyCleanup {
 			$paired = false;
 		}
 
+		// Same shapes and same rule as the import (Comune::coppia()): the import
+		// stores a sentence decoded and «dressed» (`&amp;` is `&`, `don't` is
+		// `don’t`) and skips what reads the same in both languages. Looked up here
+		// in the raw database shape, every sentence with an ampersand or an
+		// apostrophe counted as «not imported yet», and a copy that had been
+		// imported in full was kept on the site (found 21/09/2026, WPML + Spectra).
 		$wanted = array();
 		foreach ( $pairs as $pair ) {
-			$original = trim( $pair[0] );
-			$text     = trim( $pair[1] );
-			if ( '' !== $original && '' !== $text && $original !== $text ) {
-				$wanted[ $original ] = true;
+			$forme_o = Comune::forme( (string) $pair[0] );
+			$forme_t = Comune::forme( (string) $pair[1] );
+			if ( empty( $forme_o ) || empty( $forme_t ) || $forme_o[0] === $forme_t[0] ) {
+				continue;
 			}
+			$wanted[ $forme_o[0] ] = $forme_o;
 		}
 
 		$missing = 0;
 		if ( ! empty( $wanted ) ) {
-			$found   = Strings::translate_texts( array_keys( $wanted ), $lang );
-			$missing = count( array_diff_key( $wanted, $found ) );
+			$tutte = array();
+			foreach ( $wanted as $forme ) {
+				foreach ( $forme as $f ) {
+					$tutte[] = $f;
+				}
+			}
+			$found = Strings::translate_texts( $tutte, $lang );
+			foreach ( $wanted as $forme ) {
+				$c_e = false;
+				foreach ( $forme as $f ) {
+					if ( isset( $found[ $f ] ) ) {
+						$c_e = true;
+						break;
+					}
+				}
+				if ( ! $c_e ) {
+					++$missing;
+				}
+			}
 		}
 
 		return array(

@@ -64,7 +64,33 @@ final class KeepTerms {
 	 * @param string   $close Closing tag.
 	 */
 	public static function wrap( string $text, array $terms, string $open, string $close ): string {
-		$escaped = htmlspecialchars( $text, ENT_NOQUOTES | ENT_XML1, 'UTF-8' );
+		return self::wrap_escaped( self::escape( $text ), $terms, $open, $close );
+	}
+
+	/**
+	 * Escape a text for a request in XML or HTML mode. One place, one rule.
+	 *
+	 * @param string $text Text.
+	 */
+	public static function escape( string $text ): string {
+		return htmlspecialchars( $text, ENT_NOQUOTES | ENT_XML1, 'UTF-8' );
+	}
+
+	/**
+	 * Wrap the protected names in a text that is ALREADY escaped.
+	 *
+	 * ⚠️ Esiste perche' una frase con dentro un link viaggia gia' escapata e con i suoi
+	 * segnaposto trasformati in tag: passarla di nuovo da wrap() la escapava due volte e
+	 * i servizi non vedevano piu' i tag. Una frase escapata due volte torna indietro per
+	 * combinazione, ma nel mezzo DeepL e Google non possono piu' spostare i tag: li
+	 * storpiano, e la traduzione viene rifiutata e ripagata a ogni giro.
+	 *
+	 * @param string   $escaped Text already escaped.
+	 * @param string[] $terms   Protected names.
+	 * @param string   $open    Opening tag.
+	 * @param string   $close   Closing tag.
+	 */
+	public static function wrap_escaped( string $escaped, array $terms, string $open, string $close ): string {
 		if ( empty( $terms ) ) {
 			return $escaped;
 		}
@@ -89,8 +115,22 @@ final class KeepTerms {
 	 * @param string $tag_name Wrapping element name ('keep', 'span').
 	 */
 	public static function unwrap( string $text, string $tag_name ): string {
-		$text = (string) preg_replace( '#<' . preg_quote( $tag_name, '#' ) . '(\s[^>]*)?>|</' . preg_quote( $tag_name, '#' ) . '\s*>#i', '', $text );
-		return html_entity_decode( $text, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		return html_entity_decode( self::strip_tag( $text, $tag_name ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+	}
+
+	/**
+	 * Togliere SOLO il tag, senza decodificare: la decodifica la fa chi chiama, una volta
+	 * sola, perche' una frase con segnaposto ha gia' il suo giro di decodifica.
+	 *
+	 * @param string $text     Text from the service.
+	 * @param string $tag_name Tag to remove.
+	 */
+	public static function strip_tag( string $text, string $tag_name ): string {
+		return (string) preg_replace(
+			'#<' . preg_quote( $tag_name, '#' ) . '(\s[^>]*)?>|</' . preg_quote( $tag_name, '#' ) . '\s*>#i',
+			'',
+			$text
+		);
 	}
 
 	/**

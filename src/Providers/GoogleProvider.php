@@ -7,6 +7,8 @@
 
 namespace TranslateRocket\Providers;
 
+use TranslateRocket\Frontend\InlineText;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -34,16 +36,33 @@ class GoogleProvider extends AbstractProvider {
 
 		// Names from "Words & phrases" inside these sentences: Google leaves translate="no"
 		// alone, but only in HTML mode. Without such names the request is unchanged.
+		// Stessa regola sola di DeepL: se si va in HTML, ogni testo viene escapato una
+		// volta e ogni risposta decodificata una volta. (Vedi il commento in DeepLProvider.)
 		$keep  = KeepTerms::in( $texts );
+		$parts = false;
+		foreach ( $texts as $text ) {
+			if ( InlineText::has_parts( $text ) ) {
+				$parts = true;
+				break;
+			}
+		}
+		$html  = ! empty( $keep ) || $parts;
 		$query = http_build_query(
 			array(
 				'source' => $this->google_code( $source ),
 				'target' => $this->google_code( $target ),
-				'format' => empty( $keep ) ? 'text' : 'html',
+				'format' => $html ? 'html' : 'text',
 			)
 		);
 		foreach ( $texts as $text ) {
-			$query .= '&q=' . rawurlencode( empty( $keep ) ? $text : KeepTerms::wrap( $text, $keep, '<span translate="no">', '</span>' ) );
+			$body = $text;
+			if ( $html ) {
+				$body = InlineText::has_parts( $text ) ? InlineText::to_tags( $text ) : KeepTerms::escape( $text );
+				if ( ! empty( $keep ) ) {
+					$body = KeepTerms::wrap_escaped( $body, $keep, '<span translate="no">', '</span>' );
+				}
+			}
+			$query .= '&q=' . rawurlencode( $body );
 		}
 
 		$result = $this->post(
@@ -61,11 +80,19 @@ class GoogleProvider extends AbstractProvider {
 		}
 
 		$out = array();
+		$i   = 0;
 		foreach ( $data['data']['translations'] as $item ) {
-			// v2 returns HTML-escaped text even with format=text.
-			$out[] = empty( $keep )
-				? html_entity_decode( (string) ( $item['translatedText'] ?? '' ), ENT_QUOTES, 'UTF-8' )
-				: KeepTerms::unwrap( (string) ( $item['translatedText'] ?? '' ), 'span' );
+			$t = (string) ( $item['translatedText'] ?? '' );
+			if ( ! empty( $keep ) ) {
+				$t = KeepTerms::strip_tag( $t, 'span' );
+			}
+			// v2 restituisce testo con le entita' anche in modalita' «text»: si decodifica
+			// sempre, ma UNA volta sola (from_tags decodifica gia' per conto suo).
+			$t     = ( isset( $texts[ $i ] ) && InlineText::has_parts( $texts[ $i ] ) )
+				? InlineText::from_tags( $t )
+				: html_entity_decode( $t, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+			$out[] = $t;
+			++$i;
 		}
 		if ( count( $out ) !== count( $texts ) ) {
 			return TranslationResult::fail( 'Google: item count mismatch.' );

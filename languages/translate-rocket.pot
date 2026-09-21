@@ -3658,3 +3658,377 @@ msgstr ""
 #: src/Admin/Admin.php
 msgid "Names that must stay as they are, such as your brand or product names. A text that is only the name is never translated; inside a sentence, DeepL, Google Cloud and the AI models are told to leave the name unchanged."
 msgstr ""
+
+#: src/Translator.php
+msgid "A sentence came back from the translation service without the marks that say where its links go, so it was not saved. It will be translated again next time."
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "I could not get it to work"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "What did you try, and what happened?"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "The translations were not good enough"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Which language, and what was wrong with it?"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "It broke something on my site"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "What broke? This is the one I most want to hear about."
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Something I need is missing"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "What were you looking for?"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Too complicated to set up"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Where did you get stuck?"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "I am switching to another plugin"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Which one, and what does it do better?"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Only turning it off for a moment"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Something else"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Tell me in your own words."
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Before you go: what went wrong?"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "TranslateRocket is written by one person. Almost everybody who leaves does it in silence, so the same mistake stays in the plugin. One line here would help a lot. Answering is optional, and the plugin deactivates either way."
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Your answer stays on this site. The plugin does not send anything anywhere. If you would like me to see it, use the copy button and paste it in the support forum: it is the fastest way to get an answer, too."
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "What the copy button puts on your clipboard"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Your answer above, and these numbers. Nothing else: no site address, no name, no e-mail, no page or translation content."
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Copy and deactivate"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Skip and deactivate"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Cancel"
+msgstr ""
+
+#: src/Admin/Farewell.php
+msgid "Open the support forum in a new tab"
+msgstr ""
+
+#: src/Coexistence.php
+msgid "Only you can see this. TranslateRocket is standing aside while %s runs the languages here, so this page looks exactly as your visitors see it. Nothing is broken."
+msgstr ""
+
+#: src/Coexistence.php
+msgid "See this page in %s"
+msgstr ""
+
+#: src/Coexistence.php
+msgid "How this works"
+msgstr ""
+
+#: src/Coexistence.php
+msgid "Hide until I come back"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Three more things that turn days into hours"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The report above says what your site is running. It cannot say what you are seeing. Send what you can, a screenshot on its own is already a lot, but when a message has these, the answer is usually a fix instead of a question."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The address of a page where it happens. A test or staging site is perfect. If the site is not public, a screenshot instead."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The exact words that stay untranslated or come back wrong, copied and pasted. Two words are enough to find them."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The piece of the page that misbehaves, as code. In Chrome, Edge or Firefox: right-click the text, choose Inspect, then right-click the highlighted line in the panel and pick Copy, then Copy outer HTML. It looks cryptic and it is the single most useful thing you can send: it shows exactly what your theme or plugin builds, which cannot be guessed from another site."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "If a \"Fatal error\" line appeared anywhere, copy that whole line too, with the file name and the number at the end."
+msgstr ""
+
+#: src/Frontend/InlineText.php
+msgid "This mark holds the place of a link or a formatted word. Keep it, with its number: you can move it where your language needs it."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Not saved: this sentence holds a link or a formatted word, and the marks that say where they go are missing or changed. Keep every mark, with its number, anywhere in the sentence."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Where you are, and what to do next"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "%1$d of %2$d done"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Nothing is waiting for you. Add or change content and come back: new text shows up here."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "You have not chosen your languages yet. Everything else waits for that."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "%s is running the languages on your site. TranslateRocket is standing aside: your visitors see exactly what they saw before, and nothing you do here touches the live site until you say so."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "TranslateRocket is in charge of the languages, but none of them is online yet: only you can see them."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Which language your site is written in, and which ones you want it to speak."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Open the setup"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Your languages"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Change them"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "You are running side by side with %s"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "This is on purpose, and nothing is broken: your public site is untouched. Look at the translated pages with Preview. When you are happy, deactivate the other plugin and a button here will put TranslateRocket online."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Preview a page"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "They are yours: importing copies them here, and the other plugin keeps its own."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Import them"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Translations imported from %s"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "There is nothing left to bring over."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "With your browser, with an AI key, or by hand. You can do a page at a time."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Go to the translations"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Every phrase found on your site has a translation in every language."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "The language switcher is on"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Visitors can change language. You can move it or restyle it whenever you like."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Change how it looks"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Put a language switcher on your site"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Without it, a visitor has no way to reach the other languages except by guessing the address."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Set it up"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Put %s online"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Ready and waiting: only you can see these languages at the moment."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Choose what is online"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "All your languages are online"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Visitors and search engines can reach every one of them."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "One page per language is how the other plugin worked. Each one can go to the Trash, where it stays recoverable and its old address keeps working, or you can keep it. Nothing is ever deleted."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Look them over"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Your menus in other languages: nothing to do"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Your headers and footers per language: nothing to do"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Could not read what the other translation plugin left behind. The rest of the list is fine."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "The \"what to do next\" panel could not be built this time. Everything else works as usual."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "From %1$s into %2$s."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "and"
+msgstr ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "You have %1$s, one per language — %2$s needs them, because it serves a different page for each language. TranslateRocket does not: it translates the one header and the one footer you already have, into every language. You do not have to change anything: leaving them as they are works. If one day you want a single header, do it one step at a time — put a TranslateRocket switcher in the one in your source language, look at the site in every language, and only then move one extra copy to the Trash and look again. From the Trash they come straight back. When in doubt, leave them: they do no harm."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "Bring in the %1$d translations you already have in %2$s"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "%d translation was not saved: the marks that hold the place of a link or a bold word were missing or changed. Open that line again and keep every mark, with its number, anywhere in the sentence."
+msgid_plural "%d translations were not saved: the marks that hold the place of a link or a bold word were missing or changed. Open those lines again and keep every mark, with its number, anywhere in the sentence."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/NextSteps.php
+msgid "Your site is live in %1$d language out of the %2$d you set up."
+msgid_plural "Your site is live in %1$d languages out of the %2$d you set up."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/NextSteps.php
+msgid "Translate the %d phrase that is still missing"
+msgid_plural "Translate the %d phrases that are still missing"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/NextSteps.php
+msgid "Look over the %1$d page %2$s left behind"
+msgid_plural "Look over the %1$d pages %2$s left behind"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Frontend/VisualEditor.php
+msgid "%d sentence was not saved: it holds a link or a formatted word, and the marks that say where they go were missing or changed. Keep every mark, with its number, anywhere in the sentence."
+msgid_plural "%d sentences were not saved: they hold a link or a formatted word, and the marks that say where they go were missing or changed. Keep every mark, with its number, anywhere in the sentence."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Importers/BuilderTemplates.php
+msgid "You also have %1$d menu in another language (%3$s), kept by %2$s. You can leave it exactly where it is: when %2$s is switched off, WordPress keeps the menu of your main language in every position and this one simply stops being used. Nothing disappears from your site, and nothing needs deleting."
+msgid_plural "You also have %1$d menus in other languages (%3$s), kept by %2$s. You can leave them exactly where they are: when %2$s is switched off, WordPress keeps the menu of your main language in every position and these simply stop being used. Nothing disappears from your site, and nothing needs deleting."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/Admin.php
+msgid "Next steps"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "What to do next"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "This list is worked out from your site every time you open it, so it is always the truth of this moment. Come back whenever you are not sure what is left."
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "%d thing is waiting for you"
+msgid_plural "%d things are waiting for you"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/NextSteps.php
+msgid "Nothing is waiting for you"
+msgstr ""
+
+#: src/Admin/NextSteps.php
+msgid "see what is left"
+msgstr ""

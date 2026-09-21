@@ -7,6 +7,8 @@
 
 namespace TranslateRocket\Providers;
 
+use TranslateRocket\Frontend\InlineText;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -39,14 +41,46 @@ class DeepLProvider extends AbstractProvider {
 		);
 		// Names from "Words & phrases" inside these sentences: DeepL leaves <keep> alone
 		// (tag_handling=xml, ignore_tags=keep). Without such names the request is unchanged.
-		$keep = KeepTerms::in( $texts );
-		if ( ! empty( $keep ) ) {
+		// UNA sola regola per tutto il lotto. ⚠️ Prima era: «se ci sono nomi protetti
+		// accendo l'XML e proteggo QUELLE frasi». Da quando anche le frasi intere usano i
+		// tag, bastava una frase col link perche' l'intera richiesta andasse in XML mentre
+		// le ALTRE frasi partivano grezze e tornavano non decodificate: un «Fish & chips»
+		// nello stesso lotto arrivava in pagina come «Fish &amp;amp; chips». Adesso: se si
+		// va in XML, ogni testo viene escapato una volta e ogni risposta decodificata una
+		// volta. Trovato in revisione il 20/9.
+		$keep  = KeepTerms::in( $texts );
+		$parts = array();
+		foreach ( $texts as $text ) {
+			if ( InlineText::has_parts( $text ) ) {
+				preg_match_all( '#<(\d{1,3})#', $text, $m );
+				foreach ( $m[1] as $one ) {
+					$parts[ InlineText::tag_name( $one ) ] = true;
+				}
+			}
+		}
+		$xml = ! empty( $keep ) || ! empty( $parts );
+		if ( $xml ) {
 			$params['tag_handling'] = 'xml';
-			$params['ignore_tags']  = 'keep';
+		}
+		if ( ! empty( $keep ) ) {
+			$params['ignore_tags'] = 'keep';
+		}
+		if ( ! empty( $parts ) ) {
+			// I segnaposto sono parte della frase: non la interrompono.
+			$params['non_splitting_tags'] = implode( ',', array_keys( $parts ) );
 		}
 		$query = http_build_query( $params );
 		foreach ( $texts as $text ) {
-			$query .= '&text=' . rawurlencode( empty( $keep ) ? $text : KeepTerms::wrap( $text, $keep, '<keep>', '</keep>' ) );
+			$body = $text;
+			if ( $xml ) {
+				$body = InlineText::has_parts( $text )
+					? InlineText::to_tags( $text )        // escapa e trasforma i segnaposto in tag
+					: KeepTerms::escape( $text );         // escapa e basta
+				if ( ! empty( $keep ) ) {
+					$body = KeepTerms::wrap_escaped( $body, $keep, '<keep>', '</keep>' );
+				}
+			}
+			$query .= '&text=' . rawurlencode( $body );
 		}
 
 		$result = $this->post(
@@ -92,9 +126,19 @@ class DeepLProvider extends AbstractProvider {
 		}
 
 		$out = array();
+		$i   = 0;
 		foreach ( $data['translations'] as $item ) {
-			$t     = (string) ( $item['text'] ?? '' );
-			$out[] = empty( $keep ) ? $t : KeepTerms::unwrap( $t, 'keep' );
+			$t = (string) ( $item['text'] ?? '' );
+			if ( $xml ) {
+				if ( ! empty( $keep ) ) {
+					$t = KeepTerms::strip_tag( $t, 'keep' );
+				}
+				$t = ( isset( $texts[ $i ] ) && InlineText::has_parts( $texts[ $i ] ) )
+					? InlineText::from_tags( $t )                                        // rimette i segnaposto e decodifica
+					: html_entity_decode( $t, ENT_QUOTES | ENT_HTML5, 'UTF-8' );         // decodifica e basta
+			}
+			$out[] = $t;
+			++$i;
 		}
 		if ( count( $out ) !== count( $texts ) ) {
 			return TranslationResult::fail( 'DeepL: item count mismatch.' );

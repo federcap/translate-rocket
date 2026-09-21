@@ -445,6 +445,17 @@ class Engine {
 			$skip_el .= ' or ' . $extra;
 		}
 
+		// Il predicato per gli ELEMENTI interi (le frasi unite): serve sia la lista dei
+		// tag da non toccare (code, pre, script...) sia le condizioni di $skip_el, e tutte
+		// con «ancestor-or-self», perche' qui si sceglie un elemento e un elemento non e'
+		// antenato di se stesso. $skip ha i tag ma solo come antenati; $skip_el ha le
+		// condizioni giuste ma non i tag. Da qui il terzo.
+		$skip_unit = '';
+		foreach ( self::SKIP_PARENTS as $tag ) {
+			$skip_unit .= "ancestor-or-self::{$tag} or ";
+		}
+		$skip_unit .= $skip_el;
+
 		$collected = array();
 		$changed   = false;
 
@@ -454,6 +465,34 @@ class Engine {
 		// (100k+ strings) it becomes an indexed batch lookup, so memory stays
 		// proportional to the page instead of the whole site.
 		$text_nodes = iterator_to_array( $xpath->query( "//text()[not({$skip})]" ) );
+
+		// Frasi spezzate da un link o da una parola in grassetto: si leggono intere,
+		// con i tag al posto loro (vedi InlineText). I nodi di testo che stanno
+		// dentro una di queste frasi non si raccolgono piu' uno per uno: sarebbero
+		// pezzi senza senso («Read the», «or»). Filtro disattivabile per chi ha un
+		// tema che ne soffre.
+		$units      = array();
+		$unit_texts = array();
+		// Gli oggetti dei nodi vanno tenuti vivi finche' si usa spl_object_id: quando
+		// PHP libera un DOMNode, lo stesso numero puo' finire a un altro nodo.
+		$unit_refs  = array();
+		if ( apply_filters( 'trrocket_merge_inline', true ) ) {
+			// ⚠️ $skip_el, non $skip: il primo dice «l'elemento stesso o un suo antenato»,
+			// il secondo solo «un antenato». Qui si sceglie un ELEMENTO, e un elemento non
+			// e' antenato di se stesso: con $skip un <p translate="no"> o un <code> che
+			// contiene del testo veniva preso lo stesso. Trovato in revisione il 20/9.
+			foreach ( InlineText::units( $xpath, $skip_unit ) as $unit_el ) {
+				$src = InlineText::source( $unit_el );
+				if ( '' === $src || self::is_noise( $src ) || NoTranslate::text_excluded( $src ) ) {
+					continue;
+				}
+				$units[] = array( 'el' => $unit_el, 'src' => $src );
+				foreach ( $xpath->query( './/text()', $unit_el ) as $inner ) {
+					$unit_refs[]                          = $inner;
+					$unit_texts[ spl_object_id( $inner ) ] = true;
+				}
+			}
+		}
 		$attr_nodes = array();
 		foreach ( self::ATTRIBUTES as $attr ) {
 			$attr_nodes[ $attr ] = iterator_to_array( $xpath->query( "//*[@{$attr}][not({$skip_el})][not(self::link)]" ) );
@@ -489,6 +528,9 @@ class Engine {
 				foreach ( $texts as $text ) {
 					$candidates[] = $text;
 				}
+			}
+			foreach ( $units as $unit ) {
+				$candidates[] = $unit['src'];
 			}
 			foreach ( $text_nodes as $node ) {
 				$candidates[] = trim( (string) $node->nodeValue );
@@ -530,12 +572,69 @@ class Engine {
 		// Only enable visual-edit wrapping on a SECONDARY language — you can't
 		// translate the source language into itself.
 		$editing = VisualEditor::is_editing() && $this->is_secondary;
+
+		// Le frasi intere: si raccolgono cosi' come sono e, se c'e' la traduzione, si
+		// riscrive il paragrafo riusando i tag della pagina (mai quelli che arrivano
+		// dalla traduzione). Se la traduzione non c'e' ancora, o i segnaposto non
+		// tornano, non si tocca niente: i pezzi vecchi restano e il visitatore vede
+		// quello che vedeva prima.
+		$unit_done = array();
+		foreach ( $units as $unit ) {
+			$src = $unit['src'];
+			if ( $this->do_collect ) {
+				$collected[] = array(
+					'original' => $src,
+					'type'     => 'text',
+					'context'  => null,
+				);
+			}
+			$inner = iterator_to_array( $xpath->query( './/text()', $unit['el'] ) );
+			foreach ( $inner as $node ) {
+				$unit_refs[] = $node;
+			}
+			if ( isset( $map[ $src ] ) && InlineText::apply( $unit['el'], $map[ $src ] ) ) {
+				foreach ( $inner as $node ) {
+					$unit_done[ spl_object_id( $node ) ] = true;
+				}
+				$changed = true;
+			}
+			if ( $editing ) {
+				// Nell'editor visivo la frase si clicca tutta insieme: il pezzo
+				// dentro il link non ha vita propria.
+				$cls = (string) $unit['el']->getAttribute( 'class' );
+				$add = isset( $map[ $src ] ) ? 'trrocket-ed' : 'trrocket-ed trrocket-ed-untr';
+				$unit['el']->setAttribute( 'class', '' === $cls ? $add : $cls . ' ' . $add );
+				$unit['el']->setAttribute( 'data-trr-src', rawurlencode( $src ) );
+				// La frase intera ha dei segnaposto: nel riquadro dell'editor non si puo'
+				// mettere il testo come si vede sulla pagina, perche' li' i segnaposto non
+				// ci sono e chi corregge a mano si vedrebbe rifiutare il salvataggio senza
+				// capire perche'. Si passa la traduzione COSI' COM'E' (o la frase di
+				// partenza, se non e' ancora tradotta). Trovato in revisione il 20/9.
+				$unit['el']->setAttribute( 'data-trr-parts', '1' );
+				$unit['el']->setAttribute( 'data-trr-cur', rawurlencode( isset( $map[ $src ] ) ? $map[ $src ] : '' ) );
+				foreach ( iterator_to_array( $xpath->query( './/text()', $unit['el'] ) ) as $node ) {
+					$unit_refs[]                        = $node;
+					$unit_done[ spl_object_id( $node ) ] = true;
+				}
+				$changed = true;
+			}
+		}
 		foreach ( $text_nodes as $node ) {
+			// Pezzo di una frase gia' riscritta per intero: quel nodo non e' piu'
+			// nella pagina, e anche solo leggerlo farebbe saltare tutto. Il
+			// controllo va PRIMA di toccare il nodo.
+			if ( isset( $unit_done[ spl_object_id( $node ) ] ) ) {
+				continue;
+			}
 			$text = trim( (string) $node->nodeValue );
 			if ( '' === $text || ! preg_match( '/\p{L}/u', $text ) || self::is_noise( $text ) || NoTranslate::text_excluded( $text ) ) {
 				continue;
 			}
-			if ( $this->do_collect ) {
+			// Pezzo di una frase che leggiamo intera: la frase e' gia' stata raccolta,
+			// il pezzo no. Resta pero' la traduzione vecchia, se c'e', cosi' i siti che
+			// hanno gia' tradotto a pezzi non peggiorano da un aggiornamento all'altro.
+			$is_piece = isset( $unit_texts[ spl_object_id( $node ) ] );
+			if ( $this->do_collect && ! $is_piece ) {
 				$collected[] = array(
 					'original' => $text,
 					'type'     => 'text',
@@ -556,6 +655,18 @@ class Engine {
 				$node->parentNode->replaceChild( $span, $node );
 				$changed = true;
 			}
+		}
+
+		// ⚠️ Le frasi riscritte hanno sostituito i loro figli con delle COPIE: i nodi
+		// degli attributi e delle immagini raccolti prima sono ormai fuori dalla pagina,
+		// e scriverci sopra non cambierebbe niente (il titolo di un link e il testo
+		// alternativo di un'immagine dentro una frase col grassetto restavano nella
+		// lingua di partenza). Si riprendono dalla pagina com'e' adesso.
+		if ( ! empty( $unit_done ) ) {
+			foreach ( self::ATTRIBUTES as $attr ) {
+				$attr_nodes[ $attr ] = iterator_to_array( $xpath->query( "//*[@{$attr}][not({$skip_el})][not(self::link)]" ) );
+			}
+			$img_nodes = iterator_to_array( $xpath->query( "//img[@src][not({$skip_el})]" ) );
 		}
 
 		// Translatable attributes. <link> is skipped: its title attributes are the

@@ -101,6 +101,10 @@ class Cache {
 	 * on sites without an object cache.
 	 */
 	public static function flush(): void {
+		// Se cambia il contenuto, puo' essere cambiato anche cosa resta da fare.
+		if ( class_exists( '\\TranslateRocket\\Admin\\NextSteps' ) ) {
+			\TranslateRocket\Admin\NextSteps::forget();
+		}
 		update_option( self::VER_OPTION, self::version() + 1 );
 
 		if ( ! wp_using_ext_object_cache() ) {

@@ -177,7 +177,7 @@ class WpmlImporter implements ProvidesCopies {
 			if ( ! Languages::exists( $lang ) || $lang === $our_default ) {
 				continue;
 			}
-			if ( Strings::store_imported( (string) $row->source, $lang, (string) $row->translation ) ) {
+			if ( Comune::coppia( (string) $row->source, $lang, (string) $row->translation, true ) ) {
 				++$count;
 			}
 		}
@@ -237,11 +237,11 @@ class WpmlImporter implements ProvidesCopies {
 					continue;
 				}
 
-				if ( Strings::store_imported( (string) $source->post_title, $lang, (string) $tpost->post_title ) ) {
+				if ( Comune::coppia( (string) $source->post_title, $lang, (string) $tpost->post_title, true ) ) {
 					++$count;
 				}
 				if ( '' !== trim( (string) $source->post_excerpt ) && '' !== trim( (string) $tpost->post_excerpt )
-					&& Strings::store_imported( (string) $source->post_excerpt, $lang, (string) $tpost->post_excerpt ) ) {
+					&& Comune::coppia( (string) $source->post_excerpt, $lang, (string) $tpost->post_excerpt, true ) ) {
 					++$count;
 				}
 				if ( '' !== (string) $tpost->post_name ) {
@@ -252,11 +252,15 @@ class WpmlImporter implements ProvidesCopies {
 				$tr_chunks  = $this->chunks( (string) $tpost->post_content );
 				if ( ! empty( $src_chunks ) && count( $src_chunks ) === count( $tr_chunks ) ) {
 					foreach ( $src_chunks as $i => $chunk ) {
-						if ( Strings::store_imported( $chunk, $lang, $tr_chunks[ $i ] ) ) {
+						if ( Comune::coppia( $chunk, $lang, $tr_chunks[ $i ], true ) ) {
 							++$count;
 						}
 					}
 				}
+
+				// A page built with a page builder keeps its words in a meta, not
+				// in post_content: without this such a site imports no page text.
+				$count += Comune::builder( $source, $tpost, $lang, true );
 			}
 		}
 		return $count;

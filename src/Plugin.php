@@ -149,6 +149,14 @@ final class Plugin {
 			( new \TranslateRocket\Admin\CopyCleanupAdmin() )->register();
 			( new \TranslateRocket\Admin\EditorButton() )->register();
 			( new \TranslateRocket\Admin\Growth() )->register();
+			// Una domanda sola a chi disattiva: e' l'unico modo di sapere perche' se ne va.
+			( new \TranslateRocket\Admin\Farewell() )->register();
+			// L'elenco dei passi sta in un transient di 5 minuti: va dimenticato appena
+			// cambia qualcosa che puo' averne chiuso o aperto uno, altrimenti il pannello
+			// dice cose vecchie proprio dopo che hai agito.
+			foreach ( array( 'update_option_trrocket_settings', 'add_option_trrocket_settings', 'trrocket_after_import' ) as $quando ) {
+				add_action( $quando, array( '\\TranslateRocket\\Admin\\NextSteps', 'forget' ), 10, 0 );
+			}
 			( new \TranslateRocket\Admin\BrowserEngine() )->register();
 		} elseif ( $coexist ) {
 			// Side by side: nothing reaches visitors. Only the administrator's

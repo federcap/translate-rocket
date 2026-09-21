@@ -1616,3 +1616,64 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-lang-state-table tr.is-offline .trr-state-no {
 	display: inline-block;
 }
+
+/* I segnaposto delle frasi intere (<1>…</1>): si devono vedere, perche' chi
+   corregge a mano deve capire che vanno tenuti. Vedi src/Frontend/InlineText.php. */
+.trr-ph{display:inline-block;background:#eef3ff;color:#2a4b8d;border:1px solid #c7d7f5;border-radius:3px;
+	padding:0 3px;margin:0 1px;font:600 11px/1.6 ui-monospace,Menlo,Consolas,monospace;cursor:help;vertical-align:baseline}
+@media (prefers-color-scheme:dark){.trr-ph{background:#22314f;color:#b9ccf3;border-color:#3b5180}}
+
+/* «Dove sei e cosa devi fare»: il pannello che dice lo stato vero del sito e il
+   prossimo passo. Nato dal ticket #16: avere tutto nel codice e niente in faccia
+   all'utente equivale a non averlo fatto. Vedi src/Admin/NextSteps.php */
+.trr-passi-testa{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.trr-passi-testa h2{margin:0}
+.trr-passi-conta{font-size:12px;font-weight:600;color:#50575e;background:#f0f2f5;border-radius:20px;padding:3px 11px}
+.trr-passi-dove{margin:8px 0 14px;color:#50575e;max-width:78ch}
+.trr-passi-elenco{list-style:none;margin:0;padding:0;counter-reset:none}
+.trr-passo{display:flex;gap:12px;padding:12px 0;border-top:1px solid #eef0f3}
+.trr-passo:first-child{border-top:0}
+.trr-passo-segno{flex:0 0 22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+	font-size:13px;font-weight:700;margin-top:1px}
+.trr-passo-fatto .trr-passo-segno{background:#e6f5ec;color:#1a7f45}
+.trr-passo-da-fare .trr-passo-segno{background:#2f6df6;color:#fff}
+.trr-passo-nota .trr-passo-segno{background:#f0f2f5;color:#787c82}
+.trr-passo-corpo{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.trr-passo-corpo strong{font-size:14px}
+.trr-passo-d{color:#50575e;max-width:78ch}
+.trr-passo-corpo .button{margin-top:4px}
+.trr-passo-fatto strong{color:#1a7f45}
+.trr-passi-fine{margin:14px 0 0;color:#50575e}
+@media (prefers-color-scheme:dark){
+	.trr-passi-conta,.trr-passo-nota .trr-passo-segno{background:#2c3338;color:#c3c4c7}
+	.trr-passi-dove,.trr-passo-d,.trr-passi-fine{color:#c3c4c7}
+	.trr-passo{border-color:#3c434a}
+}
+
+/* Il numero dei passi in attesa sulla scheda «Next steps»: si vede da ogni
+   schermata del plugin. Blu, non rosso: e' lavoro che ti aspetta, non un guasto. */
+.trr-nav-item.has-steps .trr-nav-steps{background:#2f6df6;color:#fff}
+.trr-passi-dove-sola{margin:0;flex:1 1 320px}
+.trr-passi-barra{height:4px;border-radius:4px;background:#eef0f3;overflow:hidden;margin:12px 0 4px}
+.trr-passi-barra span{display:block;height:100%;background:#1a7f45;transition:width .3s ease}
+@media (prefers-color-scheme:dark){.trr-passi-barra{background:#3c434a}}
+
+/* Il cassetto «cosa manca», sotto la barra delle schede di ogni schermata del plugin.
+   Si apre dove sei, senza farti perdere la pagina su cui stai lavorando. */
+.trr-cassetto{margin:0 0 16px;border:1px solid #dcdfe4;border-radius:10px;background:#fff;overflow:hidden}
+.trr-cassetto>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;padding:10px 14px;
+	font-weight:600;color:#1d2327;user-select:none}
+.trr-cassetto>summary::-webkit-details-marker{display:none}
+.trr-cassetto>summary .dashicons{color:#787c82}
+.trr-cassetto.ha-passi>summary{background:#eef3ff;color:#14243d}
+.trr-cassetto.ha-passi>summary .dashicons{color:#2f6df6}
+.trr-cassetto-apri{margin-left:auto;font-weight:400;font-size:13px;color:#2f6df6;text-decoration:underline}
+.trr-cassetto[open] .trr-cassetto-apri{visibility:hidden}
+.trr-cassetto-dentro{padding:0 14px 6px;border-top:1px solid #eef0f3}
+.trr-cassetto-dentro .trrocket-card{box-shadow:none;border:0;padding:12px 0;margin:0}
+@media (prefers-color-scheme:dark){
+	.trr-cassetto{background:#1d2327;border-color:#3c434a}
+	.trr-cassetto>summary{color:#f0f0f1}
+	.trr-cassetto.ha-passi>summary{background:#22314f;color:#eaf0fb}
+	.trr-cassetto-dentro{border-color:#3c434a}
+}

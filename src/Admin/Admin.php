@@ -218,6 +218,22 @@ class Admin {
 			58
 		);
 
+		// Per prima, con un numero quando qualcosa aspetta: e' il faro per chi si e'
+		// perso. Il conto sta in un transient, questa riga gira su OGNI pagina admin.
+		try {
+			$in_attesa = \TranslateRocket\Admin\NextSteps::pending();
+		} catch ( \Throwable $e ) {
+			$in_attesa = 0;   // senza numero, non senza menu.
+		}
+		add_submenu_page(
+			'translate-rocket',
+			__( 'What to do next', 'translate-rocket' ),
+			__( 'Next steps', 'translate-rocket' ) . ( $in_attesa > 0 ? ' <span class="update-plugins count-' . (int) $in_attesa . '"><span class="plugin-count">' . (int) $in_attesa . '</span></span>' : '' ),
+			'manage_options',
+			'translate-rocket-next',
+			array( '\\TranslateRocket\\Admin\\NextSteps', 'page' )
+		);
+
 		add_submenu_page(
 			'translate-rocket',
 			__( 'Translations', 'translate-rocket' ),
@@ -719,9 +735,12 @@ class Admin {
 			return;
 		}
 
+		$rifiutate = 0;
 		if ( isset( $_POST['tr'] ) && is_array( $_POST['tr'] ) ) {
 			foreach ( wp_unslash( $_POST['tr'] ) as $string_id => $translation ) { // phpcs:ignore
-				Strings::save_translation( (int) $string_id, $lang, sanitize_text_field( $translation ) );
+				if ( ! Strings::save_translation( (int) $string_id, $lang, \TranslateRocket\Frontend\InlineText::sanitize( (string) $translation ) ) ) {
+					++$rifiutate;
+				}
 			}
 		}
 
@@ -732,7 +751,7 @@ class Admin {
 			}
 		}
 
-		$this->redirect_editor( $lang, 'saved' );
+		$this->redirect_editor( $lang, 'saved', $rifiutate );
 	}
 
 	/**
@@ -1371,6 +1390,12 @@ class Admin {
 						$avviso_modelli = \TranslateRocket\Importers\BuilderTemplates::notice( $importer->label() );
 						if ( '' !== $avviso_modelli ) {
 							echo '<p class="description trr-modelli-lingua">' . esc_html( $avviso_modelli ) . '</p>';
+						}
+						// I menu per lingua: finora non li nominava nessuno, e chi si trovava
+						// «Header PT» in Aspetto cancellava a caso. Qui si dice che non serve.
+						$avviso_menu = \TranslateRocket\Importers\BuilderTemplates::menus_notice( $importer->label() );
+						if ( '' !== $avviso_menu ) {
+							echo '<p class="description trr-menu-lingua">' . esc_html( $avviso_menu ) . '</p>';
 						}
 					}
 					?>
@@ -2019,6 +2044,21 @@ class Admin {
 		if ( isset( $_GET['saved'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Saved.', 'translate-rocket' ) . '</p></div>';
 		}
+		// phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_GET['badparts'] ) ) {
+			echo '<div class="notice notice-warning is-dismissible"><p>' . esc_html(
+				sprintf(
+					/* translators: %d: number of translations that were not saved. */
+					_n(
+						'%d translation was not saved: the marks that hold the place of a link or a bold word were missing or changed. Open that line again and keep every mark, with its number, anywhere in the sentence.',
+						'%d translations were not saved: the marks that hold the place of a link or a bold word were missing or changed. Open those lines again and keep every mark, with its number, anywhere in the sentence.',
+						(int) $_GET['badparts'],
+						'translate-rocket'
+					),
+					(int) $_GET['badparts']
+				)
+			) . '</p></div>';
+		}
 		if ( isset( $_GET['cleaned'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html(
 				sprintf(
@@ -2131,7 +2171,8 @@ class Admin {
 			$missing = ! ( (int) $row->status > 0 && null !== $row->translation && '' !== $row->translation );
 			echo '<tr class="' . ( $missing ? 'trr-emissing' : '' ) . '">';
 			echo '<td style="width:42%">' . ( $missing ? '<span class="trr-edot">&#9679;</span> ' : '' )
-				. esc_html( (string) $row->original ) . '<div class="trr-etype">' . esc_html( $key ) . '</div></td>';
+				. wp_kses_post( \TranslateRocket\Frontend\InlineText::admin_html( (string) $row->original ) )
+				. '<div class="trr-etype">' . esc_html( $key ) . '</div></td>';
 			echo wp_kses( '<td class="trr-gt-cell">' . $this->gt_link( (string) $row->original, $lang ) . '</td>' , \TranslateRocket\Kses::html_rules() );
 			echo '<td><textarea class="large-text trr-etr" rows="1" name="tr[' . (int) $row->string_id . ']" data-src="' . esc_attr( (string) $row->original ) . '">'
 				. esc_textarea( (string) $row->translation ) . '</textarea></td>';
@@ -2243,9 +2284,12 @@ JS;
 			wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php' ) ) );
 			exit;
 		}
+		$rifiutate = 0;
 		if ( isset( $_POST['tr'] ) && is_array( $_POST['tr'] ) ) {
 			foreach ( wp_unslash( $_POST['tr'] ) as $sid => $tr ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-				Strings::save_translation( (int) $sid, $lang, sanitize_textarea_field( (string) $tr ) );
+				if ( ! Strings::save_translation( (int) $sid, $lang, \TranslateRocket\Frontend\InlineText::sanitize( (string) $tr ) ) ) {
+					++$rifiutate;
+				}
 			}
 		}
 		\TranslateRocket\Cache::flush();
@@ -2255,6 +2299,9 @@ JS;
 			'lang'  => $lang,
 			'saved' => '1',
 		);
+		if ( $rifiutate > 0 ) {
+			$args['badparts'] = $rifiutate;
+		}
 		if ( isset( $_POST['s'] ) && '' !== $_POST['s'] ) {
 			$args['s'] = sanitize_text_field( wp_unslash( $_POST['s'] ) );
 		}
@@ -2265,7 +2312,7 @@ JS;
 		exit;
 	}
 
-	private function redirect_editor( string $lang, string $flag ): void {
+	private function redirect_editor( string $lang, string $flag, int $rifiutate = 0 ): void {
 		// These redirects all follow a write (save / import / reset) — drop the cache.
 		\TranslateRocket\Cache::flush();
 		$args = array(
@@ -2273,6 +2320,9 @@ JS;
 			'lang' => $lang,
 			$flag  => '1',
 		);
+		if ( $rifiutate > 0 ) {
+			$args['badparts'] = $rifiutate;
+		}
 		$loc = isset( $_POST['loc'] ) ? sanitize_text_field( wp_unslash( $_POST['loc'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 		if ( '' !== $loc ) {
 			$args['loc'] = $loc;
@@ -2468,6 +2518,7 @@ JS;
 	public static function header( string $current ): void {
 		// Same order as the WP submenu on the left, with an icon before each name.
 		$pages = array(
+			'translate-rocket-next'       => array( __( 'Next steps', 'translate-rocket' ), 'dashicons-yes-alt' ),
 			'translate-rocket'            => array( __( 'Languages', 'translate-rocket' ), 'dashicons-translation' ),
 			'translate-rocket-strings'    => array( __( 'Translations', 'translate-rocket' ), 'dashicons-edit' ),
 			'translate-rocket-memory'     => array( __( 'Memory', 'translate-rocket' ), 'dashicons-database' ),
@@ -2481,6 +2532,11 @@ JS;
 		);
 
 		$unseen = \TranslateRocket\Logger::count_unseen();
+		// Il numero dei passi in attesa si vede da OGNI schermata del plugin, sulla
+		// scheda «Next steps»: la guida e' raggiungibile da ovunque senza ripetere lo
+		// stesso elenco in dieci pagine. Ripetuto ovunque diventerebbe carta da parati
+		// e smetterebbe di essere letto, che e' quello che e' successo con gli avvisi sparsi.
+		$in_attesa = \TranslateRocket\Admin\NextSteps::pending();
 
 		echo '<div class="trr-hero">';
 		echo '<img class="trr-hero-full" src="' . esc_url( TRROCKET_URL . 'assets/img/logo-white.png' ) . '" alt="TranslateRocket™" width="1200" height="226" />';
@@ -2498,6 +2554,10 @@ JS;
 				$cls  .= ' has-issues';
 				$badge = ' <span class="trr-nav-badge">' . esc_html( (string) $unseen ) . '</span>';
 			}
+			if ( 'translate-rocket-next' === $slug && $in_attesa > 0 ) {
+				$cls  .= ' has-steps';
+				$badge = ' <span class="trr-nav-badge trr-nav-steps">' . esc_html( (string) $in_attesa ) . '</span>';
+			}
 			echo wp_kses(
 				'<a class="' . esc_attr( $cls ) . '" href="' . esc_url( admin_url( 'admin.php?page=' . $slug ) ) . '">'
 				. '<span class="dashicons ' . esc_attr( $p[1] ) . '"></span> ' . esc_html( $p[0] )
@@ -2512,6 +2572,17 @@ JS;
 			. '<span class="dashicons dashicons-heart"></span> ' . esc_html__( 'Support the project', 'translate-rocket' )
 			. '</a>';
 		echo '</nav>';
+
+		// Il cassetto: da qualunque schermata si vede cosa manca senza perdere la
+		// pagina su cui si sta lavorando. Non sulla schermata dedicata, che ha gia'
+		// l'elenco per intero.
+		if ( 'translate-rocket-next' !== $current ) {
+			try {
+				\TranslateRocket\Admin\NextSteps::drawer();
+			} catch ( \Throwable $e ) {
+				unset( $e );   // la barra delle schede non salta mai per colpa del cassetto.
+			}
+		}
 	}
 
 	/**
@@ -3380,6 +3451,22 @@ JS
 					<button type="button" class="button button-primary" id="trr-diag-copy"><?php esc_html_e( 'Copy the report', 'translate-rocket' ); ?></button>
 					<span id="trr-diag-copied" class="description" style="margin-left:8px" aria-live="polite"></span>
 				</p>
+				<details class="trr-diag-piu" style="margin-top:14px">
+					<summary style="cursor:pointer;font-weight:600"><?php esc_html_e( 'Three more things that turn days into hours', 'translate-rocket' ); ?></summary>
+					<p class="description" style="margin-top:8px">
+						<?php esc_html_e( 'The report above says what your site is running. It cannot say what you are seeing. Send what you can, a screenshot on its own is already a lot, but when a message has these, the answer is usually a fix instead of a question.', 'translate-rocket' ); ?>
+					</p>
+					<ol class="description" style="margin-left:18px">
+						<li><?php esc_html_e( 'The address of a page where it happens. A test or staging site is perfect. If the site is not public, a screenshot instead.', 'translate-rocket' ); ?></li>
+						<li><?php esc_html_e( 'The exact words that stay untranslated or come back wrong, copied and pasted. Two words are enough to find them.', 'translate-rocket' ); ?></li>
+						<li>
+							<?php esc_html_e( 'The piece of the page that misbehaves, as code. In Chrome, Edge or Firefox: right-click the text, choose Inspect, then right-click the highlighted line in the panel and pick Copy, then Copy outer HTML. It looks cryptic and it is the single most useful thing you can send: it shows exactly what your theme or plugin builds, which cannot be guessed from another site.', 'translate-rocket' ); ?>
+						</li>
+					</ol>
+					<p class="description">
+						<?php esc_html_e( 'If a "Fatal error" line appeared anywhere, copy that whole line too, with the file name and the number at the end.', 'translate-rocket' ); ?>
+					</p>
+				</details>
 				<p style="margin:12px 0 0">
 					<a class="button" href="https://wordpress.org/support/plugin/translate-rocket/" target="_blank" rel="noopener">
 						<?php esc_html_e( 'Open a topic on WordPress.org', 'translate-rocket' ); ?> &#8599;
@@ -3921,6 +4008,7 @@ JS;
 			<?php self::header( 'translate-rocket' ); ?>
 			<h1 class="trr-page-title"><?php esc_html_e( 'Languages &amp; general', 'translate-rocket' ); ?></h1>
 
+
 			<?php if ( empty( $targets ) ) : ?>
 				<div class="trrocket-card" style="border-left:4px solid #4f46e5">
 					<h2>🚀 <?php esc_html_e( 'Quick start', 'translate-rocket' ); ?></h2>
@@ -4312,6 +4400,21 @@ JS;
 		// phpcs:ignore WordPress.Security.NonceVerification
 		if ( isset( $_GET['saved'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Translations saved.', 'translate-rocket' ) . '</p></div>';
+		}
+		// phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_GET['badparts'] ) ) {
+			echo '<div class="notice notice-warning is-dismissible"><p>' . esc_html(
+				sprintf(
+					/* translators: %d: number of translations that were not saved. */
+					_n(
+						'%d translation was not saved: the marks that hold the place of a link or a bold word were missing or changed. Open that line again and keep every mark, with its number, anywhere in the sentence.',
+						'%d translations were not saved: the marks that hold the place of a link or a bold word were missing or changed. Open those lines again and keep every mark, with its number, anywhere in the sentence.',
+						(int) $_GET['badparts'],
+						'translate-rocket'
+					),
+					(int) $_GET['badparts']
+				)
+			) . '</p></div>';
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification
 		if ( isset( $_GET['imported'] ) ) {
@@ -5066,7 +5169,7 @@ JS;
 						<tr class="trr-erow<?php echo $missing ? ' trr-emissing' : ''; ?>" data-type="<?php echo esc_attr( $key ); ?>">
 							<td style="width:50%">
 								<?php if ( $missing ) : ?><span class="trr-edot">&#9679;</span> <?php endif; ?>
-								<?php echo esc_html( $row->original ); ?>
+								<?php echo wp_kses_post( \TranslateRocket\Frontend\InlineText::admin_html( (string) $row->original ) ); ?>
 								<div class="trr-etype"><?php echo esc_html( $key ); ?></div>
 							</td>
 							<?php echo wp_kses( $this->gt_cell( (string) $row->original, $lang ) , \TranslateRocket\Kses::html_rules() ); ?>
