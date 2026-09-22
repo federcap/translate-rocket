@@ -92,6 +92,9 @@ final class Plugin {
 		// Content shown only in some languages: the [translaterocket_language]
 		// shortcode, and the trrocket-only-xx / trrocket-hide-xx classes on blocks.
 		( new \TranslateRocket\Frontend\LanguageOnly() )->boot();
+		// Posts still holding qTranslate / WPGlobus / WP Multilang markers: once that
+		// plugin is off, show the source-language part instead of every language at once.
+		( new \TranslateRocket\Frontend\InlineCleanup() )->boot();
 		// Menu items limited to some languages (checkboxes in Appearance > Menus).
 		// Side by side the menus are the other plugin's: only the settings screen.
 		if ( ! $coexist || is_admin() ) {

@@ -126,7 +126,7 @@ class TranslatePressImporter implements ImporterInterface {
 			// 1) Page-content dictionary.
 			$table = $this->dictionary_table( $s['default-language'], $target );
 			if ( $this->table_exists( $table ) ) {
-				$rows = $wpdb->get_results( "SELECT original, translated FROM `{$table}` WHERE status > 0 AND translated <> ''" ); // phpcs:ignore WordPress.DB
+				$rows = $wpdb->get_results( "SELECT original, translated, status FROM `{$table}` WHERE status > 0 AND translated <> ''" ); // phpcs:ignore WordPress.DB
 				foreach ( $rows as $row ) {
 					// TranslatePress stores its segments in RENDERED form — HTML
 					// entities included ("Bed &amp; Breakfast", "pi&ugrave;"). Our
@@ -135,7 +135,19 @@ class TranslatePressImporter implements ImporterInterface {
 					// translation would print "&amp;" literally). Decode both.
 					$original   = html_entity_decode( (string) $row->original, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 					$translated = html_entity_decode( (string) $row->translated, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
-					if ( Strings::store_imported( $original, $lang, $translated ) ) {
+
+					// The same words in both languages mean two different things here.
+					// Approved by a person (status 2), it is a decision — a name, a brand,
+					// "Villa Aurora" — and it is kept, so that automatic translation
+					// never touches it afterwards. Left by a machine (status 1), it is a
+					// sentence nobody translated, and it is skipped like any copy.
+					if ( trim( $original ) === trim( $translated ) ) {
+						if ( 2 === (int) $row->status && Strings::store_imported( $original, $lang, $translated ) ) {
+							++$count;
+						}
+						continue;
+					}
+					if ( Comune::coppia( $original, $lang, $translated, true ) ) {
 						++$count;
 					}
 				}

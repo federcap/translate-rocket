@@ -173,6 +173,13 @@ class LocoImporter implements ImporterInterface {
 		$fatti = 0;
 
 		foreach ( $voci as $originale => $tradotto ) {
+			// An interface string can carry a link or a bold word ("Read the <a>terms</a>").
+			// On the page the engine reads it whole, with numbered marks, so it is stored
+			// in that shape too; stored only as written, it was never used (22/09/2026).
+			if ( false !== strpos( (string) $originale, '<' ) ) {
+				$fatti += Comune::testo_o_righe( (string) $originale, (string) $tradotto, $lingua, $salva );
+				continue;
+			}
 			if ( Comune::coppia( (string) $originale, $lingua, (string) $tradotto, $salva ) ) {
 				++$fatti;
 			}

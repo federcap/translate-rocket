@@ -172,11 +172,16 @@ class Comune {
 	 */
 	public static function builder( $origine, $tradotto, string $lingua, bool $salva ): int {
 		$fatti = 0;
-		if ( empty( $origine->ID ) || empty( $tradotto->ID ) ) {
-			return 0;
-		}
 
-		foreach ( array_keys( self::BUILDER_META ) as $chiave ) {
+		// The builders' own meta fields belong to a post, so they need both ids.
+		// The rest below reads the content alone: an importer that hands over a
+		// translation as a bare row with no post behind it (Multilanguage keeps its
+		// translations in a table of its own) still gets its sentences with links
+		// and bold words, and its block attributes. Found 22/09/2026: returning
+		// early here dropped exactly those, in every language.
+		$con_id = ! empty( $origine->ID ) && ! empty( $tradotto->ID );
+
+		foreach ( $con_id ? array_keys( self::BUILDER_META ) : array() as $chiave ) {
 			$a = self::campi( (int) $origine->ID, $chiave );
 			$b = self::campi( (int) $tradotto->ID, $chiave );
 			if ( empty( $a ) || empty( $b ) ) {
@@ -377,7 +382,7 @@ class Comune {
 	/**
 	 * Pair one value: whole when it is a line, line by line when it is HTML.
 	 */
-	private static function testo_o_righe( string $a, string $b, string $lingua, bool $salva ): int {
+	public static function testo_o_righe( string $a, string $b, string $lingua, bool $salva ): int {
 		if ( false === strpos( $a, '<' ) && false === strpos( $b, '<' ) ) {
 			return self::coppia( $a, $lingua, $b, $salva ) ? 1 : 0;
 		}
@@ -495,6 +500,39 @@ class Comune {
 			}
 		}
 		return $fatto;
+	}
+
+	/**
+	 * Store a pair from a file that says nothing about where the words are used.
+	 *
+	 * A translation memory from another tool (a TMX from a CAT tool) knows the
+	 * words, not whether they are page text, an aria-label or an og:site_name.
+	 * The pair is stored like any imported one (both shapes, identical copies
+	 * dropped), then on every other kind of string already in the catalog with
+	 * those very words — otherwise "Cart" would be translated as text and stay in
+	 * the source language as the label of the cart icon.
+	 */
+	public static function ovunque( string $origine, string $lingua, string $testo ): bool {
+		if ( ! self::coppia( $origine, $lingua, $testo, true ) ) {
+			return false;
+		}
+		global $wpdb;
+		$tabella = \TranslateRocket\Database::strings_table();
+		$forme_o = self::forme( $origine );
+		$forme_t = self::forme( $testo );
+		foreach ( $forme_o as $i => $forma ) {
+			$tradotta = $forme_t[ $i ] ?? $forme_t[0];
+			$varianti = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT type, context FROM {$tabella} WHERE original = %s", $forma ) ); // phpcs:ignore WordPress.DB
+			foreach ( (array) $varianti as $v ) {
+				$tipo = (string) $v->type;
+				$ctx  = (string) $v->context;
+				if ( 'text' === $tipo && '' === $ctx ) {
+					continue; // already stored by coppia()
+				}
+				\TranslateRocket\Strings::store_imported( $forma, $lingua, $tradotta, $tipo, '' !== $ctx ? $ctx : null );
+			}
+		}
+		return true;
 	}
 
 	/**

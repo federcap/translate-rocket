@@ -239,68 +239,21 @@ class InlineImporter implements ImporterInterface {
 			}
 
 			if ( ! $a_righe ) {
-				if ( $this->coppia( $origine, $codice, $testo, $salva ) ) {
+				if ( Comune::coppia( $origine, $codice, $testo, $salva ) ) {
 					++$fatti;
 				}
 				continue;
 			}
 
-			// Il corpo si spezza in righe come fa il resto del plugin. Le due
-			// versioni si appaiano solo se hanno lo STESSO numero di righe: se
-			// no si accoppierebbe un paragrafo con quello sbagliato, che e'
-			// peggio del non importare niente.
-			$a = $this->righe( $origine );
-			$b = $this->righe( $testo );
-			if ( empty( $a ) || count( $a ) !== count( $b ) ) {
-				continue;
-			}
-			foreach ( $a as $i => $riga ) {
-				if ( $this->coppia( $riga, $codice, $b[ $i ], $salva ) ) {
-					++$fatti;
-				}
-			}
+			// The body goes through the same code as every other importer: lines
+			// paired only when both sides have the same number, whole sentences
+			// with a link or a bold word in the engine's own shape, every text in
+			// both the raw and the dressed shape, identical copies dropped. This
+			// importer used to carry its own older copy of that code, which knew
+			// none of it (found 22/09/2026).
+			$fatti += Comune::testo_o_righe( $origine, $testo, $codice, $salva );
 		}
 
 		return $fatti;
-	}
-
-	/**
-	 * Store one pair, or just say it would count.
-	 */
-	private function coppia( string $origine, string $lingua, string $testo, bool $salva ): bool {
-		$origine = trim( $origine );
-		$testo   = trim( $testo );
-		if ( '' === $origine || '' === $testo || $origine === $testo ) {
-			return false;
-		}
-		if ( ! $salva ) {
-			return true;
-		}
-		return Strings::store_imported( $origine, $lingua, $testo );
-	}
-
-	/**
-	 * Body text, one line per translatable block.
-	 *
-	 * Same shape as the Polylang importer uses, so a site coming from either
-	 * plugin ends up with strings of the same granularity.
-	 *
-	 * @return string[]
-	 */
-	private function righe( string $html ): array {
-		$html = (string) preg_replace( '/<!--.*?-->/s', '', $html );
-		$html = (string) preg_replace( '#<(script|style)[^>]*>.*?</\1>#is', '', $html );
-		$html = (string) preg_replace( '#</(p|h[1-6]|li|div|blockquote|figcaption|td|th)>#i', "\n", $html );
-		$html = (string) preg_replace( '#<br\s*/?>#i', "\n", $html );
-		$testo = wp_strip_all_tags( $html );
-
-		$fuori = array();
-		foreach ( preg_split( '/\r\n|\r|\n/', $testo ) as $riga ) {
-			$riga = trim( $riga );
-			if ( '' !== $riga && preg_match( '/\p{L}/u', $riga ) ) {
-				$fuori[] = $riga;
-			}
-		}
-		return $fuori;
 	}
 }

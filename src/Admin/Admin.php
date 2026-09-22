@@ -982,6 +982,13 @@ class Admin {
 				continue; // No translations for this source — skip it.
 			}
 			echo "\t<tu>\n";
+			// Type and context travel with the unit (TMX 1.4 <prop>, before the <tuv>s). The
+			// same words can be page text, an aria-label and an og:site_name at once; without
+			// these, re-importing our own file restored only one of them (22/09/2026).
+			echo "\t\t<prop type=\"x-trrocket-type\">" . self::xml( (string) ( $r['type'] ?? 'text' ) ) . "</prop>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- XML export; escaped via self::xml().
+			if ( '' !== (string) ( $r['ctx'] ?? '' ) ) {
+				echo "\t\t<prop type=\"x-trrocket-context\">" . self::xml( (string) $r['ctx'] ) . "</prop>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- XML export; escaped via self::xml().
+			}
 			echo "\t\t<tuv xml:lang=\"" . self::xml( self::bcp47( $source ) ) . "\"><seg>" . self::xml( $src ) . "</seg></tuv>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- XML export; values escaped via self::xml().
 			echo $tuvs; // phpcs:ignore WordPress.Security.EscapeOutput -- each <seg> escaped via self::xml().
 			echo "\t</tu>\n";
@@ -1084,6 +1091,18 @@ class Admin {
 			if ( '' === trim( $src_text ) ) {
 				continue;
 			}
+			// Our own export says which kind of string each unit is; a file from any
+			// other tool does not.
+			$tipo = null;
+			$ctx  = null;
+			foreach ( $tu->prop as $prop ) {
+				$nome = (string) $prop['type'];
+				if ( 'x-trrocket-type' === $nome ) {
+					$tipo = (string) $prop;
+				} elseif ( 'x-trrocket-context' === $nome ) {
+					$ctx = (string) $prop;
+				}
+			}
 			foreach ( $segs as $lang => $text ) {
 				if ( '' === trim( $text ) ) {
 					continue;
@@ -1092,7 +1111,15 @@ class Admin {
 				if ( '' === $target || $target === $source ) {
 					continue;
 				}
-				if ( Strings::store_imported( $src_text, $target, $text ) ) {
+				if ( null !== $tipo ) {
+					// Ours: restored exactly as it was exported, identical ones included.
+					$fatto = Strings::store_imported( $src_text, $target, $text, '' !== $tipo ? $tipo : 'text', ( null !== $ctx && '' !== $ctx ) ? $ctx : null );
+				} else {
+					// Another tool's: in the shape the page shows, and on every kind of
+					// string with those words (text, aria-label, og:title...).
+					$fatto = \TranslateRocket\Importers\Comune::ovunque( $src_text, $target, $text );
+				}
+				if ( $fatto ) {
 					++$count;
 				}
 			}

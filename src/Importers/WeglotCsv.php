@@ -147,12 +147,76 @@ class WeglotCsv {
 				continue;
 			}
 
-			if ( Strings::store_imported( $original, $lang, $translation ) ) {
+			// A sentence with a link or a bold word comes out of Weglot whole, its
+			// tags stripped and numbered: 'Read the <a wg-1="">terms</a> first.'
+			// The engine reads the same sentence as 'Read the <1>terms</1> first.',
+			// so it is stored in that shape; stored as exported, it was never used
+			// (22/09/2026). Markup that cannot be mapped for certain is skipped
+			// rather than stored in a shape nothing will ever look up.
+			$o = self::da_weglot( $original );
+			$t = self::da_weglot( $translation );
+			if ( null === $o || null === $t ) {
+				continue;
+			}
+			if ( $o !== $original && ! \TranslateRocket\Frontend\InlineText::parts_ok( $o, $t ) ) {
+				continue;
+			}
+			if ( Comune::coppia( $o, $lang, $t, true ) ) {
 				++$out['count'];
 			}
 		}
 		fclose( $fh ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closes the fopen() stream above.
 
 		return $out;
+	}
+
+	/**
+	 * Weglot's inline tags into the engine's numbered marks.
+	 *
+	 * Weglot numbers the tags of a merged sentence in document order, nested ones
+	 * included (wg-1, wg-2...), which is the order the engine numbers them in.
+	 * `<a wg-1="">x</a>` becomes `<1>x</1>`; a void or empty one becomes `<1/>`.
+	 *
+	 * @return string|null The converted text, the text itself when it has no tags,
+	 *                     or null when it holds markup that cannot be mapped.
+	 */
+	private static function da_weglot( string $testo ): ?string {
+		if ( false === strpos( $testo, '<' ) ) {
+			return $testo;
+		}
+		$pezzi = preg_split( '#(<[^>]*>)#', $testo, -1, PREG_SPLIT_DELIM_CAPTURE );
+		if ( false === $pezzi ) {
+			return null;
+		}
+		$vuoti = array( 'br', 'img', 'hr', 'input', 'wbr' );
+		$pila  = array();
+		$fuori = '';
+		foreach ( $pezzi as $p ) {
+			if ( '' === $p || '<' !== $p[0] ) {
+				$fuori .= $p;
+				continue;
+			}
+			if ( preg_match( '#^</\s*[a-z][a-z0-9]*\s*>$#i', $p ) ) {
+				if ( empty( $pila ) ) {
+					return null;
+				}
+				$fuori .= '</' . array_pop( $pila ) . '>';
+				continue;
+			}
+			if ( ! preg_match( '#^<([a-z][a-z0-9]*)\b[^>]*\bwg-(\d{1,3})=""[^>]*?(/?)>$#i', $p, $m ) ) {
+				return null;
+			}
+			if ( '/' === $m[3] || in_array( strtolower( $m[1] ), $vuoti, true ) ) {
+				$fuori .= '<' . $m[2] . '/>';
+				continue;
+			}
+			$pila[] = $m[2];
+			$fuori .= '<' . $m[2] . '>';
+		}
+		if ( ! empty( $pila ) ) {
+			return null;
+		}
+		// An element with nothing inside is an empty part for the engine: <N/>.
+		return (string) preg_replace( '#<(\d{1,3})></\1>#', '<$1/>', $fuori );
 	}
 }
