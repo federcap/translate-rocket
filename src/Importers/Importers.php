@@ -27,6 +27,8 @@ class Importers {
 			new InlineImporter(),
 			new BogoImporter(),
 			new MultilanguageImporter(),
+			new FalangImporter(),
+			new SublanguageImporter(),
 			new LocoImporter(),
 		);
 	}

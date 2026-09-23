@@ -91,6 +91,21 @@ class DeepLProvider extends AbstractProvider {
 			),
 			$query
 		);
+		// The «:fx» ending is how DeepL tells a free key from a paid one, and the two
+		// live on different hosts. A key that breaks the rule (DeepL has changed its
+		// plans before) gets 403 «Wrong endpoint»: one more try on the other host
+		// instead of a dead translator and a message nobody understands.
+		if ( isset( $result['error'] ) && false !== strpos( $result['error'], 'HTTP 403' ) && false !== stripos( $result['error'], 'endpoint' ) ) {
+			$altro  = ( 'https://api.deepl.com' === $host ) ? 'https://api-free.deepl.com' : 'https://api.deepl.com';
+			$result = $this->post(
+				$altro . '/v2/translate',
+				array(
+					'Authorization' => 'DeepL-Auth-Key ' . $key,
+					'Content-Type'  => 'application/x-www-form-urlencoded',
+				),
+				$query
+			);
+		}
 		if ( isset( $result['error'] ) ) {
 			// 456 is DeepL's "quota exceeded" status. It does NOT only mean the
 			// monthly characters are gone: on a free key with an unverified

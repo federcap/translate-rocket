@@ -923,6 +923,10 @@ class Admin {
 			}
 			$result = $importer->import();
 			$count  = (int) ( $result['count'] ?? 0 );
+			// Un importatore puo' rifiutarsi con un motivo (per esempio: il vecchio
+			// plugin dice che il sito e' scritto in un'altra lingua). Prima la bacheca
+			// mostrava solo «0 importate», e l'utente non sapeva perche'.
+			$errore = (string) ( $result['error'] ?? '' );
 			// Imported strings won't show on the front end until caches are cleared —
 			// the CSV/TMX/Weglot paths already flush; the migration path must too.
 			\TranslateRocket\Cache::flush();
@@ -930,9 +934,15 @@ class Admin {
 
 		wp_safe_redirect(
 			add_query_arg(
-				array(
-					'page'       => 'translate-rocket-import',
-					'imported_n' => $count,
+				array_filter(
+					array(
+						'page'         => 'translate-rocket-import',
+						'imported_n'   => $count,
+						'import_error' => isset( $errore ) ? $errore : '',
+					),
+					static function ( $v ) {
+						return '' !== $v;
+					}
 				),
 				admin_url( 'admin.php' )
 			)
@@ -1315,7 +1325,12 @@ class Admin {
 			<?php self::header( 'translate-rocket-import' ); ?>
 			<h1 class="trr-page-title"><?php esc_html_e( 'Import translations', 'translate-rocket' ); ?><?php $this->info( __( 'Already used another translation plugin? Bring its translations into TranslateRocket so you don’t start over.', 'translate-rocket' ) ); ?></h1>
 
-			<?php if ( isset( $_GET['imported_n'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
+			<?php if ( isset( $_GET['import_error'] ) && 'source_mismatch' === $_GET['import_error'] ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
+				<div class="notice notice-error">
+					<p><strong><?php esc_html_e( 'Nothing was imported, on purpose.', 'translate-rocket' ); ?></strong>
+					<?php esc_html_e( 'The plugin you are coming from says your site is written in a different language from the one set in TranslateRocket. Importing now would pair every sentence with the wrong side. Set the source language in TranslateRocket to the language your pages are written in, then import again.', 'translate-rocket' ); ?></p>
+				</div>
+			<?php elseif ( isset( $_GET['imported_n'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
 				<div class="notice notice-success is-dismissible">
 					<p>
 						<?php
@@ -2917,7 +2932,7 @@ JS
 												&#128273;
 												<?php
 												/* translators: %s: provider name (e.g. OpenAI). */
-												printf( esc_html__( 'Get a %s API key ↗', 'translate-rocket' ), esc_html( $def['label'] ) );
+												printf( esc_html__( 'Get your %s API key ↗', 'translate-rocket' ), esc_html( $def['label'] ) );
 												?>
 											</a>
 										</p>

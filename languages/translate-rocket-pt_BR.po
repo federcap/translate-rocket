@@ -3155,3 +3155,15 @@ msgstr "Nada espera por você"
 #: src/Admin/NextSteps.php
 msgid "see what is left"
 msgstr "ver o que falta"
+
+#: src/Admin/Admin.php
+msgid "Get your %s API key ↗"
+msgstr "Obtenha sua chave de API %s ↗"
+
+#: src/Admin/Admin.php
+msgid "Nothing was imported, on purpose."
+msgstr "Nada foi importado, de propósito."
+
+#: src/Admin/Admin.php
+msgid "The plugin you are coming from says your site is written in a different language from the one set in TranslateRocket. Importing now would pair every sentence with the wrong side. Set the source language in TranslateRocket to the language your pages are written in, then import again."
+msgstr "O plugin de onde você vem diz que seu site está escrito em um idioma diferente do definido no TranslateRocket. Importar agora associaria cada frase ao lado errado. Defina no TranslateRocket o idioma de origem como o idioma em que suas páginas estão escritas e importe novamente."

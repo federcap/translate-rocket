@@ -94,6 +94,8 @@ final class Coexistence {
 			'wpm'            => array( 'WP Multilang', defined( 'WPM_PLUGIN_FILE' ) || class_exists( 'WPM\Includes\WP_Multilang', false ) ),
 			'bogo'           => array( 'Bogo', defined( 'BOGO_VERSION' ) ),
 			'multilanguage'  => array( 'Multilanguage', function_exists( 'mltlngg_init' ) ),
+			'falang'         => array( 'Falang', defined( 'FALANG_VERSION' ) ),
+			'sublanguage'    => array( 'Sublanguage', class_exists( 'Sublanguage_core', false ) ),
 		);
 	}
 
@@ -234,6 +236,22 @@ final class Coexistence {
 			add_action( 'init', array( __CLASS__, 'takeover' ), 98 );
 		}
 		add_action( 'init', array( __CLASS__, 'maybe_flush_rewrites' ), 99 );
+		add_action( 'deactivated_plugin', array( __CLASS__, 'after_deactivation' ) );
+	}
+
+	/**
+	 * A plugin was switched off: rebuild the rewrite rules on the next request.
+	 *
+	 * Translation plugins add their own rules (Falang and Sublanguage one per
+	 * language and page) and leave them behind when switched off: WordPress then
+	 * reads /our-farmhouse/ with the dead plugin's rules and sends it to the home
+	 * page. Rebuilding in THIS request would not help — the plugin is still loaded
+	 * and its filters would write the same rules again — so it is booked for the
+	 * next one, when the plugin is gone. Any plugin, not only the ones we know: a
+	 * rebuild costs one query, a page sent to the home page costs the visitor.
+	 */
+	public static function after_deactivation(): void {
+		update_option( self::FLUSH, 1, true );
 	}
 
 	/**

@@ -21,7 +21,33 @@ defined( 'ABSPATH' ) || exit;
  */
 class Engine {
 
-	private const ATTRIBUTES   = array( 'alt', 'title', 'placeholder', 'aria-label', 'value' );
+	/**
+	 * Attributes whose value is text a visitor reads.
+	 *
+	 * The data-* ones come from a scan of 103,887 PHP files in 138 packages (plugins and
+	 * themes, `_ssh/ricerca/scan-data-attributi.py`): the attributes that receive a
+	 * string the plugin itself translates, in its PUBLIC templates, are text somebody
+	 * reads. data-wait-text is what Beaver Builder shows on the button while a form is
+	 * sending; data-title and data-th are the column headings of WooCommerce and Tutor
+	 * tables on a phone; data-bp-tooltip is BuddyPress. Any other data-* is left alone
+	 * on purpose: most of them are ids, keys and field names that JavaScript matches on.
+	 * The noise filter still applies, so a data-title holding a file name stays out.
+	 */
+	private const ATTRIBUTES   = array(
+		'alt',
+		'title',
+		'placeholder',
+		'aria-label',
+		'value',
+		'data-title',
+		'data-th',
+		'data-wait-text',
+		'data-loading-text',
+		'data-text',
+		'data-tooltip',
+		'data-bp-tooltip',
+		'data-placeholder',
+	);
 	private const SKIP_PARENTS = array( 'script', 'style', 'code', 'pre', 'textarea', 'title' );
 
 	/**
@@ -63,6 +89,63 @@ class Engine {
 			}
 		}
 		return $out;
+	}
+
+	/**
+	 * The pieces of a composed title: "About our farmhouse - Olive Grove Stays".
+	 *
+	 * SEO plugins and themes glue page title and site name with a separator. The
+	 * whole string is a new one that nobody has translated yet, while its pieces
+	 * often are — after an import, always: the page title and the site name came
+	 * over, the glued version never existed in the old plugin. Split on the
+	 * separator (spaces around it, so "e-mail" or "10-12" stay whole).
+	 *
+	 * @return array{0:string[],1:string[]}|null pieces and the separators between them, or null
+	 */
+	private static function title_pieces( string $value ): ?array {
+		$parts = preg_split( '/(\s+[-|–—·•»:]{1,2}\s+)/u', $value, -1, PREG_SPLIT_DELIM_CAPTURE );
+		if ( ! is_array( $parts ) || count( $parts ) < 3 ) {
+			return null;
+		}
+		$pieces = array();
+		$seps   = array();
+		foreach ( $parts as $i => $p ) {
+			if ( 0 === $i % 2 ) {
+				$pieces[] = $p;
+			} else {
+				$seps[] = $p;
+			}
+		}
+		return array( $pieces, $seps );
+	}
+
+	/**
+	 * A composed title put together from its translated pieces.
+	 *
+	 * Only used when the whole title has no translation of its own: once it has
+	 * one (the AI or a person translated it), that wins. Pieces without a
+	 * translation stay as they are — usually the brand name.
+	 *
+	 * @param array<string,string> $map Translations of this page.
+	 * @return string|null the title, or null when no piece changed.
+	 */
+	private static function composed_title( string $value, array $map ): ?string {
+		$split = self::title_pieces( $value );
+		if ( null === $split ) {
+			return null;
+		}
+		list( $pieces, $seps ) = $split;
+		$out     = '';
+		$changed = false;
+		foreach ( $pieces as $i => $p ) {
+			$k = trim( $p );
+			if ( '' !== $k && isset( $map[ $k ] ) ) {
+				$p       = $map[ $k ];
+				$changed = true;
+			}
+			$out .= $p . ( $seps[ $i ] ?? '' );
+		}
+		return $changed ? $out : null;
 	}
 
 	/**
@@ -113,6 +196,60 @@ class Engine {
 			$pezzi[] = ( $map[ $url ] ?? $url ) . $resto;
 		}
 		return implode( ', ', $pezzi );
+	}
+
+	/**
+	 * Collect and translate the per-device text Divi 4 keeps in data-et-multi-view.
+	 *
+	 * The attribute holds {"schema":{"content":{"desktop":"…","tablet":"…","phone":"…"}}}.
+	 * Each value is plain text or a small HTML fragment (a heading, a line break), so it
+	 * goes through HtmlText, which knows how to read and rewrite just the text in it.
+	 *
+	 * @param \DOMXPath $xpath     Document XPath.
+	 * @param string    $skip_el   Predicate listing the elements to stay out of.
+	 * @param array     $collected Strings collected on this request (by reference).
+	 * @param bool      $changed   Whether the document changed (by reference).
+	 */
+	private function divi_multi_view( \DOMXPath $xpath, string $skip_el, array &$collected, bool &$changed ): void {
+		$nodi = $xpath->query( "//*[@data-et-multi-view][not({$skip_el})]" );
+		if ( ! $nodi || 0 === $nodi->length ) {
+			return;
+		}
+		foreach ( iterator_to_array( $nodi ) as $el ) {
+			$dati = json_decode( (string) $el->getAttribute( 'data-et-multi-view' ), true );
+			if ( ! is_array( $dati ) || empty( $dati['schema']['content'] ) || ! is_array( $dati['schema']['content'] ) ) {
+				continue;
+			}
+			$toccato = false;
+			foreach ( $dati['schema']['content'] as $dispositivo => $testo ) {
+				if ( ! is_string( $testo ) || '' === trim( $testo ) ) {
+					continue;
+				}
+				if ( $this->do_collect ) {
+					foreach ( HtmlText::segments( $testo ) as $pezzo ) {
+						if ( ! preg_match( '/\p{L}/u', $pezzo ) || self::is_noise( $pezzo ) || NoTranslate::text_excluded( $pezzo ) ) {
+							continue;
+						}
+						$collected[] = array(
+							'original' => $pezzo,
+							'type'     => 'text',
+							'context'  => null,
+						);
+					}
+				}
+				if ( $this->is_secondary ) {
+					$tradotto = HtmlText::translate( $testo, $this->current );
+					if ( $tradotto !== $testo ) {
+						$dati['schema']['content'][ $dispositivo ] = $tradotto;
+						$toccato = true;
+					}
+				}
+			}
+			if ( $toccato ) {
+				$el->setAttribute( 'data-et-multi-view', (string) wp_json_encode( $dati ) );
+				$changed = true;
+			}
+		}
 	}
 
 	/**
@@ -337,6 +474,11 @@ class Engine {
 		// "550e8400-e29b-41d4-a716-446655440000", "SKU-A100", "IMG_2043".
 		if ( preg_match( '/^#[0-9a-f]{3,8}$/i', $text )
 			|| preg_match( '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $text ) ) {
+			return true;
+		}
+		// Parole unite dal trattino basso e senza spazi: e' un nome di file o una chiave,
+		// mai una frase («Louvre_Window_Terminology», un alt lasciato col nome del file).
+		if ( ! preg_match( '/\s/', $text ) && false !== strpos( $text, '_' ) && preg_match( '/^[\w.\-]+$/u', $text ) ) {
 			return true;
 		}
 		if ( ! preg_match( '/\s/', $text ) && preg_match( '/\d/', $text ) && preg_match( '/^[\w.\-]+$/', $text ) ) {
@@ -771,9 +913,17 @@ class Engine {
 			}
 			foreach ( $social_nodes as $social ) {
 				$candidates[] = trim( (string) $social->nodeValue );
+				$split        = self::title_pieces( trim( (string) $social->nodeValue ) );
+				foreach ( null === $split ? array() : $split[0] as $piece ) {
+					$candidates[] = trim( $piece );
+				}
 			}
 			foreach ( $title_nodes as $title_el ) {
 				$candidates[] = trim( (string) $title_el->textContent );
+				$split        = self::title_pieces( trim( (string) $title_el->textContent ) );
+				foreach ( null === $split ? array() : $split[0] as $piece ) {
+					$candidates[] = trim( $piece );
+				}
 			}
 			$map = Strings::translate_texts( $candidates, $this->current );
 		}
@@ -991,6 +1141,14 @@ class Engine {
 			}
 		}
 
+		// Divi 4: the text a module shows on tablets and phones is not in the page but
+		// in a JSON attribute, and Divi's own script writes it over the element when the
+		// screen is small. Left alone, a translated page turns back into the source
+		// language on every phone (reproduced 23/09/2026 with HTML from real Divi sites,
+		// `_ssh/collaudi/collaudo-divi.sh`). Only the schema's "content" strings are
+		// text; everything else in that JSON is layout and stays as it is.
+		$this->divi_multi_view( $xpath, $skip_el, $collected, $changed );
+
 		// SEO meta description. Use setAttribute() (not nodeValue) so values with an
 		// ampersand — "Bed & Breakfast", "B&B" — aren't mangled into an empty string
 		// by libxml's entity parsing.
@@ -1035,8 +1193,9 @@ class Engine {
 					'context'  => (string) $quale,
 				);
 			}
-			if ( isset( $map[ $value ] ) ) {
-				$social->ownerElement->setAttribute( $social->nodeName, $map[ $value ] );
+			$tradotto = $map[ $value ] ?? ( $this->is_secondary ? self::composed_title( $value, $map ) : null );
+			if ( null !== $tradotto ) {
+				$social->ownerElement->setAttribute( $social->nodeName, $tradotto );
 				$changed = true;
 			}
 		}
@@ -1055,11 +1214,12 @@ class Engine {
 					'context'  => 'title',
 				);
 			}
-			if ( isset( $map[ $value ] ) ) {
+			$tradotto = $map[ $value ] ?? ( $this->is_secondary ? self::composed_title( $value, $map ) : null );
+			if ( null !== $tradotto ) {
 				while ( $title_el->firstChild ) {
 					$title_el->removeChild( $title_el->firstChild );
 				}
-				$title_el->appendChild( $dom->createTextNode( $map[ $value ] ) );
+				$title_el->appendChild( $dom->createTextNode( $tradotto ) );
 				$changed = true;
 			}
 		}

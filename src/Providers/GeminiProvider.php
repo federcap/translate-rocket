@@ -25,7 +25,7 @@ class GeminiProvider extends LlmProvider {
 	protected function chat( string $prompt ): TranslationResult {
 		$model = $this->model() ?: 'gemini-flash-lite-latest';
 		$url   = 'https://generativelanguage.googleapis.com/v1beta/models/'
-			. rawurlencode( $model ) . ':generateContent?key=' . rawurlencode( $this->api_key() );
+			. rawurlencode( $model ) . ':generateContent';
 
 		$body = wp_json_encode(
 			array(
@@ -38,7 +38,12 @@ class GeminiProvider extends LlmProvider {
 
 		$result = $this->post(
 			$url,
-			array( 'Content-Type' => 'application/json' ),
+			// The key goes in a header, as Google's documentation now shows, not in
+			// the address: an address ends up in server logs and error messages.
+			array(
+				'Content-Type'   => 'application/json',
+				'x-goog-api-key' => $this->api_key(),
+			),
 			$body,
 			60
 		);
@@ -58,7 +63,7 @@ class GeminiProvider extends LlmProvider {
 		if ( '' === $this->api_key() ) {
 			return array();
 		}
-		$res = $this->get( 'https://generativelanguage.googleapis.com/v1beta/models?key=' . rawurlencode( $this->api_key() ) );
+		$res = $this->get( 'https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000', array( 'x-goog-api-key' => $this->api_key() ) );
 		if ( isset( $res['error'] ) ) {
 			return array();
 		}

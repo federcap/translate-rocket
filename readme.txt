@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,7 +21,7 @@ https://www.youtube.com/watch?v=WsLpAISB_vo
 
 **You do not need an API key at all.** Chrome and Edge on a computer carry a translator that runs on the device itself, and TranslateRocket can drive it: install the plugin, pick your languages, press one button and the site is translated. It costs nothing, needs no account, and the text never leaves your machine. It is the fastest way to a translated site. When you want fluent, idiomatic copy, the same pages can go through DeepL or an AI model with your own key (OpenAI, Anthropic, Gemini — you pay the provider directly), through ChatGPT or Gemini with a ready-made prompt at no cost, or through your own hands, line by line — and everything already translated is kept, so nothing is ever done twice.
 
-**Switching from another translation plugin? Your existing translations come with you.** One click imports everything you have already paid for or typed by hand — from **TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft and Loco Translate**, plus CSV and TMX for anything else. Most are read straight from the tables, the posts or the files, so the import still works after the other plugin has been deactivated or even deleted — which is the usual state of a site that is moving on. Pages built with Elementor or Bricks come across too, widget by widget — their words live in a meta field, not in the page content, and most importers never look there.
+**Switching from another translation plugin? Your existing translations come with you.** One click imports everything you have already paid for or typed by hand — from **TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft, Falang, Sublanguage and Loco Translate**, plus CSV and TMX for anything else. Most are read straight from the tables, the posts or the files, so the import still works after the other plugin has been deactivated or even deleted — which is the usual state of a site that is moving on. Pages built with Elementor or Bricks come across too, widget by widget — their words live in a meta field, not in the page content, and most importers never look there.
 
 It detects translatable text as you browse — visible text, link titles, image alt, placeholders, ARIA labels, page titles, meta descriptions and the social preview tags a SEO plugin adds (Open Graph, X) — and serves each language under its own clean URL prefix (`/it/`, `/de/`), friendly to SEO and to page caches.
 
@@ -45,7 +45,7 @@ You translate however you like:
 * 🔍 **One SEO panel with everything in it**: open a page in the visual editor and the SEO panel lists, in order, the translated address, the page title, the meta description, the social preview (Open Graph and X), the keywords, then every image on the page and every translatable attribute — titles, placeholders, ARIA labels. Each line takes you straight to that element on the page and opens the right editor, so nothing search engines read is left in the source language by accident.
 * 🚦 **Per-page visibility**: if a page has no equivalent in a language, redirect it, show a custom message, or 404 — per page, per language.
 * 🎌 **Flexible language switcher** as a shortcode `[translaterocket_switcher]`, a Gutenberg block, or a widget — inline, dropdown, or a **scrollable bar with ‹ › arrows** for many languages — with original SVG flags that render everywhere (including Windows). Show a switcher on desktop only, on mobile only, or both, to style a different menu for each.
-* 📥 **One-click import from ten other plugins** — TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft and Loco Translate — plus CSV and TMX for everything else. Read straight from the tables, the posts or the `.po` files, so it works even when the other plugin is gone. Pages built with Elementor or Bricks come across too, widget by widget.
+* 📥 **One-click import from twelve other plugins** — TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft, Falang, Sublanguage and Loco Translate — plus CSV and TMX for everything else. Read straight from the tables, the posts or the `.po` files, so it works even when the other plugin is gone. Pages built with Elementor or Bricks come across too, widget by widget.
 * 🖼️ **A different image for each language** — swap any picture for a translated one: switch on the visual editor, click the button on the image and pick another from your media library. For text baked into a picture, a screenshot of your own interface, or a photo that only makes sense in one country.
 * 🎯 **Different content and menus per language** — show a paragraph, a block or a menu item only in some languages: with a shortcode, a class on any block, or a checkbox in Appearance → Menus.
 * 🛒 **WooCommerce aware**: product and category slugs per language, the AJAX mini-cart and JS strings translated too, and customer emails rendered in the language the order was placed in.
@@ -192,7 +192,7 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 4. Pick the language your site is written in and the languages to translate it into. Each one gets its own /xx/ URL.
 5. Every page at a glance, with how much of it is translated and what is still missing.
 6. Bring your own key — OpenAI, Anthropic, Gemini, DeepL or Google. You pay the provider directly, and a key is optional.
-7. Coming from another plugin? WPML, Polylang, TranslatePress, qTranslate, WPGlobus, WP Multilang, Bogo, Multilanguage and Loco Translate are all detected automatically; Weglot imports from its CSV export.
+7. Coming from another plugin? WPML, Polylang, TranslatePress, qTranslate, WPGlobus, WP Multilang, Bogo, Multilanguage, Falang, Sublanguage and Loco Translate are all detected automatically; Weglot imports from its CSV export.
 8. Design the language switcher with a live preview — dropdown or list, flags, colours, corners and position.
 9. SEO for each page and language: the translated URL slug, the title Google shows and the meta description.
 10. Translation memory: the same phrase is never paid for twice, and you can see what that has saved you.
@@ -200,6 +200,19 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 
 == Changelog ==
+
+= 1.5.3 =
+* New: import from Falang and Sublanguage. Both keep the translation of a page as extra fields on the original page, not as copies; TranslateRocket reads them straight from the database, so the import works after the other plugin has been switched off. Only what Falang marks as published comes across, and an empty field - which both plugins read as "use the original" - is not imported as a translation. The translated page addresses come across too (/it/chi-siamo/ stays /it/chi-siamo/), so the links search engines already know keep working. Menu labels typed by hand come across as well, and so do the site title and the widget texts saved by Falang.
+* New: when an import would do harm, it stops and says why. If the plugin you are coming from says your site is written in another language than the one set in TranslateRocket, every sentence would be paired with the wrong side; now nothing is imported and a message explains what to change, instead of a silent "0 imported".
+* Fix: after switching off a translation plugin, pages no longer send visitors to the home page. Falang, Sublanguage and others leave their own address rules behind; WordPress kept reading addresses with the rules of a plugin that was gone. The rules are now rebuilt on the first visit after any plugin is switched off.
+* Fix: the page title in the browser tab, in search results and in social previews is translated even before anyone translates it as a whole. Themes and SEO plugins glue "Page title - Site name" together; that glued sentence never existed in the plugin you imported from, while both pieces did. It is now put together from its translated pieces, and a translation of the whole title, when there is one, still wins.
+* Fix: texts that visitors read but that live in data attributes are translated: the column headings WooCommerce and Tutor LMS show on phones, the "Sending..." text of Beaver Builder buttons, loading texts, tooltips (BuddyPress included) and data placeholders. Every other data attribute is left alone on purpose: they are ids and keys that scripts depend on.
+* Fix: Divi 4 texts written differently for desktop, tablet and phone are translated for every device. Divi keeps them in a data attribute and puts them on screen with JavaScript, so a phone showed the original language.
+* Fix: OpenAI's reasoning models (o1, o3, o4-mini, gpt-5 and later) work. They refuse the fixed "temperature" TranslateRocket sent for steady translations, and every request failed; it is now sent only to the models that accept it, with one more try without it for any model not known yet.
+* Fix: the Gemini key travels in a request header, as Google now documents, instead of in the address, where addresses end up in server logs.
+* Fix: a DeepL key sent to the wrong server (free and paid keys live on different ones) is retried on the other one instead of failing.
+* Fix: identifiers made of words joined by underscores, and lone codes with digits in them, are no longer collected as text to translate.
+* Tested with the real Falang and Sublanguage plugins; 682 automated checks in 45 suites, including the update from the version on WordPress.org.
 
 = 1.5.2 =
 * Fix: the text of a submit button is translated. That is the button of the WordPress comment form ("Post Comment"), the search button of many themes and the login button of Divi: they all keep their text in an attribute, which was never read, so those buttons stayed in the original language on an otherwise translated page. The value of a text field, a checkbox or a hidden field is deliberately left alone: there it is data being submitted, not a label, and translating it would break the form.
@@ -353,6 +366,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.5.3 =
+Import from Falang and Sublanguage; pages no longer end up on the home page after a translation plugin is switched off; OpenAI reasoning models work; composed page titles are translated.
 
 = 1.5.2 =
 Submit buttons, pictures inside <picture>, video posters and retina images are translated; an edited translation shows immediately; visitors arriving with tracking parameters read from the cache.

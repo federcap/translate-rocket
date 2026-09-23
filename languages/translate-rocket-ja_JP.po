@@ -3135,3 +3135,15 @@ msgstr "待っている作業はありません"
 #: src/Admin/NextSteps.php
 msgid "see what is left"
 msgstr "残りを見る"
+
+#: src/Admin/Admin.php
+msgid "Get your %s API key ↗"
+msgstr "%sのAPIキーを取得 ↗"
+
+#: src/Admin/Admin.php
+msgid "Nothing was imported, on purpose."
+msgstr "意図的に何もインポートしていません。"
+
+#: src/Admin/Admin.php
+msgid "The plugin you are coming from says your site is written in a different language from the one set in TranslateRocket. Importing now would pair every sentence with the wrong side. Set the source language in TranslateRocket to the language your pages are written in, then import again."
+msgstr "移行元のプラグインでは、サイトの言語が TranslateRocket で設定された言語と異なっています。このままインポートすると、すべての文が逆向きに対応付けられます。TranslateRocket の元の言語をページが書かれている言語に設定してから、もう一度インポートしてください。"

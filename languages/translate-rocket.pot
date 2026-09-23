@@ -1176,12 +1176,6 @@ msgstr ""
 msgid "Almost used up."
 msgstr ""
 
-#. translators: %s: provider name (e.g. OpenAI).
-#: src/Admin/Admin.php:2602
-#, php-format
-msgid "Get a %s API key ↗"
-msgstr ""
-
 #: src/Admin/Admin.php:2610
 msgid "Fallback priority"
 msgstr ""
@@ -4031,4 +4025,16 @@ msgstr ""
 
 #: src/Admin/NextSteps.php
 msgid "see what is left"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Get your %s API key ↗"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Nothing was imported, on purpose."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The plugin you are coming from says your site is written in a different language from the one set in TranslateRocket. Importing now would pair every sentence with the wrong side. Set the source language in TranslateRocket to the language your pages are written in, then import again."
 msgstr ""

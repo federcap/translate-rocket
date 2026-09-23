@@ -24,28 +24,17 @@ class OpenAIProvider extends LlmProvider {
 
 	protected function chat( string $prompt ): TranslationResult {
 		$model = $this->model() ?: 'gpt-4o-mini';
-		$body  = wp_json_encode(
-			array(
-				'model'       => $model,
-				'temperature' => 0,
-				'messages'    => array(
-					array(
-						'role'    => 'user',
-						'content' => $prompt,
-					),
-				),
-			)
-		);
-
-		$result = $this->post(
-			'https://api.openai.com/v1/chat/completions',
-			array(
-				'Authorization' => 'Bearer ' . $this->api_key(),
-				'Content-Type'  => 'application/json',
-			),
-			$body,
-			60
-		);
+		// temperature 0 keeps the translation steady from one call to the next, but
+		// the reasoning models (o1, o3, o4-mini, gpt-5…) refuse any value but the
+		// default and answer 400 «Unsupported value: 'temperature'»: whoever picked
+		// one of them from the list saw every page fail. Sent only to the models
+		// known to take it; and if a model we do not know yet refuses it too, one
+		// more try without it.
+		$temperatura = (bool) preg_match( '/^(gpt-4|gpt-3\.5|chatgpt)/i', $model );
+		$result      = $this->post_chat( $model, $prompt, $temperatura );
+		if ( $temperatura && isset( $result['error'] ) && false !== stripos( $result['error'], 'temperature' ) ) {
+			$result = $this->post_chat( $model, $prompt, false );
+		}
 		if ( isset( $result['error'] ) ) {
 			return TranslationResult::fail( 'OpenAI: ' . $result['error'] );
 		}
@@ -56,6 +45,35 @@ class OpenAIProvider extends LlmProvider {
 			return TranslationResult::fail( 'OpenAI: empty response.' );
 		}
 		return TranslationResult::ok( array( (string) $text ) );
+	}
+
+	/**
+	 * One call to Chat Completions.
+	 *
+	 * @return array{body?:string,error?:string}
+	 */
+	private function post_chat( string $model, string $prompt, bool $temperatura ): array {
+		$req = array(
+			'model'    => $model,
+			'messages' => array(
+				array(
+					'role'    => 'user',
+					'content' => $prompt,
+				),
+			),
+		);
+		if ( $temperatura ) {
+			$req['temperature'] = 0;
+		}
+		return $this->post(
+			'https://api.openai.com/v1/chat/completions',
+			array(
+				'Authorization' => 'Bearer ' . $this->api_key(),
+				'Content-Type'  => 'application/json',
+			),
+			wp_json_encode( $req ),
+			60
+		);
 	}
 
 	public function list_models(): array {
