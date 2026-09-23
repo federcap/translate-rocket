@@ -66,7 +66,9 @@
 /* Floating switcher (enabled from the Switcher settings) */
 .trrocket-floating {
 	position: fixed;
-	z-index: 9999;
+	/* Sopra i banner dei cookie: Complianz, CookieYes e Iubenda stanno a 99999 e piu',
+	   e con 9999 il selettore finiva DIETRO il banner finche' non si accettava (23/9/2026). */
+	z-index: 2147483000;
 	/* Never wider than the screen, so it can't be cropped on small viewports. */
 	max-width: calc( 100vw - 16px );
 	background: #fff;
@@ -267,7 +269,9 @@
 	border-radius: 0;
 	overflow: hidden;
 	box-shadow: 0 6px 14px rgba( 0, 0, 0, 0.14 );
-	z-index: 9999;
+	/* Sopra i banner dei cookie: Complianz, CookieYes e Iubenda stanno a 99999 e piu',
+	   e con 9999 il selettore finiva DIETRO il banner finche' non si accettava (23/9/2026). */
+	z-index: 2147483000;
 }
 
 .trrocket-dd.is-open .trrocket-dd-menu {

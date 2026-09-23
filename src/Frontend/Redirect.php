@@ -92,7 +92,11 @@ class Redirect {
 		);
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- self::JS is a fixed literal, the data is JSON-encoded above.
-		echo '<script id="trrocket-redirect">(' . self::JS . ')(' . $dati . ');</script>' . "\n";
+		// Gli attributi servono agli ottimizzatori che guardano il TAG e non l'id:
+		// LiteSpeed confronta il contenuto dello script, Cloudflare Rocket Loader
+		// legge data-cfasync. Senza, questo script viene rimandato al primo tocco
+		// e il visitatore legge la lingua sbagliata (vedi Frontend\Optimizers).
+		echo '<script id="trrocket-redirect" data-no-optimize="1" data-no-defer="1" data-no-minify="1" data-cfasync="false">(' . self::JS . ')(' . $dati . ');</script>' . "\n";
 	}
 
 	/**

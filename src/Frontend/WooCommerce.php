@@ -47,6 +47,18 @@ class WooCommerce {
 	private $email_is_customer = false;
 
 	/**
+	 * Language of the email whose body has just been translated, kept until the
+	 * subject is built.
+	 *
+	 * WooCommerce assembles the body first and only then hands over the subject
+	 * (class-wc-email.php:1234 and :1236), so the subject arrives after
+	 * email_content() has already reset $email_lang.
+	 *
+	 * @var string
+	 */
+	private $subject_lang = '';
+
+	/**
 	 * Where email-only wording is filed, so it appears in the translation screens
 	 * under its own heading instead of being mixed into a real page.
 	 */
@@ -70,6 +82,10 @@ class WooCommerce {
 		// Translate transactional customer emails into the order's language.
 		add_action( 'woocommerce_email_order_details', array( $this, 'capture_email_language' ), 1, 4 );
 		add_filter( 'woocommerce_mail_content', array( $this, 'email_content' ), 20 );
+		// L'oggetto NON passa da woocommerce_mail_content: viene costruito a parte e
+		// consegnato qui (class-wc-email.php:1236). Senza questo filtro il cliente
+		// tedesco riceveva il messaggio in tedesco con l'oggetto in italiano.
+		add_filter( 'woocommerce_mail_callback_params', array( $this, 'email_subject' ), 20, 2 );
 
 		// Send the customer back to the thank-you page in the language they ordered in.
 		add_filter( 'woocommerce_get_checkout_order_received_url', array( $this, 'order_received_url' ), 20, 2 );
@@ -203,6 +219,52 @@ class WooCommerce {
 		}
 	}
 
+
+	/**
+	 * Translate the subject of a customer email into the order's language.
+	 *
+	 * The subject is a single line of text, not HTML: it is collected like any
+	 * other phrase (nobody ever browses an email, so the page collector can never
+	 * reach it) and swapped when a translation exists.
+	 *
+	 * @param array $params Arguments for wp_mail(): to, subject, message, headers, attachments.
+	 * @param mixed $email  The WC_Email being sent.
+	 * @return array
+	 */
+	public function email_subject( $params, $email = null ) {
+		unset( $email );
+		$lang               = $this->subject_lang;
+		$this->subject_lang = '';
+
+		if ( ! is_array( $params ) || ! isset( $params[1] ) || ! is_string( $params[1] ) ) {
+			return $params;
+		}
+		$subject = trim( $params[1] );
+		if ( '' === $subject || ! preg_match( '/\p{L}/u', $subject ) || NoTranslate::text_excluded( $subject ) ) {
+			return $params;
+		}
+
+		$settings = Settings::get();
+		$targets  = array_values( (array) ( $settings['target_languages'] ?? array() ) );
+		if ( ! empty( $targets ) ) {
+			Strings::remember_batch(
+				array( array( 'original' => $subject, 'type' => 'text' ) ),
+				$targets,
+				self::EMAIL_URL,
+				__( 'WooCommerce emails', 'translate-rocket' )
+			);
+		}
+
+		if ( '' === $lang ) {
+			return $params;
+		}
+		$map = Strings::translate_texts( array( $subject ), $lang );
+		if ( isset( $map[ $subject ] ) && '' !== $map[ $subject ] ) {
+			$params[1] = $map[ $subject ];
+		}
+		return $params;
+	}
+
 	/**
 	 * Translate the assembled email HTML into the order's language.
 	 *
@@ -212,6 +274,7 @@ class WooCommerce {
 	public function email_content( $content ) {
 		$lang                    = $this->email_lang;
 		$is_customer             = $this->email_is_customer;
+		$this->subject_lang      = $is_customer ? $lang : '';
 		$this->email_lang        = ''; // Reset for the next email in this request.
 		$this->email_is_customer = false;
 

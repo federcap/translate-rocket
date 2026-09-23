@@ -692,7 +692,7 @@ class VisualEditor {
 				Strings::save_by_source( $src, $lang, $tr, 'meta', $ctx );
 			}
 		}
-		\TranslateRocket\Cache::flush();
+		\TranslateRocket\Cache::flush_later();
 		// Send back the slug as actually saved (sanitize_title may have changed it)
 		// so the editor can follow the page to its new address.
 		wp_send_json_success( array( 'slug' => \TranslateRocket\Slugs::get( $post_id, $lang ) ) );
@@ -738,7 +738,7 @@ class VisualEditor {
 				__( 'Not saved: this sentence holds a link or a formatted word, and the marks that say where they go are missing or changed. Keep every mark, with its number, anywhere in the sentence.', 'translate-rocket' )
 			);
 		}
-		\TranslateRocket\Cache::flush();
+		\TranslateRocket\Cache::flush_later();
 		wp_send_json_success( array( 'translation' => $trans ) );
 	}
 
@@ -777,7 +777,7 @@ class VisualEditor {
 				++$rifiutate;
 			}
 		}
-		\TranslateRocket\Cache::flush();
+		\TranslateRocket\Cache::flush_later();
 		if ( $rifiutate > 0 ) {
 			wp_send_json_error(
 				sprintf(
@@ -877,7 +877,7 @@ class VisualEditor {
 			$msg  = isset( $rules[ $lang ]['msg'] ) ? wp_kses_post( (string) $rules[ $lang ]['msg'] ) : '';
 			\TranslateRocket\Exclusions::set( $post_id, $lang, $mode, $url, $msg );
 		}
-		\TranslateRocket\Cache::flush();
+		\TranslateRocket\Cache::flush_later();
 		wp_send_json_success( array( 'saved' => true ) );
 	}
 

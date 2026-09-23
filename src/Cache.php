@@ -100,6 +100,51 @@ class Cache {
 	 * delete the stored transients so the options table doesn't accumulate garbage
 	 * on sites without an object cache.
 	 */
+	/**
+	 * Whether a flush has already been booked for the end of this request.
+	 *
+	 * @var bool
+	 */
+	private static $da_svuotare = false;
+
+	/**
+	 * Book one flush for the end of the request.
+	 *
+	 * flush() is deliberately expensive — it deletes every cached page and asks the
+	 * host cache, the cache plugins and the CDN to drop their copies — so it must not
+	 * run once per string. But leaving each caller to remember it is how a stale page
+	 * survives an edit: the call was repeated by hand in a dozen places in the admin
+	 * screens and missing from the REST save, which is exactly how ticket #18 reached
+	 * a customer (a corrected translation that kept showing the old text).
+	 *
+	 * Booking it instead makes it automatic and cheap: a loop that saves ten thousand
+	 * translations books it ten thousand times and pays for it once, when the request
+	 * ends. Reproduced and covered by `_ssh/collaudi/collaudo-cache.sh` (23/09/2026).
+	 */
+	public static function flush_later(): void {
+		if ( self::$da_svuotare ) {
+			return;
+		}
+		self::$da_svuotare = true;
+		// On WP-CLI and inside `php -r` there is no shutdown action to lean on, so
+		// register with PHP itself: the cache must be dropped there too.
+		if ( function_exists( 'add_action' ) ) {
+			add_action( 'shutdown', array( __CLASS__, 'flush_booked' ), 1 );
+		}
+		register_shutdown_function( array( __CLASS__, 'flush_booked' ) );
+	}
+
+	/**
+	 * Run the booked flush, once.
+	 */
+	public static function flush_booked(): void {
+		if ( ! self::$da_svuotare ) {
+			return;
+		}
+		self::$da_svuotare = false;
+		self::flush();
+	}
+
 	public static function flush(): void {
 		// Se cambia il contenuto, puo' essere cambiato anche cosa resta da fare.
 		if ( class_exists( '\\TranslateRocket\\Admin\\NextSteps' ) ) {
@@ -145,13 +190,18 @@ class Cache {
 		do_action( 'litespeed_purge_all' );
 		do_action( 'cache_enabler_clear_complete_cache' );
 		do_action( 'rt_nginx_helper_purge_all' );
+		// WP Fastest Cache: `wpfc_clear_all_cache` sembra una funzione ma e' un
+		// METODO della sua classe (wpFastestCache.php:2791), quindi il controllo
+		// function_exists() piu' sotto non lo trovava mai e la sua cache non veniva
+		// svuotata: la pagina vecchia restava servita. L'azione invece esiste
+		// (wpFastestCache.php:174). Verificato sul plugin vero il 23/09/2026.
+		do_action( 'wpfc_clear_all_cache' );
 
 		// Plugins that expose a function instead of an action.
 		$callables = array(
 			'rocket_clean_domain',       // WP Rocket.
 			'w3tc_flush_all',            // W3 Total Cache.
 			'wp_cache_clear_cache',      // WP Super Cache.
-			'wpfc_clear_all_cache',      // WP Fastest Cache.
 			'sg_cachepress_purge_cache', // SiteGround Optimizer.
 			'wpo_cache_flush',           // WP-Optimize.
 		);

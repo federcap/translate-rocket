@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -201,6 +201,17 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 == Changelog ==
 
+= 1.5.2 =
+* Fix: the text of a submit button is translated. That is the button of the WordPress comment form ("Post Comment"), the search button of many themes and the login button of Divi: they all keep their text in an attribute, which was never read, so those buttons stayed in the original language on an otherwise translated page. The value of a text field, a checkbox or a hidden field is deliberately left alone: there it is data being submitted, not a label, and translating it would break the form.
+* Fix: a picture with a version of its own per language now reaches the eye. Until now only a lone <img> was swapped; inside a <picture> the browser picks the <source> beside it - which is what WebP plugins produce - so the translated picture never appeared. The same now works for a video poster, for video and audio sources, for the retina version in srcset, and for lazy loading, which used to put the original picture back half a second later.
+* Fix: the title of an SVG icon is translated. It is the name a screen reader says out loud, and it was skipped together with the title of the page.
+* Fix: visitors arriving from a campaign, a social network, a newsletter or a QR code now read a page from the cache like everybody else. Their address carries tracking parameters (utm_source and the like), and any address with a parameter was treated as a page of its own that could not be cached - so the most expensive traffic was the slowest.
+* Fix: an edited translation shows on the site immediately. Clearing the page cache was repeated by hand in a dozen places and missing from others; it now happens inside the saving itself, once per request, whether you save one sentence or import ten thousand. The same for sites with Redis or Memcached, where the per-page maps could stay up to twelve hours behind, and for WP Fastest Cache, which was never cleared at all.
+* Fix: optimization plugins are told to leave the language script alone. It runs in the page head to pick the visitor's language before the page is painted; with "delay JavaScript until interaction" it was postponed to the first tap, so the visitor read the wrong language, and the language picker did not open on the first click. Autoptimize, LiteSpeed Cache, WP Rocket, SiteGround Optimizer, WP-Optimize and W3 Total Cache are all told now.
+* Fix: the floating language picker is no longer hidden behind a cookie banner.
+* Fix: the subject of a WooCommerce email is translated into the language of the order. The body already was, and the subject is the first thing read in an inbox.
+* Fix: file names, template placeholders like ${name}, style strings, email addresses, colours and product codes are no longer collected as text to translate. They were paid for like any other phrase and came back changed: a translated file name makes the picture disappear, and a "localized" email address stops being clickable. Seen on real multilingual sites while comparing them with their translations.
+
 = 1.5.1 =
 * Fix: coming from qTranslate-X, qTranslate-XT, WPGlobus or WP Multilang, once that plugin was switched off every page showed all of its languages one after the other, with the language markers in plain sight - the title first. The public site now shows only the part in your source language, and TranslateRocket translates it like any other text. Nothing in your database is changed, and switching the old plugin back on brings everything back as it was.
 * Fix: imported sentences with a link or a bold word in them are now used on the translated page when they come from Weglot, Loco Translate, Multilanguage, qTranslate, WPGlobus or WP Multilang. Weglot marks those words in its export in its own way; they are now read.
@@ -342,6 +353,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.5.2 =
+Submit buttons, pictures inside <picture>, video posters and retina images are translated; an edited translation shows immediately; visitors arriving with tracking parameters read from the cache.
 
 = 1.5.1 =
 Switching from qTranslate, WPGlobus or WP Multilang no longer leaves every language on every page, and imported sentences with links are used everywhere. Recommended if you are moving from another translation plugin.

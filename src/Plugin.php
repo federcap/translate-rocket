@@ -191,6 +191,8 @@ final class Plugin {
 			( new \TranslateRocket\Frontend\Sitemap() )->boot();
 			// Optional first-visit redirect to the visitor's browser language.
 			( new \TranslateRocket\Frontend\Redirect() )->boot();
+			// Gli ottimizzatori vanno avvisati di non toccare i nostri script: vedi Optimizers.
+			( new \TranslateRocket\Frontend\Optimizers() )->boot();
 		}
 	}
 

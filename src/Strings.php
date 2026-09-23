@@ -682,8 +682,25 @@ class Strings {
 	 *
 	 * @return array<string,string>
 	 */
+
+	/**
+	 * Generation number of the per-page maps of one language.
+	 *
+	 * flush_maps() used to invalidate those maps by DELETEing their rows from
+	 * wp_options. That only works when transients live in the database: with a
+	 * persistent object cache (Redis, Memcached — what Cloudways and most managed
+	 * hosts run) they never touch wp_options, so the DELETE matched nothing and an
+	 * edited translation kept being served from a stale map for up to twelve hours.
+	 * Putting a number in the key invalidates them wherever they are stored, exactly
+	 * as Cache::version() already does for whole pages.
+	 */
+	private static function map_gen( string $lang ): int {
+		$gen = get_option( 'trrocket_map_gen', array() );
+		return (int) ( is_array( $gen ) ? ( $gen[ $lang ] ?? 1 ) : 1 );
+	}
+
 	public static function map_for_page( string $url_hash, string $lang ): array {
-		$key    = 'trrocket_pmap_' . substr( $url_hash, 0, 12 ) . '_' . $lang;
+		$key    = 'trrocket_pmap_' . substr( $url_hash, 0, 12 ) . '_' . $lang . '_' . self::map_gen( $lang );
 		$cached = get_transient( $key );
 		if ( is_array( $cached ) ) {
 			return $cached;
@@ -710,6 +727,12 @@ class Strings {
 	public static function flush_maps( string $lang ): void {
 		global $wpdb;
 		delete_transient( 'trrocket_map_' . $lang );
+		// Il numero di generazione: e' quello che invalida davvero le mappe per
+		// pagina quando i transient NON stanno nel database (Redis, Memcached).
+		$gen           = get_option( 'trrocket_map_gen', array() );
+		$gen           = is_array( $gen ) ? $gen : array();
+		$gen[ $lang ]  = ( (int) ( $gen[ $lang ] ?? 1 ) ) + 1;
+		update_option( 'trrocket_map_gen', $gen, false );
 		$suffix = '%' . $wpdb->esc_like( '_' . $lang );
 		$wpdb->query(
 			$wpdb->prepare(
@@ -816,6 +839,11 @@ class Strings {
 		); // phpcs:ignore WordPress.DB
 
 		self::flush_maps( $lang );
+		// La pagina tradotta che sta in cache mostra ancora la traduzione di prima:
+		// va buttata, o la correzione non si vede. Si prenota invece di eseguirla
+		// subito, cosi' un salvataggio in blocco la paga una volta sola: vedi
+		// Cache::flush_later().
+		\TranslateRocket\Cache::flush_later();
 		// Un passo del pannello puo' essersi chiuso proprio adesso.
 		\TranslateRocket\Admin\NextSteps::forget();
 		return true;

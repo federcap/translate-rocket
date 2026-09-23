@@ -21,8 +21,124 @@ defined( 'ABSPATH' ) || exit;
  */
 class Engine {
 
-	private const ATTRIBUTES   = array( 'alt', 'title', 'placeholder', 'aria-label' );
+	private const ATTRIBUTES   = array( 'alt', 'title', 'placeholder', 'aria-label', 'value' );
 	private const SKIP_PARENTS = array( 'script', 'style', 'code', 'pre', 'textarea', 'title' );
+
+	/**
+	 * Media whose file can have a per-language version, as tag => attributes.
+	 *
+	 * An <img> is rarely alone any more. A WebP plugin wraps it in a <picture> with
+	 * a <source srcset> beside it, and the browser picks the <source>, so swapping
+	 * only the <img src> changes nothing on screen (reproduced 23/09/2026 with
+	 * `_ssh/collaudi/collaudo-immagini.sh`). Lazy loading does the same through
+	 * `data-src`: the script writes it back over our `src` half a second later.
+	 * A video has its own poster — usually the frame with the title written on it —
+	 * and its own soundtrack, which is the whole point of having a per-language file.
+	 */
+	private const MEDIA_ATTRS = array(
+		// `srcset` anche sull'<img>, non solo sul <source>: il logo «retina» dei temi
+		// ha l'immagine normale nel `src` e quella doppia nel `srcset`, e su un
+		// telefono o su un Mac il browser sceglie la seconda. Chi aveva mappato la
+		// versione doppia se la vedeva ignorare (Astra, markup-extras.php:2144).
+		'img'    => array( 'src', 'data-src', 'srcset', 'data-srcset' ),
+		'source' => array( 'src', 'srcset', 'data-srcset' ),
+		'video'  => array( 'src', 'poster' ),
+		'audio'  => array( 'src' ),
+	);
+
+	/**
+	 * Every media node to look at, as pairs of element and attribute.
+	 *
+	 * @param \DOMXPath $xpath   Document XPath.
+	 * @param string    $skip_el Predicate listing the elements to stay out of.
+	 * @return array<int,array{0:\DOMElement,1:string}>
+	 */
+	private static function media_nodes( \DOMXPath $xpath, string $skip_el ): array {
+		$out = array();
+		foreach ( self::MEDIA_ATTRS as $tag => $attrs ) {
+			foreach ( $attrs as $attr ) {
+				foreach ( $xpath->query( "//{$tag}[@{$attr}][not({$skip_el})]" ) as $el ) {
+					$out[] = array( $el, $attr );
+				}
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * The file addresses inside one attribute.
+	 *
+	 * `srcset` is not one address but a list with a descriptor each
+	 * ("small.webp 480w, big.webp 1200w"), so each address is looked up on its own
+	 * and its descriptor kept as it is.
+	 *
+	 * @return string[]
+	 */
+	private static function media_urls( string $value, string $attr ): array {
+		if ( 'srcset' !== $attr && 'data-srcset' !== $attr ) {
+			return array( trim( $value ) );
+		}
+		$out = array();
+		foreach ( explode( ',', $value ) as $piece ) {
+			$piece = trim( $piece );
+			if ( '' === $piece ) {
+				continue;
+			}
+			$parts = preg_split( '/\s+/', $piece, 2 );
+			if ( isset( $parts[0] ) && '' !== $parts[0] ) {
+				$out[] = $parts[0];
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * Put the translated addresses back, keeping each descriptor.
+	 *
+	 * @param array<string,string> $map Original address => address for this language.
+	 */
+	private static function media_replace( string $value, string $attr, array $map ): string {
+		if ( 'srcset' !== $attr && 'data-srcset' !== $attr ) {
+			return $map[ trim( $value ) ] ?? $value;
+		}
+		$pezzi = array();
+		foreach ( explode( ',', $value ) as $piece ) {
+			$piece = trim( $piece );
+			if ( '' === $piece ) {
+				continue;
+			}
+			$parts = preg_split( '/\s+/', $piece, 2 );
+			$url   = $parts[0] ?? '';
+			$resto = isset( $parts[1] ) ? ' ' . $parts[1] : '';
+			$pezzi[] = ( $map[ $url ] ?? $url ) . $resto;
+		}
+		return implode( ', ', $pezzi );
+	}
+
+	/**
+	 * Which elements carry a translatable text in that attribute.
+	 *
+	 * `value` is the odd one out. On a text field, a checkbox or a hidden field it
+	 * holds DATA — the answer that gets submitted, a key the form logic matches on —
+	 * so translating it would break the form (real Gravity Forms exports pair a
+	 * visible `text` with a code-like `value` such as `website-design`). On a button
+	 * it is the opposite: it is the label the visitor reads. WordPress itself prints
+	 * the comment form button that way — `<input type="submit" value="Post Comment">`
+	 * in comment-template.php — and so do the Divi login and search modules, which is
+	 * why those buttons used to stay in the source language (found 22/09/2026 on real
+	 * sites, reproduced with `_ssh/collaudi/prova-value.sh`).
+	 *
+	 * @param string $attr    Attribute name.
+	 * @param string $skip_el XPath predicate listing the elements to stay out of.
+	 */
+	private static function attr_xpath( string $attr, string $skip_el ): string {
+		if ( 'value' === $attr ) {
+			$lower = "translate(@type,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')";
+			return "//input[@value][@type][not({$skip_el})]"
+				. "[contains(' submit button reset ', concat(' ', {$lower}, ' '))]";
+		}
+		return "//*[@{$attr}][not({$skip_el})][not(self::link)]";
+	}
 
 	/**
 	 * Current request language.
@@ -175,15 +291,58 @@ class Engine {
 	}
 
 	/**
-	 * Pure CSS values / measurements that are never real content and must never be
-	 * collected or translated: "16px", "1.4em", "100%", "1.5rem", "inherit"…
-	 * (these typically leak in from typography / style-guide demo blocks).
+	 * Text that is never content, and must never be collected or translated.
+	 *
+	 * Two reasons to be strict here. The obvious one: a phrase in the list is a
+	 * phrase the site owner pays an AI to translate. The serious one: these come
+	 * back changed. A file name comes back translated and the image disappears; a
+	 * `${blog.title}` placeholder comes back with a space inside and the widget
+	 * that reads it breaks; an email address comes back "localized" and stops being
+	 * clickable.
+	 *
+	 * Every pattern below was seen on a real site while comparing 22 multilingual
+	 * pages against their translations (23/09/2026, `_ssh/ricerca/casi/confronto-siti.md`):
+	 * `BANNER_ET.png`, `${blog.title}`, `w:normal;s:50,50,37,22;l:60,60,45,27;`.
 	 */
 	public static function is_noise( string $text ): bool {
+		$text = trim( $text );
+		if ( '' === $text ) {
+			return true;
+		}
+		// Misure e parole chiave del CSS: "16px", "1.4em", "100%", "inherit".
 		if ( preg_match( '/^[\d.,\s]+(px|em|rem|pt|ex|ch|vh|vw|vmin|vmax|fr|%)$/i', $text ) ) {
 			return true;
 		}
-		return in_array( strtolower( $text ), array( 'inherit', 'initial', 'unset', 'revert' ), true );
+		if ( in_array( strtolower( $text ), array( 'inherit', 'initial', 'unset', 'revert' ), true ) ) {
+			return true;
+		}
+		// Un nome di file da solo: "BANNER_ET.png", "listino-2026.pdf".
+		if ( preg_match( '/^[\w .()\-]{1,80}\.(png|jpe?g|gif|webp|avif|svg|ico|pdf|mp4|webm|mp3|wav|docx?|xlsx?|pptx?|zip|rar|css|js|json|xml)$/i', $text ) ) {
+			return true;
+		}
+		// Un segnaposto di modello, da solo: "${blog.title}", "{{ nome }}", "%1$s".
+		if ( preg_match( '/^(\$\{[^}]*\}|\{\{[^}]*\}\}|\{[a-z0-9_.\-]+\}|%\d*\$?[bcdeEfFgGosuxX])$/i', $text ) ) {
+			return true;
+		}
+		// Un elenco di coppie chiave:valore come le scrivono i temi nei data-*:
+		// "w:normal;s:50,50,37,22;l:60,60,45,27;fw:500;".
+		if ( preg_match( '/^([a-z-]{1,20}\s*:\s*[^;:]{1,40};\s*){2,}$/i', $text ) ) {
+			return true;
+		}
+		// Un indirizzo e-mail da solo: e' un contatto, non una frase.
+		if ( preg_match( '/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i', $text ) ) {
+			return true;
+		}
+		// Un colore, un identificativo, una sigla senza spazi: "#1a2b3c",
+		// "550e8400-e29b-41d4-a716-446655440000", "SKU-A100", "IMG_2043".
+		if ( preg_match( '/^#[0-9a-f]{3,8}$/i', $text )
+			|| preg_match( '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $text ) ) {
+			return true;
+		}
+		if ( ! preg_match( '/\s/', $text ) && preg_match( '/\d/', $text ) && preg_match( '/^[\w.\-]+$/', $text ) ) {
+			return true; // una sola parola con dentro delle cifre: e' un codice
+		}
+		return false;
 	}
 
 	/**
@@ -300,8 +459,14 @@ class Engine {
 		if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
 			return false;
 		}
+		// Una pagina con parametri veri (una ricerca, un filtro, una paginazione a
+		// query) non si mette in cache. I parametri di sola provenienza invece non
+		// cambiano nulla di cio' che si legge, quindi non devono impedirla.
 		if ( ! empty( $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- read-only cache gate.
-			return false;
+			$veri = array_diff_key( $_GET, array_flip( self::tracking_params() ) ); // phpcs:ignore WordPress.Security.NonceVerification -- read-only cache gate.
+			if ( ! empty( $veri ) ) {
+				return false;
+			}
 		}
 		if ( function_exists( 'is_404' ) && is_404() ) {
 			return false;
@@ -328,7 +493,56 @@ class Engine {
 	 * Current request URI (path + query), sanitized.
 	 */
 	private function request_uri(): string {
-		return isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
+		$uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
+		// I parametri di tracciamento cambiano l'indirizzo ma non la pagina: se
+		// entrassero nella chiave, ogni visita da una campagna, da un social o da un
+		// QR sarebbe una voce di cache diversa — cioe' il traffico che costa di piu'
+		// non userebbe mai la cache.
+		$pezzi = explode( '?', $uri, 2 );
+		if ( isset( $pezzi[1] ) ) {
+			parse_str( $pezzi[1], $par );
+			$resta = array_diff_key( $par, array_flip( self::tracking_params() ) );
+			$uri   = $pezzi[0] . ( empty( $resta ) ? '' : '?' . http_build_query( $resta ) );
+		}
+		return $uri;
+	}
+
+	/**
+	 * Query parameters that only say where the visitor came from.
+	 *
+	 * They are dropped from the cache key and ignored when deciding whether a
+	 * request can be cached at all. The list can be extended by a site that uses
+	 * its own tracking parameter.
+	 *
+	 * @return string[]
+	 */
+	private static function tracking_params(): array {
+		$lista = array(
+			'utm_source',
+			'utm_medium',
+			'utm_campaign',
+			'utm_term',
+			'utm_content',
+			'utm_id',
+			'gclid',
+			'gbraid',
+			'wbraid',
+			'fbclid',
+			'msclkid',
+			'ttclid',
+			'twclid',
+			'igshid',
+			'mc_cid',
+			'mc_eid',
+			'_gl',
+			'yclid',
+		);
+		/**
+		 * Filters the query parameters treated as tracking-only.
+		 *
+		 * @param string[] $lista Parameter names.
+		 */
+		return (array) apply_filters( 'trrocket_tracking_params', $lista );
 	}
 
 	/**
@@ -426,7 +640,13 @@ class Engine {
 
 		$skip = '';
 		foreach ( self::SKIP_PARENTS as $tag ) {
-			$skip .= "ancestor::{$tag} or ";
+			// `title` sta in questo elenco per il titolo del documento, che si
+			// traduce per conto suo piu' sotto. Ma <title> e' anche il NOME di
+			// un'icona SVG, quello che legge un lettore di schermo: escludendolo
+			// per tag restavano inglesi tutte le icone dei temi, e non comparivano
+			// nemmeno nell'elenco delle frasi (23/09/2026). Si salta quindi solo
+			// il <title> che sta nella testata del documento.
+			$skip .= ( 'title' === $tag ) ? "ancestor::title[parent::head] or " : "ancestor::{$tag} or ";
 		}
 		$skip   .= "ancestor::*[@id='wpadminbar'] or ancestor::*[@id='trrocket-ve-bar'] or ancestor::*[@translate='no']";
 		$skip_el = "ancestor-or-self::*[@id='wpadminbar'] or ancestor-or-self::*[@id='trrocket-ve-bar'] or ancestor-or-self::*[@translate='no']";
@@ -452,7 +672,7 @@ class Engine {
 		// condizioni giuste ma non i tag. Da qui il terzo.
 		$skip_unit = '';
 		foreach ( self::SKIP_PARENTS as $tag ) {
-			$skip_unit .= "ancestor-or-self::{$tag} or ";
+			$skip_unit .= ( 'title' === $tag ) ? "ancestor-or-self::title[parent::head] or " : "ancestor-or-self::{$tag} or ";
 		}
 		$skip_unit .= $skip_el;
 
@@ -495,13 +715,13 @@ class Engine {
 		}
 		$attr_nodes = array();
 		foreach ( self::ATTRIBUTES as $attr ) {
-			$attr_nodes[ $attr ] = iterator_to_array( $xpath->query( "//*[@{$attr}][not({$skip_el})][not(self::link)]" ) );
+			$attr_nodes[ $attr ] = iterator_to_array( $xpath->query( self::attr_xpath( $attr, $skip_el ) ) );
 		}
 		// Le immagini: il loro `src` si tratta come tutto il resto, cioe' come una
 		// cosa che puo' avere una versione per lingua. Serve a chi ha una foto con
 		// del testo dentro, una locandina, un banner: tradurre la didascalia non
 		// basta se l'immagine stessa parla un'altra lingua.
-		$img_nodes = iterator_to_array( $xpath->query( "//img[@src][not({$skip_el})]" ) );
+		$img_nodes = self::media_nodes( $xpath, $skip_el );
 
 		$desc_nodes   = iterator_to_array( $xpath->query( '//meta[@name="description"]/@content' ) );
 		// Social e parole chiave. ⚠️ Prima questi venivano SOLO tradotti se il
@@ -540,8 +760,11 @@ class Engine {
 					$candidates[] = trim( (string) $el->getAttribute( $attr ) );
 				}
 			}
-			foreach ( $img_nodes as $img ) {
-				$candidates[] = trim( (string) $img->getAttribute( 'src' ) );
+			foreach ( $img_nodes as $media ) {
+				list( $el, $attr ) = $media;
+				foreach ( self::media_urls( (string) $el->getAttribute( $attr ), $attr ) as $url ) {
+					$candidates[] = $url;
+				}
 			}
 			foreach ( $desc_nodes as $meta ) {
 				$candidates[] = trim( (string) $meta->nodeValue );
@@ -664,9 +887,9 @@ class Engine {
 		// lingua di partenza). Si riprendono dalla pagina com'e' adesso.
 		if ( ! empty( $unit_done ) ) {
 			foreach ( self::ATTRIBUTES as $attr ) {
-				$attr_nodes[ $attr ] = iterator_to_array( $xpath->query( "//*[@{$attr}][not({$skip_el})][not(self::link)]" ) );
+				$attr_nodes[ $attr ] = iterator_to_array( $xpath->query( self::attr_xpath( $attr, $skip_el ) ) );
 			}
-			$img_nodes = iterator_to_array( $xpath->query( "//img[@src][not({$skip_el})]" ) );
+			$img_nodes = self::media_nodes( $xpath, $skip_el );
 		}
 
 		// Translatable attributes. <link> is skipped: its title attributes are the
@@ -675,7 +898,9 @@ class Engine {
 		foreach ( self::ATTRIBUTES as $attr ) {
 			foreach ( $attr_nodes[ $attr ] as $el ) {
 				$value = trim( (string) $el->getAttribute( $attr ) );
-				if ( '' === $value || ! preg_match( '/\p{L}/u', $value ) || NoTranslate::text_excluded( $value ) ) {
+				// Il filtro del rumore vale anche qui: negli attributi finiscono nomi di
+				// file, segnaposto di modello e stringhe di stile piu' che nel testo.
+				if ( '' === $value || ! preg_match( '/\p{L}/u', $value ) || self::is_noise( $value ) || NoTranslate::text_excluded( $value ) ) {
 					continue;
 				}
 				if ( $this->do_collect ) {
@@ -708,39 +933,56 @@ class Engine {
 		// Immagini. Il "testo" qui e' l'indirizzo del file, e si comporta come una
 		// stringa qualunque: si raccoglie, si cerca una versione per questa lingua,
 		// e se c'e' si sostituisce.
-		foreach ( $img_nodes as $img ) {
-			$src = trim( (string) $img->getAttribute( 'src' ) );
+		foreach ( $img_nodes as $media ) {
+			list( $img, $attr ) = $media;
+			$valore = trim( (string) $img->getAttribute( $attr ) );
 			// Un'immagine incorporata nella pagina (data:) non ha un indirizzo da
 			// sostituire, e ficcarla nell'elenco delle stringhe lo riempirebbe di
 			// migliaia di caratteri illeggibili.
-			if ( '' === $src || 0 === stripos( $src, 'data:' ) ) {
+			if ( '' === $valore || 0 === stripos( $valore, 'data:' ) ) {
 				continue;
 			}
+			$urls = self::media_urls( $valore, $attr );
 
 			if ( $this->do_collect ) {
-				$collected[] = array(
-					// Il tipo e' 'image' e non 'attribute' apposta: cosi' la
-					// traduzione automatica sa che qui non c'e' niente da tradurre.
-					// Mandare un indirizzo a DeepL o all'AI non e' solo inutile:
-					// tornerebbe indietro storpiato, e l'immagine sparirebbe.
-					'original' => $src,
-					'type'     => 'image',
-					'context'  => 'src',
-				);
+				foreach ( $urls as $url ) {
+					if ( '' === $url || 0 === stripos( $url, 'data:' ) ) {
+						continue;
+					}
+					$collected[] = array(
+						// Il tipo e' 'image' e non 'attribute' apposta: cosi' la
+						// traduzione automatica sa che qui non c'e' niente da tradurre.
+						// Mandare un indirizzo a DeepL o all'AI non e' solo inutile:
+						// tornerebbe indietro storpiato, e l'immagine sparirebbe.
+						'original' => $url,
+						'type'     => 'image',
+						'context'  => $attr,
+					);
+				}
 			}
 
-			if ( isset( $map[ $src ] ) ) {
-				$img->setAttribute( 'src', $map[ $src ] );
-				// srcset e sizes vanno tolti: restano quelli dell'immagine di
-				// partenza, e il browser sceglierebbe da li' ignorando il src
-				// appena messo. Sembrerebbe che la sostituzione non funzioni.
-				$img->removeAttribute( 'srcset' );
-				$img->removeAttribute( 'sizes' );
+			$nuovo = self::media_replace( $valore, $attr, $map );
+			if ( $nuovo !== $valore ) {
+				$img->setAttribute( $attr, $nuovo );
+				if ( 'src' === $attr && 'img' === strtolower( $img->nodeName ) ) {
+					// Il `srcset` batte il `src`: se resta quello dell'immagine di
+					// partenza, il browser sceglie da li' e la sostituzione sembra
+					// non funzionare. Ma buttarlo via e' un rimedio peggiore quando
+					// il proprietario ha mappato anche le versioni piu' grandi: si
+					// perderebbe l'alta definizione. Quindi lo si toglie SOLO se
+					// resta indietro, cioe' se non tutte le sue voci hanno una
+					// versione in questa lingua (il caso del logo «retina»).
+					$set = trim( (string) $img->getAttribute( 'srcset' ) );
+					if ( '' !== $set && self::media_replace( $set, 'srcset', $map ) === $set ) {
+						$img->removeAttribute( 'srcset' );
+						$img->removeAttribute( 'sizes' );
+					}
+				}
 				$changed = true;
 			}
 
-			if ( $editing ) {
-				$img->setAttribute( 'data-trr-img', rawurlencode( $src ) );
+			if ( $editing && 'src' === $attr && 'img' === strtolower( $img->nodeName ) ) {
+				$img->setAttribute( 'data-trr-img', rawurlencode( $valore ) );
 				$cls = (string) $img->getAttribute( 'class' );
 				if ( false === strpos( ' ' . $cls . ' ', ' trrocket-ed-img ' ) ) {
 					$img->setAttribute( 'class', '' === $cls ? 'trrocket-ed-img' : $cls . ' trrocket-ed-img' );
