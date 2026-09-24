@@ -61,7 +61,7 @@ class Translator {
 
 		// Free pass first: reuse existing translations of the same text and
 		// glossary terms, and collapse duplicate texts into one request each.
-		$pending = self::reuse_pass( $rows, $lang, $count );
+		$pending = self::reuse_pass( $rows, $lang, $count, self::reuse_mode() );
 
 		foreach ( $pending as $text => $ids ) {
 			$tr = GoogleFree::translate_html( $text, $source, $lang );
@@ -98,7 +98,7 @@ class Translator {
 	 * @param int    $batch    Strings per API call.
 	 * @return array{ok:bool,count:int,error:string}
 	 */
-	public static function translate_missing( string $lang, string $url_hash = '', int $batch = 0 ): array {
+	public static function translate_missing( string $lang, string $url_hash = '', int $batch = 0, bool $migliora = false ): array {
 		// The whole configured fallback chain, in priority order. If the first
 		// provider runs out of credit (or its key is rejected) mid-job, the next
 		// one takes over — a big translation can span several accounts.
@@ -117,9 +117,14 @@ class Translator {
 			$batch = min( array_map( static fn( $p ) => $p->batch_size(), $providers ) );
 		}
 
-		$rows = ( '' !== $url_hash )
-			? Strings::untranslated_for_page_language( $url_hash, $lang )
-			: Strings::untranslated_for_language( $lang, 1000 );
+		// «Improve with AI»: not the missing sentences but the ones the browser translated.
+		if ( $migliora ) {
+			$rows = Strings::browser_rows( $lang, 1000 );
+		} else {
+			$rows = ( '' !== $url_hash )
+				? Strings::untranslated_for_page_language( $url_hash, $lang )
+				: Strings::untranslated_for_language( $lang, 1000 );
+		}
 
 		// Never send user-excluded strings to the AI.
 		$rows = array_values(
@@ -156,7 +161,8 @@ class Translator {
 		// type/context (attribute vs text node vs interface string) or on another
 		// page, or be forced by the glossary — copy those instead of paying for
 		// them, and collapse duplicate texts into a single API item each.
-		$pending = self::reuse_pass( $rows, $lang, $count );
+		// Improving browser translations: never copy a browser translation back.
+		$pending = self::reuse_pass( $rows, $lang, $count, $migliora ? ( 'none' === self::reuse_mode() ? 'none' : 'no_browser' ) : self::reuse_mode() );
 
 		foreach ( array_chunk( array_keys( $pending ), max( 1, $batch ) ) as $texts ) {
 			if ( AiUsage::over_limit() ) {
@@ -278,6 +284,23 @@ class Translator {
 	}
 
 	/**
+	 * How much of the translation memory a paid engine may reuse (setting «reuse_mode»).
+	 *
+	 * all        everything already translated (the cheapest; the default)
+	 * no_browser everything except what the browser translator wrote: whoever moves from
+	 *            the free Chrome translation to an AI wants the AI quality, and reusing
+	 *            the Chrome text for every repeated sentence (menus, footer, buttons)
+	 *            would keep the Chrome quality exactly where it shows most
+	 * none       nothing: the AI gets every sentence it is asked for
+	 *
+	 * The browser translator itself always reuses everything: it costs nothing.
+	 */
+	public static function reuse_mode(): string {
+		$m = (string) ( Settings::get()['reuse_mode'] ?? 'all' );
+		return in_array( $m, array( 'all', 'no_browser', 'none' ), true ) ? $m : 'all';
+	}
+
+	/**
 	 * The free pass shared by both providers: rows whose text already has a
 	 * translation somewhere (another string row of any type/context, or the
 	 * glossary) are stored as reuse — no API call, savings recorded. The rest
@@ -288,14 +311,21 @@ class Translator {
 	 * @param int               $count Running translated-strings counter (by ref).
 	 * @return array<string,int[]> text => string ids still needing the API.
 	 */
-	private static function reuse_pass( array $rows, string $lang, int &$count ): array {
+	private static function reuse_pass( array $rows, string $lang, int &$count, string $modo = 'all' ): array {
 		$texts = array();
 		foreach ( $rows as $row ) {
 			$texts[] = (string) $row->original;
 		}
 		// These rows have no translation under their own string id, so any hit
 		// here comes from a different row with the same text — or the glossary.
-		$existing = Strings::translate_texts( $texts, $lang );
+		if ( 'none' === $modo ) {
+			// «Nessuna»: all'AI va tutto. Il glossario resta: e' una regola, non una traduzione.
+			$existing = Strings::glossary_texts( $texts, $lang );
+		} elseif ( 'no_browser' === $modo ) {
+			$existing = Strings::reusable_texts( $texts, $lang, array( 'browser', 'reuse' ) );
+		} else {
+			$existing = Strings::translate_texts( $texts, $lang );
+		}
 
 		$pending = array();
 		foreach ( $rows as $row ) {

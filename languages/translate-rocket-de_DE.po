@@ -3167,3 +3167,75 @@ msgstr "Absichtlich wurde nichts importiert."
 #: src/Admin/Admin.php
 msgid "The plugin you are coming from says your site is written in a different language from the one set in TranslateRocket. Importing now would pair every sentence with the wrong side. Set the source language in TranslateRocket to the language your pages are written in, then import again."
 msgstr "Das Plugin, von dem Sie kommen, gibt an, dass Ihre Website in einer anderen Sprache geschrieben ist als der in TranslateRocket eingestellten. Ein Import jetzt würde jeden Satz der falschen Seite zuordnen. Stellen Sie in TranslateRocket als Ausgangssprache die Sprache ein, in der Ihre Seiten geschrieben sind, und importieren Sie dann erneut."
+
+#: src/Admin/Admin.php
+msgid "All except the ones made by the browser translator"
+msgstr "Alle außer denen des Browser-Übersetzers"
+
+#: src/Admin/Admin.php
+msgid "All of them"
+msgstr "Alle"
+
+#: src/Admin/Admin.php
+msgid "Every translation is kept. Before sending a sentence to the AI, TranslateRocket looks for the same sentence already translated elsewhere on your site and reuses it for free. Here you choose which of those saved translations the AI may reuse."
+msgstr "Jede Übersetzung wird gespeichert. Bevor ein Satz an die KI gesendet wird, sucht TranslateRocket nach demselben Satz, der bereits an anderer Stelle auf Ihrer Website übersetzt wurde, und verwendet ihn kostenlos wieder. Hier legen Sie fest, welche dieser gespeicherten Übersetzungen die KI wiederverwenden darf."
+
+#: src/Admin/Admin.php
+msgid "Recommended when you move from the free Chrome/Edge translation to an AI: repeated sentences (menus, footer, buttons) get the AI quality too. Your own edits and imported translations are still reused."
+msgstr "Empfohlen, wenn Sie von der kostenlosen Chrome/Edge-Übersetzung zu einer KI wechseln: Auch wiederholte Sätze (Menüs, Footer, Schaltflächen) erhalten die KI-Qualität. Ihre eigenen Bearbeitungen und importierten Übersetzungen werden weiterhin wiederverwendet."
+
+#: src/Admin/Admin.php
+msgid "Sends the sentences the free browser translator translated to the active AI provider, for better quality. Translations you edited yourself are never touched. It uses your AI credit and counts towards the daily character limit."
+msgstr "Sendet die vom kostenlosen Browser-Übersetzer übersetzten Sätze zur besseren Qualität an den aktiven KI-Anbieter. Von Ihnen selbst bearbeitete Übersetzungen werden nie angerührt. Es nutzt Ihr KI-Guthaben und zählt zum täglichen Zeichenlimit."
+
+#: src/Admin/Admin.php
+msgid "The AI translates every sentence it is asked for. Glossary terms still apply."
+msgstr "Die KI übersetzt jeden Satz, um den sie gebeten wird. Die Glossarbegriffe gelten weiterhin."
+
+#: src/Admin/Admin.php
+msgid "The cheapest: a sentence already translated is never paid for twice."
+msgstr "Die günstigste: Ein bereits übersetzter Satz wird nie zweimal bezahlt."
+
+#: src/Admin/Admin.php
+msgid "Translate: open the page and translate it sentence by sentence. AI: translate what is missing on this page with your AI provider. Start over: remove this page’s translations and translated address in this language to translate it again from scratch — sentences also used on other pages keep their translation, and an Undo link puts everything back. Hide: take the page off this list (for old or deleted pages); nothing is deleted, and the page comes back if it is visited again."
+msgstr "Übersetzen: öffnet die Seite und übersetzt sie Satz für Satz. AI: übersetzt mit Ihrem KI-Anbieter, was auf dieser Seite noch fehlt. Neu beginnen: entfernt die Übersetzungen und die übersetzte Adresse dieser Seite in dieser Sprache, um sie von Grund auf neu zu übersetzen — Sätze, die auch auf anderen Seiten verwendet werden, behalten ihre Übersetzung, und ein Undo-Link stellt alles wieder her. Ausblenden: entfernt die Seite aus dieser Liste (für alte oder gelöschte Seiten); es wird nichts gelöscht, und die Seite kommt zurück, wenn sie erneut besucht wird."
+
+#: src/Admin/Admin.php
+msgid "Hide this page from the list: nothing is deleted, and it comes back if the page is visited again"
+msgstr "Diese Seite aus der Liste ausblenden: Es wird nichts gelöscht, und sie kommt zurück, wenn die Seite erneut besucht wird"
+
+#: src/Admin/Admin.php
+msgid "Start over: remove the translations and the translated address of this page, to translate it again from scratch (you can undo this)"
+msgstr "Neu beginnen: entfernt die Übersetzungen und die übersetzte Adresse dieser Seite, um sie von Grund auf neu zu übersetzen (Sie können dies rückgängig machen)"
+
+#: src/Admin/Admin.php
+msgid "(puts back the translations you just removed)"
+msgstr "(stellt die Übersetzungen wieder her, die Sie gerade entfernt haben)"
+
+#: src/Admin/Admin.php
+msgid "Actions"
+msgstr "Aktionen"
+
+#: src/Admin/Admin.php
+msgid "Reuse saved translations"
+msgstr "Gespeicherte Übersetzungen wiederverwenden"
+
+#: src/Admin/Admin.php
+msgid "Start over"
+msgstr "Neu beginnen"
+
+#: src/Admin/Admin.php
+msgid "This only decides what the AI may copy instead of translating. Translations already on your pages stay as they are, and the free browser translator always reuses everything."
+msgstr "Dies entscheidet nur, was die KI kopieren darf, anstatt zu übersetzen. Übersetzungen, die bereits auf Ihren Seiten vorhanden sind, bleiben unverändert, und der kostenlose Browser-Übersetzer verwendet immer alles wieder."
+
+#: src/Admin/Admin.php
+msgid "%d sentence translated by the browser is now translated by the AI."
+msgid_plural "%d sentences translated by the browser are now translated by the AI."
+msgstr[0] "%d vom Browser übersetzter Satz wird jetzt von der KI übersetzt."
+msgstr[1] "%d vom Browser übersetzte Sätze werden jetzt von der KI übersetzt."
+
+#: src/Admin/Admin.php
+msgid "Improve %d browser translation with AI"
+msgid_plural "Improve %d browser translations with AI"
+msgstr[0] "%d Browser-Übersetzung mit KI verbessern"
+msgstr[1] "%d Browser-Übersetzungen mit KI verbessern"

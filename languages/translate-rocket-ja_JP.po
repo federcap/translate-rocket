@@ -3147,3 +3147,73 @@ msgstr "意図的に何もインポートしていません。"
 #: src/Admin/Admin.php
 msgid "The plugin you are coming from says your site is written in a different language from the one set in TranslateRocket. Importing now would pair every sentence with the wrong side. Set the source language in TranslateRocket to the language your pages are written in, then import again."
 msgstr "移行元のプラグインでは、サイトの言語が TranslateRocket で設定された言語と異なっています。このままインポートすると、すべての文が逆向きに対応付けられます。TranslateRocket の元の言語をページが書かれている言語に設定してから、もう一度インポートしてください。"
+
+#: src/Admin/Admin.php
+msgid "All except the ones made by the browser translator"
+msgstr "ブラウザの翻訳機能によるものを除くすべて"
+
+#: src/Admin/Admin.php
+msgid "All of them"
+msgstr "すべて"
+
+#: src/Admin/Admin.php
+msgid "Every translation is kept. Before sending a sentence to the AI, TranslateRocket looks for the same sentence already translated elsewhere on your site and reuses it for free. Here you choose which of those saved translations the AI may reuse."
+msgstr "翻訳はすべて保存されます。文をAIに送る前に、TranslateRocketはサイト内の他の場所ですでに翻訳された同じ文を探し、無料で再利用します。ここでは、保存されたどの翻訳をAIが再利用できるかを選びます。"
+
+#: src/Admin/Admin.php
+msgid "Recommended when you move from the free Chrome/Edge translation to an AI: repeated sentences (menus, footer, buttons) get the AI quality too. Your own edits and imported translations are still reused."
+msgstr "Chrome/Edgeの無料翻訳からAIに切り替える際におすすめです。繰り返し使われる文（メニュー、フッター、ボタン）もAIの品質になります。自分で編集した内容とインポートした翻訳は引き続き再利用されます。"
+
+#: src/Admin/Admin.php
+msgid "Sends the sentences the free browser translator translated to the active AI provider, for better quality. Translations you edited yourself are never touched. It uses your AI credit and counts towards the daily character limit."
+msgstr "無料のブラウザ翻訳機能が翻訳した文を、品質向上のためアクティブなAIプロバイダーに送信します。自分で編集した翻訳が変更されることはありません。AIクレジットを使用し、1日の文字数上限にもカウントされます。"
+
+#: src/Admin/Admin.php
+msgid "The AI translates every sentence it is asked for. Glossary terms still apply."
+msgstr "AIは依頼されたすべての文を翻訳します。用語集の用語は引き続き適用されます。"
+
+#: src/Admin/Admin.php
+msgid "The cheapest: a sentence already translated is never paid for twice."
+msgstr "最も安価です。一度翻訳された文に、二度支払うことはありません。"
+
+#: src/Admin/Admin.php
+msgid "Translate: open the page and translate it sentence by sentence. AI: translate what is missing on this page with your AI provider. Start over: remove this page’s translations and translated address in this language to translate it again from scratch — sentences also used on other pages keep their translation, and an Undo link puts everything back. Hide: take the page off this list (for old or deleted pages); nothing is deleted, and the page comes back if it is visited again."
+msgstr "翻訳: ページを開いて文ごとに翻訳します。AI: このページで不足している部分をAIプロバイダーで翻訳します。やり直す: このページのこの言語での翻訳と翻訳済みアドレスを削除し、最初からもう一度翻訳します — 他のページでも使われている文は翻訳が保持され、Undoリンクですべて元に戻せます。非表示: このページを一覧から外します（古いページや削除されたページ用）。何も削除されず、再度訪問されればページは戻ってきます。"
+
+#: src/Admin/Admin.php
+msgid "Hide this page from the list: nothing is deleted, and it comes back if the page is visited again"
+msgstr "このページを一覧から非表示にします。何も削除されず、再度訪問されればページは戻ってきます"
+
+#: src/Admin/Admin.php
+msgid "Start over: remove the translations and the translated address of this page, to translate it again from scratch (you can undo this)"
+msgstr "やり直す: このページの翻訳と翻訳済みアドレスを削除し、最初からもう一度翻訳します（元に戻すこともできます）"
+
+#: src/Admin/Admin.php
+msgid "(puts back the translations you just removed)"
+msgstr "（削除したばかりの翻訳を元に戻します）"
+
+#: src/Admin/Admin.php
+msgid "Actions"
+msgstr "操作"
+
+#: src/Admin/Admin.php
+msgid "Reuse saved translations"
+msgstr "保存された翻訳を再利用"
+
+#: src/Admin/Admin.php
+msgid "Start over"
+msgstr "やり直す"
+
+#: src/Admin/Admin.php
+msgid "This only decides what the AI may copy instead of translating. Translations already on your pages stay as they are, and the free browser translator always reuses everything."
+msgstr "これはAIが翻訳の代わりにコピーしてよい内容のみを決めます。すでにページにある翻訳はそのまま保たれ、無料のブラウザ翻訳機能は常にすべてを再利用します。"
+
+#: src/Admin/Admin.php
+msgid "%d sentence translated by the browser is now translated by the AI."
+msgid_plural "%d sentences translated by the browser are now translated by the AI."
+msgstr[0] "ブラウザが翻訳した%d件の文が、AIによる翻訳になりました。"
+
+#: src/Admin/Admin.php
+msgid "Improve %d browser translation with AI"
+msgid_plural "Improve %d browser translations with AI"
+msgstr[0] "ブラウザ翻訳%d件をAIで改善"

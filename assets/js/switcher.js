@@ -98,3 +98,73 @@
 	function run() { Array.prototype.forEach.call( document.querySelectorAll( '.trrocket-scroll' ), initScroll ); }
 	if ( 'loading' !== document.readyState ) { run(); } else { document.addEventListener( 'DOMContentLoaded', run ); }
 }() );
+
+/* Floating switcher and bottom banners (cookie consent, chat bars): the switcher sits above
+   them in z-index so it is never hidden (1.5.2), but then it covered their buttons — on the
+   test site it hid the «OK» of the cookie banner, so a visitor could not accept (24/9/2026).
+   While something fixed hugs the bottom edge under the switcher, the switcher moves up above
+   it; when the banner goes away, it comes back down. Only for a bottom-anchored switcher. */
+( function () {
+	'use strict';
+	function start() {
+		var box = document.querySelector( '.trrocket-floating' );
+		if ( ! box || ! window.document.elementsFromPoint ) {
+			return;
+		}
+		var cs = window.getComputedStyle( box );
+		if ( 'auto' === cs.bottom || '' === cs.bottom ) {
+			return;
+		}
+		var base = parseFloat( cs.bottom ) || 0;
+		function fixedAncestor( el ) {
+			for ( var n = el; n && n !== document.body && n !== document.documentElement; n = n.parentElement ) {
+				var p = window.getComputedStyle( n ).position;
+				if ( 'fixed' === p || 'sticky' === p ) {
+					return n;
+				}
+			}
+			return null;
+		}
+		function obstacle() {
+			var H = window.innerHeight;
+			var r = box.getBoundingClientRect();
+			var top = H;
+			[ r.left + 4, ( r.left + r.right ) / 2, r.right - 4 ].forEach( function ( x ) {
+				document.elementsFromPoint( Math.max( 0, x ), H - 3 ).forEach( function ( el ) {
+					if ( box.contains( el ) ) {
+						return;
+					}
+					var f = fixedAncestor( el );
+					if ( ! f || box.contains( f ) ) {
+						return;
+					}
+					var fr = f.getBoundingClientRect();
+					// A bar along the bottom edge, not a full-screen overlay.
+					if ( fr.bottom >= H - 6 && fr.height > 0 && fr.height < H * 0.6 ) {
+						top = Math.min( top, fr.top );
+					}
+				} );
+			} );
+			return H - top;
+		}
+		var last = -1;
+		function update() {
+			var h = obstacle();
+			var want = h > 0 ? Math.max( base, h + 8 ) : base;
+			if ( want !== last ) {
+				box.style.setProperty( 'bottom', want + 'px', 'important' );
+				last = want;
+			}
+		}
+		update();
+		// Banners appear late (after consent scripts load) and disappear on a click: look again
+		// now and then, and at every resize. elementsFromPoint on three points is cheap.
+		window.setInterval( function () {
+			if ( ! document.hidden ) {
+				update();
+			}
+		}, 700 );
+		window.addEventListener( 'resize', update );
+	}
+	if ( 'loading' !== document.readyState ) { start(); } else { document.addEventListener( 'DOMContentLoaded', start ); }
+}() );

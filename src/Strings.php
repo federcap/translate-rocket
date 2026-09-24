@@ -675,6 +675,108 @@ class Strings {
 	}
 
 	/**
+	 * Like translate_texts(), but only from translations whose origin is not in $escludi
+	 * (the «provider» column: 'browser' for the Chrome/Edge translator, 'reuse' for the
+	 * copies the memory made — a copy of a browser translation is still browser quality).
+	 * Read from the database, not from the page map: the map does not know the origin.
+	 * Glossary terms apply as always.
+	 *
+	 * @param string[] $texts   Source texts.
+	 * @param string[] $escludi Origins not to reuse.
+	 * @return array<string,string>
+	 */
+	public static function reusable_texts( array $texts, string $lang, array $escludi ): array {
+		$wanted = array();
+		foreach ( $texts as $text ) {
+			$text = trim( (string) $text );
+			if ( '' !== $text ) {
+				$wanted[ sha1( $text ) ] = $text;
+			}
+		}
+		$out = array();
+		if ( empty( $wanted ) ) {
+			return $out;
+		}
+		global $wpdb;
+		$strings      = Database::strings_table();
+		$translations = Database::translations_table();
+		$fuori        = implode( ',', array_fill( 0, count( $escludi ), '%s' ) );
+		foreach ( array_chunk( array_keys( $wanted ), 500 ) as $chunk ) {
+			$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%s' ) );
+			$rows         = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT st.original AS o, tr.translation AS t
+					 FROM {$strings} st
+					 INNER JOIN {$translations} tr ON tr.string_id = st.id AND tr.language = %s
+					 WHERE st.text_hash IN ({$placeholders})
+					   AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''"
+					. ( $escludi ? " AND ( tr.provider IS NULL OR tr.provider NOT IN ({$fuori}) )" : '' ),
+					array_merge( array( $lang ), $chunk, $escludi )
+				)
+			); // phpcs:ignore WordPress.DB
+			foreach ( $rows as $row ) {
+				$out[ trim( (string) $row->o ) ] = (string) $row->t;
+			}
+		}
+		return array_merge( $out, self::glossary_texts( array_values( $wanted ), $lang ) );
+	}
+
+	/**
+	 * Rows whose translation in $lang came from the browser translator — the ones
+	 * «Improve with AI» sends to the AI. The copies the memory made of a browser
+	 * translation (provider 'reuse', same text) count too: they are browser quality.
+	 * Only status 1 (machine): a translation a person saved (status 2) is never touched.
+	 *
+	 * @return array<int,object> rows with string_id and original
+	 */
+	public static function browser_rows( string $lang, int $limit = 1000 ): array {
+		global $wpdb;
+		$st = Database::strings_table();
+		$tr = Database::translations_table();
+		return (array) $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB
+			"SELECT st.id AS string_id, st.original
+			 FROM {$st} st INNER JOIN {$tr} t ON t.string_id = st.id AND t.language = %s
+			 WHERE t.status = 1
+			   AND ( t.provider = 'browser'
+			         OR ( t.provider = 'reuse' AND EXISTS (
+			              SELECT 1 FROM {$st} s2 INNER JOIN {$tr} t2 ON t2.string_id = s2.id AND t2.language = %s
+			              WHERE s2.text_hash = st.text_hash AND t2.provider = 'browser' ) ) )
+			 ORDER BY st.id LIMIT %d",
+			$lang,
+			$lang,
+			$limit
+		) );
+	}
+
+	/**
+	 * How many translations in $lang came from the browser translator (see browser_rows()).
+	 */
+	public static function browser_count( string $lang ): int {
+		return count( self::browser_rows( $lang, 100000 ) );
+	}
+
+	/**
+	 * Only the glossary: the texts that have a fixed translation set by the site owner.
+	 *
+	 * @param string[] $texts Source texts.
+	 * @return array<string,string>
+	 */
+	public static function glossary_texts( array $texts, string $lang ): array {
+		$wanted = array();
+		foreach ( $texts as $text ) {
+			$wanted[ trim( (string) $text ) ] = true;
+		}
+		$out = array();
+		foreach ( Settings::glossary( $lang ) as $term => $forced ) {
+			$term = trim( (string) $term );
+			if ( '' !== $term && '' !== (string) $forced && isset( $wanted[ $term ] ) ) {
+				$out[ $term ] = (string) $forced;
+			}
+		}
+		return $out;
+	}
+
+	/**
 	 * Original => translation map for ONE page (by url hash) — used in huge mode
 	 * where a whole-language map is off the table but a page-sized one is fine
 	 * (e.g. the [interface] strings for the gettext layer). Cached per language

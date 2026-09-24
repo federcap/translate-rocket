@@ -58,6 +58,7 @@ class Admin {
 		add_action( 'admin_notices', array( $this, 'preview_mode_notice' ) );
 		add_action( 'admin_notices', array( $this, 'provider_down_notice' ) );
 		add_action( 'admin_notices', array( $this, 'changed_pages_notice' ) );
+		add_action( 'in_admin_header', array( $this, 'quiet_wizard' ) );
 		add_action( 'admin_init', array( $this, 'maybe_dismiss_provider_notice' ) );
 	}
 
@@ -2110,6 +2111,20 @@ class Admin {
 				)
 			) . '</p></div>';
 		}
+		if ( isset( $_GET['aiimproved'] ) ) {
+			$n = (int) $_GET['aiimproved'];
+			if ( $n < 0 ) {
+				self::avviso_ai_fallita( '' );
+			} else {
+				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html(
+					sprintf(
+						/* translators: %d: number of strings. */
+						_n( '%d sentence translated by the browser is now translated by the AI.', '%d sentences translated by the browser are now translated by the AI.', $n, 'translate-rocket' ),
+						$n
+					)
+				) . '</p></div>';
+			}
+		}
 		if ( isset( $_GET['aidone'] ) ) {
 			$n = (int) $_GET['aidone'];
 			if ( $n < 0 ) {
@@ -2185,6 +2200,14 @@ class Admin {
 				esc_html( sprintf( /* translators: %d: number of missing strings. */ __( 'Translate %d missing with AI', 'translate-rocket' ), $miss_total ) )
 			);
 			$this->info( __( 'Fills every still-missing string for this language using the active AI provider.', 'translate-rocket' ) );
+			$dal_browser = Strings::browser_count( $lang );
+			if ( $dal_browser > 0 ) {
+				printf(
+					' <button type="submit" form="trr-mem-improve" class="button">%s</button> ',
+					esc_html( sprintf( /* translators: %d: number of sentences translated by the browser. */ _n( 'Improve %d browser translation with AI', 'Improve %d browser translations with AI', $dal_browser, 'translate-rocket' ), $dal_browser ) )
+				);
+				$this->info( __( 'Sends the sentences the free browser translator translated to the active AI provider, for better quality. Translations you edited yourself are never touched. It uses your AI credit and counts towards the daily character limit.', 'translate-rocket' ) );
+			}
 		} else {
 			echo '<span class="description">' . esc_html__( 'Set up an AI provider on the AI page to bulk-translate the missing strings — or use your browser below, which needs no key.', 'translate-rocket' ) . '</span>';
 		}
@@ -2201,6 +2224,9 @@ class Admin {
 		echo '<form id="trr-mem-ai" method="post">';
 		wp_nonce_field( 'trrocket_save_memory', 'trrocket_memory_nonce' );
 		echo '<input type="hidden" name="lang" value="' . esc_attr( $lang ) . '" /><input type="hidden" name="trr_ai_all" value="1" /><input type="hidden" name="s" value="' . esc_attr( $term ) . '" /><input type="hidden" name="onlymiss" value="' . ( $only ? '1' : '' ) . '" /></form>';
+		echo '<form id="trr-mem-improve" method="post">';
+		wp_nonce_field( 'trrocket_save_memory', 'trrocket_memory_nonce' );
+		echo '<input type="hidden" name="lang" value="' . esc_attr( $lang ) . '" /><input type="hidden" name="trr_ai_improve" value="1" /></form>';
 
 		echo '<form method="post">';
 		wp_nonce_field( 'trrocket_save_memory', 'trrocket_memory_nonce' );
@@ -2308,6 +2334,23 @@ JS;
 			exit;
 		}
 
+		// «Improve with AI»: send the sentences the browser translated to the AI.
+		if ( isset( $_POST['trr_ai_improve'] ) ) {
+			$res = Translator::translate_missing( $lang, '', 0, true );
+			\TranslateRocket\Cache::flush();
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'page'       => 'translate-rocket-memory',
+						'lang'       => $lang,
+						'aiimproved' => $res['ok'] ? (int) $res['count'] : -1,
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			exit;
+		}
+
 		// Bulk AI: translate every still-missing string for this language.
 		if ( isset( $_POST['trr_ai_all'] ) ) {
 			$res = Translator::translate_missing( $lang );
@@ -2376,6 +2419,21 @@ JS;
 	/**
 	 * Build an editor URL.
 	 */
+	/**
+	 * The setup wizard shows nothing but its three steps.
+	 *
+	 * On the phone, the «pages changed» notice and the review request filled half the screen
+	 * INSIDE the first-run setup (24/9/2026, visual check), and other plugins' notices land
+	 * there too. Someone setting up for the first time needs one thing to do, not five.
+	 */
+	public function quiet_wizard(): void {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( $screen && false !== strpos( (string) $screen->id, 'translate-rocket-wizard' ) ) {
+			remove_all_actions( 'admin_notices' );
+			remove_all_actions( 'all_admin_notices' );
+		}
+	}
+
 	private function editor_url( string $lang, string $loc = '' ): string {
 		$args = array(
 			'page' => 'translate-rocket-strings',
@@ -2426,6 +2484,8 @@ JS;
 			: '';
 		$settings['ai_reset_day']    = isset( $_POST['ai_reset_day'] ) ? max( 0, min( 31, (int) $_POST['ai_reset_day'] ) ) : 0;
 		$settings['ai_block_bots']   = ! empty( $_POST['ai_block_bots'] );
+		$riuso                       = isset( $_POST['reuse_mode'] ) ? sanitize_key( wp_unslash( $_POST['reuse_mode'] ) ) : 'all';
+		$settings['reuse_mode']      = in_array( $riuso, array( 'all', 'no_browser', 'none' ), true ) ? $riuso : 'all';
 
 		if ( ! empty( $_POST['trr_ai_reset'] ) ) {
 			\TranslateRocket\AiUsage::reset_usage();
@@ -3027,6 +3087,29 @@ JS
 							</tr>
 						</table>
 
+					<h3><?php esc_html_e( 'Translation memory', 'translate-rocket' ); ?> <?php $this->info( __( 'Every translation is kept. Before sending a sentence to the AI, TranslateRocket looks for the same sentence already translated elsewhere on your site and reuses it for free. Here you choose which of those saved translations the AI may reuse.', 'translate-rocket' ) ); ?></h3>
+						<table class="form-table" role="presentation">
+							<tr>
+								<th scope="row"><?php esc_html_e( 'Reuse saved translations', 'translate-rocket' ); ?></th>
+								<td>
+									<?php
+									$riuso = \TranslateRocket\Translator::reuse_mode();
+									$scelte = array(
+										'all'        => array( __( 'All of them', 'translate-rocket' ), __( 'The cheapest: a sentence already translated is never paid for twice.', 'translate-rocket' ) ),
+										'no_browser' => array( __( 'All except the ones made by the browser translator', 'translate-rocket' ), __( 'Recommended when you move from the free Chrome/Edge translation to an AI: repeated sentences (menus, footer, buttons) get the AI quality too. Your own edits and imported translations are still reused.', 'translate-rocket' ) ),
+										'none'       => array( __( 'None', 'translate-rocket' ), __( 'The AI translates every sentence it is asked for. Glossary terms still apply.', 'translate-rocket' ) ),
+									);
+									foreach ( $scelte as $val => $testi ) :
+										?>
+										<p><label><input type="radio" name="reuse_mode" value="<?php echo esc_attr( $val ); ?>" <?php checked( $riuso, $val ); ?> /> <strong><?php echo esc_html( $testi[0] ); ?></strong></label><br /><span class="description"><?php echo esc_html( $testi[1] ); ?></span></p>
+										<?php
+									endforeach;
+									?>
+									<p class="description"><?php esc_html_e( 'This only decides what the AI may copy instead of translating. Translations already on your pages stay as they are, and the free browser translator always reuses everything.', 'translate-rocket' ); ?></p>
+								</td>
+							</tr>
+						</table>
+
 					<h3><?php esc_html_e( 'Usage &amp; limits', 'translate-rocket' ); ?> <?php $this->info( __( 'Protect your API spend: cap how many characters are sent to the AI each day, and keep crawlers from triggering paid translation.', 'translate-rocket' ) ); ?></h3>
 						<table class="form-table" role="presentation">
 							<tr>
@@ -3131,7 +3214,7 @@ JS
 								<tr>
 									<td><?php echo esc_html( Languages::flag( $code ) . ' ' . Languages::label( $code ) ); ?></td>
 									<td><?php echo wp_kses( $this->progress_bar( $done, $det, true ) , \TranslateRocket\Kses::html_rules() ); ?></td>
-									<td><strong><?php echo (int) $miss; ?></strong></td>
+									<td data-label="<?php esc_attr_e( 'Missing', 'translate-rocket' ); ?>"><strong><?php echo (int) $miss; ?></strong></td>
 									<td>
 										<form method="post" action="" style="margin:0">
 											<?php wp_nonce_field( 'trrocket_auto_translate', 'trrocket_auto_nonce' ); ?>
@@ -4375,9 +4458,9 @@ JS;
 								<tr>
 									<td><?php echo esc_html( Languages::flag( $code ) . ' ' . Languages::label( $code ) ); ?></td>
 									<td><?php echo wp_kses( $this->progress_bar( $done, $det, true ) , \TranslateRocket\Kses::html_rules() ); ?></td>
-									<td><?php echo (int) $det; ?></td>
-									<td><?php echo (int) $stats['translated']; ?></td>
-									<td><strong><?php echo (int) $stats['missing']; ?></strong></td>
+									<td data-label="<?php esc_attr_e( 'Detected', 'translate-rocket' ); ?>"><?php echo (int) $det; ?></td>
+									<td data-label="<?php esc_attr_e( 'Translated', 'translate-rocket' ); ?>"><?php echo (int) $stats['translated']; ?></td>
+									<td data-label="<?php esc_attr_e( 'Missing', 'translate-rocket' ); ?>"><strong><?php echo (int) $stats['missing']; ?></strong></td>
 									<td><a href="<?php echo esc_url( $this->editor_url( $code ) ); ?>"><?php esc_html_e( 'Open editor', 'translate-rocket' ); ?></a></td>
 								</tr>
 							<?php endforeach; ?>
@@ -4481,7 +4564,7 @@ JS;
 			}
 			if ( $ultimo ) {
 				$undo = wp_nonce_url( add_query_arg( array( 'page' => 'translate-rocket-strings', 'lang' => $lang_r, 'loc' => $loc_r, 'trrocket_undo' => $ultimo['id'] ), admin_url( 'admin.php' ) ), 'trrocket_undo_' . $ultimo['id'] );
-				echo ' <a href="' . esc_url( $undo ) . '"><strong>' . esc_html__( 'Undo', 'translate-rocket' ) . '</strong></a>';
+				echo ' <a href="' . esc_url( $undo ) . '"><strong>' . esc_html__( 'Undo', 'translate-rocket' ) . '</strong></a> <span class="description">' . esc_html__( '(puts back the translations you just removed)', 'translate-rocket' ) . '</span>';
 			}
 			echo '</p></div>';
 		}
@@ -4712,7 +4795,7 @@ JS;
 					<th class="trr-sortable" data-key="translated" data-type="num"><?php esc_html_e( 'Translated', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
 					<th class="trr-sortable" data-key="missing" data-type="num"><?php esc_html_e( 'Missing', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
 					<th class="trr-sortable" data-key="pct" data-type="num"><?php esc_html_e( 'Progress', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
-					<th></th>
+					<th><?php esc_html_e( 'Actions', 'translate-rocket' ); ?> <?php $this->info( __( 'Translate: open the page and translate it sentence by sentence. AI: translate what is missing on this page with your AI provider. Start over: remove this page’s translations and translated address in this language to translate it again from scratch — sentences also used on other pages keep their translation, and an Undo link puts everything back. Hide: take the page off this list (for old or deleted pages); nothing is deleted, and the page comes back if it is visited again.', 'translate-rocket' ) ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -4735,10 +4818,10 @@ JS;
 							<strong><?php echo esc_html( $label ); ?></strong><br>
 							<span class="description"><?php echo esc_html( $page->url ); ?></span>
 						</td>
-						<td><?php echo (int) $total; ?></td>
-						<td><?php echo (int) $translated; ?></td>
-						<td><strong><?php echo (int) $missing; ?></strong></td>
-						<td><?php echo wp_kses( $this->progress_bar( $translated, $total ) , \TranslateRocket\Kses::html_rules() ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Strings', 'translate-rocket' ); ?>"><?php echo (int) $total; ?></td>
+						<td data-label="<?php esc_attr_e( 'Translated', 'translate-rocket' ); ?>"><?php echo (int) $translated; ?></td>
+						<td data-label="<?php esc_attr_e( 'Missing', 'translate-rocket' ); ?>"><strong><?php echo (int) $missing; ?></strong></td>
+						<td class="trr-pcell"><?php echo wp_kses( $this->progress_bar( $translated, $total ) , \TranslateRocket\Kses::html_rules() ); ?></td>
 						<td class="trr-rowactions">
 							<a class="button button-small" href="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>
 							<?php if ( null !== $fornitore && $missing > 0 ) : ?>
@@ -4751,12 +4834,12 @@ JS;
 								<button type="submit" form="trr-reset-onepage" class="button button-small" name="loc"
 									value="<?php echo esc_attr( $page->url_hash ); ?>"
 									onclick="return confirm(<?php echo esc_attr( (string) wp_json_encode( __( 'Translate this page again? Its translations and translated address for this language are removed, so it can be translated from scratch. You can undo this.', 'translate-rocket' ) ) ); ?>);"
-									title="<?php esc_attr_e( 'Translate again: remove the translations and the translated address of this page, then redo them (undo available)', 'translate-rocket' ); ?>">&#8635; <?php esc_html_e( 'Redo', 'translate-rocket' ); ?></button>
+									title="<?php esc_attr_e( 'Start over: remove the translations and the translated address of this page, to translate it again from scratch (you can undo this)', 'translate-rocket' ); ?>">&#8635; <?php esc_html_e( 'Start over', 'translate-rocket' ); ?></button>
 							<?php endif; ?>
 							<button type="submit" form="trr-forget-onepage" class="button button-small" name="loc"
 								value="<?php echo esc_attr( $page->url_hash ); ?>"
 								onclick="return confirm(<?php echo esc_attr( (string) wp_json_encode( __( 'Remove this page from the list? Its translations stay in the database; the page comes back the next time it is read.', 'translate-rocket' ) ) ); ?>);"
-								title="<?php esc_attr_e( 'Remove this page from the list (its translations stay)', 'translate-rocket' ); ?>">&#10006;</button>
+								title="<?php esc_attr_e( 'Hide this page from the list: nothing is deleted, and it comes back if the page is visited again', 'translate-rocket' ); ?>"><span class="dashicons dashicons-hidden" style="font-size:16px;width:16px;height:16px;vertical-align:text-bottom"></span> <?php esc_html_e( 'Hide', 'translate-rocket' ); ?></button>
 						</td>
 					</tr>
 				<?php endforeach; ?>

@@ -38,3 +38,24 @@
 #trrocket-panel .trr-gt .dashicons{font-size:16px;width:16px;height:16px}
 #trrocket-panel .trr-gopen .dashicons{font-size:16px;width:16px;height:16px;vertical-align:text-bottom;margin-right:2px}
 #trrocket-panel .trr-gopen{color:#1a73e8;border-color:#c6dafc}
+/* Riquadro stretto (telefono, o la colonna laterale dell'editor): la tabella a tre colonne
+   schiacciava la traduzione a una lettera per riga e faceva scorrere di lato la pagina
+   (segnalato da Federico il 24/9/2026). Sotto i 600px ogni frase diventa una scheda:
+   originale sopra, a tutta larghezza; sotto, la casella della traduzione con accanto
+   l'icona di Google. Si guarda la larghezza del RIQUADRO, non dello schermo. */
+#trrocket-panel{container-type:inline-size}
+@container (max-width:600px){
+#trrocket-panel table.widefat,#trrocket-panel table.widefat tbody{display:block;width:100%}
+#trrocket-panel table.widefat tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;padding:10px 0;border-bottom:1px solid #e6e6ec}
+#trrocket-panel table.widefat td{display:block;width:auto!important;min-width:0;padding:0 10px;border:0;overflow-wrap:anywhere}
+#trrocket-panel table.widefat td:first-child{grid-column:1/-1}
+#trrocket-panel table.widefat td:last-child{grid-column:1;grid-row:2}
+#trrocket-panel table.widefat td.trr-gt-cell{grid-column:2;grid-row:2;align-self:start;padding:4px 10px 0 0}
+#trrocket-panel textarea.trr-tr,#trrocket-panel input.large-text{width:100%;min-width:0}
+#trrocket-panel .trr-missing td:first-child{box-shadow:none}
+#trrocket-panel .trr-missing{box-shadow:inset 3px 0 0 #b32d2e}
+#trrocket-panel .trr-actions .button{flex:1 1 auto;text-align:center}
+}
+/* Visibilita' per lingua, nella colonna laterale dell'editor: menu e caselle «widefat» con
+   bordo e padding uscivano di 14px dalla colonna (controllo visivo, 24/9/2026). */
+#trrocket-visibility .widefat{box-sizing:border-box;max-width:100%}

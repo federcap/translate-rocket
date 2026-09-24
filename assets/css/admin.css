@@ -308,7 +308,7 @@
 /* AI providers as readable blocks in a responsive grid. */
 .trr-ai-providers {
 	display: grid;
-	grid-template-columns: repeat( auto-fill, minmax( 360px, 1fr ) );
+	grid-template-columns: repeat( auto-fill, minmax( min( 360px, 100% ), 1fr ) );
 	gap: 14px;
 	margin: 10px 0 18px;
 }
@@ -827,7 +827,7 @@
 }
 
 .trr-ptoolbar #trr-psearch {
-	min-width: 300px;
+	min-width: min( 300px, 100% );
 }
 
 th.trr-sortable {
@@ -1483,7 +1483,7 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
    Federico asked for it right there in the language list: green means your
    visitors see the language, grey means only you do while you translate it. */
 .trr-lang-grid {
-	grid-template-columns: repeat( auto-fill, minmax( 240px, 1fr ) );
+	grid-template-columns: repeat( auto-fill, minmax( min( 240px, 100% ), 1fr ) );
 }
 
 .trr-lang-grid .trrocket-lang-item {
@@ -1676,4 +1676,64 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 	.trr-cassetto>summary{color:#f0f0f1}
 	.trr-cassetto.ha-passi>summary{background:#22314f;color:#eaf0fb}
 	.trr-cassetto-dentro{border-color:#3c434a}
+}
+
+/* -----------------------------------------------------------------------------
+ * Telefono (24/9/2026, dal controllo visivo automatico collaudo-visivo.sh).
+ * ------------------------------------------------------------------------- */
+@media screen and ( max-width: 782px ) {
+	/* Elenco delle pagine (Traduzioni): una scheda per pagina invece di una tabella che
+	   scorre di lato e nasconde «Progress» e «Actions» fuori dallo schermo. */
+	.trrocket-wrap table#trr-ptable { display: block; overflow: visible; border: 0; background: none; }
+	.trrocket-wrap table#trr-ptable thead { display: none; }
+	.trrocket-wrap table#trr-ptable tbody { display: block; }
+	.trrocket-wrap table#trr-ptable tr { display: grid; grid-template-columns: repeat( 3, minmax( 0, 1fr ) ); gap: 6px 10px; padding: 12px; margin: 0 0 10px; background: #fff; border: 1px solid #dcdcde; border-radius: 8px; }
+	.trrocket-wrap table#trr-ptable td { display: block; padding: 0; font-size: 13px; min-width: 0; overflow-wrap: anywhere; }
+	.trrocket-wrap table#trr-ptable td:first-child { grid-column: 1 / -1; }
+	.trrocket-wrap table#trr-ptable td[data-label]::before { content: attr( data-label ); display: block; font-size: 11px; color: #646970; }
+	.trrocket-wrap table#trr-ptable td.trr-pcell { grid-column: 1 / -1; }
+	.trrocket-wrap table#trr-ptable td.trr-rowactions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; white-space: normal; }
+	.trrocket-wrap table#trr-ptable .trr-rowactions .button + .button { margin-left: 0; }
+
+	/* Caselle di testo e menu a tendina: mai piu' larghi della scheda che li contiene
+	   (le chiavi dei fornitori uscivano dal bordo destro in AI Translation). */
+	.trrocket-wrap input[type="text"],
+	.trrocket-wrap input[type="url"],
+	.trrocket-wrap input[type="password"],
+	.trrocket-wrap input[type="number"],
+	.trrocket-wrap input[type="email"],
+	.trrocket-wrap select,
+	.trrocket-wrap textarea { max-width: 100%; box-sizing: border-box; }
+	.trrocket-wrap .form-table th,
+	.trrocket-wrap .form-table td { padding-right: 0; max-width: 100%; box-sizing: border-box; }
+	.trrocket-wrap .trr-ai-provider { box-sizing: border-box; max-width: 100%; overflow-wrap: anywhere; }
+}
+@media screen and ( max-width: 782px ) {
+	/* Avanzamento per lingua (Impostazioni, AI Translation): una scheda per lingua.
+	   Lingua e barra a tutta larghezza, i numeri in fila, il pulsante sotto. */
+	.trrocket-wrap table.trr-progress-table { display: block; overflow: visible; border: 0; background: none; }
+	.trrocket-wrap table.trr-progress-table thead { display: none; }
+	.trrocket-wrap table.trr-progress-table tbody { display: block; }
+	.trrocket-wrap table.trr-progress-table tr { display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 12px; margin: 0 0 10px; background: #fff; border: 1px solid #dcdcde; border-radius: 8px; }
+	.trrocket-wrap table.trr-progress-table td { display: block; padding: 0; width: auto !important; }
+	.trrocket-wrap table.trr-progress-table td:first-child,
+	.trrocket-wrap table.trr-progress-table td:nth-child(2),
+	.trrocket-wrap table.trr-progress-table td:last-child { flex: 1 1 100%; }
+	.trrocket-wrap table.trr-progress-table td[data-label]::before { content: attr( data-label ) ": "; color: #646970; font-size: 12px; }
+	.trrocket-wrap table.trr-progress-table td:last-child .button { width: 100%; text-align: center; }
+}
+@media screen and ( max-width: 782px ) {
+	/* Memoria di traduzione: come il riquadro nell'editor, una scheda per frase — originale
+	   sopra, casella della traduzione sotto a tutta larghezza, icona di Google a fianco. Prima
+	   la casella era larga ~110px sul telefono (controllo visivo, 24/9/2026). */
+	.trrocket-wrap table.trr-mem { display: block; overflow: visible; }
+	.trrocket-wrap table.trr-mem tbody { display: block; }
+	.trrocket-wrap table.trr-mem tr { display: grid; grid-template-columns: minmax( 0, 1fr ) auto; gap: 6px; padding: 10px 0; border-bottom: 1px solid #e6e6ec; }
+	.trrocket-wrap table.trr-mem td { display: block; width: auto !important; min-width: 0; padding: 0 10px; overflow-wrap: anywhere; }
+	.trrocket-wrap table.trr-mem td:first-child { grid-column: 1 / -1; }
+	.trrocket-wrap table.trr-mem td:last-child { grid-column: 1; grid-row: 2; }
+	.trrocket-wrap table.trr-mem td.trr-gt-cell { grid-column: 2; grid-row: 2; align-self: start; padding: 4px 10px 0 0; }
+	.trrocket-wrap table.trr-mem textarea { width: 100%; }
+	.trrocket-wrap .trr-mem .trr-emissing td:first-child { box-shadow: none; }
+	.trrocket-wrap .trr-mem .trr-emissing { box-shadow: inset 3px 0 0 #b32d2e; }
 }
