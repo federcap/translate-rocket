@@ -40,6 +40,8 @@ if ( is_array( $trrocket_settings ) && ! empty( $trrocket_settings['delete_data_
 	delete_option( 'trrocket_installed' );
 	delete_option( 'trrocket_review_dismissed' );
 	delete_option( 'trrocket_welcome_dismissed' );
+	delete_option( 'trrocket_pieces_done' );
+	delete_option( 'trrocket_pieces_cursor' );
 	delete_option( 'trrocket_donate_dismissed' );
 	delete_option( 'trrocket_ai_usage' );
 	delete_option( 'trrocket_savings' );

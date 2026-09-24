@@ -972,10 +972,18 @@ class Engine {
 				$changed = true;
 			}
 			if ( $editing ) {
+				// Frase intera senza traduzione, ma coi pezzi tradotti da una versione
+				// vecchia: il visitatore la vede tradotta (pezzo per pezzo), l'editor la
+				// mostrava in inglese con la casella vuota. Si mostra come la vede il
+				// visitatore e la casella si riempie con la frase ricomposta (24/9/2026).
+				$composto = isset( $map[ $src ] ) ? null : InlineText::compose( $src, $map );
+				if ( null !== $composto && InlineText::apply( $unit['el'], $composto ) ) {
+					$changed = true;
+				}
 				// Nell'editor visivo la frase si clicca tutta insieme: il pezzo
 				// dentro il link non ha vita propria.
 				$cls = (string) $unit['el']->getAttribute( 'class' );
-				$add = isset( $map[ $src ] ) ? 'trrocket-ed' : 'trrocket-ed trrocket-ed-untr';
+				$add = ( isset( $map[ $src ] ) || null !== $composto ) ? 'trrocket-ed' : 'trrocket-ed trrocket-ed-untr';
 				$unit['el']->setAttribute( 'class', '' === $cls ? $add : $cls . ' ' . $add );
 				$unit['el']->setAttribute( 'data-trr-src', rawurlencode( $src ) );
 				// La frase intera ha dei segnaposto: nel riquadro dell'editor non si puo'
@@ -984,7 +992,7 @@ class Engine {
 				// capire perche'. Si passa la traduzione COSI' COM'E' (o la frase di
 				// partenza, se non e' ancora tradotta). Trovato in revisione il 20/9.
 				$unit['el']->setAttribute( 'data-trr-parts', '1' );
-				$unit['el']->setAttribute( 'data-trr-cur', rawurlencode( isset( $map[ $src ] ) ? $map[ $src ] : '' ) );
+				$unit['el']->setAttribute( 'data-trr-cur', rawurlencode( isset( $map[ $src ] ) ? $map[ $src ] : (string) $composto ) );
 				foreach ( iterator_to_array( $xpath->query( './/text()', $unit['el'] ) ) as $node ) {
 					$unit_refs[]                        = $node;
 					$unit_done[ spl_object_id( $node ) ] = true;

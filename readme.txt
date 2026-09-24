@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -201,6 +201,18 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 == Changelog ==
 
+= 1.5.5 =
+* Fix: sentences you translated with an older version show up translated in the visual editor again. Older versions collected a sentence with a link, a bold word or a line break as separate pieces, and newer ones read it as one; visitors kept seeing it translated, but the visual editor showed it in the original language with an empty box, as if the work were lost. The editor now shows it as visitors do, with the box already filled, and once after the update every such sentence whose pieces are all translated gets its whole translation saved — exactly what visitors already read. Sentences with an untranslated piece and translations you wrote yourself are left alone, and nothing is deleted.
+* Fix: «Translate everything in this browser — no key» no longer leaves you waiting on a browser that cannot do it. The button turns off, a progress bar shows the one-time download of the language model and then each sentence, and if the download stalls or the first sentences fail, a box right under the button explains why and offers three free ways: a free Gemini key (5 minutes, no card) with a step-by-step guide, copy → Google Translate → paste back, or a desktop Chrome or Edge. Before, the only sign was «0 translated · 12 ⚠» after minutes.
+* Fix: the setup wizard tells you at the translation step when the browser you are using cannot translate by itself (phones, Firefox, Safari), and points to the free Gemini key guide.
+* Fix: «Only flags on phones» hid every language name except the current one, which stayed on screen next to its flag. Found by the new live preview below.
+* Fix: in the dropdown switcher, a language name that is short in letters but wide on screen could be cut off in the open menu. The width now comes from the widest name as drawn, not from the one with the most letters.
+* Fix: admin screens no longer jump at every click. Notices from WordPress and other plugins were printed above the screen and moved under the title only once the page had finished loading — on a slow site after 2–3 seconds, pushing everything down and back. They are now in place from the start.
+* Improved: the switcher's live preview is now your real switcher, drawn by the same code and CSS as your site in a frame of its own. It follows every change before you save — layout, names, colours, divider — opens and closes like on the site, and has a Desktop / Phone view. Before, it was a copy that cut names short in the dropdown and showed layout changes only after saving.
+* Improved: changing, adding or deleting a switcher profile, or saving, brings you back to where you were on the page, not to the top.
+* Improved: «Load available models» says what went wrong, right next to the button: no key yet, key refused, too many requests, or the site cannot reach the provider. Before, every case showed the same browser alert.
+* Found with a new check that installs TranslateRocket on a brand-new WordPress (Astra + Elementor), follows the setup as a first-time user would, and times it — on a phone-sized and a desktop screen.
+
 = 1.5.4 =
 * New: choose what the AI may reuse from the translation memory (AI Translation → Translation memory): everything (the cheapest), everything except what the free browser translator wrote, or nothing. Moving from the free Chrome/Edge translation to an AI, every repeated sentence — menus, footer, buttons — used to be copied from the browser version and never reached the AI. Glossary terms always apply, and the browser translator itself keeps reusing everything, since it costs nothing.
 * New: «Improve N browser translations with AI» on the Memory screen. It sends only the sentences the browser translator wrote to your AI provider; a sentence that has a hand-written version elsewhere is copied instead of paid for, and a translation a person saved is never touched.
@@ -375,6 +387,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.5.5 =
+Recommended if you translated your site with an older version: sentences with links or bold words show up translated in the visual editor again. Without an API key, a browser that cannot translate now explains why and offers free alternatives. The switcher preview is now the real switcher, and admin screens no longer jump.
 
 = 1.5.4 =
 TranslateRocket now works on a phone: every admin screen fits, and the translation panel under the editor is readable. The language switcher no longer covers cookie banner buttons. New: choose what the AI reuses from memory, and improve browser translations with AI.

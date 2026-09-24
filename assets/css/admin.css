@@ -227,12 +227,52 @@
 	border-top: 3px solid #4f46e5;
 }
 
-/* Switcher live preview: neutralise wp-admin's blue underlined links so every
-   item renders exactly like the front-end (the current-language toggle and the
-   menu items must share one look — colour comes from the profile settings). */
-#trr-sw-preview a {
-	color: inherit;
-	text-decoration: none;
+/* Switcher live preview: the site's own switcher inside a frame (no wp-admin
+   styles reach it). Desktop fills the card; Phone is a 390px screen. */
+#trr-sw-preview {
+	border: 1px dashed #ccd0d4;
+	border-radius: 8px;
+	overflow: hidden;
+	background: #fff;
+}
+#trr-sw-frame {
+	display: block;
+	width: 100%;
+	height: 120px;
+	border: 0;
+	margin: 0 auto;
+}
+#trr-sw-preview.is-phone {
+	background: #f0f0f1;
+	padding: 12px 0;
+}
+#trr-sw-preview.is-phone #trr-sw-frame {
+	width: 390px;
+	max-width: calc( 100% - 16px );
+	border: 1px solid #c3c4c7;
+	border-radius: 12px;
+}
+.trr-sw-views {
+	display: flex;
+	gap: 6px;
+	margin: 0 0 8px;
+}
+.trr-sw-view.is-on,
+.trr-sw-view.is-on:hover,
+.trr-sw-view.is-on:focus {
+	background: #2271b1;
+	border-color: #2271b1;
+	color: #fff;
+}
+.trr-sw-view.is-on .dashicons {
+	color: #fff;
+}
+.trr-sw-view .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	margin-top: -2px;
 }
 
 /* Click-to-open "i" info icon + popover, used across all screens */
@@ -1737,3 +1777,9 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 	.trrocket-wrap .trr-mem .trr-emissing td:first-child { box-shadow: none; }
 	.trrocket-wrap .trr-mem .trr-emissing { box-shadow: inset 3px 0 0 #b32d2e; }
 }
+
+/* «Load available models»: why it failed (or how many were found), next to the button. */
+.trr-models-msg{margin:6px 0 0;padding:6px 10px;border-left:4px solid #72aee6;background:#f0f6fc;max-width:560px}
+.trr-models-msg.is-bad{border-left-color:#d63638;background:#fcf0f1}
+.trr-models-msg.is-ok{border-left-color:#00a32a;background:#edfaef}
+.trr-models-select{margin:6px 0 0!important;width:100%;max-width:25em!important;box-sizing:border-box}

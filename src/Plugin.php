@@ -65,6 +65,8 @@ final class Plugin {
 		// plugin serves it until it is deactivated. See Coexistence.
 		$coexist = Coexistence::on();
 		Coexistence::boot();
+		// Frasi lette intere ma tradotte a pezzi da una versione vecchia: si ricompongono (24/9/2026).
+		PiecesMigration::boot();
 
 		// Language routing runs on both front end and admin (admin uses helpers).
 		// Side by side it reads no language from the address (see Router::boot).

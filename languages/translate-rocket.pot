@@ -4110,3 +4110,103 @@ msgid "Improve %d browser translation with AI"
 msgid_plural "Improve %d browser translations with AI"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/Frontend/VisualEditor.php
+msgid "%1$d translated · %2$d could not be translated"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Copy → Google Translate → paste back"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Downloading the language model (only the first time)… %d%%"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Get a free Gemini key — 5 minutes, no card"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Open AI Translation"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Or open this page in the latest Chrome or Edge on a computer."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Right below: copy the text, translate it in Google Translate, paste it back."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Step-by-step guide. Then paste the key in AI Translation and translate everything with one click."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "The free translator built into the browser works only in recent Chrome and Edge on a computer with enough memory and disk space. Here are three other ways, all free:"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "This is taking longer than it should"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Your browser could not translate this page"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "How to get a free Gemini key ↗"
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "The free translator runs only in recent Chrome and Edge on a computer. The easiest free option from here: a Gemini key — 5 minutes, no card."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "This browser cannot translate by itself."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Paste your API key in the field above first: the list comes from the provider, and it only answers with a key."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The provider says too many requests right now. Wait a minute and try again."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Your site could not reach the provider (network or firewall). Try again later, or ask your host."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The provider answered with an error. Try again in a few minutes."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "%d models available — pick one from the list."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Preview size"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Desktop"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Phone"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "This is the switcher your visitors will see, drawn by the same code as your site, and it follows every change before you save. Click it to try it. Only the font may differ: on your site it takes the theme’s font, unless you choose one above."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The Desktop and Phone buttons of the live preview show both."
+msgstr ""

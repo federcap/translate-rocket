@@ -326,7 +326,10 @@ class Switcher {
 
 		$mobile = (string) ( $s['mobile'] ?? 'same' );
 		if ( 'flags' === $mobile ) {
-			$out .= '@media(max-width:782px){' . $scope . ' .trrocket-name{display:none;}}';
+			// !important: «.trrocket-switcher .trrocket-current span» (frontend.css) is more
+			// specific and kept the CURRENT language's name on phones (found 24/9/2026 by the
+			// new live preview, which draws the switcher with the site's own CSS).
+			$out .= '@media(max-width:782px){' . $scope . ' .trrocket-name{display:none !important;}}';
 		} elseif ( 'hide' === $mobile ) {
 			$out .= '@media(max-width:782px){' . $scope . ' .trrocket-switcher,' . $scope . ' .trrocket-dd,' . $scope . '.trrocket-floating{display:none;}}';
 		}
@@ -408,6 +411,69 @@ class Switcher {
 		// translate="no" keeps the language names (Italiano, English…) out of the
 		// translation engine — they must never be collected or translated.
 		return '<div class="trrocket-sw trrocket-sw-' . esc_attr( $id ) . '" translate="no">' . $html . '</div>';
+	}
+
+	/**
+	 * The switcher exactly as the site would draw it with these settings (saved or not),
+	 * for the live preview in the dashboard: same markup (build()), same CSS (css_for()).
+	 *
+	 * The preview used to be a copy drawn by hand in the admin, and it drifted from the
+	 * real thing: truncated names in the dropdown, layout changes shown only after saving
+	 * (Federico, 24/9/2026). Now there is one renderer.
+	 *
+	 * The preview frame is narrower than a desktop screen, so the desktop/phone rules
+	 * (breakpoint 783px) are resolved here for the view that was asked for, instead of
+	 * letting the frame's own width decide.
+	 *
+	 * @param array<string,mixed> $s    Switcher settings (one profile).
+	 * @param string              $view desktop|phone.
+	 * @return array{html:string,css:string,type:string}
+	 */
+	public function preview_parts( array $s, string $view ): array {
+		$this->divider = (string) ( $s['divider'] ?? 'none' );
+		$atts          = array(
+			'id'      => 'preview',
+			'type'    => (string) ( $s['type'] ?? 'inline' ),
+			'show'    => (string) ( $s['show'] ?? 'both' ),
+			'current' => (string) ( $s['current'] ?? 'show' ),
+			'trigger' => (string) ( $s['dd_trigger'] ?? 'click' ),
+			'caret'   => empty( $s['dd_caret'] ) ? '0' : '1',
+		);
+		$html = $this->build( $atts, ! empty( $s['english_names'] ) );
+		$css  = self::css_for( 'preview', $s );
+		$css  = (string) preg_replace_callback(
+			'/@media\s*\(\s*(max|min)-width\s*:\s*(782(?:\.98)?|783)px\s*\)\s*\{((?:[^{}]*\{[^{}]*\})*)\s*\}/',
+			function ( $m ) use ( $view ) {
+				$per_telefono = ( 'max' === $m[1] );
+				return ( ( 'phone' === $view ) === $per_telefono ) ? $m[3] : '';
+			},
+			$css
+		);
+		return array(
+			'html' => '' === $html ? '' : '<div class="trrocket-sw trrocket-sw-preview" translate="no">' . $html . '</div>',
+			'css'  => $css,
+			'type' => $atts['type'],
+		);
+	}
+
+	/**
+	 * A whole page for the preview frame: the site's switcher stylesheet and script, the
+	 * switcher, and nothing from the dashboard's own styles around it.
+	 *
+	 * @param array{html:string,css:string,type:string} $parts From preview_parts().
+	 * @param string                                    $empty Shown when there is nothing to switch.
+	 */
+	public static function preview_document( array $parts, string $empty ): string {
+		$body = '' !== $parts['html'] ? $parts['html'] : '<p class="trr-empty">' . esc_html( $empty ) . '</p>';
+		return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+			. '<link rel="stylesheet" href="' . esc_url( TRROCKET_URL . 'assets/css/frontend.css?ver=' . Plugin::asset_ver( 'assets/css/frontend.css' ) ) . '">'
+			. '<style>html,body{margin:0}body{padding:24px 16px;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1f2937;background:#fff;text-align:center}a{color:inherit}#trr-root{display:inline-block;text-align:left;max-width:100%}.trr-empty{color:#646970;margin:0}</style>'
+			. '<style id="trr-live">' . wp_strip_all_tags( $parts['css'] ) . '</style>'
+			. '</head><body><div id="trr-root" data-type="' . esc_attr( $parts['type'] ) . '">' . $body . '</div>'
+			. '<script src="' . esc_url( TRROCKET_URL . 'assets/js/switcher.js?ver=' . Plugin::asset_ver( 'assets/js/switcher.js' ) ) . '"></script>'
+			// A language link leads nowhere in here: it only closes the menu, like the site would.
+			. '<script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(a){e.preventDefault();}},true);</script>'
+			. '</body></html>';
 	}
 
 	/**
@@ -678,8 +744,21 @@ class Switcher {
 		// width; the interactive OVERLAY (real toggle + menu) sits on top, both at
 		// width:100% of that anchor. So the toggle and the open menu are ALWAYS the
 		// exact same width, with no JavaScript measuring.
+		// The anchor gives the toggle and the menu their width. It held only the name with
+		// the most LETTERS, which is not always the widest on screen (Ш, W, 語 against i, l):
+		// a wider name was cut off in the open menu. Now every name is stacked in the same
+		// spot, invisible, and the widest one really decides (24/9/2026).
+		$anchor_label = $this->label_html( $widest, $show );
+		$tutti        = '';
+		foreach ( array_merge( array( $current ), $others ) as $entry ) {
+			$tutti .= '<span>' . esc_html( self::label_text( $entry, $show ) ) . '</span>';
+		}
+		$nome_largo = '<span class="trrocket-name">' . esc_html( self::label_text( $widest, $show ) ) . '</span>';
+		if ( '' !== self::label_text( $widest, $show ) && false !== strpos( $anchor_label, $nome_largo ) ) {
+			$anchor_label = str_replace( $nome_largo, '<span class="trrocket-name trrocket-dd-names">' . $tutti . '</span>', $anchor_label );
+		}
 		$anchor = '<div class="trrocket-dd-anchor" aria-hidden="true">'
-			. '<span class="trrocket-dd-toggle">' . $this->label_html( $widest, $show ) . $caret_html . '</span>'
+			. '<span class="trrocket-dd-toggle">' . $anchor_label . $caret_html . '</span>'
 			. '</div>';
 
 		return '<div class="' . esc_attr( $dd_class ) . '">'

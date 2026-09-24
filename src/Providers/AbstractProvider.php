@@ -25,10 +25,24 @@ abstract class AbstractProvider implements ProviderInterface {
 	protected $config;
 
 	/**
+	 * Why the last list_models() came back empty: '' | 'http-401' | 'http-429' | 'net'…
+	 *
+	 * @var string
+	 */
+	protected $models_error = '';
+
+	/**
 	 * @param array<string,mixed> $config Provider config slice.
 	 */
 	public function __construct( array $config ) {
 		$this->config = $config;
+	}
+
+	/**
+	 * Why the last list_models() came back empty ('' when it did not fail).
+	 */
+	public function models_error(): string {
+		return $this->models_error;
 	}
 
 	public function is_configured(): bool {
@@ -55,13 +69,17 @@ abstract class AbstractProvider implements ProviderInterface {
 	 * @return array{body?:string,error?:string}
 	 */
 	protected function get( string $url, array $headers = array(), int $timeout = 20 ): array {
-		$response = wp_remote_get( $url, array( 'headers' => $headers, 'timeout' => $timeout ) );
+		$this->models_error = '';
+		$response           = wp_remote_get( $url, array( 'headers' => $headers, 'timeout' => $timeout ) );
 		if ( is_wp_error( $response ) ) {
+			$this->models_error = 'net';
 			return array( 'error' => $response->get_error_message() );
 		}
 		$code = (int) wp_remote_retrieve_response_code( $response );
 		$raw  = (string) wp_remote_retrieve_body( $response );
 		if ( $code < 200 || $code >= 300 ) {
+			// Gemini answers a wrong key with 400 «API_KEY_INVALID», not 401.
+			$this->models_error = ( 400 === $code && false !== stripos( $raw, 'API_KEY_INVALID' ) ) ? 'http-401' : 'http-' . $code;
 			return array( 'error' => 'HTTP ' . $code );
 		}
 		return array( 'body' => $raw );

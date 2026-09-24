@@ -6,15 +6,6 @@
 	if ( ! preview ) {
 		return;
 	}
-	// The live-preview <style> element is created here (not printed in PHP) so the
-	// plugin never outputs a raw <style> tag in its markup.
-	var live = document.getElementById( 'trr-sw-live' );
-	if ( ! live ) {
-		live = document.createElement( 'style' );
-		live.id = 'trr-sw-live';
-		document.head.appendChild( live );
-	}
-
 	function el( id ) {
 		return document.getElementById( id );
 	}
@@ -29,152 +20,151 @@
 		}
 	}
 
-	/* Colours (live). */
-	function update() {
-		var text = val( 'sw_text_color' );
-		var bg   = val( 'sw_bg_color' );
-		var bd   = val( 'sw_border_color' );
-		// La casella "nessun bordo" vince sul colore, come nel front-end.
-		var noBd = !!( document.getElementById( 'sw_no_border' ) || {} ).checked;
-		if ( noBd ) { bd = ''; }
-		var hv   = val( 'sw_hover_color' );
-		var r    = val( 'sw_radius' );
-
-		var bgop  = el( 'sw_bg_opacity' ) ? parseInt( el( 'sw_bg_opacity' ).value, 10 ) : 100;
-		var bgEff = ( bgop < 100 ) ? ( toRgba( bg || '#ffffff', bgop / 100 ) || bg ) : bg;
-		var box = '';
-		if ( bgEff ) { box += 'background:' + bgEff + ';'; }
-		if ( noBd )   { box += 'border:0;'; }
-		else if ( bd ) { box += 'border:1px solid ' + bd + ';'; }
-		if ( r )  { box += 'border-radius:' + ( /^\d+$/.test( r ) ? r + 'px' : r ) + ';'; }
-
-		var sh      = el( 'sw_shadow' ) ? el( 'sw_shadow' ).value : 'none';
-		var shadows = { light: '0 1px 3px rgba(0,0,0,.12)', medium: '0 2px 8px rgba(0,0,0,.15)', strong: '0 4px 16px rgba(0,0,0,.2)' };
-		if ( shadows[ sh ] ) { box += 'box-shadow:' + shadows[ sh ] + ';'; }
-
-		var w    = el( 'sw_width' ) ? el( 'sw_width' ).value : 'auto';
-		var wpx  = val( 'sw_width_px' );
-		var wmap = { small: '120px', medium: '180px', large: '260px' };
-		var wv   = '';
-		if ( 'custom' === w && wpx ) { wv = /^\d+$/.test( wpx ) ? wpx + 'px' : wpx; }
-		else if ( wmap[ w ] ) { wv = wmap[ w ]; }
-		if ( wv ) { box += 'min-width:' + wv + ';'; }
-
-		var out = '';
-		// Mirror css_for() on the front-end exactly: the whole box (bg / border /
-		// radius / shadow) goes to the inline switcher AND the dropdown toggle, the
-		// menu carries the same surface with bottom-only rounding — so the toggle and
-		// the menu items always share one size, shape and colour in the preview too.
-		if ( box )  { out += '#trr-sw-preview .trrocket-switcher,#trr-sw-preview .trrocket-switcher-select,#trr-sw-preview .trrocket-dd-toggle{' + box + 'padding:6px 12px;}'; }
-		var rpx   = r ? ( /^\d+$/.test( r ) ? r + 'px' : r ) : '';
-		var ddbox = '';
-		if ( bgEff ) { ddbox += 'background:' + bgEff + ';'; }
-		if ( bd )    { ddbox += 'border:1px solid ' + bd + ';border-top:0;'; }
-		if ( rpx )   { ddbox += 'border-radius:0 0 ' + rpx + ' ' + rpx + ';'; }
-		if ( shadows[ sh ] ) { ddbox += 'box-shadow:' + shadows[ sh ] + ';'; }
-		if ( ddbox ) { out += '#trr-sw-preview .trrocket-dd-menu{' + ddbox + '}'; }
-		// Gli angoli in basso si appiattiscono SOLO da aperto, come fa il sito
-		// (.trrocket-dd.is-open .trrocket-dd-toggle). Prima erano piatti sempre,
-		// perche' nell'anteprima il menu era sempre aperto: da chiuso si vedeva un
-		// pulsante con due angoli quadrati che sul sito non esistono.
-		if ( rpx )   { out += '#trr-sw-preview .trr-prev-dd.is-open .trrocket-dd-toggle{border-bottom-left-radius:0;border-bottom-right-radius:0;}'; }
-		if ( text ) { out += '#trr-sw-preview .trrocket-switcher a,#trr-sw-preview .trrocket-switcher .trrocket-current span,#trr-sw-preview .trrocket-switcher-select,#trr-sw-preview .trrocket-dd-toggle,#trr-sw-preview .trrocket-dd-menu a{color:' + text + ';}'; }
-		if ( hv )   { out += '#trr-sw-preview .trrocket-switcher a:hover,#trr-sw-preview .trrocket-dd-menu a:hover,#trr-sw-preview .trrocket-dd-toggle:hover{color:' + hv + ';}'; }
-
-		function fv( id ) {
-			return el( id ) ? ( parseInt( el( id ).value, 10 ) || 0 ) : 0;
-		}
-		var tl = fv( 'sw_flag_tl' ), tr = fv( 'sw_flag_tr' ), br = fv( 'sw_flag_br' ), bl = fv( 'sw_flag_bl' );
-		if ( tl || tr || br || bl ) {
-			out += '#trr-sw-preview .trrocket-flag-svg,#trr-sw-preview .trrocket-flag-wrap svg{border-radius:' + tl + 'px ' + tr + 'px ' + br + 'px ' + bl + 'px;overflow:hidden;}';
-		}
-
-		var hoverbg = val( 'sw_hover_bg' );
-		if ( hoverbg ) {
-			out += '#trr-sw-preview .trrocket-dd-menu a:hover,#trr-sw-preview .trrocket-switcher a:hover,#trr-sw-preview .trr-prev-ul a:hover,#trr-sw-preview .trrocket-dd-toggle:hover{background:' + hoverbg + ';}';
-		}
-		var fontmap = { system: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif', arial: 'Arial,Helvetica,sans-serif', helvetica: '"Helvetica Neue",Helvetica,Arial,sans-serif', segoe: '"Segoe UI",Roboto,Helvetica,Arial,sans-serif', verdana: 'Verdana,Geneva,sans-serif', tahoma: 'Tahoma,Geneva,sans-serif', trebuchet: '"Trebuchet MS",Helvetica,sans-serif', lucida: '"Lucida Sans Unicode","Lucida Grande",sans-serif', century: '"Century Gothic","Apple Gothic",sans-serif', impact: 'Impact,Charcoal,sans-serif', georgia: 'Georgia,"Times New Roman",serif', times: '"Times New Roman",Times,serif', palatino: '"Palatino Linotype","Book Antiqua",Palatino,serif', garamond: 'Garamond,Baskerville,"Times New Roman",serif', courier: '"Courier New",Courier,monospace', consolas: 'Consolas,Monaco,"Courier New",monospace' };
-		var font = el( 'sw_font_family' ) ? el( 'sw_font_family' ).value : '';
-		if ( fontmap[ font ] ) {
-			out += '#trr-sw-preview .trrocket-switcher,#trr-sw-preview .trrocket-dd-toggle,#trr-sw-preview .trrocket-dd-menu{font-family:' + fontmap[ font ] + ';}';
-		}
-
-		var anim = el( 'sw_animation' ) ? el( 'sw_animation' ).value : 'fade';
-		if ( [ 'fade', 'slide', 'scale' ].indexOf( anim ) !== -1 ) {
-			// Solo su .is-open: col :hover l'animazione ripartiva ogni volta che il
-			// mouse passava sopra al menu gia' aperto.
-			out += '#trr-sw-preview .trr-prev-dd.is-open .trrocket-dd-menu{animation:trr-anim-' + anim + ' .2s ease;}';
-		}
-		var hfx   = el( 'sw_hover_fx' ) ? el( 'sw_hover_fx' ).value : 'none';
-		var lk    = '#trr-sw-preview .trrocket-switcher a,#trr-sw-preview .trrocket-dd-menu a';
-		var lkh   = '#trr-sw-preview .trrocket-switcher a:hover,#trr-sw-preview .trrocket-dd-menu a:hover';
-		if ( 'lift' === hfx ) {
-			out += lk + '{transition:transform .15s ease;}' + lkh + '{transform:translateY(-2px);}';
-		} else if ( 'grow' === hfx ) {
-			out += lk + '{transition:transform .15s ease;display:inline-block;}' + lkh + '{transform:scale(1.08);}';
-		} else if ( 'underline' === hfx ) {
-			out += lk + '{background-image:linear-gradient(currentColor,currentColor);background-position:0 100%;background-repeat:no-repeat;background-size:0 2px;transition:background-size .2s ease;}' + lkh + '{background-size:100% 2px;}';
-		}
-
-		live.textContent = out;
-		// La larghezza, il bordo o il testo appena cambiati spostano il fondo del
-		// menu: lo spazio va rimisurato dopo che il browser ha riapplicato il CSS.
-		setTimeout( spazio, 0 );
-	}
-
 	/* -----------------------------------------------------------------------
-	   Il menu a tendina si apre e si chiude col clic, come sul sito.
-	   Prima il menu era inchiodato aperto da uno stile scritto nel markup: si
-	   vedevano i colori, ma non si poteva provare l'apertura — che e' meta' di
-	   quello che fa un selettore a tendina.
-	   Ora il markup e il CSS sono gli stessi del front-end, quindi qui basta
-	   ripetere quello che fa switcher.js sul sito.
+	   The preview is the site's own switcher (Switcher::preview_parts()), in a
+	   frame so the dashboard's styles cannot touch it. Every change in the form
+	   asks the server to draw it again with the values not saved yet: the same
+	   code as the site, so it cannot drift from it any more (it used to be a copy
+	   drawn here by hand: names cut short in the dropdown, layout changes shown
+	   only after saving — Federico, 24/9/2026).
 	   ----------------------------------------------------------------------- */
-	var dd = preview.querySelector( '.trr-prev-dd' );
+	var CFG   = window.TRRocketSwPreview || {};
+	var frame = el( 'trr-sw-frame' );
+	var form  = document.querySelector( 'input[name="sw_profile"]' );
+	form      = form ? form.form : null;
+	var view  = 'desktop';
+	var bgNow = '';
+	var timer = null;
+	var seq   = 0;
+	var openAfter = false;
 
-	// Il menu aperto e' fuori dal flusso (position:absolute), come sul sito:
-	// senza fargli spazio uscirebbe dal riquadro tratteggiato e finirebbe sopra
-	// ai comandi qui sotto.
-	function spazio() {
-		if ( ! dd || ! dd.classList.contains( 'is-open' ) ) {
-			preview.style.minHeight = '';
-			return;
-		}
-		var menu = dd.querySelector( '.trrocket-dd-menu' );
-		if ( ! menu ) { return; }
-		var p = preview.getBoundingClientRect();
-		var m = menu.getBoundingClientRect();
-		preview.style.minHeight = Math.ceil( m.bottom - p.top + 24 ) + 'px';
+	function doc() {
+		try { return frame && frame.contentDocument; } catch ( e ) { return null; }
 	}
 
-	function apri( aperto ) {
-		if ( ! dd ) { return; }
-		dd.classList.toggle( 'is-open', aperto );
-		var t = dd.querySelector( '.trrocket-dd-overlay .trrocket-dd-toggle' );
-		if ( t ) { t.setAttribute( 'aria-expanded', aperto ? 'true' : 'false' ); }
-		spazio();
+	// The frame is as tall as the switcher, and grows while the dropdown is open.
+	function fit() {
+		var d = doc();
+		if ( ! d || ! d.body ) { return; }
+		var root = d.getElementById( 'trr-root' );
+		var h    = root ? root.getBoundingClientRect().bottom : 0;
+		Array.prototype.forEach.call( d.querySelectorAll( '.trrocket-dd-menu' ), function ( m ) {
+			var r = m.getBoundingClientRect();
+			if ( r.height > 0 && 'hidden' !== d.defaultView.getComputedStyle( m ).visibility ) { h = Math.max( h, r.bottom ); }
+		} );
+		frame.style.height = Math.max( 90, Math.ceil( h + 24 ) ) + 'px';
 	}
 
-	preview.addEventListener( 'click', function ( e ) {
-		if ( ! dd || ! e.target.closest ) { return; }
-		// Solo il pulsante vero: quello dentro all'ancora e' nascosto e serve
-		// unicamente a dare la larghezza.
-		var t = e.target.closest( '.trrocket-dd-overlay .trrocket-dd-toggle' );
-		if ( t && dd.contains( t ) ) {
-			apri( ! dd.classList.contains( 'is-open' ) );
+	function wire() {
+		var d = doc();
+		if ( ! d || ! d.body || d.body.getAttribute( 'data-trr-wired' ) ) { return; }
+		d.body.setAttribute( 'data-trr-wired', '1' );
+		var later = function () { fit(); setTimeout( fit, 260 ); };
+		d.addEventListener( 'click', later );
+		d.addEventListener( 'mouseover', later );
+		d.addEventListener( 'mouseout', later );
+		d.addEventListener( 'keyup', later );
+		if ( bgNow ) { d.body.style.background = bgNow; }
+		fit();
+	}
+
+	function openDropdown() {
+		var d = doc();
+		var t = d && d.querySelector( '.trrocket-dd-toggle' );
+		var w = d && d.querySelector( '.trrocket-dd' );
+		if ( t && w && ! w.classList.contains( 'is-open' ) ) { t.click(); }
+		setTimeout( fit, 0 );
+		setTimeout( fit, 260 );
+	}
+
+	// The scrolling switcher sets itself up when its page loads: it gets a fresh page.
+	function reload( parts ) {
+		var d = doc();
+		var live = d.getElementById( 'trr-live' );
+		var root = d.getElementById( 'trr-root' );
+		if ( live ) { live.textContent = parts.css || ''; }
+		root.innerHTML = parts.html;
+		root.setAttribute( 'data-type', parts.type || '' );
+		d.body.removeAttribute( 'data-trr-wired' );
+		d.body.style.background = '';
+		frame.srcdoc = '<!DOCTYPE html>' + d.documentElement.outerHTML;
+	}
+
+	function draw( parts, wasOpen ) {
+		var d = doc();
+		if ( ! d || ! d.getElementById( 'trr-root' ) ) { return; }
+		var root     = d.getElementById( 'trr-root' );
+		var live     = d.getElementById( 'trr-live' );
+		var prevType = root.getAttribute( 'data-type' ) || '';
+		if ( 'scroll' === parts.type && parts.html ) {
+			reload( parts );
 			return;
 		}
-		// Una voce del menu non porta da nessuna parte qui dentro: si chiude, come
-		// farebbe la pagina cambiando lingua.
-		if ( e.target.closest( '.trrocket-dd-menu a' ) ) { apri( false ); }
-	} );
+		if ( live ) { live.textContent = parts.css || ''; }
+		if ( parts.html ) {
+			root.innerHTML = parts.html;
+		} else {
+			root.innerHTML = '<p class="trr-empty"></p>';
+			root.firstChild.textContent = CFG.empty || '';
+		}
+		root.setAttribute( 'data-type', parts.type || '' );
+		// Switching to the dropdown opens it, or its menu would stay unseen; after that
+		// the clicks decide. An open menu stays open while colours change.
+		if ( 'dropdown' === parts.type && ( wasOpen || openAfter || 'dropdown' !== prevType ) ) {
+			openDropdown();
+		}
+		openAfter = false;
+		fit();
+	}
 
-	// Fuori dall'anteprima e Escape chiudono, esattamente come sul sito.
-	document.addEventListener( 'click', function ( e ) {
-		if ( dd && ! preview.contains( e.target ) ) { apri( false ); }
-	} );
-	document.addEventListener( 'keyup', function ( e ) {
-		if ( 'Escape' === e.key ) { apri( false ); }
+	function refresh() {
+		if ( ! form || ! frame || ! CFG.ajaxurl ) { return; }
+		var d       = doc();
+		var wasOpen = !! ( d && d.querySelector( '.trrocket-dd.is-open' ) );
+		var fd      = new FormData( form );
+		// Without the save nonce: the preview only draws, it never saves.
+		fd.delete( 'trrocket_switcher_nonce' );
+		fd.delete( '_wp_http_referer' );
+		fd.append( 'action', 'trrocket_sw_preview' );
+		fd.append( '_ajax_nonce', CFG.nonce );
+		fd.append( 'view', view );
+		var mine = ++seq;
+		fetch( CFG.ajaxurl, { method: 'POST', credentials: 'same-origin', body: fd } )
+			.then( function ( r ) { return r.json(); } )
+			.then( function ( r ) {
+				// Only the answer to the latest change counts.
+				if ( mine !== seq || ! r || ! r.success || ! r.data ) { return; }
+				draw( r.data, wasOpen );
+			} )
+			.catch( function () {} );
+	}
+
+	// Colours and sliders fire at every step: one request when the hand stops.
+	function update() {
+		clearTimeout( timer );
+		timer = setTimeout( refresh, 180 );
+	}
+
+	if ( frame ) {
+		frame.addEventListener( 'load', wire );
+		wire();
+	}
+	if ( form ) {
+		form.addEventListener( 'input', update );
+		form.addEventListener( 'change', update );
+	}
+
+	Array.prototype.forEach.call( document.querySelectorAll( '.trr-sw-view' ), function ( b ) {
+		b.addEventListener( 'click', function () {
+			view = b.getAttribute( 'data-view' ) || 'desktop';
+			Array.prototype.forEach.call( document.querySelectorAll( '.trr-sw-view' ), function ( o ) {
+				var on = o === b;
+				o.classList.toggle( 'is-on', on );
+				o.setAttribute( 'aria-pressed', on ? 'true' : 'false' );
+			} );
+			preview.classList.toggle( 'is-phone', 'phone' === view );
+			refresh();
+		} );
 	} );
 
 	/* -----------------------------------------------------------------------
@@ -220,81 +210,10 @@
 		// frase inglese scritta a mano nel JavaScript non si tradurrebbe.
 	}
 
-	/* Layout / show / names (live). */
+	/* Layout / show / names: the preview follows by itself (see update()). */
 	function layout() {
-		var type = el( 'sw_type' ) ? el( 'sw_type' ).value : 'inline';
-		var show = el( 'sw_show' ) ? el( 'sw_show' ).value : 'both';
-		var cur  = el( 'sw_current' ) ? el( 'sw_current' ).value : 'show';
-		var eng  = el( 'sw_english' ) ? el( 'sw_english' ).checked : false;
-
-		var ul = preview.querySelector( '.trr-prev-ul' );
-
-		if ( ul ) {
-			ul.style.display = ( 'dropdown' === type ) ? 'none' : '';
-			if ( 'list' === type ) {
-				ul.classList.add( 'trrocket-vertical' );
-			} else {
-				ul.classList.remove( 'trrocket-vertical' );
-			}
-		}
-		if ( dd ) {
-			var eraTendina = 'inline-block' === dd.style.display;
-			dd.style.display = ( 'dropdown' === type ) ? 'inline-block' : 'none';
-			// Scegliendo "dropdown" si apre da solo, se no i colori del menu non si
-			// vedrebbero finche' non ci si clicca sopra. Poi comanda il clic.
-			if ( 'dropdown' === type && ! eraTendina ) { apri( true ); }
-			if ( 'dropdown' !== type ) { apri( false ); }
-		}
-
-		Array.prototype.forEach.call( preview.querySelectorAll( '.trrocket-flag-wrap' ), function ( e ) {
-			e.style.display = ( 'name' === show ) ? 'none' : '';
-		} );
-		Array.prototype.forEach.call( preview.querySelectorAll( '.trrocket-name' ), function ( e ) {
-			e.style.display = ( 'flag' === show ) ? 'none' : '';
-			e.textContent   = eng ? ( e.getAttribute( 'data-en' ) || '' ) : ( e.getAttribute( 'data-native' ) || '' );
-		} );
-		Array.prototype.forEach.call( preview.querySelectorAll( '.trr-prev-cur' ), function ( e ) {
-			e.style.display = ( 'hide' === cur ) ? 'none' : '';
-		} );
-		var caretEl = preview.querySelector( '.trr-prev-dd .trrocket-dd-caret' );
-		if ( caretEl ) {
-			caretEl.style.display = ( el( 'sw_dd_caret' ) && ! el( 'sw_dd_caret' ).checked ) ? 'none' : '';
-		}
 		soloTendina();
-		applyTextStyle();
-	}
-
-	/* Bold text + flag/name divider (live). */
-	var divMap = { pipe: '|', bullet: '•', dot: '·', slash: '/', dash: '–' };
-	function applyTextStyle() {
-		var bold = el( 'sw_font_weight' ) && el( 'sw_font_weight' ).checked;
-		Array.prototype.forEach.call( preview.querySelectorAll( '.trrocket-name' ), function ( n ) {
-			n.style.fontWeight = bold ? '700' : '';
-		} );
-		Array.prototype.forEach.call( preview.querySelectorAll( '.trr-sep' ), function ( s ) {
-			if ( s.parentNode ) { s.parentNode.removeChild( s ); }
-		} );
-		var dv   = el( 'sw_divider' ) ? el( 'sw_divider' ).value : 'none';
-		var show = el( 'sw_show' ) ? el( 'sw_show' ).value : 'both';
-		if ( divMap[ dv ] && 'both' === show ) {
-			Array.prototype.forEach.call( preview.querySelectorAll( '.trrocket-flag-wrap' ), function ( f ) {
-				var sep = document.createElement( 'span' );
-				sep.className = 'trr-sep';
-				sep.textContent = divMap[ dv ];
-				sep.style.opacity = '0.45';
-				sep.style.margin = '0 3px';
-				f.parentNode.insertBefore( sep, f.nextSibling );
-			} );
-		}
-	}
-
-	function toRgba( c, a ) {
-		c = ( c || '' ).trim();
-		var m = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec( c );
-		if ( ! m ) { return ''; }
-		var h = m[ 1 ];
-		if ( 3 === h.length ) { h = h[ 0 ] + h[ 0 ] + h[ 1 ] + h[ 1 ] + h[ 2 ] + h[ 2 ]; }
-		return 'rgba(' + parseInt( h.substr( 0, 2 ), 16 ) + ',' + parseInt( h.substr( 2, 2 ), 16 ) + ',' + parseInt( h.substr( 4, 2 ), 16 ) + ',' + a + ')';
+		update();
 	}
 
 	function syncSwatches() {
@@ -381,29 +300,15 @@
 		if ( e ) {
 			e.addEventListener( 'change', function () {
 				update();
-				// Si rigioca l'animazione di apertura, cosi' la scelta si vede.
-				// Prima richiudeva da sola dopo 900ms: adesso che il menu si apre e
-				// si chiude davvero, richiuderlo vorrebbe dire chiudere quello che
-				// l'utente aveva aperto apposta. Resta aperto.
-				if ( dd ) {
-					dd.classList.remove( 'is-open' );
-					void dd.offsetWidth;
-					apri( true );
-				}
+				// Si rigioca l'animazione di apertura, cosi' la scelta si vede:
+				// il menu ridisegnato si apre da solo.
+				openAfter = true;
 			} );
 		}
 	} );
 	var fontEl = el( 'sw_font_family' );
 	if ( fontEl ) {
 		fontEl.addEventListener( 'change', update );
-	}
-	var fwEl = el( 'sw_font_weight' );
-	if ( fwEl ) {
-		fwEl.addEventListener( 'change', applyTextStyle );
-	}
-	var dvEl = el( 'sw_divider' );
-	if ( dvEl ) {
-		dvEl.addEventListener( 'change', applyTextStyle );
 	}
 	var opEl = el( 'sw_bg_opacity' );
 	if ( opEl ) {
@@ -507,7 +412,9 @@
 	if ( bgRow ) {
 		var imgBg = 'linear-gradient(135deg,#667eea,#764ba2 42%,#f093fb)';
 		var setBg = function ( v, srcEl ) {
-			preview.style.background = ( 'img' === v ) ? imgBg : v;
+			bgNow = ( 'img' === v ) ? imgBg : v;
+			var d = doc();
+			if ( d && d.body ) { d.body.style.background = bgNow; }
 			Array.prototype.forEach.call( bgRow.querySelectorAll( '.trr-sw-bg' ), function ( b ) { b.classList.remove( 'is-on' ); } );
 			if ( srcEl && srcEl.classList ) { srcEl.classList.add( 'is-on' ); }
 		};
@@ -520,7 +427,37 @@
 		}
 	}
 
-	update();
-	layout();
+	soloTendina();
 	renderPresets();
+
+	// Changing profile, adding one, deleting one or saving reloads the page, and the browser
+	// went back to the very top: you had to scroll down again every time (Federico,
+	// 24/9/2026). Remember where the profile bar was on screen and put it back there.
+	var bar = el( 'trr-sw-profiles' );
+	var KEY = 'trrSwPos';
+	function remember() {
+		if ( ! bar ) { return; }
+		try { sessionStorage.setItem( KEY, String( Math.round( bar.getBoundingClientRect().top ) ) ); } catch ( e ) {}
+	}
+	if ( bar ) {
+		Array.prototype.forEach.call( bar.querySelectorAll( 'a.button' ), function ( a ) {
+			a.addEventListener( 'click', remember );
+		} );
+	}
+	Array.prototype.forEach.call( document.querySelectorAll( '.trrocket-wrap form[method="post"]' ), function ( f ) {
+		f.addEventListener( 'submit', function ( e ) {
+			// «Delete this profile?» answered No: nothing reloads, nothing to remember.
+			if ( ! e.defaultPrevented ) { remember(); }
+		} );
+	} );
+	var was = null;
+	try { was = sessionStorage.getItem( KEY ); sessionStorage.removeItem( KEY ); } catch ( e ) {}
+	if ( bar && null !== was && '' !== was && ! isNaN( +was ) ) {
+		var go = function () {
+			window.scrollTo( 0, Math.max( 0, window.pageYOffset + bar.getBoundingClientRect().top - ( +was ) ) );
+		};
+		go();
+		// Once more after images and fonts, which can still change the height above it.
+		window.addEventListener( 'load', go );
+	}
 }() );

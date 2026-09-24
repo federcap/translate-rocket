@@ -165,6 +165,15 @@
 	pointer-events: none;
 }
 
+/* Every name stacked in one spot: the widest decides the width. */
+.trrocket-dd-names {
+	display: inline-grid;
+}
+.trrocket-dd-names > span {
+	grid-area: 1 / 1;
+	white-space: nowrap;
+}
+
 .trrocket-dd-overlay {
 	position: absolute;
 	top: 0;

@@ -5,11 +5,10 @@
 **Free, AI-powered translation for WordPress — make your whole site multilingual without a subscription.**
 
 [![License: GPL v2+](https://img.shields.io/badge/License-GPLv2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/translate-rocket.svg)](https://wordpress.org/plugins/translate-rocket/)
 [![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-21759b.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777bb4.svg)](https://www.php.net/)
 
-[Plugin on WordPress.org](https://wordpress.org/plugins/translate-rocket/) · [Website](https://translaterocket.com) · [Author](https://federicocaputo.dev)
+[Website](https://translaterocket.com) · [Author](https://federicocaputo.dev)
 
 </div>
 
@@ -25,39 +24,29 @@ in **your** database and can be edited by hand at any time.
 
 ## ✨ Why it's different
 
-- **🔑 No API key required at all.** Chrome and Edge on a desktop ship a translator
-  that runs **on the device itself**, and TranslateRocket drives it: pick your
-  languages, press one button, and the site is translated. Nothing to sign up for,
-  nothing to pay, and the text never leaves the machine. Quality sits below DeepL and
-  the AI models, so it is the fastest route to a translated site rather than the
-  finest one — and everything it produces is kept, so adding a provider later never
-  repeats the work.
 - **🖱️ On-page visual editor.** Flip a switch and your live site becomes editable —
   click any text and translate it in a small **draggable popup** with Previous/Next,
-  a progress bar, "skip already-translated" mode, auto-save on navigation, raw
-  **HTML editing**, and a one-click **Translate page** button.
-- **⚡ Free with Google Translate.** Every field has a link that opens Google
-  Translate prefilled — translate on Google's own site and paste it back.
+  a progress bar, "skip already-translated" mode, auto-save on navigation, and a
+  close button — plus raw **HTML editing** of any string and a one-click **Translate
+  page** button that auto-translates the whole page at once. It even translates image
+  `alt`/`title` attributes.
+- **⚡ Free with Google Translate (no API key).** Every field has a link that opens
+  Google Translate prefilled — translate for free on Google's own site and paste it back.
 - **🤖 Bring-your-own AI.** Optional batch auto-translation with **your own** key for
   DeepL, OpenAI, Google Gemini, Anthropic (Claude) or Google Cloud Translate. Text is
   sent only to the provider you pick, only when you ask, with a daily usage cap.
 - **🔎 Detects strings automatically** as an admin browses — no manual string
-  registration; works with page builders (Gutenberg, Elementor, Spectra…).
-- **📈 Built for big sites.** Past ~20,000 strings the engine switches by itself to
-  indexed per-page lookups: flat memory and the same render time at 500 or 500,000
-  strings, where map-loading plugins hit the PHP memory limit.
-- **🌍 36 built-in languages** including RTL (Arabic, Hebrew, Persian), plus unlimited
-  custom language codes.
+  registration, works with page builders (Gutenberg, Spectra…).
+- **🌍 36 built-in languages** including RTL (Arabic, Hebrew, Persian).
 
-## 🛠️ Five ways to translate
+## 🛠️ Four ways to translate
 
 | Method | Key needed? | Best for |
 |--------|:-----------:|----------|
-| **In the browser** (Chrome/Edge, on-device) | no | translating a whole site with nothing to set up |
 | **Visual editor** (click text on the page) | no | quick fixes, seeing context |
-| **Google Translate link** (per phrase) | no | one-off phrases, decent quality |
-| **ChatGPT or Gemini** (copy with a ready-made prompt) | no | a whole page in a chat you already use |
-| **AI auto-translate** (batch) | yes (yours) | the best quality, a whole site at once |
+| **Google Translate link** (per phrase) | no | fast, free, decent quality |
+| **By hand / copy & paste** | no | full control, bulk paste |
+| **AI auto-translate** (batch) | yes (yours) | translating a whole site at once |
 
 Every machine translation is just a starting point — review and edit anything in the
 per-page editor, where missing strings are highlighted in red.
@@ -66,43 +55,28 @@ per-page editor, where missing strings are highlighted in red.
 
 - Clean per-language URLs (`/it/chi-siamo/`) with **translated slugs**.
 - Automatic `hreflang` tags and a correct `<html lang>` per language.
-- Translatable SEO **title**, **meta description** and social preview tags
-  (Open Graph, X) — including the ones a SEO plugin adds.
-- **One SEO panel** listing, in order, everything a search engine reads on the page,
-  each line linking straight to that element in the editor.
+- Translatable SEO **title** and **meta description**.
 - **Language switcher** as a shortcode `[translaterocket_switcher]`, a Gutenberg
   block, or a widget — with original SVG flags that render everywhere (Windows
   included) — inline, dropdown, or a **scrollable bar with ‹ › arrows** for many
-  languages.
-- **Content and menus per language:** show a paragraph, a block or a menu item only
-  in some languages — `[translaterocket_language lang="it"]…[/translaterocket_language]`,
-  a `trrocket-only-it` / `trrocket-hide-it` class on any block, or a "Show in" checkbox
-  on every item in Appearance → Menus.
+  languages — plus presets, a flag-dropdown, and full styling controls.
 - **Per-page visibility:** if a page has no equivalent in a language, choose to
   redirect it, show a custom message, or return a 404 — per page, per language.
-- **Publish a language when it's ready:** each language has an online/offline switch.
-  While it is offline it stays out of the switcher, the sitemap and the `hreflang`
-  tags, and its URLs send visitors to the default language — so nothing
-  half-translated ever reaches a visitor or Google.
 
 ## 🔁 Migrating from another plugin?
 
-One screen (`TranslateRocket → Import`) brings across what you have already paid for
-or typed by hand, from **TranslatePress, Polylang, WPML, Weglot, qTranslate (X and
-XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft and Loco Translate**,
-plus CSV and TMX for anything else. Most are read straight from the tables, the posts
-or the `.po` files — so the import still works after the other plugin has been
-deactivated or deleted, which is the usual state of a site that is moving on.
+Import your existing translations from **TranslatePress**, **Polylang** or **WPML**
+in one screen (`TranslateRocket → Import`). The WPML import reads straight from
+its tables — string translations *and* post-based translations — so it works even
+after WPML has been deactivated.
 
 ## 🚀 Installation
 
-1. Install from [WordPress.org](https://wordpress.org/plugins/translate-rocket/), or
-   copy this repository into `/wp-content/plugins/translate-rocket/`.
+1. Copy the `translate-rocket` folder to `/wp-content/plugins/` (or install the ZIP).
 2. Activate it from **Plugins**.
 3. In **TranslateRocket → Settings**, pick your source language and target languages.
 4. Browse the site to detect content, then translate from **TranslateRocket →
-   Translations** (in the browser, the visual editor, Google Translate links, by hand,
-   or AI).
+   Translations** (visual editor, Google Translate links, by hand, or AI).
 5. Drop the switcher anywhere with `[translaterocket_switcher]`, the block, or the widget.
 
 ## 🏗️ Architecture
@@ -121,7 +95,7 @@ translate-rocket/
 ├── translate-rocket.php        # plugin header + bootstrap + autoloader
 ├── uninstall.php               # opt-in data removal
 ├── readme.txt                  # WordPress.org readme
-├── languages/                  # translation catalog (.pot/.po/.mo) — 9 languages
+├── languages/                  # translation catalog (.pot/.po/.mo) — Italian included
 ├── assets/                     # admin + visual-editor CSS/JS, SVG flags
 └── src/
     ├── Plugin.php              # orchestrator (singleton)
@@ -131,42 +105,24 @@ translate-rocket/
     ├── Router.php              # language routing (URL prefixes)
     ├── Translator.php          # AI batch auto-translate orchestrator
     ├── GoogleFree.php          # Google Translate links (+ opt-in auto-fill helper)
-    ├── Copies.php              # per-language images and media swaps
-    ├── Savings.php             # counts the API calls reuse avoided
-    ├── MenuLanguages.php       # "Show in" checkboxes on menu items
-    ├── Frontend/
-    │   ├── Engine.php          # detect + replace strings on the front end
-    │   ├── VisualEditor.php    # on-page click-to-edit popup + SEO panel
-    │   ├── Switcher.php        # [translaterocket_switcher] + block + widget
-    │   ├── DynamicContent.php  # JS-injected text (banners, popups, AJAX)
-    │   ├── WooCommerce.php     # cart, checkout, order e-mails, product slugs
-    │   ├── Sitemap.php         # per-language sitemaps and hreflang
-    │   ├── Visibility.php      # per-page, per-language redirect / message / 404
-    │   └── LanguageOnly.php    # [translaterocket_language] + trrocket-only-* classes
+    ├── Frontend/Engine.php     # detect + replace strings on the front end
+    ├── Frontend/VisualEditor.php # on-page click-to-edit popup
+    ├── Frontend/Switcher.php   # [translaterocket_switcher] + block + widget
     ├── Providers/              # AI adapters: DeepL, OpenAI, Google, Gemini, Anthropic
-    ├── Importers/              # ten plugin importers + CSV/TMX
-    └── Admin/                  # settings, page editor, in-post metabox, browser engine
+    ├── Importers/              # TranslatePress + Polylang importers
+    └── Admin/                  # settings, page editor, in-post metabox panel
 ```
-
-Compatibility with other plugins is tracked in [COMPATIBILITY.md](COMPATIBILITY.md).
 
 ## 🔐 Privacy & security
 
 - Translations are stored in **your** WordPress database.
 - Text leaves your site only when **you** trigger it: clicking the Google button
   (one phrase, to Google's free endpoint) or running an AI translation (to the
-  provider whose key you added). The browser translator does not send anything
-  anywhere — it runs on the device. Nothing is sent automatically or in bulk in the
+  provider whose key you added). Nothing is sent automatically or in bulk in the
   background.
 - Every admin action is protected by WordPress nonces **and** capability checks; all
   database access is parameterized; all output is escaped. See the **External
   services** section of `readme.txt` for the full disclosure.
-
-## 🤝 Contributing
-
-Bug reports and pull requests are welcome. For support questions, the
-[WordPress.org support forum](https://wordpress.org/support/plugin/translate-rocket/)
-is the better place — answers there help the next person with the same problem.
 
 ## 📦 License
 

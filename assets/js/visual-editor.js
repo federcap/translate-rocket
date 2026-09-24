@@ -231,10 +231,23 @@
 		}, true );
 	}
 
+	// Chi ascolta lo scaricamento del modello (la prima volta puo' durare minuti): la
+	// barra sotto il pulsante. Una sola funzione alla volta, sostituita a ogni lavoro.
+	var suScaricamento = null;
 	function prendiTraduttore( rifai ) {
 		if ( rifai ) { trBrowserPromessa = null; }
 		if ( ! trBrowserPromessa ) {
-			trBrowserPromessa = Translator.create( { sourceLanguage: VE.srcBcp, targetLanguage: VE.dstBcp } );
+			trBrowserPromessa = Translator.create( {
+				sourceLanguage: VE.srcBcp,
+				targetLanguage: VE.dstBcp,
+				monitor: function ( mon ) {
+					mon.addEventListener( 'downloadprogress', function ( e ) {
+						if ( suScaricamento ) { suScaricamento( e.loaded ); }
+					} );
+				}
+			} );
+			// Se fallisce, la prossima volta si riprova da capo invece di tenersi il rifiuto.
+			trBrowserPromessa.catch( function () { trBrowserPromessa = null; } );
 		}
 		return trBrowserPromessa;
 	}
@@ -2329,27 +2342,111 @@
 		var brBtn = panel.querySelector( '.trrocket-ve-bulk-br' );
 		var noteEl = panel.querySelector( '.trrocket-ve-bulk-note' );
 
+		// Il riquadro per chi il traduttore del browser non ce l'ha (o non parte): una
+		// spiegazione e tre strade gratuite, invece di «0 translated · 12 ⚠» in un angolo.
+		// 'lento': lo scaricamento non si muove da un pezzo (il lavoro continua sotto);
+		// 'fallito': non e' stato tradotto niente.
+		function aiutoBrowser( tipo ) {
+			var box = panel.querySelector( '.trrocket-ve-bulk-help' );
+			if ( ! box ) {
+				box = document.createElement( 'div' );
+				box.className = 'trrocket-ve-bulk-help';
+				box.setAttribute( 'role', 'status' );
+				box.innerHTML = '<b class="trrocket-ve-bulk-help-tit"></b><p></p>'
+					+ '<a class="trrocket-ve-bulk-help-gem" target="_blank" rel="noopener"></a><span class="trrocket-ve-bulk-help-tip"></span>'
+					+ '<a class="trrocket-ve-bulk-help-ai"></a>'
+					+ '<button type="button" class="trrocket-ve-bulk-help-paste"></button><span class="trrocket-ve-bulk-help-tip2"></span>'
+					+ '<p class="trrocket-ve-bulk-help-pc"></p>';
+				box.querySelector( 'p' ).textContent = VE.i18n.brHelpTxt || '';
+				var gem = box.querySelector( '.trrocket-ve-bulk-help-gem' );
+				gem.textContent = ( VE.i18n.brHelpGemini || 'Get a free Gemini key' ) + ' ↗';
+				gem.href = VE.geminiGuide || 'https://translaterocket.com/api-keys/gemini-api-key/';
+				box.querySelector( '.trrocket-ve-bulk-help-tip' ).textContent = VE.i18n.brHelpGeminiTip || '';
+				var ai = box.querySelector( '.trrocket-ve-bulk-help-ai' );
+				ai.textContent = VE.i18n.brHelpAi || 'AI Translation';
+				ai.href = VE.aiUrl || '#';
+				var pb = box.querySelector( '.trrocket-ve-bulk-help-paste' );
+				pb.textContent = VE.i18n.brHelpPaste || 'Copy → Google Translate → paste back';
+				box.querySelector( '.trrocket-ve-bulk-help-tip2' ).textContent = VE.i18n.brHelpPasteTip || '';
+				pb.addEventListener( 'click', function () {
+					var dove = panel.querySelector( '.trrocket-ve-bulk-sub' );
+					if ( dove ) { dove.scrollIntoView( { behavior: 'smooth', block: 'start' } ); dove.classList.add( 'trrocket-ve-lampo' ); setTimeout( function () { dove.classList.remove( 'trrocket-ve-lampo' ); }, 1600 ); }
+					if ( copyBtn ) { copyBtn.focus(); }
+				} );
+				box.querySelector( '.trrocket-ve-bulk-help-pc' ).textContent = VE.i18n.brHelpPc || '';
+				progBox.parentNode.insertBefore( box, progBox.nextSibling );
+			}
+			box.querySelector( '.trrocket-ve-bulk-help-tit' ).textContent = ( 'lento' === tipo ) ? ( VE.i18n.brHelpSlow || '' ) : ( VE.i18n.brHelpTit || '' );
+			box.hidden = false;
+		}
+		function nascondiAiuto() {
+			var box = panel.querySelector( '.trrocket-ve-bulk-help' );
+			if ( box ) { box.hidden = true; }
+		}
+		function fmt2( t, a, b ) { return String( t || '' ).replace( '%1$d', String( a ) ).replace( '%2$d', String( b ) ).replace( '%d', String( a ) ).replace( '%%', '%' ); }
+
 		function autoBrowser() {
 			if ( running ) { return; }
 			var m = mode();
 			var list = navUnits().filter( unitTodo );
 			if ( ! list.length ) { msg.textContent = VE.i18n.bulkNothing || ''; return; }
 			running = true;
-			msg.textContent = VE.i18n.bulkBrowserDl || VE.i18n.bulkRun || '';
+			nascondiAiuto();
+			// Il pulsante si spegne subito: prima restava uguale, e sembrava che il clic
+			// non avesse fatto niente (si ricliccava).
+			brBtn.disabled = true;
+			brBtn.setAttribute( 'aria-busy', 'true' );
+			msg.textContent = '';
+			progBox.hidden = false;
+			progFill.style.width = '0%';
+			progTxt.textContent = fmt2( VE.i18n.brDlPct || '%d%%', 0 );
+			// Fermo = la percentuale non cresce. Chrome manda subito un «0%», e contarlo come
+			// segno di vita lasciava l'utente ad aspettare minuti senza alternative (prova, 24/9).
+			var pronto = false, ultimaPct = -1, ultimoPasso = Date.now();
+			suScaricamento = function ( quota ) {
+				var pct = Math.max( 0, Math.min( 100, Math.round( ( quota || 0 ) * 100 ) ) );
+				if ( pct > ultimaPct ) { ultimaPct = pct; ultimoPasso = Date.now(); }
+				progFill.style.width = pct + '%';
+				progTxt.textContent = fmt2( VE.i18n.brDlPct || '%d%%', pct );
+			};
+			// 45 secondi fermo: si mostrano le alternative, senza fermare il lavoro.
+			var cane = setInterval( function () {
+				if ( running && ! pronto && Date.now() - ultimoPasso > 45000 ) { aiutoBrowser( 'lento' ); clearInterval( cane ); }
+			}, 3000 );
+			function chiudi( ok, fail ) {
+				clearInterval( cane );
+				suScaricamento = null;
+				running = false;
+				brBtn.disabled = false;
+				brBtn.removeAttribute( 'aria-busy' );
+				progBox.hidden = true;
+				msg.textContent = fail ? fmt2( VE.i18n.brDone || '%1$d · %2$d', ok, fail ) : ( VE.i18n.bulkDone || '%d translated' ).replace( '%d', String( ok ) );
+				try { updateProgress(); } catch ( e ) {}
+				if ( 0 === ok && fail > 0 ) { aiutoBrowser( 'fallito' ); } else if ( fail > 0 ) { aiutoBrowser( 'fallito' ); } else { nascondiAiuto(); }
+			}
 			prendiTraduttore().then( function () {
-				msg.textContent = VE.i18n.bulkRun || '';
-				setProg( 0, list.length );
+				pronto = true;
+				clearInterval( cane );
+				nascondiAiuto();
 				var i = 0, ok = 0, fail = 0;
+				setProg( 0, list.length );
+				progTxt.textContent = fmt2( VE.i18n.brRun || '%1$d / %2$d', 0, list.length );
 				( function step() {
-					if ( i >= list.length ) { running = false; finish( ok, fail ); return; }
+					if ( i >= list.length ) { chiudi( ok, fail ); return; }
 					var u = list[ i++ ];
 					traduciColBrowser( unitSource( u, m ) ).then( function ( out ) {
-						applyUnit( u, out, m, function ( good ) { good ? ok++ : fail++; setProg( i, list.length ); step(); } );
-					} ).catch( function () { fail++; setProg( i, list.length ); step(); } );
+						applyUnit( u, out, m, function ( good ) { good ? ok++ : fail++; setProg( i, list.length ); progTxt.textContent = fmt2( VE.i18n.brRun || '%1$d / %2$d', i, list.length ); step(); } );
+					} ).catch( function () {
+						fail++;
+						// La prima frase fallisce e nessuna e' riuscita: le alternative si mostrano
+						// subito, senza aspettare che il browser fallisca anche tutte le altre.
+						if ( 0 === ok ) { aiutoBrowser( 'lento' ); }
+						setProg( i, list.length ); step();
+					} );
 				}() );
 			} ).catch( function () {
-				running = false;
-				msg.textContent = VE.i18n.bulkBrowserErr || '';
+				// Il modello non si e' potuto preparare: niente e' stato tradotto.
+				chiudi( 0, list.length );
 			} );
 		}
 

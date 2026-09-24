@@ -3253,3 +3253,103 @@ msgid_plural "Improve %d browser translations with AI"
 msgstr[0] "Ulepsz %d tłumaczenie przeglądarki za pomocą AI"
 msgstr[1] "Ulepsz %d tłumaczenia przeglądarki za pomocą AI"
 msgstr[2] "Ulepsz %d tłumaczeń przeglądarki za pomocą AI"
+
+#: src/Frontend/VisualEditor.php
+msgid "%1$d translated · %2$d could not be translated"
+msgstr "%1$d przetłumaczonych · %2$d nie udało się przetłumaczyć"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copy → Google Translate → paste back"
+msgstr "Kopiuj → Google Translate → wklej"
+
+#: src/Frontend/VisualEditor.php
+msgid "Downloading the language model (only the first time)… %d%%"
+msgstr "Pobieranie modelu językowego (tylko za pierwszym razem)… %d%%"
+
+#: src/Frontend/VisualEditor.php
+msgid "Get a free Gemini key — 5 minutes, no card"
+msgstr "Zdobądź darmowy klucz Gemini — 5 minut, bez karty"
+
+#: src/Frontend/VisualEditor.php
+msgid "Open AI Translation"
+msgstr "Otwórz AI Translation"
+
+#: src/Frontend/VisualEditor.php
+msgid "Or open this page in the latest Chrome or Edge on a computer."
+msgstr "Albo otwórz tę stronę w najnowszej wersji Chrome lub Edge na komputerze."
+
+#: src/Frontend/VisualEditor.php
+msgid "Right below: copy the text, translate it in Google Translate, paste it back."
+msgstr "Poniżej: skopiuj tekst, przetłumacz go w Google Translate i wklej z powrotem."
+
+#: src/Frontend/VisualEditor.php
+msgid "Step-by-step guide. Then paste the key in AI Translation and translate everything with one click."
+msgstr "Instrukcja krok po kroku. Następnie wklej klucz w AI Translation i przetłumacz wszystko jednym kliknięciem."
+
+#: src/Frontend/VisualEditor.php
+msgid "The free translator built into the browser works only in recent Chrome and Edge on a computer with enough memory and disk space. Here are three other ways, all free:"
+msgstr "Bezpłatny tłumacz wbudowany w przeglądarkę działa tylko w najnowszych wersjach Chrome i Edge na komputerze z wystarczającą ilością pamięci i miejsca na dysku. Oto trzy inne sposoby, wszystkie bezpłatne:"
+
+#: src/Frontend/VisualEditor.php
+msgid "This is taking longer than it should"
+msgstr "To trwa dłużej, niż powinno"
+
+#: src/Frontend/VisualEditor.php
+msgid "Your browser could not translate this page"
+msgstr "Twoja przeglądarka nie mogła przetłumaczyć tej strony"
+
+#: src/Frontend/VisualEditor.php
+msgid "How to get a free Gemini key ↗"
+msgstr "Jak zdobyć darmowy klucz Gemini ↗"
+
+#: src/Frontend/VisualEditor.php
+msgid "The free translator runs only in recent Chrome and Edge on a computer. The easiest free option from here: a Gemini key — 5 minutes, no card."
+msgstr "Bezpłatny tłumacz działa tylko w najnowszych wersjach Chrome i Edge na komputerze. Najprostsza bezpłatna opcja stąd: klucz Gemini — 5 minut, bez karty."
+
+#: src/Frontend/VisualEditor.php
+msgid "This browser cannot translate by itself."
+msgstr "Ta przeglądarka nie potrafi tłumaczyć samodzielnie."
+
+#: src/Admin/Admin.php
+msgid "Paste your API key in the field above first: the list comes from the provider, and it only answers with a key."
+msgstr "Najpierw wklej klucz API w polu powyżej: lista pochodzi od dostawcy, który odpowiada tylko z kluczem."
+
+#: src/Admin/Admin.php
+msgid "The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active."
+msgstr "Dostawca odrzucił ten klucz API. Sprawdź, czy skopiowano go w całości, bez spacji, i czy jest nadal aktywny."
+
+#: src/Admin/Admin.php
+msgid "The provider says too many requests right now. Wait a minute and try again."
+msgstr "Dostawca zgłasza w tej chwili zbyt wiele żądań. Odczekaj minutę i spróbuj ponownie."
+
+#: src/Admin/Admin.php
+msgid "Your site could not reach the provider (network or firewall). Try again later, or ask your host."
+msgstr "Twoja witryna nie mogła połączyć się z dostawcą (sieć lub zapora). Spróbuj później lub zapytaj swój hosting."
+
+#: src/Admin/Admin.php
+msgid "The provider answered with an error. Try again in a few minutes."
+msgstr "Dostawca odpowiedział błędem. Spróbuj ponownie za kilka minut."
+
+#: src/Admin/Admin.php
+msgid "%d models available — pick one from the list."
+msgstr "Dostępne modele: %d — wybierz jeden z listy."
+
+#: src/Admin/Admin.php
+msgid "Preview size"
+msgstr "Rozmiar podglądu"
+
+#: src/Admin/Admin.php
+msgid "Desktop"
+msgstr "Komputer"
+
+#: src/Admin/Admin.php
+msgid "Phone"
+msgstr "Telefon"
+
+#: src/Admin/Admin.php
+msgid "This is the switcher your visitors will see, drawn by the same code as your site, and it follows every change before you save. Click it to try it. Only the font may differ: on your site it takes the theme’s font, unless you choose one above."
+msgstr "Tak będzie wyglądał przełącznik, który zobaczą odwiedzający — rysowany tym samym kodem co Twoja witryna — i odzwierciedla każdą zmianę jeszcze przed zapisaniem. Kliknij go, aby wypróbować. Różnić się może tylko czcionka: na witrynie przejmuje czcionkę motywu, chyba że wybierzesz ją powyżej."
+
+#: src/Admin/Admin.php
+msgid "Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The Desktop and Phone buttons of the live preview show both."
+msgstr "Na jakich ekranach pojawia się ten przełącznik. Utwórz profil „Tylko komputer” i drugi „Tylko telefon”, aby zaprojektować osobne menu języków dla każdego (próg 783px). Przyciski Komputer i Telefon w podglądzie na żywo pokazują oba."

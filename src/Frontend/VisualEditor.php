@@ -208,6 +208,10 @@ class VisualEditor {
 				'curFlag'  => \TranslateRocket\Flags::html( $lang, Languages::flag( $lang ) ),
 				'autoG'    => \TranslateRocket\GoogleFree::auto_enabled(),
 				'aiReady'  => (bool) ( ( $trr_ap = Registry::active() ) && $trr_ap->is_configured() ),
+				// Dove mandare chi il traduttore del browser non ce l'ha: la guida alla chiave
+				// Gemini gratuita e la schermata dove incollarla.
+				'aiUrl'    => admin_url( 'admin.php?page=translate-rocket-ai' ),
+				'geminiGuide' => 'https://translaterocket.com/api-keys/gemini-api-key/',
 				// Per il traduttore dentro Chrome ed Edge, che lavora sul dispositivo e
 				// non chiede nessuna chiave. Se questo browser ce l'abbia si sa solo a
 				// video: qui passiamo solo i codici lingua nel formato che vuole lui.
@@ -246,6 +250,24 @@ class VisualEditor {
 					'bulkBrowserTip' => __( 'Chrome and Edge on a computer can translate on the device itself: it costs nothing and the text never leaves your machine. Quality is below the AI models.', 'translate-rocket' ),
 					'bulkBrowserDl'  => __( 'Downloading the language model — this happens once…', 'translate-rocket' ),
 					'bulkBrowserErr' => __( 'The browser translator stopped with an error.', 'translate-rocket' ),
+					// Mentre il browser scarica il modello e traduce: in chiaro, vicino al pulsante.
+					/* translators: %d: percentage downloaded. */
+					'brDlPct'        => __( 'Downloading the language model (only the first time)… %d%%', 'translate-rocket' ),
+					/* translators: 1: sentences done, 2: total sentences. */
+					'brRun'          => __( 'Translating %1$d of %2$d…', 'translate-rocket' ),
+					/* translators: 1: sentences translated, 2: sentences that could not be translated. */
+					'brDone'         => __( '%1$d translated · %2$d could not be translated', 'translate-rocket' ),
+					// Quando il browser non ce la fa: invece di «0 translated · 12 ⚠», una spiegazione
+					// e tre strade (visto nella prova «WordPress nuovo», 24/9/2026).
+					'brHelpTit'      => __( 'Your browser could not translate this page', 'translate-rocket' ),
+					'brHelpSlow'     => __( 'This is taking longer than it should', 'translate-rocket' ),
+					'brHelpTxt'      => __( 'The free translator built into the browser works only in recent Chrome and Edge on a computer with enough memory and disk space. Here are three other ways, all free:', 'translate-rocket' ),
+					'brHelpGemini'   => __( 'Get a free Gemini key — 5 minutes, no card', 'translate-rocket' ),
+					'brHelpGeminiTip' => __( 'Step-by-step guide. Then paste the key in AI Translation and translate everything with one click.', 'translate-rocket' ),
+					'brHelpPaste'    => __( 'Copy → Google Translate → paste back', 'translate-rocket' ),
+					'brHelpPasteTip' => __( 'Right below: copy the text, translate it in Google Translate, paste it back.', 'translate-rocket' ),
+					'brHelpPc'       => __( 'Or open this page in the latest Chrome or Edge on a computer.', 'translate-rocket' ),
+					'brHelpAi'       => __( 'Open AI Translation', 'translate-rocket' ),
 					// Sul telefono il pulsante si mostra SPENTO invece di sparire: se sparisce,
 					// nessuno sa che la funzione esiste. Queste due righe spiegano dove usarla.
 					'soloPcTit'      => __( 'This one needs a computer', 'translate-rocket' ),

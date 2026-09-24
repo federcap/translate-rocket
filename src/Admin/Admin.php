@@ -46,6 +46,7 @@ class Admin {
 		add_action( 'admin_init', array( $this, 'maybe_save_memory' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'wp_ajax_trrocket_models', array( $this, 'ajax_models' ) );
+		add_action( 'wp_ajax_trrocket_sw_preview', array( $this, 'ajax_switcher_preview' ) );
 		add_action( 'wp_ajax_trrocket_gt', array( $this, 'ajax_gt' ) );
 		add_action( 'wp_ajax_trrocket_deepl_usage', array( $this, 'ajax_deepl_usage' ) );
 		add_action( 'wp_ajax_trrocket_test_provider', array( $this, 'ajax_test_provider' ) );
@@ -382,6 +383,15 @@ class Admin {
 				\TranslateRocket\Plugin::asset_ver( 'assets/js/switcher-admin.js' ),
 				true
 			);
+			wp_localize_script(
+				'trrocket-switcher-admin',
+				'TRRocketSwPreview',
+				array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'trrocket_sw_preview' ),
+					'empty'   => __( 'Add target languages to see the preview.', 'translate-rocket' ),
+				)
+			);
 		}
 
 		if ( false !== strpos( $hook, 'translate-rocket-ai' ) ) {
@@ -401,6 +411,13 @@ class Admin {
 					'i18n'    => array(
 						'loading' => __( 'Loading…', 'translate-rocket' ),
 						'none'    => __( 'No models found — check the API key for this provider.', 'translate-rocket' ),
+						'noKey'   => __( 'Paste your API key in the field above first: the list comes from the provider, and it only answers with a key.', 'translate-rocket' ),
+						'refused' => __( 'The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active.', 'translate-rocket' ),
+						'busy'    => __( 'The provider says too many requests right now. Wait a minute and try again.', 'translate-rocket' ),
+						'net'     => __( 'Your site could not reach the provider (network or firewall). Try again later, or ask your host.', 'translate-rocket' ),
+						'provErr' => __( 'The provider answered with an error. Try again in a few minutes.', 'translate-rocket' ),
+						/* translators: %d: number of AI models found. */
+						'found'   => __( '%d models available — pick one from the list.', 'translate-rocket' ),
 						'pick'    => __( '— pick a model —', 'translate-rocket' ),
 						'chars'   => __( 'characters used', 'translate-rocket' ),
 					),
@@ -476,9 +493,23 @@ class Admin {
 		if ( null === $provider ) {
 			wp_send_json_error( array( 'error' => 'unknown-provider' ) );
 		}
+		// Nothing typed and nothing saved: there is no key to ask the provider with.
+		if ( ! $provider->is_configured() ) {
+			wp_send_json_error( array( 'error' => 'no-key' ) );
+		}
 		$models = $provider->list_models();
 		if ( empty( $models ) ) {
-			wp_send_json_error( array( 'error' => 'no-models' ) );
+			$why = method_exists( $provider, 'models_error' ) ? (string) $provider->models_error() : '';
+			if ( in_array( $why, array( 'http-401', 'http-403' ), true ) ) {
+				$why = 'key-refused';
+			} elseif ( 'http-429' === $why ) {
+				$why = 'busy';
+			} elseif ( '' === $why ) {
+				$why = 'no-models';
+			} elseif ( 'net' !== $why ) {
+				$why = 'provider-error';
+			}
+			wp_send_json_error( array( 'error' => $why ) );
 		}
 		wp_send_json_success( array( 'models' => array_values( $models ) ) );
 	}
@@ -1527,7 +1558,9 @@ class Admin {
 	 * Save the switcher customization settings.
 	 */
 	public function maybe_save_switcher(): void {
-		if ( ! isset( $_POST['trrocket_switcher_nonce'] ) ) {
+		// Only the customizer's own submit saves. The live preview posts the same form to
+		// admin-ajax.php, and must never save what is only being tried out.
+		if ( ! isset( $_POST['trrocket_switcher_nonce'] ) || wp_doing_ajax() ) {
 			return;
 		}
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -1568,6 +1601,26 @@ class Admin {
 			? ( is_array( $settings['switcher'] ?? null ) ? $settings['switcher'] : array() )
 			: ( is_array( $settings['switchers'][ $profile ] ?? null ) ? $settings['switchers'][ $profile ] : $settings['switcher'] );
 
+		$sw = $this->switcher_from_post( $sw );
+
+		if ( 'default' === $profile ) {
+			$settings['switcher'] = $sw;
+		} else {
+			$settings['switchers'][ $profile ] = $sw;
+		}
+		Settings::update( $settings );
+		$this->redirect_switcher( $profile );
+	}
+
+	/**
+	 * The switcher settings posted by the customizer form, checked one by one. Used to
+	 * save, and by the live preview to draw what has not been saved yet.
+	 *
+	 * @param array<string,mixed> $sw Current settings of the profile (kept for keys the form does not send).
+	 * @return array<string,mixed>
+	 */
+	private function switcher_from_post( array $sw ): array {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- both callers verify the nonce first.
 		$type = isset( $_POST['sw_type'] ) ? sanitize_key( $_POST['sw_type'] ) : 'inline';
 		$show = isset( $_POST['sw_show'] ) ? sanitize_key( $_POST['sw_show'] ) : 'both';
 		$cur  = isset( $_POST['sw_current'] ) ? sanitize_key( $_POST['sw_current'] ) : 'show';
@@ -1626,14 +1679,21 @@ class Admin {
 		foreach ( array( 'flag_tl', 'flag_tr', 'flag_br', 'flag_bl' ) as $ck ) {
 			$sw[ $ck ] = isset( $_POST[ 'sw_' . $ck ] ) ? min( 50, max( 0, (int) $_POST[ 'sw_' . $ck ] ) ) : 0;
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+		return $sw;
+	}
 
-		if ( 'default' === $profile ) {
-			$settings['switcher'] = $sw;
-		} else {
-			$settings['switchers'][ $profile ] = $sw;
+	/**
+	 * AJAX: the live preview, drawn by the site's own switcher code with the settings
+	 * currently in the form (saved or not).
+	 */
+	public function ajax_switcher_preview(): void {
+		check_ajax_referer( 'trrocket_sw_preview' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'error' => 'forbidden' ) );
 		}
-		Settings::update( $settings );
-		$this->redirect_switcher( $profile );
+		$view = ( isset( $_POST['view'] ) && 'phone' === $_POST['view'] ) ? 'phone' : 'desktop';
+		wp_send_json_success( ( new \TranslateRocket\Frontend\Switcher() )->preview_parts( $this->switcher_from_post( array() ), $view ) );
 	}
 
 	/**
@@ -1667,67 +1727,6 @@ class Admin {
 	}
 
 	/**
-	 * Server-rendered switcher for the live preview box. Built so the customizer
-	 * JS can toggle layout / show / names live (flag + name in separate spans,
-	 * plus a hidden <select> for the dropdown layout).
-	 */
-	private function switcher_preview(): string {
-		$router  = \TranslateRocket\Plugin::instance()->router();
-		$langs   = $router->active_languages();
-		$current = $router->current_language();
-		if ( count( $langs ) < 2 ) {
-			return '<p class="description">' . esc_html__( 'Add target languages to see the preview.', 'translate-rocket' ) . '</p>';
-		}
-
-		$items  = '';
-		$toggle = '';
-		$menu   = '';
-		$widest = '';
-		foreach ( $langs as $code ) {
-			$flag = \TranslateRocket\Flags::svg( $code );
-			if ( '' === $flag ) {
-				$flag = esc_html( Languages::flag( $code ) );
-			}
-			$native = Languages::label( $code );
-			$en     = Languages::english_label( $code );
-			$label  = '<span class="trrocket-flag-wrap">' . $flag . '</span> <span class="trrocket-name" data-native="' . esc_attr( $native ) . '" data-en="' . esc_attr( $en ) . '">' . esc_html( $native ) . '</span>';
-
-			if ( $code === $current ) {
-				$items .= '<li class="trrocket-current trr-prev-cur"><span>' . $label . '</span></li>';
-				$toggle = $label;
-			} else {
-				$items .= '<li><a role="link" tabindex="0">' . $label . '</a></li>';
-				$menu  .= '<li><a role="link" tabindex="0">' . $label . '</a></li>';
-			}
-			// The widest name decides the control's width, exactly as on the front-end.
-			if ( mb_strlen( Languages::label( $code ) ) > mb_strlen( $widest ) ) {
-				$widest = Languages::label( $code );
-			}
-		}
-
-		$caret = '<span class="trrocket-dd-caret" aria-hidden="true"><svg viewBox="0 0 10 6" width="10" height="6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
-
-		// Same structure as render_dropdown() on the front-end: an invisible in-flow
-		// ANCHOR sized to the widest item, plus the interactive OVERLAY on top. The
-		// preview used to be a simplified box whose menu was nailed open with an
-		// inline "display:block": you could see the menu's colours but never how it
-		// opens, which is half of what a switcher does. Now it opens and closes for
-		// real, on the same markup and the same CSS as the site.
-		$anchor = '<div class="trrocket-dd-anchor" aria-hidden="true">'
-			. '<span class="trrocket-dd-toggle"><span class="trrocket-flag-wrap">' . \TranslateRocket\Flags::svg( $current ) . '</span> <span class="trrocket-name">' . esc_html( $widest ) . '</span>' . $caret . '</span>'
-			. '</div>';
-
-		return '<ul class="trrocket-switcher trr-prev-ul">' . $items . '</ul>'
-			. '<div class="trrocket-dd trr-prev-dd" style="display:none">'
-			. $anchor
-			. '<div class="trrocket-dd-overlay">'
-			. '<button type="button" class="trrocket-dd-toggle" aria-haspopup="true" aria-expanded="false">' . $toggle . $caret . '</button>'
-			. '<ul class="trrocket-dd-menu">' . $menu . '</ul>'
-			. '</div>'
-			. '</div>';
-	}
-
-	/**
 	 * Switcher customization page: style, colours, presets, floating, live preview.
 	 */
 	public function render_switcher_page(): void {
@@ -1752,7 +1751,7 @@ class Admin {
 			<?php endif; ?>
 			<p class="trrocket-tagline"><?php esc_html_e( 'Design your switcher — create profiles (e.g. header, footer), each with its own style and a live preview.', 'translate-rocket' ); ?></p>
 
-			<div class="trrocket-card" style="max-width:none">
+			<div id="trr-sw-profiles" class="trrocket-card" style="max-width:none">
 				<strong><?php esc_html_e( 'Profile:', 'translate-rocket' ); ?></strong>
 				<a class="button <?php echo ( 'default' === $profile ) ? 'button-primary' : ''; ?>" href="<?php echo esc_url( $base ); ?>"><?php esc_html_e( 'Default', 'translate-rocket' ); ?></a>
 				<?php foreach ( $extras as $pid => $pdata ) : ?>
@@ -1817,7 +1816,7 @@ class Admin {
 									<option value="desktop" <?php selected( $g( 'device', 'both' ), 'desktop' ); ?>><?php esc_html_e( 'Desktop only', 'translate-rocket' ); ?></option>
 									<option value="mobile" <?php selected( $g( 'device', 'both' ), 'mobile' ); ?>><?php esc_html_e( 'Mobile only', 'translate-rocket' ); ?></option>
 								</select>
-								<p class="description"><?php esc_html_e( 'Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The live preview above always shows the desktop appearance.', 'translate-rocket' ); ?></p>
+								<p class="description"><?php esc_html_e( 'Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The Desktop and Phone buttons of the live preview show both.', 'translate-rocket' ); ?></p>
 							</td></tr>
 							<tr><th scope="row"><?php esc_html_e( 'On mobile', 'translate-rocket' ); ?></th><td>
 								<select id="sw_mobile" name="sw_mobile">
@@ -2036,8 +2035,20 @@ class Admin {
 				<div class="trr-sw-side">
 					<div class="trrocket-card trr-sw-sticky">
 						<h2><?php esc_html_e( 'Live preview', 'translate-rocket' ); ?></h2>
-						<div id="trr-sw-preview" style="padding:24px;border:1px dashed #ccd0d4;border-radius:8px;background:#fff;text-align:center">
-							<?php echo wp_kses( $this->switcher_preview() , \TranslateRocket\Kses::html_rules() ); ?>
+						<div class="trr-sw-views" role="group" aria-label="<?php esc_attr_e( 'Preview size', 'translate-rocket' ); ?>">
+							<button type="button" class="button trr-sw-view is-on" data-view="desktop" aria-pressed="true"><span class="dashicons dashicons-desktop" aria-hidden="true"></span> <?php esc_html_e( 'Desktop', 'translate-rocket' ); ?></button>
+							<button type="button" class="button trr-sw-view" data-view="phone" aria-pressed="false"><span class="dashicons dashicons-smartphone" aria-hidden="true"></span> <?php esc_html_e( 'Phone', 'translate-rocket' ); ?></button>
+						</div>
+						<div id="trr-sw-preview">
+							<?php
+							// The switcher of the site itself, in a frame of its own: same markup, same
+							// CSS, and none of the dashboard's styles leaking into it.
+							$trr_doc = \TranslateRocket\Frontend\Switcher::preview_document(
+								( new \TranslateRocket\Frontend\Switcher() )->preview_parts( $sw, 'desktop' ),
+								__( 'Add target languages to see the preview.', 'translate-rocket' )
+							);
+							?>
+							<iframe id="trr-sw-frame" title="<?php esc_attr_e( 'Live preview', 'translate-rocket' ); ?>" srcdoc="<?php echo esc_attr( $trr_doc ); ?>"></iframe>
 						</div>
 						<div class="trr-sw-bgrow">
 							<span class="description"><?php esc_html_e( 'Preview on:', 'translate-rocket' ); ?></span>
@@ -2049,7 +2060,7 @@ class Admin {
 							<button type="button" class="trr-sw-bg trr-sw-bg-img" data-bg="img" title="<?php esc_attr_e( 'Photo', 'translate-rocket' ); ?>"></button>
 							<input type="color" class="trr-sw-bg-pick" value="#ffffff" title="<?php esc_attr_e( 'Custom background', 'translate-rocket' ); ?>" />
 						</div>
-						<p class="description"><?php esc_html_e( 'Colours update live; layout and labels update after you save.', 'translate-rocket' ); ?></p>
+						<p class="description"><?php esc_html_e( 'This is the switcher your visitors will see, drawn by the same code as your site, and it follows every change before you save. Click it to try it. Only the font may differ: on your site it takes the theme’s font, unless you choose one above.', 'translate-rocket' ); ?></p>
 					</div>
 				</div>
 			</div>
@@ -2675,6 +2686,20 @@ JS;
 			. '</a>';
 		echo '</nav>';
 
+		// Gli avvisi (nostri e di altri plugin) WordPress li stampa SOPRA la schermata, e il
+		// suo common.js li sposta qui sotto solo a caricamento finito: su un sito lento anche
+		// dopo 2-3 secondi, e tutta la pagina saltava di 170-300 px a ogni clic su una scheda
+		// (Federico, 24/9/2026). Si fa lo stesso spostamento subito, mentre la pagina si
+		// disegna: common.js poi li trova gia' al loro posto e non si muove piu' niente.
+		echo '<hr class="wp-header-end">';
+		$sposta = '(function(){var e=document.currentScript&&document.currentScript.previousElementSibling;var c=document.getElementById("wpbody-content");if(!e||!c){return;}'
+			. 'Array.prototype.slice.call(c.children).forEach(function(n){if(n.matches&&n.matches("div.updated,div.error,div.notice")&&!n.matches(".inline,.below-h2")){e.parentNode.insertBefore(n,e.nextSibling);e=n;}});})();';
+		if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+			wp_print_inline_script_tag( $sposta );
+		} else {
+			echo '<script>' . $sposta . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput -- fixed string.
+		}
+
 		// Il cassetto: da qualunque schermata si vede cosa manca senza perdere la
 		// pagina su cui si sta lavorando. Non sulla schermata dedicata, che ha gia'
 		// l'elenco per intero.
@@ -3031,6 +3056,7 @@ JS
 											<button type="button" class="button trr-load-models" data-provider="<?php echo esc_attr( $pid ); ?>">&#8635; <?php esc_html_e( 'Load available models', 'translate-rocket' ); ?></button>
 											<select class="trr-models-select" data-provider="<?php echo esc_attr( $pid ); ?>" style="display:none;margin-left:6px;max-width:280px"></select>
 										</p>
+										<p class="trr-models-msg" data-provider="<?php echo esc_attr( $pid ); ?>" role="status" aria-live="polite" hidden></p>
 										<p class="description"><?php esc_html_e( 'Queries this provider with your key and lists the exact models it can use right now.', 'translate-rocket' ); ?></p>
 									</td>
 								</tr>
@@ -3997,6 +4023,11 @@ JS;
 						<input type="radio" name="trr_method" value="manual" checked />
 						<span><strong><?php esc_html_e( 'No API key for now', 'translate-rocket' ); ?></strong><br><?php esc_html_e( 'Translate by hand, or let Chrome and Edge translate the whole site for free from the Translations page — the text never leaves your computer. You can add a key later at any time.', 'translate-rocket' ); ?></span>
 					</label>
+					<?php // Se questo browser non ha il traduttore integrato, la strada «senza chiave» qui non funziona: lo si dice subito (prova «WordPress nuovo», 24/9/2026). ?>
+					<div class="trr-wiz-nobr notice notice-warning inline" id="trr-wiz-nobr" hidden>
+						<p><strong><?php esc_html_e( 'This browser cannot translate by itself.', 'translate-rocket' ); ?></strong> <?php esc_html_e( 'The free translator runs only in recent Chrome and Edge on a computer. The easiest free option from here: a Gemini key — 5 minutes, no card.', 'translate-rocket' ); ?>
+						<a href="https://translaterocket.com/api-keys/gemini-api-key/" target="_blank" rel="noopener"><?php esc_html_e( 'How to get a free Gemini key ↗', 'translate-rocket' ); ?></a></p>
+					</div>
 				</section>
 
 				<!-- Step 3: switcher -->
@@ -4048,7 +4079,21 @@ JS;
 		next.hidden = ( i === steps.length - 1 );
 		finish.hidden = ( i !== steps.length - 1 );
 	}
-	next.addEventListener( 'click', function () { show( i + 1 ); } );
+	// Il traduttore del browser c'e'? Solo sui computer, in Chrome ed Edge recenti. Se no, la
+	// nota sotto «No API key for now» dice subito che qui quella strada non funziona.
+	var nobr = document.getElementById( 'trr-wiz-nobr' );
+	function controllaBrowser() {
+		if ( ! nobr ) { return; }
+		var uad = navigator.userAgentData;
+		var telefono = ( uad && typeof uad.mobile === 'boolean' ) ? uad.mobile : /Android|iPhone|iPad|iPod|Mobile/i.test( navigator.userAgent || '' );
+		if ( telefono || typeof Translator === 'undefined' || ! Translator.availability || ! window.isSecureContext ) { nobr.hidden = false; return; }
+		var da = ( document.getElementById( 'trr-wiz-source' ) || {} ).value || 'en';
+		var a = document.querySelector( '.trr-wiz-target input:checked' );
+		Translator.availability( { sourceLanguage: da.split( '-' )[ 0 ], targetLanguage: ( a ? a.value : 'it' ).split( '-' )[ 0 ] } )
+			.then( function ( st ) { nobr.hidden = !! st && 'unavailable' !== st; } )
+			.catch( function () { nobr.hidden = false; } );
+	}
+	next.addEventListener( 'click', function () { show( i + 1 ); if ( 1 === i ) { controllaBrowser(); } } );
 	back.addEventListener( 'click', function () { show( i - 1 ); } );
 	// Hide the chosen source language from the targets grid.
 	var src = document.getElementById( 'trr-wiz-source' );

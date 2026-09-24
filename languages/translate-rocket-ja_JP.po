@@ -3217,3 +3217,103 @@ msgstr[0] "ブラウザが翻訳した%d件の文が、AIによる翻訳にな�
 msgid "Improve %d browser translation with AI"
 msgid_plural "Improve %d browser translations with AI"
 msgstr[0] "ブラウザ翻訳%d件をAIで改善"
+
+#: src/Frontend/VisualEditor.php
+msgid "%1$d translated · %2$d could not be translated"
+msgstr "%1$d件翻訳済み・%2$d件は翻訳できませんでした"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copy → Google Translate → paste back"
+msgstr "コピー → Google Translate → 貼り付け"
+
+#: src/Frontend/VisualEditor.php
+msgid "Downloading the language model (only the first time)… %d%%"
+msgstr "言語モデルをダウンロード中（初回のみ）… %d%%"
+
+#: src/Frontend/VisualEditor.php
+msgid "Get a free Gemini key — 5 minutes, no card"
+msgstr "無料のGeminiキーを取得 — 5分、カード不要"
+
+#: src/Frontend/VisualEditor.php
+msgid "Open AI Translation"
+msgstr "AI Translationを開く"
+
+#: src/Frontend/VisualEditor.php
+msgid "Or open this page in the latest Chrome or Edge on a computer."
+msgstr "または、パソコンで最新のChromeかEdgeでこのページを開いてください。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Right below: copy the text, translate it in Google Translate, paste it back."
+msgstr "すぐ下: テキストをコピーし、Google Translateで翻訳して貼り戻します。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Step-by-step guide. Then paste the key in AI Translation and translate everything with one click."
+msgstr "ステップごとのガイドです。次に、キーをAI Translationに貼り付けて、ワンクリックですべて翻訳します。"
+
+#: src/Frontend/VisualEditor.php
+msgid "The free translator built into the browser works only in recent Chrome and Edge on a computer with enough memory and disk space. Here are three other ways, all free:"
+msgstr "ブラウザに組み込まれた無料の翻訳機能は、十分なメモリとディスク容量があるパソコンの最新版ChromeまたはEdgeでのみ動作します。以下は他の3つの方法で、すべて無料です。"
+
+#: src/Frontend/VisualEditor.php
+msgid "This is taking longer than it should"
+msgstr "予想より時間がかかっています"
+
+#: src/Frontend/VisualEditor.php
+msgid "Your browser could not translate this page"
+msgstr "お使いのブラウザはこのページを翻訳できませんでした"
+
+#: src/Frontend/VisualEditor.php
+msgid "How to get a free Gemini key ↗"
+msgstr "無料のGeminiキーの取得方法 ↗"
+
+#: src/Frontend/VisualEditor.php
+msgid "The free translator runs only in recent Chrome and Edge on a computer. The easiest free option from here: a Gemini key — 5 minutes, no card."
+msgstr "無料の翻訳機能はパソコンの最新版ChromeとEdgeでのみ動作します。ここから最も簡単な無料の選択肢は、Geminiキーです — 5分、カード不要。"
+
+#: src/Frontend/VisualEditor.php
+msgid "This browser cannot translate by itself."
+msgstr "このブラウザは自分で翻訳することができません。"
+
+#: src/Admin/Admin.php
+msgid "Paste your API key in the field above first: the list comes from the provider, and it only answers with a key."
+msgstr "まず上の欄にAPIキーを貼り付けてください。一覧はプロバイダーから届き、キーがないと応答しません。"
+
+#: src/Admin/Admin.php
+msgid "The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active."
+msgstr "プロバイダーがこのAPIキーを拒否しました。空白を含めず全体をコピーしたか、キーがまだ有効かを確認してください。"
+
+#: src/Admin/Admin.php
+msgid "The provider says too many requests right now. Wait a minute and try again."
+msgstr "プロバイダーによると現在リクエストが多すぎます。1分待ってからもう一度お試しください。"
+
+#: src/Admin/Admin.php
+msgid "Your site could not reach the provider (network or firewall). Try again later, or ask your host."
+msgstr "サイトからプロバイダーに接続できませんでした（ネットワークまたはファイアウォール）。後でもう一度試すか、ホスティング会社にお問い合わせください。"
+
+#: src/Admin/Admin.php
+msgid "The provider answered with an error. Try again in a few minutes."
+msgstr "プロバイダーがエラーを返しました。数分後にもう一度お試しください。"
+
+#: src/Admin/Admin.php
+msgid "%d models available — pick one from the list."
+msgstr "利用可能なモデル: %d件 — 一覧から選んでください。"
+
+#: src/Admin/Admin.php
+msgid "Preview size"
+msgstr "プレビューのサイズ"
+
+#: src/Admin/Admin.php
+msgid "Desktop"
+msgstr "デスクトップ"
+
+#: src/Admin/Admin.php
+msgid "Phone"
+msgstr "スマートフォン"
+
+#: src/Admin/Admin.php
+msgid "This is the switcher your visitors will see, drawn by the same code as your site, and it follows every change before you save. Click it to try it. Only the font may differ: on your site it takes the theme’s font, unless you choose one above."
+msgstr "これは訪問者に表示される言語切替そのもので、サイトと同じコードで描画され、保存する前からすべての変更を反映します。クリックして試せます。フォントだけは異なる場合があります。上でフォントを選ばない限り、サイトではテーマのフォントが使われます。"
+
+#: src/Admin/Admin.php
+msgid "Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The Desktop and Phone buttons of the live preview show both."
+msgstr "この言語切替を表示する画面サイズです。「デスクトップのみ」と「モバイルのみ」のプロファイルを作ると、それぞれに別の言語メニューを作れます（境界 783px）。ライブプレビューの「デスクトップ」と「スマートフォン」ボタンで両方を確認できます。"

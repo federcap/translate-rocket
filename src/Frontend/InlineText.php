@@ -240,6 +240,68 @@ class InlineText {
 	}
 
 	/**
+	 * The whole sentence put together from the translations of its pieces.
+	 *
+	 * Until the sentence was read as one (with <1>…</1> where a link or a bold word
+	 * sits), every piece was a string of its own, and older sites translated them one
+	 * by one: «Translate WordPress» and «into every language». Visitors still see those
+	 * pieces translated, but the sentence itself has no translation, so the visual
+	 * editor showed it in the source language with an empty box — 378 sentences on
+	 * translaterocket.com alone (24/9/2026). This builds the sentence from the pieces,
+	 * keeping the placeholders and the spaces around each piece.
+	 *
+	 * @param string               $src The sentence with its placeholders.
+	 * @param array<string,string> $map Translations by source text (the pieces).
+	 * @return string|null Null unless EVERY piece with a letter in it has a translation.
+	 */
+	public static function compose( string $src, array $map ): ?string {
+		if ( ! self::has_parts( $src ) ) {
+			return null;
+		}
+		$parts = preg_split( '#(</?\d{1,3}/?>)#', $src, -1, PREG_SPLIT_DELIM_CAPTURE );
+		if ( ! is_array( $parts ) ) {
+			return null;
+		}
+		$out   = '';
+		$fatti = 0;
+		foreach ( $parts as $k => $part ) {
+			if ( 1 === $k % 2 ) {
+				$out .= $part; // Il segnaposto, tale e quale.
+				continue;
+			}
+			$testo = trim( self::unescape( $part ) );
+			if ( '' === $testo || ! preg_match( '/\p{L}/u', $testo ) ) {
+				$out .= $part;
+				continue;
+			}
+			if ( ! isset( $map[ $testo ] ) || '' === trim( (string) $map[ $testo ] ) ) {
+				return null;
+			}
+			preg_match( '/^\s*/u', $part, $prima );
+			preg_match( '/\s*$/u', $part, $dopo );
+			$out .= ( $prima[0] ?? '' ) . self::escape( trim( (string) $map[ $testo ] ) ) . ( $dopo[0] ?? '' );
+			++$fatti;
+		}
+		return $fatti > 0 ? $out : null;
+	}
+
+	/**
+	 * The pieces of a sentence that each need a translation of their own.
+	 *
+	 * @return string[]
+	 */
+	public static function pieces( string $src ): array {
+		$out = array();
+		foreach ( preg_split( '#</?\d{1,3}/?>#', $src ) ?: array() as $part ) {
+			$t = trim( self::unescape( $part ) );
+			if ( '' !== $t && preg_match( '/\p{L}/u', $t ) ) {
+				$out[] = $t;
+			}
+		}
+		return $out;
+	}
+
+	/**
 	 * Does this sentence carry placeholders?
 	 *
 	 * @param string $text Text.

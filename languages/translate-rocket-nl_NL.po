@@ -3235,3 +3235,103 @@ msgid "Improve %d browser translation with AI"
 msgid_plural "Improve %d browser translations with AI"
 msgstr[0] "%d browservertaling verbeteren met AI"
 msgstr[1] "%d browservertalingen verbeteren met AI"
+
+#: src/Frontend/VisualEditor.php
+msgid "%1$d translated · %2$d could not be translated"
+msgstr "%1$d vertaald · %2$d konden niet worden vertaald"
+
+#: src/Frontend/VisualEditor.php
+msgid "Copy → Google Translate → paste back"
+msgstr "Kopiëren → Google Translate → plakken"
+
+#: src/Frontend/VisualEditor.php
+msgid "Downloading the language model (only the first time)… %d%%"
+msgstr "Taalmodel downloaden (alleen de eerste keer)… %d%%"
+
+#: src/Frontend/VisualEditor.php
+msgid "Get a free Gemini key — 5 minutes, no card"
+msgstr "Haal een gratis Gemini-sleutel op — 5 minuten, geen kaart nodig"
+
+#: src/Frontend/VisualEditor.php
+msgid "Open AI Translation"
+msgstr "AI Translation openen"
+
+#: src/Frontend/VisualEditor.php
+msgid "Or open this page in the latest Chrome or Edge on a computer."
+msgstr "Of open deze pagina in de nieuwste versie van Chrome of Edge op een computer."
+
+#: src/Frontend/VisualEditor.php
+msgid "Right below: copy the text, translate it in Google Translate, paste it back."
+msgstr "Hieronder: kopieer de tekst, vertaal deze in Google Translate en plak hem terug."
+
+#: src/Frontend/VisualEditor.php
+msgid "Step-by-step guide. Then paste the key in AI Translation and translate everything with one click."
+msgstr "Stapsgewijze handleiding. Plak daarna de sleutel in AI Translation en vertaal alles met één klik."
+
+#: src/Frontend/VisualEditor.php
+msgid "The free translator built into the browser works only in recent Chrome and Edge on a computer with enough memory and disk space. Here are three other ways, all free:"
+msgstr "De gratis vertaler die in de browser is ingebouwd, werkt alleen in recente versies van Chrome en Edge op een computer met voldoende geheugen en schijfruimte. Hier zijn drie andere manieren, allemaal gratis:"
+
+#: src/Frontend/VisualEditor.php
+msgid "This is taking longer than it should"
+msgstr "Dit duurt langer dan het zou moeten"
+
+#: src/Frontend/VisualEditor.php
+msgid "Your browser could not translate this page"
+msgstr "Je browser kon deze pagina niet vertalen"
+
+#: src/Frontend/VisualEditor.php
+msgid "How to get a free Gemini key ↗"
+msgstr "Hoe krijg je een gratis Gemini-sleutel ↗"
+
+#: src/Frontend/VisualEditor.php
+msgid "The free translator runs only in recent Chrome and Edge on a computer. The easiest free option from here: a Gemini key — 5 minutes, no card."
+msgstr "De gratis vertaler werkt alleen in recente versies van Chrome en Edge op een computer. De eenvoudigste gratis optie van hieruit: een Gemini-sleutel — 5 minuten, geen kaart nodig."
+
+#: src/Frontend/VisualEditor.php
+msgid "This browser cannot translate by itself."
+msgstr "Deze browser kan niet zelf vertalen."
+
+#: src/Admin/Admin.php
+msgid "Paste your API key in the field above first: the list comes from the provider, and it only answers with a key."
+msgstr "Plak eerst je API-sleutel in het veld hierboven: de lijst komt van de provider, en die antwoordt alleen met een sleutel."
+
+#: src/Admin/Admin.php
+msgid "The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active."
+msgstr "De provider heeft deze API-sleutel geweigerd. Controleer of je hem helemaal hebt gekopieerd, zonder spaties, en of hij nog actief is."
+
+#: src/Admin/Admin.php
+msgid "The provider says too many requests right now. Wait a minute and try again."
+msgstr "De provider meldt op dit moment te veel verzoeken. Wacht een minuut en probeer het opnieuw."
+
+#: src/Admin/Admin.php
+msgid "Your site could not reach the provider (network or firewall). Try again later, or ask your host."
+msgstr "Je site kon de provider niet bereiken (netwerk of firewall). Probeer het later opnieuw, of vraag het je hostingprovider."
+
+#: src/Admin/Admin.php
+msgid "The provider answered with an error. Try again in a few minutes."
+msgstr "De provider antwoordde met een fout. Probeer het over een paar minuten opnieuw."
+
+#: src/Admin/Admin.php
+msgid "%d models available — pick one from the list."
+msgstr "%d modellen beschikbaar — kies er een uit de lijst."
+
+#: src/Admin/Admin.php
+msgid "Preview size"
+msgstr "Grootte van het voorbeeld"
+
+#: src/Admin/Admin.php
+msgid "Desktop"
+msgstr "Desktop"
+
+#: src/Admin/Admin.php
+msgid "Phone"
+msgstr "Telefoon"
+
+#: src/Admin/Admin.php
+msgid "This is the switcher your visitors will see, drawn by the same code as your site, and it follows every change before you save. Click it to try it. Only the font may differ: on your site it takes the theme’s font, unless you choose one above."
+msgstr "Dit is de taalkiezer die je bezoekers zien, getekend door dezelfde code als je site, en hij volgt elke wijziging nog voordat je opslaat. Klik erop om hem te proberen. Alleen het lettertype kan verschillen: op je site neemt hij dat van het thema over, tenzij je hierboven een kiest."
+
+#: src/Admin/Admin.php
+msgid "Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The Desktop and Phone buttons of the live preview show both."
+msgstr "Op welke schermformaten deze taalkiezer verschijnt. Maak een profiel ‘Alleen desktop’ en een ander ‘Alleen mobiel’ om voor elk een eigen talenmenu te ontwerpen (grens 783px). De knoppen Desktop en Telefoon van het livevoorbeeld tonen beide."
