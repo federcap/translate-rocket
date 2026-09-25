@@ -2356,6 +2356,7 @@
 					+ '<a class="trrocket-ve-bulk-help-gem" target="_blank" rel="noopener"></a><span class="trrocket-ve-bulk-help-tip"></span>'
 					+ '<a class="trrocket-ve-bulk-help-ai"></a>'
 					+ '<button type="button" class="trrocket-ve-bulk-help-paste"></button><span class="trrocket-ve-bulk-help-tip2"></span>'
+					+ '<a class="trrocket-ve-bulk-help-labs" target="_blank" rel="noopener"></a><span class="trrocket-ve-bulk-help-tip3"></span>'
 					+ '<p class="trrocket-ve-bulk-help-pc"></p>';
 				box.querySelector( 'p' ).textContent = VE.i18n.brHelpTxt || '';
 				var gem = box.querySelector( '.trrocket-ve-bulk-help-gem' );
@@ -2373,6 +2374,17 @@
 					if ( dove ) { dove.scrollIntoView( { behavior: 'smooth', block: 'start' } ); dove.classList.add( 'trrocket-ve-lampo' ); setTimeout( function () { dove.classList.remove( 'trrocket-ve-lampo' ); }, 1600 ); }
 					if ( copyBtn ) { copyBtn.focus(); }
 				} );
+				// Labs: any browser, phones too. Hidden when Labs is already installed.
+				var labs = box.querySelector( '.trrocket-ve-bulk-help-labs' );
+				var labsTip = box.querySelector( '.trrocket-ve-bulk-help-tip3' );
+				if ( VE.labsUrl ) {
+					labs.textContent = ( VE.i18n.brHelpLabs || 'TranslateRocket Labs' ) + ' ↗';
+					labs.href = VE.labsUrl;
+					labsTip.textContent = VE.i18n.brHelpLabsTip || '';
+				} else {
+					labs.parentNode.removeChild( labs );
+					labsTip.parentNode.removeChild( labsTip );
+				}
 				box.querySelector( '.trrocket-ve-bulk-help-pc' ).textContent = VE.i18n.brHelpPc || '';
 				progBox.parentNode.insertBefore( box, progBox.nextSibling );
 			}

@@ -3528,3 +3528,259 @@ msgstr "Questo è il selettore che vedranno i tuoi visitatori, disegnato dallo s
 #: src/Admin/Admin.php
 msgid "Which screen sizes show this switcher. Make one profile “Desktop only” and another “Mobile only” to design a different language menu for each (breakpoint 783px). The Desktop and Phone buttons of the live preview show both."
 msgstr "Su quali schermi compare questo selettore. Crea un profilo «Solo desktop» e un altro «Solo mobile» per progettare un menu delle lingue diverso per ciascuno (soglia 783px). I pulsanti Desktop e Telefono dell'anteprima dal vivo li mostrano entrambi."
+
+#: src/Admin/Growth.php
+msgid "I already did"
+msgstr "L'ho già fatto"
+
+#: src/Admin/Farewell.php
+msgid "Send and deactivate"
+msgstr "Invia e disattiva"
+
+#: src/Admin/Farewell.php
+msgid "«Send and deactivate» sends your answer to the developer at translaterocket.com, anonymously. «Skip and deactivate» sends nothing."
+msgstr "«Invia e disattiva» manda la tua risposta allo sviluppatore su translaterocket.com, in forma anonima. «Salta e disattiva» non manda nulla."
+
+#: src/Admin/Farewell.php
+msgid "Exactly what is sent"
+msgstr "Cosa viene inviato, esattamente"
+
+#: src/Admin/Farewell.php
+msgid "The reason you picked, what you wrote, and these numbers. Nothing else: no site address, no name, no e-mail, no page or translation content. Your IP address is not stored."
+msgstr "Il motivo che hai scelto, quello che hai scritto e questi numeri. Nient'altro: nessun indirizzo del sito, nessun nome, nessuna e-mail, nessun contenuto di pagine o traduzioni. Il tuo indirizzo IP non viene salvato."
+
+#: src/Admin/Admin.php
+msgid "Ready"
+msgstr "Pronto"
+
+#: src/Admin/Admin.php
+msgid "How it works"
+msgstr "Come funziona"
+
+#: src/Frontend/VisualEditor.php
+msgid "TranslateRocket Labs — free, on request"
+msgstr "TranslateRocket Labs — gratis, su richiesta"
+
+#: src/Frontend/VisualEditor.php
+msgid "An add-on that translates from your server, with no key, in any browser — phones included — for most languages. Machine translation: review what matters."
+msgstr "Un componente aggiuntivo che traduce dal tuo server, senza chiave, da qualsiasi browser — anche dal telefono — nella maggior parte delle lingue. Traduzione automatica: rivedi ciò che conta."
+
+#: src/Frontend/VisualEditor.php
+msgid "Or ask for TranslateRocket Labs, free: an add-on that translates from your server with no key, in any browser — phones included."
+msgstr "Oppure chiedi TranslateRocket Labs, gratis: un componente aggiuntivo che traduce dal tuo server senza chiave, da qualsiasi browser — anche dal telefono."
+
+#: src/Frontend/VisualEditor.php
+msgid "About Labs ↗"
+msgstr "Scopri Labs ↗"
+
+#: src/Admin/LabsPromo.php
+msgid "TranslateRocket Labs"
+msgstr "TranslateRocket Labs"
+
+#: src/Admin/LabsPromo.php
+msgid "Labs ✨"
+msgstr "Labs ✨"
+
+#: src/Admin/LabsPromo.php
+msgid "Sorry, you are not allowed to do that."
+msgstr "Non hai i permessi per farlo."
+
+#: src/Admin/LabsPromo.php
+msgid "free: translate with no API key, from any browser, automatically."
+msgstr "gratis: traduci senza chiave API, da qualsiasi browser, in automatico."
+
+#: src/Admin/LabsPromo.php
+msgid "See what Labs adds"
+msgstr "Scopri cosa aggiunge Labs"
+
+#: src/Admin/LabsPromo.php
+msgid "No API key needed"
+msgstr "Nessuna chiave API"
+
+#: src/Admin/LabsPromo.php
+msgid "No account, no card: switch it on and your site gets translated."
+msgstr "Nessun account, nessuna carta: lo attivi e il sito viene tradotto."
+
+#: src/Admin/LabsPromo.php
+msgid "Any browser, even phones"
+msgstr "Qualsiasi browser, anche il telefono"
+
+#: src/Admin/LabsPromo.php
+msgid "Firefox, Safari, a tablet: your server does the work, not Chrome."
+msgstr "Firefox, Safari, un tablet: il lavoro lo fa il tuo server, non Chrome."
+
+#: src/Admin/LabsPromo.php
+msgid "Translates by itself"
+msgstr "Traduce da solo"
+
+#: src/Admin/LabsPromo.php
+msgid "The whole site in one click, and every page you publish is translated automatically."
+msgstr "Tutto il sito con un clic, e ogni pagina che pubblichi viene tradotta in automatico."
+
+#: src/Admin/LabsPromo.php
+msgid "Never stuck"
+msgstr "Mai bloccato"
+
+#: src/Admin/LabsPromo.php
+msgid "Key out of credit or engine busy? The next one in your order takes over."
+msgstr "Chiave senza credito o motore occupato? Subentra il successivo nel tuo ordine."
+
+#: src/Admin/LabsPromo.php
+msgid "Fold into one line"
+msgstr "Riduci a una riga"
+
+#: src/Admin/LabsPromo.php
+msgid "Free"
+msgstr "Gratis"
+
+#: src/Admin/LabsPromo.php
+msgid "The free add-on that does the translating for you."
+msgstr "Il componente aggiuntivo gratuito che traduce al posto tuo."
+
+#: src/Admin/LabsPromo.php
+msgid "Ask for Labs — free"
+msgstr "Richiedi Labs — gratis"
+
+#: src/Admin/LabsPromo.php
+msgid "See everything Labs adds"
+msgstr "Tutto quello che aggiunge Labs"
+
+#: src/Admin/LabsPromo.php
+msgid "A free add-on for TranslateRocket that translates your site with no API key, from any browser — phones included — and does more of the work by itself."
+msgstr "Un componente aggiuntivo gratuito per TranslateRocket che traduce il sito senza chiave API, da qualsiasi browser — anche dal telefono — e fa da solo più lavoro."
+
+#: src/Admin/LabsPromo.php
+msgid "Free, on request — one key per site"
+msgstr "Gratis, su richiesta — una chiave per sito"
+
+#: src/Admin/LabsPromo.php
+msgid "Instant translation"
+msgstr "Traduzione immediata"
+
+#: src/Admin/LabsPromo.php
+msgid "Your whole site in one click — and every new page translates itself the moment you publish it."
+msgstr "Tutto il sito con un clic — e ogni pagina nuova si traduce da sola appena la pubblichi."
+
+#: src/Admin/LabsPromo.php
+msgid "No API key"
+msgstr "Nessuna chiave API"
+
+#: src/Admin/LabsPromo.php
+msgid "No account, no card, nothing to set up. Switch it on and it translates."
+msgstr "Nessun account, nessuna carta, niente da configurare. Lo attivi e traduce."
+
+#: src/Admin/LabsPromo.php
+msgid "Any browser, phones too"
+msgstr "Qualsiasi browser, anche il telefono"
+
+#: src/Admin/LabsPromo.php
+msgid "Your server does the work: Firefox, Safari, a phone or a tablet — it all works."
+msgstr "Il lavoro lo fa il tuo server: Firefox, Safari, un telefono o un tablet — funziona tutto."
+
+#: src/Admin/LabsPromo.php
+msgid "Always translated"
+msgstr "Sempre tradotto"
+
+#: src/Admin/LabsPromo.php
+msgid "Your API keys, the browser, and free engines — in the order you choose. If one stops, the next takes over."
+msgstr "Le tue chiavi API, il browser e i motori gratuiti — nell'ordine che scegli tu. Se uno si ferma, subentra il successivo."
+
+#: src/Admin/LabsPromo.php
+msgid "What Labs does by itself"
+msgstr "Cosa fa Labs da solo"
+
+#: src/Admin/LabsPromo.php
+msgid "The whole site in one click"
+msgstr "Tutto il sito con un clic"
+
+#: src/Admin/LabsPromo.php
+msgid "Every published page, post and product, a few at a time, while you do something else."
+msgstr "Ogni pagina, articolo e prodotto pubblicato, pochi alla volta, mentre fai altro."
+
+#: src/Admin/LabsPromo.php
+msgid "Translate on publish"
+msgstr "Traduzione alla pubblicazione"
+
+#: src/Admin/LabsPromo.php
+msgid "Publish or update a page: its new text is translated into your languages in the background."
+msgstr "Pubblichi o aggiorni una pagina: il testo nuovo viene tradotto nelle tue lingue in background."
+
+#: src/Admin/LabsPromo.php
+msgid "Menus, widgets, Customizer"
+msgstr "Menu, widget, Personalizza"
+
+#: src/Admin/LabsPromo.php
+msgid "Changes that appear on every page are picked up and translated by themselves."
+msgstr "Le modifiche che compaiono su ogni pagina vengono rilevate e tradotte da sole."
+
+#: src/Admin/LabsPromo.php
+msgid "Free engines, no key"
+msgstr "Motori gratuiti, senza chiave"
+
+#: src/Admin/LabsPromo.php
+msgid "Yandex, Microsoft Edge, MyMemory and Google, each switched on only after you read and accept its conditions."
+msgstr "Yandex, Microsoft Edge, MyMemory e Google, ciascuno attivato solo dopo che hai letto e accettato le sue condizioni."
+
+#: src/Admin/LabsPromo.php
+msgid "Polish with AI"
+msgstr "Rifinitura con l'IA"
+
+#: src/Admin/LabsPromo.php
+msgid "With an AI key, a little of the free engines' work is translated again every day, so quality grows over time."
+msgstr "Con una chiave IA, ogni giorno un po' del lavoro dei motori gratuiti viene ritradotto, così la qualità cresce nel tempo."
+
+#: src/Admin/LabsPromo.php
+msgid "A weekly report"
+msgstr "Un resoconto settimanale"
+
+#: src/Admin/LabsPromo.php
+msgid "Every Monday, a short e-mail: what was translated and what is still waiting."
+msgstr "Ogni lunedì, una breve e-mail: cosa è stato tradotto e cosa resta in attesa."
+
+#: src/Admin/LabsPromo.php
+msgid "Updates itself"
+msgstr "Si aggiorna da solo"
+
+#: src/Admin/LabsPromo.php
+msgid "New versions appear in Plugins, like any other update."
+msgstr "Le nuove versioni compaiono in Plugin, come ogni altro aggiornamento."
+
+#: src/Admin/LabsPromo.php
+msgid "Pauses on its own"
+msgstr "Si mette in pausa da solo"
+
+#: src/Admin/LabsPromo.php
+msgid "If a service asks to slow down, Labs pauses it and the next engine takes over."
+msgstr "Se un servizio chiede di rallentare, Labs lo mette in pausa e subentra il motore successivo."
+
+#: src/Admin/LabsPromo.php
+msgid "You choose the order"
+msgstr "L'ordine lo scegli tu"
+
+#: src/Admin/LabsPromo.php
+msgid "An example of priority order"
+msgstr "Un esempio di ordine di priorità"
+
+#: src/Admin/LabsPromo.php
+msgid "Your API key"
+msgstr "La tua chiave API"
+
+#: src/Admin/LabsPromo.php
+msgid "Drag the engines into the order you want and switch each one on or off. If one is missing, out of credit or paused, the next one translates the page: one way or another, every page gets translated."
+msgstr "Trascina i motori nell'ordine che vuoi e attiva o disattiva ciascuno. Se uno manca, ha finito il credito o è in pausa, traduce il successivo: in un modo o nell'altro, ogni pagina viene tradotta."
+
+#: src/Admin/LabsPromo.php
+msgid "Labs is a separate plugin, sent by e-mail with a key for your site. The free TranslateRocket stays complete and unchanged. Some engines in Labs are unofficial services: they are optional, each with its own conditions, and marked as experimental."
+msgstr "Labs è un plugin separato, inviato per e-mail con una chiave per il tuo sito. TranslateRocket gratuito resta completo e invariato. Alcuni motori di Labs sono servizi non ufficiali: sono facoltativi, ciascuno con le sue condizioni, e segnati come sperimentali."
+
+#: src/Admin/LabsPromo.php
+msgid "A free add-on: translation with no API key, from any browser and phones, the whole site in one click, and new pages translated as you publish them."
+msgstr "Un componente aggiuntivo gratuito: traduzione senza chiave API, da qualsiasi browser e dal telefono, tutto il sito con un clic, e le pagine nuove tradotte appena le pubblichi."
+
+#: src/Admin/Admin.php
+msgid "All except free machine translations (browser translator and free engines)"
+msgstr "Tutte tranne le traduzioni automatiche gratuite (traduttore del browser e motori gratuiti)"
+
+#: src/Admin/Admin.php
+msgid "Recommended when you move from free machine translation (the Chrome/Edge translator, or the free engines of TranslateRocket Labs) to an AI: repeated sentences (menus, footer, buttons) get the AI quality too. Your own edits and imported translations are still reused."
+msgstr "Consigliato quando passi dalla traduzione automatica gratuita (il traduttore di Chrome/Edge o i motori gratuiti di TranslateRocket Labs) a un'AI: anche le frasi ripetute (menu, piè di pagina, pulsanti) prendono la qualità dell'AI. Le tue correzioni e le traduzioni importate vengono comunque riutilizzate."

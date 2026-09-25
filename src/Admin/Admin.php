@@ -1131,6 +1131,17 @@ class Admin {
 			}
 			$src_text = isset( $segs[ $source ] ) ? $segs[ $source ] : '';
 			if ( '' === trim( $src_text ) ) {
+				// Trados, memoQ, OmegaT write the full code (en-US, en-GB): the same
+				// fallback match_target() uses for the target side. Before, such a file
+				// loaded fine and imported zero (casi raccolti, importatori 26, 25/9/2026).
+				foreach ( $segs as $l => $t ) {
+					if ( strtok( str_replace( '_', '-', (string) $l ), '-' ) === $source && '' !== trim( $t ) ) {
+						$src_text = $t;
+						break;
+					}
+				}
+			}
+			if ( '' === trim( $src_text ) ) {
 				continue;
 			}
 			// Our own export says which kind of string each unit is; a file from any
@@ -2457,6 +2468,64 @@ JS;
 	}
 
 	/**
+	 * The providers on the AI Translation screen: the built-in ones, plus any another
+	 * plugin adds with the trrocket_provider_defs filter ('nokey' => true when it needs
+	 * no API key; its provider object comes from trrocket_providers).
+	 *
+	 * @return array<string,array<string,mixed>>
+	 */
+	private static function provider_defs(): array {
+		$defs = array(
+			'deepl'     => array(
+				'label'  => 'DeepL',
+				'model'  => false,
+				'help'   => __( 'Free keys end in “:fx”. Use “Check usage” below for your live monthly quota.', 'translate-rocket' ),
+				'signup' => 'https://www.deepl.com/en/pro',
+			),
+			'openai'    => array(
+				'label'  => 'OpenAI',
+				'model'  => true,
+				'help'   => __( 'Pay-as-you-go (needs a few dollars of credit). gpt-4o-mini is cheap and good.', 'translate-rocket' ),
+				'models' => array( 'gpt-4o-mini', 'gpt-4o', 'gpt-4.1-mini', 'gpt-4.1' ),
+				'signup' => 'https://platform.openai.com/api-keys',
+			),
+			'google'    => array(
+				'label'  => 'Google Translate',
+				'model'  => false,
+				'help'   => __( 'Google Cloud Translation API key (requires a Google Cloud project with billing).', 'translate-rocket' ),
+				'signup' => 'https://console.cloud.google.com/apis/credentials',
+			),
+			'gemini'    => array(
+				'label'  => 'Google Gemini',
+				'model'  => true,
+				'help'   => __( 'Has a free tier — create a key in Google AI Studio at no cost.', 'translate-rocket' ),
+				'models' => array( 'gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-2.5-flash-lite' ),
+				'signup' => 'https://aistudio.google.com/apikey',
+			),
+			'anthropic' => array(
+				'label'  => 'Anthropic (Claude)',
+				'model'  => true,
+				'help'   => __( 'Pay-as-you-go on the Anthropic API (separate from a Claude.ai subscription).', 'translate-rocket' ),
+				'models' => array( 'claude-haiku-4-5', 'claude-sonnet-4-6', 'claude-opus-4-8' ),
+				'signup' => 'https://console.anthropic.com/settings/keys',
+			),
+		);
+		/**
+		 * Extra providers for the AI Translation screen.
+		 *
+		 * @param array $extra id => array( label, help, model, models, signup, nokey ).
+		 */
+		$extra = apply_filters( 'trrocket_provider_defs', array() );
+		foreach ( (array) $extra as $id => $def ) {
+			$id = sanitize_key( (string) $id );
+			if ( '' !== $id && ! isset( $defs[ $id ] ) && is_array( $def ) && ! empty( $def['label'] ) ) {
+				$defs[ $id ] = array_merge( array( 'model' => false, 'help' => '', 'signup' => '', 'nokey' => false ), $def );
+			}
+		}
+		return $defs;
+	}
+
+	/**
 	 * Save AI provider settings (keys, models, active provider).
 	 */
 	public function maybe_save_ai_settings(): void {
@@ -2471,7 +2540,7 @@ JS;
 		}
 
 		$settings = Settings::get();
-		$ids      = array( 'deepl', 'openai', 'google', 'gemini', 'anthropic' );
+		$ids      = array_keys( self::provider_defs() );
 
 		$active                      = isset( $_POST['active_provider'] ) ? sanitize_text_field( wp_unslash( $_POST['active_provider'] ) ) : '';
 		$settings['active_provider'] = in_array( $active, $ids, true ) ? $active : '';
@@ -2506,6 +2575,9 @@ JS;
 		foreach ( $ids as $pid ) {
 			if ( empty( $settings['providers'][ $pid ] ) || ! is_array( $settings['providers'][ $pid ] ) ) {
 				$settings['providers'][ $pid ] = array();
+			}
+			if ( ! empty( self::provider_defs()[ $pid ]['nokey'] ) ) {
+				continue; // A provider without a key (added by another plugin) has none to save.
 			}
 			$settings['providers'][ $pid ]['api_key'] = isset( $posted[ $pid ]['api_key'] ) ? sanitize_text_field( $posted[ $pid ]['api_key'] ) : '';
 			if ( isset( $posted[ $pid ]['model'] ) ) {
@@ -2679,6 +2751,11 @@ JS;
 				\TranslateRocket\Kses::html_rules()
 			);
 		}
+		// «Labs ✨»: what the free add-on adds (or Labs itself, once installed). Opens only when clicked.
+		$labs = \TranslateRocket\Admin\LabsPromo::slug();
+		echo '<a class="trr-nav-item trr-nav-labs' . ( $labs === $current ? ' is-active' : '' ) . '" href="' . esc_url( admin_url( 'admin.php?page=' . $labs ) ) . '">'
+			. '<span class="dashicons dashicons-star-filled"></span> ' . esc_html__( 'Labs ✨', 'translate-rocket' )
+			. '</a>';
 		// Optional donation link: keeps the plugin free + supporters get priority help.
 		echo '<a class="trr-nav-item trr-nav-support" href="https://translaterocket.com/donate/" target="_blank" rel="noopener" title="'
 			. esc_attr__( 'TranslateRocket is 100% free. Support development to keep it free — supporters get priority support & custom help.', 'translate-rocket' ) . '">'
@@ -2899,41 +2976,7 @@ JS
 			$order_prio[ (string) $pid ] = $i + 1;
 		}
 
-		$defs = array(
-			'deepl'     => array(
-				'label'  => 'DeepL',
-				'model'  => false,
-				'help'   => __( 'Free keys end in “:fx”. Use “Check usage” below for your live monthly quota.', 'translate-rocket' ),
-				'signup' => 'https://www.deepl.com/en/pro',
-			),
-			'openai'    => array(
-				'label'  => 'OpenAI',
-				'model'  => true,
-				'help'   => __( 'Pay-as-you-go (needs a few dollars of credit). gpt-4o-mini is cheap and good.', 'translate-rocket' ),
-				'models' => array( 'gpt-4o-mini', 'gpt-4o', 'gpt-4.1-mini', 'gpt-4.1' ),
-				'signup' => 'https://platform.openai.com/api-keys',
-			),
-			'google'    => array(
-				'label'  => 'Google Translate',
-				'model'  => false,
-				'help'   => __( 'Google Cloud Translation API key (requires a Google Cloud project with billing).', 'translate-rocket' ),
-				'signup' => 'https://console.cloud.google.com/apis/credentials',
-			),
-			'gemini'    => array(
-				'label'  => 'Google Gemini',
-				'model'  => true,
-				'help'   => __( 'Has a free tier — create a key in Google AI Studio at no cost.', 'translate-rocket' ),
-				'models' => array( 'gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-2.5-flash-lite' ),
-				'signup' => 'https://aistudio.google.com/apikey',
-			),
-			'anthropic' => array(
-				'label'  => 'Anthropic (Claude)',
-				'model'  => true,
-				'help'   => __( 'Pay-as-you-go on the Anthropic API (separate from a Claude.ai subscription).', 'translate-rocket' ),
-				'models' => array( 'claude-haiku-4-5', 'claude-sonnet-4-6', 'claude-opus-4-8' ),
-				'signup' => 'https://console.anthropic.com/settings/keys',
-			),
-		);
+		$defs = self::provider_defs();
 		?>
 		<div class="wrap trrocket-wrap">
 			<?php self::header( 'translate-rocket-ai' ); ?>
@@ -2942,6 +2985,8 @@ JS
 			<?php if ( isset( $_GET['ai_saved'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
 				<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'AI settings saved.', 'translate-rocket' ); ?></p></div>
 			<?php endif; ?>
+
+			<?php \TranslateRocket\Admin\LabsPromo::banner( 'ai' ); ?>
 
 			<form method="post" action="">
 				<?php wp_nonce_field( 'trrocket_save_ai', 'trrocket_ai_nonce' ); ?>
@@ -2964,13 +3009,29 @@ JS
 					foreach ( $defs as $pid => $def ) :
 						$is_active = ( $pid === $active );
 						$has_key   = '' !== (string) ( $providers[ $pid ]['api_key'] ?? '' );
+						$senza_chiave = ! empty( $def['nokey'] );
+						if ( $senza_chiave ) {
+							$trr_p   = \TranslateRocket\Providers\Registry::get( $pid );
+							$has_key = $trr_p && $trr_p->is_configured();
+						}
 						?>
 						<div class="trr-ai-provider<?php echo $is_active ? ' is-active' : ''; ?>">
 							<div class="trr-ai-phead">
 								<strong class="trr-ai-pname"><?php echo esc_html( $def['label'] ); ?></strong>
-								<?php if ( $is_active ) : ?><span class="trr-ai-badge is-on"><?php esc_html_e( 'Active', 'translate-rocket' ); ?></span><?php elseif ( $has_key ) : ?><span class="trr-ai-badge"><?php esc_html_e( 'Key set', 'translate-rocket' ); ?></span><?php endif; ?>
+								<?php if ( $is_active ) : ?><span class="trr-ai-badge is-on"><?php esc_html_e( 'Active', 'translate-rocket' ); ?></span><?php elseif ( $has_key ) : ?><span class="trr-ai-badge"><?php echo $senza_chiave ? esc_html__( 'Ready', 'translate-rocket' ) : esc_html__( 'Key set', 'translate-rocket' ); ?></span><?php endif; ?>
 							</div>
 						<table class="form-table" role="presentation">
+							<?php if ( $senza_chiave ) : ?>
+							<tr>
+								<th scope="row"><?php esc_html_e( 'How it works', 'translate-rocket' ); ?></th>
+								<td>
+									<p class="description"><?php echo esc_html( (string) $def['help'] ); ?></p>
+									<?php if ( ! empty( $def['settings_url'] ) ) : ?>
+										<p><a class="button button-small" href="<?php echo esc_url( (string) $def['settings_url'] ); ?>"><?php esc_html_e( 'Settings', 'translate-rocket' ); ?></a></p>
+									<?php endif; ?>
+								</td>
+							</tr>
+							<?php else : ?>
 							<tr>
 								<th scope="row"><?php esc_html_e( 'API key', 'translate-rocket' ); ?> <?php $this->info( __( 'Your secret key from this provider. Stored on your site only, and sent to the provider when translating.', 'translate-rocket' ) ); ?></th>
 								<td>
@@ -3024,6 +3085,7 @@ JS
 									<?php endif; ?>
 								</td>
 							</tr>
+							<?php endif; ?>
 							<tr>
 									<th scope="row"><?php esc_html_e( 'Fallback priority', 'translate-rocket' ); ?> <?php $this->info( __( 'Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Leave on “—” to keep a provider out of the chain.', 'translate-rocket' ) ); ?></th>
 									<td>
@@ -3122,7 +3184,7 @@ JS
 									$riuso = \TranslateRocket\Translator::reuse_mode();
 									$scelte = array(
 										'all'        => array( __( 'All of them', 'translate-rocket' ), __( 'The cheapest: a sentence already translated is never paid for twice.', 'translate-rocket' ) ),
-										'no_browser' => array( __( 'All except the ones made by the browser translator', 'translate-rocket' ), __( 'Recommended when you move from the free Chrome/Edge translation to an AI: repeated sentences (menus, footer, buttons) get the AI quality too. Your own edits and imported translations are still reused.', 'translate-rocket' ) ),
+										'no_browser' => array( __( 'All except free machine translations (browser translator and free engines)', 'translate-rocket' ), __( 'Recommended when you move from free machine translation (the Chrome/Edge translator, or the free engines of TranslateRocket Labs) to an AI: repeated sentences (menus, footer, buttons) get the AI quality too. Your own edits and imported translations are still reused.', 'translate-rocket' ) ),
 										'none'       => array( __( 'None', 'translate-rocket' ), __( 'The AI translates every sentence it is asked for. Glossary terms still apply.', 'translate-rocket' ) ),
 									);
 									foreach ( $scelte as $val => $testi ) :
@@ -4027,6 +4089,10 @@ JS;
 					<div class="trr-wiz-nobr notice notice-warning inline" id="trr-wiz-nobr" hidden>
 						<p><strong><?php esc_html_e( 'This browser cannot translate by itself.', 'translate-rocket' ); ?></strong> <?php esc_html_e( 'The free translator runs only in recent Chrome and Edge on a computer. The easiest free option from here: a Gemini key — 5 minutes, no card.', 'translate-rocket' ); ?>
 						<a href="https://translaterocket.com/api-keys/gemini-api-key/" target="_blank" rel="noopener"><?php esc_html_e( 'How to get a free Gemini key ↗', 'translate-rocket' ); ?></a></p>
+						<?php if ( ! defined( 'TRRLABS_VERSION' ) ) : ?>
+							<p id="trr-wiz-labs"><?php esc_html_e( 'Or ask for TranslateRocket Labs, free: an add-on that translates from your server with no key, in any browser — phones included.', 'translate-rocket' ); ?>
+							<a href="https://translaterocket.com/labs/?utm_source=plugin" target="_blank" rel="noopener"><?php esc_html_e( 'About Labs ↗', 'translate-rocket' ); ?></a></p>
+						<?php endif; ?>
 					</div>
 				</section>
 
@@ -4177,6 +4243,7 @@ JS;
 		<div class="wrap trrocket-wrap">
 			<?php self::header( 'translate-rocket' ); ?>
 			<h1 class="trr-page-title"><?php esc_html_e( 'Languages &amp; general', 'translate-rocket' ); ?></h1>
+			<?php \TranslateRocket\Admin\LabsPromo::banner( 'home' ); ?>
 
 
 			<?php if ( empty( $targets ) ) : ?>

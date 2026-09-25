@@ -406,6 +406,9 @@
 }
 
 .trr-ai-badge {
+	/* Never split («Activ / e») next to a long provider name on a phone. */
+	white-space: nowrap;
+	flex-shrink: 0;
 	font-size: 11px;
 	font-weight: 600;
 	color: #6b6b80;
@@ -1030,6 +1033,67 @@ th.trr-sortable:hover {
 
 .trr-nav-item.trr-nav-support .dashicons {
 	color: #fff;
+}
+
+/* «Labs ✨» — multicolour, like the Labs page on translaterocket.com. */
+.trr-nav-item.trr-nav-labs {
+	color: #fff;
+	background: linear-gradient( 110deg, #8b5cf6, #3b82f6 60%, #06b6d4 );
+	border-color: transparent;
+	box-shadow: 0 6px 14px -6px rgba( 59, 130, 246, 0.7 );
+}
+
+.trr-nav-item.trr-nav-labs:hover,
+.trr-nav-item.trr-nav-labs.is-active {
+	color: #fff;
+	border-color: transparent;
+	box-shadow: 0 9px 18px -6px rgba( 59, 130, 246, 0.85 );
+}
+
+.trr-nav-item.trr-nav-labs.is-active {
+	outline: 2px solid #4f46e5;
+	outline-offset: 2px;
+}
+
+.trr-nav-item.trr-nav-labs .dashicons {
+	color: #fff;
+}
+
+/* Labs box (plugin home + AI Translation): what you gain, in four points. */
+.trr-lb {
+	position: relative;
+	margin: 0 0 20px;
+	padding: 22px 24px 20px;
+	border-radius: 18px;
+	color: #fff;
+	background: linear-gradient( 120deg, #7c3aed 0%, #4f46e5 38%, #2563eb 68%, #0891b2 100% );
+	box-shadow: 0 14px 30px -12px rgba( 79, 70, 229, 0.65 );
+}
+.trr-lb-head { display: flex; align-items: center; gap: 14px; margin-right: 70px; }
+.trr-lb-gem { flex: 0 0 52px; height: 52px; border-radius: 16px; background: rgba( 255, 255, 255, 0.2 ); display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.trr-lb-tit { font-size: 22px; font-weight: 800; line-height: 1.2; }
+.trr-lb-free { display: inline-block; vertical-align: middle; margin-left: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #4c1d95; background: #fde68a; }
+.trr-lb-sub { font-size: 14.5px; opacity: 0.92; margin-top: 3px; }
+.trr-lb-list { display: grid; grid-template-columns: repeat( auto-fit, minmax( min( 220px, 100% ), 1fr ) ); gap: 12px; margin: 18px 0 16px; padding: 0; list-style: none; }
+.trr-lb-list li { display: flex; gap: 10px; align-items: flex-start; margin: 0; padding: 12px 14px; border-radius: 12px; background: rgba( 255, 255, 255, 0.13 ); line-height: 1.4; }
+.trr-lb-list .dashicons { flex: 0 0 24px; color: #fde68a; font-size: 24px; width: 24px; height: 24px; }
+.trr-lb-list strong { display: block; font-size: 14.5px; margin-bottom: 2px; }
+.trr-lb-list span:not( .dashicons ) { font-size: 13px; opacity: 0.92; }
+.trr-lb-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.trr-lb-btn { display: inline-block; padding: 11px 24px; border-radius: 999px; font-size: 15px; font-weight: 800; text-decoration: none; color: #4c1d95; background: #fff; box-shadow: 0 6px 16px -6px rgba( 0, 0, 0, 0.35 ); }
+.trr-lb-btn:hover, .trr-lb-btn:focus { color: #4c1d95; background: #fde68a; }
+.trr-lb-more, .trr-lb-more:hover, .trr-lb-more:focus { color: #fff; font-weight: 600; }
+.trr-lb-hide { position: absolute; top: 12px; right: 14px; color: rgba( 255, 255, 255, 0.85 ); font-size: 12.5px; text-decoration: none; }
+.trr-lb-hide:hover, .trr-lb-hide:focus { color: #fff; text-decoration: underline; }
+.trr-lb a:focus { box-shadow: 0 0 0 2px #fde68a; outline: none; }
+.trr-lb-min { margin: 0 0 16px; padding: 10px 14px; border-radius: 10px; background: linear-gradient( 110deg, #f5f3ff, #eff6ff ); border: 1px solid #ddd6fe; color: #3c434a; }
+.trr-lb-min a { font-weight: 600; }
+.trr-lb-min .trr-lb-toggle { font-weight: 400; margin-left: 8px; color: #646970; }
+@media ( max-width: 600px ) {
+	.trr-lb { padding: 18px 16px 16px; }
+	.trr-lb-head { margin-right: 0; margin-top: 12px; }
+	.trr-lb-tit { font-size: 19px; }
+	.trr-lb-cta { flex-direction: column; align-items: stretch; text-align: center; }
 }
 
 /* Page section title (the per-page <h1> under the nav) */

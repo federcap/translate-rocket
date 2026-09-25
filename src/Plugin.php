@@ -120,6 +120,8 @@ final class Plugin {
 		foreach ( array( 'rest_after_save_widget', 'customize_save_after', 'wp_update_nav_menu', 'woocommerce_update_product', 'woocommerce_new_product', 'switch_theme' ) as $gancio ) {
 			add_action( $gancio, array( 'TranslateRocket\\Cache', 'content_changed' ) );
 		}
+		// The CDN purge (NitroPack, Cloudflare), a minute after the last change.
+		add_action( Cache::REMOTE_EVENT, array( 'TranslateRocket\\Cache', 'purge_remote' ) );
 
 		// Schema upgrades must run before any code path that writes strings — the
 		// front-end collection pass included (an admin can browse the site before
@@ -154,6 +156,7 @@ final class Plugin {
 			( new \TranslateRocket\Admin\CopyCleanupAdmin() )->register();
 			( new \TranslateRocket\Admin\EditorButton() )->register();
 			( new \TranslateRocket\Admin\Growth() )->register();
+			( new \TranslateRocket\Admin\LabsPromo() )->register();
 			// Una domanda sola a chi disattiva: e' l'unico modo di sapere perche' se ne va.
 			( new \TranslateRocket\Admin\Farewell() )->register();
 			// L'elenco dei passi sta in un transient di 5 minuti: va dimenticato appena

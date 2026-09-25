@@ -24,8 +24,22 @@ class Growth {
 	const REVIEW_URL     = 'https://wordpress.org/support/plugin/translate-rocket/reviews/#new-post';
 
 	/** Ask for a review only once the plugin has actually done something useful. */
-	const REVIEW_MIN_STRINGS = 25;
-	const REVIEW_MIN_DAYS    = 5;
+	const REVIEW_MIN_STRINGS = 50;
+	const REVIEW_MIN_DAYS    = 3;
+
+	/*
+	 * «Maybe later» (and the notice's ×) put the question off instead of burying it:
+	 * three weeks for the review, twice at most; sixty days for the donation, once.
+	 * Only «No thanks» / «I already did» close it for good. Before 1.5.6 every button,
+	 * the × included, closed it for good, and a person who was busy at that moment was
+	 * never asked again (24/9/2026).
+	 */
+	const REVIEW_SNOOZE      = 'trrocket_review_snooze';
+	const DONATE_SNOOZE      = 'trrocket_donate_snooze';
+	const REVIEW_SNOOZE_DAYS = 21;
+	const REVIEW_SNOOZE_MAX  = 2;
+	const DONATE_SNOOZE_DAYS = 60;
+	const DONATE_SNOOZE_MAX  = 1;
 	/** The welcome notice steps aside after a week so it can't block the rest. */
 	const WELCOME_MAX_DAYS   = 7;
 
@@ -104,14 +118,46 @@ class Growth {
 		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'trrocket_dismiss' ) ) {
 			return;
 		}
-		$which = sanitize_key( $_GET['trrocket_dismiss'] );
+		$this->dismiss( sanitize_key( $_GET['trrocket_dismiss'] ) );
+	}
+
+	/**
+	 * Close a notice for good, or put it off: 'review', 'welcome', 'donate' close it;
+	 * 'review-later' and 'donate-later' snooze it (and close it once the snoozes are used up).
+	 */
+	private function dismiss( string $which ): void {
 		if ( 'review' === $which ) {
 			update_option( self::REVIEW_DONE, 1 );
 		} elseif ( 'welcome' === $which ) {
 			update_option( self::WELCOME_DONE, 1 );
 		} elseif ( 'donate' === $which ) {
 			update_option( self::DONATE_DONE, 1 );
+		} elseif ( 'review-later' === $which ) {
+			self::snooze( self::REVIEW_SNOOZE, self::REVIEW_DONE, self::REVIEW_SNOOZE_DAYS, self::REVIEW_SNOOZE_MAX );
+		} elseif ( 'donate-later' === $which ) {
+			self::snooze( self::DONATE_SNOOZE, self::DONATE_DONE, self::DONATE_SNOOZE_DAYS, self::DONATE_SNOOZE_MAX );
 		}
+	}
+
+	/**
+	 * Put a notice off for $days; after $max times, the next «later» closes it for good.
+	 */
+	private static function snooze( string $opt, string $done, int $days, int $max ): void {
+		$s     = (array) get_option( $opt, array() );
+		$times = (int) ( $s['times'] ?? 0 );
+		if ( $times >= $max ) {
+			update_option( $done, 1 );
+			return;
+		}
+		update_option( $opt, array( 'until' => time() + $days * DAY_IN_SECONDS, 'times' => $times + 1 ), false );
+	}
+
+	/**
+	 * True while a notice is put off.
+	 */
+	private static function snoozed( string $opt ): bool {
+		$s = (array) get_option( $opt, array() );
+		return (int) ( $s['until'] ?? 0 ) > time();
 	}
 
 	private function dismiss_url( string $which ): string {
@@ -135,7 +181,8 @@ class Growth {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- counting our own table, cached below.
 		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) === $table ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-			$n = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
+			// Real translations only: rows waiting for one, or emptied, are not work done.
+			$n = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status > 0 AND translation IS NOT NULL AND translation <> ''" );
 		}
 		set_transient( 'trrocket_translated_count', $n, HOUR_IN_SECONDS );
 		return $n;
@@ -151,6 +198,18 @@ class Growth {
 		?>
 		<script>
 		document.addEventListener( 'click', function ( e ) {
+			// Going to write the review: it is not asked again.
+			var g = e.target.closest( '.trr-review-go' );
+			if ( g ) {
+				var dd = new FormData();
+				dd.append( 'action', 'trrocket_dismiss_notice' );
+				dd.append( 'which', 'review-done' );
+				dd.append( 'nonce', '<?php echo esc_js( wp_create_nonce( 'trrocket_dismiss' ) ); ?>' );
+				fetch( ajaxurl, { method: 'POST', body: dd, credentials: 'same-origin' } );
+				var box = g.closest( '[data-trrocket]' );
+				if ( box ) { box.style.display = 'none'; }
+				return;
+			}
 			var b = e.target.closest( '.notice-dismiss' );
 			if ( ! b ) { return; }
 			var n = b.closest( '[data-trrocket]' );
@@ -174,13 +233,15 @@ class Growth {
 		}
 		check_ajax_referer( 'trrocket_dismiss', 'nonce' );
 		$which = isset( $_POST['which'] ) ? sanitize_key( wp_unslash( $_POST['which'] ) ) : '';
+		// The × is «not now», not «never»: for the review and the donation it puts them off.
 		$mappa = array(
-			'review'  => self::REVIEW_DONE,
-			'welcome' => self::WELCOME_DONE,
-			'donate'  => self::DONATE_DONE,
+			'review'  => 'review-later',
+			'welcome'     => 'welcome',
+			'donate'      => 'donate-later',
+			'review-done' => 'review',
 		);
 		if ( isset( $mappa[ $which ] ) ) {
-			update_option( $mappa[ $which ], 1 );
+			$this->dismiss( $mappa[ $which ] );
 		}
 		wp_send_json_success();
 	}
@@ -236,8 +297,15 @@ class Growth {
 
 		// Ask for a review once the plugin has actually earned it: real translations
 		// done, not just a date on the calendar since install.
-		$done = $this->translated_count();
+		// Only on TranslateRocket's own screens: there the person is using the plugin and
+		// can see what it did. On Posts or WooCommerce it was an interruption.
+		$nostra = $schermata && false !== strpos( (string) $schermata->id, 'translate-rocket' );
+		if ( ! $nostra ) {
+			return;
+		}
+		$done = ( get_option( self::REVIEW_DONE ) || self::snoozed( self::REVIEW_SNOOZE ) ) ? 0 : $this->translated_count();
 		if ( ! get_option( self::REVIEW_DONE )
+			&& ! self::snoozed( self::REVIEW_SNOOZE )
 			&& $age > ( self::REVIEW_MIN_DAYS * DAY_IN_SECONDS )
 			&& $done >= self::REVIEW_MIN_STRINGS ) {
 			$this->notice_shown = true;
@@ -247,20 +315,23 @@ class Growth {
 				esc_html__( 'TranslateRocket has translated %s strings on this site, for free. It has no paid version: reviews are the only thing that helps other people find it. Would you leave one?', 'translate-rocket' ),
 				'<strong>' . esc_html( number_format_i18n( $done ) ) . '</strong>'
 			);
-			echo ' <a class="button button-primary button-small" style="margin-left:6px" href="' . esc_url( self::REVIEW_URL ) . '" target="_blank" rel="noopener">' . esc_html__( 'Write a review', 'translate-rocket' ) . '</a>';
+			echo ' <a class="button button-primary button-small trr-review-go" style="margin-left:6px" href="' . esc_url( self::REVIEW_URL ) . '" target="_blank" rel="noopener">' . esc_html__( 'Write a review', 'translate-rocket' ) . '</a>';
 			echo ' &middot; <a href="' . esc_url( $this->link( 'support' ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Something is wrong instead', 'translate-rocket' ) . '</a>';
+			echo ' &middot; <a href="' . esc_url( $this->dismiss_url( 'review-later' ) ) . '">' . esc_html__( 'Maybe later', 'translate-rocket' ) . '</a>';
+			echo ' &middot; <a href="' . esc_url( $this->dismiss_url( 'review' ) ) . '">' . esc_html__( 'I already did', 'translate-rocket' ) . '</a>';
 			echo ' &middot; <a href="' . esc_url( $this->dismiss_url( 'review' ) ) . '">' . esc_html__( 'No thanks', 'translate-rocket' ) . '</a>';
 			echo '</p></div>';
 			return;
 		}
 
 		// After 30 days: a gentle, one-time donation nudge (no tracking — just a link).
-		if ( ! get_option( self::DONATE_DONE ) && $age > ( 30 * DAY_IN_SECONDS ) ) {
+		if ( ! get_option( self::DONATE_DONE ) && ! self::snoozed( self::DONATE_SNOOZE ) && $age > ( 30 * DAY_IN_SECONDS ) ) {
 			$this->notice_shown = true;
 			echo '<div class="notice notice-success is-dismissible" data-trrocket="donate"><p>';
 			echo '❤️ ' . esc_html__( 'You’ve been translating with TranslateRocket for a while now. It’s free forever, and it stays maintained either way — if it saved you a paid plugin, a donation is a nice way to say thanks.', 'translate-rocket' );
 			echo ' <a class="button button-primary button-small" style="margin-left:6px" href="' . esc_url( $this->link( 'donate' ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Buy me a coffee ☕', 'translate-rocket' ) . '</a>';
-			echo ' &middot; <a href="' . esc_url( $this->dismiss_url( 'donate' ) ) . '">' . esc_html__( 'Maybe later', 'translate-rocket' ) . '</a>';
+			echo ' &middot; <a href="' . esc_url( $this->dismiss_url( 'donate-later' ) ) . '">' . esc_html__( 'Maybe later', 'translate-rocket' ) . '</a>';
+			echo ' &middot; <a href="' . esc_url( $this->dismiss_url( 'donate' ) ) . '">' . esc_html__( 'No thanks', 'translate-rocket' ) . '</a>';
 			echo '</p></div>';
 		}
 	}
@@ -286,6 +357,14 @@ class Growth {
 				<p><?php esc_html_e( 'Found a bug or have an idea? Tell me — it shapes what gets built next.', 'translate-rocket' ); ?></p>
 				<a class="button" href="<?php echo esc_url( $this->link( 'support' ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Send feedback', 'translate-rocket' ); ?></a>
 			</div>
+
+			<?php if ( ! LabsPromo::installed() ) : ?>
+			<div class="trrocket-card trrocket-labs-card">
+				<h2>✨ <?php esc_html_e( 'TranslateRocket Labs', 'translate-rocket' ); ?></h2>
+				<p><?php esc_html_e( 'A free add-on: translation with no API key, from any browser and phones, the whole site in one click, and new pages translated as you publish them.', 'translate-rocket' ); ?></p>
+				<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=' . LabsPromo::SLUG ) ); ?>"><?php esc_html_e( 'See what Labs adds', 'translate-rocket' ); ?></a>
+			</div>
+			<?php endif; ?>
 
 			<div class="trrocket-card">
 				<h2>⭐ <?php esc_html_e( 'Leave a review', 'translate-rocket' ); ?></h2>

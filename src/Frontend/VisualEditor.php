@@ -212,6 +212,9 @@ class VisualEditor {
 				// Gemini gratuita e la schermata dove incollarla.
 				'aiUrl'    => admin_url( 'admin.php?page=translate-rocket-ai' ),
 				'geminiGuide' => 'https://translaterocket.com/api-keys/gemini-api-key/',
+				// Labs (free, on request) translates from the server: any browser, phones too.
+				// Not offered when Labs is already installed.
+				'labsUrl'  => defined( 'TRRLABS_VERSION' ) ? '' : 'https://translaterocket.com/labs/?utm_source=plugin',
 				// Per il traduttore dentro Chrome ed Edge, che lavora sul dispositivo e
 				// non chiede nessuna chiave. Se questo browser ce l'abbia si sa solo a
 				// video: qui passiamo solo i codici lingua nel formato che vuole lui.
@@ -267,6 +270,8 @@ class VisualEditor {
 					'brHelpPaste'    => __( 'Copy → Google Translate → paste back', 'translate-rocket' ),
 					'brHelpPasteTip' => __( 'Right below: copy the text, translate it in Google Translate, paste it back.', 'translate-rocket' ),
 					'brHelpPc'       => __( 'Or open this page in the latest Chrome or Edge on a computer.', 'translate-rocket' ),
+					'brHelpLabs'     => __( 'TranslateRocket Labs — free, on request', 'translate-rocket' ),
+					'brHelpLabsTip'  => __( 'An add-on that translates from your server, with no key, in any browser — phones included — for most languages. Machine translation: review what matters.', 'translate-rocket' ),
 					'brHelpAi'       => __( 'Open AI Translation', 'translate-rocket' ),
 					// Sul telefono il pulsante si mostra SPENTO invece di sparire: se sparisce,
 					// nessuno sa che la funzione esiste. Queste due righe spiegano dove usarla.

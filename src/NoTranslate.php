@@ -61,6 +61,24 @@ class NoTranslate {
 	}
 
 	/**
+	 * What is never translated on any site, before the owner's own list: codes that
+	 * only look like words. A product SKU such as «TSHIRT-BLUE» translated into
+	 * «MAGLIETTA-BLU» is quoted to support by the customer, and the variation
+	 * script writes the original back when a variant is chosen — two codes on one
+	 * page (casi raccolti, negozio 9, 25/9/2026).
+	 *
+	 * @return string[]
+	 */
+	public static function factory_selectors(): array {
+		/**
+		 * Filters the selectors TranslateRocket never translates, whatever the settings say.
+		 *
+		 * @param string[] $selectors Simple selectors: tag, .class or #id.
+		 */
+		return self::clean_list( apply_filters( 'trrocket_factory_exclude_selectors', array( '.sku' ) ) );
+	}
+
+	/**
 	 * @return string[]
 	 */
 	public static function strings(): array {
@@ -100,7 +118,7 @@ class NoTranslate {
 	 */
 	public static function xpath_skip(): string {
 		$parts = array();
-		foreach ( self::selectors() as $sel ) {
+		foreach ( array_merge( self::factory_selectors(), self::selectors() ) as $sel ) {
 			$type = $sel[0] ?? '';
 			$name = preg_replace( '/[^A-Za-z0-9_-]/', '', substr( $sel, ( '.' === $type || '#' === $type ) ? 1 : 0 ) );
 			if ( '' === $name ) {

@@ -132,6 +132,14 @@ class Preview {
 			$target = $router->url_for_language( $router->default_language() );
 		}
 
+		// This bounce lasts only until «Go online»: no cache may keep it, or the
+		// language would still bounce visitors after it is published (cache cases
+		// 14-15, 25/9/2026).
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
+		nocache_headers();
+		do_action( 'litespeed_control_set_nocache', 'TranslateRocket: language not published yet' );
 		wp_safe_redirect( $target, 302 );
 		exit;
 	}

@@ -233,7 +233,7 @@ class WpmlImporter implements ProvidesCopies {
 					continue;
 				}
 				$tpost = get_post( (int) $pid );
-				if ( ! $tpost ) {
+				if ( ! Comune::pubblicato( $tpost ) ) {
 					continue;
 				}
 

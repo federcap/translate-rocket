@@ -24,13 +24,32 @@ class Registry {
 	public static function all(): array {
 		$cfg = (array) ( Settings::get()['providers'] ?? array() );
 
-		return array(
+		$list = array(
 			new DeepLProvider( (array) ( $cfg['deepl'] ?? array() ) ),
 			new OpenAIProvider( (array) ( $cfg['openai'] ?? array() ) ),
 			new GoogleProvider( (array) ( $cfg['google'] ?? array() ) ),
 			new GeminiProvider( (array) ( $cfg['gemini'] ?? array() ) ),
 			new AnthropicProvider( (array) ( $cfg['anthropic'] ?? array() ) ),
 		);
+		$ids = array( 'deepl' => true, 'openai' => true, 'google' => true, 'gemini' => true, 'anthropic' => true );
+
+		/**
+		 * Extra translation providers from another plugin. Each one must implement
+		 * ProviderInterface and have its own id; it then works everywhere the built-in
+		 * ones do: bulk translation, the fallback chain, the visual editor.
+		 * Its card on the AI Translation screen comes from trrocket_provider_defs.
+		 *
+		 * @param ProviderInterface[] $extra Providers to add.
+		 * @param array<string,mixed> $cfg   Saved provider settings, by id.
+		 */
+		$extra = apply_filters( 'trrocket_providers', array(), $cfg );
+		foreach ( (array) $extra as $provider ) {
+			if ( $provider instanceof ProviderInterface && ! isset( $ids[ $provider->id() ] ) ) {
+				$ids[ $provider->id() ] = true;
+				$list[]                 = $provider;
+			}
+		}
+		return $list;
 	}
 
 	/**
@@ -60,7 +79,8 @@ class Registry {
 			'anthropic' => AnthropicProvider::class,
 		);
 		if ( ! isset( $map[ $id ] ) ) {
-			return null;
+			// A provider added by another plugin: the one it registered.
+			return self::get( $id );
 		}
 		$class = $map[ $id ];
 		return new $class( $config );

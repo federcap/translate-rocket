@@ -223,7 +223,17 @@ class InlineImporter implements ImporterInterface {
 			return 0;
 		}
 
-		$lingue = InlineMarkers::dividi( $valore );
+		// I marcatori possono avere la regione ({:en_US}, {:pt_BR}, {:zh_CN}): i codici passano
+		// dalla stessa conversione degli altri importatori. Prima un {:en_US} di partenza
+		// faceva saltare il post intero, e {:zh_CN} non era nessuna lingua nostra
+		// (casi raccolti, importatori 37, 25/9/2026).
+		$lingue = array();
+		foreach ( InlineMarkers::dividi( $valore ) as $codice => $testo ) {
+			$nostro = Comune::lingua( (string) $codice );
+			if ( ! isset( $lingue[ $nostro ] ) ) {
+				$lingue[ $nostro ] = $testo;
+			}
+		}
 		// Senza la lingua di partenza non c'e' niente a cui appaiare una
 		// traduzione: si lascia stare, invece di indovinare.
 		if ( ! isset( $lingue[ $sorgente ] ) ) {

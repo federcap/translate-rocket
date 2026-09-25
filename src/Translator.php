@@ -322,7 +322,15 @@ class Translator {
 			// «Nessuna»: all'AI va tutto. Il glossario resta: e' una regola, non una traduzione.
 			$existing = Strings::glossary_texts( $texts, $lang );
 		} elseif ( 'no_browser' === $modo ) {
-			$existing = Strings::reusable_texts( $texts, $lang, array( 'browser', 'reuse' ) );
+			/**
+			 * Which translations «All except free machine translations» does not reuse.
+			 * Plugins that bring free engines add theirs (TranslateRocket Labs: Edge,
+			 * Yandex, MyMemory, Google): their quality is the browser's, not the AI's.
+			 *
+			 * @param string[] $providers Provider ids.
+			 */
+			$fuori    = (array) apply_filters( 'trrocket_reuse_skip_providers', array( 'browser', 'reuse' ) );
+			$existing = Strings::reusable_texts( $texts, $lang, array_values( array_unique( array_map( 'strval', $fuori ) ) ) );
 		} else {
 			$existing = Strings::translate_texts( $texts, $lang );
 		}

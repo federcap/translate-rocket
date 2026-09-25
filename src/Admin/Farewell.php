@@ -16,11 +16,13 @@ defined( 'ABSPATH' ) || exit;
  * Everybody else leaves in silence, and a plugin that never hears from them
  * keeps making the same mistake. So: one small box, on the way out.
  *
- * Nothing is sent anywhere from here. The answer is written into this site's
- * own options, and the person is offered a button that copies it so they can
- * paste it into the support forum if they feel like it. Whether the plugin
- * should ever post it on its own is a decision for the site owner to make
- * knowingly, not something a deactivation screen does quietly.
+ * The answer is always written into this site's own options. It reaches the
+ * developer only if the person presses «Send and deactivate»: then the reason,
+ * what they typed and the numbers shown in the box (versions, how many
+ * languages and sentences, days since install) go to translaterocket.com. No
+ * site address, no name, no e-mail. «Skip and deactivate» sends nothing. Until
+ * 1.5.5 nothing was ever sent, and 20 active sites out of ~400 downloads a month
+ * left without anybody knowing why (24/9/2026).
  *
  * The rest of the rules, which are also the plugin directory's rules:
  *  - it never blocks anything: "Skip and deactivate" is right there, Escape and
@@ -33,6 +35,7 @@ class Farewell {
 	const ASKED  = 'trrocket_farewell_asked';
 	const ANSWER = 'trrocket_farewell_answer';
 	const NONCE  = 'trrocket_farewell';
+	const ENDPOINT = 'https://translaterocket.com/wp-json/translaterocket/v1/farewell';
 
 	/**
 	 * Hook into the Plugins screen only.
@@ -144,6 +147,7 @@ class Farewell {
 			'provider'  => $provider,
 			'wizard'    => get_option( 'trrocket_wizard_done' ) ? 'done' : 'not done',
 			'days'      => (int) floor( ( time() - (int) get_option( Growth::INSTALLED, time() ) ) / DAY_IN_SECONDS ),
+			'locale'    => get_locale(),
 		);
 	}
 
@@ -176,15 +180,15 @@ class Farewell {
 				<p class="trr-bye-ask" style="display:none"><label for="trr-bye-text" id="trr-bye-asklabel"></label></p>
 				<textarea id="trr-bye-text" rows="3" style="display:none" class="large-text"></textarea>
 				<p class="trr-bye-note">
-					<?php esc_html_e( 'Your answer stays on this site. The plugin does not send anything anywhere. If you would like me to see it, use the copy button and paste it in the support forum: it is the fastest way to get an answer, too.', 'translate-rocket' ); ?>
+					<?php esc_html_e( '«Send and deactivate» sends your answer to the developer at translaterocket.com, anonymously. «Skip and deactivate» sends nothing.', 'translate-rocket' ); ?>
 				</p>
 				<details class="trr-bye-what">
-					<summary><?php esc_html_e( 'What the copy button puts on your clipboard', 'translate-rocket' ); ?></summary>
-					<p><?php esc_html_e( 'Your answer above, and these numbers. Nothing else: no site address, no name, no e-mail, no page or translation content.', 'translate-rocket' ); ?></p>
+					<summary><?php esc_html_e( 'Exactly what is sent', 'translate-rocket' ); ?></summary>
+					<p><?php esc_html_e( 'The reason you picked, what you wrote, and these numbers. Nothing else: no site address, no name, no e-mail, no page or translation content. Your IP address is not stored.', 'translate-rocket' ); ?></p>
 					<pre class="trr-bye-ctx"><?php echo esc_html( $line ); ?></pre>
 				</details>
 				<p class="trr-bye-buttons">
-					<button type="button" class="button button-primary" id="trr-bye-copy" disabled><?php esc_html_e( 'Copy and deactivate', 'translate-rocket' ); ?></button>
+					<button type="button" class="button button-primary" id="trr-bye-copy" disabled><?php esc_html_e( 'Send and deactivate', 'translate-rocket' ); ?></button>
 					<button type="button" class="button" id="trr-bye-skip"><?php esc_html_e( 'Skip and deactivate', 'translate-rocket' ); ?></button>
 					<button type="button" class="button-link trr-bye-cancel" id="trr-bye-cancel"><?php esc_html_e( 'Cancel', 'translate-rocket' ); ?></button>
 				</p>
@@ -244,13 +248,14 @@ class Farewell {
 				askLabel.textContent = q || '';
 			} );
 
-			function remember( then ) {
+			function remember( then, send ) {
 				var picked = box.querySelector( 'input[name="trr-bye-reason"]:checked' ),
 					body = new URLSearchParams();
 				body.append( 'action', 'trrocket_farewell' );
 				body.append( 'nonce', nonce );
 				body.append( 'reason', picked ? picked.value : '' );
 				body.append( 'text', text.value || '' );
+				body.append( 'send', send ? '1' : '0' );
 				fetch( ajax, { method: 'POST', credentials: 'same-origin', body: body } ).then( then ).catch( then );
 				// Nobody stays stuck on a box because a request hangs.
 				setTimeout( then, 4000 );
@@ -278,13 +283,8 @@ class Farewell {
 				}
 			} );
 			copy.addEventListener( 'click', function () {
-				var picked = box.querySelector( 'input[name="trr-bye-reason"]:checked' ),
-					note = ( picked ? picked.parentNode.textContent.trim() : '' ) + '\n\n' + ( text.value || '' ) + '\n\n' + ctx;
 				copy.disabled = true;
-				if ( navigator.clipboard && navigator.clipboard.writeText ) {
-					navigator.clipboard.writeText( note ).catch( function () {} );
-				}
-				remember( leave );
+				remember( leave, true );
 			} );
 		}() );
 		</script>
@@ -293,7 +293,7 @@ class Farewell {
 
 	/**
 	 * Write the answer into this site's options and remember the question was
-	 * asked. Nothing leaves the site.
+	 * asked. With «Send and deactivate», also post it to translaterocket.com.
 	 */
 	public function ajax(): void {
 		if ( ! current_user_can( 'activate_plugins' ) || ! check_ajax_referer( self::NONCE, 'nonce', false ) ) {
@@ -313,6 +313,29 @@ class Farewell {
 				),
 				false
 			);
+			/**
+			 * Whether «Send and deactivate» may post the answer to translaterocket.com.
+			 * Return false to keep every answer on this site.
+			 *
+			 * @param bool $send Default true (the person pressed Send).
+			 */
+			$manda = isset( $_POST['send'] ) ? sanitize_key( wp_unslash( $_POST['send'] ) ) : '';
+			if ( '1' === $manda && apply_filters( 'trrocket_farewell_send', true ) ) {
+				wp_remote_post(
+					self::ENDPOINT,
+					array(
+						'timeout' => 5,
+						'headers' => array( 'Content-Type' => 'application/json' ),
+						'body'    => wp_json_encode(
+							array(
+								'reason'  => $reason,
+								'text'    => mb_substr( $text, 0, 2000 ),
+								'context' => self::context(),
+							)
+						),
+					)
+				);
+			}
 		}
 		wp_send_json_success();
 	}

@@ -25,10 +25,24 @@ defined( 'ABSPATH' ) || exit;
 class Comune {
 
 	/**
+	 * Is this translated copy one to import? Only a published, private or scheduled
+	 * one: another plugin keeps drafts, pending ones and the trash in the same group,
+	 * and a translation left half-done or binned on purpose used to become the
+	 * published one (casi raccolti, importatori 27, 25/9/2026).
+	 *
+	 * @param mixed $post A post or null.
+	 */
+	public static function pubblicato( $post ): bool {
+		return $post instanceof \WP_Post && in_array( $post->post_status, array( 'publish', 'private', 'future' ), true );
+	}
+
+	/**
 	 * Another plugin's language code (or a WordPress locale) into ours.
 	 *
 	 * Handles `it_IT`, `pt-BR`, `zh_CN` and friends. Everything unknown falls
 	 * back to the first two letters, which is right far more often than not.
+	 *
+	 * @param string $codice Code or locale.
 	 */
 	public static function lingua( string $codice ): string {
 		$codice = strtolower( str_replace( '-', '_', trim( $codice ) ) );
@@ -41,7 +55,11 @@ class Comune {
 			'zh_tw'   => 'zh-tw',
 			'zh_hant' => 'zh-tw',
 			'sr_rs'   => 'sr',
-			'nb_no'   => 'nb',
+			// Norwegian Bokmal is 'no' in our catalogue (locale nb_NO), as WeglotCsv already
+			// maps it: 'nb' was no language of ours, so a Norwegian site imported nothing
+			// and was not told (casi raccolti, importatori 25, 25/9/2026).
+			'nb_no'   => 'no',
+			'nb'      => 'no',
 			'nn_no'   => 'nn',
 		);
 		if ( isset( $mappa[ $codice ] ) ) {
@@ -454,7 +472,7 @@ class Comune {
 		}
 		$skip = 'ancestor-or-self::script or ancestor-or-self::style or ancestor-or-self::code'
 			. ' or ancestor-or-self::pre or ancestor-or-self::textarea'
-			. " or ancestor-or-self::*[@translate='no']";
+			. " or ancestor-or-self::*[@translate='no'][not(self::html or self::body)]";
 		$fuori = array();
 		foreach ( \TranslateRocket\Frontend\InlineText::units( new \DOMXPath( $doc ), $skip ) as $el ) {
 			$frase = \TranslateRocket\Frontend\InlineText::source( $el );

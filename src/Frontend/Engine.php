@@ -678,6 +678,26 @@ class Engine {
 			'mc_eid',
 			'_gl',
 			'yclid',
+			// Aggiunti il 25/9/2026 (casi raccolti, cache 29), come fanno Cache Enabler, WP Super
+			// Cache e Breeze: srsltid lo mette Google Shopping su ogni clic verso un prodotto,
+			// quindi su un negozio era la maggior parte del traffico a pagamento, ritradotto a
+			// ogni visita. Nessuno di questi cambia cio' che la pagina mostra.
+			'srsltid',
+			'utm_expid',
+			'dclid',
+			'ref',
+			'usqp',
+			'cn-reloaded',
+			'age-verified',
+			'_ke',
+			'fb_action_ids',
+			'fb_action_types',
+			'fb_source',
+			'epik',
+			'li_fat_id',
+			'sc_cid',
+			'pk_campaign',
+			'pk_kwd',
 		);
 		/**
 		 * Filters the query parameters treated as tracking-only.
@@ -790,8 +810,12 @@ class Engine {
 			// il <title> che sta nella testata del documento.
 			$skip .= ( 'title' === $tag ) ? "ancestor::title[parent::head] or " : "ancestor::{$tag} or ";
 		}
-		$skip   .= "ancestor::*[@id='wpadminbar'] or ancestor::*[@id='trrocket-ve-bar'] or ancestor::*[@translate='no']";
-		$skip_el = "ancestor-or-self::*[@id='wpadminbar'] or ancestor-or-self::*[@id='trrocket-ve-bar'] or ancestor-or-self::*[@translate='no']";
+		// translate="no" on <html> or <body> is for the browser's own translator («don't
+		// offer to translate this page»: Weglot writes it, and so do owners who dislike the
+		// popup). Taken as «skip the whole page» it left sites untranslated with no clue why
+		// (casi raccolti, siti-veri 30, 25/9/2026). Inside the page it is still respected.
+		$skip   .= "ancestor::*[@id='wpadminbar'] or ancestor::*[@id='trrocket-ve-bar'] or ancestor::*[@translate='no'][not(self::html or self::body)]";
+		$skip_el = "ancestor-or-self::*[@id='wpadminbar'] or ancestor-or-self::*[@id='trrocket-ve-bar'] or ancestor-or-self::*[@translate='no'][not(self::html or self::body)]";
 		// Tooling that only administrators see (debug panels, page-builder helpers): not
 		// page content, so never collected — and never translated either.
 		foreach ( NoTranslate::tool_prefixes() as $prefix ) {
@@ -1278,7 +1302,7 @@ class Engine {
 			// 0.7.6 pass rewrote it too, trapping visitors in the translated
 			// language. Same for explicit translate="no" regions (hand-made
 			// language menus can opt out the same way content does).
-			$link_nodes = iterator_to_array( $xpath->query( "//a[@href][not(ancestor-or-self::*[@id='wpadminbar'] or ancestor-or-self::*[@id='trrocket-ve-bar'] or ancestor-or-self::*[contains(@class,'trrocket')] or ancestor-or-self::*[@translate='no'])]" ) );
+			$link_nodes = iterator_to_array( $xpath->query( "//a[@href][not(ancestor-or-self::*[@id='wpadminbar'] or ancestor-or-self::*[@id='trrocket-ve-bar'] or ancestor-or-self::*[contains(@class,'trrocket')] or ancestor-or-self::*[@translate='no'][not(self::html or self::body)])]" ) );
 			foreach ( $link_nodes as $a ) {
 				if ( ! $a instanceof \DOMElement ) {
 					continue;

@@ -1118,6 +1118,15 @@ class Strings {
 		if ( ! $id ) {
 			return false;
 		}
+		// A translation corrected by hand (2) or reviewed (3) is never overwritten by an
+		// import: importing again — because more was translated in the other plugin, or
+		// to be sure — used to bring back the old text over the owner's corrections, and
+		// the count stayed the same so nothing showed it (casi raccolti, importatori 28,
+		// 25/9/2026).
+		$stato = $wpdb->get_var( $wpdb->prepare( 'SELECT status FROM ' . Database::translations_table() . ' WHERE string_id = %d AND language = %s', $id, $lang ) ); // phpcs:ignore WordPress.DB
+		if ( null !== $stato && (int) $stato >= 2 ) {
+			return false;
+		}
 		self::save_translation( $id, $lang, $translation, 1, 'import' );
 		return true;
 	}

@@ -20,6 +20,8 @@ class Cache {
 
 	private const VER_OPTION = 'trrocket_cache_ver';
 	private const PREFIX     = 'trrocket_pc_';
+	/** Cron event of the CDN purge (see purge_remote_later()). */
+	public const REMOTE_EVENT = 'trrocket_purge_remote';
 	private const TTL        = 21600; // 6 hours.
 
 	/**
@@ -210,6 +212,51 @@ class Cache {
 				$fn();
 			}
 		}
+
+		self::purge_remote_later();
+	}
+
+	/**
+	 * CDNs in front of the site (NitroPack, Cloudflare) are purged through their API,
+	 * which counts every call: a bulk translation that saves for ten minutes must not
+	 * call it ten minutes long. One purge is booked a minute after the change, and
+	 * further changes in that minute ride on it (casi raccolti, cache 20-21, 25/9/2026).
+	 */
+	private static function purge_remote_later(): void {
+		$nitro = function_exists( 'nitropack_sdk_invalidate' );
+		$cf    = isset( $GLOBALS['cloudflareHooks'] ) && is_object( $GLOBALS['cloudflareHooks'] ) && method_exists( $GLOBALS['cloudflareHooks'], 'purgeCacheEverything' );
+		if ( ! $nitro && ! $cf && ! has_action( 'trrocket_purge_remote_caches' ) ) {
+			return;
+		}
+		if ( ! wp_next_scheduled( self::REMOTE_EVENT ) ) {
+			wp_schedule_single_event( time() + MINUTE_IN_SECONDS, self::REMOTE_EVENT );
+		}
+	}
+
+	/**
+	 * The booked CDN purge.
+	 *
+	 * NitroPack: invalidate, the call its own integrations use (Elementor, WPBakery):
+	 * pages are marked stale and rebuilt, nothing is thrown away at once.
+	 * Cloudflare: its plugin's own «purge everything» (only acts when its page cache or
+	 * APO is on). Its list of purge actions is read when it loads, before us, so a
+	 * filter on it would arrive too late: the call is direct.
+	 */
+	public static function purge_remote(): void {
+		if ( ! apply_filters( 'trrocket_purge_external_caches', true ) ) {
+			return;
+		}
+		if ( function_exists( 'nitropack_sdk_invalidate' ) ) {
+			nitropack_sdk_invalidate( null, null, 'TranslateRocket: translations changed' );
+		}
+		$cf = $GLOBALS['cloudflareHooks'] ?? null;
+		if ( is_object( $cf ) && method_exists( $cf, 'purgeCacheEverything' ) ) {
+			$cf->purgeCacheEverything();
+		}
+		/**
+		 * Fires when TranslateRocket purges the CDNs, a minute after translations changed.
+		 */
+		do_action( 'trrocket_purge_remote_caches' );
 	}
 
 	/**

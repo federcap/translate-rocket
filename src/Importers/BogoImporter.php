@@ -138,7 +138,7 @@ class BogoImporter implements ProvidesCopies {
 					continue;
 				}
 				$tradotto = get_post( (int) $m->post );
-				if ( ! $tradotto || (int) $tradotto->ID === (int) $origine->ID ) {
+				if ( ! Comune::pubblicato( $tradotto ) || (int) $tradotto->ID === (int) $origine->ID ) {
 					continue;
 				}
 				$totale += Comune::appaia( $origine, $tradotto, $lingua, $salva );

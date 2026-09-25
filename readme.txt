@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,7 @@ This plugin can connect to third-party services, but only with your involvement:
 * **Google Translate (manual, always available).** Every editor offers a per-phrase link and a copy-paste box that open Google Translate (translate.google.com) prefilled, so you translate on Google's own site and paste the result back. This is just a convenience link — your browser, not the plugin, contacts Google. Service: https://translate.google.com , terms: https://policies.google.com/terms , privacy: https://policies.google.com/privacy
 * **Optional one-click Google auto-fill (off by default).** A site owner can opt in (the `TRROCKET_AUTO_GOOGLE` constant / the `trrocket_auto_google` filter) to let the server fetch a translation from Google's free endpoint with one click. This uses an undocumented endpoint and is best-effort, so it is disabled out of the box and the plugin never calls it on its own. For dependable automatic translation use the official AI providers below.
 * **translaterocket.com support ticket (optional, on request).** The Diagnostics screen has a form that opens a support ticket for you. It sends nothing until you fill it in and press Send, and what it sends is exactly what the page shows you: your name, your email address (so the answer can reach you), your subject and message, your site address and the plugin version, plus the technical report if you leave that box ticked. The report never contains API keys. To prove the request really comes from your site and not from a spam robot, the support site then makes one request back to your site's home URL with a one-time token. Nothing else is transmitted, nothing is stored on your site, and if you would rather not use it the same page still offers the copy-and-paste route. Service: https://translaterocket.com , privacy: https://translaterocket.com/privacy-policy/
+* **translaterocket.com deactivation feedback (optional, only if you press Send).** When you deactivate the plugin, a box asks why. The answer is saved on your own site. Only if you press «Send and deactivate» is it sent to https://translaterocket.com/wp-json/translaterocket/v1/farewell : the reason you picked, what you typed, and the numbers shown in the box (plugin, WordPress and PHP versions, number of languages and of detected sentences, the translation provider in use, whether the setup wizard was completed, days since install, your admin language). No site address, no name, no e-mail, no page or translation content; the IP address is not stored. «Skip and deactivate» sends nothing, and the `trrocket_farewell_send` filter turns sending off entirely. Service: https://translaterocket.com , privacy: https://translaterocket.com/privacy-policy/
 * **translaterocket.com (optional).** The "Help & Feedback", "Request customization", "Send feedback" and "Get tips & updates" links open translaterocket.com in your browser with your site's domain in the URL. Nothing is sent automatically — these are links you choose to click. Service: https://translaterocket.com , privacy: https://translaterocket.com/privacy-policy/
 
 == Installation ==
@@ -200,6 +201,23 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 
 == Changelog ==
+
+= 1.5.6 =
+* New: when you deactivate the plugin, «Send and deactivate» sends your reason to the developer — anonymously, and only if you press it. Until now the answer stayed on your site, and nobody ever learned why people left. «Skip and deactivate» sends nothing; the box shows exactly what is sent (versions and a few counts, no site address, no name, no e-mail).
+* Improved: the request for a review now comes at a better moment and never gets in the way. It appears only on TranslateRocket's own screens (never on Posts, WooCommerce or the Dashboard), after 3 days and 50 real translations — empty or waiting rows no longer count. «Maybe later» and the × put it off for three weeks, twice at most; «I already did», «No thanks» and «Write a review» close it for good. Before, the × closed it forever, so someone busy at that moment was never asked again. «Maybe later» on the donation note now puts it off for 60 days instead of closing it.
+* New: a «Labs ✨» page tells you what TranslateRocket Labs adds — a free add-on, on request, that translates with no API key from any browser, phones included, and does more of the work by itself. It shows on the plugin home and on AI Translation, and can be folded into one line. It opens only inside TranslateRocket, never as a notice elsewhere, and disappears once Labs is installed.
+* Improved: «Reuse saved translations» → «All except free machine translations» now also leaves out what the free engines of TranslateRocket Labs translated, not only the browser translator. Whoever moves to an AI gets the AI quality on repeated sentences too (menus, footer, buttons); your own edits, imported and AI translations are still reused.
+* Fix: a page whose `<html>` or `<body>` carries `translate="no"` is translated again. That attribute tells Chrome, Edge and Safari not to offer their own translation — Weglot writes it, and so do owners who dislike the browser's popup — but TranslateRocket read it as «skip the whole page» and left the site untranslated with no explanation. `translate="no"` on a part of the page is still respected.
+* Fix: 16 more tracking-only parameters no longer stop a translated page from being cached — first of all `srsltid`, which Google Shopping adds to every click on a product, so on a shop most paid traffic was translated again at every visit. Also `ref`, `dclid`, Pinterest's `epik`, LinkedIn's `li_fat_id`, Matomo's `pk_campaign` and others, as the main cache plugins do. A page with a real parameter (a search, a filter) is still never cached.
+* Fix: product SKUs (`.sku`) are never translated, even when a translation for the same text exists: a customer quoting a translated code to support, while choosing a variant put the original back, saw two codes on one page.
+* Fix: while a language is not online yet, the redirect that sends visitors back to your main language is marked «do not cache», so no cache in front of the site keeps sending them away after you press «Go online».
+* Fix: importing again no longer overwrites the translations you corrected by hand. Importing a second time — because you translated more in the other plugin, or to be sure — brought back the old text over your corrections, and the count stayed the same so nothing showed it.
+* Fix: Polylang, WPML and Bogo imports take only published, private or scheduled translations. Drafts, pending ones and translations in the trash — often binned on purpose because they were wrong — were imported as good ones.
+* Fix: a Norwegian site (Bokmål, `nb_NO`) imported nothing from Bogo, Loco Translate and Multilanguage, without saying so. It now lands in Norwegian.
+* Fix: qTranslate-XT, WPGlobus and WP Multilang markers with a region — `{:en_US}`, `{:pt_BR}`, `{:zh_CN}` — are understood. With the source written `{:en_US}` the whole post was skipped.
+* Fix: a TMX file from Trados, memoQ or OmegaT, which write the source language as `en-US` or `en-GB`, imported zero translations. The source now matches like the target languages already did.
+* Improved: NitroPack and Cloudflare (the official Cloudflare plugin, with its page cache or APO on) are now refreshed when translations change, so a corrected translation no longer waits for their cache to expire. The call goes out once, a minute after the last change, so a bulk translation does not call their API hundreds of times.
+* Developers: another plugin can now add a translation provider with the `trrocket_providers` and `trrocket_provider_defs` filters. It then appears on the AI Translation screen (with no key field, if it needs none) and works everywhere the built-in ones do: bulk translation, the fallback chain, the visual editor.
 
 = 1.5.5 =
 * Fix: sentences you translated with an older version show up translated in the visual editor again. Older versions collected a sentence with a link, a bold word or a line break as separate pieces, and newer ones read it as one; visitors kept seeing it translated, but the visual editor showed it in the original language with an empty box, as if the work were lost. The editor now shows it as visitors do, with the box already filled, and once after the update every such sentence whose pieces are all translated gets its whole translation saved — exactly what visitors already read. Sentences with an untranslated piece and translations you wrote yourself are left alone, and nothing is deleted.
@@ -387,6 +405,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.5.6 =
+Imports keep your hand corrections and skip drafts and trash; pages with translate="no" on <html> are translated; better caching (Google Shopping links, NitroPack, Cloudflare). New Labs page; optional anonymous reason on deactivation.
 
 = 1.5.5 =
 Recommended if you translated your site with an older version: sentences with links or bold words show up translated in the visual editor again. Without an API key, a browser that cannot translate now explains why and offers free alternatives. The switcher preview is now the real switcher, and admin screens no longer jump.
