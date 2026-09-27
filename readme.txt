@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.6
+Stable tag: 1.5.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -185,6 +185,14 @@ And when a machine translation gets a word wrong, fixing it takes ten seconds:
 
 https://www.youtube.com/watch?v=Bc83GXh1NvI
 
+= My browser isn't Chrome or Edge, or I work from a phone. Can I still translate without a key? =
+
+The translator built into the browser exists only in Chrome and Edge on a computer. TranslateRocket Labs, a separate free add-on you can ask for at https://translaterocket.com/labs/, adds free translation engines that work from any browser, phones included — each one is switched on only after you read and accept its conditions. Labs is not needed: everything described on this page works without it.
+
+Both, in one minute — a page translated in the browser with no key, then Labs translating a new page the moment it is published:
+
+https://www.youtube.com/watch?v=Zsf1PXWFhVI
+
 == Screenshots ==
 
 1. Translate without an API key at all: Chrome and Edge carry a translator that runs on the device itself, and one button puts it to work on everything still missing. Nothing is sent anywhere, nothing is charged, and what it translates is kept for good.
@@ -201,6 +209,10 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 
 == Changelog ==
+
+= 1.5.7 =
+* Changed: the «Labs ✨» page describes the free engines of TranslateRocket Labs as free translation engines, without naming third-party services.
+* Readme: a new question for people without Chrome or Edge, and an animated first screenshot.
 
 = 1.5.6 =
 * New: when you deactivate the plugin, «Send and deactivate» sends your reason to the developer — anonymously, and only if you press it. Until now the answer stayed on your site, and nobody ever learned why people left. «Skip and deactivate» sends nothing; the box shows exactly what is sent (versions and a few counts, no site address, no name, no e-mail).
@@ -405,6 +417,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.5.7 =
+Wording of the Labs page only. Nothing else changes.
 
 = 1.5.6 =
 Imports keep your hand corrections and skip drafts and trash; pages with translate="no" on <html> are translated; better caching (Google Shopping links, NitroPack, Cloudflare). New Labs page; optional anonymous reason on deactivation.

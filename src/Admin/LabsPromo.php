@@ -197,7 +197,7 @@ class LabsPromo {
 						$feat( '🌍', __( 'The whole site in one click', 'translate-rocket' ), __( 'Every published page, post and product, a few at a time, while you do something else.', 'translate-rocket' ) );
 						$feat( '📝', __( 'Translate on publish', 'translate-rocket' ), __( 'Publish or update a page: its new text is translated into your languages in the background.', 'translate-rocket' ) );
 						$feat( '🧭', __( 'Menus, widgets, Customizer', 'translate-rocket' ), __( 'Changes that appear on every page are picked up and translated by themselves.', 'translate-rocket' ) );
-						$feat( '🤖', __( 'Free engines, no key', 'translate-rocket' ), __( 'Yandex, Microsoft Edge, MyMemory and Google, each switched on only after you read and accept its conditions.', 'translate-rocket' ) );
+						$feat( '🤖', __( 'Free engines, no key', 'translate-rocket' ), __( 'Free translation engines, each switched on only after you read and accept its conditions.', 'translate-rocket' ) );
 						$feat( '💎', __( 'Polish with AI', 'translate-rocket' ), __( 'With an AI key, a little of the free engines\' work is translated again every day, so quality grows over time.', 'translate-rocket' ) );
 						$feat( '📬', __( 'A weekly report', 'translate-rocket' ), __( 'Every Monday, a short e-mail: what was translated and what is still waiting.', 'translate-rocket' ) );
 						$feat( '🔄', __( 'Updates itself', 'translate-rocket' ), __( 'New versions appear in Plugins, like any other update.', 'translate-rocket' ) );
@@ -211,15 +211,15 @@ class LabsPromo {
 					<div class="trr-lp-chain" aria-label="<?php esc_attr_e( 'An example of priority order', 'translate-rocket' ); ?>">
 						<span class="trr-lp-step">1 · <?php esc_html_e( 'Your API key', 'translate-rocket' ); ?></span><span class="trr-lp-arrow">→</span>
 						<span class="trr-lp-step">2 · Chrome</span><span class="trr-lp-arrow">→</span>
-						<span class="trr-lp-step">3 · Microsoft Edge</span><span class="trr-lp-arrow">→</span>
-						<span class="trr-lp-step">4 · Yandex</span>
+						<span class="trr-lp-step">3 · <?php esc_html_e( 'Free engine', 'translate-rocket' ); ?></span><span class="trr-lp-arrow">→</span>
+						<span class="trr-lp-step">4 · <?php esc_html_e( 'Another free engine', 'translate-rocket' ); ?></span>
 					</div>
 					<p style="margin:10px 0 0;color:#50575e"><?php esc_html_e( 'Drag the engines into the order you want and switch each one on or off. If one is missing, out of credit or paused, the next one translates the page: one way or another, every page gets translated.', 'translate-rocket' ); ?></p>
 				</div>
 
 				<div class="trr-lp-cta">
 					<a href="<?php echo esc_url( self::site_url() ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Ask for Labs — free', 'translate-rocket' ); ?> ↗</a>
-					<p class="trr-lp-note"><?php esc_html_e( 'Labs is a separate plugin, sent by e-mail with a key for your site. The free TranslateRocket stays complete and unchanged. Some engines in Labs are unofficial services: they are optional, each with its own conditions, and marked as experimental.', 'translate-rocket' ); ?></p>
+					<p class="trr-lp-note"><?php esc_html_e( 'Labs is a separate plugin, sent by e-mail with a key for your site. The free TranslateRocket stays complete and unchanged. Some engines in Labs are optional free services, each with its own conditions, and marked as experimental.', 'translate-rocket' ); ?></p>
 				</div>
 			</div>
 		</div>

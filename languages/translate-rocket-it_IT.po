@@ -3784,3 +3784,19 @@ msgstr "Tutte tranne le traduzioni automatiche gratuite (traduttore del browser 
 #: src/Admin/Admin.php
 msgid "Recommended when you move from free machine translation (the Chrome/Edge translator, or the free engines of TranslateRocket Labs) to an AI: repeated sentences (menus, footer, buttons) get the AI quality too. Your own edits and imported translations are still reused."
 msgstr "Consigliato quando passi dalla traduzione automatica gratuita (il traduttore di Chrome/Edge o i motori gratuiti di TranslateRocket Labs) a un'AI: anche le frasi ripetute (menu, piè di pagina, pulsanti) prendono la qualità dell'AI. Le tue correzioni e le traduzioni importate vengono comunque riutilizzate."
+
+#: src/Admin/LabsPromo.php
+msgid "Free translation engines, each switched on only after you read and accept its conditions."
+msgstr "Motori di traduzione gratuiti, ciascuno attivato solo dopo che hai letto e accettato le sue condizioni."
+
+#: src/Admin/LabsPromo.php
+msgid "Free engine"
+msgstr "Motore gratuito"
+
+#: src/Admin/LabsPromo.php
+msgid "Another free engine"
+msgstr "Un altro motore gratuito"
+
+#: src/Admin/LabsPromo.php
+msgid "Labs is a separate plugin, sent by e-mail with a key for your site. The free TranslateRocket stays complete and unchanged. Some engines in Labs are optional free services, each with its own conditions, and marked as experimental."
+msgstr "Labs è un plugin separato, inviato per e-mail con una chiave per il tuo sito. TranslateRocket gratuito resta completo e invariato. Alcuni motori di Labs sono servizi gratuiti facoltativi, ciascuno con le sue condizioni, e segnati come sperimentali."

@@ -324,8 +324,8 @@ class Translator {
 		} elseif ( 'no_browser' === $modo ) {
 			/**
 			 * Which translations «All except free machine translations» does not reuse.
-			 * Plugins that bring free engines add theirs (TranslateRocket Labs: Edge,
-			 * Yandex, MyMemory, Google): their quality is the browser's, not the AI's.
+			 * Plugins that bring free engines add theirs (TranslateRocket Labs does):
+			 * their quality is the browser's, not the AI's.
 			 *
 			 * @param string[] $providers Provider ids.
 			 */
