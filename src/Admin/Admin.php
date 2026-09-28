@@ -953,7 +953,9 @@ class Admin {
 			if ( function_exists( 'set_time_limit' ) ) {
 				@set_time_limit( 300 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, Squiz.PHP.DiscouragedFunctions.Discouraged -- disabled on some hosts; failing silently is fine.
 			}
+			Strings::batch_start();
 			$result = $importer->import();
+			Strings::batch_end();
 			$count  = (int) ( $result['count'] ?? 0 );
 			// Un importatore puo' rifiutarsi con un motivo (per esempio: il vecchio
 			// plugin dice che il sito e' scritto in un'altra lingua). Prima la bacheca
@@ -1119,6 +1121,8 @@ class Admin {
 		$xmlns   = 'http://www.w3.org/XML/1998/namespace';
 		$count   = 0;
 
+		// Una sola transazione per tutto il file: vedi Strings::batch_start().
+		Strings::batch_start();
 		foreach ( $doc->body->tu as $tu ) {
 			$segs = array();
 			foreach ( $tu->tuv as $tuv ) {
@@ -1177,6 +1181,7 @@ class Admin {
 				}
 			}
 		}
+		Strings::batch_end();
 		\TranslateRocket\Cache::flush();
 		$redirect( array( 'tmx_imported' => $count ) );
 	}
@@ -1258,10 +1263,12 @@ class Admin {
 		}
 
 		$fallback = isset( $_POST['trrocket_weglot_lang'] ) ? sanitize_key( wp_unslash( $_POST['trrocket_weglot_lang'] ) ) : '';
-		$result   = \TranslateRocket\Importers\WeglotCsv::import(
+		Strings::batch_start();
+		$result = \TranslateRocket\Importers\WeglotCsv::import(
 			(string) $_FILES['trrocket_weglot_csv']['tmp_name'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- server-generated temp path, is_uploaded_file-checked above.
 			$fallback
 		);
+		Strings::batch_end();
 
 		if ( '' !== $result['error'] ) {
 			// WeglotCsv::import() returns a stable machine code ('columns' | 'open');
@@ -1331,6 +1338,7 @@ class Admin {
 		};
 
 		$count = 0;
+		Strings::batch_start();
 		while ( ( $row = fgetcsv( $fh, 0, ',', '"', '' ) ) !== false ) {
 			$original = isset( $row[0] ) ? $unguard( (string) $row[0] ) : '';
 			$type     = isset( $row[1] ) && '' !== $row[1] ? $unguard( (string) $row[1] ) : 'text';
@@ -1345,6 +1353,7 @@ class Admin {
 				}
 			}
 		}
+		Strings::batch_end();
 		fclose( $fh ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closes the fopen() stream above.
 
 		\TranslateRocket\Cache::flush();

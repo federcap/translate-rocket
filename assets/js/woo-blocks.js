@@ -32,6 +32,13 @@
 			var t = val.trim();
 			if ( '' !== t && map[ t ] && map[ t ] !== t ) {
 				node.nodeValue = val.replace( t, map[ t ] );
+				continue;
+			}
+			// A label printed with its colon («Colour:» next to the chosen value):
+			// the translation is filed without it.
+			var m = /^(.*\S)\s*([:：])$/.exec( t );
+			if ( m && map[ m[ 1 ] ] && map[ m[ 1 ] ] !== m[ 1 ] ) {
+				node.nodeValue = val.replace( t, map[ m[ 1 ] ] + m[ 2 ] );
 			}
 		}
 	}

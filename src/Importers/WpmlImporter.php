@@ -145,6 +145,7 @@ class WpmlImporter implements ProvidesCopies {
 
 		$count += $this->import_strings( $our_default );
 		$count += $this->import_content( $our_default );
+		$count += $this->import_terms( $our_default );
 
 		return array(
 			'count' => $count,
@@ -261,6 +262,54 @@ class WpmlImporter implements ProvidesCopies {
 				// A page built with a page builder keeps its words in a meta, not
 				// in post_content: without this such a site imports no page text.
 				$count += Comune::builder( $source, $tpost, $lang, true );
+				// WooCommerce: purchase note, the product's own attributes, variations.
+				$count += Comune::prodotto( $source, $tpost, $lang, true );
+				// Advanced Custom Fields filled in the copy.
+				$count += Comune::campi_acf( $source, $tpost, $lang, true );
+			}
+		}
+		return $count;
+	}
+
+	/**
+	 * Term translations (categories, tags, product categories, attribute values):
+	 * WPML keeps them in icl_translations as tax_* rows, keyed by term_taxonomy_id.
+	 *
+	 * @param string $our_default Our default language code (never overwritten).
+	 */
+	private function import_terms( string $our_default ): int {
+		global $wpdb;
+		$tr = $wpdb->prefix . 'icl_translations';
+		if ( ! $this->table_exists( $tr ) ) {
+			return 0;
+		}
+		$rows = $wpdb->get_results(
+			"SELECT trid, element_id, language_code, source_language_code FROM `{$tr}` WHERE element_type LIKE 'tax\_%'"
+		); // phpcs:ignore WordPress.DB
+		$groups = array();
+		foreach ( (array) $rows as $row ) {
+			$term = get_term_by( 'term_taxonomy_id', (int) $row->element_id );
+			if ( ! $term instanceof \WP_Term ) {
+				continue;
+			}
+			$src = $row->source_language_code;
+			if ( null === $src || '' === (string) $src ) {
+				$groups[ (int) $row->trid ]['source'] = (int) $term->term_id;
+			} else {
+				$groups[ (int) $row->trid ]['trans'][ (string) $row->language_code ] = (int) $term->term_id;
+			}
+		}
+		$count = 0;
+		foreach ( $groups as $group ) {
+			if ( empty( $group['source'] ) || empty( $group['trans'] ) ) {
+				continue;
+			}
+			foreach ( $group['trans'] as $code => $tid ) {
+				$lang = $this->map_lang( (string) $code );
+				if ( ! Languages::exists( $lang ) || $lang === $our_default ) {
+					continue;
+				}
+				$count += Comune::termine( (int) $group['source'], (int) $tid, $lang, true );
 			}
 		}
 		return $count;

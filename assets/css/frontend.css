@@ -231,6 +231,21 @@
 	outline: none;
 }
 
+/* Themes restyle EVERY button, and their rules can tie with ours and win by loading later: Hello Elementor has
+   `[type=button]:focus{color:#fff}` and `[type=button]{width:auto}` (same weight as `.trrocket-dd-toggle:focus`).
+   Once clicked the toggle keeps the focus, so the open dropdown showed the current language white on white and
+   narrower than the menu. One class more wins without !important; the colours chosen in the switcher settings
+   are !important and still win over this. */
+.trrocket-dd .trrocket-dd-toggle,
+.trrocket-dd .trrocket-dd-toggle:hover,
+.trrocket-dd .trrocket-dd-toggle:focus,
+.trrocket-dd .trrocket-dd-toggle:active {
+	display: inline-flex;
+	color: inherit;
+	width: 100%;
+	text-align: left;
+}
+
 .trrocket-dd-caret {
 	display: inline-flex;
 	align-items: center;

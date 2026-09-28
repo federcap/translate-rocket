@@ -171,6 +171,49 @@ class Schema {
 	}
 
 	/**
+	 * The parts of a composed title: SEO plugins write «Product - Site name» (or
+	 * with – | —) in the page's WebPage node, a text nobody ever translated whole
+	 * (found 28/09/2026 on a shop imported from Polylang: the name stayed English).
+	 *
+	 * @param string $text Value.
+	 * @return string[] The parts, or none when the text is not composed.
+	 */
+	public static function pieces( string $text ): array {
+		if ( ! preg_match( '/\s[-–—|]\s/u', $text ) ) {
+			return array();
+		}
+		$parts = preg_split( '/\s+[-–—|]\s+/u', $text );
+		return array_values( array_filter( array_map( 'trim', (array) $parts ), 'strlen' ) );
+	}
+
+	/**
+	 * Translate a composed title part by part, keeping its separators.
+	 *
+	 * @param string               $text Value.
+	 * @param array<string,string> $map  Translations.
+	 * @return string|null Null when no part has a translation.
+	 */
+	private static function by_pieces( string $text, array $map ): ?string {
+		if ( ! self::pieces( $text ) ) {
+			return null;
+		}
+		$some = false;
+		$out  = preg_replace_callback(
+			'/[^\s–—|-][^–—|]*?(?=\s+[-–—|]\s+|$)/u',
+			static function ( $m ) use ( $map, &$some ) {
+				$t = trim( $m[0] );
+				if ( isset( $map[ $t ] ) && '' !== $map[ $t ] && $map[ $t ] !== $t ) {
+					$some = true;
+					return str_replace( $t, $map[ $t ], $m[0] );
+				}
+				return $m[0];
+			},
+			$text
+		);
+		return ( $some && is_string( $out ) ) ? $out : null;
+	}
+
+	/**
 	 * Rewrite translatable strings and inLanguage.
 	 *
 	 * @param mixed                $node     Node.
@@ -190,6 +233,12 @@ class Schema {
 				if ( isset( $map[ $source ] ) && '' !== $map[ $source ] && $map[ $source ] !== $source ) {
 					$node[ $key ] = $map[ $source ];
 					$changed      = true;
+				} else {
+					$joined = self::by_pieces( $source, $map );
+					if ( null !== $joined ) {
+						$node[ $key ] = $joined;
+						$changed      = true;
+					}
 				}
 			} elseif ( 'inLanguage' === $key && is_string( $value ) && ! $is_media && '' !== $tag && strtolower( $value ) !== strtolower( $tag ) ) {
 				// Only an existing declaration is corrected: a node that states no language is

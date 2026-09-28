@@ -326,6 +326,15 @@ class CopyCleanup {
 			$paired = false;
 		}
 
+		// A product also keeps words outside its text (purchase note, attributes,
+		// variations): they must be in TranslateRocket before its copy can go.
+		foreach ( Comune::coppie_prodotto( $source, $copy ) as $coppia ) {
+			$pairs[] = $coppia;
+		}
+		foreach ( Comune::coppie_campi( $source, $copy ) as $coppia ) {
+			$pairs[] = $coppia;
+		}
+
 		// Same shapes and same rule as the import (Comune::coppia()): the import
 		// stores a sentence decoded and «dressed» (`&amp;` is `&`, `don't` is
 		// `don’t`) and skips what reads the same in both languages. Looked up here

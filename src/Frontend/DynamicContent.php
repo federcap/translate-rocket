@@ -87,9 +87,59 @@ class DynamicContent {
 				'ajax' => admin_url( 'admin-ajax.php' ),
 				'lang' => $lang,
 				'edit' => $editing,
+				'pre'  => (object) $this->preload( $lang ),
 			)
 		);
 		wp_enqueue_script( $handle );
+	}
+
+	/**
+	 * Translations handed to the observer with the page, so text that a script is SURE
+	 * to write swaps in the same instant instead of after a round trip to admin-ajax.
+	 *
+	 * WooCommerce's checkout rewrites the address labels and placeholders from its own
+	 * English JSON (address-i18n.js) when the page loads and every time the customer
+	 * changes country: with a lookup per change a Polish checkout showed «ZIP Code» for
+	 * about a second each time, and «Town / City» for 1.5–2 s after load (measured in
+	 * collaudo-cassa-etichette, 28/9/2026). Only strings that already have a translation
+	 * are sent; a cache hit is applied inside the mutation callback, before paint.
+	 *
+	 * @param string $lang Current secondary language.
+	 * @return array<string,string> Original => translation.
+	 */
+	private function preload( string $lang ): array {
+		$texts = array();
+		if ( function_exists( 'WC' ) && wp_script_is( 'wc-address-i18n', 'enqueued' ) ) {
+			$countries = WC()->countries;
+			$sets      = array( $countries->get_default_address_fields() );
+			foreach ( (array) $countries->get_country_locale() as $fields ) {
+				$sets[] = (array) $fields;
+			}
+			foreach ( $sets as $fields ) {
+				foreach ( (array) $fields as $field ) {
+					foreach ( array( 'label', 'placeholder' ) as $key ) {
+						if ( ! empty( $field[ $key ] ) && is_string( $field[ $key ] ) ) {
+							$texts[ wp_strip_all_tags( $field[ $key ] ) ] = true;
+						}
+					}
+				}
+			}
+			// address-i18n.js also writes these two after a label.
+			$texts[ __( 'required', 'woocommerce' ) ] = true; // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- WooCommerce's own string, read as it prints it.
+			$texts[ __( 'optional', 'woocommerce' ) ] = true; // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		}
+		/**
+		 * Filters the source strings whose translations ship with the page for the
+		 * JavaScript observer (strings a script will certainly write on this page).
+		 *
+		 * @param string[] $texts Source strings.
+		 * @param string   $lang  Current language.
+		 */
+		$texts = (array) apply_filters( 'trrocket_dynamic_preload', array_keys( $texts ), $lang );
+		if ( empty( $texts ) ) {
+			return array();
+		}
+		return Strings::translate_texts( array_slice( $texts, 0, 1000 ), $lang );
 	}
 
 	/**

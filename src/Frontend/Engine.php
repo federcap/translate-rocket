@@ -92,6 +92,64 @@ class Engine {
 	}
 
 	/**
+	 * Texts quoted inside a sentence: WooCommerce and themes slip a product or
+	 * page name into their own wording — «Be the first to review “Blue mug”»,
+	 * «“Blue mug” has been added to your cart», «Add to cart: “Blue mug”». The
+	 * wording comes translated from the language pack, the name never did: the
+	 * sentence as a whole is new text nobody has translated (28/09/2026).
+	 *
+	 * @param string $value Text.
+	 * @return string[] The quoted texts.
+	 */
+	private static function quoted( string $value ): array {
+		$bordi = self::edges( $value );
+		$extra = null !== $bordi ? array( $bordi[1] ) : array();
+		if ( ! preg_match_all( '/[“„"«]\s*([^“”„"«»]{2,160}?)\s*[”“"»]/u', $value, $m ) ) {
+			return $extra;
+		}
+		return array_values( array_unique( array_merge( $extra, array_map( 'trim', $m[1] ) ) ) );
+	}
+
+	/**
+	 * A text between separators at its edges: « / Blue mug», «» Contact», «Home ›».
+	 *
+	 * @param string $value Text.
+	 * @return array{0:string,1:string,2:string}|null Leading edge, core, trailing edge.
+	 */
+	private static function edges( string $value ): ?array {
+		if ( ! preg_match( '/^([\s\x{00A0}\/»›|·•>–—:-]*)(.*?)([\s\x{00A0}\/«‹|·•<–—:-]*)$/us', $value, $m ) ) {
+			return null;
+		}
+		$core = trim( $m[2] );
+		if ( '' === $core || $core === trim( $value ) || ! preg_match( '/\p{L}/u', $core ) || ! preg_match( '/[\/»›|·•><«‹–—:-]/u', $m[1] . $m[3] ) ) {
+			return null; // Nothing but spaces around it: the normal lookup already tried.
+		}
+		return array( $m[1], $core, $m[3] );
+	}
+
+	/**
+	 * The text with every quoted name that has a translation translated, or null.
+	 *
+	 * @param string               $value Text.
+	 * @param array<string,string> $map   Translations.
+	 */
+	private static function with_quoted( string $value, array $map ): ?string {
+		// A breadcrumb's last step is written glued to its separator
+		// («&nbsp;/&nbsp;Blue mug»): the name is known, the node's text is not.
+		$bordi = self::edges( $value );
+		if ( null !== $bordi && isset( $map[ $bordi[1] ] ) && '' !== $map[ $bordi[1] ] && $map[ $bordi[1] ] !== $bordi[1] ) {
+			return $bordi[0] . $map[ $bordi[1] ] . $bordi[2];
+		}
+		$out = $value;
+		foreach ( self::quoted( $value ) as $q ) {
+			if ( isset( $map[ $q ] ) && '' !== $map[ $q ] && $map[ $q ] !== $q ) {
+				$out = str_replace( $q, $map[ $q ], $out );
+			}
+		}
+		return $out !== $value ? $out : null;
+	}
+
+	/**
 	 * The pieces of a composed title: "About our farmhouse - Olive Grove Stays".
 	 *
 	 * SEO plugins and themes glue page title and site name with a separator. The
@@ -913,6 +971,10 @@ class Engine {
 			foreach ( $schema_texts as $texts ) {
 				foreach ( $texts as $text ) {
 					$candidates[] = $text;
+					// «Product - Site name»: its parts may be known when the whole is not.
+					foreach ( Schema::pieces( $text ) as $piece ) {
+						$candidates[] = $piece;
+					}
 				}
 			}
 			foreach ( $units as $unit ) {
@@ -920,10 +982,16 @@ class Engine {
 			}
 			foreach ( $text_nodes as $node ) {
 				$candidates[] = trim( (string) $node->nodeValue );
+				foreach ( self::quoted( (string) $node->nodeValue ) as $q ) {
+					$candidates[] = $q;
+				}
 			}
 			foreach ( $attr_nodes as $attr => $els ) {
 				foreach ( $els as $el ) {
 					$candidates[] = trim( (string) $el->getAttribute( $attr ) );
+					foreach ( self::quoted( (string) $el->getAttribute( $attr ) ) as $q ) {
+						$candidates[] = $q;
+					}
 				}
 			}
 			foreach ( $img_nodes as $media ) {
@@ -1049,6 +1117,12 @@ class Engine {
 			if ( isset( $map[ $text ] ) ) {
 				$node->nodeValue = str_replace( $text, $map[ $text ], (string) $node->nodeValue );
 				$changed         = true;
+			} else {
+				$with = self::with_quoted( $text, $map );
+				if ( null !== $with ) {
+					$node->nodeValue = str_replace( $text, $with, (string) $node->nodeValue );
+					$changed         = true;
+				}
 			}
 			if ( $editing && null !== $node->parentNode ) {
 				$span = $dom->createElement( 'span' );
@@ -1095,6 +1169,12 @@ class Engine {
 				if ( isset( $map[ $value ] ) ) {
 					$el->setAttribute( $attr, $map[ $value ] );
 					$changed = true;
+				} else {
+					$with = self::with_quoted( $value, $map );
+					if ( null !== $with ) {
+						$el->setAttribute( $attr, $with );
+						$changed = true;
+					}
 				}
 				// In edit mode, tag the element so the visual editor can edit this
 				// attribute (alt/title/…) — keeps its source alongside the live value.

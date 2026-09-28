@@ -540,6 +540,77 @@ class Strings {
 	private static $map_cache = array();
 
 	/**
+	 * How deep we are inside batch_start()/batch_end() (0 = not in a batch).
+	 *
+	 * @var int
+	 */
+	private static $batch = 0;
+
+	/**
+	 * Languages touched during the current batch, flushed once at batch_end().
+	 *
+	 * @var array<string,bool>
+	 */
+	private static $batch_langs = array();
+
+	/**
+	 * Start a bulk write (an import file, another plugin's tables).
+	 *
+	 * An exported TMX of 2,000 translations took 46 seconds to import back
+	 * (28/09/2026): every translation was its own disk write, and every one
+	 * emptied the language maps again. On Apache with mod_fcgid the request is
+	 * cut at 40 seconds and the user got an error page. Inside a batch the writes
+	 * share one database transaction and the maps and page cache are emptied once,
+	 * at batch_end(). Calls can nest; only the outermost pair does the work.
+	 */
+	public static function batch_start(): void {
+		global $wpdb;
+		static $rete = false;
+		if ( 0 === self::$batch++ ) {
+			self::$batch_langs = array();
+			$wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB
+		}
+		if ( ! $rete ) {
+			// Se la richiesta finisce a meta' (un exit, un'eccezione), quel che e'
+			// gia' scritto si salva e le mappe si svuotano lo stesso: un import si
+			// puo' sempre rifare, e prima di questa modifica restava scritto anche lui.
+			$rete = true;
+			register_shutdown_function(
+				static function () {
+					if ( self::$batch > 0 ) {
+						self::$batch = 1;
+						self::batch_end();
+					}
+				}
+			);
+		}
+	}
+
+	/**
+	 * Close a bulk write: commit, then empty once what each write used to empty.
+	 * Always call it (try/finally), or the writes stay uncommitted.
+	 */
+	public static function batch_end(): void {
+		global $wpdb;
+		if ( self::$batch <= 0 ) {
+			return;
+		}
+		if ( --self::$batch > 0 ) {
+			return;
+		}
+		$wpdb->query( 'COMMIT' ); // phpcs:ignore WordPress.DB
+		$lingue            = array_keys( self::$batch_langs );
+		self::$batch_langs = array();
+		foreach ( $lingue as $lingua ) {
+			self::flush_maps( (string) $lingua );
+		}
+		if ( $lingue ) {
+			\TranslateRocket\Cache::flush_later();
+			\TranslateRocket\Admin\NextSteps::forget();
+		}
+	}
+
+	/**
 	 * Whether the site has enough strings that loading a whole language map per
 	 * request would hurt. The count is cached briefly — crossing the threshold is
 	 * not time-critical and both modes are always correct.
@@ -940,6 +1011,12 @@ class Strings {
 			)
 		); // phpcs:ignore WordPress.DB
 
+		if ( self::$batch > 0 ) {
+			// Dentro un import: mappe e cache si svuotano una volta sola, a batch_end().
+			self::$batch_langs[ $lang ] = true;
+			unset( self::$lookup_cache[ $lang ], self::$map_cache[ $lang ] );
+			return true;
+		}
 		self::flush_maps( $lang );
 		// La pagina tradotta che sta in cache mostra ancora la traduzione di prima:
 		// va buttata, o la correzione non si vede. Si prenota invece di eseguirla

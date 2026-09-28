@@ -47,6 +47,14 @@ class WooCommerce {
 	private $email_is_customer = false;
 
 	/**
+	 * True while an e-mail body is being written: its product names follow the
+	 * e-mail's reader, never the page the request came from.
+	 *
+	 * @var bool
+	 */
+	private $in_email = false;
+
+	/**
 	 * Language of the email whose body has just been translated, kept until the
 	 * subject is built.
 	 *
@@ -87,6 +95,25 @@ class WooCommerce {
 		// tedesco riceveva il messaggio in tedesco con l'oggetto in italiano.
 		add_filter( 'woocommerce_mail_callback_params', array( $this, 'email_subject' ), 20, 2 );
 
+		// Each e-mail is BUILT in its reader's language, so WooCommerce's own language
+		// pack writes it: the customer's in the order's language even when the shop
+		// manager clicks «Completed» in an English admin (the subject stayed English),
+		// the shop's own notice in the site language even while the customer checks out
+		// on /it/ (it arrived in Italian). 28/09/2026, from the competitors' forums.
+		if ( did_action( 'woocommerce_email' ) && function_exists( 'WC' ) ) {
+			$this->hook_emails( WC()->mailer() );
+		} else {
+			add_action( 'woocommerce_email', array( $this, 'hook_emails' ) );
+		}
+		add_filter( 'woocommerce_allow_restoring_email_locale', array( $this, 'email_done' ), 1 );
+		add_action( 'woocommerce_email_sent', array( $this, 'email_done' ), 1 );
+
+		// Product names that WooCommerce puts inside a sentence or glues together
+		// («“Blue mug” has been added to your cart», «Linen shirt - Blue»): the page
+		// engine only knows whole texts, so they stayed in the source language in the
+		// cart, on the thank-you page and in the e-mails.
+		add_filter( 'woocommerce_order_item_name', array( $this, 'order_item_name' ), 20, 2 );
+
 		// Send the customer back to the thank-you page in the language they ordered in.
 		add_filter( 'woocommerce_get_checkout_order_received_url', array( $this, 'order_received_url' ), 20, 2 );
 
@@ -104,6 +131,208 @@ class WooCommerce {
 		add_filter( 'woocommerce_get_script_data', array( $this, 'script_data' ), 20, 2 );
 		add_filter( 'woocommerce_add_to_cart_fragments', array( $this, 'fragments' ), 20 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_blocks' ), 20 );
+		add_filter( 'woocommerce_cart_item_name', array( $this, 'cart_item_name' ), 20 );
+		add_filter( 'wc_add_to_cart_message_html', array( $this, 'add_to_cart_message' ), 20, 2 );
+		// The quantity box's label for screen readers: «Blue mug quantità».
+		add_filter( 'woocommerce_quantity_input_args', array( $this, 'quantity_args' ), 20 );
+	}
+
+	/**
+	 * Product name in the quantity box's accessible label.
+	 *
+	 * @param mixed $args Quantity input arguments.
+	 * @return mixed
+	 */
+	public function quantity_args( $args ) {
+		if ( is_array( $args ) && isset( $args['product_name'] ) && is_string( $args['product_name'] ) && '' !== $this->lang ) {
+			$args['product_name'] = self::translate_name( $args['product_name'], $this->lang );
+		}
+		return $args;
+	}
+
+	/**
+	 * Watch every WooCommerce e-mail: its recipient is asked for right after the
+	 * order is known and before the subject is written, the one moment to switch.
+	 *
+	 * @param mixed $mailer WC_Emails.
+	 */
+	public function hook_emails( $mailer ): void {
+		if ( ! is_object( $mailer ) || ! method_exists( $mailer, 'get_emails' ) ) {
+			return;
+		}
+		foreach ( (array) $mailer->get_emails() as $email ) {
+			if ( is_object( $email ) && ! empty( $email->id ) ) {
+				add_filter( 'woocommerce_email_recipient_' . $email->id, array( $this, 'email_language' ), 1, 3 );
+			}
+		}
+	}
+
+	/**
+	 * Switch to the reader's language while this e-mail is built.
+	 *
+	 * @param mixed $recipient Recipient(s), returned untouched.
+	 * @param mixed $item      The order (or other object) the e-mail is about.
+	 * @param mixed $email     WC_Email.
+	 * @return mixed
+	 */
+	public function email_language( $recipient, $item = null, $email = null ) {
+		if ( ! is_object( $email ) || ! method_exists( $email, 'is_customer_email' ) || ! ( $item instanceof \WC_Order ) ) {
+			return $recipient;
+		}
+		if ( $email->is_customer_email() ) {
+			$lang   = (string) $item->get_meta( '_trrocket_lang' );
+			$locale = '' !== $lang ? \TranslateRocket\Languages::locale( $lang ) : '';
+		} else {
+			$locale = (string) get_option( 'WPLANG' );
+			$locale = '' !== $locale ? $locale : 'en_US';
+		}
+		if ( '' !== $locale && $locale !== determine_locale() ) {
+			Locale::force( $locale );
+		}
+		return $recipient;
+	}
+
+	/**
+	 * The e-mail is out (or given up): back to the request's own language.
+	 *
+	 * @param mixed $pass Returned untouched (also used as an action).
+	 * @return mixed
+	 */
+	public function email_done( $pass = true ) {
+		Locale::restore();
+		$this->in_email = false;
+		return $pass;
+	}
+
+	/**
+	 * A product or order-line name in a language, including the names WooCommerce
+	 * builds itself: «Linen shirt - Blue» is the product name and the attribute
+	 * value joined, a text nobody ever translated as a whole.
+	 *
+	 * @param string $name Name as WooCommerce prints it (plain text).
+	 * @param string $lang Target language.
+	 */
+	public static function translate_name( string $name, string $lang ): string {
+		$name = trim( $name );
+		if ( '' === $name || '' === $lang ) {
+			return $name;
+		}
+		// Only a name WooCommerce glued («Shirt - Red, Large») is taken apart; a plain
+		// name with a comma in it («Salt, pepper and oil») is translated whole or not at all.
+		$pieces = preg_match( '/\s[-–]\s/u', $name ) ? preg_split( '/(\s+[-–]\s+|,\s+)/u', $name, -1, PREG_SPLIT_DELIM_CAPTURE ) : array( $name );
+		$texts  = array( $name );
+		foreach ( (array) $pieces as $i => $piece ) {
+			if ( 0 === $i % 2 ) {
+				$texts[] = trim( html_entity_decode( (string) $piece, ENT_QUOTES, 'UTF-8' ) );
+			}
+		}
+		$map = Strings::translate_texts( array_values( array_unique( array_filter( $texts ) ) ), $lang );
+		if ( isset( $map[ $name ] ) && '' !== $map[ $name ] ) {
+			return $map[ $name ];
+		}
+		if ( ! is_array( $pieces ) || count( $pieces ) < 3 ) {
+			return $name;
+		}
+		$out  = '';
+		$some = false;
+		foreach ( $pieces as $i => $piece ) {
+			$t = trim( html_entity_decode( (string) $piece, ENT_QUOTES, 'UTF-8' ) );
+			if ( 0 === $i % 2 && isset( $map[ $t ] ) && '' !== $map[ $t ] ) {
+				$out .= $map[ $t ];
+				$some = true;
+			} else {
+				$out .= $piece;
+			}
+		}
+		return $some ? $out : $name;
+	}
+
+	/**
+	 * Replace the visible text of a name, keeping the link around it.
+	 *
+	 * @param string $html Name, possibly wrapped in <a>.
+	 * @param string $lang Target language.
+	 */
+	private static function translate_name_html( string $html, string $lang ): string {
+		return (string) preg_replace_callback(
+			'/(^|>)([^<>]+)(<|$)/u',
+			static function ( $m ) use ( $lang ) {
+				$t = trim( $m[2] );
+				if ( '' === $t || ! preg_match( '/\p{L}/u', $t ) ) {
+					return $m[0];
+				}
+				$tr = self::translate_name( html_entity_decode( $t, ENT_QUOTES, 'UTF-8' ), $lang );
+				return $m[1] . str_replace( $t, esc_html( $tr ), $m[2] ) . $m[3];
+			},
+			$html
+		);
+	}
+
+	/**
+	 * Name of a line in the classic cart and mini-cart.
+	 *
+	 * @param mixed $name Name HTML.
+	 * @return mixed
+	 */
+	public function cart_item_name( $name ) {
+		if ( ! is_string( $name ) || '' === $this->lang ) {
+			return $name;
+		}
+		return self::translate_name_html( $name, $this->lang );
+	}
+
+	/**
+	 * Name of an order line: thank-you page, «My account», and customer e-mails
+	 * (in the order's language, whatever page sent them).
+	 *
+	 * @param mixed $name Name HTML.
+	 * @param mixed $item WC_Order_Item.
+	 * @return mixed
+	 */
+	public function order_item_name( $name, $item = null ) {
+		if ( ! is_string( $name ) ) {
+			return $name;
+		}
+		$lang = $this->email_lang;
+		if ( '' === $lang && ! $this->in_email && '' !== $this->lang && ! is_admin() ) {
+			$lang = $this->lang;
+		}
+		if ( '' === $lang || Plugin::instance()->router()->is_default( $lang ) ) {
+			return $name;
+		}
+		unset( $item );
+		return self::translate_name_html( $name, $lang );
+	}
+
+	/**
+	 * «“Blue mug” has been added to your cart»: WooCommerce slips the name into the
+	 * sentence, so the page engine sees one text it has never met.
+	 *
+	 * @param mixed $message  Notice HTML.
+	 * @param mixed $products Product id => quantity.
+	 * @return mixed
+	 */
+	public function add_to_cart_message( $message, $products = array() ) {
+		if ( ! is_string( $message ) || '' === $this->lang || ! is_array( $products ) ) {
+			return $message;
+		}
+		foreach ( array_keys( $products ) as $id ) {
+			$product = function_exists( 'wc_get_product' ) ? wc_get_product( $id ) : null;
+			if ( ! $product ) {
+				continue;
+			}
+			foreach ( array_unique( array( $product->get_name(), wp_strip_all_tags( (string) get_the_title( $id ) ) ) ) as $orig ) {
+				$orig = trim( (string) $orig );
+				if ( '' === $orig ) {
+					continue;
+				}
+				$tr = self::translate_name( html_entity_decode( $orig, ENT_QUOTES, 'UTF-8' ), $this->lang );
+				if ( $tr !== $orig ) {
+					$message = str_replace( array( $orig, esc_html( $orig ) ), esc_html( $tr ), $message );
+				}
+			}
+		}
+		return $message;
 	}
 
 	/**
@@ -210,6 +439,7 @@ class WooCommerce {
 		unset( $plain_text, $email );
 		$this->email_lang        = '';
 		$this->email_is_customer = false;
+		$this->in_email          = true;
 		if ( $sent_to_admin ) {
 			return;
 		}
@@ -277,6 +507,7 @@ class WooCommerce {
 		$this->subject_lang      = $is_customer ? $lang : '';
 		$this->email_lang        = ''; // Reset for the next email in this request.
 		$this->email_is_customer = false;
+		$this->in_email          = false;
 
 		if ( ! is_string( $content ) || '' === trim( $content ) ) {
 			return $content;

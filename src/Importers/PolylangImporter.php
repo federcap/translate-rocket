@@ -235,6 +235,29 @@ class PolylangImporter implements ProvidesCopies {
 				// A page built with a page builder keeps its words in a meta, not
 				// in post_content: without this such a site imports no page text.
 				$count += Comune::builder( $source, $tpost, $lang, true );
+				// WooCommerce: purchase note, the product's own attributes, variations.
+				$count += Comune::prodotto( $source, $tpost, $lang, true );
+				// Advanced Custom Fields filled in the copy.
+				$count += Comune::campi_acf( $source, $tpost, $lang, true );
+			}
+		}
+
+		// 3) Translated terms: categories, tags, product categories, attribute values.
+		$groups = $wpdb->get_col( "SELECT description FROM {$wpdb->term_taxonomy} WHERE taxonomy = 'term_translations'" ); // phpcs:ignore WordPress.DB
+		foreach ( $groups as $group ) {
+			$map = $this->unserialize_map( $group );
+			if ( ! is_array( $map ) || empty( $map[ $default ] ) ) {
+				continue;
+			}
+			foreach ( $map as $slug => $tid ) {
+				if ( $slug === $default ) {
+					continue;
+				}
+				$lang = $this->map_lang( (string) $slug );
+				if ( ! Languages::exists( $lang ) || $lang === $our_default ) {
+					continue;
+				}
+				$count += Comune::termine( (int) $map[ $default ], (int) $tid, $lang, true );
 			}
 		}
 

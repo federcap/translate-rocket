@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -209,6 +209,18 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 
 == Changelog ==
+
+= 1.5.8 =
+* Fix: WooCommerce e-mails sent from the dashboard — «Completed», a note to the customer, a resent invoice — were never translated: the customer who ordered in Italian got them entirely in English. Each e-mail is now written in its reader's language: the customer's in the language of the order (subject included, from WooCommerce's own language pack), the shop's own notifications in the site language — before, the shop received them in the customer's language.
+* Fix: variations and product names inside WooCommerce sentences stayed in the source language — «Linen shirt - Blue» in the cart, on the thank-you page and in the e-mails, «“Blue mug” has been added to your cart», «Be the first to review “Blue mug”», the breadcrumb's last step and the quantity label read by screen readers. Now they are translated like the product itself; this works for any theme or plugin that quotes a name inside its own wording.
+* New: searching on a translated page finds what the visitor typed in their language — «tazza» on /it/ finds the product stored as «mug». It was the most reported problem in the forums of other translation plugins.
+* New: WP Rocket integration. WP Rocket now knows your languages, as it does with WPML, Polylang and TranslatePress: a page excluded with «Never cache this URL» (or its box on the edit screen) is also excluded in every language — the /it/ copy of a members' page was cached before; the empty mini-cart it keeps is kept per language instead of one for everybody; cart, checkout and account are excluded in every language; «Clear cache» offers each language; «Remove Unused CSS» keeps the language switcher's styles.
+* Fix: imports from Polylang and WPML now bring the translations of categories, tags, product categories and attribute values (Red → Rosso in the variation choices), the purchase note, the attributes typed in a product, variation descriptions and Advanced Custom Fields filled in the translated copy. The copy cleanup no longer offers to trash a copy whose fields were not imported yet.
+* Fix: a big TMX or CSV import (2,000 translations) could stop halfway with a server error on hosts that limit a request to 40 seconds. It now runs in one database transaction: the same file takes a few seconds.
+* Fix: WooCommerce checkout: the address labels (Town / City, Postcode…) no longer show in English for a moment when the page opens or the country changes.
+* Fix: in the block cart, attribute labels («Colour:») are translated.
+* Fix: structured data for Google: a title composed as «Product - Site name» is translated.
+* Fix: with themes that restyle every button (Hello Elementor), the open language menu kept the current language white on white and narrower than the menu.
 
 = 1.5.7 =
 * Changed: the «Labs ✨» page describes the free engines of TranslateRocket Labs as free translation engines, without naming third-party services.
@@ -417,6 +429,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.5.8 =
+Recommended for WooCommerce shops: e-mails sent from the dashboard are translated, variations and product names in the cart and e-mails too, search works in every language. New WP Rocket integration. Imports from Polylang and WPML bring categories, variations and ACF fields.
 
 = 1.5.7 =
 Wording of the Labs page only. Nothing else changes.

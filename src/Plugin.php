@@ -120,6 +120,9 @@ final class Plugin {
 		foreach ( array( 'rest_after_save_widget', 'customize_save_after', 'wp_update_nav_menu', 'woocommerce_update_product', 'woocommerce_new_product', 'switch_theme' ) as $gancio ) {
 			add_action( $gancio, array( 'TranslateRocket\\Cache', 'content_changed' ) );
 		}
+		// WP Rocket asks multilingual plugins it does not know through filters: answer
+		// them, or it takes the site for single-language (see Integrations\WpRocket).
+		( new \TranslateRocket\Integrations\WpRocket() )->boot();
 		// The CDN purge (NitroPack, Cloudflare), a minute after the last change.
 		add_action( Cache::REMOTE_EVENT, array( 'TranslateRocket\\Cache', 'purge_remote' ) );
 
@@ -140,6 +143,13 @@ final class Plugin {
 			// back in the visitor's language.
 			if ( ! $coexist && Router::is_frontend_ajax() ) {
 				( new \TranslateRocket\Frontend\Locale() )->boot();
+				( new \TranslateRocket\Frontend\WooCommerce() )->boot();
+			} elseif ( ! $coexist ) {
+				// The shop manager marks an order «Completed», adds a note for the
+				// customer, resends an e-mail: all from wp-admin. Without this the
+				// e-mail left untranslated whatever language the order was placed in
+				// (28/09/2026). Only the e-mail and order parts run here: boot() stops
+				// before the page ones, the admin being in the default language.
 				( new \TranslateRocket\Frontend\WooCommerce() )->boot();
 			}
 			// Forminator submits and loads forms through admin-ajax: its messages and
@@ -188,6 +198,8 @@ final class Plugin {
 			( new \TranslateRocket\Frontend\Locale() )->boot();
 			// WooCommerce: translate JS-localised strings + AJAX cart fragments.
 			( new \TranslateRocket\Frontend\WooCommerce() )->boot();
+			// Search on /it/ finds what the visitor typed in Italian.
+			( new \TranslateRocket\Frontend\Search() )->boot();
 			// Form plugins: translate JS-inserted validation/notice messages.
 			( new \TranslateRocket\Frontend\Forms() )->boot();
 			// Forminator: hidden language field, server messages, e-mail notifications.

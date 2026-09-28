@@ -35,6 +35,17 @@
 		}
 	} catch ( e ) {}
 
+	// Translations the server shipped with the page for text a script is sure to write
+	// (WooCommerce's checkout labels on every change of country): a cache hit is applied
+	// inside the mutation callback, before paint, so they never show in the source language.
+	if ( cfg.pre && typeof cfg.pre === 'object' ) {
+		Object.keys( cfg.pre ).forEach( function ( k ) {
+			if ( cfg.pre[ k ] ) {
+				cache[ k ] = cfg.pre[ k ];
+			}
+		} );
+	}
+
 	function persist() {
 		try {
 			window.sessionStorage.setItem( storeKey, JSON.stringify( cache ) );

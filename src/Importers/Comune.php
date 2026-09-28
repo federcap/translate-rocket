@@ -484,6 +484,209 @@ class Comune {
 	}
 
 	/**
+	 * A term and its translation (Polylang's term_translations, WPML's tax_*
+	 * rows): name, description and slug. Categories, tags, product categories and
+	 * the values of WooCommerce attributes («Red» → «Rosso») live here; before
+	 * 28/09/2026 no importer read them, so a shop arriving from Polylang or WPML
+	 * kept its categories and variation choices in the source language.
+	 *
+	 * @param int    $origine  Source-language term id.
+	 * @param int    $tradotto Translated term id.
+	 * @param string $lingua   Our language code.
+	 * @param bool   $salva    Store, or only count.
+	 */
+	public static function termine( int $origine, int $tradotto, string $lingua, bool $salva ): int {
+		$a = get_term( $origine );
+		$b = get_term( $tradotto );
+		if ( ! $a instanceof \WP_Term || ! $b instanceof \WP_Term || $a->term_id === $b->term_id ) {
+			return 0;
+		}
+		$n = 0;
+		if ( self::coppia( (string) $a->name, $lingua, (string) $b->name, $salva ) ) {
+			++$n;
+		}
+		if ( '' !== trim( (string) $a->description ) && '' !== trim( (string) $b->description )
+			&& self::coppia( (string) $a->description, $lingua, (string) $b->description, $salva ) ) {
+			++$n;
+		}
+		if ( $salva && '' !== (string) $b->slug && $b->slug !== $a->slug ) {
+			\TranslateRocket\TermSlugs::set( (int) $a->term_id, $lingua, (string) $b->slug );
+		}
+		return $n;
+	}
+
+	/**
+	 * What a WooCommerce product keeps outside its title and text: the purchase
+	 * note, the attributes written in the product itself («Material: Ceramic»),
+	 * and each variation's description. Variations are paired by their order, the
+	 * way WooCommerce Multilingual and Polylang for WooCommerce keep them in step.
+	 *
+	 * @param mixed  $origine  Source-language product (WP_Post).
+	 * @param mixed  $tradotto Translated product (WP_Post).
+	 * @param string $lingua   Our language code.
+	 * @param bool   $salva    Store, or only count.
+	 */
+	public static function prodotto( $origine, $tradotto, string $lingua, bool $salva ): int {
+		$n = 0;
+		foreach ( self::coppie_prodotto( $origine, $tradotto ) as $coppia ) {
+			if ( self::coppia( $coppia[0], $lingua, $coppia[1], $salva ) ) {
+				++$n;
+			}
+		}
+		return $n;
+	}
+
+	/**
+	 * The pairs prodotto() stores, also read by CopyCleanup before it offers to
+	 * trash a product copy (a copy whose purchase note was never imported must not
+	 * be called «ready»).
+	 *
+	 * @param mixed $origine  Source-language product (WP_Post).
+	 * @param mixed $tradotto Translated product (WP_Post).
+	 * @return array<int,array{0:string,1:string}>
+	 */
+	public static function coppie_prodotto( $origine, $tradotto ): array {
+		if ( ! $origine instanceof \WP_Post || ! $tradotto instanceof \WP_Post || 'product' !== $origine->post_type ) {
+			return array();
+		}
+		$out  = array();
+		$pari = static function ( $x, $y ) use ( &$out ) {
+			$x = trim( wp_strip_all_tags( (string) $x ) );
+			$y = trim( wp_strip_all_tags( (string) $y ) );
+			if ( '' !== $x && '' !== $y ) {
+				$out[] = array( $x, $y );
+			}
+		};
+		$pari( get_post_meta( $origine->ID, '_purchase_note', true ), get_post_meta( $tradotto->ID, '_purchase_note', true ) );
+
+		// Attributes typed in the product (not the shared pa_* ones, those are terms).
+		$aa = get_post_meta( $origine->ID, '_product_attributes', true );
+		$bb = get_post_meta( $tradotto->ID, '_product_attributes', true );
+		if ( is_array( $aa ) && is_array( $bb ) ) {
+			$bb = array_values( array_filter( $bb, static function ( $x ) { return is_array( $x ) && empty( $x['is_taxonomy'] ); } ) );
+			$i  = 0;
+			foreach ( $aa as $x ) {
+				if ( ! is_array( $x ) || ! empty( $x['is_taxonomy'] ) ) {
+					continue;
+				}
+				$y = $bb[ $i++ ] ?? null;
+				if ( ! is_array( $y ) ) {
+					break;
+				}
+				$pari( $x['name'] ?? '', $y['name'] ?? '' );
+				$va = array_map( 'trim', explode( '|', (string) ( $x['value'] ?? '' ) ) );
+				$vb = array_map( 'trim', explode( '|', (string) ( $y['value'] ?? '' ) ) );
+				if ( count( $va ) === count( $vb ) ) {
+					foreach ( $va as $k => $v ) {
+						$pari( $v, $vb[ $k ] );
+					}
+				}
+			}
+		}
+
+		// Variations, in order.
+		$figli = static function ( int $id ): array {
+			return get_posts( array( 'post_type' => 'product_variation', 'post_parent' => $id, 'post_status' => array( 'publish', 'private' ), 'numberposts' => 200, 'orderby' => array( 'menu_order' => 'ASC', 'ID' => 'ASC' ), 'fields' => 'ids' ) );
+		};
+		$va = $figli( (int) $origine->ID );
+		$vb = $figli( (int) $tradotto->ID );
+		if ( $va && count( $va ) === count( $vb ) ) {
+			foreach ( $va as $k => $id ) {
+				$pari( get_post_meta( $id, '_variation_description', true ), get_post_meta( $vb[ $k ], '_variation_description', true ) );
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * Advanced Custom Fields filled in the translated copy (Polylang, WPML): text,
+	 * text area, editor, the title of a link field, and the sub-fields of repeaters
+	 * and groups (ACF stores those as their own meta keys). ACF was the second
+	 * most cited plugin in the competitors' forums; before 28/09/2026 these words
+	 * stayed behind in the copy and the translated page showed the source ones.
+	 *
+	 * @param mixed  $origine  Source-language post (WP_Post).
+	 * @param mixed  $tradotto Translated post (WP_Post).
+	 * @param string $lingua   Our language code.
+	 * @param bool   $salva    Store, or only count.
+	 */
+	public static function campi_acf( $origine, $tradotto, string $lingua, bool $salva ): int {
+		$n = 0;
+		// Whole values, then the same pairing as a page body: an editor field keeps a
+		// bold word inside its sentence, stored the way the engine reads it (<1>…</1>).
+		foreach ( self::coppie_campi( $origine, $tradotto, true ) as $coppia ) {
+			$n += self::testo_o_righe( $coppia[0], $coppia[1], $lingua, $salva );
+		}
+		return $n;
+	}
+
+	/**
+	 * The pairs campi_acf() stores. A meta key is an ACF field when ACF left its
+	 * reference next to it («_name» => «field_…»); nothing else is touched, so
+	 * ids, prices and settings in other meta are never taken for text.
+	 *
+	 * @param mixed $origine  Source-language post (WP_Post).
+	 * @param mixed $tradotto Translated post (WP_Post).
+	 * @param bool  $grezzi   Whole values (HTML kept) instead of lines.
+	 * @return array<int,array{0:string,1:string}>
+	 */
+	public static function coppie_campi( $origine, $tradotto, bool $grezzi = false ): array {
+		if ( ! $origine instanceof \WP_Post || ! $tradotto instanceof \WP_Post ) {
+			return array();
+		}
+		$ma = get_post_meta( $origine->ID );
+		$mb = get_post_meta( $tradotto->ID );
+		if ( ! is_array( $ma ) || ! is_array( $mb ) ) {
+			return array();
+		}
+		$out = array();
+		$add = static function ( $x, $y ) use ( &$out, $grezzi ) {
+			$x = (string) $x;
+			$y = (string) $y;
+			if ( '' === trim( $x ) || '' === trim( $y ) || ! preg_match( '/\p{L}/u', $x ) ) {
+				return;
+			}
+			if ( $grezzi ) {
+				$out[] = array( $x, $y );
+				return;
+			}
+			// An editor field holds HTML: paired line by line when both sides have
+			// the same lines, as the body of a page is.
+			$ra = self::righe( $x );
+			$rb = self::righe( $y );
+			if ( count( $ra ) > 1 && count( $ra ) === count( $rb ) ) {
+				foreach ( $ra as $i => $riga ) {
+					$out[] = array( $riga, $rb[ $i ] );
+				}
+				return;
+			}
+			$out[] = array( trim( $x ), trim( $y ) );
+		};
+		foreach ( $ma as $chiave => $valori ) {
+			$chiave = (string) $chiave;
+			if ( '' === $chiave || '_' === $chiave[0] || ! isset( $mb[ $chiave ] ) ) {
+				continue;
+			}
+			$rif = $ma[ '_' . $chiave ][0] ?? '';
+			if ( ! is_string( $rif ) || 0 !== strpos( $rif, 'field_' ) ) {
+				continue;
+			}
+			$a = maybe_unserialize( $valori[0] ?? '' );
+			$b = maybe_unserialize( $mb[ $chiave ][0] ?? '' );
+			if ( is_string( $a ) && is_string( $b ) ) {
+				if ( is_numeric( $a ) || false !== filter_var( $a, FILTER_VALIDATE_URL ) ) {
+					continue;
+				}
+				$add( $a, $b );
+			} elseif ( is_array( $a ) && is_array( $b ) && isset( $a['title'], $b['title'] ) ) {
+				// Link field: its visible title (the address is rewritten per language anyway).
+				$add( $a['title'], $b['title'] );
+			}
+		}
+		return $out;
+	}
+
+	/**
 	 * Store one pair, or just say whether it would count.
 	 */
 	public static function coppia( string $origine, string $lingua, string $testo, bool $salva ): bool {

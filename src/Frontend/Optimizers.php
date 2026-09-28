@@ -56,6 +56,7 @@ class Optimizers {
 			'litespeed_optm_js_defer_exc',
 			'litespeed_optm_gm_js_exc',
 			'rocket_exclude_js',
+			'rocket_exclude_defer_js',
 			'rocket_minify_excluded_external_js',
 			'rocket_delay_js_exclusions',
 			'rocket_defer_inline_exclusions',
@@ -66,6 +67,12 @@ class Optimizers {
 		) as $filtro ) {
 			add_filter( $filtro, array( $this, 'aggiungi' ), 20 );
 		}
+
+		// WP Rocket «Remove unused CSS» keeps only the rules that match the page as
+		// it is loaded. The switcher opens by adding .is-open on click, so its open
+		// menu's rules would be thrown away and the menu would open unstyled. Our
+		// stylesheet is small: keep all of it (read in WP Rocket 3.23.4, 28/09/2026).
+		add_filter( 'rocket_rucss_safelist', array( $this, 'rucss' ), 20 );
 
 		// W3 Total Cache asks the other way round: it hands over the script tag and
 		// expects true/false for "may I minify this one?".
@@ -90,6 +97,19 @@ class Optimizers {
 			return array_values( array_unique( array_merge( $lista, self::NOSTRI ) ) );
 		}
 		return $lista;
+	}
+
+	/**
+	 * WP Rocket: rules and files «Remove unused CSS» must keep.
+	 *
+	 * @param mixed $lista Safelist (CSS selectors or file paths).
+	 * @return mixed
+	 */
+	public function rucss( $lista ) {
+		if ( ! is_array( $lista ) ) {
+			return $lista;
+		}
+		return array_values( array_unique( array_merge( $lista, array( '/wp-content/plugins/translate-rocket/assets/css/(.*).css', '.trrocket-dd' ) ) ) );
 	}
 
 	/**
