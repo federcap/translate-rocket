@@ -1,7 +1,6 @@
 # Powers the "Sponsor" button on this repository.
 #
-# github: needs a GitHub Sponsors profile (bank details + tax forms), so it is
-# left out until that is approved. The rest works right away.
+github: federcap
 
 ko_fi: translaterocket
 custom: ["https://translaterocket.com/donate/", "https://paypal.me/translaterocket"]
