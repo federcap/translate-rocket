@@ -176,7 +176,24 @@ class WooCommerce {
 	 * @return mixed
 	 */
 	public function email_language( $recipient, $item = null, $email = null ) {
-		if ( ! is_object( $email ) || ! method_exists( $email, 'is_customer_email' ) || ! ( $item instanceof \WC_Order ) ) {
+		if ( ! is_object( $email ) || ! method_exists( $email, 'is_customer_email' ) ) {
+			return $recipient;
+		}
+		if ( $item instanceof \WP_User ) {
+			// «New account», «reset password»: the language of the page they signed up
+			// on (saved on their profile by Locale::remember_user_language), else the
+			// page they are on right now.
+			$locale = (string) get_user_meta( $item->ID, 'locale', true );
+			if ( '' === $locale ) {
+				$lang   = Plugin::instance()->router()->request_language();
+				$locale = ( '' !== $lang && ! Plugin::instance()->router()->is_default( $lang ) ) ? \TranslateRocket\Languages::locale( $lang ) : '';
+			}
+			if ( '' !== $locale && $locale !== determine_locale() ) {
+				Locale::force( $locale );
+			}
+			return $recipient;
+		}
+		if ( ! ( $item instanceof \WC_Order ) ) {
 			return $recipient;
 		}
 		if ( $email->is_customer_email() ) {

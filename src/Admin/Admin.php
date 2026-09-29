@@ -1456,8 +1456,11 @@ class Admin {
 					<?php if ( $available && $count > 0 ) : ?>
 						<p>
 							<?php
-							/* translators: %d: number of strings found. */
-							printf( esc_html__( '%d translatable strings found.', 'translate-rocket' ), (int) $count );
+							/* translators: %d: number of translated pages, terms or strings found. */
+							// Polylang and WPML count translated pages and terms, TranslatePress counts
+							// strings: «5 found» then «Imported 33 translations» read as a contradiction
+							// (seen recording the wordpress.org screenshots, 30/09/2026).
+							printf( esc_html__( '%d translated items found (pages, terms or strings).', 'translate-rocket' ), (int) $count );
 							?>
 						</p>
 						<form method="post" action="">

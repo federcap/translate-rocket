@@ -151,15 +151,20 @@ class Comune {
 	 * already paid for or typed by hand". Polylang/WPML + Elementor is one of
 	 * the most common combinations there is, and it is what Alain came from.
 	 *
-	 * Only formats that are plain JSON are read. Beaver Builder keeps PHP
-	 * objects in a serialized blob; unserializing that safely is a different
-	 * job, and half-doing it would be worse than not doing it.
+	 * Elementor and Bricks keep JSON. SiteOrigin's Page Builder (`panels_data`)
+	 * and Beaver Builder (`_fl_builder_data`) keep a serialized PHP array — with
+	 * stdClass objects for Beaver's nodes. WordPress has already unserialized it
+	 * by the time get_post_meta() returns; here it is turned into plain arrays
+	 * through JSON, so nothing is ever unserialized by this code (29/09/2026,
+	 * after the plugin probes: a SiteOrigin page has an empty post_content).
 	 *
 	 * @var array<string,string>
 	 */
 	const BUILDER_META = array(
 		'_elementor_data'        => 'Elementor',
 		'_bricks_page_content_2' => 'Bricks',
+		'panels_data'            => 'SiteOrigin',
+		'_fl_builder_data'       => 'Beaver Builder',
 	);
 
 	/**
@@ -298,6 +303,10 @@ class Comune {
 	 */
 	private static function campi( int $post_id, string $chiave ): array {
 		$grezzo = get_post_meta( $post_id, $chiave, true );
+		if ( is_array( $grezzo ) || is_object( $grezzo ) ) {
+			// SiteOrigin, Beaver Builder: already an array (objects inside for Beaver).
+			$grezzo = wp_json_encode( $grezzo );
+		}
 		if ( ! is_string( $grezzo ) || '' === $grezzo ) {
 			return array();
 		}
@@ -351,6 +360,11 @@ class Comune {
 			if ( 'metadata' === $k || ( $schema && in_array( $k, array( 'description', 'title', 'name', 'category', 'categorySlug' ), true ) ) ) {
 				continue;
 			}
+			// SiteOrigin: where a widget sits (grid, cell, class, its random id) —
+			// never words; and the layout's own grids and cells hold only sizes.
+			if ( in_array( $k, array( 'panels_info', 'grids', 'grid_cells', 'panels_style', 'style' ), true ) ) {
+				continue;
+			}
 			// An element is addressed by its own id, not by where it sits in the
 			// list: the translated copy keeps the same widget ids, but a widget
 			// added in one language only shifts everything after it. Addressing
@@ -360,7 +374,9 @@ class Comune {
 			if ( is_array( $v ) && isset( $v['id'] ) && is_string( $v['id'] ) && '' !== $v['id'] ) {
 				$segmento = '#' . $v['id'];
 			}
-			self::scendi( $v, '' === $percorso ? $segmento : $percorso . '.' . $segmento, $dentro || 'settings' === $k, $fuori );
+			// Elementor and Beaver keep the words under «settings»; SiteOrigin's
+			// widget instances ARE the settings, listed under «widgets».
+			self::scendi( $v, '' === $percorso ? $segmento : $percorso . '.' . $segmento, $dentro || 'settings' === $k || 'widgets' === $k, $fuori );
 		}
 	}
 
@@ -734,6 +750,13 @@ class Comune {
 	 * the source language as the label of the cart icon.
 	 */
 	public static function ovunque( string $origine, string $lingua, string $testo ): bool {
+		// A TMX or CSV is the site's own catalogue coming back (or a translator's
+		// file): a pair with the same words on both sides is a decision — «Agrigento»
+		// stays «Agrigento» — not a copy to drop, or the round trip export → import
+		// would lose it (seen 30/09/2026, collaudo-import-tmx-csv).
+		if ( trim( $origine ) === trim( $testo ) ) {
+			return '' !== trim( $origine ) && \TranslateRocket\Strings::store_imported( trim( $origine ), $lingua, trim( $testo ) );
+		}
 		if ( ! self::coppia( $origine, $lingua, $testo, true ) ) {
 			return false;
 		}

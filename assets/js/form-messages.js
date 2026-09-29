@@ -22,6 +22,7 @@
 		+ '.gfield_validation_message,.validation_message,.gform_validation_errors,.gform_confirmation_message,'
 		+ '.forminator-label-error,.forminator-error-message,.forminator-response-message,'
 		+ '.frm_error,.frm_message,'
+		+ '.ff-message-success,.ff-errors-in-stack,.ff-el-is-error .error,'
 		+ '[role="alert"]';
 
 	function translateEl( el ) {

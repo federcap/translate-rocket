@@ -30,6 +30,13 @@ class Switcher {
 	private $divider = 'none';
 
 	/**
+	 * Draw only the languages visitors can see (the live preview).
+	 *
+	 * @var bool
+	 */
+	private $solo_pubbliche = false;
+
+	/**
 	 * Hook into WordPress.
 	 */
 	public function boot(): void {
@@ -439,8 +446,18 @@ class Switcher {
 			'trigger' => (string) ( $s['dd_trigger'] ?? 'click' ),
 			'caret'   => empty( $s['dd_caret'] ) ? '0' : '1',
 		);
-		$html = $this->build( $atts, ! empty( $s['english_names'] ) );
-		$css  = self::css_for( 'preview', $s );
+		// The preview is «the switcher your visitors will see»: a language still offline is
+		// not in it, even though the administrator looking at it could open that language
+		// (the preview listed Deutsch while visitors never saw it — 30/09/2026).
+		$this->solo_pubbliche = true;
+		$html                 = $this->build( $atts, ! empty( $s['english_names'] ) );
+		$this->solo_pubbliche = false;
+		$css                  = self::css_for( 'preview', $s );
+		$router               = Plugin::instance()->router();
+		$nascoste             = array();
+		foreach ( $router->offline_languages() as $code ) {
+			$nascoste[] = Languages::label( $code );
+		}
 		$css  = (string) preg_replace_callback(
 			'/@media\s*\(\s*(max|min)-width\s*:\s*(782(?:\.98)?|783)px\s*\)\s*\{((?:[^{}]*\{[^{}]*\})*)\s*\}/',
 			function ( $m ) use ( $view ) {
@@ -450,7 +467,10 @@ class Switcher {
 			$css
 		);
 		return array(
-			'html' => '' === $html ? '' : '<div class="trrocket-sw trrocket-sw-preview" translate="no">' . $html . '</div>',
+			'html' => ( '' === $html ? '' : '<div class="trrocket-sw trrocket-sw-preview" translate="no">' . $html . '</div>' )
+				. ( empty( $nascoste ) ? '' : '<p class="trr-sw-offline-note" style="margin:10px 0 0;font:12px/1.4 system-ui,sans-serif;color:#6b7089;text-align:center">'
+					/* translators: %s: comma-separated language names. */
+					. esc_html( sprintf( __( 'Not shown to visitors yet (offline): %s.', 'translate-rocket' ), implode( ', ', array_filter( $nascoste ) ) ) ) . '</p>' ),
 			'css'  => $css,
 			'type' => $atts['type'],
 		);
@@ -566,6 +586,9 @@ class Switcher {
 		// Le lingue ancora in lavorazione non compaiono nel selettore: chi le
 		// sta traducendo (di norma l'amministratore) le vede lo stesso.
 		$langs  = $router->public_languages();
+		if ( $this->solo_pubbliche ) {
+			$langs = array_values( array_diff( $langs, $router->offline_languages() ) );
+		}
 		if ( count( $langs ) < 2 ) {
 			return '';
 		}

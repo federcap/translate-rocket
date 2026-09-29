@@ -180,10 +180,16 @@ class Strings {
 		// il pannello sembrava dire che non c'era niente da tradurre.
 		$detected = self::total_sources();
 
+		// Only translations whose string still exists: a translation left behind by a
+		// deleted string (a page reset, an old test) made «translated» bigger than
+		// «detected», and «missing» clamped to 0 — the guide said «Everything is
+		// translated» with a new phrase still waiting (30/09/2026).
+		$strings    = Database::strings_table();
 		$translated = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$translations}
-				 WHERE language = %s AND status > 0 AND translation IS NOT NULL AND translation <> ''",
+				"SELECT COUNT(*) FROM {$translations} tr
+				 INNER JOIN {$strings} s ON s.id = tr.string_id
+				 WHERE tr.language = %s AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''",
 				$lang
 			)
 		); // phpcs:ignore WordPress.DB

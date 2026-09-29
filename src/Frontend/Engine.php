@@ -47,6 +47,9 @@ class Engine {
 		'data-tooltip',
 		'data-bp-tooltip',
 		'data-placeholder',
+		'data-success_message', // WoodMart: «“Mug” has been added to your cart» on the add-to-cart button.
+		'data-alt',             // Sliders and galleries park the picture's alt here (19 times on 115 real pages, 29/09/2026).
+		'data-bs-content',      // Bootstrap 5 popover text.
 	);
 	private const SKIP_PARENTS = array( 'script', 'style', 'code', 'pre', 'textarea', 'title' );
 
@@ -66,8 +69,12 @@ class Engine {
 		// ha l'immagine normale nel `src` e quella doppia nel `srcset`, e su un
 		// telefono o su un Mac il browser sceglie la seconda. Chi aveva mappato la
 		// versione doppia se la vedeva ignorare (Astra, markup-extras.php:2144).
-		'img'    => array( 'src', 'data-src', 'srcset', 'data-srcset' ),
-		'source' => array( 'src', 'srcset', 'data-srcset' ),
+		// `data-lazy-src`/`data-lazy-srcset`/`data-lazy-original`: where ShortPixel,
+		// EWWW (for other lazy loaders) and a3 Lazy Load park the real address until
+		// the image scrolls into view; a picture chosen per language stayed the source
+		// one with them (read in their code, 29/09/2026).
+		'img'    => array( 'src', 'data-src', 'srcset', 'data-srcset', 'data-lazy-src', 'data-lazy-srcset', 'data-lazy-original' ),
+		'source' => array( 'src', 'srcset', 'data-srcset', 'data-lazy-srcset' ),
 		'video'  => array( 'src', 'poster' ),
 		'audio'  => array( 'src' ),
 	);
@@ -101,7 +108,7 @@ class Engine {
 	 * @param string $value Text.
 	 * @return string[] The quoted texts.
 	 */
-	private static function quoted( string $value ): array {
+	public static function quoted( string $value ): array {
 		$bordi = self::edges( $value );
 		$extra = null !== $bordi ? array( $bordi[1] ) : array();
 		if ( ! preg_match_all( '/[“„"«]\s*([^“”„"«»]{2,160}?)\s*[”“"»]/u', $value, $m ) ) {
@@ -133,7 +140,7 @@ class Engine {
 	 * @param string               $value Text.
 	 * @param array<string,string> $map   Translations.
 	 */
-	private static function with_quoted( string $value, array $map ): ?string {
+	public static function with_quoted( string $value, array $map ): ?string {
 		// A breadcrumb's last step is written glued to its separator
 		// («&nbsp;/&nbsp;Blue mug»): the name is known, the node's text is not.
 		$bordi = self::edges( $value );
@@ -326,6 +333,52 @@ class Engine {
 	 * @param string $attr    Attribute name.
 	 * @param string $skip_el XPath predicate listing the elements to stay out of.
 	 */
+	/**
+	 * A data-* attribute whose NAME says it holds words for the visitor: the fixed
+	 * list above cannot know every theme's `data-product-title`, `data-toast-cta`,
+	 * `data-none-results-text`, `data-a2a-title` (seen on 113 real pages, 29/09/2026).
+	 * Analytics labels (data-gtm-*), lazy-load and builder internals are left out.
+	 */
+	// «data-bs-title» / «data-bs-original-title» are Bootstrap 5 tooltips, read by the
+	// visitor: the «bs-» prefix stays in. «data-button-transition-text-1»: a numbered
+	// The bare name counts too: WP User Frontend's «<li data-label="Post Title">», a
+	// table's «data-label» read on a phone, «data-caption» of a gallery.
+	// series of sentences (seen on a shop's «notify me» button, 29/09/2026).
+	const DATA_SUFFIX = '/^data-(?!(gtm|lazy|wp|wpr|elementor|trr|et|vc|wf)-)(?:[a-z0-9_-]*-)?(text|message|msg|label|title|tooltip|placeholder|alt|caption|cta|description|heading|subtitle|empty|error|success|confirm|notice)(-\d+)?$/';
+
+	/**
+	 * Elements carrying each translatable attribute, keyed by attribute name: the
+	 * fixed list, plus every data-* attribute the page uses whose name matches
+	 * DATA_SUFFIX.
+	 *
+	 * @param \DOMXPath $xpath   Page.
+	 * @param string    $skip_el XPath predicate for elements to leave alone.
+	 * @return array<string,\DOMElement[]>
+	 */
+	private static function attr_nodes( \DOMXPath $xpath, string $skip_el ): array {
+		$nodes = array();
+		foreach ( self::ATTRIBUTES as $attr ) {
+			$nodes[ $attr ] = iterator_to_array( $xpath->query( self::attr_xpath( $attr, $skip_el ) ) );
+		}
+		$with_data = $xpath->query( "//*[@*[starts-with(name(),'data-')]][not({$skip_el})][not(self::link)]" );
+		foreach ( $with_data ? $with_data : array() as $el ) {
+			if ( ! ( $el instanceof \DOMElement ) || ! $el->hasAttributes() ) {
+				continue;
+			}
+			foreach ( $el->attributes as $a ) {
+				$name = strtolower( (string) $a->nodeName );
+				// (The fixed list is already collected above; a data-* name is added for
+				// EVERY element that carries it — the probe caught only the first gallery
+				// caption being translated, 29/09/2026.)
+				if ( in_array( $name, self::ATTRIBUTES, true ) || ! preg_match( self::DATA_SUFFIX, $name ) ) {
+					continue;
+				}
+				$nodes[ $name ][] = $el;
+			}
+		}
+		return $nodes;
+	}
+
 	private static function attr_xpath( string $attr, string $skip_el ): string {
 		if ( 'value' === $attr ) {
 			$lower = "translate(@type,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')";
@@ -405,6 +458,14 @@ class Engine {
 	private $schema_tokens = array();
 
 	/**
+	 * Placeholders that hold a wp_localize_script() block («handle-js-extra»):
+	 * read through ScriptData, on the decoded data.
+	 *
+	 * @var string[]
+	 */
+	private $extra_tokens = array();
+
+	/**
 	 * Elements whose body the HTML spec treats as raw text / RCDATA: the browser
 	 * reads their content as text, never as markup. libxml does not, and quietly
 	 * DROPS any "</name>" sequence it finds inside them — so a perfectly valid
@@ -428,6 +489,7 @@ class Engine {
 	private function mask_raw_text( string $html ): string {
 		$this->raw_blocks    = array();
 		$this->schema_tokens = array();
+		$this->extra_tokens  = array();
 
 		// One random salt per request: a placeholder must never collide with text
 		// that legitimately appears on the page.
@@ -454,6 +516,17 @@ class Engine {
 				// Structured data is the one script body worth reading (see Schema).
 				if ( 'script' === strtolower( $m[2] ) && preg_match( '#\btype\s*=\s*(["\']?)application/ld\+json\1#i', $m[1] ) ) {
 					$this->schema_tokens[] = $token;
+				} elseif ( 'script' === strtolower( $m[2] ) && preg_match( '#\bid\s*=\s*(["\']?)[\w-]+-js-(extra|before|after)\1#i', $m[1] ) ) {
+					// -js-extra: wp_localize_script(); -js-before/-js-after: wp_add_inline_script()
+					// (Elementor's «var elementorFrontendConfig = {…}» with its i18n lives there).
+					$this->extra_tokens[] = $token;
+				} elseif ( 'script' === strtolower( $m[2] ) && strlen( $m[3] ) <= 300000
+					&& ! preg_match( '#\bsrc\s*=#i', $m[1] )
+					&& ! preg_match( '#\btype\s*=\s*(["\']?)(?!(text/javascript|module|application/javascript))#i', $m[1] )
+					&& preg_match( '#^\s*(?://[^\n]*\n\s*|/\*.*?\*/\s*)*(?:(?:var|let|const)\s+|window\.)[A-Za-z_$][\w$]*\s*=\s*[\[{]#s', $m[3] ) ) {
+					// A theme's own block printed by hand — «<script>var theme_i18n = {…}</script>»
+					// in wp_head — carries the same kind of sentences without the -js-extra id.
+					$this->extra_tokens[] = $token;
 				}
 				return $m[1] . $token . $m[4];
 			},
@@ -573,7 +646,9 @@ class Engine {
 		// own menus, buttons and dialogs already rendered from that language's
 		// pack — collecting there files Arabic or Dutch as if it were English to
 		// be translated. Source pages still discover everything.
-		$this->do_collect   = current_user_can( 'manage_options' ) && ! empty( $this->secondary );
+		// An administrator reading the page — or the site reading it again as a
+		// guest right after (GuestScan): the words only guests see.
+		$this->do_collect   = ( current_user_can( 'manage_options' ) || GuestScan::active() ) && ! empty( $this->secondary );
 		if ( $this->do_collect && $this->is_secondary && Locale::$active ) {
 			$this->do_collect = false;
 		}
@@ -777,6 +852,19 @@ class Engine {
 	 * @return string Localized (or original) href.
 	 */
 	private function localize_href( string $href, string $home_host, string $home_path ): string {
+		return self::localize_link( $href, $home_host, $home_path, $this->current, $this->secondary );
+	}
+
+	/**
+	 * The same, usable outside a page: a fragment fetched by AJAX (Fragment).
+	 *
+	 * @param string   $href      Link as written.
+	 * @param string   $home_host Host of the raw home URL.
+	 * @param string   $home_path Path prefix of the raw home URL ('' at the root).
+	 * @param string   $current   Language to send the link to.
+	 * @param string[] $secondary Every secondary language (a link already in one is left).
+	 */
+	public static function localize_link( string $href, string $home_host, string $home_path, string $current, array $secondary ): string {
 		if ( '' === $href || '#' === $href[0] || '?' === $href[0] ) {
 			return $href;
 		}
@@ -818,13 +906,13 @@ class Engine {
 		}
 		// Already carrying a language prefix — ours or another configured language's
 		// (e.g. switcher links) — including via a nulled-prefix exact match.
-		foreach ( array_merge( array( $this->current ), $this->secondary ) as $code ) {
+		foreach ( array_merge( array( $current ), $secondary ) as $code ) {
 			if ( $rest === '/' . $code || 0 === strpos( $rest, '/' . $code . '/' ) ) {
 				return $href;
 			}
 		}
 
-		$new_path = $home_path . '/' . $this->current . $rest;
+		$new_path = $home_path . '/' . $current . $rest;
 		$suffix   = ( isset( $parts['query'] ) ? '?' . $parts['query'] : '' )
 			. ( isset( $parts['fragment'] ) ? '#' . $parts['fragment'] : '' );
 		if ( isset( $parts['host'] ) ) {
@@ -937,10 +1025,7 @@ class Engine {
 				}
 			}
 		}
-		$attr_nodes = array();
-		foreach ( self::ATTRIBUTES as $attr ) {
-			$attr_nodes[ $attr ] = iterator_to_array( $xpath->query( self::attr_xpath( $attr, $skip_el ) ) );
-		}
+		$attr_nodes = self::attr_nodes( $xpath, $skip_el );
 		// Le immagini: il loro `src` si tratta come tutto il resto, cioe' come una
 		// cosa che puo' avere una versione per lingua. Serve a chi ha una foto con
 		// del testo dentro, una locandina, un banner: tradurre la didascalia non
@@ -964,6 +1049,13 @@ class Engine {
 				$schema_texts[ $token ] = Schema::strings( $this->raw_blocks[ $token ] );
 			}
 		}
+		// Sentences a theme or plugin hands to its scripts (wp_localize_script).
+		$extra_texts = array();
+		foreach ( $this->extra_tokens as $token ) {
+			if ( isset( $this->raw_blocks[ $token ] ) ) {
+				$extra_texts[ $token ] = ScriptData::strings( $this->raw_blocks[ $token ] );
+			}
+		}
 
 		$map = array();
 		if ( $this->is_secondary ) {
@@ -975,6 +1067,11 @@ class Engine {
 					foreach ( Schema::pieces( $text ) as $piece ) {
 						$candidates[] = $piece;
 					}
+				}
+			}
+			foreach ( $extra_texts as $texts ) {
+				foreach ( $texts as $text ) {
+					$candidates[] = $text;
 				}
 			}
 			foreach ( $units as $unit ) {
@@ -1024,6 +1121,18 @@ class Engine {
 		// the text direction so right-to-left languages (Arabic, Hebrew, Persian…)
 		// render correctly instead of left-to-right.
 		if ( $this->is_secondary && null !== $dom->documentElement ) {
+			// og:locale is printed by SEO plugins and themes from get_locale(), which
+			// is the site's language unless «translate the interface» is on: the
+			// Italian page told Facebook it was in English. The page's own value wins.
+			$og_locale = \TranslateRocket\Languages::locale( $this->current );
+			if ( '' !== $og_locale ) {
+				foreach ( $xpath->query( '//meta[@property="og:locale"]/@content' ) as $og ) {
+					if ( $og->ownerElement instanceof \DOMElement && trim( (string) $og->nodeValue ) !== $og_locale ) {
+						$og->ownerElement->setAttribute( 'content', $og_locale );
+						$changed = true;
+					}
+				}
+			}
 			$dom->documentElement->setAttribute( 'lang', $this->current );
 			if ( \TranslateRocket\Languages::is_rtl( $this->current ) ) {
 				$dom->documentElement->setAttribute( 'dir', 'rtl' );
@@ -1142,17 +1251,15 @@ class Engine {
 		// alternativo di un'immagine dentro una frase col grassetto restavano nella
 		// lingua di partenza). Si riprendono dalla pagina com'e' adesso.
 		if ( ! empty( $unit_done ) ) {
-			foreach ( self::ATTRIBUTES as $attr ) {
-				$attr_nodes[ $attr ] = iterator_to_array( $xpath->query( self::attr_xpath( $attr, $skip_el ) ) );
-			}
-			$img_nodes = self::media_nodes( $xpath, $skip_el );
+			$attr_nodes = self::attr_nodes( $xpath, $skip_el );
+			$img_nodes  = self::media_nodes( $xpath, $skip_el );
 		}
 
 		// Translatable attributes. <link> is skipped: its title attributes are the
 		// machine-facing feed/oEmbed/RSD labels in <head> ("Site » Feed", "JSON"…) —
 		// never user-visible, they would only pollute every page's string list.
-		foreach ( self::ATTRIBUTES as $attr ) {
-			foreach ( $attr_nodes[ $attr ] as $el ) {
+		foreach ( $attr_nodes as $attr => $els ) {
+			foreach ( $els as $el ) {
 				$value = trim( (string) $el->getAttribute( $attr ) );
 				// Il filtro del rumore vale anche qui: negli attributi finiscono nomi di
 				// file, segnaposto di modello e stringhe di stile piu' che nel testo.
@@ -1361,6 +1468,27 @@ class Engine {
 				}
 			}
 		}
+		foreach ( $extra_texts as $token => $texts ) {
+			if ( $this->do_collect ) {
+				foreach ( $texts as $text ) {
+					if ( self::is_noise( $text ) || NoTranslate::text_excluded( $text ) ) {
+						continue;
+					}
+					$collected[] = array(
+						'original' => $text,
+						'type'     => 'text',
+						'context'  => 'script',
+					);
+				}
+			}
+			if ( $this->is_secondary && isset( $this->raw_blocks[ $token ] ) ) {
+				$translated = ScriptData::translate( $this->raw_blocks[ $token ], $map );
+				if ( null !== $translated ) {
+					$this->raw_blocks[ $token ] = $translated;
+					$changed                    = true;
+				}
+			}
+		}
 
 		// Internal links in the page body. Menu items and WP-generated permalinks
 		// arrive already localized through the home_url() filter, but links
@@ -1394,6 +1522,22 @@ class Engine {
 					$changed = true;
 				}
 			}
+			// Forms that post to the page itself: Divi's contact module builds its
+			// action from REQUEST_URI, which no longer carries /it/ once the router
+			// has read it, so the reply page — with the module's «thank you» — came
+			// back in the source language (29/09/2026). Same rule as the links.
+			$form_nodes = iterator_to_array( $xpath->query( "//form[@action][not(ancestor-or-self::*[@id='wpadminbar'] or ancestor-or-self::*[contains(@class,'trrocket')] or ancestor-or-self::*[@translate='no'][not(self::html or self::body)])]" ) );
+			foreach ( $form_nodes as $form ) {
+				if ( ! $form instanceof \DOMElement ) {
+					continue;
+				}
+				$action = (string) $form->getAttribute( 'action' );
+				$new    = $this->localize_href( $action, $home_host, $home_path );
+				if ( $new !== $action ) {
+					$form->setAttribute( 'action', $new );
+					$changed = true;
+				}
+			}
 		}
 
 		// Persist everything found on this page in one batch — but never record
@@ -1408,6 +1552,11 @@ class Engine {
 			// This page has just been read: it is no longer waiting for a scan.
 			if ( $qid > 0 ) {
 				\TranslateRocket\Rescan::forget( $qid );
+			}
+			// …and now the site reads it once more as a guest, for the words a
+			// logged-in administrator is never shown.
+			if ( ! $this->is_secondary ) {
+				GuestScan::schedule( $router->current_clean_path() );
 			}
 		}
 

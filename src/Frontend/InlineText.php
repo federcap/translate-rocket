@@ -142,26 +142,69 @@ class InlineText {
 	 * @param \DOMElement $el Element.
 	 */
 	private static function is_unit( \DOMElement $el ): bool {
-		$has_text   = false;
-		$has_inline = false;
-		$parts      = 0;
+		$children = array();
 		foreach ( $el->childNodes as $child ) {
-			if ( XML_TEXT_NODE === $child->nodeType || XML_CDATA_SECTION_NODE === $child->nodeType ) {
-				if ( preg_match( '/\p{L}/u', (string) $child->nodeValue ) ) {
-					$has_text = true;
-				}
+			if ( XML_COMMENT_NODE === $child->nodeType ) {
 				continue;
 			}
-			if ( XML_COMMENT_NODE === $child->nodeType ) {
+			if ( XML_TEXT_NODE === $child->nodeType || XML_CDATA_SECTION_NODE === $child->nodeType ) {
+				$children[] = array( 'text', (string) $child->nodeValue );
 				continue;
 			}
 			if ( ! self::is_inline( $child ) || ! self::inline_is_simple( $child ) ) {
 				return false;
 			}
-			$has_inline = true;
-			++$parts;
+			$children[] = array( 'part', (string) $child->textContent );
 		}
-		return $has_text && $has_inline && $parts <= self::MAX_PARTS;
+		$has_text  = false;
+		$has_words = false; // at least one inline part carries words: an icon alone is not part of a sentence
+		$parts     = 0;
+		$first     = '';
+		foreach ( $children as $c ) {
+			if ( 'text' === $c[0] ) {
+				if ( preg_match( '/\p{L}/u', $c[1] ) ) {
+					$has_text = true;
+					if ( '' === $first ) {
+						$first = 'text';
+					}
+				}
+			} else {
+				++$parts;
+				if ( '' === $first ) {
+					$first = 'part';
+				}
+				if ( preg_match( '/\p{L}/u', $c[1] ) ) {
+					$has_words = true;
+				}
+			}
+		}
+		if ( ! $has_text || 0 === $parts || $parts > self::MAX_PARTS || ! $has_words ) {
+			return false;
+		}
+		// «<a>Home</a> / <a>Rooms</a> / Sea view»: a breadcrumb, a tag list, a
+		// pagination — links glued by separators, not a sentence. Each link is its
+		// own text, and the product name is the same string as on its page. Only
+		// the text BETWEEN two parts decides; what follows the last part (the current
+		// page) does not. Seen on WooCommerce's breadcrumb with the plugin probes, 29/09/2026.
+		if ( 'part' === $first ) {
+			$last_part = -1;
+			foreach ( $children as $i => $c ) {
+				if ( 'part' === $c[0] ) {
+					$last_part = $i;
+				}
+			}
+			$between_has_words = false;
+			foreach ( $children as $i => $c ) {
+				if ( 'text' === $c[0] && $i < $last_part && preg_match( '/\p{L}/u', $c[1] ) ) {
+					$between_has_words = true;
+					break;
+				}
+			}
+			if ( ! $between_has_words && $parts >= 2 ) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

@@ -144,6 +144,8 @@ final class Plugin {
 			if ( ! $coexist && Router::is_frontend_ajax() ) {
 				( new \TranslateRocket\Frontend\Locale() )->boot();
 				( new \TranslateRocket\Frontend\WooCommerce() )->boot();
+				// «Load more», filters, quick views: the content they return.
+				( new \TranslateRocket\Frontend\AjaxContent() )->boot();
 			} elseif ( ! $coexist ) {
 				// The shop manager marks an order «Completed», adds a note for the
 				// customer, resends an e-mail: all from wp-admin. Without this the
@@ -200,6 +202,18 @@ final class Plugin {
 			( new \TranslateRocket\Frontend\WooCommerce() )->boot();
 			// Search on /it/ finds what the visitor typed in Italian.
 			( new \TranslateRocket\Frontend\Search() )->boot();
+			// Blocks and headless themes fetching content from /wp-json for a translated page.
+			( new \TranslateRocket\Frontend\RestContent() )->boot();
+			// /it/feed/: titles, excerpts and bodies translated in the RSS/Atom XML.
+			( new \TranslateRocket\Frontend\Feed() )->boot();
+			// Someone who signs up on /it/ gets WordPress' own e-mails (new account,
+			// password reset) in Italian: WordPress reads the user's locale for them.
+			add_action( 'user_register', array( '\\TranslateRocket\\Frontend\\Locale', 'remember_user_language' ), 10, 1 );
+			// SEOPress and All in One SEO: canonical, og:url and og:locale of the
+			// translated page, our sitemap in their index.
+			( new \TranslateRocket\Integrations\Seo() )->boot();
+			// Ninja Forms draws its fields from JSON: translated before the JSON is written.
+			( new \TranslateRocket\Integrations\NinjaForms() )->boot();
 			// Form plugins: translate JS-inserted validation/notice messages.
 			( new \TranslateRocket\Frontend\Forms() )->boot();
 			// Forminator: hidden language field, server messages, e-mail notifications.

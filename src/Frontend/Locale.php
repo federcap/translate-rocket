@@ -84,11 +84,58 @@ class Locale {
 			return;
 		}
 		if ( empty( Settings::get()['translate_interface'] ) ) {
+			// The interface keeps the site's language, but the DIRECTION must follow
+			// the page's: on /ar/ WordPress and the theme load their -rtl.css only
+			// when is_rtl() says so (29/09/2026).
+			add_action( 'init', array( $this, 'direction' ), 1 );
 			return;
 		}
 		self::$active = true;
 		add_filter( 'determine_locale', array( $this, 'filter' ), 20 );
 		add_filter( 'locale', array( $this, 'filter' ), 20 );
+	}
+
+	/**
+	 * The language of the page a new user signed up on, saved as their locale
+	 * (only when they have none): wp_new_user_notification(), retrieve_password()
+	 * and WooCommerce's account e-mails switch to the user's locale by themselves.
+	 *
+	 * @param mixed $user_id New user's id.
+	 */
+	public static function remember_user_language( $user_id ): void {
+		$user_id = (int) $user_id;
+		if ( $user_id <= 0 || '' !== (string) get_user_meta( $user_id, 'locale', true ) ) {
+			return;
+		}
+		$router = Plugin::instance()->router();
+		$lang   = $router->request_language();
+		if ( '' === $lang || $router->is_default( $lang ) ) {
+			return;
+		}
+		$locale = Languages::locale( $lang );
+		if ( '' !== $locale ) {
+			update_user_meta( $user_id, 'locale', $locale );
+		}
+	}
+
+	/**
+	 * Text direction of the page's language, when it differs from the site's.
+	 */
+	public function direction(): void {
+		$router = Plugin::instance()->router();
+		if ( empty( $router->secondary_languages() ) || ! isset( $GLOBALS['wp_locale'] ) || ! is_object( $GLOBALS['wp_locale'] ) ) {
+			return;
+		}
+		$rtl = Languages::is_rtl( $router->current_language() );
+		if ( $rtl !== is_rtl() ) {
+			$GLOBALS['wp_locale']->text_direction = $rtl ? 'rtl' : 'ltr';
+		}
+		// WP_Styles copies the direction when it is created, and a plugin that
+		// registers a style early (WooCommerce) creates it before this runs: its
+		// -rtl.css files were chosen with the old direction.
+		if ( isset( $GLOBALS['wp_styles'] ) && is_object( $GLOBALS['wp_styles'] ) ) {
+			$GLOBALS['wp_styles']->text_direction = $rtl ? 'rtl' : 'ltr';
+		}
 	}
 
 	/**

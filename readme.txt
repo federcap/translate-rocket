@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.8
+Stable tag: 1.5.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,7 +21,7 @@ https://www.youtube.com/watch?v=WsLpAISB_vo
 
 **You do not need an API key at all.** Chrome and Edge on a computer carry a translator that runs on the device itself, and TranslateRocket can drive it: install the plugin, pick your languages, press one button and the site is translated. It costs nothing, needs no account, and the text never leaves your machine. It is the fastest way to a translated site. When you want fluent, idiomatic copy, the same pages can go through DeepL or an AI model with your own key (OpenAI, Anthropic, Gemini — you pay the provider directly), through ChatGPT or Gemini with a ready-made prompt at no cost, or through your own hands, line by line — and everything already translated is kept, so nothing is ever done twice.
 
-**Switching from another translation plugin? Your existing translations come with you.** One click imports everything you have already paid for or typed by hand — from **TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft, Falang, Sublanguage and Loco Translate**, plus CSV and TMX for anything else. Most are read straight from the tables, the posts or the files, so the import still works after the other plugin has been deactivated or even deleted — which is the usual state of a site that is moving on. Pages built with Elementor or Bricks come across too, widget by widget — their words live in a meta field, not in the page content, and most importers never look there.
+**Switching from another translation plugin? Your existing translations come with you.** One click imports everything you have already paid for or typed by hand — from **TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft, Falang, Sublanguage, Loco Translate and Autoglot**, plus CSV and TMX for anything else. Most are read straight from the tables, the posts or the files, so the import still works after the other plugin has been deactivated or even deleted — which is the usual state of a site that is moving on. Pages built with Elementor or Bricks come across too, widget by widget — their words live in a meta field, not in the page content, and most importers never look there.
 
 It detects translatable text as you browse — visible text, link titles, image alt, placeholders, ARIA labels, page titles, meta descriptions and the social preview tags a SEO plugin adds (Open Graph, X) — and serves each language under its own clean URL prefix (`/it/`, `/de/`), friendly to SEO and to page caches.
 
@@ -45,7 +45,7 @@ You translate however you like:
 * 🔍 **One SEO panel with everything in it**: open a page in the visual editor and the SEO panel lists, in order, the translated address, the page title, the meta description, the social preview (Open Graph and X), the keywords, then every image on the page and every translatable attribute — titles, placeholders, ARIA labels. Each line takes you straight to that element on the page and opens the right editor, so nothing search engines read is left in the source language by accident.
 * 🚦 **Per-page visibility**: if a page has no equivalent in a language, redirect it, show a custom message, or 404 — per page, per language.
 * 🎌 **Flexible language switcher** as a shortcode `[translaterocket_switcher]`, a Gutenberg block, or a widget — inline, dropdown, or a **scrollable bar with ‹ › arrows** for many languages — with original SVG flags that render everywhere (including Windows). Show a switcher on desktop only, on mobile only, or both, to style a different menu for each.
-* 📥 **One-click import from twelve other plugins** — TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft, Falang, Sublanguage and Loco Translate — plus CSV and TMX for everything else. Read straight from the tables, the posts or the `.po` files, so it works even when the other plugin is gone. Pages built with Elementor or Bricks come across too, widget by widget.
+* 📥 **One-click import from thirteen other plugins** — TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft, Falang, Sublanguage, Loco Translate and Autoglot — plus CSV and TMX for everything else. Read straight from the tables, the posts or the `.po` files, so it works even when the other plugin is gone. Pages built with Elementor or Bricks come across too, widget by widget.
 * 🖼️ **A different image for each language** — swap any picture for a translated one: switch on the visual editor, click the button on the image and pick another from your media library. For text baked into a picture, a screenshot of your own interface, or a photo that only makes sense in one country.
 * 🎯 **Different content and menus per language** — show a paragraph, a block or a menu item only in some languages: with a shortcode, a class on any block, or a checkbox in Appearance → Menus.
 * 🛒 **WooCommerce aware**: product and category slugs per language, the AJAX mini-cart and JS strings translated too, and customer emails rendered in the language the order was placed in.
@@ -201,7 +201,7 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 4. Pick the language your site is written in and the languages to translate it into. Each one gets its own /xx/ URL.
 5. Every page at a glance, with how much of it is translated and what is still missing.
 6. Bring your own key — OpenAI, Anthropic, Gemini, DeepL or Google. You pay the provider directly, and a key is optional.
-7. Coming from another plugin? WPML, Polylang, TranslatePress, qTranslate, WPGlobus, WP Multilang, Bogo, Multilanguage, Falang, Sublanguage and Loco Translate are all detected automatically; Weglot imports from its CSV export.
+7. Coming from another plugin? WPML, Polylang, TranslatePress, qTranslate, WPGlobus, WP Multilang, Bogo, Multilanguage, Falang, Sublanguage, Loco Translate and Autoglot are all detected automatically; Weglot imports from its CSV export.
 8. Design the language switcher with a live preview — dropdown or list, flags, colours, corners and position.
 9. SEO for each page and language: the translated URL slug, the title Google shows and the meta description.
 10. Translation memory: the same phrase is never paid for twice, and you can see what that has saved you.
@@ -209,6 +209,26 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 
 == Changelog ==
+
+= 1.5.9 =
+* New: the words only a visitor who is not logged in can see — login and registration forms (Ultimate Member, bbPress, WooCommerce «My account»), «You must be logged in to reply», the e-mail field of the review form, guest-checkout notes — are collected too. Text was collected while an administrator looked at a page, and an administrator is logged in: those words were never collected, and every visitor saw them in the source language. Now, after an administrator has read a page, the site reads it once more by itself as a guest, in the background, once a day per page.
+* New: content loaded after the page — «Load more» buttons, product filters, quick views, infinite scroll — comes back translated, with its links in the language. Themes and plugins fetch those pieces through admin-ajax; the page engine never saw them, so on /it/ everything loaded after the first screen was in the source language.
+* New: the REST API answers a translated page in its language: WooCommerce's blocks (All Products, filters, the cart), client-side navigation and headless themes get product names, titles, excerpts and descriptions translated, permalinks in the language. Ids, slugs, prices and the editor's own requests are untouched.
+* New: the sentences a theme or plugin hands to its scripts — «Product was successfully added to your cart», «View cart», «Loading…», Elementor's «Close», «Next», «Share on Facebook» — are translated and collected like any other text. A paid theme without language packs (WoodMart, Flatsome, Avada) showed them in English on every language. This reads a JSON handed over as a string too (WooCommerce's address labels «Town / City», «Postcode / ZIP», Kadence's countdown labels), a theme's own `const` or `window.name = {…}` block, and a block printed by hand in the page head.
+* New: feeds of a translated language (/it/feed/, Atom) carry translated titles, excerpts and bodies, with links in the language. Feed readers, newsletter tools and Google Discover read that file.
+* New: any `data-*` attribute whose name says it holds words (`data-product-title`, `data-none-results-text`, `data-toast-cta`, `data-tooltip-message`…) is translated, as are `data-alt` on sliders, Bootstrap's `data-bs-title` tooltips, bare names like `data-label` or `data-caption` and numbered series like `data-button-transition-text-1`; analytics labels are left alone.
+* New: import from Autoglot. Its table of paid translations — page sentences and the owner's own replacements, in every language it served — is read straight from the database, with Autoglot switched off; translated addresses and sentences it never finished are left out.
+* New: Ninja Forms fields — labels, placeholders, options, the submit button — are translated before the form is drawn. Fluent Forms is recognised (its messages too).
+* New: a visitor who signs up on /it/ keeps that language: WordPress' password-reset and new-account e-mails, and WooCommerce's account e-mails, go out in it.
+* Improved: SEO plugins. `og:locale` now names the page's language whatever the site locale is (Yoast, Rank Math, All in One SEO, SEOPress); no second `og:locale` with All in One SEO; our multilingual sitemap is listed in All in One SEO's and SEOPress's sitemap index too.
+* Improved: a breadcrumb («Home / Rooms / Sea view»), a list of tags or a pagination is no longer taken for one sentence: each link is translated on its own, and the product's name there is the same one as on its page. An icon-only link inside a sentence no longer turns the sentence into a unit.
+* Improved: the switcher's live preview shows exactly what visitors will see: a language still offline is left out of it and named underneath, instead of being drawn as if it were online.
+* Improved: right-to-left languages keep their direction — and load the theme's and WooCommerce's `-rtl.css` — even when «Translate the interface» is off.
+* Improved: imports from Polylang and WPML bring the translations of categories, tags, product categories and attribute values, the purchase note, product attributes, variation descriptions and Advanced Custom Fields; the copy cleanup checks them before offering to trash a copy.
+* Improved: imports from Polylang and WPML read pages built with SiteOrigin's Page Builder and Beaver Builder, whose text lives in a serialized field, not in the page content — as Elementor and Bricks already were.
+* Fix: a TMX or CSV brought back into the site keeps the pairs that read the same in both languages («Agrigento» stays «Agrigento»): they are decisions, and the round trip export → import lost them. The «What to do next» guide no longer says «Everything is translated» while a new phrase is waiting, when a deleted string left a translation behind.
+* Fix: a picture chosen per language is also swapped where ShortPixel, EWWW and a3 Lazy Load park the real address (`data-lazy-src`).
+* Fix: WooCommerce e-mails sent from the dashboard («Completed», a note to the customer) are translated; variations («Linen shirt – Blue») and product names inside WooCommerce's sentences too; searching on /it/ finds products by their translated name.
 
 = 1.5.8 =
 * Fix: WooCommerce e-mails sent from the dashboard — «Completed», a note to the customer, a resent invoice — were never translated: the customer who ordered in Italian got them entirely in English. Each e-mail is now written in its reader's language: the customer's in the language of the order (subject included, from WooCommerce's own language pack), the shop's own notifications in the site language — before, the shop received them in the customer's language.
@@ -429,6 +449,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.5.9 =
+Content loaded after the page («Load more», filters), REST responses, feeds and script strings are now translated; Ninja/Fluent Forms; SEO og:locale and sitemaps; RTL; sign-up language. Recommended for every site.
 
 = 1.5.8 =
 Recommended for WooCommerce shops: e-mails sent from the dashboard are translated, variations and product names in the cart and e-mails too, search works in every language. New WP Rocket integration. Imports from Polylang and WPML bring categories, variations and ACF fields.

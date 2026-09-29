@@ -106,7 +106,7 @@ class Gettext {
 		$this->lang         = $router->current_language();
 		$this->secondary    = $router->secondary_languages();
 		$this->is_secondary = ! $router->is_default( $this->lang );
-		$this->do_collect   = current_user_can( 'manage_options' ) && ! empty( $this->secondary );
+		$this->do_collect   = ( current_user_can( 'manage_options' ) || GuestScan::active() ) && ! empty( $this->secondary );
 
 		if ( ! $this->is_secondary && ! $this->do_collect ) {
 			return;

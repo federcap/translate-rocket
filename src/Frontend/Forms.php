@@ -32,12 +32,12 @@ class Forms {
 	/**
 	 * Form shortcodes.
 	 */
-	const SHORTCODES = array( 'sureforms', 'contact-form-7', 'contact-form', 'wpforms', 'gravityform', 'gravityforms', 'forminator_form', 'formidable', 'ninja_form', 'ninja_forms' );
+	const SHORTCODES = array( 'sureforms', 'contact-form-7', 'contact-form', 'wpforms', 'gravityform', 'gravityforms', 'forminator_form', 'formidable', 'ninja_form', 'ninja_forms', 'fluentform' );
 
 	/**
 	 * Block name prefixes (Forminator's block is forminator/forms).
 	 */
-	const BLOCK_PREFIXES = array( 'srfm/', 'sureforms/', 'contact-form-7/', 'gravityforms/', 'formidable/', 'wpforms/', 'forminator/', 'ninja-forms/' );
+	const BLOCK_PREFIXES = array( 'srfm/', 'sureforms/', 'contact-form-7/', 'gravityforms/', 'formidable/', 'wpforms/', 'forminator/', 'ninja-forms/', 'fluentfom/' ); // Fluent Forms registers its block as «fluentfom» (their spelling).
 
 	/**
 	 * Front-end scripts the form plugins enqueue only when a form is rendered.
@@ -50,13 +50,14 @@ class Forms {
 		'gform_gravityforms',       // Gravity Forms.
 		'formidable',               // Formidable Forms.
 		'nf-front-end',             // Ninja Forms.
+		'fluent-form-submission',   // Fluent Forms.
 	);
 
 	/**
 	 * Elementor widget types that show a form: the plugins' own widgets and their
 	 * WordPress widgets placed through Elementor ("wp-widget-" + widget id).
 	 */
-	const ELEMENTOR_WIDGETS = '#"widgetType":"(?:wpforms|formidable|sureforms_form|wp-widget-(?:forminator_widget|wpforms-widget|gform_widget|frm_show_form|ninja_forms_widget))"#';
+	const ELEMENTOR_WIDGETS = '#"widgetType":"(?:wpforms|formidable|sureforms_form|fluent-form-widget|wp-widget-(?:forminator_widget|wpforms-widget|gform_widget|frm_show_form|ninja_forms_widget))"#';
 
 	/**
 	 * A form plugin rendered a form on this request.
@@ -97,6 +98,7 @@ class Forms {
 			add_filter( $filter, array( $this, 'seen_passthrough' ), 1 );
 		}
 		add_action( 'wpforms_frontend_output_before', array( $this, 'mark_seen' ), 1, 0 );
+		add_action( 'fluentform/before_form_render', array( $this, 'mark_seen' ), 1, 0 );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue' ), 20 );
 		// Runs after every wp_footer callback before priority 20 (WPForms enqueues at

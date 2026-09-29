@@ -560,7 +560,7 @@ class Router {
 	 * Whether a major SEO plugin is active, so we don't duplicate its OG tags.
 	 */
 	private static function seo_plugin_active(): bool {
-		return defined( 'WPSEO_VERSION' ) || defined( 'SEOPRESS_VERSION' ) || class_exists( 'RankMath' ) || class_exists( 'RankMath\Helper' );
+		return defined( 'WPSEO_VERSION' ) || defined( 'SEOPRESS_VERSION' ) || defined( 'AIOSEO_VERSION' ) || class_exists( 'RankMath' ) || class_exists( 'RankMath\Helper' );
 	}
 
 	/**

@@ -30,6 +30,7 @@ class Importers {
 			new FalangImporter(),
 			new SublanguageImporter(),
 			new LocoImporter(),
+			new AutoglotImporter(),
 		);
 	}
 
