@@ -199,18 +199,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Screenshots ==
 
-1. Translate without an API key at all: Chrome and Edge carry a translator that runs on the device itself, and one button puts it to work on everything still missing. Nothing is sent anywhere, nothing is charged, and what it translates is kept for good.
-2. Click any text on your live page and translate it there — the language switcher, the progress bar and the SEO panel are all in the toolbar.
-3. The per-page editor: your text on the left, the translation on the right. Type it yourself or let AI fill it in.
-4. Pick the language your site is written in and the languages to translate it into. Each one gets its own /xx/ URL.
-5. Every page at a glance, with how much of it is translated and what is still missing.
-6. Bring your own key — OpenAI, Anthropic, Gemini, DeepL or Google. You pay the provider directly, and a key is optional.
-7. Coming from another plugin? WPML, Polylang, TranslatePress, qTranslate, WPGlobus, WP Multilang, Bogo, Multilanguage, Falang, Sublanguage, Loco Translate and Autoglot are all detected automatically; Weglot imports from its CSV export.
-8. Design the language switcher with a live preview — dropdown or list, flags, colours, corners and position.
-9. SEO for each page and language: the translated URL slug, the title Google shows and the meta description.
-10. Translation memory: the same phrase is never paid for twice, and you can see what that has saved you.
-11. Diagnostics: a health check of the setup plus anything the plugin has flagged, so nothing fails silently.
-
+1. Your whole site in every language: each language on its own address (/it/, /de/, /fr/), ready for Google, with a language switcher for your visitors.
+2. Free AI translation with your own free account: a Groq key in two minutes, no card, in any browser — phones and Firefox too. Or bring your own OpenAI, Claude, Gemini or DeepL key.
+3. Click any sentence on your page to fix it: type it yourself, or ask the browser translator, Google Translate or your AI.
+4. Coming from another plugin? WPML, Polylang, TranslatePress and ten more have their own importer; the universal importer reads your pages as visitors see them, with a preview before you switch.
+5. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
 
