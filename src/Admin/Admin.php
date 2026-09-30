@@ -50,6 +50,7 @@ class Admin {
 		add_action( 'wp_ajax_trrocket_gt', array( $this, 'ajax_gt' ) );
 		add_action( 'wp_ajax_trrocket_deepl_usage', array( $this, 'ajax_deepl_usage' ) );
 		add_action( 'wp_ajax_trrocket_test_provider', array( $this, 'ajax_test_provider' ) );
+		add_action( 'wp_ajax_trrocket_try_free_key', array( $this, 'ajax_try_free_key' ) );
 		add_action( 'admin_init', array( $this, 'maybe_clear_log' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_wizard' ) );
 		add_action( 'admin_init', array( $this, 'maybe_wizard_redirect' ) );
@@ -1528,6 +1529,8 @@ class Admin {
 				</form>
 				<?php endif; ?>
 
+				<?php \TranslateRocket\Importers\Universal::render( current_user_can( 'manage_options' ) ); ?>
+
 				<hr>
 				<p class="description"><?php esc_html_e( 'Note: Polylang and WPML store translations as separate posts, so their import brings over string translations, titles, slugs and matching body text (best effort).', 'translate-rocket' ); ?></p>
 			</div>
@@ -2488,6 +2491,62 @@ JS;
 	 */
 	private static function provider_defs(): array {
 		$defs = array(
+			// Free with the owner's own account (official APIs): first, since they cost nothing.
+			'cloudflare' => array(
+				'label'  => 'Cloudflare Workers AI',
+				'model'  => false,
+				'free'   => true,
+				'help'   => __( 'Free with your own Cloudflare account: 10,000 «neurons» a day, about 1,900 sentences with Llama 3.3 70B or 11,000 with the plain translation model. No card needed.', 'translate-rocket' ),
+				'signup' => 'https://dash.cloudflare.com/sign-up',
+				'guide'  => array(
+					/* translators: %s: link to Cloudflare */
+					sprintf( __( 'Open %s and sign up (a Google account is enough, no card).', 'translate-rocket' ), '<a href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">dash.cloudflare.com</a>' ),
+					__( 'In the menu on the left choose <strong>AI → Workers AI</strong>, then <strong>Use REST API</strong>.', 'translate-rocket' ),
+					__( 'Press <strong>Create a Workers AI API Token</strong>, then <strong>Create API Token</strong>: copy the token into «API key» below.', 'translate-rocket' ),
+					__( 'On the same page copy the <strong>Account ID</strong> (it is also in the address bar, after dash.cloudflare.com/) into «Account ID».', 'translate-rocket' ),
+					__( 'Save, then press <strong>Load available models</strong>: if the two models appear, the key works.', 'translate-rocket' ),
+				),
+				'fields' => array(
+					'account' => array( 'text', __( 'Account ID', 'translate-rocket' ), '' ),
+					'quality' => array(
+						'select',
+						__( 'Quality', 'translate-rocket' ),
+						array(
+							'auto'   => array( __( 'Automatic (recommended)', 'translate-rocket' ), __( 'The best model first; when 80% of the day\'s neurons are used, the volume model finishes the day.', 'translate-rocket' ) ),
+							'best'   => array( __( 'Best', 'translate-rocket' ), __( 'Always Llama 3.3 70B: natural sentences, keeps links and bold text, about 1,900 sentences a day.', 'translate-rocket' ) ),
+							'volume' => array( __( 'Volume', 'translate-rocket' ), __( 'Always the plain translation model (m2m100): about 11,000 sentences a day, more literal; sentences with links are left to the next provider.', 'translate-rocket' ) ),
+						),
+					),
+				),
+			),
+			'groq'       => array(
+				'label'  => 'Groq',
+				'model'  => true,
+				'free'   => true,
+				'help'   => __( 'Free with your own Groq key: about 1,000 requests a day (twenty sentences each) with gpt-oss-120b, which translates very well.', 'translate-rocket' ),
+				'models' => array( 'openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'llama-3.3-70b-versatile' ),
+				'signup' => 'https://console.groq.com/keys',
+				'guide'  => array(
+					/* translators: %s: link to the Groq console */
+					sprintf( __( 'Open %s and sign in (a Google account is enough, no card).', 'translate-rocket' ), '<a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>' ),
+					__( 'Press <strong>Create API Key</strong>, give it a name, copy the key — it starts with <code>gsk_</code> — into «API key» below.', 'translate-rocket' ),
+					__( 'Save, then press <strong>Load available models</strong>: if models appear, the key works.', 'translate-rocket' ),
+				),
+			),
+			'openrouter' => array(
+				'label'  => 'OpenRouter',
+				'model'  => true,
+				'free'   => true,
+				'help'   => __( 'Its free models (names ending in «:free») cost nothing: about 50 requests a day, often busy. Good as the last provider of your chain.', 'translate-rocket' ),
+				'models' => \TranslateRocket\Providers\OpenRouterProvider::FREE_MODELS,
+				'signup' => 'https://openrouter.ai/settings/keys',
+				'guide'  => array(
+					/* translators: %s: link to OpenRouter */
+					sprintf( __( 'Open %s and sign in (a Google account is enough).', 'translate-rocket' ), '<a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener">openrouter.ai/settings/keys</a>' ),
+					__( 'Press <strong>Create API Key</strong>, copy it — it starts with <code>sk-or-</code> — into «API key» below. No credit is needed for the free models.', 'translate-rocket' ),
+					__( 'Save, then press <strong>Load available models</strong>: the free models appear.', 'translate-rocket' ),
+				),
+			),
 			'deepl'     => array(
 				'label'  => 'DeepL',
 				'model'  => false,
@@ -2594,6 +2653,15 @@ JS;
 			$settings['providers'][ $pid ]['api_key'] = isset( $posted[ $pid ]['api_key'] ) ? sanitize_text_field( $posted[ $pid ]['api_key'] ) : '';
 			if ( isset( $posted[ $pid ]['model'] ) ) {
 				$settings['providers'][ $pid ]['model'] = sanitize_text_field( $posted[ $pid ]['model'] );
+			}
+			foreach ( (array) ( self::provider_defs()[ $pid ]['fields'] ?? array() ) as $fk => $fdef ) {
+				if ( isset( $posted[ $pid ][ $fk ] ) ) {
+					$v = sanitize_text_field( (string) $posted[ $pid ][ $fk ] );
+					if ( 'select' === $fdef[0] && ! isset( $fdef[2][ $v ] ) ) {
+						continue;
+					}
+					$settings['providers'][ $pid ][ $fk ] = $v;
+				}
 			}
 		}
 
@@ -3030,6 +3098,7 @@ JS
 						<div class="trr-ai-provider<?php echo $is_active ? ' is-active' : ''; ?>">
 							<div class="trr-ai-phead">
 								<strong class="trr-ai-pname"><?php echo esc_html( $def['label'] ); ?></strong>
+								<?php if ( ! empty( $def['free'] ) ) : ?><span class="trr-ai-badge" style="background:#00a32a;color:#fff;border:0"><?php esc_html_e( 'Free', 'translate-rocket' ); ?></span><?php endif; ?>
 								<?php if ( $is_active ) : ?><span class="trr-ai-badge is-on"><?php esc_html_e( 'Active', 'translate-rocket' ); ?></span><?php elseif ( $has_key ) : ?><span class="trr-ai-badge"><?php echo $senza_chiave ? esc_html__( 'Ready', 'translate-rocket' ) : esc_html__( 'Key set', 'translate-rocket' ); ?></span><?php endif; ?>
 							</div>
 						<table class="form-table" role="presentation">
@@ -3052,6 +3121,33 @@ JS
 										value="<?php echo esc_attr( (string) ( $providers[ $pid ]['api_key'] ?? '' ) ); ?>" />
 									<?php if ( '' !== $def['help'] ) : ?>
 										<p class="description"><?php echo esc_html( $def['help'] ); ?></p>
+									<?php endif; ?>
+									<?php if ( ! empty( $def['guide'] ) ) : ?>
+										<details class="trr-ai-guide" style="margin:8px 0;padding:6px 10px;background:#f6f7f7;border:1px solid #dcdcde;border-radius:6px"<?php echo $has_key ? '' : ' open'; ?>>
+											<summary style="cursor:pointer;font-weight:600">&#128273; <?php esc_html_e( 'Get your free key in 2 minutes', 'translate-rocket' ); ?></summary>
+											<ol style="margin:6px 0 4px 20px">
+												<?php foreach ( (array) $def['guide'] as $passo ) : ?>
+													<li><?php echo wp_kses( (string) $passo, array( 'a' => array( 'href' => array(), 'target' => array(), 'rel' => array() ), 'strong' => array(), 'code' => array() ) ); ?></li>
+												<?php endforeach; ?>
+											</ol>
+										</details>
+									<?php endif; ?>
+									<?php foreach ( (array) ( $def['fields'] ?? array() ) as $fk => $fdef ) : ?>
+										<?php $fval = (string) ( $providers[ $pid ][ $fk ] ?? '' ); ?>
+										<?php if ( 'text' === $fdef[0] ) : ?>
+											<p style="margin:8px 0 0"><label style="display:block;font-weight:600"><?php echo esc_html( $fdef[1] ); ?></label>
+											<input type="text" class="regular-text code" autocomplete="off" name="providers[<?php echo esc_attr( $pid ); ?>][<?php echo esc_attr( $fk ); ?>]" value="<?php echo esc_attr( $fval ); ?>" /></p>
+										<?php else : ?>
+											<fieldset style="margin:10px 0 0"><legend style="font-weight:600"><?php echo esc_html( $fdef[1] ); ?></legend>
+												<?php $fval = '' !== $fval ? $fval : (string) array_key_first( $fdef[2] ); ?>
+												<?php foreach ( $fdef[2] as $ov => $ot ) : ?>
+													<label style="display:block;margin:4px 0"><input type="radio" name="providers[<?php echo esc_attr( $pid ); ?>][<?php echo esc_attr( $fk ); ?>]" value="<?php echo esc_attr( $ov ); ?>" <?php checked( $fval, $ov ); ?> /> <strong><?php echo esc_html( $ot[0] ); ?></strong> <span class="description">— <?php echo esc_html( $ot[1] ); ?></span></label>
+												<?php endforeach; ?>
+											</fieldset>
+										<?php endif; ?>
+									<?php endforeach; ?>
+									<?php if ( ! empty( $def['free'] ) ) : ?>
+										<p class="description" style="margin-top:8px">&#128202; <?php echo esc_html( \TranslateRocket\Providers\FreeUsage::line( $pid ) ); ?></p>
 									<?php endif; ?>
 									<?php
 									// DeepL exposes its character quota: show a live meter under the key.
@@ -3289,6 +3385,20 @@ JS
 						<?php submit_button( __( 'Save AI settings', 'translate-rocket' ) ); ?>
 				</div>
 			</form>
+
+			<?php
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended -- only which message to show.
+			$trr_tone = isset( $_GET['tone'] ) ? sanitize_key( wp_unslash( $_GET['tone'] ) ) : '';
+			if ( 'error' === $trr_tone ) {
+				echo '<div class="notice notice-error"><p>' . esc_html__( 'The site could not be read:', 'translate-rocket' ) . ' ' . esc_html( isset( $_GET['tone_msg'] ) ? sanitize_text_field( rawurldecode( wp_unslash( (string) $_GET['tone_msg'] ) ) ) : '' ) . '</p></div>'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			} elseif ( 'applied' === $trr_tone ) {
+				echo '<div class="notice notice-success"><p>' . esc_html__( 'The new style is in use: it is in House style above, the names in Exclusions.', 'translate-rocket' ) . '</p></div>';
+			}
+			// phpcs:enable
+			?>
+			<div class="trrocket-card" style="max-width:none">
+				<?php \TranslateRocket\ToneAdvisor::render( current_user_can( 'manage_options' ) ); ?>
+			</div>
 
 			<?php if ( ! empty( $targets ) ) : ?>
 				<div class="trrocket-card" style="max-width:none">
@@ -3913,6 +4023,25 @@ JS;
 	 * Save the setup wizard (languages, optional AI key, switcher placement),
 	 * then send the admin to the "done" step.
 	 */
+	/**
+	 * Setup wizard, «Try the key»: asks Groq for its models with the key just pasted (nothing is saved).
+	 */
+	public function ajax_try_free_key(): void {
+		check_ajax_referer( 'trrocket_try_free_key', 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'Not allowed.', 'translate-rocket' ) );
+		}
+		$key = isset( $_POST['key'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['key'] ) ) ) : '';
+		if ( '' === $key ) {
+			wp_send_json_error( __( 'Paste the key first.', 'translate-rocket' ) );
+		}
+		$modelli = ( new \TranslateRocket\Providers\GroqProvider( array( 'api_key' => $key ) ) )->list_models();
+		if ( empty( $modelli ) ) {
+			wp_send_json_error( __( 'Groq did not accept this key: copy it again, whole.', 'translate-rocket' ) );
+		}
+		wp_send_json_success( __( 'The key works. Press Next.', 'translate-rocket' ) );
+	}
+
 	public function maybe_save_wizard(): void {
 		if ( ! isset( $_POST['trrocket_wizard_nonce'] ) ) {
 			return;
@@ -3971,6 +4100,16 @@ JS;
 				}
 				$settings['providers'][ $pid ]['api_key'] = $key;
 				$settings['active_provider']               = $pid;
+			}
+		}
+
+		// Free AI with the owner's own free account (Groq): the recommended way in, works in any browser.
+		if ( 'free' === ( isset( $_POST['trr_method'] ) ? sanitize_key( $_POST['trr_method'] ) : '' ) ) {
+			$gsk = isset( $_POST['wiz_free_key'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['wiz_free_key'] ) ) ) : '';
+			if ( '' !== $gsk ) {
+				$settings['providers']['groq']            = array_merge( (array) ( $settings['providers']['groq'] ?? array() ), array( 'api_key' => $gsk ) );
+				$settings['active_provider']              = 'groq';
+				$settings['provider_order']               = array_values( array_unique( array_merge( array( 'groq' ), (array) ( $settings['provider_order'] ?? array() ) ) ) );
 			}
 		}
 
@@ -4081,6 +4220,25 @@ JS;
 				<section class="trr-wiz-step" data-step="2" hidden>
 					<h2><?php esc_html_e( 'How do you want to translate?', 'translate-rocket' ); ?></h2>
 					<p class="trr-wiz-lead"><?php esc_html_e( 'You can let an AI do a first pass automatically, or translate by hand — you can always change this later.', 'translate-rocket' ); ?></p>
+					<?php
+					// 30/9/2026: the answers of people who left the plugin on day one — «too complicated», «I use
+					// Firefox» — none with an AI key. A free AI with a free account works in any browser: first here.
+					?>
+					<label class="trr-wiz-radio">
+						<input type="radio" name="trr_method" value="free" checked />
+						<span><strong><?php esc_html_e( 'Free AI, with your own free account (recommended)', 'translate-rocket' ); ?></strong><br><?php esc_html_e( 'A Groq key: 2 minutes with a Google account, no card. About 1,000 translations a day, good quality, in any browser — phones and Firefox included.', 'translate-rocket' ); ?></span>
+					</label>
+					<div class="trr-wiz-free">
+						<ol style="margin:6px 0 8px 22px">
+							<li><?php echo wp_kses( sprintf( /* translators: %s: link to the Groq console */ __( 'Open %s and sign in with Google.', 'translate-rocket' ), '<a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys ↗</a>' ), array( 'a' => array( 'href' => array(), 'target' => array(), 'rel' => array() ) ) ); ?></li>
+							<li><?php echo wp_kses( __( 'Press <strong>Create API Key</strong>, give it any name, and copy the key (it starts with <code>gsk_</code>).', 'translate-rocket' ), array( 'strong' => array(), 'code' => array() ) ); ?></li>
+							<li><?php esc_html_e( 'Paste it here:', 'translate-rocket' ); ?></li>
+						</ol>
+						<input type="password" name="wiz_free_key" id="trr-wiz-free-key" class="regular-text" placeholder="gsk_…" autocomplete="off" />
+						<button type="button" class="button" id="trr-wiz-free-try" data-nonce="<?php echo esc_attr( wp_create_nonce( 'trrocket_try_free_key' ) ); ?>"><?php esc_html_e( 'Try the key', 'translate-rocket' ); ?></button>
+						<span id="trr-wiz-free-out" aria-live="polite" style="margin-left:6px"></span>
+						<p class="description" style="margin:6px 0 0"><?php esc_html_e( 'More translations a day with Cloudflare Workers AI, also free: set it up later in AI Translation.', 'translate-rocket' ); ?></p>
+					</div>
 					<label class="trr-wiz-radio">
 						<input type="radio" name="trr_method" value="ai" />
 						<span><strong><?php esc_html_e( 'Use an AI provider', 'translate-rocket' ); ?></strong><br><?php esc_html_e( 'Paste your own API key. You pay the provider directly — TranslateRocket takes nothing.', 'translate-rocket' ); ?></span>
@@ -4094,13 +4252,12 @@ JS;
 						<input type="password" name="wiz_key" id="trr-wiz-key" class="regular-text" placeholder="<?php esc_attr_e( 'Paste your API key', 'translate-rocket' ); ?>" autocomplete="off" />
 					</div>
 					<label class="trr-wiz-radio">
-						<input type="radio" name="trr_method" value="manual" checked />
+						<input type="radio" name="trr_method" value="manual" />
 						<span><strong><?php esc_html_e( 'No API key for now', 'translate-rocket' ); ?></strong><br><?php esc_html_e( 'Translate by hand, or let Chrome and Edge translate the whole site for free from the Translations page — the text never leaves your computer. You can add a key later at any time.', 'translate-rocket' ); ?></span>
 					</label>
 					<?php // Se questo browser non ha il traduttore integrato, la strada «senza chiave» qui non funziona: lo si dice subito (prova «WordPress nuovo», 24/9/2026). ?>
 					<div class="trr-wiz-nobr notice notice-warning inline" id="trr-wiz-nobr" hidden>
-						<p><strong><?php esc_html_e( 'This browser cannot translate by itself.', 'translate-rocket' ); ?></strong> <?php esc_html_e( 'The free translator runs only in recent Chrome and Edge on a computer. The easiest free option from here: a Gemini key — 5 minutes, no card.', 'translate-rocket' ); ?>
-						<a href="https://translaterocket.com/api-keys/gemini-api-key/" target="_blank" rel="noopener"><?php esc_html_e( 'How to get a free Gemini key ↗', 'translate-rocket' ); ?></a></p>
+						<p><strong><?php esc_html_e( 'This browser cannot translate by itself.', 'translate-rocket' ); ?></strong> <?php esc_html_e( 'The browser translator runs only in recent Chrome and Edge on a computer. From here, choose «Free AI, with your own free account» above: it works in this browser too.', 'translate-rocket' ); ?></p>
 						<?php if ( ! defined( 'TRRLABS_VERSION' ) ) : ?>
 							<p id="trr-wiz-labs"><?php esc_html_e( 'Or ask for TranslateRocket Labs, free: an add-on that translates from your server with no key, in any browser — phones included.', 'translate-rocket' ); ?>
 							<a href="https://translaterocket.com/labs/?utm_source=plugin" target="_blank" rel="noopener"><?php esc_html_e( 'About Labs ↗', 'translate-rocket' ); ?></a></p>
@@ -4185,9 +4342,30 @@ JS;
 	if ( src ) { src.addEventListener( 'change', syncTargets ); }
 	// Reveal the AI key fields only when "Use an AI provider" is chosen.
 	var aiBox = document.querySelector( '.trr-wiz-ai' );
+	var freeBox = document.querySelector( '.trr-wiz-free' );
 	document.querySelectorAll( 'input[name="trr_method"]' ).forEach( function ( r ) {
-		r.addEventListener( 'change', function () { if ( aiBox ) { aiBox.hidden = ( document.querySelector( 'input[name=trr_method]:checked' ).value !== 'ai' ); } } );
+		r.addEventListener( 'change', function () {
+			var v = document.querySelector( 'input[name=trr_method]:checked' ).value;
+			if ( aiBox ) { aiBox.hidden = ( v !== 'ai' ); }
+			if ( freeBox ) { freeBox.hidden = ( v !== 'free' ); }
+		} );
 	} );
+	// «Try the key»: the server asks Groq for its models with the key just pasted.
+	var tryBtn = document.getElementById( 'trr-wiz-free-try' );
+	if ( tryBtn ) {
+		tryBtn.addEventListener( 'click', function () {
+			var out = document.getElementById( 'trr-wiz-free-out' );
+			var d = new FormData();
+			d.append( 'action', 'trrocket_try_free_key' );
+			d.append( 'nonce', tryBtn.getAttribute( 'data-nonce' ) );
+			d.append( 'key', document.getElementById( 'trr-wiz-free-key' ).value );
+			tryBtn.disabled = true; out.textContent = '…';
+			fetch( ajaxurl, { method: 'POST', credentials: 'same-origin', body: d } ).then( function ( r ) { return r.json(); } ).then( function ( j ) {
+				out.style.color = j && j.success ? '#00a32a' : '#b32d2e';
+				out.textContent = ( j && j.success ? '✓ ' : '✗ ' ) + ( j && j.data ? j.data : '' );
+			} ).catch( function () { out.textContent = '✗'; } ).then( function () { tryBtn.disabled = false; } );
+		} );
+	}
 	show( 0 );
 }() );
 JS;
@@ -4603,6 +4781,7 @@ JS;
 				<h2>❤️ <?php esc_html_e( 'Support the project', 'translate-rocket' ); ?></h2>
 				<p><?php esc_html_e( 'TranslateRocket is 100% free. If it helps you, a small donation keeps it alive and updated.', 'translate-rocket' ); ?></p>
 				<a class="button button-primary" href="https://translaterocket.com/donate" target="_blank" rel="noopener"><?php esc_html_e( 'Make a donation', 'translate-rocket' ); ?></a>
+				<a class="button" href="https://github.com/sponsors/federcap" target="_blank" rel="noopener">💜 <?php esc_html_e( 'Sponsor on GitHub', 'translate-rocket' ); ?></a>
 				<?php
 				// One line, not a screen of its own: everyone who helps - a bug report,
 				// a translation, a donation - is named on the site. A whole admin page

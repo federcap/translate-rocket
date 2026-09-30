@@ -2044,7 +2044,7 @@ msgid "Translate %d missing in this browser"
 msgstr "未翻訳の %d 件をこのブラウザーで翻訳"
 
 msgid "Translate with your browser — no API key"
-msgstr "ブラウザーで翻訳 — API キー不要"
+msgstr "ブラウザーで翻訳 — APIキー不要"
 
 msgid "Translating %1$d of %2$d…"
 msgstr "%2$d 件中 %1$d 件を翻訳しています…"
@@ -2059,7 +2059,7 @@ msgid "Open the copy &amp; paste tool"
 msgstr "コピー＆ペーストの画面を開く"
 
 msgid "Translate without an API key"
-msgstr "API キーなしで翻訳"
+msgstr "APIキーなしで翻訳"
 
 msgid "Your browser has no translator of its own — Chrome and Edge on a computer do. You can still work without a key: copy the missing strings out, run them through any translator you like, and paste the result back."
 msgstr "お使いのブラウザーには翻訳機能がありません。パソコンの Chrome と Edge にはあります。キーがなくても作業はできます。足りない文字列をコピーして、好きな翻訳サービスにかけ、結果を貼り戻してください。"
@@ -2080,7 +2080,7 @@ msgid "Copy the report"
 msgstr "レポートをコピー"
 
 msgid "Copy the report below and paste it into your message: it says which versions you are on and what these checks found. Nothing is sent anywhere on its own — you copy it, you decide where it goes. It never contains your API keys."
-msgstr "下のレポートをコピーしてメッセージに貼り付けてください。使用中のバージョンと、これらのチェックで見つかった内容が書かれています。勝手にどこかへ送信されることはありません。コピーするのはあなたで、どこへ送るかを決めるのもあなたです。API キーが含まれることは決してありません。"
+msgstr "下のレポートをコピーしてメッセージに貼り付けてください。使用中のバージョンと、これらのチェックで見つかった内容が書かれています。勝手にどこかへ送信されることはありません。コピーするのはあなたで、どこへ送るかを決めるのもあなたです。APIキーが含まれることは決してありません。"
 
 msgid "Could not reach the support site from here. Your host may be blocking outgoing requests — you can still copy the report and write from the browser."
 msgstr "ここからサポートサイトに接続できませんでした。ホスティング側が外部への通信を遮断している可能性があります。レポートをコピーしてブラウザーから送ることはできます。"
@@ -2113,10 +2113,10 @@ msgid "Leave this field empty"
 msgstr "この欄は空のままにしてください"
 
 msgid "Needs an API key — set one up in %s, or use your browser below (free)."
-msgstr "API キーが必要です — %s で設定するか、下のブラウザー翻訳をお使いください（無料）。"
+msgstr "APIキーが必要です — %s で設定するか、下のブラウザー翻訳をお使いください（無料）。"
 
 msgid "No API key for now"
-msgstr "今は API キーなしで"
+msgstr "今は APIキーなしで"
 
 msgid "Open a topic on WordPress.org"
 msgstr "WordPress.org でトピックを開く"
@@ -3376,7 +3376,7 @@ msgstr "この操作を行う権限がありません。"
 
 #: src/Admin/LabsPromo.php
 msgid "free: translate with no API key, from any browser, automatically."
-msgstr "無料：API キーなし、どのブラウザからでも自動で翻訳。"
+msgstr "無料：APIキーなし、どのブラウザからでも自動で翻訳。"
 
 #: src/Admin/LabsPromo.php
 msgid "See what Labs adds"
@@ -3384,7 +3384,7 @@ msgstr "Labs でできること"
 
 #: src/Admin/LabsPromo.php
 msgid "No API key needed"
-msgstr "API キー不要"
+msgstr "APIキー不要"
 
 #: src/Admin/LabsPromo.php
 msgid "No account, no card: switch it on and your site gets translated."
@@ -3436,7 +3436,7 @@ msgstr "Labs の機能をすべて見る"
 
 #: src/Admin/LabsPromo.php
 msgid "A free add-on for TranslateRocket that translates your site with no API key, from any browser — phones included — and does more of the work by itself."
-msgstr "TranslateRocket の無料アドオン。API キーなしで、どのブラウザ（スマホも）からでもサイトを翻訳し、より多くの作業を自動でこなします。"
+msgstr "TranslateRocket の無料アドオン。APIキーなしで、どのブラウザ（スマホも）からでもサイトを翻訳し、より多くの作業を自動でこなします。"
 
 #: src/Admin/LabsPromo.php
 msgid "Free, on request — one key per site"
@@ -3452,7 +3452,7 @@ msgstr "サイト全体をワンクリックで。新しいページは公開し
 
 #: src/Admin/LabsPromo.php
 msgid "No API key"
-msgstr "API キーなし"
+msgstr "APIキーなし"
 
 #: src/Admin/LabsPromo.php
 msgid "No account, no card, nothing to set up. Switch it on and it translates."
@@ -3472,7 +3472,7 @@ msgstr "いつでも翻訳"
 
 #: src/Admin/LabsPromo.php
 msgid "Your API keys, the browser, and free engines — in the order you choose. If one stops, the next takes over."
-msgstr "API キー、ブラウザ、無料エンジンを好きな順番で。1 つが止まっても次が引き継ぎます。"
+msgstr "APIキー、ブラウザ、無料エンジンを好きな順番で。1 つが止まっても次が引き継ぎます。"
 
 #: src/Admin/LabsPromo.php
 msgid "What Labs does by itself"
@@ -3552,7 +3552,7 @@ msgstr "優先順位の例"
 
 #: src/Admin/LabsPromo.php
 msgid "Your API key"
-msgstr "あなたの API キー"
+msgstr "あなたの APIキー"
 
 #: src/Admin/LabsPromo.php
 msgid "Drag the engines into the order you want and switch each one on or off. If one is missing, out of credit or paused, the next one translates the page: one way or another, every page gets translated."
@@ -3564,7 +3564,7 @@ msgstr "Labs は別のプラグインで、サイト用のキーと一緒にメ�
 
 #: src/Admin/LabsPromo.php
 msgid "A free add-on: translation with no API key, from any browser and phones, the whole site in one click, and new pages translated as you publish them."
-msgstr "無料アドオン：API キーなしで、どのブラウザ・スマホからでも翻訳。サイト全体をワンクリックで、新しいページは公開時に翻訳。"
+msgstr "無料アドオン：APIキーなしで、どのブラウザ・スマホからでも翻訳。サイト全体をワンクリックで、新しいページは公開時に翻訳。"
 
 #: src/Admin/Admin.php
 msgid "All except free machine translations (browser translator and free engines)"
@@ -3589,3 +3589,324 @@ msgstr "別の無料エンジン"
 #: src/Admin/LabsPromo.php
 msgid "Labs is a separate plugin, sent by e-mail with a key for your site. The free TranslateRocket stays complete and unchanged. Some engines in Labs are optional free services, each with its own conditions, and marked as experimental."
 msgstr "Labs は別のプラグインで、サイト用のキーと一緒にメールでお届けします。無料の TranslateRocket はそのまま完全に使えます。Labs の一部のエンジンは任意の無料サービスで、それぞれに利用条件があり、実験的と明示されています。"
+
+msgid "%d translated items found (pages, terms or strings)."
+msgstr "翻訳済みの項目が %d 件見つかりました（ページ、用語、文字列）。"
+
+msgid "Not shown to visitors yet (offline): %s."
+msgstr "訪問者にはまだ表示されません（オフライン）: %s"
+
+msgid "product template"
+msgstr "商品テンプレート"
+
+msgid "product templates"
+msgstr "商品テンプレート"
+
+msgid "A free AI reads your site, understands what kind of site it is and proposes the tone, formal or informal address for each language, and the names never to translate."
+msgstr "無料の AI がサイトを読み、どんなサイトかを判断して、トーン、各言語での丁寧さ、翻訳しない名前を提案します。"
+
+msgid "A second opinion"
+msgstr "セカンドオピニオン"
+
+msgid "A secret link for a translator or a reviewer: no WordPress account, only the pages and languages you choose, and their work waits for your approval."
+msgstr "翻訳者や校正者向けの秘密のリンク：WordPress アカウント不要、選んだページと言語だけ、作業内容はあなたの承認を待ちます。"
+
+msgid "Cloudflare Workers AI (free)"
+msgstr "Cloudflare Workers AI（無料）"
+
+msgid "Cloudflare Workers AI and Groq, with the free share of your own account: AI quality without paying, a counter for the day, and the next engine when it runs out."
+msgstr "Cloudflare Workers AI と Groq を、ご自身のアカウントの無料枠で。費用なしで AI の品質、1日のカウンター、使い切ったら次のエンジンへ。"
+
+msgid "Coming from a plugin with no importer here? Labs reads your translated pages and brings the translations over."
+msgstr "ここにインポーターがないプラグインから移行しますか？ Labs が翻訳済みページを読み、翻訳を取り込みます。"
+
+msgid "Every day a free AI rereads what the machine engines translated and lists the doubtful sentences, with a correction. You decide."
+msgstr "毎日、無料 AI が自動エンジンの翻訳を読み直し、要確認の文を修正案付きで一覧にします。決めるのはあなたです。"
+
+msgid "External collaborators"
+msgstr "外部の協力者"
+
+msgid "Free AI, your own free account"
+msgstr "無料 AI、ご自身の無料アカウントで"
+
+msgid "Groq (free)"
+msgstr "Groq（無料）"
+
+msgid "Labs adds it to your priority order, with a two-minute guide to get the key and a daily counter."
+msgstr "Labs が優先順位に追加します。2分でキーを取得できるガイドと1日のカウンター付き。"
+
+msgid "Open it in Labs"
+msgstr "Labs で開く"
+
+msgid "Sponsor on GitHub"
+msgstr "GitHub でスポンサーになる"
+
+msgid "Switch it on in Labs"
+msgstr "Labs でオンにする"
+
+msgid "The right tone for your site"
+msgstr "サイトに合ったトーン"
+
+msgid "Universal importer"
+msgstr "ユニバーサルインポーター"
+
+msgid "With Labs"
+msgstr "Labs で"
+
+msgid "Your own free Cloudflare account: about 1,900 sentences a day with Llama 3.3 70B, or 11,000 with the high-volume model. No card needed."
+msgstr "ご自身の無料 Cloudflare アカウント：Llama 3.3 70B で1日約1,900文、大量処理モデルなら11,000文。カード不要。"
+
+msgid "Your own free Groq key: about 1,000 requests a day, ten sentences each, with an excellent open model."
+msgstr "ご自身の無料 Groq キー：1日約1,000リクエスト（各10文）、優れたオープンモデルで。"
+
+msgid "Your plugin is not listed here? The universal importer in Labs reads your pages as visitors see them, in each language, and pairs each sentence with its translation. So it also works with translation plugins that have no importer here. It keeps only the pairs it is sure of: you see what it found before importing, and a preview of every page while your old plugin is still on."
+msgstr "ご利用のプラグインが一覧にありませんか？ Labs のユニバーサルインポーターは、各ページを訪問者が見るとおりに各言語で読み込み、文と翻訳を組み合わせます。そのため、ここにインポーターがない翻訳プラグインでも使えます。確実なペアだけを採用し、インポート前に見つかった内容を確認でき、旧プラグインが有効なまま各ページをプレビューできます。"
+
+msgid "%1$s, %2$s: %3$d sentence pairs, %4$d of %5$d pages read."
+msgstr "%1$s（%2$s）：文のペア %3$d 件、%5$d ページ中 %4$d ページを読み取り。"
+
+msgid "%d left out"
+msgstr "%d 件は除外"
+
+msgid "Account ID"
+msgstr "アカウント ID"
+
+msgid "Addressing visitors"
+msgstr "訪問者への呼びかけ"
+
+msgid "Automatic (recommended)"
+msgstr "自動（おすすめ）"
+
+msgid "Best"
+msgstr "最高品質"
+
+msgid "Discard"
+msgstr "破棄"
+
+msgid "First a scan: nothing is saved, you see what would be imported page by page. Then the import. Translations you already have in TranslateRocket are kept. Translators that work only inside the visitor's browser (a Google widget) cannot be read from the server: the scan says so."
+msgstr "まずスキャン：何も保存されず、ページごとにインポートされる内容を確認できます。その後インポートします。TranslateRocket にある既存の翻訳はそのまま残ります。訪問者のブラウザ内だけで動く翻訳（Google のウィジェット）はサーバーから読めません。スキャンでそう表示されます。"
+
+msgid "Found and still on: %s. Good: its pages can be read now."
+msgstr "検出・有効：%s。今ならそのページを読み取れます。"
+
+msgid "Get your free key in 2 minutes"
+msgstr "2分で無料キーを取得"
+
+msgid "Import what the scan found"
+msgstr "スキャンで見つかったものをインポート"
+
+msgid "Imported"
+msgstr "インポート済み"
+
+msgid "In the menu on the left choose <strong>AI → Workers AI</strong>, then <strong>Use REST API</strong>."
+msgstr "左のメニューで <strong>AI → Workers AI</strong> を選び、<strong>Use REST API</strong> を押します。"
+
+msgid "In use: the style for a %s."
+msgstr "使用中：「%s」向けのスタイル。"
+
+msgid "It works side by side, like TranslateRocket: the old plugin keeps serving your site while you import. After the import, each page has a «preview» link per language: the page with TranslateRocket's translations, visible only to you, next to the old plugin's version to compare. When you are happy, switch the old plugin off and put the languages online."
+msgstr "TranslateRocket と同じく並行モードで動作します。インポート中も旧プラグインがサイトを表示し続けます。インポート後、各ページには言語ごとの「プレビュー」リンクがあり、あなただけが見られる TranslateRocket の翻訳ページを旧プラグインの版と並べて比較できます。問題なければ旧プラグインを無効にし、言語を公開してください。"
+
+msgid "Kind of site"
+msgstr "サイトの種類"
+
+msgid "Languages: pairs"
+msgstr "言語：ペア"
+
+msgid "Last scan"
+msgstr "前回のスキャン"
+
+msgid "Never translate these names (they are added to Exclusions):"
+msgstr "これらの名前は翻訳しない（除外設定に追加されます）："
+
+msgid "Note"
+msgstr "メモ"
+
+msgid "Open %s and sign in (a Google account is enough)."
+msgstr "%s を開いてログインします（Google アカウントで OK）。"
+
+msgid "Open %s and sign in (a Google account is enough, no card)."
+msgstr "%s を開いてログインします（Google アカウントで OK、カード不要）。"
+
+msgid "Open %s and sign up (a Google account is enough, no card)."
+msgstr "%s を開いて登録します（Google アカウントで OK、カード不要）。"
+
+msgid "Proposed by %1$s, %2$s. Translations already done stay as they are; new ones follow the style."
+msgstr "%1$s による提案（%2$s）。既存の翻訳はそのまま残り、新しい翻訳はこのスタイルに従います。"
+
+msgid "Proposed house style (you can edit it before using it):"
+msgstr "提案された文体の指定（使う前に編集できます）："
+
+msgid "Quality"
+msgstr "品質"
+
+msgid "Read my site again"
+msgstr "サイトをもう一度読む"
+
+msgid "Read my site and propose a style"
+msgstr "サイトを読んでスタイルを提案"
+
+msgid "Reading the pages…"
+msgstr "ページを読み込み中…"
+
+msgid "Scan the site"
+msgstr "サイトをスキャン"
+
+msgid "The site could not be read:"
+msgstr "サイトを読み取れませんでした："
+
+msgid "To see the previews, TranslateRocket must run side by side with it: the old plugin keeps the site, TranslateRocket shows its translations only to you."
+msgstr "プレビューを見るには TranslateRocket を並行モードにする必要があります。旧プラグインがサイトを表示し続け、TranslateRocket の翻訳はあなただけに表示されます。"
+
+msgid "Tone"
+msgstr "トーン"
+
+msgid "Translation style from the kind of site"
+msgstr "サイトの種類に合わせた翻訳スタイル"
+
+msgid "Use this style"
+msgstr "このスタイルを使う"
+
+msgid "Volume"
+msgstr "大量処理"
+
+msgid "Your house style now:"
+msgstr "現在の文体の指定："
+
+msgid "a translated copy: read from its original"
+msgstr "翻訳コピー：元のページから読み取ります"
+
+msgid "formal"
+msgstr "丁寧"
+
+msgid "informal"
+msgstr "くだけた"
+
+msgid "no translated version found"
+msgstr "翻訳版が見つかりません"
+
+msgid "old plugin"
+msgstr "旧プラグイン"
+
+msgid "pairs"
+msgstr "ペア"
+
+msgid "preview"
+msgstr "プレビュー"
+
+msgid "the page did not open"
+msgstr "ページを開けませんでした"
+
+msgid "translated only inside the visitor's browser: out of reach from the server"
+msgstr "訪問者のブラウザ内だけで翻訳：サーバーからは読めません"
+
+msgid "translations found"
+msgstr "翻訳あり"
+
+msgid "%1$s of %2$s free neurons today (%3$s sentences)"
+msgstr "本日 無料ニューロン %1$s / %2$s（%3$s 文）"
+
+msgid "%1$s of %2$s free requests today (%3$s sentences)"
+msgstr "本日 無料リクエスト %1$s / %2$s（%3$s 文）"
+
+msgid "A free AI provider set up on this page reads your site — name, tagline, home page, main pages — and understands what kind of site it is: a hotel, a law firm, a shop, a blog. Then it proposes how to translate it: the tone, whether to address visitors formally or informally in each language, and the names never to translate. Nothing changes until you press «Use this style»."
+msgstr "このページで設定した無料 AI プロバイダーがサイト（名前、キャッチフレーズ、ホームページ、主要ページ）を読み、ホテル、法律事務所、ショップ、ブログなど、どんなサイトかを判断します。そのうえで翻訳の方針を提案します：トーン、各言語で訪問者にくだけた呼びかけと丁寧な呼びかけのどちらを使うか、翻訳しない名前。「このスタイルを使う」を押すまで何も変わりません。"
+
+msgid "Always Llama 3.3 70B: natural sentences, keeps links and bold text, about 1,900 sentences a day."
+msgstr "常に Llama 3.3 70B：自然な文章で、リンクや太字もそのまま、1日約1,900文。"
+
+msgid "Always the plain translation model (m2m100): about 11,000 sentences a day, more literal; sentences with links are left to the next provider."
+msgstr "常に翻訳専用モデル（m2m100）：1日約11,000文、より直訳的。リンクを含む文は最高品質のモデルが担当します。"
+
+msgid "Coming from a translation plugin with no importer in TranslateRocket, or one whose tables cannot be read? Keep it switched on: TranslateRocket reads each page as visitors see it, in your language and in every language the old plugin shows, and pairs each sentence with its translation. It takes a pair only where the two pages have the same structure, leaves out what changes on every visit (dates, counters) and copies, and keeps links and bold words in place."
+msgstr "TranslateRocket がインポートできない翻訳プラグインや、テーブルを読めないプラグインから移行しますか？ そのまま有効にしておいてください。TranslateRocket が各ページを訪問者が見るとおりに、あなたの言語と旧プラグインの各言語で読み込み、文と翻訳を組み合わせます。2つのページの構造が同じ箇所だけを採用し、訪問ごとに変わるもの（日付、カウンター）やコピーは除外し、リンクや太字はそのまま保ちます。"
+
+msgid "Free with your own Cloudflare account: 10,000 «neurons» a day, about 1,900 sentences with Llama 3.3 70B or 11,000 with the plain translation model. No card needed."
+msgstr "ご自身の Cloudflare アカウントで無料：1日10,000「ニューロン」、Llama 3.3 70B で約1,900文、翻訳専用モデルなら11,000文。カード不要。"
+
+msgid "Free with your own Groq key: about 1,000 requests a day (twenty sentences each) with gpt-oss-120b, which translates very well."
+msgstr "ご自身の Groq キーで無料：gpt-oss-120b で1日約1,000リクエスト（各20文）。翻訳の質は非常に高いです。"
+
+msgid "Its free models (names ending in «:free») cost nothing: about 50 requests a day, often busy. Good as the last provider of your chain."
+msgstr "無料モデル（名前が「:free」で終わるもの）は費用なし：1日約50リクエスト、混雑しがち。チェーンの最後のプロバイダーに向いています。"
+
+msgid "On the same page copy the <strong>Account ID</strong> (it is also in the address bar, after dash.cloudflare.com/) into «Account ID»."
+msgstr "同じページで <strong>Account ID</strong> をコピーし（アドレスバーの dash.cloudflare.com/ の後にもあります）、「Account ID」に貼り付けます。"
+
+msgid "Press <strong>Create API Key</strong>, copy it — it starts with <code>sk-or-</code> — into «API key» below. No credit is needed for the free models."
+msgstr "<strong>Create API Key</strong> を押してコピーし（<code>sk-or-</code> で始まります）、下の「APIキー」に貼り付けます。無料モデルにクレジットは不要です。"
+
+msgid "Press <strong>Create API Key</strong>, give it a name, copy the key — it starts with <code>gsk_</code> — into «API key» below."
+msgstr "<strong>Create API Key</strong> を押して名前を付け、キーをコピーし（<code>gsk_</code> で始まります）、下の「APIキー」に貼り付けます。"
+
+msgid "Press <strong>Create a Workers AI API Token</strong>, then <strong>Create API Token</strong>: copy the token into «API key» below."
+msgstr "<strong>Create a Workers AI API Token</strong>、続いて <strong>Create API Token</strong> を押し、トークンを下の「APIキー」に貼り付けます。"
+
+msgid "Save, then press <strong>Load available models</strong>: if models appear, the key works."
+msgstr "保存してから <strong>利用できるモデルを読み込む</strong> を押します。モデルが表示されればキーは有効です。"
+
+msgid "Save, then press <strong>Load available models</strong>: if the two models appear, the key works."
+msgstr "保存してから <strong>利用できるモデルを読み込む</strong> を押します。2つのモデルが表示されればキーは有効です。"
+
+msgid "Save, then press <strong>Load available models</strong>: the free models appear."
+msgstr "保存してから <strong>利用できるモデルを読み込む</strong> を押すと、無料モデルが表示されます。"
+
+msgid "Set up a free AI provider first (Cloudflare Workers AI, Groq or OpenRouter) on this page."
+msgstr "先にこのページで無料 AI プロバイダー（Cloudflare Workers AI、Groq、OpenRouter）を設定してください。"
+
+msgid "The answer could not be read."
+msgstr "応答を読み取れませんでした。"
+
+msgid "The best model first; when 80% of the day's neurons are used, the volume model finishes the day."
+msgstr "まず最高品質のモデル。その日のニューロンの80%を使ったら、大量処理モデルが残りを担当します。"
+
+msgid "The new style is in use: it is in House style above, the names in Exclusions."
+msgstr "新しいスタイルを使用中です：上の「文体の指定」にあり、名前は除外設定にあります。"
+
+msgid "TranslateRocket read your site by itself and prepared this proposal."
+msgstr "TranslateRocket が自動でサイトを読み、この提案を用意しました。"
+
+msgid "today's free share is used: the next provider in your chain carries on until tomorrow"
+msgstr "本日の無料枠は使い切りました：明日までチェーンの次のプロバイダーが引き継ぎます"
+
+msgid "Try the key"
+msgstr "キーを試す"
+
+msgid "A Groq key: 2 minutes with a Google account, no card. About 1,000 translations a day, good quality, in any browser — phones and Firefox included."
+msgstr "Groq キー：Google アカウントで2分、カード不要。1日約1,000件の翻訳、品質良好、どのブラウザでも使えます（スマホや Firefox も）。"
+
+msgid "Free AI, with your own free account (recommended)"
+msgstr "ご自身の無料アカウントで無料 AI（おすすめ）"
+
+msgid "Groq did not accept this key: copy it again, whole."
+msgstr "Groq はこのキーを受け付けませんでした。もう一度、全体をコピーしてください。"
+
+msgid "More translations a day with Cloudflare Workers AI, also free: set it up later in AI Translation."
+msgstr "より多くの翻訳には Cloudflare Workers AI（こちらも無料）：後で AI翻訳 で設定できます。"
+
+msgid "Open %s and sign in with Google."
+msgstr "%s を開き、Google でログインします。"
+
+msgid "Paste it here:"
+msgstr "ここに貼り付けます："
+
+msgid "Paste the key first."
+msgstr "先にキーを貼り付けてください。"
+
+msgid "Press <strong>Create API Key</strong>, give it any name, and copy the key (it starts with <code>gsk_</code>)."
+msgstr "<strong>Create API Key</strong> を押して好きな名前を付け、キーをコピーします（<code>gsk_</code> で始まります）。"
+
+msgid "The browser translator runs only in recent Chrome and Edge on a computer. From here, choose «Free AI, with your own free account» above: it works in this browser too."
+msgstr "ブラウザの翻訳機能は、パソコンの最新の Chrome と Edge でのみ動きます。ここでは上の「ご自身の無料アカウントで無料 AI」を選んでください。このブラウザでも使えます。"
+
+msgid "The key works. Press Next."
+msgstr "キーは有効です。「次へ」を押してください。"
+
+msgid "already in TranslateRocket: nothing new to import"
+msgstr "すでに TranslateRocket にあります：新しくインポートするものはありません"
+
+msgid "First choose «Run side by side»: while TranslateRocket also serves the languages, the pages the importer reads may be its own."
+msgstr "まず「並行モードにする」を選んでください。TranslateRocket も言語を配信している間は、インポーターが読むページが TranslateRocket 自身のものである可能性があります。"
+
+msgid "TranslateRocket is serving the languages itself, so the importer would read its own pages. Switch the old plugin on and choose «Run side by side», or take the languages offline while you import."
+msgstr "TranslateRocket 自身が言語を配信しているため、インポーターは自分のページを読むことになります。古いプラグインを有効にして「並行モードにする」を選ぶか、インポート中は言語をオフラインにしてください。"

@@ -157,6 +157,14 @@ final class Coexistence {
 	}
 
 	/**
+	 * TranslateRocket itself answers the language addresses (/it/…) for visitors: not side
+	 * by side, and at least one language is public.
+	 */
+	public static function serving(): bool {
+		return ! self::on() && self::is_public();
+	}
+
+	/**
 	 * TranslateRocket shows at least one language to visitors.
 	 */
 	private static function is_public(): bool {

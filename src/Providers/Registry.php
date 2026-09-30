@@ -30,8 +30,11 @@ class Registry {
 			new GoogleProvider( (array) ( $cfg['google'] ?? array() ) ),
 			new GeminiProvider( (array) ( $cfg['gemini'] ?? array() ) ),
 			new AnthropicProvider( (array) ( $cfg['anthropic'] ?? array() ) ),
+			new CloudflareProvider( (array) ( $cfg['cloudflare'] ?? array() ) ),
+			new GroqProvider( (array) ( $cfg['groq'] ?? array() ) ),
+			new OpenRouterProvider( (array) ( $cfg['openrouter'] ?? array() ) ),
 		);
-		$ids = array( 'deepl' => true, 'openai' => true, 'google' => true, 'gemini' => true, 'anthropic' => true );
+		$ids = array( 'deepl' => true, 'openai' => true, 'google' => true, 'gemini' => true, 'anthropic' => true, 'cloudflare' => true, 'groq' => true, 'openrouter' => true );
 
 		/**
 		 * Extra translation providers from another plugin. Each one must implement
@@ -77,6 +80,9 @@ class Registry {
 			'google'    => GoogleProvider::class,
 			'gemini'    => GeminiProvider::class,
 			'anthropic' => AnthropicProvider::class,
+			'cloudflare' => CloudflareProvider::class,
+			'groq'       => GroqProvider::class,
+			'openrouter' => OpenRouterProvider::class,
 		);
 		if ( ! isset( $map[ $id ] ) ) {
 			// A provider added by another plugin: the one it registered.

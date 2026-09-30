@@ -65,6 +65,8 @@ final class Plugin {
 		// plugin serves it until it is deactivated. See Coexistence.
 		$coexist = Coexistence::on();
 		Coexistence::boot();
+		\TranslateRocket\Importers\Universal::boot(); // AJAX of the universal importer (Import screen)
+		\TranslateRocket\ToneAdvisor::boot();         // «translation style from the kind of site» (AI Translation)
 		// Frasi lette intere ma tradotte a pezzi da una versione vecchia: si ricompongono (24/9/2026).
 		PiecesMigration::boot();
 

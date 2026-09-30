@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.9
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,7 @@ You translate however you like:
 * 🆓 **Free with Google Translate (no key)** — every field has a link that opens Google Translate prefilled, so you translate for free on Google's own site and paste the result back.
 * ✍️ **By hand**, in a clear per-page editor (also inside the post/page screen) with red highlighting for what's still missing — plus a copy & paste box for bulk Google translation.
 * 💬 **With ChatGPT or Gemini, no key** — one button copies the whole page with a translation prompt written for your site; paste the answer back and every line goes to its place.
+* 🆓 **With free AI, on your own free account** — Cloudflare Workers AI (about 1,900 sentences a day with Llama 3.3 70B, or 11,000 with a plain translation model), Groq (gpt-oss-120b) or OpenRouter's free models. A two-minute guide gets you the key, no card needed; a counter shows today's free share, and when it runs out the next provider in your chain carries on.
 * 🤖 **With AI** — bring your own key for DeepL, OpenAI, Google Gemini, Anthropic (Claude) or Google Cloud Translate. Text is sent only to the provider you choose, only when you ask.
 
 = Highlights =
@@ -45,7 +46,7 @@ You translate however you like:
 * 🔍 **One SEO panel with everything in it**: open a page in the visual editor and the SEO panel lists, in order, the translated address, the page title, the meta description, the social preview (Open Graph and X), the keywords, then every image on the page and every translatable attribute — titles, placeholders, ARIA labels. Each line takes you straight to that element on the page and opens the right editor, so nothing search engines read is left in the source language by accident.
 * 🚦 **Per-page visibility**: if a page has no equivalent in a language, redirect it, show a custom message, or 404 — per page, per language.
 * 🎌 **Flexible language switcher** as a shortcode `[translaterocket_switcher]`, a Gutenberg block, or a widget — inline, dropdown, or a **scrollable bar with ‹ › arrows** for many languages — with original SVG flags that render everywhere (including Windows). Show a switcher on desktop only, on mobile only, or both, to style a different menu for each.
-* 📥 **One-click import from thirteen other plugins** — TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft, Falang, Sublanguage, Loco Translate and Autoglot — plus CSV and TMX for everything else. Read straight from the tables, the posts or the `.po` files, so it works even when the other plugin is gone. Pages built with Elementor or Bricks come across too, widget by widget.
+* 📥 **One-click import from thirteen other plugins** — TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft, Falang, Sublanguage, Loco Translate and Autoglot — plus a **universal importer** for any other plugin: it reads your pages as visitors see them, in every language, pairs each sentence with its translation only where the pages match, and lets you preview every page side by side before you switch the old plugin off — plus CSV and TMX for everything else. Read straight from the tables, the posts or the `.po` files, so it works even when the other plugin is gone. Pages built with Elementor or Bricks come across too, widget by widget.
 * 🖼️ **A different image for each language** — swap any picture for a translated one: switch on the visual editor, click the button on the image and pick another from your media library. For text baked into a picture, a screenshot of your own interface, or a photo that only makes sense in one country.
 * 🎯 **Different content and menus per language** — show a paragraph, a block or a menu item only in some languages: with a shortcode, a class on any block, or a checkbox in Appearance → Menus.
 * 🛒 **WooCommerce aware**: product and category slugs per language, the AJAX mini-cart and JS strings translated too, and customer emails rendered in the language the order was placed in.
@@ -89,6 +90,9 @@ This plugin can connect to third-party services, but only with your involvement:
   * OpenAI — service: https://platform.openai.com , privacy: https://openai.com/policies/privacy-policy/
   * Google Cloud Translation / Gemini — service: https://cloud.google.com/translate , privacy: https://policies.google.com/privacy
   * Anthropic (Claude) — service: https://www.anthropic.com , privacy: https://www.anthropic.com/legal/privacy
+  * Cloudflare Workers AI — service: https://developers.cloudflare.com/workers-ai/ , privacy: https://www.cloudflare.com/privacypolicy/
+  * Groq — service: https://console.groq.com , privacy: https://groq.com/privacy-policy/
+  * OpenRouter (and the provider of the model you pick there) — service: https://openrouter.ai , privacy: https://openrouter.ai/privacy
 * **Google Translate (manual, always available).** Every editor offers a per-phrase link and a copy-paste box that open Google Translate (translate.google.com) prefilled, so you translate on Google's own site and paste the result back. This is just a convenience link — your browser, not the plugin, contacts Google. Service: https://translate.google.com , terms: https://policies.google.com/terms , privacy: https://policies.google.com/privacy
 * **Optional one-click Google auto-fill (off by default).** A site owner can opt in (the `TRROCKET_AUTO_GOOGLE` constant / the `trrocket_auto_google` filter) to let the server fetch a translation from Google's free endpoint with one click. This uses an undocumented endpoint and is best-effort, so it is disabled out of the box and the plugin never calls it on its own. For dependable automatic translation use the official AI providers below.
 * **translaterocket.com support ticket (optional, on request).** The Diagnostics screen has a form that opens a support ticket for you. It sends nothing until you fill it in and press Send, and what it sends is exactly what the page shows you: your name, your email address (so the answer can reach you), your subject and message, your site address and the plugin version, plus the technical report if you leave that box ticked. The report never contains API keys. To prove the request really comes from your site and not from a spam robot, the support site then makes one request back to your site's home URL with a one-time token. Nothing else is transmitted, nothing is stored on your site, and if you would rather not use it the same page still offers the copy-and-paste route. Service: https://translaterocket.com , privacy: https://translaterocket.com/privacy-policy/
@@ -209,6 +213,15 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 
 == Changelog ==
+
+= 1.7.0 =
+* New: free AI translation with your own free account. Cloudflare Workers AI (10,000 «neurons» a day: about 1,900 sentences with Llama 3.3 70B, or 11,000 with the plain translation model, with a Quality setting — Best, Volume or Automatic), Groq (about 1,000 requests a day with gpt-oss-120b) and OpenRouter's free models are providers like DeepL or OpenAI: in the fallback chain, in bulk translation, in the visual editor. Each has a two-minute guide to get the key, «Load available models» to check it, and today's counter; a little before the free share runs out, the next provider of your chain carries on. Official APIs, no card needed.
+* New: the setup wizard offers free AI first. «Free AI, with your own free account»: a Groq key in 2 minutes with a Google account, a «Try the key» button, and the site translates from the first minute — in any browser, phones and Firefox included, where the browser translator does not exist.
+* New: the universal importer, on Import. Coming from a translation plugin with no importer here, or one whose tables cannot be read? Keep it on: TranslateRocket reads each page as visitors see it, in every language, finds its translations from the hreflang links, and pairs each sentence with its translation only where the two pages have the same structure — leaving out what changes on every visit and copies, keeping links and bold words. A scan first (nothing saved), then the import, then a side-by-side preview of every page per language while the old plugin still serves your site. Tested on the bench with TranslatePress, Bogo, qTranslate-XT, WPGlobus, WP Multilang, Multilanguage and Polylang, and on pages of 20 real multilingual sites (8 systems): language switchers, cached copies with other content and sentences in the wrong language are left out. It waits while TranslateRocket itself serves the languages, so it never reads its own pages back. Translators that work only in the visitor's browser (GTranslate free, Weglot's JavaScript) cannot be read from the server: the scan says so.
+* New: translation style from the kind of site, on AI Translation. A free AI reads your site's name, tagline and main pages and proposes the tone, formal or informal address for each of your languages, and the names never to translate; nothing changes until you press «Use this style». The house style now reaches every AI provider.
+* New: a «Sponsor on GitHub» button next to the donation link.
+* Improved: German admin screens address you consistently; the Labs page lists what Labs adds for teams.
+* Fixed: translations whose source string no longer existed were counted but never shown or exported; they are removed on update.
 
 = 1.5.9 =
 * New: the words only a visitor who is not logged in can see — login and registration forms (Ultimate Member, bbPress, WooCommerce «My account»), «You must be logged in to reply», the e-mail field of the review form, guest-checkout notes — are collected too. Text was collected while an administrator looked at a page, and an administrator is logged in: those words were never collected, and every visitor saw them in the source language. Now, after an administrator has read a page, the site reads it once more by itself as a guest, in the background, once a day per page.
@@ -449,6 +462,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.7.0 =
+Free AI translation with your own free Cloudflare, Groq or OpenRouter account; a universal importer for plugins with no importer here, with side-by-side preview; a translation style proposed from your site. Recommended.
 
 = 1.5.9 =
 Content loaded after the page («Load more», filters), REST responses, feeds and script strings are now translated; Ninja/Fluent Forms; SEO og:locale and sitemaps; RTL; sign-up language. Recommended for every site.

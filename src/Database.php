@@ -24,7 +24,7 @@ class Database {
 	/**
 	 * Schema version. Bump when the table structure changes.
 	 */
-	const DB_VERSION = '3';
+	const DB_VERSION = '4';
 
 	/**
 	 * Source strings table name.
@@ -78,7 +78,20 @@ class Database {
 		}
 		self::create_tables();
 		self::backfill_text_hash();
+		self::remove_orphans();
 		update_option( 'trrocket_db_version', self::DB_VERSION );
+	}
+
+	/**
+	 * Translations whose source string no longer exists (schema v4, 30/9/2026). Older versions
+	 * could leave them behind; nothing can show or export them, but they were still counted, so a
+	 * TMX or CSV round trip seemed to «lose» them. One query, on upgrade only.
+	 */
+	private static function remove_orphans(): void {
+		global $wpdb;
+		$t = self::translations_table();
+		$s = self::strings_table();
+		$wpdb->query( "DELETE t FROM {$t} t LEFT JOIN {$s} s ON s.id = t.string_id WHERE s.id IS NULL" ); // phpcs:ignore WordPress.DB
 	}
 
 	/**

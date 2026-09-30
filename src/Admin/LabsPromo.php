@@ -198,6 +198,8 @@ class LabsPromo {
 						$feat( '📝', __( 'Translate on publish', 'translate-rocket' ), __( 'Publish or update a page: its new text is translated into your languages in the background.', 'translate-rocket' ) );
 						$feat( '🧭', __( 'Menus, widgets, Customizer', 'translate-rocket' ), __( 'Changes that appear on every page are picked up and translated by themselves.', 'translate-rocket' ) );
 						$feat( '🤖', __( 'Free engines, no key', 'translate-rocket' ), __( 'Free translation engines, each switched on only after you read and accept its conditions.', 'translate-rocket' ) );
+						$feat( '🔍', __( 'A second opinion', 'translate-rocket' ), __( 'Every day a free AI rereads what the machine engines translated and lists the doubtful sentences, with a correction. You decide.', 'translate-rocket' ) );
+						$feat( '🤝', __( 'External collaborators', 'translate-rocket' ), __( 'A secret link for a translator or a reviewer: no WordPress account, only the pages and languages you choose, and their work waits for your approval.', 'translate-rocket' ) );
 						$feat( '💎', __( 'Polish with AI', 'translate-rocket' ), __( 'With an AI key, a little of the free engines\' work is translated again every day, so quality grows over time.', 'translate-rocket' ) );
 						$feat( '📬', __( 'A weekly report', 'translate-rocket' ), __( 'Every Monday, a short e-mail: what was translated and what is still waiting.', 'translate-rocket' ) );
 						$feat( '🔄', __( 'Updates itself', 'translate-rocket' ), __( 'New versions appear in Plugins, like any other update.', 'translate-rocket' ) );
@@ -225,4 +227,5 @@ class LabsPromo {
 		</div>
 		<?php
 	}
+
 }

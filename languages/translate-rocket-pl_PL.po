@@ -3625,3 +3625,324 @@ msgstr "Kolejna darmowa usługa"
 #: src/Admin/LabsPromo.php
 msgid "Labs is a separate plugin, sent by e-mail with a key for your site. The free TranslateRocket stays complete and unchanged. Some engines in Labs are optional free services, each with its own conditions, and marked as experimental."
 msgstr "Labs to osobna wtyczka, wysyłana e-mailem z kluczem dla twojej strony. Darmowy TranslateRocket pozostaje kompletny i bez zmian. Niektóre usługi w Labs są opcjonalnymi darmowymi usługami, każda z własnymi warunkami, oznaczone jako eksperymentalne."
+
+msgid "%d translated items found (pages, terms or strings)."
+msgstr "Znaleziono %d przetłumaczonych elementów (strony, terminy lub teksty)."
+
+msgid "Not shown to visitors yet (offline): %s."
+msgstr "Jeszcze niewidoczne dla odwiedzających (offline): %s."
+
+msgid "product template"
+msgstr "szablon produktu"
+
+msgid "product templates"
+msgstr "szablony produktów"
+
+msgid "A free AI reads your site, understands what kind of site it is and proposes the tone, formal or informal address for each language, and the names never to translate."
+msgstr "Darmowa AI czyta Twoją witrynę, rozpoznaje jej rodzaj i proponuje ton, formę zwracania się w każdym języku oraz nazwy, których nigdy nie tłumaczyć."
+
+msgid "A second opinion"
+msgstr "Druga opinia"
+
+msgid "A secret link for a translator or a reviewer: no WordPress account, only the pages and languages you choose, and their work waits for your approval."
+msgstr "Tajny link dla tłumacza lub korektora: bez konta WordPress, tylko wybrane strony i języki, a ich praca czeka na Twoją akceptację."
+
+msgid "Cloudflare Workers AI (free)"
+msgstr "Cloudflare Workers AI (za darmo)"
+
+msgid "Cloudflare Workers AI and Groq, with the free share of your own account: AI quality without paying, a counter for the day, and the next engine when it runs out."
+msgstr "Cloudflare Workers AI i Groq z darmowym limitem Twojego konta: jakość AI bez płacenia, licznik dnia i kolejny silnik, gdy limit się skończy."
+
+msgid "Coming from a plugin with no importer here? Labs reads your translated pages and brings the translations over."
+msgstr "Przechodzisz z wtyczki, która nie ma tu importera? Labs czyta przetłumaczone strony i przenosi tłumaczenia."
+
+msgid "Every day a free AI rereads what the machine engines translated and lists the doubtful sentences, with a correction. You decide."
+msgstr "Codziennie darmowa AI czyta ponownie to, co przetłumaczyły silniki automatyczne, i wypisuje wątpliwe zdania z poprawką. Ty decydujesz."
+
+msgid "External collaborators"
+msgstr "Współpracownicy zewnętrzni"
+
+msgid "Free AI, your own free account"
+msgstr "Darmowa AI z Twoim własnym darmowym kontem"
+
+msgid "Groq (free)"
+msgstr "Groq (za darmo)"
+
+msgid "Labs adds it to your priority order, with a two-minute guide to get the key and a daily counter."
+msgstr "Labs dodaje go do Twojej kolejności, z dwuminutowym przewodnikiem po klucz i dziennym licznikiem."
+
+msgid "Open it in Labs"
+msgstr "Otwórz w Labs"
+
+msgid "Sponsor on GitHub"
+msgstr "Wesprzyj na GitHub"
+
+msgid "Switch it on in Labs"
+msgstr "Włącz w Labs"
+
+msgid "The right tone for your site"
+msgstr "Właściwy ton dla Twojej witryny"
+
+msgid "Universal importer"
+msgstr "Uniwersalny importer"
+
+msgid "With Labs"
+msgstr "Z Labs"
+
+msgid "Your own free Cloudflare account: about 1,900 sentences a day with Llama 3.3 70B, or 11,000 with the high-volume model. No card needed."
+msgstr "Twoje własne darmowe konto Cloudflare: około 1900 zdań dziennie z Llama 3.3 70B lub 11 000 z modelem ilościowym. Bez karty."
+
+msgid "Your own free Groq key: about 1,000 requests a day, ten sentences each, with an excellent open model."
+msgstr "Twój własny darmowy klucz Groq: około 1000 zapytań dziennie, po dziesięć zdań, z doskonałym otwartym modelem."
+
+msgid "Your plugin is not listed here? The universal importer in Labs reads your pages as visitors see them, in each language, and pairs each sentence with its translation. So it also works with translation plugins that have no importer here. It keeps only the pairs it is sure of: you see what it found before importing, and a preview of every page while your old plugin is still on."
+msgstr "Twojej wtyczki nie ma na liście? Uniwersalny importer Labs czyta strony tak, jak widzą je odwiedzający, w każdym języku, i łączy każde zdanie z jego tłumaczeniem. Dzięki temu działa też z wtyczkami tłumaczeniowymi, które nie mają tu importera. Zachowuje tylko pewne pary: przed importem widzisz, co znalazł, a także podgląd każdej strony, gdy stara wtyczka jest jeszcze włączona."
+
+msgid "%1$s, %2$s: %3$d sentence pairs, %4$d of %5$d pages read."
+msgstr "%1$s, %2$s: %3$d par zdań, przeczytano %4$d z %5$d stron."
+
+msgid "%d left out"
+msgstr "%d pominięto"
+
+msgid "Account ID"
+msgstr "ID konta"
+
+msgid "Addressing visitors"
+msgstr "Zwracanie się do odwiedzających"
+
+msgid "Automatic (recommended)"
+msgstr "Automatycznie (zalecane)"
+
+msgid "Best"
+msgstr "Najlepsza"
+
+msgid "Discard"
+msgstr "Odrzuć"
+
+msgid "First a scan: nothing is saved, you see what would be imported page by page. Then the import. Translations you already have in TranslateRocket are kept. Translators that work only inside the visitor's browser (a Google widget) cannot be read from the server: the scan says so."
+msgstr "Najpierw skanowanie: nic nie jest zapisywane, widzisz strona po stronie, co zostałoby zaimportowane. Potem import. Tłumaczenia, które masz już w TranslateRocket, zostają. Tłumaczy działających tylko w przeglądarce odwiedzającego (widżet Google) nie da się odczytać z serwera: skanowanie to pokaże."
+
+msgid "Found and still on: %s. Good: its pages can be read now."
+msgstr "Znaleziono i nadal włączona: %s. Dobrze: jej strony można teraz odczytać."
+
+msgid "Get your free key in 2 minutes"
+msgstr "Darmowy klucz w 2 minuty"
+
+msgid "Import what the scan found"
+msgstr "Zaimportuj to, co znalazło skanowanie"
+
+msgid "Imported"
+msgstr "Zaimportowano"
+
+msgid "In the menu on the left choose <strong>AI → Workers AI</strong>, then <strong>Use REST API</strong>."
+msgstr "W menu po lewej wybierz <strong>AI → Workers AI</strong>, a potem <strong>Use REST API</strong>."
+
+msgid "In use: the style for a %s."
+msgstr "W użyciu: styl dla witryny typu „%s”."
+
+msgid "It works side by side, like TranslateRocket: the old plugin keeps serving your site while you import. After the import, each page has a «preview» link per language: the page with TranslateRocket's translations, visible only to you, next to the old plugin's version to compare. When you are happy, switch the old plugin off and put the languages online."
+msgstr "Działa równolegle, jak TranslateRocket: stara wtyczka nadal obsługuje witrynę podczas importu. Po imporcie każda strona ma link „podgląd” dla każdego języka: stronę z tłumaczeniami TranslateRocket, widoczną tylko dla Ciebie, obok wersji starej wtyczki do porównania. Gdy wszystko pasuje, wyłącz starą wtyczkę i opublikuj języki."
+
+msgid "Kind of site"
+msgstr "Rodzaj witryny"
+
+msgid "Languages: pairs"
+msgstr "Języki: pary"
+
+msgid "Last scan"
+msgstr "Ostatnie skanowanie"
+
+msgid "Never translate these names (they are added to Exclusions):"
+msgstr "Nigdy nie tłumacz tych nazw (zostaną dodane do Wykluczeń):"
+
+msgid "Note"
+msgstr "Notatka"
+
+msgid "Open %s and sign in (a Google account is enough)."
+msgstr "Otwórz %s i zaloguj się (wystarczy konto Google)."
+
+msgid "Open %s and sign in (a Google account is enough, no card)."
+msgstr "Otwórz %s i zaloguj się (wystarczy konto Google, bez karty)."
+
+msgid "Open %s and sign up (a Google account is enough, no card)."
+msgstr "Otwórz %s i zarejestruj się (wystarczy konto Google, bez karty)."
+
+msgid "Proposed by %1$s, %2$s. Translations already done stay as they are; new ones follow the style."
+msgstr "Zaproponowane przez %1$s, %2$s. Istniejące tłumaczenia zostają bez zmian; nowe będą zgodne ze stylem."
+
+msgid "Proposed house style (you can edit it before using it):"
+msgstr "Proponowany styl marki (możesz go edytować przed użyciem):"
+
+msgid "Quality"
+msgstr "Jakość"
+
+msgid "Read my site again"
+msgstr "Przeczytaj witrynę ponownie"
+
+msgid "Read my site and propose a style"
+msgstr "Przeczytaj witrynę i zaproponuj styl"
+
+msgid "Reading the pages…"
+msgstr "Czytam strony…"
+
+msgid "Scan the site"
+msgstr "Skanuj witrynę"
+
+msgid "The site could not be read:"
+msgstr "Nie udało się odczytać witryny:"
+
+msgid "To see the previews, TranslateRocket must run side by side with it: the old plugin keeps the site, TranslateRocket shows its translations only to you."
+msgstr "Aby zobaczyć podglądy, TranslateRocket musi działać równolegle: stara wtyczka nadal obsługuje witrynę, a TranslateRocket pokazuje swoje tłumaczenia tylko Tobie."
+
+msgid "Tone"
+msgstr "Ton"
+
+msgid "Translation style from the kind of site"
+msgstr "Styl tłumaczenia według rodzaju witryny"
+
+msgid "Use this style"
+msgstr "Użyj tego stylu"
+
+msgid "Volume"
+msgstr "Ilość"
+
+msgid "Your house style now:"
+msgstr "Twój obecny styl marki:"
+
+msgid "a translated copy: read from its original"
+msgstr "przetłumaczona kopia: odczytana z oryginału"
+
+msgid "formal"
+msgstr "formalnie (Pan/Pani)"
+
+msgid "informal"
+msgstr "nieformalnie (ty)"
+
+msgid "no translated version found"
+msgstr "nie znaleziono przetłumaczonej wersji"
+
+msgid "old plugin"
+msgstr "stara wtyczka"
+
+msgid "pairs"
+msgstr "par"
+
+msgid "preview"
+msgstr "podgląd"
+
+msgid "the page did not open"
+msgstr "strona się nie otworzyła"
+
+msgid "translated only inside the visitor's browser: out of reach from the server"
+msgstr "tłumaczona tylko w przeglądarce odwiedzającego: poza zasięgiem serwera"
+
+msgid "translations found"
+msgstr "znaleziono tłumaczenia"
+
+msgid "%1$s of %2$s free neurons today (%3$s sentences)"
+msgstr "%1$s z %2$s darmowych neuronów dziś (%3$s zdań)"
+
+msgid "%1$s of %2$s free requests today (%3$s sentences)"
+msgstr "%1$s z %2$s darmowych zapytań dziś (%3$s zdań)"
+
+msgid "A free AI provider set up on this page reads your site — name, tagline, home page, main pages — and understands what kind of site it is: a hotel, a law firm, a shop, a blog. Then it proposes how to translate it: the tone, whether to address visitors formally or informally in each language, and the names never to translate. Nothing changes until you press «Use this style»."
+msgstr "Darmowy dostawca AI skonfigurowany na tej stronie czyta witrynę — nazwę, hasło, stronę główną, najważniejsze strony — i rozpoznaje, jaki to rodzaj witryny: hotel, kancelaria, sklep, blog. Potem proponuje, jak ją tłumaczyć: ton, czy zwracać się do odwiedzających na „ty”, czy formalnie w każdym języku, oraz nazwy, których nigdy nie tłumaczyć. Nic się nie zmieni, dopóki nie klikniesz „Użyj tego stylu”."
+
+msgid "Always Llama 3.3 70B: natural sentences, keeps links and bold text, about 1,900 sentences a day."
+msgstr "Zawsze Llama 3.3 70B: naturalne zdania, zachowuje linki i pogrubienia, około 1900 zdań dziennie."
+
+msgid "Always the plain translation model (m2m100): about 11,000 sentences a day, more literal; sentences with links are left to the next provider."
+msgstr "Zawsze prosty model tłumaczący (m2m100): około 11 000 zdań dziennie, bardziej dosłownie; zdania z linkami tłumaczy najlepszy model."
+
+msgid "Coming from a translation plugin with no importer in TranslateRocket, or one whose tables cannot be read? Keep it switched on: TranslateRocket reads each page as visitors see it, in your language and in every language the old plugin shows, and pairs each sentence with its translation. It takes a pair only where the two pages have the same structure, leaves out what changes on every visit (dates, counters) and copies, and keeps links and bold words in place."
+msgstr "Przechodzisz z wtyczki tłumaczeniowej, której TranslateRocket nie umie zaimportować, albo której tabel nie da się odczytać? Zostaw ją włączoną: TranslateRocket czyta każdą stronę tak, jak widzą ją odwiedzający, w Twoim języku i w każdym języku starej wtyczki, i łączy każde zdanie z jego tłumaczeniem. Bierze parę tylko tam, gdzie obie strony mają tę samą strukturę, pomija to, co zmienia się przy każdej wizycie (daty, liczniki), oraz kopie, a linki i pogrubienia zostawia na miejscu."
+
+msgid "Free with your own Cloudflare account: 10,000 «neurons» a day, about 1,900 sentences with Llama 3.3 70B or 11,000 with the plain translation model. No card needed."
+msgstr "Za darmo z Twoim własnym kontem Cloudflare: 10 000 „neuronów” dziennie, około 1900 zdań z Llama 3.3 70B lub 11 000 z prostym modelem tłumaczącym. Bez karty."
+
+msgid "Free with your own Groq key: about 1,000 requests a day (twenty sentences each) with gpt-oss-120b, which translates very well."
+msgstr "Za darmo z Twoim własnym kluczem Groq: około 1000 zapytań dziennie (po dwadzieścia zdań) z gpt-oss-120b, który tłumaczy bardzo dobrze."
+
+msgid "Its free models (names ending in «:free») cost nothing: about 50 requests a day, often busy. Good as the last provider of your chain."
+msgstr "Jego darmowe modele (nazwy kończące się na „:free”) nic nie kosztują: około 50 zapytań dziennie, często zajęte. Dobry jako ostatni dostawca w łańcuchu."
+
+msgid "On the same page copy the <strong>Account ID</strong> (it is also in the address bar, after dash.cloudflare.com/) into «Account ID»."
+msgstr "Na tej samej stronie skopiuj <strong>Account ID</strong> (jest też w pasku adresu, po dash.cloudflare.com/) do pola „Account ID”."
+
+msgid "Press <strong>Create API Key</strong>, copy it — it starts with <code>sk-or-</code> — into «API key» below. No credit is needed for the free models."
+msgstr "Kliknij <strong>Create API Key</strong> i skopiuj klucz — zaczyna się od <code>sk-or-</code> — do pola „Klucz API” poniżej. Darmowe modele nie wymagają kredytów."
+
+msgid "Press <strong>Create API Key</strong>, give it a name, copy the key — it starts with <code>gsk_</code> — into «API key» below."
+msgstr "Kliknij <strong>Create API Key</strong>, nadaj mu nazwę i skopiuj klucz — zaczyna się od <code>gsk_</code> — do pola „Klucz API” poniżej."
+
+msgid "Press <strong>Create a Workers AI API Token</strong>, then <strong>Create API Token</strong>: copy the token into «API key» below."
+msgstr "Kliknij <strong>Create a Workers AI API Token</strong>, potem <strong>Create API Token</strong>: skopiuj token do pola „Klucz API” poniżej."
+
+msgid "Save, then press <strong>Load available models</strong>: if models appear, the key works."
+msgstr "Zapisz, a potem kliknij <strong>Wczytaj dostępne modele</strong>: jeśli pojawią się modele, klucz działa."
+
+msgid "Save, then press <strong>Load available models</strong>: if the two models appear, the key works."
+msgstr "Zapisz, a potem kliknij <strong>Wczytaj dostępne modele</strong>: jeśli pojawią się oba modele, klucz działa."
+
+msgid "Save, then press <strong>Load available models</strong>: the free models appear."
+msgstr "Zapisz, a potem kliknij <strong>Wczytaj dostępne modele</strong>: pojawią się darmowe modele."
+
+msgid "Set up a free AI provider first (Cloudflare Workers AI, Groq or OpenRouter) on this page."
+msgstr "Najpierw skonfiguruj na tej stronie darmowego dostawcę AI (Cloudflare Workers AI, Groq lub OpenRouter)."
+
+msgid "The answer could not be read."
+msgstr "Nie udało się odczytać odpowiedzi."
+
+msgid "The best model first; when 80% of the day's neurons are used, the volume model finishes the day."
+msgstr "Najpierw najlepszy model; gdy zużyte zostanie 80% dziennych neuronów, dzień kończy model ilościowy."
+
+msgid "The new style is in use: it is in House style above, the names in Exclusions."
+msgstr "Nowy styl jest w użyciu: znajdziesz go powyżej w Stylu marki, a nazwy w Wykluczeniach."
+
+msgid "TranslateRocket read your site by itself and prepared this proposal."
+msgstr "TranslateRocket sam przeczytał Twoją witrynę i przygotował tę propozycję."
+
+msgid "today's free share is used: the next provider in your chain carries on until tomorrow"
+msgstr "dzisiejszy darmowy limit jest wykorzystany: do jutra działa następny dostawca w łańcuchu"
+
+msgid "Try the key"
+msgstr "Wypróbuj klucz"
+
+msgid "A Groq key: 2 minutes with a Google account, no card. About 1,000 translations a day, good quality, in any browser — phones and Firefox included."
+msgstr "Klucz Groq: 2 minuty z kontem Google, bez karty. Około 1000 tłumaczeń dziennie, dobra jakość, w każdej przeglądarce — także na telefonie i w Firefoksie."
+
+msgid "Free AI, with your own free account (recommended)"
+msgstr "Darmowa AI z Twoim własnym darmowym kontem (zalecane)"
+
+msgid "Groq did not accept this key: copy it again, whole."
+msgstr "Groq nie przyjął tego klucza: skopiuj go ponownie, w całości."
+
+msgid "More translations a day with Cloudflare Workers AI, also free: set it up later in AI Translation."
+msgstr "Więcej tłumaczeń dziennie z Cloudflare Workers AI, również za darmo: skonfigurujesz go później w Tłumaczenie AI."
+
+msgid "Open %s and sign in with Google."
+msgstr "Otwórz %s i zaloguj się przez Google."
+
+msgid "Paste it here:"
+msgstr "Wklej go tutaj:"
+
+msgid "Paste the key first."
+msgstr "Najpierw wklej klucz."
+
+msgid "Press <strong>Create API Key</strong>, give it any name, and copy the key (it starts with <code>gsk_</code>)."
+msgstr "Kliknij <strong>Create API Key</strong>, nadaj mu dowolną nazwę i skopiuj klucz (zaczyna się od <code>gsk_</code>)."
+
+msgid "The browser translator runs only in recent Chrome and Edge on a computer. From here, choose «Free AI, with your own free account» above: it works in this browser too."
+msgstr "Tłumacz przeglądarki działa tylko w nowym Chrome i Edge na komputerze. Tutaj wybierz powyżej „Darmowa AI z Twoim własnym darmowym kontem”: działa też w tej przeglądarce."
+
+msgid "The key works. Press Next."
+msgstr "Klucz działa. Kliknij Dalej."
+
+msgid "already in TranslateRocket: nothing new to import"
+msgstr "już w TranslateRocket: nic nowego do zaimportowania"
+
+msgid "First choose «Run side by side»: while TranslateRocket also serves the languages, the pages the importer reads may be its own."
+msgstr "Najpierw wybierz „Uruchom równolegle”: dopóki TranslateRocket też obsługuje języki, strony czytane przez importer mogą być jego własne."
+
+msgid "TranslateRocket is serving the languages itself, so the importer would read its own pages. Switch the old plugin on and choose «Run side by side», or take the languages offline while you import."
+msgstr "TranslateRocket sam obsługuje już języki, więc importer czytałby własne strony. Włącz starą wtyczkę i wybierz „Uruchom równolegle” albo przełącz języki w tryb offline na czas importu."
