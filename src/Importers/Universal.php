@@ -265,47 +265,14 @@ final class Universal {
 	 * '' when unsure (short text, other scripts, no clear winner).
 	 */
 	private static function guess_language( string $t ): string {
-		$parole = preg_split( '/[^\p{L}\']+/u', mb_strtolower( wp_strip_all_tags( $t ) ), -1, PREG_SPLIT_NO_EMPTY );
-		if ( count( $parole ) < 5 ) {
-			return '';
-		}
-		static $comuni = array(
-			'en' => 'the and of to in is for with that you your are on this from our be it as at by',
-			'it' => 'il di che la per non una sono della del le con un gli nel alla anche questo delle più',
-			'fr' => 'le la les des et est pour une dans du que en vous sur avec pas nous au sont votre',
-			'de' => 'der die und das ist nicht mit den für sie auf ein eine zu von dem sich auch wir ihre',
-			'es' => 'el la los las de que y en para por una con es del su se al como más tu',
-			'pt' => 'o os as de que e em para com uma um do da no na por não se mais seu',
-			'nl' => 'de het een en van in is op te voor met zijn niet dat je wij ook naar bij',
-			'pl' => 'i w nie na się z do że jest to o jak dla od po przez są oraz czy',
-		);
-		$punti = array();
-		foreach ( $comuni as $l => $lista ) {
-			$set = array_flip( explode( ' ', $lista ) );
-			$n   = 0;
-			foreach ( $parole as $p ) {
-				if ( isset( $set[ $p ] ) ) {
-					++$n;
-				}
-			}
-			$punti[ $l ] = $n;
-		}
-		arsort( $punti );
-		$primi = array_slice( $punti, 0, 2, true );
-		$l1    = (string) key( $primi );
-		$n1    = (int) reset( $primi );
-		$n2    = (int) next( $primi );
-		return $n1 >= 3 && $n1 >= 2 * max( 1, $n2 ) ? $l1 : '';
+		return Check::guess_language( $t );
 	}
 
 	/**
 	 * The numbers in a text (dates, prices, codes), in order of size: «1.000» and «1,000» alike.
 	 */
 	private static function numbers( string $t ): array {
-		preg_match_all( '/\d+/u', $t, $m );
-		$n = $m[0];
-		sort( $n );
-		return $n;
+		return Check::numbers( $t );
 	}
 
 	private static function clean( string $t ): string {

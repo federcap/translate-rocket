@@ -1003,6 +1003,11 @@ class Strings {
 		}
 		$status      = ( '' === $translation ) ? 0 : $status; // 1 = machine, 2 = human.
 
+		// What was there before, for whoever keeps a history (TranslateRocket Labs). One more
+		// query per save, and only when someone listens.
+		$ascolta = has_action( 'trrocket_translation_changed' );
+		$prima   = $ascolta ? $wpdb->get_row( $wpdb->prepare( "SELECT translation, status, provider FROM {$translations} WHERE string_id = %d AND language = %s", $string_id, $lang ), ARRAY_A ) : null; // phpcs:ignore WordPress.DB
+
 		$wpdb->query(
 			$wpdb->prepare(
 				"INSERT INTO {$translations} (string_id, language, translation, status, provider, updated_at)
@@ -1016,6 +1021,18 @@ class Strings {
 				current_time( 'mysql' )
 			)
 		); // phpcs:ignore WordPress.DB
+
+		if ( $ascolta ) {
+			/**
+			 * A translation was saved.
+			 *
+			 * @param int        $string_id Source string.
+			 * @param string     $lang      Language.
+			 * @param array|null $before    translation, status, provider before (null: there was none).
+			 * @param array      $after     translation, status, provider now.
+			 */
+			do_action( 'trrocket_translation_changed', $string_id, $lang, $prima, array( 'translation' => $translation, 'status' => $status, 'provider' => (string) $provider ) );
+		}
 
 		if ( self::$batch > 0 ) {
 			// Dentro un import: mappe e cache si svuotano una volta sola, a batch_end().
@@ -1035,12 +1052,40 @@ class Strings {
 	}
 
 	/**
+	 * Before translations are deleted on purpose (a page reset, «Remove» after an import): tell whoever
+	 * keeps a history what goes. Nothing at all when nobody listens.
+	 *
+	 * @param string $where SQL condition on the translations table, aliased «tr» (with %s/%d placeholders).
+	 * @param array  $args  Its values.
+	 * @param string $why   reset | import-check | …
+	 */
+	public static function deleting( string $where, array $args, string $why ): void {
+		if ( ! has_action( 'trrocket_translation_deleted' ) ) {
+			return;
+		}
+		global $wpdb;
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT tr.string_id, tr.language, tr.translation, tr.status, tr.provider FROM ' . Database::translations_table() . " tr WHERE {$where}", $args ), ARRAY_A ); // phpcs:ignore WordPress.DB
+		foreach ( (array) $rows as $r ) {
+			/**
+			 * A translation is about to be deleted on purpose.
+			 *
+			 * @param int    $string_id Source string.
+			 * @param string $lang      Language.
+			 * @param array  $before    translation, status, provider.
+			 * @param string $why       Why.
+			 */
+			do_action( 'trrocket_translation_deleted', (int) $r['string_id'], (string) $r['language'], $r, $why );
+		}
+	}
+
+	/**
 	 * Delete every translation of one page for a language (intentional reset).
 	 */
 	public static function reset_page( string $url_hash, string $lang ): void {
 		global $wpdb;
 		$translations = Database::translations_table();
 		$occurrences  = Database::occurrences_table();
+		self::deleting( "tr.language = %s AND tr.string_id IN (SELECT o.string_id FROM {$occurrences} o WHERE o.url_hash = %s)", array( $lang, $url_hash ), 'reset' );
 		$wpdb->query(
 			$wpdb->prepare(
 				"DELETE tr FROM {$translations} tr
@@ -1211,6 +1256,7 @@ class Strings {
 			return false;
 		}
 		self::save_translation( $id, $lang, $translation, 1, 'import' );
+		\TranslateRocket\Importers\Check::mark(); // the Import screen rereads what came in
 		return true;
 	}
 

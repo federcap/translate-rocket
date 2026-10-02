@@ -113,6 +113,7 @@ final class PageReset {
 
 		$ids = array_map( static function ( $r ) { return (int) $r[0]; }, $saved );
 		if ( ! empty( $ids ) ) {
+			Strings::deleting( 'tr.language = %s AND tr.string_id IN (' . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ')', array_merge( array( $lang ), $ids ), 'reset' );
 			$wpdb->query( $wpdb->prepare( "DELETE FROM {$translations} WHERE language = %s AND string_id IN (" . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ')', array_merge( array( $lang ), $ids ) ) ); // phpcs:ignore WordPress.DB
 		}
 		Strings::flush_maps( $lang );

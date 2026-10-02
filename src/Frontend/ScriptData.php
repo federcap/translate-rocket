@@ -88,10 +88,16 @@ class ScriptData {
 		$found = array();
 		// «var» is what wp_localize_script() prints; a theme's own inline block says
 		// «const», «let» or «window.name = {…}» just as often (29/09/2026).
-		if ( ! preg_match_all( '/(?:\b(?:var|let|const)\s+|\bwindow\.)[A-Za-z_$][\w$]*\s*=\s*(?=[\[{])/', $js, $m, PREG_OFFSET_CAPTURE ) ) {
+		if ( ! preg_match_all( '/(?:\b(?:var|let|const)\s+|\bwindow\.)([A-Za-z_$][\w$]*)\s*=\s*(?=[\[{])/', $js, $m, PREG_OFFSET_CAPTURE ) ) {
 			return $found;
 		}
-		foreach ( $m[0] as $hit ) {
+		foreach ( $m[0] as $i => $hit ) {
+			// TranslateRocket's own objects (trrocketVE: the visual editor's labels) are the
+			// administrator's interface, in the administrator's language — never page content.
+			// On /it/ the editor's «Save» had become «Salva» (30/09/2026).
+			if ( 0 === stripos( (string) $m[1][ $i ][0], 'trrocket' ) ) {
+				continue;
+			}
 			$start = $hit[1] + strlen( $hit[0] );
 			$end   = self::json_end( $js, $start );
 			if ( null === $end ) {

@@ -3910,3 +3910,61 @@ msgstr "まず「並行モードにする」を選んでください。Translate
 
 msgid "TranslateRocket is serving the languages itself, so the importer would read its own pages. Switch the old plugin on and choose «Run side by side», or take the languages offline while you import."
 msgstr "TranslateRocket 自身が言語を配信しているため、インポーターは自分のページを読むことになります。古いプラグインを有効にして「並行モードにする」を選ぶか、インポート中は言語をオフラインにしてください。"
+
+msgid "Check after import"
+msgstr "インポート後のチェック"
+
+msgid "%1$s: %2$d imported translations reread, without AI — wrong language or alphabet, broken characters, sentences still in the original, lost links, different numbers."
+msgstr "%1$s：インポートした翻訳 %2$d 件を AI なしで確認しました — 言語や文字の誤り、文字化け、原文のままの文、失われたリンク、数字の違い。"
+
+msgid "Nothing evidently wrong."
+msgstr "明らかな誤りはありません。"
+
+msgid "Imported translation"
+msgstr "インポートした翻訳"
+
+msgid "Why"
+msgstr "理由"
+
+msgid "Keep"
+msgstr "残す"
+
+msgid "Remove"
+msgstr "削除"
+
+msgid "Remove all the listed ones"
+msgstr "一覧のものをすべて削除"
+
+msgid "Check again"
+msgstr "もう一度チェック"
+
+msgid "…and %d more: remove or keep these, then check again."
+msgstr "…ほか %d 件：これらを削除するか残してから、もう一度チェックしてください。"
+
+msgid "broken characters"
+msgstr "文字化け"
+
+msgid "not written in this language’s alphabet"
+msgstr "この言語の文字で書かれていません"
+
+msgid "still in the original language"
+msgstr "原文の言語のまま"
+
+msgid "links or bold words lost"
+msgstr "リンクや太字が失われています"
+
+msgid "different numbers from the original"
+msgstr "原文と数字が違います"
+
+msgid "far longer or shorter than the original"
+msgstr "原文よりずっと長いか短い"
+
+msgid "written in another language"
+msgstr "別の言語で書かれています"
+
+msgid "%d translation looks wrong. Keep it if it is fine, or remove it: the sentence goes back to «missing» and is translated again like any other."
+msgid_plural "%d translations look wrong. Keep the ones that are fine, remove the others: those sentences go back to «missing» and are translated again like any other."
+msgstr[0] "%d 件の翻訳に誤りがあるようです。問題なければ残し、そうでなければ削除してください。削除した文は「未翻訳」に戻り、ほかと同じように再翻訳されます。"
+
+msgid "WooCommerce PDF documents"
+msgstr "WooCommerce の PDF 書類"

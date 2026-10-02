@@ -95,6 +95,12 @@ class Engine {
 				}
 			}
 		}
+		// The picture of the preview when the page is shared (Facebook, LinkedIn, WhatsApp, X):
+		// a picture chosen per language changes there too, or the Italian page is shared with
+		// the English banner (casi raccolti, siti-veri 13).
+		foreach ( $xpath->query( "//head/meta[@property='og:image' or @property='og:image:url' or @property='og:image:secure_url' or @name='twitter:image'][@content]" ) as $el ) {
+			$out[] = array( $el, 'content' );
+		}
 		return $out;
 	}
 
@@ -592,6 +598,15 @@ class Engine {
 		if ( preg_match( '/^(\$\{[^}]*\}|\{\{[^}]*\}\}|\{[a-z0-9_.\-]+\}|%\d*\$?[bcdeEfFgGosuxX])$/i', $text ) ) {
 			return true;
 		}
+		// Template placeholders only — «{{{ data.name }}}», «{{first}} {{last}}», «%1$s – %2$s»: once
+		// they are taken out nothing readable is left. Sent to an AI they come back with spaces or
+		// translated words inside and the widget that fills them breaks (casi raccolti, siti-veri 22).
+		if ( preg_match( '/\{\{|\$\{|%\d*\$?[sd]/', $text ) ) {
+			$resto = preg_replace( '/\{\{\{?[^{}]*\}?\}\}|\$\{[^}]*\}|\{[a-z0-9_.\-]+\}|%\d*\$?[bcdeEfFgGosuxX]/i', '', $text );
+			if ( ! preg_match( '/\p{L}/u', (string) $resto ) ) {
+				return true;
+			}
+		}
 		// Un elenco di coppie chiave:valore come le scrivono i temi nei data-*:
 		// "w:normal;s:50,50,37,22;l:60,60,45,27;fw:500;".
 		if ( preg_match( '/^([a-z-]{1,20}\s*:\s*[^;:]{1,40};\s*){2,}$/i', $text ) ) {
@@ -962,6 +977,13 @@ class Engine {
 		// (casi raccolti, siti-veri 30, 25/9/2026). Inside the page it is still respected.
 		$skip   .= "ancestor::*[@id='wpadminbar'] or ancestor::*[@id='trrocket-ve-bar'] or ancestor::*[@translate='no'][not(self::html or self::body)]";
 		$skip_el = "ancestor-or-self::*[@id='wpadminbar'] or ancestor-or-self::*[@id='trrocket-ve-bar'] or ancestor-or-self::*[@translate='no'][not(self::html or self::body)]";
+		// The «do not translate» marks of the other translation tools: Google's class (used by many
+		// themes and by GTranslate), TranslatePress' and Weglot's attributes. A site that migrates
+		// keeps what it had excluded on purpose (casi raccolti, siti-veri 24). On <html>/<body> they
+		// mean «no browser popup», like translate="no": the page is still translated.
+		$segni    = "[contains(concat(' ',normalize-space(@class),' '),' notranslate ') or contains(concat(' ',normalize-space(@class),' '),' skiptranslate ') or @data-no-translation or @data-wg-notranslate or @data-notranslate][not(self::html or self::body)]";
+		$skip    .= ' or ancestor::*' . $segni;
+		$skip_el .= ' or ancestor-or-self::*' . $segni;
 		// Tooling that only administrators see (debug panels, page-builder helpers): not
 		// page content, so never collected — and never translated either.
 		foreach ( NoTranslate::tool_prefixes() as $prefix ) {
@@ -1038,7 +1060,7 @@ class Engine {
 		// un sito con Yoast o Rank Math, che mettono un titolo social diverso da
 		// quello della pagina, l'anteprima su Facebook e LinkedIn restava nella
 		// lingua di partenza per sempre. Adesso si raccolgono come tutto il resto.
-		$social_nodes = iterator_to_array( $xpath->query( '//meta[@property="og:title" or @property="og:description" or @property="og:site_name" or @property="og:image:alt" or @name="twitter:title" or @name="twitter:description" or @name="twitter:image:alt" or @name="keywords"]/@content' ) );
+		$social_nodes = iterator_to_array( $xpath->query( '//meta[@property="og:title" or @property="og:description" or @property="og:site_name" or @property="og:image:alt" or @name="twitter:title" or @name="twitter:description" or @name="twitter:image:alt" or @name="twitter:label1" or @name="twitter:label2" or @name="keywords"]/@content' ) );
 		$title_nodes  = iterator_to_array( $xpath->query( '//head/title' ) );
 
 		// Structured data: the prose inside JSON-LD (FAQ questions and answers, article

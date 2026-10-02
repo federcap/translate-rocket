@@ -85,10 +85,19 @@
 			if ( el.getAttribute && el.getAttribute( 'translate' ) === 'no' ) {
 				return true;
 			}
+			// The «do not translate» marks of other tools (Google's class, TranslatePress, Weglot),
+			// as on the server; on <html>/<body> they only silence the browser's popup.
+			if ( el.tagName !== 'HTML' && el.tagName !== 'BODY' && el.getAttribute && ( ( el.classList && ( el.classList.contains( 'notranslate' ) || el.classList.contains( 'skiptranslate' ) ) ) || el.hasAttribute( 'data-no-translation' ) || el.hasAttribute( 'data-wg-notranslate' ) || el.hasAttribute( 'data-notranslate' ) ) ) {
+				return true;
+			}
 			if ( el.isContentEditable ) {
 				return true;
 			}
 			el = el.parentNode;
+			// Out of a shadow DOM: go on from the element that hosts it (its marks count too).
+			if ( el && el.nodeType === 11 && el.host ) {
+				el = el.host;
+			}
 		}
 		return false;
 	}
@@ -141,7 +150,10 @@
 			queueText( node );
 			return;
 		}
-		if ( node.nodeType !== 1 || skip( node ) ) {
+		if ( node.nodeType !== 1 && node.nodeType !== 11 ) {
+			return;
+		}
+		if ( node.nodeType === 1 && skip( node ) ) {
 			return;
 		}
 
@@ -170,6 +182,31 @@
 						queueAttr( els[ j ], ATTRS[ k ] );
 					}
 				}
+			}
+		}
+		adopt( node );
+	}
+
+	// Shadow DOMs (open ones): a consent banner built as a web component keeps its text there,
+	// out of sight of an observer on <body>. Each one found is read and watched like the page.
+	var roots = [];
+	var OPTS  = { childList: true, subtree: true, characterData: true };
+	function adopt( node ) {
+		if ( ! node || ! node.querySelectorAll ) {
+			return;
+		}
+		var all  = node.querySelectorAll( '*' );
+		var list = node.nodeType === 1 ? [ node ] : [];
+		var i;
+		for ( i = 0; i < all.length; i++ ) {
+			list.push( all[ i ] );
+		}
+		for ( i = 0; i < list.length; i++ ) {
+			var sr = list[ i ].shadowRoot;
+			if ( sr && roots.indexOf( sr ) < 0 && ! skip( list[ i ] ) ) {
+				roots.push( sr );
+				observer.observe( sr, OPTS );
+				collect( sr );
 			}
 		}
 	}
@@ -313,13 +350,22 @@
 
 	function observe() {
 		if ( document.body ) {
-			observer.observe( document.body, {
-				childList: true,
-				subtree: true,
-				characterData: true
-			} );
+			observer.observe( document.body, OPTS );
+		}
+		var i;
+		for ( i = 0; i < roots.length; i++ ) {
+			observer.observe( roots[ i ], OPTS );
 		}
 	}
 
 	observe();
+	// A component attaches its shadow DOM after it is in the page, which no observer sees:
+	// look again a few times while the page settles.
+	[ 300, 1500, 4000, 8000 ].forEach( function ( ms ) {
+		window.setTimeout( function () {
+			if ( document.body ) {
+				adopt( document.body );
+			}
+		}, ms );
+	} );
 }() );

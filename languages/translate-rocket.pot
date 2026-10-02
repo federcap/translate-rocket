@@ -4482,3 +4482,7 @@ msgstr ""
 #: src/Admin/LabsPromo.php
 msgid "Labs is a separate plugin, sent by e-mail with a key for your site. The free TranslateRocket stays complete and unchanged. Some engines in Labs are optional free services, each with its own conditions, and marked as experimental."
 msgstr ""
+
+#: src/Frontend/WooCommerce.php
+msgid "WooCommerce PDF documents"
+msgstr ""

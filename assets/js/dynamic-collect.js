@@ -81,10 +81,19 @@
 			if ( el.getAttribute && el.getAttribute( 'translate' ) === 'no' ) {
 				return true;
 			}
+			// The «do not translate» marks of other tools (Google's class, TranslatePress, Weglot),
+			// as on the server; on <html>/<body> they only silence the browser's popup.
+			if ( el.tagName !== 'HTML' && el.tagName !== 'BODY' && el.getAttribute && ( ( el.classList && ( el.classList.contains( 'notranslate' ) || el.classList.contains( 'skiptranslate' ) ) ) || el.hasAttribute( 'data-no-translation' ) || el.hasAttribute( 'data-wg-notranslate' ) || el.hasAttribute( 'data-notranslate' ) ) ) {
+				return true;
+			}
 			if ( el.isContentEditable ) {
 				return true;
 			}
 			el = el.parentNode;
+			// Out of a shadow DOM: go on from the element that hosts it (its marks count too).
+			if ( el && el.nodeType === 11 && el.host ) {
+				el = el.host;
+			}
 		}
 		return false;
 	}
@@ -111,12 +120,12 @@
 			add( node.nodeValue, '', node.parentNode );
 			return;
 		}
-		if ( node.nodeType !== 1 ) {
+		if ( node.nodeType !== 1 && node.nodeType !== 11 ) {
 			return;
 		}
 		var i, j;
 		for ( i = 0; i < ATTRS.length; i++ ) {
-			if ( node.hasAttribute( ATTRS[ i ] ) ) {
+			if ( node.hasAttribute && node.hasAttribute( ATTRS[ i ] ) ) {
 				add( node.getAttribute( ATTRS[ i ] ), ATTRS[ i ], node );
 			}
 		}
@@ -136,6 +145,29 @@
 				if ( els[ i ].hasAttribute( ATTRS[ j ] ) ) {
 					add( els[ i ].getAttribute( ATTRS[ j ] ), ATTRS[ j ], els[ i ] );
 				}
+			}
+		}
+		adopt( node );
+	}
+
+	// Open shadow DOMs (consent banners built as web components), as in the translation observer.
+	var roots = [];
+	function adopt( node ) {
+		if ( ! node || ! node.querySelectorAll ) {
+			return;
+		}
+		var all  = node.querySelectorAll( '*' );
+		var list = node.nodeType === 1 ? [ node ] : [];
+		var i;
+		for ( i = 0; i < all.length; i++ ) {
+			list.push( all[ i ] );
+		}
+		for ( i = 0; i < list.length; i++ ) {
+			var sr = list[ i ].shadowRoot;
+			if ( sr && roots.indexOf( sr ) < 0 && ! skip( list[ i ] ) ) {
+				roots.push( sr );
+				observer.observe( sr, { childList: true, subtree: true, characterData: true } );
+				walk( sr );
 			}
 		}
 	}
@@ -211,4 +243,11 @@
 		}
 	} );
 	observer.observe( document.documentElement, { childList: true, subtree: true, characterData: true } );
+	[ 300, 1500, 4000, 8000 ].forEach( function ( ms ) {
+		window.setTimeout( function () {
+			if ( document.body ) {
+				adopt( document.body );
+			}
+		}, ms );
+	} );
 }() );

@@ -1446,6 +1446,8 @@ class Admin {
 
 			<p class="trrocket-tagline"><?php esc_html_e( 'Bring your translations over from another plugin — no need to start from scratch.', 'translate-rocket' ); ?></p>
 
+			<?php \TranslateRocket\Importers\Check::render(); ?>
+
 			<div class="trrocket-card">
 				<p class="description"><?php esc_html_e( 'Existing TranslateRocket translations are kept; imported strings are added or filled in.', 'translate-rocket' ); ?></p>
 				<?php

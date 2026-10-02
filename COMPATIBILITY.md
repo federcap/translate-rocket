@@ -1,55 +1,60 @@
-# TranslateRocket — compatibility test log
+# TranslateRocket — Compatibility test log
 
-Last full run: **2 July 2026**, plugin v0.5.1.
+Ultimo aggiornamento: 2026-07-02 · plugin v0.5.1
+Ambienti: **trqa** (LocalWP, localhost:10010, WP 6.x + PHP 8.2) · **clone scaliapalermo** (LocalWP, localhost:10004, sito reale clonato) · **translaterocket.com live** (Cloudways).
 
-Test environments:
+Batteria standard per ogni plugin: home EN ok · /de/ tradotto (marker tedesco) · `html lang="de"` · /ar/ `dir="rtl"` · nessun PHP fatal · login raggiungibile.
 
-- **QA site** — a clean local WordPress 6.x install on PHP 8.2, used for isolated
-  plugin-by-plugin testing.
-- **Production clone** — a full copy of a real, content-heavy production site
-  (Astra + Spectra, ~3.500 strings, several plugins already installed), used to
-  check that TranslateRocket behaves in a site it did not grow up in.
-- **Live** — translaterocket.com itself, in production.
+## Testati — PASS
 
-Standard battery for every plugin: English home page renders · `/de/` is actually
-translated (checked against a known German marker) · `html lang="de"` is correct ·
-`/ar/` sets `dir="rtl"` · no PHP fatal · wp-login stays reachable.
-
-## Tested — pass
-
-| Plugin | Where | What was verified |
+| Plugin | Dove | Cosa è stato verificato |
 |---|---|---|
-| **WooCommerce** | QA site | Cart and My Account in German (server-side), AJAX mini-cart fragments, block cart/checkout via JS, order e-mails in the order's language, cart/checkout excluded from our cache |
-| **Elementor** | QA site | An Elementor-built page fully translated into German, markup intact |
-| **Contact Form 7** | QA site | Form rendered on `/contact/` and `/de/contact/`, labels translated |
-| **Yoast SEO** | QA site | No duplicate hreflang (7 tags = 6 languages + x-default, ours only), title/meta correct, our sitemap appears inside Yoast's index (`wpseo_sitemap_index`) |
-| **Rank Math** | Production clone | Coexists on a real site running a custom schema mu-plugin; `og:locale` not duplicated (guarded by `seo_plugin_active`) |
-| **Autoptimize** | QA site | With HTML+CSS+JS aggregation on: translation is applied to the already-optimised HTML (our buffer wraps theirs — correct LIFO order), AO assets present, no conflicts |
-| **Cache Enabler** | QA site | Second hit on `/de/` served from cache is *always* German; `/` (English) never poisoned by the German cache — the URL prefix keeps cache keys separate |
-| **Breeze** (Cloudways) | Live | In production on the plugin's own site: translated pages cached and served correctly |
-| **Cookie Notice** | QA site | Banner injected via JavaScript translated on the fly by `dynamic.js` |
-| **Complianz** | Production clone | Coexistence on a real site (banner detected, its JS text covered by `dynamic.js`) |
-| **WPForms Lite** | QA site | Clean activation, EN/DE/AR pages fine, no fatal (embedded forms: manual test recommended) |
-| **Astra + Spectra (UAG)** | Production clone | A complete real site: ~3.500 strings, bulk AI translation, `/it/` perfect; ~20 ms overhead |
-| **Joinchat** | Production clone | The widget's gettext strings are translated |
-| **TranslatePress / Polylang / WPML** | — | Anti-conflict guard (warns if they run at the same time) plus dedicated importers (TranslatePress: dictionary + gettext + slugs; real test: 376 strings detected) |
+| **WooCommerce** | trqa | Carrello e My-account in tedesco (server-side), fragments AJAX mini-cart, block cart/checkout via JS, email nella lingua dell'ordine, pagine cart/checkout escluse dalla nostra cache |
+| **Elementor** | trqa | Pagina costruita con Elementor tradotta al 100% in DE, markup intatto |
+| **Contact Form 7** | trqa | Form renderizzato su /contact/ e /de/contact/, etichette tradotte |
+| **Yoast SEO** | trqa | Nessun hreflang duplicato (7 = 6 lingue + x-default, solo i nostri), title/meta ok, la nostra sitemap compare nell'indice di Yoast (`wpseo_sitemap_index`) |
+| **Rank Math** | clone scalia | Convive in un sito reale (con mu-plugin schema custom); og:locale non duplicato (guard `seo_plugin_active`) |
+| **Autoptimize** | trqa | Aggregazione HTML+CSS+JS attiva: la traduzione viene applicata all'HTML già ottimizzato (il nostro buffer avvolge il suo — ordine LIFO corretto), asset AO presenti, zero conflitti |
+| **Cache Enabler** | trqa | Doppio hit su /de/ servito da cache SEMPRE in tedesco; / (EN) mai inquinata dalla cache DE (URL-prefix = chiavi cache separate) |
+| **Breeze** (Cloudways) | live | In produzione sul sito del plugin: pagine tradotte cache-ate e servite correttamente |
+| **Cookie Notice** | trqa | Banner iniettato via JS tradotto al volo da dynamic.js ("Wir verwenden Cookies…") |
+| **Complianz** | clone scalia | Coesistenza su sito reale (banner rilevato; testo JS coperto da dynamic.js) |
+| **WPForms Lite** | trqa | Attivazione pulita, pagine EN/DE/AR ok, nessun fatal (embed form: test manuale consigliato) |
+| **Astra + Spectra (UAG)** | clone scalia | Sito reale completo: 3.571 stringhe, bulk AI, /it/ perfetto; benchmark ~20ms |
+| **Joinchat** | clone scalia | Stringhe gettext del widget tradotte |
+| **TranslatePress / Polylang / WPML** | — | Guard anti-conflitto (avviso se attivi insieme) + importer dedicati (TP: dictionary+gettext+slug; test reale: 376 stringhe rilevate sul clone) |
 
-## Queued for testing
+## Da testare (coda)
 
-- **Jetpack** (needs a WP.com connection) · **Wordfence** · **Site Kit by Google**
-- Server-specific caches: **LiteSpeed Cache** (needs a LiteSpeed server),
-  **WP Rocket / W3TC** (Breeze already covers the page-cache case in production)
-- Commercial builders: **Divi**, **WPBakery** — the engine works on the final HTML,
-  so the risk is low, but it has not been verified
-- **Gravity Forms** (commercial)
-- Multisite (known limitation: uninstall does not iterate over sites)
+- **Jetpack** (richiede connessione WP.com) · **Wordfence** · **Site Kit by Google**
+- Cache server-specific: **LiteSpeed Cache** (serve un server LS), **WP Rocket / W3TC** (Breeze già copre il caso page-cache in produzione)
+- Builder a pagamento: **Divi**, **WPBakery** (l'engine lavora sull'HTML finale: rischio basso, ma da verificare)
+- **Gravity Forms** (a pagamento)
+- Multisite (limitazione nota: uninstall non itera i siti)
 
-## Why most things just work
+## Note architetturali
 
-- The engine translates the **final rendered HTML** (an output buffer opened on
-  `template_redirect`, priority 1). Anything that produces standard HTML is
-  compatible by design.
-- Each language lives under its own URL prefix, so page caches of any brand
-  separate the languages automatically.
-- Text injected by JavaScript (banners, popups, AJAX) is covered by `dynamic.js`
-  (a MutationObserver that looks up translations that already exist).
+- Il motore traduce l'**HTML finale renderizzato** (output buffer su `template_redirect` prio 1): tutto ciò che produce HTML standard è compatibile by design.
+- Ogni lingua vive sotto il proprio prefisso URL → le page-cache (di qualunque marca) separano le lingue automaticamente.
+- Testi iniettati via JavaScript (banner, popup, AJAX) coperti da `dynamic.js` (MutationObserver + lookup delle traduzioni esistenti).
+
+## Importatore universale con gli altri plugin (30/9/2026, 1.7.0, commit 7f53625)
+
+Prove: `_ssh/collaudi/collaudo-universale-altri.sh` (nel giro completo) = le prove d'import di ogni plugin con
+`UNIVERSALE=1` (passo `universale-passo.php`: controlla ogni coppia contro le traduzioni vere della scena).
+
+| Plugin | Esito | Note |
+|---|---|---|
+| Bogo 3.9.3 | 10/10 | 0 coppie sbagliate |
+| qTranslate-XT 3.16.1 | 12/12 | acceso dalla bacheca (da riga di comando chiude: `cli_come_bacheca`); di serie serve solo en,de |
+| WPGlobus 3.0.5 | 12/12 | di serie non serve it/ar/zh: la prova le abilita |
+| WP Multilang 2.4.33 | 12/12 | |
+| Multilanguage 1.5.2 | 10/10 | indirizzi ?lang=it_IT / /it_IT/ trovati dagli hreflang (serve «link alternativi» acceso) |
+| TranslatePress 3.3.5 | 22/22 | collaudo-universale.sh |
+| Polylang + WooCommerce | 17/24 (solo `POLYLANG=1`) | nota d'acquisto e varianti NON sono testo della pagina: per Polylang resta l'importatore a tabella |
+| GTranslate 5.0.1 gratuito | 5/5 | «traduce solo nel browser», nulla importato. NON si puo' dire «importa da GTranslate» |
+| GTranslate a pagamento | prova a secco su pagine vere (`universale-secco.php`) | medicoverhospitals.in en→fr 647 coppie ok; ingv.it it→en 249 coppie, 2 titoli di notizie ancora sbagliati (elenco in ordine diverso nella copia in cache) |
+
+Difetti trovati e corretti: l'universale leggeva le pagine di TranslateRocket stesso quando serviva gia' le lingue
+(ora aspetta «Modalita' affiancata» o lingue offline); «traduzioni trovate» con 0 coppie; coppie sbagliate da copie
+tradotte vecchie (ora: numeri uguali, blocco scartato intero, forma anche del nonno).

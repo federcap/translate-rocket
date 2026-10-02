@@ -24,7 +24,7 @@ class Database {
 	/**
 	 * Schema version. Bump when the table structure changes.
 	 */
-	const DB_VERSION = '4';
+	const DB_VERSION = '5';
 
 	/**
 	 * Source strings table name.
@@ -79,7 +79,113 @@ class Database {
 		self::create_tables();
 		self::backfill_text_hash();
 		self::remove_orphans();
+		self::remove_customer_details();
 		update_option( 'trrocket_db_version', self::DB_VERSION );
+	}
+
+	/**
+	 * Customers' own details that the order e-mails collected as sentences before 1.7.1
+	 * (schema v5, 1/10/2026): a name, a street, a city, an e-mail, «Hi Anna,». Only strings
+	 * seen nowhere but in WooCommerce e-mails or PDFs are looked at, and one goes only when
+	 * it is made of details of a real order: once they are taken out, at most two words are
+	 * left. «Your order will ship soon» stays even with a customer called Will.
+	 */
+	public static function remove_customer_details(): void {
+		global $wpdb;
+		$s = self::strings_table();
+		$o = self::occurrences_table();
+		$t = self::translations_table();
+		// phpcs:disable WordPress.DB, PluginCheck.Security.DirectDB -- one-time cleanup on the plugin's own tables and WooCommerce's order data; table names from the code, values prepared.
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT s.id, s.original FROM {$s} s INNER JOIN {$o} o ON o.string_id = s.id
+				 GROUP BY s.id, s.original HAVING SUM( o.url NOT IN ( %s, %s ) ) = 0",
+				'[woocommerce emails]',
+				'[woocommerce pdf]'
+			)
+		);
+		if ( empty( $rows ) ) {
+			return;
+		}
+		$keys = array();
+		foreach ( array( 'billing', 'shipping' ) as $who ) {
+			foreach ( array( 'first_name', 'last_name', 'company', 'address_1', 'address_2', 'city', 'postcode', 'state', 'email', 'phone' ) as $f ) {
+				$keys[] = '_' . $who . '_' . $f;
+			}
+		}
+		$hpos = $wpdb->prefix . 'wc_order_addresses';
+		$hpos = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $hpos ) ) ) === $hpos ) ? $hpos : '';
+		$cols = array( 'first_name', 'last_name', 'company', 'address_1', 'address_2', 'city', 'postcode', 'state', 'email', 'phone' );
+		$low  = static function ( $v ) {
+			return function_exists( 'mb_strtolower' ) ? mb_strtolower( trim( (string) $v ) ) : strtolower( trim( (string) $v ) );
+		};
+
+		foreach ( array_chunk( $rows, 300 ) as $chunk ) {
+			// What to look up: each string whole and each of its words.
+			$look = array();
+			foreach ( $chunk as $r ) {
+				$look[ $r->original ] = true;
+				foreach ( preg_split( '/[\s,;:()]+/u', (string) $r->original ) as $w ) {
+					$w = trim( $w, '.!?"\'' );
+					if ( ( function_exists( 'mb_strlen' ) ? mb_strlen( $w ) : strlen( $w ) ) >= 2 ) {
+						$look[ $w ] = true;
+					}
+				}
+			}
+			$look  = array_keys( $look );
+			$found = array();
+			foreach ( array_chunk( $look, 500 ) as $part ) {
+				$in   = implode( ',', array_fill( 0, count( $part ), '%s' ) );
+				$kin  = implode( ',', array_fill( 0, count( $keys ), '%s' ) );
+				$vals = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key IN ( {$kin} ) AND meta_value IN ( {$in} )", array_merge( $keys, $part ) ) );
+				if ( '' !== $hpos ) {
+					foreach ( $cols as $c ) {
+						$vals = array_merge( $vals, (array) $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT {$c} FROM {$hpos} WHERE {$c} IN ( {$in} )", $part ) ) );
+					}
+				}
+				foreach ( $vals as $v ) {
+					$v = $low( $v );
+					if ( ( function_exists( 'mb_strlen' ) ? mb_strlen( $v ) : strlen( $v ) ) >= 2 ) {
+						$found[ $v ] = true;
+					}
+				}
+			}
+			if ( empty( $found ) ) {
+				continue;
+			}
+			// Longest first, so «Anna Maria» goes before «Anna».
+			$found = array_keys( $found );
+			usort(
+				$found,
+				static function ( $a, $b ) {
+					return strlen( $b ) - strlen( $a );
+				}
+			);
+			$gone = array();
+			foreach ( $chunk as $r ) {
+				$rest = $low( $r->original );
+				$hit  = false;
+				foreach ( $found as $v ) {
+					$re = '/(?<![\p{L}\p{N}])' . preg_quote( $v, '/' ) . '(?![\p{L}\p{N}])/u';
+					if ( preg_match( $re, $rest ) ) {
+						$rest = (string) preg_replace( $re, ' ', $rest );
+						$hit  = true;
+					}
+				}
+				if ( $hit && preg_match_all( '/[\p{L}\p{N}]+/u', $rest ) <= 2 ) {
+					$gone[] = (int) $r->id;
+				}
+			}
+			if ( empty( $gone ) ) {
+				continue;
+			}
+			$in = implode( ',', $gone );
+			Strings::deleting( "tr.string_id IN ( {$in} ) AND 1 = %d", array( 1 ), 'privacy' );
+			$wpdb->query( "DELETE FROM {$t} WHERE string_id IN ( {$in} )" );
+			$wpdb->query( "DELETE FROM {$o} WHERE string_id IN ( {$in} )" );
+			$wpdb->query( "DELETE FROM {$s} WHERE id IN ( {$in} )" );
+		}
+		// phpcs:enable WordPress.DB, PluginCheck.Security.DirectDB
 	}
 
 	/**

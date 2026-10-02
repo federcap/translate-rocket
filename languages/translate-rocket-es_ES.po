@@ -3932,3 +3932,62 @@ msgstr "Primero elige «Ejecutar en paralelo»: mientras TranslateRocket tambié
 
 msgid "TranslateRocket is serving the languages itself, so the importer would read its own pages. Switch the old plugin on and choose «Run side by side», or take the languages offline while you import."
 msgstr "TranslateRocket ya está sirviendo los idiomas, así que el importador leería sus propias páginas. Activa el plugin antiguo y elige «Ejecutar en paralelo», o pon los idiomas fuera de línea mientras importas."
+
+msgid "Check after import"
+msgstr "Comprobación tras la importación"
+
+msgid "%1$s: %2$d imported translations reread, without AI — wrong language or alphabet, broken characters, sentences still in the original, lost links, different numbers."
+msgstr "%1$s: %2$d traducciones importadas revisadas, sin IA — idioma o alfabeto equivocado, caracteres rotos, frases aún en el original, enlaces perdidos, números distintos."
+
+msgid "Nothing evidently wrong."
+msgstr "Nada evidentemente incorrecto."
+
+msgid "Imported translation"
+msgstr "Traducción importada"
+
+msgid "Why"
+msgstr "Motivo"
+
+msgid "Keep"
+msgstr "Mantener"
+
+msgid "Remove"
+msgstr "Quitar"
+
+msgid "Remove all the listed ones"
+msgstr "Quitar todas las de la lista"
+
+msgid "Check again"
+msgstr "Comprobar de nuevo"
+
+msgid "…and %d more: remove or keep these, then check again."
+msgstr "…y %d más: quita o mantén estas y vuelve a comprobar."
+
+msgid "broken characters"
+msgstr "caracteres rotos"
+
+msgid "not written in this language’s alphabet"
+msgstr "no está escrita en el alfabeto de este idioma"
+
+msgid "still in the original language"
+msgstr "aún en el idioma original"
+
+msgid "links or bold words lost"
+msgstr "enlaces o negritas perdidos"
+
+msgid "different numbers from the original"
+msgstr "números distintos del original"
+
+msgid "far longer or shorter than the original"
+msgstr "mucho más larga o más corta que el original"
+
+msgid "written in another language"
+msgstr "escrita en otro idioma"
+
+msgid "%d translation looks wrong. Keep it if it is fine, or remove it: the sentence goes back to «missing» and is translated again like any other."
+msgid_plural "%d translations look wrong. Keep the ones that are fine, remove the others: those sentences go back to «missing» and are translated again like any other."
+msgstr[0] "%d traducción parece incorrecta. Mantenla si está bien, o quítala: la frase vuelve a «pendiente» y se traduce de nuevo como cualquier otra."
+msgstr[1] "%d traducciones parecen incorrectas. Mantén las que estén bien y quita las demás: esas frases vuelven a «pendiente» y se traducen de nuevo como cualquier otra."
+
+msgid "WooCommerce PDF documents"
+msgstr "Documentos PDF de WooCommerce"

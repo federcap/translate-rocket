@@ -55,6 +55,22 @@ class WooCommerce {
 	private $in_email = false;
 
 	/**
+	 * The order the e-mail being written is about: its customer's own details are
+	 * never collected as phrases nor translated.
+	 *
+	 * @var \WC_Abstract_Order|null
+	 */
+	private $email_order = null;
+
+	/**
+	 * PDF documents being built (PDF Invoices & Packing Slips), by object id:
+	 * their order's language and whether the locale was switched for them.
+	 *
+	 * @var array<int, array{lang: string, switched: bool, order: \WC_Abstract_Order}>
+	 */
+	private $pdf = array();
+
+	/**
 	 * Language of the email whose body has just been translated, kept until the
 	 * subject is built.
 	 *
@@ -71,6 +87,11 @@ class WooCommerce {
 	 * under its own heading instead of being mixed into a real page.
 	 */
 	const EMAIL_URL = '[woocommerce emails]';
+
+	/**
+	 * Where the wording of the PDF documents (invoices) is filed.
+	 */
+	const PDF_URL = '[woocommerce pdf]';
 
 	/**
 	 * Hook into WooCommerce.
@@ -107,6 +128,13 @@ class WooCommerce {
 		}
 		add_filter( 'woocommerce_allow_restoring_email_locale', array( $this, 'email_done' ), 1 );
 		add_action( 'woocommerce_email_sent', array( $this, 'email_done' ), 1 );
+
+		// PDF Invoices & Packing Slips builds the invoice in a request that carries no
+		// language (an admin-ajax link, the e-mail attachment, «resend» from the order
+		// screen) and prints the shop's own footer and extra fields, which no page ever
+		// shows: the German customer got an Italian invoice (casi raccolti, negozio 18-19).
+		add_action( 'wpo_wcpdf_before_html', array( $this, 'pdf_start' ), 1, 2 );
+		add_filter( 'wpo_wcpdf_get_html', array( $this, 'pdf_html' ), 20, 2 );
 
 		// Product names that WooCommerce puts inside a sentence or glues together
 		// («“Blue mug” has been added to your cart», «Linen shirt - Blue»): the page
@@ -457,6 +485,7 @@ class WooCommerce {
 		$this->email_lang        = '';
 		$this->email_is_customer = false;
 		$this->in_email          = true;
+		$this->email_order       = ( $order instanceof \WC_Abstract_Order ) ? $order : null;
 		if ( $sent_to_admin ) {
 			return;
 		}
@@ -521,6 +550,8 @@ class WooCommerce {
 	public function email_content( $content ) {
 		$lang                    = $this->email_lang;
 		$is_customer             = $this->email_is_customer;
+		$order                   = $this->email_order;
+		$this->email_order       = null;
 		$this->subject_lang      = $is_customer ? $lang : '';
 		$this->email_lang        = ''; // Reset for the next email in this request.
 		$this->email_is_customer = false;
@@ -537,7 +568,7 @@ class WooCommerce {
 		// you for your order", "Quantity", "Price") would never become
 		// translatable at all.
 		if ( $is_customer ) {
-			$this->collect_email_strings( $content );
+			$this->collect_email_strings( $content, $order );
 		}
 
 		if ( '' === $lang ) {
@@ -549,7 +580,140 @@ class WooCommerce {
 		if ( ! Strings::has_translations( $lang ) ) {
 			return $content;
 		}
-		return $this->translate_html( $content, $lang );
+		return $this->translate_html( $content, $lang, $order );
+	}
+
+	/**
+	 * A PDF document starts: an invoice for the customer is built in the language
+	 * the order was placed in (its headings come from the plugins' own language
+	 * packs that way). The packing slip is for the warehouse and keeps the site's.
+	 *
+	 * @param mixed $type     Document type (invoice, packing-slip, credit-note…).
+	 * @param mixed $document The document object.
+	 */
+	public function pdf_start( $type, $document = null ): void {
+		$order = ( is_object( $document ) && isset( $document->order ) ) ? $document->order : null;
+		if ( ! ( $order instanceof \WC_Abstract_Order ) ) {
+			return; // The wrapper of a bulk export: each order inside comes through here too.
+		}
+		$types = (array) apply_filters( 'trrocket_pdf_customer_documents', array( 'invoice', 'credit-note', 'proforma', 'receipt' ) );
+		if ( ! in_array( (string) $type, $types, true ) ) {
+			return;
+		}
+		$lang = (string) $order->get_meta( '_trrocket_lang' );
+		if ( '' === $lang && method_exists( $order, 'get_parent_id' ) && $order->get_parent_id() ) {
+			$parent = wc_get_order( $order->get_parent_id() ); // A refund (credit note): its order's language.
+			$lang   = $parent ? (string) $parent->get_meta( '_trrocket_lang' ) : '';
+		}
+		$router   = Plugin::instance()->router();
+		$switched = false;
+		if ( '' !== $lang && ! $router->is_default( $lang ) && in_array( $lang, $router->secondary_languages(), true ) ) {
+			$locale = \TranslateRocket\Languages::locale( $lang );
+			// Already there when the invoice is attached to an e-mail written in that language.
+			if ( '' !== $locale && $locale !== determine_locale() && function_exists( 'switch_to_locale' ) ) {
+				$switched = (bool) switch_to_locale( $locale );
+			}
+		} else {
+			$lang = '';
+		}
+		$this->pdf[ spl_object_id( $document ) ] = array(
+			'lang'     => $lang,
+			'switched' => $switched,
+			'order'    => $order,
+		);
+	}
+
+	/**
+	 * The PDF document's HTML is ready: learn its wording (the shop's footer and extra
+	 * fields included) and translate it into the order's language.
+	 *
+	 * @param mixed $html     Document HTML.
+	 * @param mixed $document The document object.
+	 * @return mixed
+	 */
+	public function pdf_html( $html, $document = null ) {
+		$key = is_object( $document ) ? spl_object_id( $document ) : 0;
+		if ( ! isset( $this->pdf[ $key ] ) ) {
+			return $html;
+		}
+		$job = $this->pdf[ $key ];
+		unset( $this->pdf[ $key ] );
+		if ( $job['switched'] ) {
+			restore_previous_locale();
+		}
+		if ( ! is_string( $html ) || '' === trim( $html ) ) {
+			return $html;
+		}
+		$this->collect_email_strings( $html, $job['order'], self::PDF_URL, __( 'WooCommerce PDF documents', 'translate-rocket' ) );
+		if ( '' === $job['lang'] || ! Strings::has_translations( $job['lang'] ) ) {
+			return $html;
+		}
+		return $this->translate_html( $html, $job['lang'], $job['order'] );
+	}
+
+	/**
+	 * The customer's own details on an order — names, company, addresses, e-mail,
+	 * phone, note — which are never phrases of the site: they must not be collected
+	 * (they would sit in the translation screens and be sent to the AI) nor translated
+	 * (a customer called Rose, a street in Venice).
+	 *
+	 * @param mixed $order The order.
+	 * @return string[] Lower-case values.
+	 */
+	private static function personal( $order ): array {
+		if ( ! ( $order instanceof \WC_Abstract_Order ) ) {
+			return array();
+		}
+		$out = array();
+		foreach ( array( 'billing', 'shipping' ) as $who ) {
+			foreach ( array( 'first_name', 'last_name', 'company', 'address_1', 'address_2', 'city', 'postcode', 'state', 'email', 'phone' ) as $f ) {
+				$m = 'get_' . $who . '_' . $f;
+				if ( method_exists( $order, $m ) ) {
+					$out[] = (string) $order->$m();
+				}
+			}
+		}
+		if ( method_exists( $order, 'get_customer_note' ) ) {
+			$out[] = (string) $order->get_customer_note();
+		}
+		$lower = function_exists( 'mb_strtolower' ) ? 'mb_strtolower' : 'strtolower';
+		$out   = array_map(
+			static function ( $v ) use ( $lower ) {
+				return trim( $lower( $v ) );
+			},
+			$out
+		);
+		return array_values(
+			array_unique(
+				array_filter(
+					$out,
+					static function ( $v ) {
+						return ( function_exists( 'mb_strlen' ) ? mb_strlen( $v ) : strlen( $v ) ) >= 2;
+					}
+				)
+			)
+		);
+	}
+
+	/**
+	 * Whether a text carries one of the customer's details (whole words only: a
+	 * customer from «Bari» does not hide «Barista»). Not any e-mail address: the shop's
+	 * own («contact us at shop@…») is part of a sentence to translate.
+	 *
+	 * @param string   $text     Text node.
+	 * @param string[] $personal From personal().
+	 */
+	private static function is_personal( string $text, array $personal ): bool {
+		if ( empty( $personal ) ) {
+			return false;
+		}
+		$low = function_exists( 'mb_strtolower' ) ? mb_strtolower( $text ) : strtolower( $text );
+		foreach ( $personal as $v ) {
+			if ( false !== strpos( $low, $v ) && preg_match( '/(?<![\p{L}\p{N}])' . preg_quote( $v, '/' ) . '(?![\p{L}\p{N}])/u', $low ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -561,7 +725,7 @@ class WooCommerce {
 	 *
 	 * @param string $html Assembled email HTML.
 	 */
-	private function collect_email_strings( string $html ): void {
+	private function collect_email_strings( string $html, $order = null, string $url = self::EMAIL_URL, string $label = '' ): void {
 		$settings = Settings::get();
 		$targets  = array_values( (array) ( $settings['target_languages'] ?? array() ) );
 		if ( empty( $targets ) || ! class_exists( '\DOMDocument' ) ) {
@@ -570,7 +734,7 @@ class WooCommerce {
 
 		// One template's wording is the same for every order; a transient keyed on
 		// the content keeps repeat orders from re-running this.
-		$key = 'trrocket_wcmail_' . md5( $html );
+		$key = 'trrocket_wcmail_' . md5( $url . $html );
 		if ( get_transient( $key ) ) {
 			return;
 		}
@@ -586,12 +750,13 @@ class WooCommerce {
 		}
 
 		$xpath = new \DOMXPath( $dom );
-		$nodes = $xpath->query( '//text()[not(ancestor::script) and not(ancestor::style) and not(ancestor::title)]' );
+		$nodes = $xpath->query( "//text()[not(ancestor::script) and not(ancestor::style) and not(ancestor::title) and not(ancestor::address) and not(parent::*[contains(concat(' ',normalize-space(@class),' '),' sku ')])]" );
 		if ( ! $nodes ) {
 			return;
 		}
 
-		$items = array();
+		$personal = self::personal( $order );
+		$items    = array();
 		foreach ( $nodes as $node ) {
 			$text = trim( (string) $node->nodeValue );
 			if ( '' === $text || ! preg_match( '/\p{L}/u', $text ) ) {
@@ -600,7 +765,7 @@ class WooCommerce {
 			if ( function_exists( 'mb_strlen' ) ? mb_strlen( $text ) > 400 : strlen( $text ) > 400 ) {
 				continue;
 			}
-			if ( NoTranslate::text_excluded( $text ) ) {
+			if ( NoTranslate::text_excluded( $text ) || self::is_personal( $text, $personal ) ) {
 				continue;
 			}
 			$items[ $text ] = array( 'original' => $text, 'type' => 'text' );
@@ -612,8 +777,8 @@ class WooCommerce {
 		Strings::remember_batch(
 			array_values( $items ),
 			$targets,
-			self::EMAIL_URL,
-			__( 'WooCommerce emails', 'translate-rocket' )
+			$url,
+			'' !== $label ? $label : __( 'WooCommerce emails', 'translate-rocket' )
 		);
 	}
 
@@ -676,7 +841,7 @@ class WooCommerce {
 	 * and bare fragments. Defensive: returns the original markup unchanged on
 	 * any parse problem or when nothing matched.
 	 */
-	private function translate_html( string $html, string $lang ): string {
+	private function translate_html( string $html, string $lang, $order = null ): string {
 		if ( '' === trim( $html ) || '' === $lang || ! class_exists( '\DOMDocument' ) ) {
 			return $html;
 		}
@@ -700,9 +865,22 @@ class WooCommerce {
 			return $html;
 		}
 
-		$changed = false;
-		$texts   = $xpath->query( './/text()', $scope );
-		$nodes   = $texts ? iterator_to_array( $texts ) : array();
+		// Never the customer's address nor a product code (<p class="sku">: the code is
+		// the bare text after the label, which stays translatable).
+		$changed  = false;
+		$texts    = $xpath->query( ".//text()[not(ancestor::address) and not(parent::*[contains(concat(' ',normalize-space(@class),' '),' sku ')])]", $scope );
+		$nodes    = $texts ? iterator_to_array( $texts ) : array();
+		$personal = self::personal( $order );
+		if ( ! empty( $personal ) ) {
+			$nodes = array_values(
+				array_filter(
+					$nodes,
+					static function ( $n ) use ( $personal ) {
+						return ! self::is_personal( (string) $n->nodeValue, $personal );
+					}
+				)
+			);
+		}
 
 		$candidates = array();
 		foreach ( $nodes as $node ) {
