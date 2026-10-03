@@ -3968,3 +3968,12 @@ msgstr[0] "%d 件の翻訳に誤りがあるようです。問題なければ残
 
 msgid "WooCommerce PDF documents"
 msgstr "WooCommerce の PDF 書類"
+
+msgid "Plugin language"
+msgstr "プラグインの言語"
+
+msgid "Automatic (your profile)"
+msgstr "自動(プロフィールの言語)"
+
+msgid "For the whole dashboard in your language: Users → Profile → Language."
+msgstr "管理画面全体をあなたの言語にするには:ユーザー → プロフィール → 言語。"

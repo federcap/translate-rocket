@@ -50,6 +50,20 @@ class Engine {
 		'data-success_message', // WoodMart: «“Mug” has been added to your cart» on the add-to-cart button.
 		'data-alt',             // Sliders and galleries park the picture's alt here (19 times on 115 real pages, 29/09/2026).
 		'data-bs-content',      // Bootstrap 5 popover text.
+		// ElementsKit's countdown (1M sites): the labels its script writes under the digits
+		// (countdown-timer.php:1898-1907). Named one by one: «data-day» elsewhere is a key.
+		'data-date-ekit-day',
+		'data-date-ekit-hour',
+		'data-date-ekit-minute',
+		'data-date-ekit-second',
+		// ElementsKit's image comparison: «Before» / «After» written over the slider.
+		'data-label_before',
+		'data-label_after',
+		// Variation Swatches for WooCommerce (300k): the colour or size name shown on hover.
+		'data-wvstooltip',
+		// An Elementor widget's settings as JSON: only the words inside are translated
+		// (see settings_doc()); Premium Addons' typing «Fancy Text» keeps its phrases here.
+		'data-settings',
 	);
 	private const SKIP_PARENTS = array( 'script', 'style', 'code', 'pre', 'textarea', 'title' );
 
@@ -350,7 +364,76 @@ class Engine {
 	// The bare name counts too: WP User Frontend's «<li data-label="Post Title">», a
 	// table's «data-label» read on a phone, «data-caption» of a gallery.
 	// series of sentences (seen on a shop's «notify me» button, 29/09/2026).
-	const DATA_SUFFIX = '/^data-(?!(gtm|lazy|wp|wpr|elementor|trr|et|vc|wf)-)(?:[a-z0-9_-]*-)?(text|message|msg|label|title|tooltip|placeholder|alt|caption|cta|description|heading|subtitle|empty|error|success|confirm|notice)(-\d+)?$/';
+	// «data-day-label-plural»: Qi Addons' countdown keeps «Days» there and «Day» in data-day-label;
+	// the plural, the one shown nearly always, stayed English (3/10/2026).
+	const DATA_SUFFIX = '/^data-(?!(gtm|lazy|wp|wpr|elementor|trr|et|vc|wf)-)(?:[a-z0-9_-]*-)?(text|message|msg|label|title|tooltip|placeholder|alt|caption|cta|description|heading|subtitle|empty|error|success|confirm|notice)([-_](?:plural|singular))?(-\d+)?$/';
+
+	/**
+	 * The phrases of a data-* value that is a list split on «|» by its script, or null.
+	 *
+	 * Essential Addons' «Fancy Text» writes «|the sea|fresh juice|a quiet garden» and types
+	 * one phrase after the other (Fancy_Text.php:615-624, 3/10/2026): sent whole, the AI may
+	 * move or drop the bars and the animation shows the wrong pieces. Only data-* attributes:
+	 * a title like «Rooms | Hotel» is one sentence.
+	 *
+	 * @param string $attr  Attribute name.
+	 * @param string $value Attribute value.
+	 * @return string[]|null
+	 */
+	private static function list_pieces( string $attr, string $value ): ?array {
+		if ( 0 !== strpos( $attr, 'data-' ) || false === strpos( $value, '|' ) ) {
+			return null;
+		}
+		$out = array();
+		foreach ( explode( '|', $value ) as $part ) {
+			$t = trim( $part );
+			if ( '' !== $t && preg_match( '/\p{L}/u', $t ) ) {
+				$out[] = $t;
+			}
+		}
+		return count( $out ) >= 2 ? $out : null;
+	}
+
+	/**
+	 * Whether a data-* attribute may carry a JSON document whose words are read
+	 * (an Elementor widget's data-settings, a chat box's data-button…). The same
+	 * internal prefixes as DATA_SUFFIX stay out: analytics, lazy loading, the WordPress
+	 * Interactivity API, builders' own state and TranslateRocket's.
+	 *
+	 * @param string $attr Attribute name.
+	 */
+	private static function json_attr( string $attr ): bool {
+		return 0 === strpos( $attr, 'data-' ) && ! preg_match( '/^data-(gtm|lazy|wp|wpr|elementor|trr|et|vc|wf)-/', $attr );
+	}
+
+	/**
+	 * The decoded «data-settings» JSON of an Elementor widget, or null.
+	 *
+	 * @param string $value Attribute value.
+	 */
+	private static function settings_doc( string $value ): ?array {
+		$v = ltrim( $value );
+		if ( '' === $v || ( '{' !== $v[0] && '[' !== $v[0] ) ) {
+			return null;
+		}
+		$doc = json_decode( $v, true );
+		return is_array( $doc ) ? $doc : null;
+	}
+
+	/**
+	 * The words inside a «data-settings» JSON (for the batch lookup).
+	 *
+	 * @param string $attr  Attribute name.
+	 * @param string $value Attribute value.
+	 * @return string[]
+	 */
+	private static function settings_strings( string $attr, string $value ): array {
+		if ( ! self::json_attr( $attr ) ) {
+			return array();
+		}
+		$doc = self::settings_doc( $value );
+		return null === $doc ? array() : ScriptData::json_strings( $doc );
+	}
 
 	/**
 	 * Elements carrying each translatable attribute, keyed by attribute name: the
@@ -376,7 +459,10 @@ class Engine {
 				// (The fixed list is already collected above; a data-* name is added for
 				// EVERY element that carries it — the probe caught only the first gallery
 				// caption being translated, 29/09/2026.)
-				if ( in_array( $name, self::ATTRIBUTES, true ) || ! preg_match( self::DATA_SUFFIX, $name ) ) {
+				// A data-* holding JSON is opened too (only its words count, see settings_doc()):
+				// Social Chat builds its WhatsApp box from data-button / data-box (3/10/2026).
+				$json = self::json_attr( $name ) && null !== self::settings_doc( (string) $a->nodeValue );
+				if ( in_array( $name, self::ATTRIBUTES, true ) || ( ! $json && ! preg_match( self::DATA_SUFFIX, $name ) ) ) {
 					continue;
 				}
 				$nodes[ $name ][] = $el;
@@ -472,6 +558,13 @@ class Engine {
 	private $extra_tokens = array();
 
 	/**
+	 * Placeholders of MetForm's form templates (read by MetFormTemplate, not ScriptData).
+	 *
+	 * @var array<string,bool>
+	 */
+	private $mf_tokens = array();
+
+	/**
 	 * Elements whose body the HTML spec treats as raw text / RCDATA: the browser
 	 * reads their content as text, never as markup. libxml does not, and quietly
 	 * DROPS any "</name>" sequence it finds inside them — so a perfectly valid
@@ -496,6 +589,7 @@ class Engine {
 		$this->raw_blocks    = array();
 		$this->schema_tokens = array();
 		$this->extra_tokens  = array();
+		$this->mf_tokens     = array();
 
 		// One random salt per request: a placeholder must never collide with text
 		// that legitimately appears on the page.
@@ -522,6 +616,10 @@ class Engine {
 				// Structured data is the one script body worth reading (see Schema).
 				if ( 'script' === strtolower( $m[2] ) && preg_match( '#\btype\s*=\s*(["\']?)application/ld\+json\1#i', $m[1] ) ) {
 					$this->schema_tokens[] = $token;
+				} elseif ( 'script' === strtolower( $m[2] ) && MetFormTemplate::is_template( $m[1] ) ) {
+					// A MetForm form, written as a JavaScript template (see MetFormTemplate).
+					$this->extra_tokens[]      = $token;
+					$this->mf_tokens[ $token ] = true;
 				} elseif ( 'script' === strtolower( $m[2] ) && preg_match( '#\bid\s*=\s*(["\']?)[\w-]+-js-(extra|before|after)\1#i', $m[1] ) ) {
 					// -js-extra: wp_localize_script(); -js-before/-js-after: wp_add_inline_script()
 					// (Elementor's «var elementorFrontendConfig = {…}» with its i18n lives there).
@@ -1075,7 +1173,7 @@ class Engine {
 		$extra_texts = array();
 		foreach ( $this->extra_tokens as $token ) {
 			if ( isset( $this->raw_blocks[ $token ] ) ) {
-				$extra_texts[ $token ] = ScriptData::strings( $this->raw_blocks[ $token ] );
+				$extra_texts[ $token ] = isset( $this->mf_tokens[ $token ] ) ? MetFormTemplate::strings( $this->raw_blocks[ $token ] ) : ScriptData::strings( $this->raw_blocks[ $token ] );
 			}
 		}
 
@@ -1108,6 +1206,12 @@ class Engine {
 			foreach ( $attr_nodes as $attr => $els ) {
 				foreach ( $els as $el ) {
 					$candidates[] = trim( (string) $el->getAttribute( $attr ) );
+					foreach ( (array) self::list_pieces( $attr, (string) $el->getAttribute( $attr ) ) as $piece ) {
+						$candidates[] = $piece;
+					}
+					foreach ( self::settings_strings( $attr, (string) $el->getAttribute( $attr ) ) as $piece ) {
+						$candidates[] = $piece;
+					}
 					foreach ( self::quoted( (string) $el->getAttribute( $attr ) ) as $q ) {
 						$candidates[] = $q;
 					}
@@ -1283,9 +1387,69 @@ class Engine {
 		foreach ( $attr_nodes as $attr => $els ) {
 			foreach ( $els as $el ) {
 				$value = trim( (string) $el->getAttribute( $attr ) );
+				// A data-* holding JSON — an Elementor widget's data-settings, a chat box's data-button —
+				// only its words, never its keys or effect names (Premium Addons' typing «Fancy Text»,
+				// Social Chat's WhatsApp button and greeting, 3/10/2026).
+				$doc = self::json_attr( $attr ) ? self::settings_doc( $value ) : null;
+				if ( null !== $doc || 'data-settings' === $attr ) {
+					if ( null !== $doc ) {
+						foreach ( ScriptData::json_strings( $doc ) as $t ) {
+							if ( $this->do_collect && ! self::is_noise( $t ) && ! NoTranslate::text_excluded( $t ) ) {
+								$collected[] = array(
+									'original' => $t,
+									'type'     => 'attribute',
+									'context'  => $attr,
+								);
+							}
+						}
+						$nuovo = ScriptData::json_translate( $doc, $map );
+						if ( null !== $nuovo ) {
+							$json = wp_json_encode( $nuovo );
+							if ( is_string( $json ) ) {
+								$el->setAttribute( $attr, $json );
+								$changed = true;
+							}
+						}
+					}
+					continue;
+				}
 				// Il filtro del rumore vale anche qui: negli attributi finiscono nomi di
 				// file, segnaposto di modello e stringhe di stile piu' che nel testo.
 				if ( '' === $value || ! preg_match( '/\p{L}/u', $value ) || self::is_noise( $value ) || NoTranslate::text_excluded( $value ) ) {
+					continue;
+				}
+				// A switch, not words: Essential Blocks writes data-show-label="true", others
+				// data-hide-label="no". By its NAME it looks like text; translated («vero»), the
+				// block's script breaks (3/10/2026). Lower case only: a visible «Yes» stays text.
+				if ( preg_match( '/^(true|false|yes|no|on|off|show|hide|none|auto|null|enabled|disabled)$/', $value ) ) {
+					continue;
+				}
+				// A list the script splits on «|» (Essential Addons' rotating «Fancy Text»,
+				// 1M sites): each phrase is a sentence of its own, put back in its place.
+				$pieces = self::list_pieces( $attr, $value );
+				if ( null !== $pieces ) {
+					$parts = explode( '|', $value );
+					foreach ( $parts as $i => $part ) {
+						$t = trim( $part );
+						if ( '' === $t || ! preg_match( '/\p{L}/u', $t ) || self::is_noise( $t ) || NoTranslate::text_excluded( $t ) ) {
+							continue;
+						}
+						if ( $this->do_collect ) {
+							$collected[] = array(
+								'original' => $t,
+								'type'     => 'attribute',
+								'context'  => $attr,
+							);
+						}
+						if ( isset( $map[ $t ] ) ) {
+							$parts[ $i ] = str_replace( $t, str_replace( '|', '&#124;', $map[ $t ] ), $part );
+						}
+					}
+					$joined = implode( '|', $parts );
+					if ( $joined !== $value ) {
+						$el->setAttribute( $attr, $joined );
+						$changed = true;
+					}
 					continue;
 				}
 				if ( $this->do_collect ) {
@@ -1504,7 +1668,7 @@ class Engine {
 				}
 			}
 			if ( $this->is_secondary && isset( $this->raw_blocks[ $token ] ) ) {
-				$translated = ScriptData::translate( $this->raw_blocks[ $token ], $map );
+				$translated = isset( $this->mf_tokens[ $token ] ) ? MetFormTemplate::translate( $this->raw_blocks[ $token ], $map ) : ScriptData::translate( $this->raw_blocks[ $token ], $map );
 				if ( null !== $translated ) {
 					$this->raw_blocks[ $token ] = $translated;
 					$changed                    = true;

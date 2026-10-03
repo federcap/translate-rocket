@@ -44,6 +44,31 @@ class ScriptData {
 	}
 
 	/**
+	 * Translatable strings in an already decoded document (an Elementor widget's
+	 * «data-settings» attribute), with the same rules as a script's data.
+	 *
+	 * @param array $data Decoded JSON.
+	 * @return string[]
+	 */
+	public static function json_strings( array $data ): array {
+		$out = array();
+		self::walk( $data, $out );
+		return array_values( array_unique( $out ) );
+	}
+
+	/**
+	 * The decoded document with its translatable strings swapped, or null when nothing changed.
+	 *
+	 * @param array                $data Decoded JSON.
+	 * @param array<string,string> $map  Source text => translation.
+	 */
+	public static function json_translate( array $data, array $map ): ?array {
+		$changed = false;
+		$out     = self::apply( $data, $map, $changed );
+		return $changed && is_array( $out ) ? $out : null;
+	}
+
+	/**
 	 * The block with its translatable strings swapped, or null when nothing changed.
 	 *
 	 * @param string               $js  Script body.
@@ -122,7 +147,7 @@ class ScriptData {
 	 * @param string $js  Script body.
 	 * @param int    $pos Position of the opening { or [.
 	 */
-	private static function json_end( string $js, int $pos ): ?int {
+	public static function json_end( string $js, int $pos ): ?int {
 		$len   = strlen( $js );
 		$depth = 0;
 		$in    = false;

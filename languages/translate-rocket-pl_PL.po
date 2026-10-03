@@ -4006,3 +4006,12 @@ msgstr[2] "%d tłumaczeń wygląda na błędne. Zachowaj dobre, usuń pozostałe
 
 msgid "WooCommerce PDF documents"
 msgstr "Dokumenty PDF WooCommerce"
+
+msgid "Plugin language"
+msgstr "Język wtyczki"
+
+msgid "Automatic (your profile)"
+msgstr "Automatycznie (z Twojego profilu)"
+
+msgid "For the whole dashboard in your language: Users → Profile → Language."
+msgstr "Aby cały kokpit był w Twoim języku: Użytkownicy → Profil → Język."

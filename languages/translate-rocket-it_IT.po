@@ -4180,3 +4180,12 @@ msgstr[1] "%d traduzioni sembrano sbagliate. Tieni quelle che vanno bene, rimuov
 
 msgid "WooCommerce PDF documents"
 msgstr "Documenti PDF di WooCommerce"
+
+msgid "Plugin language"
+msgstr "Lingua del plugin"
+
+msgid "Automatic (your profile)"
+msgstr "Automatica (dal tuo profilo)"
+
+msgid "For the whole dashboard in your language: Users → Profile → Language."
+msgstr "Per avere tutta la bacheca nella tua lingua: Utenti → Profilo → Lingua."

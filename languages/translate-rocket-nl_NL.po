@@ -3987,3 +3987,12 @@ msgstr[1] "%d vertalingen lijken fout. Houd de goede, verwijder de andere: die z
 
 msgid "WooCommerce PDF documents"
 msgstr "WooCommerce-pdf-documenten"
+
+msgid "Plugin language"
+msgstr "Taal van de plugin"
+
+msgid "Automatic (your profile)"
+msgstr "Automatisch (je profiel)"
+
+msgid "For the whole dashboard in your language: Users → Profile → Language."
+msgstr "Voor het hele dashboard in je taal: Gebruikers → Profiel → Taal."

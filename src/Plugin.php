@@ -172,6 +172,8 @@ final class Plugin {
 			( new \TranslateRocket\Admin\EditorButton() )->register();
 			( new \TranslateRocket\Admin\Growth() )->register();
 			( new \TranslateRocket\Admin\LabsPromo() )->register();
+			// La lingua delle schermate del plugin, scelta da ciascun utente (3/10/2026).
+			( new \TranslateRocket\Admin\PluginLanguage() )->register();
 			// Una domanda sola a chi disattiva: e' l'unico modo di sapere perche' se ne va.
 			( new \TranslateRocket\Admin\Farewell() )->register();
 			// L'elenco dei passi sta in un transient di 5 minuti: va dimenticato appena

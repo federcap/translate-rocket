@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -206,6 +206,13 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 5. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.7.2 =
+* New: a «Plugin language» menu at the top of every TranslateRocket screen. Read the plugin in English, Italian, Spanish, French, German, Portuguese (Brazil), Dutch, Polish, Russian or Japanese whatever your WordPress profile says — each user chooses for themselves, and «Automatic» keeps following the profile. It changes only TranslateRocket's own texts; the tooltip says where to switch the whole dashboard.
+* Compatibility: rotating «Fancy Text» phrases are translated phrase by phrase — Essential Addons keeps them in one attribute separated by bars, Premium Addons in the widget's JSON settings — and so are ElementsKit's countdown labels (Days, Hours…) and its Before/After image comparison labels. On/off switches that some blocks keep in attributes named like text (data-show-label="true") are never taken for words to translate. Checked with ten more popular plugins: Easy Table of Contents, Breadcrumb NavXT, AddToAny, Click to Chat (the pre-filled WhatsApp message too), Ally, CookieAdmin, FiboSearch, MC4WP, Essential Addons and ElementsKit.
+* Compatibility: words inside the JSON settings that widgets and chat boxes keep in data-* attributes are translated, keys and options untouched — Social Chat's WhatsApp button, Premium Addons' typing text — and Variation Swatches' colour and size tooltips. Plural labels kept in attributes ending in «-plural» are translated too (Qi Addons' countdown shows «Days» from data-day-label-plural).
+* Compatibility: MetForm forms (600,000 sites) are translated — labels, placeholders, the button and the error messages. MetForm prints each form as a JavaScript template that the page translation never read; now only its words are replaced and the template works as before.
+* Fix: on phones, the language list under «Published, or still being translated?» no longer pushes the ONLINE label out of the table, and the AI provider cards keep their fields, guide and buttons inside the card.
 
 = 1.7.1 =
 * New: invoices from PDF Invoices & Packing Slips in the language of the order. An invoice, credit note, proforma or receipt is built in the language the customer ordered in — from the download link, attached to the e-mail or resent from the order screen — and your own footer is translatable under «WooCommerce PDF documents». The customer's details, the invoice number and product codes stay as they are; packing slips stay in the site's language for the warehouse.
@@ -466,6 +473,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.7.2 =
+MetForm forms, rotating «Fancy Text», countdown labels and chat buttons of popular Elementor add-ons now translated; a «Plugin language» menu; better on phones. Recommended.
 
 = 1.7.1 =
 Invoices from PDF Invoices & Packing Slips in the customer's language; customers' names and addresses no longer collected from order e-mails; a check after every import; more plugins and markup understood. Recommended.

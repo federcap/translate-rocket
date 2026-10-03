@@ -1847,3 +1847,107 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-models-msg.is-bad{border-left-color:#d63638;background:#fcf0f1}
 .trr-models-msg.is-ok{border-left-color:#00a32a;background:#edfaef}
 .trr-models-select{margin:6px 0 0!important;width:100%;max-width:25em!important;box-sizing:border-box}
+
+/* Telefono (2/10/2026, foto di Federico): la pastiglia ONLINE usciva dalla tabella delle lingue (nome, barra
+   larga 190px e pastiglia non stavano in 390px) e nella pagina AI le caselle arrivavano sul bordo della scheda
+   (oltre, col testo grande dei telefoni veri). Le righe vanno a capo e le tabelle restano nella loro scheda. */
+.trr-ai-providers > * {
+	min-width: 0;
+}
+
+@media screen and ( max-width: 782px ) {
+	.trr-lang-state-table,
+	.trr-lang-state-table tbody {
+		display: block;
+		width: 100%;
+	}
+
+	.trr-lang-state-table tr {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px 10px;
+		padding: 10px 0;
+		border-bottom: 1px solid #e6e7f0;
+	}
+
+	.trr-lang-state-table th,
+	.trr-lang-state-table td {
+		display: block;
+		padding: 0;
+		border: 0;
+	}
+
+	.trr-lang-state-table th {
+		flex: 1 0 100%;
+	}
+
+	.trr-lang-state-prog {
+		width: auto;
+		flex: 1 1 auto;
+	}
+
+	.trr-lang-state-prog .trr-prog {
+		width: min( 120px, 40vw );
+	}
+
+	.trr-ai-provider {
+		overflow-wrap: anywhere;
+	}
+
+	.trr-ai-provider .form-table,
+	.trr-ai-provider .form-table tbody,
+	.trr-ai-provider .form-table tr,
+	.trr-ai-provider .form-table th,
+	.trr-ai-provider .form-table td {
+		display: block;
+		width: auto;
+		max-width: 100%;
+		box-sizing: border-box;
+	}
+
+	.trr-ai-provider .form-table th {
+		white-space: normal;
+		padding-bottom: 0;
+	}
+
+	.trr-ai-provider .button {
+		white-space: normal;
+		max-width: 100%;
+		height: auto;
+		box-sizing: border-box;
+	}
+}
+
+/* Menu della lingua del plugin, nell'intestazione (3/10/2026). */
+.trr-plugin-lang {
+	margin-top: 8px;
+	font-size: 12px;
+}
+
+.trr-plugin-lang label {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+
+.trr-plugin-lang .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+}
+
+.trr-plugin-lang select {
+	min-height: 28px;
+	font-size: 12px;
+	padding: 0 24px 0 8px;
+	max-width: 100%;
+}
+
+@media ( max-width: 782px ) {
+	.trr-plugin-lang label {
+		justify-content: center;
+	}
+}

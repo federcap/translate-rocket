@@ -2810,6 +2810,7 @@ JS;
 		echo '<div class="trr-hero-info">';
 		echo '<div class="trr-hero-tag">' . esc_html__( 'Free, AI-powered translation for WordPress', 'translate-rocket' ) . '</div>';
 		echo '<div class="trr-hero-sub">' . esc_html__( 'Unlimited languages · Visual editor · SEO-ready', 'translate-rocket' ) . ' · <span class="trr-hero-ver">v' . esc_html( TRROCKET_VERSION ) . '</span></div>';
+		\TranslateRocket\Admin\PluginLanguage::render();
 		echo '</div>';
 		echo '</div>';
 

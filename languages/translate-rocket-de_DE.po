@@ -3991,3 +3991,12 @@ msgstr[1] "%d Übersetzungen scheinen falsch. Behalten Sie die passenden, entfer
 
 msgid "WooCommerce PDF documents"
 msgstr "WooCommerce-PDF-Dokumente"
+
+msgid "Plugin language"
+msgstr "Sprache des Plugins"
+
+msgid "Automatic (your profile)"
+msgstr "Automatisch (Ihr Profil)"
+
+msgid "For the whole dashboard in your language: Users → Profile → Language."
+msgstr "Für das ganze Dashboard in Ihrer Sprache: Benutzer → Profil → Sprache."

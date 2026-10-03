@@ -4486,3 +4486,15 @@ msgstr ""
 #: src/Frontend/WooCommerce.php
 msgid "WooCommerce PDF documents"
 msgstr ""
+
+#: src/Admin/PluginLanguage.php
+msgid "Plugin language"
+msgstr ""
+
+#: src/Admin/PluginLanguage.php
+msgid "Automatic (your profile)"
+msgstr ""
+
+#: src/Admin/PluginLanguage.php
+msgid "For the whole dashboard in your language: Users → Profile → Language."
+msgstr ""

@@ -4006,3 +4006,12 @@ msgstr[2] "%d переводов выглядят неверными. Остав
 
 msgid "WooCommerce PDF documents"
 msgstr "PDF-документы WooCommerce"
+
+msgid "Plugin language"
+msgstr "Язык плагина"
+
+msgid "Automatic (your profile)"
+msgstr "Автоматически (из профиля)"
+
+msgid "For the whole dashboard in your language: Users → Profile → Language."
+msgstr "Чтобы вся консоль была на вашем языке: Пользователи → Профиль → Язык."
