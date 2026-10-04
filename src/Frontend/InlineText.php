@@ -252,6 +252,13 @@ class InlineText {
 		if ( in_array( strtolower( $node->nodeName ), self::VOID_INLINE, true ) ) {
 			return true;
 		}
+		// A <time>: «Posted on <time>October 4, 2026</time>» — WordPress writes the date in the language of
+		// the page, so on /it/ the sentence read «Posted on <1>4 ottobre 2026</1>», never the one collected,
+		// and stayed in English on every post (Zakra and most themes, 4/10/2026). It keeps its place and
+		// what WordPress wrote in it; only the words around it are the sentence.
+		if ( 'time' === strtolower( $node->nodeName ) ) {
+			return true;
+		}
 		return '' === trim( (string) $node->textContent );
 	}
 

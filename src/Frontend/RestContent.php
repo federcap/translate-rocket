@@ -36,6 +36,11 @@ class RestContent {
 	const LINK_KEYS = array( 'permalink', 'link' );
 
 	/**
+	 * Where texts loaded from the REST API are filed when the page that asked is not known.
+	 */
+	const LOADED_URL = '[loaded content]';
+
+	/**
 	 * Hook into REST responses.
 	 */
 	public function boot(): void {
@@ -81,11 +86,73 @@ class RestContent {
 			return $response;
 		}
 		$changed = false;
-		$data    = $this->walk( $data, $lang, $changed, '' );
+		// A GET answer is public content (a map's markers, a slider's slides…) that the page loads after it
+		// has been shown: it never passes through the page engine, so it never became translatable — the
+		// marker descriptions of WP Go Maps stayed in English for good (3/10/2026). Its texts are collected
+		// here. Never for other methods: a POST answer can carry what a visitor typed.
+		// Nor for answers about a person: a cart, an order, an account, a user — nor for a signed-in customer.
+		$collect = 'GET' === $request->get_method()
+			&& ! preg_match( '#/(users|cart|checkout|orders?|customers?|account|me|batch)(/|$)#i', $route )
+			&& ( ! is_user_logged_in() || current_user_can( 'manage_options' ) );
+		if ( $collect ) {
+			Fragment::$seen = array();
+		}
+		$data = $this->walk( $data, $lang, $changed, '' );
+		if ( $collect ) {
+			$seen           = Fragment::$seen;
+			Fragment::$seen = null;
+			$this->remember( (array) $seen, $route );
+		}
 		if ( $changed ) {
 			$response->set_data( $data );
 		}
 		return $response;
+	}
+
+	/**
+	 * Make the texts of a REST answer translatable, filed under the page that asked for them.
+	 *
+	 * @param string[] $texts Texts met in the answer.
+	 * @param string   $route REST route.
+	 */
+	private function remember( array $texts, string $route ): void {
+		$items = array();
+		foreach ( $texts as $t ) {
+			$t = trim( (string) $t );
+			if ( '' === $t || mb_strlen( $t ) > 2000 || ! preg_match( '/\p{L}/u', $t ) || \TranslateRocket\NoTranslate::text_excluded( $t ) ) {
+				continue;
+			}
+			$items[ $t ] = array( 'original' => $t, 'type' => 'text' );
+			if ( count( $items ) >= 300 ) {
+				break;
+			}
+		}
+		$secondary = Plugin::instance()->router()->secondary_languages();
+		if ( empty( $items ) || empty( $secondary ) ) {
+			return;
+		}
+		// At most once a day for the same answer.
+		$key = 'trrocket_rest_' . md5( $route . "\n" . implode( "\n", array_keys( $items ) ) );
+		if ( get_transient( $key ) ) {
+			return;
+		}
+		set_transient( $key, 1, DAY_IN_SECONDS );
+		// Filed under the page that asked (its address without the language), or under a heading of their own.
+		$url   = self::LOADED_URL;
+		$title = '';
+		$ref   = isset( $_SERVER['HTTP_REFERER'] ) ? (string) wp_unslash( $_SERVER['HTTP_REFERER'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$path  = (string) wp_parse_url( $ref, PHP_URL_PATH );
+		$base  = rtrim( (string) wp_parse_url( (string) get_option( 'home' ), PHP_URL_PATH ), '/' );
+		if ( '' !== $base && 0 === strpos( $path, $base ) ) {
+			$path = substr( $path, strlen( $base ) );
+		}
+		$path = (string) preg_replace( '#^/[a-z]{2}(?:-[a-z]{2})?(?=/|$)#i', '', $path, 1 );
+		$pid  = '' !== $path ? url_to_postid( home_url( $path ) ) : 0;
+		if ( $pid > 0 ) {
+			$url   = Plugin::instance()->router()->canonical_path( $pid );
+			$title = wp_strip_all_tags( get_the_title( $pid ) );
+		}
+		Strings::remember_batch( array_values( $items ), $secondary, $url, $title );
 	}
 
 	/**

@@ -4189,3 +4189,30 @@ msgstr "Automatica (dal tuo profilo)"
 
 msgid "For the whole dashboard in your language: Users → Profile → Language."
 msgstr "Per avere tutta la bacheca nella tua lingua: Utenti → Profilo → Lingua."
+
+msgid "Contact Form 7 e-mails"
+msgstr "E-mail di Contact Form 7"
+
+msgid "WPForms e-mails"
+msgstr "E-mail di WPForms"
+
+msgid "Fluent Forms e-mails"
+msgstr "E-mail di Fluent Forms"
+
+msgid "Ninja Forms e-mails"
+msgstr "E-mail di Ninja Forms"
+
+msgid "Formidable e-mails"
+msgstr "E-mail di Formidable"
+
+msgid "Everest Forms e-mails"
+msgstr "E-mail di Everest Forms"
+
+msgid "SureForms e-mails"
+msgstr "E-mail di SureForms"
+
+msgid "Content loaded by the page (maps, sliders…)"
+msgstr "Contenuti caricati dalla pagina (mappe, slider…)"
+
+msgid "GiveWP e-mails"
+msgstr "E-mail di GiveWP"

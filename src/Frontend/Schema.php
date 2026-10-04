@@ -71,6 +71,28 @@ class Schema {
 	private const MAX_LENGTH = 2000;
 
 	/**
+	 * Keys holding a name or a list of names a person reads: an article's category («Hotel news»), printed by
+	 * Yoast, Rank Math and WordPress' own schema as ["Hotel news"] (4/10/2026, every theme probed).
+	 */
+	private const LIST_KEYS = array( 'articleSection' );
+
+	/**
+	 * The strings of a LIST_KEYS value, or none.
+	 *
+	 * @param mixed $value Value.
+	 * @return string[]
+	 */
+	private static function list_strings( $value ): array {
+		$out = array();
+		foreach ( is_array( $value ) ? $value : array( $value ) as $v ) {
+			if ( is_string( $v ) && '' !== trim( $v ) && mb_strlen( $v ) <= self::MAX_LENGTH && preg_match( '/\p{L}/u', $v ) ) {
+				$out[] = trim( $v );
+			}
+		}
+		return $out;
+	}
+
+	/**
 	 * Translatable strings found in a JSON-LD body, de-duplicated, in document order.
 	 *
 	 * @param string $json Script body.
@@ -164,6 +186,10 @@ class Schema {
 		foreach ( $node as $key => $value ) {
 			if ( self::is_text_field( $node, $key, $value ) ) {
 				$found[] = trim( $value );
+			} elseif ( in_array( $key, self::LIST_KEYS, true ) ) {
+				foreach ( self::list_strings( $value ) as $t ) {
+					$found[] = $t;
+				}
 			} elseif ( is_array( $value ) ) {
 				self::walk( $value, $found );
 			}
@@ -240,6 +266,16 @@ class Schema {
 						$changed      = true;
 					}
 				}
+			} elseif ( in_array( $key, self::LIST_KEYS, true ) && ( is_string( $value ) || is_array( $value ) ) ) {
+				$list = is_array( $value ) ? $value : array( $value );
+				foreach ( $list as $i => $v ) {
+					$t = is_string( $v ) ? trim( $v ) : '';
+					if ( '' !== $t && isset( $map[ $t ] ) && '' !== $map[ $t ] && $map[ $t ] !== $t ) {
+						$list[ $i ] = $map[ $t ];
+						$changed    = true;
+					}
+				}
+				$node[ $key ] = is_array( $value ) ? $list : $list[0];
 			} elseif ( 'inLanguage' === $key && is_string( $value ) && ! $is_media && '' !== $tag && strtolower( $value ) !== strtolower( $tag ) ) {
 				// Only an existing declaration is corrected: a node that states no language is
 				// not given one, because the author may have left it out on purpose.

@@ -4498,3 +4498,39 @@ msgstr ""
 #: src/Admin/PluginLanguage.php
 msgid "For the whole dashboard in your language: Users → Profile → Language."
 msgstr ""
+
+#: src/Frontend/FormMails.php
+msgid "Contact Form 7 e-mails"
+msgstr ""
+
+#: src/Frontend/FormMails.php
+msgid "WPForms e-mails"
+msgstr ""
+
+#: src/Frontend/FormMails.php
+msgid "Fluent Forms e-mails"
+msgstr ""
+
+#: src/Frontend/FormMails.php
+msgid "Ninja Forms e-mails"
+msgstr ""
+
+#: src/Frontend/FormMails.php
+msgid "Formidable e-mails"
+msgstr ""
+
+#: src/Frontend/FormMails.php
+msgid "Everest Forms e-mails"
+msgstr ""
+
+#: src/Frontend/FormMails.php
+msgid "SureForms e-mails"
+msgstr ""
+
+#: src/Strings.php
+msgid "Content loaded by the page (maps, sliders…)"
+msgstr ""
+
+#: src/Strings.php
+msgid "GiveWP e-mails"
+msgstr ""

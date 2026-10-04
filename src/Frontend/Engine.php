@@ -59,6 +59,8 @@ class Engine {
 		// ElementsKit's image comparison: «Before» / «After» written over the slider.
 		'data-label_before',
 		'data-label_after',
+		// Kadence Blocks (700k+): the tooltip of the icon in an Advanced Heading.
+		'data-kb-tooltip-content',
 		// Variation Swatches for WooCommerce (300k): the colour or size name shown on hover.
 		'data-wvstooltip',
 		// An Elementor widget's settings as JSON: only the words inside are translated
@@ -174,6 +176,74 @@ class Engine {
 			}
 		}
 		return $out !== $value ? $out : null;
+	}
+
+	/**
+	 * The page's translated sentences of two words or more, by their first and last word, for with_affix().
+	 *
+	 * @param array<string,string> $map Translations of this page.
+	 * @return array{first:array<string,string[]>,last:array<string,string[]>}
+	 */
+	private static function affix_index( array $map ): array {
+		$idx = array(
+			'first' => array(),
+			'last'  => array(),
+		);
+		foreach ( $map as $k => $v ) {
+			$k   = (string) $k;
+			$len = mb_strlen( $k );
+			if ( $len < 8 || $len > 160 || '' === (string) $v || $v === $k || ! preg_match( '/\p{L}\S*\s+\S/u', $k ) ) {
+				continue;
+			}
+			$w                                     = preg_split( '/\s+/u', $k );
+			$idx['first'][ mb_strtolower( $w[0] ) ][] = $k;
+			$idx['last'][ mb_strtolower( end( $w ) ) ][] = $k;
+		}
+		return $idx;
+	}
+
+	/**
+	 * A sentence that starts or ends with a known name: «Continue reading Our terrace reopens» — WordPress puts
+	 * the post's title into its own wording (the more link's aria-label, «Leave a comment on…», a category feed's
+	 * title). The wording comes translated from the language pack; the title stayed in English (4/10/2026).
+	 * Pieces of a composed title («Site » Hotel news Feed») are looked at one by one.
+	 *
+	 * @param string               $value Text with no translation of its own.
+	 * @param array<string,string> $map   Translations of this page.
+	 * @param array                $idx   affix_index() of the map.
+	 */
+	private static function with_affix( string $value, array $map, array $idx ): ?string {
+		if ( ( empty( $idx['first'] ) && empty( $idx['last'] ) ) || mb_strlen( $value ) > 400 ) {
+			return null;
+		}
+		$split = self::title_pieces( $value );
+		list( $pieces, $seps ) = null !== $split ? $split : array( array( $value ), array() );
+		$out     = '';
+		$changed = false;
+		foreach ( $pieces as $i => $piece ) {
+			$t    = trim( $piece );
+			$best = '';
+			if ( '' !== $t && ! isset( $map[ $t ] ) ) {
+				$w = preg_split( '/\s+/u', $t );
+				foreach ( $idx['last'][ mb_strtolower( (string) end( $w ) ) ] ?? array() as $k ) {
+					$at = strlen( $t ) - strlen( $k );
+					if ( $at > 0 && substr( $t, $at ) === $k && preg_match( '/\s$/u', substr( $t, 0, $at ) ) && strlen( $k ) > strlen( $best ) ) {
+						$best = $k;
+					}
+				}
+				foreach ( $idx['first'][ mb_strtolower( (string) $w[0] ) ] ?? array() as $k ) {
+					if ( strlen( $k ) < strlen( $t ) && 0 === strpos( $t, $k ) && preg_match( '/^[\s,.:;!?)]/u', substr( $t, strlen( $k ) ) ) && strlen( $k ) > strlen( $best ) ) {
+						$best = $k;
+					}
+				}
+			}
+			if ( '' !== $best ) {
+				$piece   = str_replace( $best, $map[ $best ], $piece );
+				$changed = true;
+			}
+			$out .= $piece . ( $seps[ $i ] ?? '' );
+		}
+		return $changed ? $out : null;
 	}
 
 	/**
@@ -364,9 +434,10 @@ class Engine {
 	// The bare name counts too: WP User Frontend's «<li data-label="Post Title">», a
 	// table's «data-label» read on a phone, «data-caption» of a gallery.
 	// series of sentences (seen on a shop's «notify me» button, 29/09/2026).
+	// «data-payment_label» (Fluent Forms' payment items): the word may follow an underscore too.
 	// «data-day-label-plural»: Qi Addons' countdown keeps «Days» there and «Day» in data-day-label;
 	// the plural, the one shown nearly always, stayed English (3/10/2026).
-	const DATA_SUFFIX = '/^data-(?!(gtm|lazy|wp|wpr|elementor|trr|et|vc|wf)-)(?:[a-z0-9_-]*-)?(text|message|msg|label|title|tooltip|placeholder|alt|caption|cta|description|heading|subtitle|empty|error|success|confirm|notice)([-_](?:plural|singular))?(-\d+)?$/';
+	const DATA_SUFFIX = '/^data-(?!(gtm|lazy|wp|wpr|elementor|trr|et|vc|wf)-)(?:[a-z0-9_-]*[-_])?(text|message|msg|label|title|tooltip|placeholder|alt|caption|cta|description|heading|subtitle|empty|error|success|confirm|notice)([-_](?:plural|singular))?(-\d+)?$/';
 
 	/**
 	 * The phrases of a data-* value that is a list split on «|» by its script, or null.
@@ -1037,13 +1108,37 @@ class Engine {
 	}
 
 	/**
+	 * Whether this request is a page shown inside a frame that its plugin prints without <html> (GiveWP's
+	 * donation form and receipt views).
+	 */
+	private static function is_frame_view(): bool {
+		$route = isset( $_GET['givewp-route'] ) ? sanitize_key( wp_unslash( $_GET['givewp-route'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$views = array( 'donation-form-view', 'donation-confirmation-receipt-view' );
+		/**
+		 * Whether a page printed without <html> is translated as a whole page.
+		 *
+		 * @param bool $is_view Default: GiveWP's form and receipt views.
+		 */
+		return (bool) apply_filters( 'trrocket_translate_frame_view', in_array( $route, $views, true ) );
+	}
+
+	/**
 	 * Output-buffer callback.
 	 *
 	 * @param string $html Buffered page HTML.
 	 */
 	public function process( $html ) {
-		if ( ! is_string( $html ) || false === stripos( $html, '<html' ) ) {
+		if ( ! is_string( $html ) ) {
 			return $html;
+		}
+		if ( false === stripos( $html, '<html' ) ) {
+			if ( ( ! $this->is_secondary && ! $this->do_collect ) || ! self::is_frame_view() || false === strpos( $html, '<' ) ) {
+				return $html;
+			}
+			// GiveWP 3 (100k sites) shows its donation form inside an iframe whose page it prints without
+			// <html> or <body>; on /it/ every label, amount and button of the form stayed in English
+			// (4/10/2026). That fragment is the whole page of the frame: it is read as a document.
+			$html = "<!DOCTYPE html>\n<html><head><meta charset=\"utf-8\"></head><body>" . $html . '</body></html>';
 		}
 
 		// Shield <script>/<style>/<textarea> bodies from the parser before it can
@@ -1177,7 +1272,11 @@ class Engine {
 			}
 		}
 
-		$map = array();
+		$map   = array();
+		$affix = array(
+			'first' => array(),
+			'last'  => array(),
+		);
 		if ( $this->is_secondary ) {
 			$candidates = array();
 			foreach ( $schema_texts as $texts ) {
@@ -1241,6 +1340,7 @@ class Engine {
 				}
 			}
 			$map = Strings::translate_texts( $candidates, $this->current );
+			$affix = self::affix_index( $map );
 		}
 
 		// On a translated page, set the document language for SEO/accessibility, and
@@ -1354,6 +1454,9 @@ class Engine {
 				$changed         = true;
 			} else {
 				$with = self::with_quoted( $text, $map );
+				if ( null === $with ) {
+					$with = self::with_affix( $text, $map, $affix );
+				}
 				if ( null !== $with ) {
 					$node->nodeValue = str_replace( $text, $with, (string) $node->nodeValue );
 					$changed         = true;
@@ -1464,6 +1567,9 @@ class Engine {
 					$changed = true;
 				} else {
 					$with = self::with_quoted( $value, $map );
+					if ( null === $with ) {
+						$with = self::with_affix( $value, $map, $affix );
+					}
 					if ( null !== $with ) {
 						$el->setAttribute( $attr, $with );
 						$changed = true;

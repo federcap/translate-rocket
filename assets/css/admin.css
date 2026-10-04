@@ -1268,6 +1268,22 @@ th.trr-sortable:hover {
 	margin: -2px 0 12px 30px;
 }
 
+.trr-wiz-ai .trr-wiz-keylink {
+	flex-basis: 100%;
+	margin: 0;
+	min-width: 0;
+}
+
+.trr-wiz-ai .trr-wiz-keylink .button {
+	box-sizing: border-box;
+	max-width: 100%;
+	height: auto;
+	white-space: normal;
+	line-height: 1.5;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
 .trr-wiz-nav {
 	display: flex;
 	align-items: center;

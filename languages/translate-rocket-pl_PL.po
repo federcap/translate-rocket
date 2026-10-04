@@ -4015,3 +4015,30 @@ msgstr "Automatycznie (z Twojego profilu)"
 
 msgid "For the whole dashboard in your language: Users → Profile → Language."
 msgstr "Aby cały kokpit był w Twoim języku: Użytkownicy → Profil → Język."
+
+msgid "Contact Form 7 e-mails"
+msgstr "E-maile Contact Form 7"
+
+msgid "WPForms e-mails"
+msgstr "E-maile WPForms"
+
+msgid "Fluent Forms e-mails"
+msgstr "E-maile Fluent Forms"
+
+msgid "Ninja Forms e-mails"
+msgstr "E-maile Ninja Forms"
+
+msgid "Formidable e-mails"
+msgstr "E-maile Formidable"
+
+msgid "Everest Forms e-mails"
+msgstr "E-maile Everest Forms"
+
+msgid "SureForms e-mails"
+msgstr "E-maile SureForms"
+
+msgid "Content loaded by the page (maps, sliders…)"
+msgstr "Treści wczytywane przez stronę (mapy, slidery…)"
+
+msgid "GiveWP e-mails"
+msgstr "E-maile GiveWP"

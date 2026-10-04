@@ -26,6 +26,14 @@ class Fragment {
 	const ATTRIBUTES = array( 'alt', 'title', 'placeholder', 'aria-label', 'data-title', 'data-text' );
 
 	/**
+	 * When an array, the texts met while translating are added to it (RestContent collects what a translated
+	 * page loads from the REST API); null otherwise.
+	 *
+	 * @var string[]|null
+	 */
+	public static $seen = null;
+
+	/**
 	 * @param string $html Fragment or whole document.
 	 * @param string $lang Target language.
 	 */
@@ -82,6 +90,14 @@ class Fragment {
 		$candidates = array_values( array_unique( array_filter( $candidates, 'strlen' ) ) );
 		if ( empty( $candidates ) ) {
 			return $html;
+		}
+		if ( is_array( self::$seen ) ) {
+			foreach ( $nodes as $node ) {
+				self::$seen[] = trim( (string) $node->nodeValue );
+			}
+			foreach ( $attrs as $pair ) {
+				self::$seen[] = trim( (string) $pair[0]->getAttribute( $pair[1] ) );
+			}
 		}
 		$map = Strings::translate_texts( $candidates, $lang );
 		if ( empty( $map ) ) {
@@ -158,6 +174,9 @@ class Fragment {
 		$t = trim( $text );
 		if ( '' === $t || '' === $lang || ! preg_match( '/\p{L}/u', $t ) ) {
 			return $text;
+		}
+		if ( is_array( self::$seen ) ) {
+			self::$seen[] = $t;
 		}
 		$map = Strings::translate_texts( array( $t ), $lang );
 		return ( isset( $map[ $t ] ) && '' !== $map[ $t ] ) ? str_replace( $t, $map[ $t ], $text ) : $text;

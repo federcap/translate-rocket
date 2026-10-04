@@ -40,7 +40,72 @@ class ScriptData {
 		foreach ( self::vars( $js ) as $var ) {
 			self::walk( $var['data'], $out );
 		}
+		foreach ( self::literals( $js ) as $lit ) {
+			$out[] = $lit['text'];
+		}
 		return array_values( array_unique( $out ) );
+	}
+
+	/**
+	 * Slider and carousel options written as a JavaScript object, not JSON: MetaSlider (900k sites) prints
+	 * «prevText:"Previous", nextText:"Next"» for FlexSlider in its own inline block, so the arrows kept the
+	 * source language on every translated page (3/10/2026). Only these known keys are read — a script is
+	 * code, and a value under any other name could be anything.
+	 */
+	const LITERAL_KEYS = 'prevText|nextText|prevSlideMessage|nextSlideMessage|firstSlideMessage|lastSlideMessage|paginationBulletMessage';
+
+	/**
+	 * The known option values in a script, with their byte range (quotes excluded).
+	 *
+	 * @param string $js Script body.
+	 * @return array<int,array{start:int,end:int,text:string,quote:string}>
+	 */
+	private static function literals( string $js ): array {
+		$found = array();
+		$re = '/(?<![\w$])["\']?(?:' . self::LITERAL_KEYS . ')["\']?\s*:\s*(?:"((?:[^"\\\\\n]|\\\\.)*)"|\'((?:[^\'\\\\\n]|\\\\.)*)\')/';
+		if ( ! preg_match_all( $re, $js, $m, PREG_SET_ORDER | PREG_OFFSET_CAPTURE ) ) {
+			return $found;
+		}
+		foreach ( $m as $set ) {
+			$single = isset( $set[2] ) && -1 !== $set[2][1];
+			$hit    = $single ? $set[2] : $set[1];
+			$quote  = $single ? "'" : '"';
+			$raw    = $hit[0];
+			$text  = '"' === $quote ? json_decode( '"' . $raw . '"' ) : stripcslashes( $raw );
+			if ( ! is_string( $text ) || ! preg_match( '/\p{L}/u', $text ) || ! self::is_text( 'text', $text ) ) {
+				continue;
+			}
+			$found[] = array(
+				'start' => $hit[1],
+				'end'   => $hit[1] + strlen( $raw ),
+				'text'  => $text,
+				'quote' => $quote,
+			);
+		}
+		return $found;
+	}
+
+	/**
+	 * The script with its known option values translated, or null when nothing changed.
+	 *
+	 * @param string               $js  Script body.
+	 * @param array<string,string> $map Source text => translation.
+	 */
+	private static function translate_literals( string $js, array $map ): ?string {
+		$out    = '';
+		$cursor = 0;
+		$any    = false;
+		foreach ( self::literals( $js ) as $lit ) {
+			$t = $lit['text'];
+			if ( ! isset( $map[ $t ] ) || '' === $map[ $t ] || $map[ $t ] === $t ) {
+				continue;
+			}
+			$enc  = '"' === $lit['quote'] ? substr( (string) wp_json_encode( $map[ $t ] ), 1, -1 ) : addcslashes( $map[ $t ], "'\\\n\r" );
+			$out .= substr( $js, $cursor, $lit['start'] - $cursor ) . $enc;
+			$cursor = $lit['end'];
+			$any    = true;
+		}
+		return $any ? $out . substr( $js, $cursor ) : null;
 	}
 
 	/**
@@ -75,6 +140,18 @@ class ScriptData {
 	 * @param array<string,string> $map Source text => translation.
 	 */
 	public static function translate( string $js, array $map ): ?string {
+		$done = self::translate_vars( $js, $map );
+		$lit  = self::translate_literals( null === $done ? $js : $done, $map );
+		return null !== $lit ? $lit : $done;
+	}
+
+	/**
+	 * The block with the strings of its «var x = {…}» data swapped, or null when nothing changed.
+	 *
+	 * @param string               $js  Script body.
+	 * @param array<string,string> $map Source text => translation.
+	 */
+	private static function translate_vars( string $js, array $map ): ?string {
 		$vars = self::vars( $js );
 		if ( empty( $vars ) ) {
 			return null;

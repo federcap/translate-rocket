@@ -162,6 +162,8 @@ final class Plugin {
 			// (read from a hidden field, so a missing referer doesn't matter).
 			if ( ! $coexist && wp_doing_ajax() ) {
 				( new \TranslateRocket\Frontend\Forminator() )->boot();
+				// WPForms, Fluent Forms and Ninja Forms send through admin-ajax: their e-mail to the visitor follows the page's language.
+				( new \TranslateRocket\Frontend\FormMails() )->boot();
 			}
 			$this->admin = new Admin();
 			$this->admin->register();
@@ -223,6 +225,8 @@ final class Plugin {
 			( new \TranslateRocket\Frontend\Forms() )->boot();
 			// Forminator: hidden language field, server messages, e-mail notifications.
 			( new \TranslateRocket\Frontend\Forminator() )->boot();
+			// Form e-mails to the visitor in the visitor's language (CF7, WPForms, Fluent, Ninja, Formidable, Everest, SureForms).
+			( new \TranslateRocket\Frontend\FormMails() )->boot();
 			// Multilingual XML sitemap (hreflang alternates for every language).
 			( new \TranslateRocket\Frontend\Sitemap() )->boot();
 			// Optional first-visit redirect to the visitor's browser language.

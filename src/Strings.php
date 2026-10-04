@@ -250,6 +250,37 @@ class Strings {
 	}
 
 	/**
+	 * The name shown for a page or heading in the translation screens.
+	 *
+	 * @param string $url   Its URL, or a heading such as «[forms]».
+	 * @param string $title Name stored with it.
+	 */
+	public static function heading_name( string $url, string $title ): string {
+		// Texts that are not on a page («[forms]», «[woocommerce emails]»…) are collected while a visitor uses
+		// a translated page, with the language pack of that page loaded: their stored name could be in Italian
+		// for an administrator who reads English. They are named here, in the reader's language.
+		$names = array(
+			self::INTERFACE_URL          => __( 'Site interface (themes & plugins)', 'translate-rocket' ),
+			'[forms]'                    => __( 'Forms: messages and e-mails', 'translate-rocket' ),
+			'[woocommerce emails]'       => __( 'WooCommerce emails', 'translate-rocket' ),
+			'[woocommerce pdf]'          => __( 'WooCommerce PDF documents', 'translate-rocket' ),
+			'[contact form 7 e-mails]'   => __( 'Contact Form 7 e-mails', 'translate-rocket' ),
+			'[wpforms e-mails]'          => __( 'WPForms e-mails', 'translate-rocket' ),
+			'[fluent forms e-mails]'     => __( 'Fluent Forms e-mails', 'translate-rocket' ),
+			'[ninja forms e-mails]'      => __( 'Ninja Forms e-mails', 'translate-rocket' ),
+			'[formidable e-mails]'       => __( 'Formidable e-mails', 'translate-rocket' ),
+			'[everest forms e-mails]'    => __( 'Everest Forms e-mails', 'translate-rocket' ),
+			'[sureforms e-mails]'        => __( 'SureForms e-mails', 'translate-rocket' ),
+			'[loaded content]'           => __( 'Content loaded by the page (maps, sliders…)', 'translate-rocket' ),
+			'[givewp e-mails]'           => __( 'GiveWP e-mails', 'translate-rocket' ),
+		);
+		if ( isset( $names[ $url ] ) ) {
+			return $names[ $url ];
+		}
+		return '' !== $title ? $title : $url;
+	}
+
+	/**
 	 * URL + title for a page, looked up by its url hash.
 	 */
 	public static function page_info( string $url_hash ): ?object {

@@ -2553,7 +2553,7 @@ JS;
 				'label'  => 'DeepL',
 				'model'  => false,
 				'help'   => __( 'Free keys end in “:fx”. Use “Check usage” below for your live monthly quota.', 'translate-rocket' ),
-				'signup' => 'https://www.deepl.com/en/pro',
+				'signup' => 'https://www.deepl.com/your-account/keys',
 			),
 			'openai'    => array(
 				'label'  => 'OpenAI',
@@ -4247,12 +4247,20 @@ JS;
 						<span><strong><?php esc_html_e( 'Use an AI provider', 'translate-rocket' ); ?></strong><br><?php esc_html_e( 'Paste your own API key. You pay the provider directly — TranslateRocket takes nothing.', 'translate-rocket' ); ?></span>
 					</label>
 					<div class="trr-wiz-ai" hidden>
+						<?php
+						// Where to get each key, one click away (a user's suggestion on the support forum, 4/10/2026).
+						$wiz_defs = self::provider_defs();
+						/* translators: %s: provider name (e.g. OpenAI). */
+						$wiz_get = __( 'Get your %s API key ↗', 'translate-rocket' );
+						?>
 						<select name="wiz_provider" id="trr-wiz-provider">
 							<?php foreach ( $prov as $pid => $plabel ) : ?>
-								<option value="<?php echo esc_attr( $pid ); ?>"><?php echo esc_html( $plabel ); ?></option>
+								<option value="<?php echo esc_attr( $pid ); ?>" data-signup="<?php echo esc_url( (string) ( $wiz_defs[ $pid ]['signup'] ?? '' ) ); ?>" data-get="<?php echo esc_attr( sprintf( $wiz_get, $plabel ) ); ?>"><?php echo esc_html( $plabel ); ?></option>
 							<?php endforeach; ?>
 						</select>
 						<input type="password" name="wiz_key" id="trr-wiz-key" class="regular-text" placeholder="<?php esc_attr_e( 'Paste your API key', 'translate-rocket' ); ?>" autocomplete="off" />
+						<?php $wiz_first = (string) array_key_first( $prov ); ?>
+						<p class="trr-wiz-keylink"><a id="trr-wiz-keylink" class="button button-small" href="<?php echo esc_url( (string) ( $wiz_defs[ $wiz_first ]['signup'] ?? '' ) ); ?>" target="_blank" rel="noopener">&#128273; <span><?php echo esc_html( sprintf( $wiz_get, $prov[ $wiz_first ] ) ); ?></span></a></p>
 					</div>
 					<label class="trr-wiz-radio">
 						<input type="radio" name="trr_method" value="manual" />
@@ -4353,6 +4361,20 @@ JS;
 			if ( freeBox ) { freeBox.hidden = ( v !== 'free' ); }
 		} );
 	} );
+	// The «Get your … API key» link follows the provider chosen.
+	var wizProv = document.getElementById( 'trr-wiz-provider' );
+	var wizLink = document.getElementById( 'trr-wiz-keylink' );
+	if ( wizProv && wizLink ) {
+		wizProv.addEventListener( 'change', function () {
+			var o = wizProv.options[ wizProv.selectedIndex ];
+			var url = o ? o.getAttribute( 'data-signup' ) : '';
+			wizLink.parentNode.hidden = ! url;
+			if ( url ) {
+				wizLink.href = url;
+				wizLink.querySelector( 'span' ).textContent = o.getAttribute( 'data-get' );
+			}
+		} );
+	}
 	// «Try the key»: the server asks Groq for its models with the key just pasted.
 	var tryBtn = document.getElementById( 'trr-wiz-free-try' );
 	if ( tryBtn ) {
@@ -5111,7 +5133,7 @@ JS;
 					$translated = (int) $page->translated;
 					$missing    = max( 0, $total - $translated );
 					$pct        = $total > 0 ? (int) round( $translated / $total * 100 ) : 100;
-					$label      = $page->title ? $page->title : $page->url;
+					$label      = \TranslateRocket\Strings::heading_name( (string) $page->url, (string) $page->title );
 					?>
 					<tr
 						data-title="<?php echo esc_attr( strtolower( $label ) ); ?>"
@@ -5230,7 +5252,7 @@ JS;
 		);
 
 		if ( $info ) {
-			echo '<h2>' . esc_html( $info->title ? $info->title : $info->url ) . '</h2>';
+			echo '<h2>' . esc_html( \TranslateRocket\Strings::heading_name( (string) $info->url, (string) $info->title ) ) . '</h2>';
 			echo '<p class="description">' . esc_html( $info->url ) . '</p>';
 		}
 
