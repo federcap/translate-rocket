@@ -4279,3 +4279,51 @@ msgstr "このプロフィールは、ショートコードまたはブロック
 #: src/Admin/Admin.php
 msgid "Style the Default profile"
 msgstr "デフォルトのプロフィールを編集"
+
+#: src/Admin/Admin.php
+msgid "Right after:"
+msgstr "直後に配置："
+
+#: src/Admin/Admin.php
+msgid "Choose «In my header menu» here and the menu shows this profile; only one profile can be in the menu. Floating, the spot on your page and the bottom row are set in the Default profile."
+msgstr "ここで「ヘッダーメニュー内」を選ぶと、メニューにこのプロフィールが表示されます。メニューに入れられるプロフィールは1つだけです。フローティング、ページ上の場所、下部の行はデフォルトのプロフィールで設定します。"
+
+#: src/Admin/Admin.php
+msgid "Your site, live"
+msgstr "あなたのサイト（ライブ）"
+
+#: src/Admin/Admin.php
+msgid "Your real header, as visitors will see it with the settings on this page — before you save. In the menu your theme draws the languages; the colours and the opening you choose here are applied to them."
+msgstr "このページの設定で訪問者が見る実際のヘッダーです（保存前）。メニューの言語はテーマが描画し、ここで選んだ色と開き方が適用されます。"
+
+#: src/Admin/Admin.php
+msgid "Columns"
+msgstr "列"
+
+#: src/Admin/Admin.php
+msgid "Columns: as many as fit"
+msgstr "列：入るだけ"
+
+#: src/Admin/Admin.php
+msgid "%d columns"
+msgstr "%d列"
+
+#: src/Admin/Admin.php
+msgid "Alignment"
+msgstr "配置"
+
+#: src/Admin/Admin.php
+msgid "Left"
+msgstr "左"
+
+#: src/Admin/Admin.php
+msgid "Centre"
+msgstr "中央"
+
+#: src/Admin/Admin.php
+msgid "Right"
+msgstr "右"
+
+#: src/Admin/Admin.php
+msgid "Bottom of the page"
+msgstr "ページ下部"

@@ -116,12 +116,15 @@ class Settings {
 				'float_pos'     => 'bottom-right',
 				'in_menu'       => false,      // in the theme's menu (6/10/2026)
 				'menu_location' => 'auto',
-				'menu_pos'      => 'end',      // start | end of the menu (desktop and phone)
+				'menu_pos'      => 'end',      // start | end | after (menu_after) of the menu (desktop and phone)
+				'menu_after'    => '',         // label of the top-level item the languages follow
 				'footer_row'    => false,      // a row of languages at the bottom of every page
 				'in_spot'       => false,      // in a spot chosen on the page (picker)
 				'spot_selector' => '',
 				'spot_where'    => 'end',      // start | end of the chosen element
 				'spot_label'    => '',
+				'footer_align'  => 'center',   // left | center | right
+				'footer_cols'   => 0,          // table columns: 0 = as many as fit, or 2..4
 				'footer_layout' => 'row',      // row | grid     // a menu location, «auto», or nav:<id> for a block theme's Navigation menu
 				'device'        => 'both',
 				'mobile'        => 'same',

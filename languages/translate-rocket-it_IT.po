@@ -4490,3 +4490,51 @@ msgstr "Questo profilo compare solo dove lo inserisci, con il suo shortcode o bl
 #: src/Admin/Admin.php
 msgid "Style the Default profile"
 msgstr "Personalizza il profilo Predefinito"
+
+#: src/Admin/Admin.php
+msgid "Right after:"
+msgstr "Subito dopo:"
+
+#: src/Admin/Admin.php
+msgid "Choose «In my header menu» here and the menu shows this profile; only one profile can be in the menu. Floating, the spot on your page and the bottom row are set in the Default profile."
+msgstr "Scegli qui «Nel menu dell'intestazione» e il menu mostrerà questo profilo; il menu può averlo un solo profilo. Fluttuante, punto sulla pagina e riga in fondo si impostano nel profilo Predefinito."
+
+#: src/Admin/Admin.php
+msgid "Your site, live"
+msgstr "Il tuo sito, dal vivo"
+
+#: src/Admin/Admin.php
+msgid "Your real header, as visitors will see it with the settings on this page — before you save. In the menu your theme draws the languages; the colours and the opening you choose here are applied to them."
+msgstr "La tua vera intestazione, come la vedranno i visitatori con le impostazioni di questa pagina — prima di salvare. Nel menu le lingue le disegna il tuo tema; i colori e l'apertura che scegli qui vengono applicati a loro."
+
+#: src/Admin/Admin.php
+msgid "Columns"
+msgstr "Colonne"
+
+#: src/Admin/Admin.php
+msgid "Columns: as many as fit"
+msgstr "Colonne: quante ne stanno"
+
+#: src/Admin/Admin.php
+msgid "%d columns"
+msgstr "%d colonne"
+
+#: src/Admin/Admin.php
+msgid "Alignment"
+msgstr "Allineamento"
+
+#: src/Admin/Admin.php
+msgid "Left"
+msgstr "Sinistra"
+
+#: src/Admin/Admin.php
+msgid "Centre"
+msgstr "Centro"
+
+#: src/Admin/Admin.php
+msgid "Right"
+msgstr "Destra"
+
+#: src/Admin/Admin.php
+msgid "Bottom of the page"
+msgstr "Fondo della pagina"

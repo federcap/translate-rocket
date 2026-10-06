@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.5
+Stable tag: 1.7.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,14 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.7.6 =
+* New: Switcher → «Your site, live» — with the languages in your header menu (or in a spot you chose) the Switcher screen shows your real header, drawn with the settings on the page before you save, on desktop and phone.
+* New: put the languages right after any item of your header menu (Switcher → Where in the menu → «Right after:»), not only at its start or end. Classic menus and the Navigation block of block themes.
+* New: a profile such as «header» can be the one in the header menu: choose «In my header menu» in that profile and the menu shows its style. One profile at a time.
+* Fixed: the colours of the switcher (text, hover, dropdown background, border, corners) now apply to the languages in your header menu too — they used to be ignored there.
+* New: the row of languages at the bottom of the page can be aligned left, centre or right, and shown as a table of 2, 3 or 4 columns (2 on phones); it takes the switcher's text colours. «Your site, live» shows the bottom of the page too.
+* Fixed: «Your site, live» shows only the languages your visitors see (not the ones still offline).
+
 = 1.7.5 =
 * Fixed: «Translate in this browser» (no API key) now saves sentences that have a link or bold words inside. They used to come back without their link marks and stayed untranslated; now the marks are kept, and where the browser's translator drops them the sentence is translated piece by piece around its links.
 * Fixed: a phrase the browser's translator refuses is tried once, not again and again — the run could go round without end and the counter passed the total («Translating 162 of 154»).
@@ -293,6 +301,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.7.6 =
+The languages in your header menu take the colours you choose, can sit right after any menu item, and the Switcher screen shows your real header live before you save. Recommended.
 
 = 1.7.5 =
 Fixes translating in your browser without an API key (sentences with links are saved, a run always ends), and flags plus open-on-click for the languages in block themes' header menu. Recommended.

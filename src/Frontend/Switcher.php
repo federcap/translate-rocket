@@ -63,6 +63,13 @@ class Switcher {
 		// Block themes: the Navigation block gets a submenu through WordPress's own
 		// «hooked blocks», drawn by the block itself.
 		add_filter( 'hooked_block_types', array( $this, 'hook_navigation' ), 10, 4 );
+		// The Switcher page shows the real site with the settings not saved yet (see trying()).
+		add_filter(
+			'show_admin_bar',
+			static function ( $show ) {
+				return null !== self::trying() ? false : $show;
+			}
+		);
 		add_filter( 'hooked_block_core/navigation-submenu', array( $this, 'hooked_submenu' ), 10, 5 );
 		// 6/10/2026 (Federico): in the Navigation block the languages had no flag and opened on hover
 		// whatever the switcher said. The block keeps only plain text in a label, so the flag travels
@@ -122,8 +129,79 @@ class Switcher {
 	 * @return array<string,mixed>
 	 */
 	private static function settings(): array {
+		$t = self::trying();
+		if ( null !== $t && 'default' === $t['profile'] ) {
+			return $t['sw'];
+		}
 		$sw = Settings::get()['switcher'] ?? array();
-		return is_array( $sw ) ? $sw : array();
+		$sw = is_array( $sw ) ? $sw : array();
+		if ( null !== $t && ! empty( $t['sw']['in_menu'] ) ) {
+			// Saving a profile «in my header menu» takes the menu from Default and stops it floating.
+			$sw = array_merge(
+				$sw,
+				array(
+					'in_menu'  => false,
+					'floating' => false,
+					'in_spot'  => false,
+				)
+			);
+		}
+		return $sw;
+	}
+
+	/**
+	 * The settings being tried on the Switcher page, not saved yet (6/10/2026, Federico: «the live
+	 * preview never matched what was published»). Only for the administrator who is trying them,
+	 * with the token the page gave, for a quarter of an hour.
+	 *
+	 * @return array{profile:string,sw:array<string,mixed>}|null
+	 */
+	public static function trying(): ?array {
+		static $done = false, $t = null;
+		if ( $done ) {
+			return $t;
+		}
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- the token is checked here.
+		if ( empty( $_GET['trrocket_sw_try'] ) || ! did_action( 'init' ) || ! function_exists( 'wp_verify_nonce' ) ) {
+			return null;
+		}
+		$done = true;
+		$uid  = get_current_user_id();
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( $uid && current_user_can( 'manage_options' ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['trrocket_sw_try'] ) ), 'trrocket_sw_try_' . $uid ) ) {
+			$v = get_transient( 'trrocket_sw_try_' . $uid );
+			if ( is_array( $v ) && isset( $v['profile'], $v['sw'] ) && is_array( $v['sw'] ) ) {
+				$t = array(
+					'profile' => (string) $v['profile'],
+					'sw'      => $v['sw'],
+				);
+			}
+		}
+		return $t;
+	}
+
+	/**
+	 * The settings the header menu is drawn with: those of the profile where «In my header
+	 * menu» was chosen — Default, or a profile like «header» (6/10/2026, Federico styled
+	 * «header» and the menu kept showing Default).
+	 *
+	 * @return array<string,mixed>
+	 */
+	public static function menu_settings(): array {
+		$d = self::settings();
+		$t = self::trying();
+		if ( null !== $t && 'default' !== $t['profile'] && ! empty( $t['sw']['in_menu'] ) ) {
+			return array_merge( $d, $t['sw'] );
+		}
+		if ( ! empty( $d['in_menu'] ) ) {
+			return $d;
+		}
+		foreach ( (array) ( Settings::get()['switchers'] ?? array() ) as $p ) {
+			if ( is_array( $p ) && ! empty( $p['in_menu'] ) ) {
+				return array_merge( $d, $p );
+			}
+		}
+		return $d;
 	}
 
 	/**
@@ -155,6 +233,67 @@ class Switcher {
 					$out .= self::css_for( (string) $id, $s );
 				}
 			}
+		}
+		if ( self::in_menu() ) {
+			$out .= self::menu_css( self::menu_settings() );
+		}
+		// The bottom row takes the Default profile's text colours (6/10/2026: the preview showed them, the site did not).
+		$d = self::settings();
+		if ( ! empty( $d['footer_row'] ) ) {
+			foreach ( array( 'text_color' => '.trrocket-footer-row a,.trrocket-footer-row span', 'hover_color' => '.trrocket-footer-row a:hover,.trrocket-footer-row a:focus' ) as $k => $sel ) {
+				$c = trim( (string) ( $d[ $k ] ?? '' ) );
+				if ( '' !== $c && preg_match( '/^(#[0-9a-f]{3,8}|rgba?\([0-9.,\s%]+\)|[a-z]+)$/i', $c ) ) {
+					$out .= $sel . '{color:' . $c . '}';
+				}
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * The profile's colours on the languages in the header menu (6/10/2026, Federico: «I chose a
+	 * colour and the menu never showed it»). The theme draws the items; text, hover, the box of
+	 * the open list and its corners come from the switcher, the rest stays the theme's.
+	 *
+	 * @param array<string,mixed> $s Settings of the profile in the menu.
+	 */
+	private static function menu_css( array $s ): string {
+		$text   = trim( (string) ( $s['text_color'] ?? '' ) );
+		$hover  = trim( (string) ( $s['hover_color'] ?? '' ) );
+		$bg     = trim( (string) ( $s['menu_bg'] ?? '' ) );
+		$bg     = '' !== $bg ? $bg : trim( (string) ( $s['bg_color'] ?? '' ) );
+		$hbg    = trim( (string) ( $s['hover_bg'] ?? '' ) );
+		$border = trim( (string) ( $s['border_color'] ?? '' ) );
+		$radius = trim( (string) ( $s['radius'] ?? '' ) );
+		$ok     = static function ( string $c ): bool {
+			return (bool) preg_match( '/^(#[0-9a-f]{3,8}|rgba?\([0-9.,\s%]+\)|[a-z]+)$/i', $c );
+		};
+		$items = '.trrocket-lang-item>a,.trrocket-lang-item>button,.trrocket-lang-item .wp-block-navigation-item__content,.trrocket-lang-item .trrocket-menu-lang';
+		$open  = '.trrocket-lang-current>.sub-menu,.trrocket-lang-current>ul.children,.trrocket-lang-current>.wp-block-navigation__submenu-container';
+		$out   = '';
+		if ( '' !== $text && $ok( $text ) ) {
+			$out .= $items . '{color:' . $text . '!important}';
+		}
+		if ( '' !== $hover && $ok( $hover ) ) {
+			$out .= '.trrocket-lang-item>a:hover,.trrocket-lang-item>a:focus,.trrocket-lang-item>button:hover,.trrocket-lang-item .wp-block-navigation-item__content:hover{color:' . $hover . '!important}';
+		}
+		if ( '' !== $hbg && $ok( $hbg ) ) {
+			$out .= '.trrocket-lang-current .trrocket-lang-item>a:hover,.trrocket-lang-current .trrocket-lang-item .wp-block-navigation-item__content:hover{background:' . $hbg . '!important}';
+		}
+		$box = '';
+		if ( '' !== $bg && $ok( $bg ) ) {
+			$box .= 'background:' . $bg . '!important;';
+		}
+		if ( ! empty( $s['no_border'] ) ) {
+			$box .= 'border:0!important;';
+		} elseif ( '' !== $border && $ok( $border ) ) {
+			$box .= 'border:1px solid ' . $border . '!important;';
+		}
+		if ( '' !== $radius ) {
+			$box .= 'border-radius:' . self::css_len( $radius ) . '!important;overflow:hidden;';
+		}
+		if ( '' !== $box ) {
+			$out .= $open . '{' . $box . '}';
 		}
 		return $out;
 	}
@@ -630,9 +769,12 @@ class Switcher {
 		if ( count( $entries ) < 2 ) {
 			return;
 		}
-		$grid = 'grid' === ( $s['footer_layout'] ?? 'row' );
-		$html = $this->render_list( $entries, false, (string) ( $s['show'] ?? 'both' ), $grid );
-		echo wp_kses( '<div class="trrocket-footer-row' . ( $grid ? ' trrocket-footer-grid' : '' ) . '" role="navigation" aria-label="' . esc_attr__( 'Languages', 'translate-rocket' ) . '" translate="no">' . $html . '</div>', \TranslateRocket\Kses::html_rules() );
+		$grid  = 'grid' === ( $s['footer_layout'] ?? 'row' );
+		$html  = $this->render_list( $entries, false, (string) ( $s['show'] ?? 'both' ), $grid );
+		$align = in_array( (string) ( $s['footer_align'] ?? 'center' ), array( 'left', 'right' ), true ) ? (string) $s['footer_align'] : 'center';
+		$cols  = (int) ( $s['footer_cols'] ?? 0 );
+		$extra = ' trrocket-footer-' . $align . ( $grid && $cols >= 2 && $cols <= 6 ? ' trrocket-footer-cols-' . $cols : '' );
+		echo wp_kses( '<div class="trrocket-footer-row' . ( $grid ? ' trrocket-footer-grid' : '' ) . $extra . '" role="navigation" aria-label="' . esc_attr__( 'Languages', 'translate-rocket' ) . '" translate="no">' . $html . '</div>', \TranslateRocket\Kses::html_rules() );
 	}
 
 	/**
@@ -731,7 +873,7 @@ class Switcher {
 	 * Is the default switcher placed in the theme's menu?
 	 */
 	public static function in_menu(): bool {
-		return ! empty( self::settings()['in_menu'] );
+		return ! empty( self::menu_settings()['in_menu'] );
 	}
 
 	/**
@@ -774,7 +916,7 @@ class Switcher {
 	 * The location chosen in the settings (or the automatic one).
 	 */
 	private static function wanted_location(): string {
-		$loc = (string) ( self::settings()['menu_location'] ?? 'auto' );
+		$loc = (string) ( self::menu_settings()['menu_location'] ?? 'auto' );
 		return ( '' === $loc || 'auto' === $loc ) ? self::auto_location() : $loc;
 	}
 
@@ -829,7 +971,7 @@ class Switcher {
 		if ( ! is_array( $items ) || ! self::in_menu() || is_admin() || Preview::hidden() || \TranslateRocket\BuilderMode::active() || ! self::is_wanted_menu( $args ) ) {
 			return $items;
 		}
-		$s             = self::settings();
+		$s             = self::menu_settings();
 		$this->divider = (string) ( $s['divider'] ?? 'none' );
 		$show          = (string) ( $s['show'] ?? 'both' );
 		$dropdown      = 'dropdown' === ( $s['type'] ?? '' );
@@ -900,7 +1042,21 @@ class Switcher {
 		}
 		// The walkers draw the items in the order of this array: first or last in the menu (and in the
 		// phone menu, which is the same menu or the theme's own one).
-		$items = 'start' === ( $s['menu_pos'] ?? 'end' ) ? array_merge( $nuove, array_values( $items ) ) : array_merge( array_values( $items ), $nuove );
+		$items = array_values( $items );
+		$pos   = (string) ( $s['menu_pos'] ?? 'end' );
+		$cut   = 'start' === $pos ? 0 : count( $items );
+		// 6/10/2026 (Federico): «right after this item» — after the chosen top-level item and its submenu.
+		if ( 'after' === $pos ) {
+			foreach ( $items as $k => $it ) {
+				if ( 0 === (int) ( $it->menu_item_parent ?? 0 ) && self::same_label( (string) ( $it->title ?? '' ), (string) ( $s['menu_after'] ?? '' ) ) ) {
+					for ( $cut = $k + 1; $cut < count( $items ) && 0 !== (int) ( $items[ $cut ]->menu_item_parent ?? 0 ); $cut++ ) {
+						continue;
+					}
+					break;
+				}
+			}
+		}
+		$items = array_merge( array_slice( $items, 0, $cut ), $nuove, array_slice( $items, $cut ) );
 		$this->in_menu_done = true;
 		if ( isset( $args->theme_location ) && in_array( (string) $args->theme_location, self::mobile_locations(), true ) ) {
 			$this->in_mobile_done = true;
@@ -919,11 +1075,15 @@ class Switcher {
 	 * @return string[]
 	 */
 	public function hook_navigation( $hooked, $position, $anchor, $context ) {
-		$dove = 'start' === ( self::settings()['menu_pos'] ?? 'end' ) ? 'first_child' : 'last_child';
-		if ( ! is_array( $hooked ) || $dove !== $position || 'core/navigation' !== $anchor || is_admin() || ! self::in_menu() || ! function_exists( 'wp_is_block_theme' ) || ! wp_is_block_theme() ) {
+		$pos = (string) ( self::menu_settings()['menu_pos'] ?? 'end' );
+		// «After this item»: hooked after every top-level link, kept only after the chosen one (hooked_submenu).
+		$ok = 'after' === $pos
+			? ( 'after' === $position && in_array( $anchor, array( 'core/navigation-link', 'core/navigation-submenu', 'core/home-link' ), true ) )
+			: ( ( 'start' === $pos ? 'first_child' : 'last_child' ) === $position && 'core/navigation' === $anchor );
+		if ( ! is_array( $hooked ) || ! $ok || is_admin() || ! self::in_menu() || ! function_exists( 'wp_is_block_theme' ) || ! wp_is_block_theme() ) {
 			return $hooked;
 		}
-		$loc = (string) ( self::settings()['menu_location'] ?? 'auto' );
+		$loc = (string) ( self::menu_settings()['menu_location'] ?? 'auto' );
 		if ( 0 === strpos( $loc, 'nav:' ) && ! ( $context instanceof \WP_Post && (int) substr( $loc, 4 ) === (int) $context->ID ) ) {
 			return $hooked;
 		}
@@ -944,10 +1104,18 @@ class Switcher {
 	 */
 	public function hooked_submenu( $parsed, $type, $position, $anchor, $context ) {
 		unset( $type, $context );
-		if ( null === $parsed || ! in_array( $position, array( 'first_child', 'last_child' ), true ) || 'core/navigation' !== ( $anchor['blockName'] ?? '' ) || Preview::hidden() ) {
+		if ( null === $parsed || Preview::hidden() ) {
 			return $parsed;
 		}
-		$s       = self::settings();
+		$s = self::menu_settings();
+		if ( 'after' === $position ) {
+			if ( 'after' !== ( $s['menu_pos'] ?? 'end' ) || false !== strpos( (string) ( $anchor['attrs']['className'] ?? '' ), 'trrocket-' )
+				|| ! self::same_label( (string) ( $anchor['attrs']['label'] ?? ( 'core/home-link' === ( $anchor['blockName'] ?? '' ) ? __( 'Home' ) : '' ) ), (string) ( $s['menu_after'] ?? '' ) ) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- the core label.
+				return null;
+			}
+		} elseif ( ! in_array( $position, array( 'first_child', 'last_child' ), true ) || 'core/navigation' !== ( $anchor['blockName'] ?? '' ) ) {
+			return $parsed;
+		}
 		$entries = $this->entries( array( 'type' => 'dropdown', 'current' => 'show' ), ! empty( $s['english_names'] ) );
 		if ( count( $entries ) < 2 ) {
 			return null;
@@ -991,6 +1159,20 @@ class Switcher {
 		);
 	}
 
+	/**
+	 * Two menu labels name the same item (tags, entities, case and spaces aside).
+	 *
+	 * @param string $a Label.
+	 * @param string $b Label.
+	 */
+	public static function same_label( string $a, string $b ): bool {
+		$n = static function ( string $x ): string {
+			$x = html_entity_decode( wp_strip_all_tags( $x ), ENT_QUOTES, 'UTF-8' );
+			return function_exists( 'mb_strtolower' ) ? mb_strtolower( trim( (string) preg_replace( '/\s+/u', ' ', $x ) ), 'UTF-8' ) : strtolower( trim( $x ) );
+		};
+		return '' !== $n( $b ) && $n( $a ) === $n( $b );
+	}
+
 	const FLAG_MARK_OPEN  = '[[trrflag:';
 
 	/**
@@ -1013,7 +1195,7 @@ class Switcher {
 		if ( ! is_string( $html ) || false === strpos( (string) ( $block['attrs']['className'] ?? '' ), 'trrocket-lang-' ) ) {
 			return $html;
 		}
-		if ( false !== strpos( (string) ( $block['attrs']['className'] ?? '' ), 'trrocket-lang-current' ) && 'click' === ( self::settings()['dd_trigger'] ?? '' ) ) {
+		if ( false !== strpos( (string) ( $block['attrs']['className'] ?? '' ), 'trrocket-lang-current' ) && 'click' === ( self::menu_settings()['dd_trigger'] ?? '' ) ) {
 			$html = self::nav_on_click( $html );
 		}
 		if ( false === strpos( $html, self::FLAG_MARK_OPEN ) ) {
@@ -1109,7 +1291,8 @@ class Switcher {
 		// Le lingue ancora in lavorazione non compaiono nel selettore: chi le
 		// sta traducendo (di norma l'amministratore) le vede lo stesso.
 		$langs  = $router->public_languages();
-		if ( $this->solo_pubbliche ) {
+		// The Switcher page's «Your site, live» is the visitors' view: no offline languages there either.
+		if ( $this->solo_pubbliche || null !== self::trying() ) {
 			$langs = array_values( array_diff( $langs, $router->offline_languages() ) );
 		}
 		if ( count( $langs ) < 2 ) {

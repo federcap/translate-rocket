@@ -4303,3 +4303,51 @@ msgstr "Dit profiel verschijnt alleen waar je het invoegt, met de shortcode of h
 #: src/Admin/Admin.php
 msgid "Style the Default profile"
 msgstr "Standaardprofiel opmaken"
+
+#: src/Admin/Admin.php
+msgid "Right after:"
+msgstr "Direct na:"
+
+#: src/Admin/Admin.php
+msgid "Choose «In my header menu» here and the menu shows this profile; only one profile can be in the menu. Floating, the spot on your page and the bottom row are set in the Default profile."
+msgstr "Kies hier «In mijn headermenu» en het menu toont dit profiel; maar één profiel kan in het menu staan. Zwevend, de plek op je pagina en de rij onderaan stel je in het standaardprofiel in."
+
+#: src/Admin/Admin.php
+msgid "Your site, live"
+msgstr "Je site, live"
+
+#: src/Admin/Admin.php
+msgid "Your real header, as visitors will see it with the settings on this page — before you save. In the menu your theme draws the languages; the colours and the opening you choose here are applied to them."
+msgstr "Je echte header, zoals bezoekers hem zien met de instellingen op deze pagina — vóór het opslaan. In het menu tekent je thema de talen; de kleuren en de manier van openen die je hier kiest worden erop toegepast."
+
+#: src/Admin/Admin.php
+msgid "Columns"
+msgstr "Kolommen"
+
+#: src/Admin/Admin.php
+msgid "Columns: as many as fit"
+msgstr "Kolommen: zoveel als past"
+
+#: src/Admin/Admin.php
+msgid "%d columns"
+msgstr "%d kolommen"
+
+#: src/Admin/Admin.php
+msgid "Alignment"
+msgstr "Uitlijning"
+
+#: src/Admin/Admin.php
+msgid "Left"
+msgstr "Links"
+
+#: src/Admin/Admin.php
+msgid "Centre"
+msgstr "Midden"
+
+#: src/Admin/Admin.php
+msgid "Right"
+msgstr "Rechts"
+
+#: src/Admin/Admin.php
+msgid "Bottom of the page"
+msgstr "Onderkant van de pagina"

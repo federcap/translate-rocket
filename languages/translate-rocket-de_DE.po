@@ -4301,3 +4301,51 @@ msgstr "Dieses Profil erscheint nur dort, wo Sie es mit seinem Shortcode oder Bl
 #: src/Admin/Admin.php
 msgid "Style the Default profile"
 msgstr "Standardprofil gestalten"
+
+#: src/Admin/Admin.php
+msgid "Right after:"
+msgstr "Direkt nach:"
+
+#: src/Admin/Admin.php
+msgid "Choose «In my header menu» here and the menu shows this profile; only one profile can be in the menu. Floating, the spot on your page and the bottom row are set in the Default profile."
+msgstr "Wählen Sie hier «In meinem Kopfzeilenmenü», und das Menü zeigt dieses Profil; nur ein Profil kann im Menü sein. Schwebend, die Stelle auf Ihrer Seite und die Zeile unten stellen Sie im Standardprofil ein."
+
+#: src/Admin/Admin.php
+msgid "Your site, live"
+msgstr "Ihre Website, live"
+
+#: src/Admin/Admin.php
+msgid "Your real header, as visitors will see it with the settings on this page — before you save. In the menu your theme draws the languages; the colours and the opening you choose here are applied to them."
+msgstr "Ihre echte Kopfzeile, wie Besucher sie mit den Einstellungen dieser Seite sehen werden — vor dem Speichern. Im Menü zeichnet Ihr Theme die Sprachen; die hier gewählten Farben und die Öffnungsart werden darauf angewendet."
+
+#: src/Admin/Admin.php
+msgid "Columns"
+msgstr "Spalten"
+
+#: src/Admin/Admin.php
+msgid "Columns: as many as fit"
+msgstr "Spalten: so viele wie passen"
+
+#: src/Admin/Admin.php
+msgid "%d columns"
+msgstr "%d Spalten"
+
+#: src/Admin/Admin.php
+msgid "Alignment"
+msgstr "Ausrichtung"
+
+#: src/Admin/Admin.php
+msgid "Left"
+msgstr "Links"
+
+#: src/Admin/Admin.php
+msgid "Centre"
+msgstr "Mitte"
+
+#: src/Admin/Admin.php
+msgid "Right"
+msgstr "Rechts"
+
+#: src/Admin/Admin.php
+msgid "Bottom of the page"
+msgstr "Seitenende"

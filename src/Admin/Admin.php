@@ -49,6 +49,7 @@ class Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'wp_ajax_trrocket_models', array( $this, 'ajax_models' ) );
 		add_action( 'wp_ajax_trrocket_sw_preview', array( $this, 'ajax_switcher_preview' ) );
+		add_action( 'wp_ajax_trrocket_sw_try', array( $this, 'ajax_switcher_try' ) );
 		add_action( 'wp_ajax_trrocket_gt', array( $this, 'ajax_gt' ) );
 		add_action( 'wp_ajax_trrocket_deepl_usage', array( $this, 'ajax_deepl_usage' ) );
 		add_action( 'wp_ajax_trrocket_test_provider', array( $this, 'ajax_test_provider' ) );
@@ -256,6 +257,41 @@ class Admin {
 	 */
 	public static function lower( string $s ): string {
 		return function_exists( 'mb_strtolower' ) ? mb_strtolower( $s, 'UTF-8' ) : strtr( $s, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz' );
+	}
+
+	/**
+	 * The top-level items of the site's menus (classic menus in a location, Navigation
+	 * menus of a block theme): the languages can go right after one of them.
+	 *
+	 * @return string[]
+	 */
+	public static function switcher_menu_labels(): array {
+		$out = array();
+		foreach ( (array) get_nav_menu_locations() as $menu_id ) {
+			foreach ( (array) wp_get_nav_menu_items( (int) $menu_id ) as $it ) {
+				if ( is_object( $it ) && 0 === (int) $it->menu_item_parent ) {
+					$out[] = (string) $it->title;
+				}
+			}
+		}
+		if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+			foreach ( get_posts( array( 'post_type' => 'wp_navigation', 'post_status' => 'publish', 'numberposts' => 20 ) ) as $nav ) {
+				foreach ( parse_blocks( (string) $nav->post_content ) as $b ) {
+					if ( in_array( $b['blockName'] ?? '', array( 'core/navigation-link', 'core/navigation-submenu' ), true ) && ! empty( $b['attrs']['label'] ) ) {
+						$out[] = (string) $b['attrs']['label'];
+					} elseif ( 'core/home-link' === ( $b['blockName'] ?? '' ) ) {
+						$out[] = (string) ( $b['attrs']['label'] ?? __( 'Home' ) ); // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- the core label.
+					}
+				}
+			}
+		}
+		$out = array_map(
+			static function ( $x ) {
+				return trim( html_entity_decode( wp_strip_all_tags( $x ), ENT_QUOTES, 'UTF-8' ) );
+			},
+			$out
+		);
+		return array_values( array_unique( array_filter( $out, 'strlen' ) ) );
 	}
 
 	/**
@@ -1818,9 +1854,24 @@ class Admin {
 
 		$sw = $this->switcher_from_post( $sw );
 
+		// One profile in the header menu (6/10/2026): the one saved with «In my header menu» takes it.
+		if ( ! empty( $sw['in_menu'] ) ) {
+			foreach ( (array) ( $settings['switchers'] ?? array() ) as $id => $p ) {
+				if ( (string) $id !== $profile && is_array( $p ) ) {
+					$settings['switchers'][ $id ]['in_menu'] = false;
+				}
+			}
+			if ( 'default' !== $profile && is_array( $settings['switcher'] ?? null ) ) {
+				$settings['switcher']['in_menu']  = false;
+				$settings['switcher']['floating'] = false;
+				$settings['switcher']['in_spot']  = false;
+			}
+		}
 		if ( 'default' === $profile ) {
 			$settings['switcher'] = $sw;
 		} else {
+			$sw['floating'] = false;
+			$sw['in_spot']  = false;
 			$settings['switchers'][ $profile ] = $sw;
 		}
 		Settings::update( $settings );
@@ -1850,9 +1901,15 @@ class Admin {
 		$sw['spot_selector'] = isset( $_POST['sw_spot_selector'] ) ? \TranslateRocket\Frontend\Switcher::clean_selector( wp_unslash( (string) $_POST['sw_spot_selector'] ) ) : (string) ( $sw['spot_selector'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- clean_selector() keeps only selector characters.
 		$sw['spot_where']    = ( isset( $_POST['sw_spot_where'] ) && 'start' === $_POST['sw_spot_where'] ) ? 'start' : 'end';
 		$sw['spot_label']    = isset( $_POST['sw_spot_label'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_spot_label'] ) ) : (string) ( $sw['spot_label'] ?? '' );
-		$sw['menu_pos']      = ( isset( $_POST['sw_menu_pos'] ) && 'start' === $_POST['sw_menu_pos'] ) ? 'start' : 'end';
+		$sw['menu_pos']      = ( isset( $_POST['sw_menu_pos'] ) && in_array( $_POST['sw_menu_pos'], array( 'start', 'after' ), true ) ) ? sanitize_key( $_POST['sw_menu_pos'] ) : 'end';
+		$sw['menu_after']    = isset( $_POST['sw_menu_after'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_menu_after'] ) ) : '';
+		if ( 'after' === $sw['menu_pos'] && '' === $sw['menu_after'] ) {
+			$sw['menu_pos'] = 'end';
+		}
 		$sw['footer_row']    = ! empty( $_POST['sw_footer_row'] );
 		$sw['footer_layout'] = ( isset( $_POST['sw_footer_layout'] ) && 'grid' === $_POST['sw_footer_layout'] ) ? 'grid' : 'row';
+		$sw['footer_align']  = ( isset( $_POST['sw_footer_align'] ) && in_array( $_POST['sw_footer_align'], array( 'left', 'right' ), true ) ) ? sanitize_key( $_POST['sw_footer_align'] ) : 'center';
+		$sw['footer_cols']   = isset( $_POST['sw_footer_cols'] ) ? max( 0, min( 6, (int) $_POST['sw_footer_cols'] ) ) : 0;
 		$sw['floating']      = ( ! in_array( $placement, array( 'manual', 'menu', 'spot' ), true ) );
 		$menu_loc            = isset( $_POST['sw_menu_location'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_menu_location'] ) ) : 'auto';
 		$sw['menu_location'] = ( 'auto' === $menu_loc || isset( \TranslateRocket\Frontend\Switcher::menu_locations()[ $menu_loc ] ) || preg_match( '/^nav:\d+$/', $menu_loc ) ) ? $menu_loc : 'auto';
@@ -1919,6 +1976,42 @@ class Admin {
 		}
 		$view = ( isset( $_POST['view'] ) && 'phone' === $_POST['view'] ) ? 'phone' : 'desktop';
 		wp_send_json_success( ( new \TranslateRocket\Frontend\Switcher() )->preview_parts( $this->switcher_from_post( array() ), $view ) );
+	}
+
+	/**
+	 * AJAX: keep the settings in the form for a quarter of an hour and give the address of the
+	 * home page drawn with them — the real header, before saving (see Switcher::trying()).
+	 */
+	public function ajax_switcher_try(): void {
+		check_ajax_referer( 'trrocket_sw_preview' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'error' => 'forbidden' ) );
+		}
+		$profile  = isset( $_POST['sw_profile'] ) ? sanitize_key( wp_unslash( $_POST['sw_profile'] ) ) : 'default';
+		$settings = Settings::get();
+		$base     = ( 'default' === $profile || '' === $profile )
+			? ( is_array( $settings['switcher'] ?? null ) ? $settings['switcher'] : array() )
+			: ( is_array( $settings['switchers'][ $profile ] ?? null ) ? $settings['switchers'][ $profile ] : (array) ( $settings['switcher'] ?? array() ) );
+		$uid      = get_current_user_id();
+		set_transient(
+			'trrocket_sw_try_' . $uid,
+			array(
+				'profile' => '' === $profile ? 'default' : $profile,
+				'sw'      => $this->switcher_from_post( $base ),
+			),
+			15 * MINUTE_IN_SECONDS
+		);
+		wp_send_json_success(
+			array(
+				'url' => add_query_arg(
+					array(
+						'trrocket_sw_try' => wp_create_nonce( 'trrocket_sw_try_' . $uid ),
+						't'               => time(),
+					),
+					home_url( '/' )
+				),
+			)
+		);
 	}
 
 	/**
@@ -2004,6 +2097,14 @@ class Admin {
 				</p>
 			</div>
 
+			<?php // 6/10/2026 (Federico): with the languages in the header menu the theme draws them — the preview is the real site. ?>
+			<div class="trrocket-card" id="trr-sw-site" <?php echo ( ! empty( $sw['in_menu'] ) || ( 'default' === $profile && ( ! empty( $sw['in_spot'] ) || ! empty( $sw['footer_row'] ) ) ) ) ? '' : 'hidden'; ?>>
+				<h2><?php esc_html_e( 'Your site, live', 'translate-rocket' ); ?></h2>
+				<p class="description"><?php esc_html_e( 'Your real header, as visitors will see it with the settings on this page — before you save. In the menu your theme draws the languages; the colours and the opening you choose here are applied to them.', 'translate-rocket' ); ?></p>
+				<div class="trr-sw-site-wrap"><iframe id="trr-sw-site-frame" title="<?php esc_attr_e( 'Your site, live', 'translate-rocket' ); ?>"></iframe></div>
+				<h3 id="trr-sw-site-foot-h" <?php echo ( 'default' === $profile && ! empty( $sw['footer_row'] ) ) ? '' : 'hidden'; ?>><?php esc_html_e( 'Bottom of the page', 'translate-rocket' ); ?></h3>
+				<div class="trr-sw-site-wrap" id="trr-sw-site-foot" <?php echo ( 'default' === $profile && ! empty( $sw['footer_row'] ) ) ? '' : 'hidden'; ?>><iframe id="trr-sw-site-frame2" title="<?php esc_attr_e( 'Bottom of the page', 'translate-rocket' ); ?>"></iframe></div>
+			</div>
 			<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
 				<form method="post" action="" style="flex:1 1 380px;min-width:340px">
 					<?php wp_nonce_field( 'trrocket_save_switcher', 'trrocket_switcher_nonce' ); ?>
@@ -2012,12 +2113,12 @@ class Admin {
 					<?php // 5/10/2026: prima dove va il selettore, poi come appare; colori e rifiniture in «More style options». ?>
 					<div class="trrocket-card">
 						<h2><?php esc_html_e( 'Placement', 'translate-rocket' ); ?></h2>
-						<?php if ( 'default' !== $profile ) : // 6/10/2026 (Federico): the header menu kept the Default profile's look while he styled «header». ?>
-							<p class="notice notice-info inline" style="margin:8px 0;padding:10px 12px"><?php esc_html_e( 'This profile shows only where you insert it, with its shortcode or block. The header menu, the spot you chose on your page, the floating switcher and the row at the bottom always use the Default profile.', 'translate-rocket' ); ?>
-								<a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-switcher' ) ); ?>"><?php esc_html_e( 'Style the Default profile', 'translate-rocket' ); ?> &rarr;</a></p>
-							<input type="hidden" name="sw_placement" value="manual" />
+						<?php $trr_extra = 'default' !== $profile; // 6/10/2026 (Federico): a profile like «header» can be the one in the header menu. ?>
+						<?php if ( $trr_extra ) : ?>
+							<p class="description"><?php esc_html_e( 'Choose «In my header menu» here and the menu shows this profile; only one profile can be in the menu. Floating, the spot on your page and the bottom row are set in the Default profile.', 'translate-rocket' ); ?></p>
 						<?php else : ?>
 						<p class="description"><?php esc_html_e( 'Choose one: either place the switcher yourself with the shortcode / block, or let the plugin float it for you — not both.', 'translate-rocket' ); ?></p>
+						<?php endif; ?>
 						<?php
 						$placement = ! empty( $g( 'in_spot' ) ) ? 'spot' : ( ! empty( $g( 'in_menu' ) ) ? 'menu' : ( empty( $g( 'floating' ) ) ? 'manual' : (string) $g( 'float_pos' ) ) );
 						$trr_menus = self::switcher_menu_choices();
@@ -2035,6 +2136,9 @@ class Admin {
 									'top-left'     => __( 'Floating — top left', 'translate-rocket' ),
 									'custom'       => __( 'Floating — custom position (X / Y)', 'translate-rocket' ),
 								) as $v => $l ) :
+									if ( $trr_extra && ! in_array( $v, array( 'menu', 'manual' ), true ) ) {
+										continue;
+									}
 									?>
 									<option value="<?php echo esc_attr( $v ); ?>" <?php selected( $placement, $v ); ?>><?php echo esc_html( $l ); ?></option>
 								<?php endforeach; ?>
@@ -2058,12 +2162,22 @@ class Admin {
 								<p class="trr-sw-menupos"><span><?php esc_html_e( 'Where in the menu', 'translate-rocket' ); ?></span>
 									<label><input type="radio" name="sw_menu_pos" value="end" <?php checked( 'start' !== (string) $g( 'menu_pos', 'end' ) ); ?> /> <?php esc_html_e( 'At the end', 'translate-rocket' ); ?></label>
 									<label><input type="radio" name="sw_menu_pos" value="start" <?php checked( 'start', (string) $g( 'menu_pos', 'end' ) ); ?> /> <?php esc_html_e( 'At the start', 'translate-rocket' ); ?></label>
+									<?php $trr_labels = self::switcher_menu_labels(); ?>
+									<?php if ( $trr_labels ) : // 6/10/2026 (Federico): between the items of the header, not only first or last. ?>
+										<label><input type="radio" name="sw_menu_pos" value="after" id="sw_menu_pos_after" <?php checked( 'after', (string) $g( 'menu_pos', 'end' ) ); ?> /> <?php esc_html_e( 'Right after:', 'translate-rocket' ); ?></label>
+										<select name="sw_menu_after" id="sw_menu_after" onchange="document.getElementById('sw_menu_pos_after').checked=true;">
+											<?php foreach ( $trr_labels as $trr_l ) : ?>
+												<option value="<?php echo esc_attr( $trr_l ); ?>" <?php selected( (string) $g( 'menu_after', '' ), $trr_l ); ?>><?php echo esc_html( $trr_l ); ?></option>
+											<?php endforeach; ?>
+										</select>
+									<?php endif; ?>
 								</p>
 								<p class="description"><?php esc_html_e( 'The languages become an item of that menu, drawn by your theme like its other items — in the phone menu too, at the top or at the bottom as chosen. With «Dropdown» the other languages open under the current one. On a page without that menu the switcher floats in the corner, so it is never missing.', 'translate-rocket' ); ?></p>
 							<?php else : ?>
 								<p class="description trr-sw-nomenu"><?php esc_html_e( 'Your theme shows no menu yet. Create one in Appearance → Menus (or in the Site Editor) and put it in the header; until then the switcher floats in the corner.', 'translate-rocket' ); ?></p>
 							<?php endif; ?>
 						</div>
+						<?php if ( ! $trr_extra ) : ?>
 						<div id="sw-spot-pick">
 							<input type="hidden" name="sw_spot_selector" id="sw_spot_selector" value="<?php echo esc_attr( (string) $g( 'spot_selector' ) ); ?>" />
 							<input type="hidden" name="sw_spot_where" id="sw_spot_where" value="<?php echo esc_attr( (string) $g( 'spot_where', 'end' ) ); ?>" />
@@ -2089,11 +2203,23 @@ class Admin {
 							<p class="trr-sw-footer-lay">
 								<label><input type="radio" name="sw_footer_layout" value="row" <?php checked( 'grid' !== (string) $g( 'footer_layout', 'row' ) ); ?> /> <?php esc_html_e( 'In a line', 'translate-rocket' ); ?></label>
 								<label><input type="radio" name="sw_footer_layout" value="grid" <?php checked( 'grid', (string) $g( 'footer_layout', 'row' ) ); ?> /> <?php esc_html_e( 'As a table', 'translate-rocket' ); ?></label>
+								<?php // 6/10/2026 (Federico): centred or not, and a table of 2, 3 or 4 columns. ?>
+								<select name="sw_footer_cols" aria-label="<?php esc_attr_e( 'Columns', 'translate-rocket' ); ?>">
+									<option value="0" <?php selected( 0, (int) $g( 'footer_cols', 0 ) ); ?>><?php esc_html_e( 'Columns: as many as fit', 'translate-rocket' ); ?></option>
+									<?php foreach ( array( 2, 3, 4 ) as $trr_c ) : ?>
+										<option value="<?php echo (int) $trr_c; ?>" <?php selected( $trr_c, (int) $g( 'footer_cols', 0 ) ); ?>><?php echo esc_html( sprintf( /* translators: %d: number of columns. */ __( '%d columns', 'translate-rocket' ), $trr_c ) ); ?></option>
+									<?php endforeach; ?>
+								</select>
+							</p>
+							<p class="trr-sw-footer-align"><span><?php esc_html_e( 'Alignment', 'translate-rocket' ); ?></span>
+								<label><input type="radio" name="sw_footer_align" value="left" <?php checked( 'left', (string) $g( 'footer_align', 'center' ) ); ?> /> <?php esc_html_e( 'Left', 'translate-rocket' ); ?></label>
+								<label><input type="radio" name="sw_footer_align" value="center" <?php checked( ! in_array( (string) $g( 'footer_align', 'center' ), array( 'left', 'right' ), true ) ); ?> /> <?php esc_html_e( 'Centre', 'translate-rocket' ); ?></label>
+								<label><input type="radio" name="sw_footer_align" value="right" <?php checked( 'right', (string) $g( 'footer_align', 'center' ) ); ?> /> <?php esc_html_e( 'Right', 'translate-rocket' ); ?></label>
 							</p>
 							<p class="description"><?php esc_html_e( 'Flags and names side by side under your footer, as many sites do: handy with many languages, and visitors find them where they look for them.', 'translate-rocket' ); ?></p>
 						</div>
-						<p id="sw-manual-hint" class="description"><?php esc_html_e( 'Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block.', 'translate-rocket' ); ?></p>
 						<?php endif; ?>
+						<p id="sw-manual-hint" class="description"><?php esc_html_e( 'Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block.', 'translate-rocket' ); ?></p>
 					</div>
 
 					<div class="trrocket-card">

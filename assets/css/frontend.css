@@ -453,3 +453,16 @@
 .trrocket-footer-row a{text-decoration:none}
 /* 6/10/2026: the switcher in a spot chosen on the page — it sits in the line of that element */
 .trrocket-spot:not(.trrocket-floating){display:inline-flex;align-items:center;vertical-align:middle;margin:0 8px}
+
+/* 6/10/2026: bottom row aligned left / centre / right, and a table of 2-6 columns */
+.trrocket-footer-row.trrocket-footer-left{text-align:left}
+.trrocket-footer-row.trrocket-footer-left .trrocket-switcher{justify-content:flex-start}
+.trrocket-footer-row.trrocket-footer-right{text-align:right}
+.trrocket-footer-row.trrocket-footer-right .trrocket-switcher{justify-content:flex-end}
+.trrocket-footer-row.trrocket-footer-cols-2 .trrocket-switcher.trrocket-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.trrocket-footer-row.trrocket-footer-cols-3 .trrocket-switcher.trrocket-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.trrocket-footer-row.trrocket-footer-cols-4 .trrocket-switcher.trrocket-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.trrocket-footer-row[class*="trrocket-footer-cols-"]{max-width:880px}
+@media (max-width:600px){.trrocket-footer-row[class*="trrocket-footer-cols-"] .trrocket-switcher.trrocket-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.trrocket-footer-row.trrocket-footer-grid.trrocket-footer-center .trrocket-switcher.trrocket-grid li>a,.trrocket-footer-row.trrocket-footer-grid.trrocket-footer-center .trrocket-switcher.trrocket-grid li>span{justify-content:center}
+.trrocket-footer-row.trrocket-footer-grid.trrocket-footer-right .trrocket-switcher.trrocket-grid li>a,.trrocket-footer-row.trrocket-footer-grid.trrocket-footer-right .trrocket-switcher.trrocket-grid li>span{justify-content:flex-end}

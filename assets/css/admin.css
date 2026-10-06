@@ -2054,3 +2054,12 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 #sw-picker-frame{flex:1;width:100%;margin:0 auto;border:0;background:#f6f7f7;transition:width .2s}
 .trr-sw-spot-now{margin:6px 0}
 @media (max-width:782px){.trr-sw-picker{padding:0}.trr-sw-picker-box{border-radius:0;height:100%}}
+
+/* 6/10/2026: the real site in the Switcher page (languages in the header menu or in a spot) */
+#trr-sw-site{margin:0 0 20px}
+.trr-sw-site-wrap{position:relative;overflow:hidden;height:300px;border:1px solid #dcdcde;border-radius:8px;background:#fff}
+.trr-sw-site-wrap iframe{position:absolute;top:0;left:0;border:0;transform-origin:0 0;background:#fff}
+#trr-sw-site.is-phone .trr-sw-site-wrap{height:560px;max-width:400px;margin:0 auto}
+#trr-sw-site[hidden]{display:none}
+.trr-sw-footer-align{display:flex;gap:16px;margin:6px 0 0 24px;align-items:center;flex-wrap:wrap}
+.trr-sw-site-wrap + h3{margin:14px 0 6px;font-size:13px}
