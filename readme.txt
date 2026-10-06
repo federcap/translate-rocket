@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.6
+Stable tag: 1.7.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.7.7 =
+* Fixed: content loaded after the page (AJAX) on a translated page kept its scripts and styles whole. A script holding HTML in a string — like SupportCandy's ticket form — came back cut in half, and its «Submit» button did nothing.
+* Fixed: links in content loaded by AJAX (a portfolio's next page, «load more») now stay in the visitor's language even when none of its texts is translated yet — «Read more» used to lead back to the default language.
+
 = 1.7.6 =
 * New: Switcher → «Your site, live» — with the languages in your header menu (or in a spot you chose) the Switcher screen shows your real header, drawn with the settings on the page before you save, on desktop and phone.
 * New: put the languages right after any item of your header menu (Switcher → Where in the menu → «Right after:»), not only at its start or end. Classic menus and the Navigation block of block themes.
@@ -301,6 +305,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.7.7 =
+Fixes content loaded by AJAX on translated pages: scripts stay whole (forms like SupportCandy's send again) and its links keep the visitor's language. Recommended.
 
 = 1.7.6 =
 The languages in your header menu take the colours you choose, can sit right after any menu item, and the Switcher screen shows your real header live before you save. Recommended.

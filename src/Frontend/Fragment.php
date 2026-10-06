@@ -42,6 +42,23 @@ class Fragment {
 			return self::text( $html, $lang );
 		}
 		$is_doc = ( false !== stripos( $html, '<body' ) || false !== stripos( $html, '<html' ) );
+		$orig   = $html;
+		// Scripts and styles travel untouched (6/10/2026: SupportCandy's ticket form on /it/ lost half of
+		// its script — PHP's HTML parser ends a script at the first «</div» inside a JS string — and its
+		// «Submit» button did nothing). Their bodies are set aside and put back as they were.
+		$kept = array();
+		$html = (string) preg_replace_callback(
+			'#(<(script|style)\b[^>]*>)(.*?)(</\2\s*>)#is',
+			static function ( $m ) use ( &$kept ) {
+				if ( '' === trim( $m[3] ) ) {
+					return $m[0];
+				}
+				$k          = 'trrkeep' . count( $kept ) . 'x' . substr( md5( $m[3] ), 0, 8 );
+				$kept[ $k ] = $m[3];
+				return $m[1] . $k . $m[4];
+			},
+			$html
+		);
 
 		$prev = libxml_use_internal_errors( true );
 		$dom  = new \DOMDocument();
@@ -50,13 +67,13 @@ class Fragment {
 		libxml_clear_errors();
 		libxml_use_internal_errors( $prev );
 		if ( ! $ok ) {
-			return $html;
+			return $orig;
 		}
 
 		$xpath = new \DOMXPath( $dom );
 		$scope = $is_doc ? $xpath->query( '//body' )->item( 0 ) : $xpath->query( '//*[@id="trr-frag"]' )->item( 0 );
 		if ( null === $scope ) {
-			return $html;
+			return $orig;
 		}
 
 		$texts = $xpath->query( './/text()[not(ancestor::script) and not(ancestor::style) and not(ancestor::textarea)]', $scope );
@@ -88,9 +105,6 @@ class Fragment {
 			}
 		}
 		$candidates = array_values( array_unique( array_filter( $candidates, 'strlen' ) ) );
-		if ( empty( $candidates ) ) {
-			return $html;
-		}
 		if ( is_array( self::$seen ) ) {
 			foreach ( $nodes as $node ) {
 				self::$seen[] = trim( (string) $node->nodeValue );
@@ -99,10 +113,9 @@ class Fragment {
 				self::$seen[] = trim( (string) $pair[0]->getAttribute( $pair[1] ) );
 			}
 		}
-		$map = Strings::translate_texts( $candidates, $lang );
-		if ( empty( $map ) ) {
-			return $html;
-		}
+		// No early way out when nothing is translated yet: the links must still take the page's language
+		// (6/10/2026: a portfolio's second page, loaded by AJAX, linked «Read more» out of /en/).
+		$map = empty( $candidates ) ? array() : Strings::translate_texts( $candidates, $lang );
 
 		$changed = false;
 		foreach ( $nodes as $node ) {
@@ -147,7 +160,7 @@ class Fragment {
 			}
 		}
 		if ( ! $changed ) {
-			return $html;
+			return $orig;
 		}
 
 		if ( $is_doc ) {
@@ -155,13 +168,23 @@ class Fragment {
 			if ( null !== $dom->doctype && '' !== $out ) {
 				$out = '<!DOCTYPE ' . $dom->doctype->name . '>' . "\n" . $out;
 			}
-			return '' !== $out ? $out : $html;
+		} else {
+			$out = '';
+			foreach ( $scope->childNodes as $child ) {
+				$out .= $dom->saveHTML( $child );
+			}
 		}
-		$out = '';
-		foreach ( $scope->childNodes as $child ) {
-			$out .= $dom->saveHTML( $child );
+		if ( '' === $out ) {
+			return $orig;
 		}
-		return '' !== $out ? $out : $html;
+		$out = strtr( $out, $kept );
+		// A body that did not come back exactly (the parser moved or dropped it): the untouched answer.
+		foreach ( $kept as $body ) {
+			if ( false === strpos( $out, $body ) ) {
+				return $orig;
+			}
+		}
+		return $out;
 	}
 
 	/**
