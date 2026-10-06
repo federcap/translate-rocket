@@ -39,10 +39,31 @@ class Switcher {
 	/**
 	 * Hook into WordPress.
 	 */
+	/** IDs of the language items added to a menu: far above any real post ID. */
+	const MENU_ID_BASE = 2100000000;
+
+	/** Was the switcher drawn in a menu on this page (else it floats, see floating()). */
+	private $in_menu_done = false;
+
+	/** The phone menu of the theme got the languages on this page. */
+	private $in_mobile_done = false;
+
 	public function boot(): void {
 		add_shortcode( 'translaterocket_switcher', array( $this, 'render' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'wp_footer', array( $this, 'floating' ) );
+		add_action( 'wp_footer', array( $this, 'footer_row' ), 5 );
+		// A spot chosen on the page itself (6/10/2026), and the picker that chooses it.
+		add_action( 'wp_footer', array( $this, 'spot' ), 6 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'picker_assets' ), 20 );
+		add_filter( 'show_admin_bar', array( $this, 'picker_no_bar' ), 99 );
+		// In the theme's menu (6/10/2026): real menu items, so the theme draws them like its
+		// own — its submenu, its mobile menu. Priority 20: after MenuLanguages hid what it hides.
+		add_filter( 'wp_nav_menu_objects', array( $this, 'menu_items' ), 20, 2 );
+		// Block themes: the Navigation block gets a submenu through WordPress's own
+		// «hooked blocks», drawn by the block itself.
+		add_filter( 'hooked_block_types', array( $this, 'hook_navigation' ), 10, 4 );
+		add_filter( 'hooked_block_core/navigation-submenu', array( $this, 'hooked_submenu' ), 10, 5 );
 		// Migration nicety: keep a leftover TranslatePress [language-switcher]
 		// working, but only when TranslatePress isn't the one handling it.
 		add_action( 'init', array( $this, 'register_compat_shortcodes' ), 99 );
@@ -524,11 +545,22 @@ class Switcher {
 			return;
 		}
 		$s = self::settings();
-		if ( empty( $s['floating'] ) ) {
+		// In the menu: floating only on a page where that menu was not drawn (a landing page
+		// without header, a template that leaves the menu out), so the switcher never vanishes.
+		$ripiego = ! empty( $s['in_menu'] ) && ! $this->in_menu_done;
+		// The header menu got the languages, but the theme draws another menu on phones and that
+		// one did not (its location is empty: the theme lists the pages there). On phones only, float.
+		$solo_telefono = ! empty( $s['in_menu'] ) && $this->in_menu_done && ! $this->in_mobile_done
+			&& ! ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) && array() !== self::mobile_locations();
+		if ( empty( $s['floating'] ) && ! $ripiego && ! $solo_telefono ) {
 			return;
 		}
+		$ripiego = $ripiego || $solo_telefono;
 		$this->divider = (string) ( $s['divider'] ?? 'none' );
 		$pos  = in_array( $s['float_pos'] ?? '', array( 'bottom-right', 'bottom-left', 'top-right', 'top-left', 'custom' ), true ) ? $s['float_pos'] : 'bottom-right';
+		if ( $ripiego ) {
+			$pos = 'bottom-right';
+		}
 		$html = $this->build(
 			array(
 				'type'    => $s['type'] ?? 'inline',
@@ -564,6 +596,9 @@ class Switcher {
 			}
 		}
 		$dd_extra = ( 'dropdown' === ( $s['type'] ?? '' ) ) ? ' trrocket-floating-dd' : '';
+		if ( ! empty( $solo_telefono ) ) {
+			$dd_extra .= ' trrocket-only-phone';
+		}
 		// Anchored to the bottom of the screen, a dropdown that opens downwards
 		// puts the whole list below the fold, where no visitor can reach it: it
 		// has to open upwards. Custom positions count when anchored from the bottom.
@@ -576,12 +611,396 @@ class Switcher {
 	}
 
 	/**
+	 * A row of languages at the bottom of every page (6/10/2026): flags and names side by side,
+	 * centred, wrapping on phones. Independent of where the main switcher is.
+	 */
+	public function footer_row(): void {
+		$s = self::settings();
+		if ( empty( $s['footer_row'] ) || Preview::hidden() || \TranslateRocket\BuilderMode::active() ) {
+			return;
+		}
+		$this->divider = 'none';
+		$entries       = $this->entries( array( 'type' => 'inline', 'current' => 'show' ), ! empty( $s['english_names'] ) );
+		if ( count( $entries ) < 2 ) {
+			return;
+		}
+		$grid = 'grid' === ( $s['footer_layout'] ?? 'row' );
+		$html = $this->render_list( $entries, false, (string) ( $s['show'] ?? 'both' ), $grid );
+		echo wp_kses( '<div class="trrocket-footer-row' . ( $grid ? ' trrocket-footer-grid' : '' ) . '" role="navigation" aria-label="' . esc_attr__( 'Languages', 'translate-rocket' ) . '" translate="no">' . $html . '</div>', \TranslateRocket\Kses::html_rules() );
+	}
+
+	/**
+	 * Is this page open in the spot picker (Switcher screen → «Choose on my page»)?
+	 */
+	public static function picking(): bool {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only: it only draws the picker for an administrator.
+		return isset( $_GET['trrocket_pick'] ) && is_user_logged_in() && current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * A CSS selector as the picker writes it (tags, #id, .class, >, :nth-of-type): nothing else survives.
+	 *
+	 * @param string $sel Selector.
+	 */
+	public static function clean_selector( string $sel ): string {
+		$sel = (string) preg_replace( '/[^A-Za-z0-9_\-#.\s>:()]/', '', $sel );
+		return trim( substr( (string) preg_replace( '/\s+/', ' ', $sel ), 0, 300 ) );
+	}
+
+	/**
+	 * The picker's script, only in the picker.
+	 */
+	public function picker_assets(): void {
+		if ( ! self::picking() ) {
+			return;
+		}
+		wp_enqueue_script( 'trrocket-switcher-picker', TRROCKET_URL . 'assets/js/switcher-picker.js', array(), Plugin::asset_ver( 'assets/js/switcher-picker.js' ), true );
+		wp_localize_script(
+			'trrocket-switcher-picker',
+			'trrocketPicker',
+			array(
+				'hint'    => __( 'Click the place where the switcher should go.', 'translate-rocket' ),
+				'start'   => __( 'At the start', 'translate-rocket' ),
+				'end'     => __( 'At the end', 'translate-rocket' ),
+				'use'     => __( 'Use this spot', 'translate-rocket' ),
+				'cancel'  => __( 'Cancel', 'translate-rocket' ),
+				'done'    => __( 'Chosen. Save the switcher to keep it.', 'translate-rocket' ),
+				'header'  => __( 'Header', 'translate-rocket' ),
+				'menu'    => __( 'Menu', 'translate-rocket' ),
+				'footer'  => __( 'Footer', 'translate-rocket' ),
+				'sidebar' => __( 'Sidebar', 'translate-rocket' ),
+			)
+		);
+	}
+
+	/**
+	 * No admin bar in the picker: it is not part of the page the visitor sees.
+	 *
+	 * @param bool $show Show the bar.
+	 */
+	public function picker_no_bar( $show ) {
+		return self::picking() ? false : $show;
+	}
+
+	/**
+	 * The switcher in the spot chosen on the page. Drawn here, at the end of the page, and moved there
+	 * by a few lines of script; where the spot is missing or hidden (a page without that header, the
+	 * desktop menu on a phone) it floats in the corner instead, and it follows the screen when resized.
+	 */
+	public function spot(): void {
+		$s       = self::settings();
+		$picking = self::picking();
+		if ( ( empty( $s['in_spot'] ) && ! $picking ) || Preview::hidden() || \TranslateRocket\BuilderMode::active() ) {
+			return;
+		}
+		$this->divider = (string) ( $s['divider'] ?? 'none' );
+		$type          = (string) ( $s['type'] ?? 'inline' );
+		$html          = $this->build(
+			array(
+				'type'    => $type,
+				'show'    => $s['show'] ?? 'both',
+				'current' => $s['current'] ?? 'show',
+				'trigger' => $s['dd_trigger'] ?? 'click',
+				'caret'   => empty( $s['dd_caret'] ) ? '0' : '1',
+			),
+			! empty( $s['english_names'] )
+		);
+		if ( '' === $html ) {
+			return;
+		}
+		$html = wp_kses( $html, \TranslateRocket\Kses::html_rules() );
+		if ( $picking ) {
+			// the picker shows the real switcher where the owner clicks
+			echo '<template id="trrocket-spot-tpl" class="trrocket-spot-tpl">' . $html . '</template>'; // phpcs:ignore WordPress.Security.EscapingOutput.OutputNotEscaped -- filtered by wp_kses above.
+			return;
+		}
+		$float = 'trrocket-floating trrocket-pos-bottom-right' . ( 'dropdown' === $type ? ' trrocket-floating-dd trrocket-dd-up' : '' );
+		echo '<div id="trrocket-spot" class="trrocket-sw trrocket-sw-default trrocket-spot" translate="no" hidden data-sel="' . esc_attr( self::clean_selector( (string) ( $s['spot_selector'] ?? '' ) ) ) . '" data-where="' . ( 'start' === ( $s['spot_where'] ?? 'end' ) ? 'start' : 'end' ) . '" data-float="' . esc_attr( $float ) . '">' . $html . '</div>'; // phpcs:ignore WordPress.Security.EscapingOutput.OutputNotEscaped -- $html filtered by wp_kses above.
+		?>
+<script>( function () { var w = document.getElementById( 'trrocket-spot' ); if ( ! w ) { return; } var base = w.className, sel = w.getAttribute( 'data-sel' ), start = 'start' === w.getAttribute( 'data-where' ), fl = w.getAttribute( 'data-float' ); function place() { var t = null; try { t = sel ? document.querySelector( sel ) : null; } catch ( e ) { t = null; } var ok = t && t.getClientRects().length && 'hidden' !== getComputedStyle( t ).visibility; if ( ok ) { if ( w.parentNode !== t ) { if ( start ) { t.insertBefore( w, t.firstChild ); } else { t.appendChild( w ); } } w.className = base; } else { if ( w.parentNode !== document.body ) { document.body.appendChild( w ); } w.className = base + ' ' + fl; } w.hidden = false; } place(); var r; window.addEventListener( 'resize', function () { clearTimeout( r ); r = setTimeout( place, 200 ); } ); }() );</script>
+		<?php
+	}
+
+	/**
+	 * Is the default switcher placed in the theme's menu?
+	 */
+	public static function in_menu(): bool {
+		return ! empty( self::settings()['in_menu'] );
+	}
+
+	/**
+	 * Menu locations of the theme that have a menu in them: location => «Location name — Menu name».
+	 *
+	 * @return array<string,string>
+	 */
+	public static function menu_locations(): array {
+		$out      = array();
+		$assigned = get_nav_menu_locations();
+		foreach ( get_registered_nav_menus() as $loc => $label ) {
+			$menu_id = (int) ( $assigned[ $loc ] ?? 0 );
+			$menu    = $menu_id > 0 ? wp_get_nav_menu_object( $menu_id ) : false;
+			if ( $menu ) {
+				$out[ (string) $loc ] = $label . ' — ' . $menu->name;
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * The location «Automatic» means: the theme's main menu by its usual names, else the first one used.
+	 */
+	public static function auto_location(): string {
+		$locs = self::menu_locations();
+		foreach ( array( 'primary', 'main', 'header', 'menu-1', 'main-menu', 'primary-menu', 'primary_navigation', 'main_menu', 'header-menu', 'top' ) as $want ) {
+			if ( isset( $locs[ $want ] ) ) {
+				return $want;
+			}
+		}
+		foreach ( array_keys( $locs ) as $loc ) {
+			if ( false === strpos( (string) $loc, 'footer' ) && false === strpos( (string) $loc, 'social' ) ) {
+				return (string) $loc;
+			}
+		}
+		return '';
+	}
+
+	/**
+	 * The location chosen in the settings (or the automatic one).
+	 */
+	private static function wanted_location(): string {
+		$loc = (string) ( self::settings()['menu_location'] ?? 'auto' );
+		return ( '' === $loc || 'auto' === $loc ) ? self::auto_location() : $loc;
+	}
+
+	/**
+	 * The theme's own phone menu locations (Astra «mobile_menu», Storefront «handheld»…): on a
+	 * phone they replace the header menu, so the languages go there too.
+	 *
+	 * @return string[]
+	 */
+	public static function mobile_locations(): array {
+		$out = array();
+		foreach ( array_keys( get_registered_nav_menus() ) as $loc ) {
+			if ( preg_match( '/mobile|handheld|off-?canvas|responsive/i', (string) $loc ) ) {
+				$out[] = (string) $loc;
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * Does this wp_nav_menu() call draw the chosen menu? By location, or by the menu itself
+	 * (Elementor's Nav Menu widget and many headers name the menu, not the location).
+	 *
+	 * @param object $args wp_nav_menu() arguments.
+	 */
+	private static function is_wanted_menu( $args ): bool {
+		$loc = self::wanted_location();
+		if ( '' === $loc || ! is_object( $args ) ) {
+			return false;
+		}
+		if ( isset( $args->theme_location ) && '' !== (string) $args->theme_location ) {
+			return (string) $args->theme_location === $loc || in_array( (string) $args->theme_location, self::mobile_locations(), true );
+		}
+		$assigned = get_nav_menu_locations();
+		$want_id  = (int) ( $assigned[ $loc ] ?? 0 );
+		if ( $want_id <= 0 || empty( $args->menu ) ) {
+			return false;
+		}
+		$menu = wp_get_nav_menu_object( $args->menu );
+		return $menu && (int) $menu->term_id === $want_id;
+	}
+
+	/**
+	 * The languages as menu items, at the end of the chosen menu: the current one with the
+	 * others in its submenu (dropdown), or one item per language (the other layouts).
+	 *
+	 * @param array<int,mixed> $items Menu items.
+	 * @param object           $args  wp_nav_menu() arguments.
+	 * @return array<int,mixed>
+	 */
+	public function menu_items( $items, $args ) {
+		if ( ! is_array( $items ) || ! self::in_menu() || is_admin() || Preview::hidden() || \TranslateRocket\BuilderMode::active() || ! self::is_wanted_menu( $args ) ) {
+			return $items;
+		}
+		$s             = self::settings();
+		$this->divider = (string) ( $s['divider'] ?? 'none' );
+		$show          = (string) ( $s['show'] ?? 'both' );
+		$dropdown      = 'dropdown' === ( $s['type'] ?? '' );
+		$entries       = $this->entries( array( 'type' => $dropdown ? 'dropdown' : 'inline', 'current' => $s['current'] ?? 'show' ), ! empty( $s['english_names'] ) );
+		if ( count( $entries ) < ( $dropdown ? 2 : 1 ) ) {
+			return $items;
+		}
+		$order = 0;
+		foreach ( $items as $it ) {
+			$order = max( $order, (int) ( $it->menu_order ?? 0 ) );
+		}
+		$id   = self::MENU_ID_BASE;
+		$make = function ( array $entry, int $parent, array $extra ) use ( &$id, &$order, $show ) {
+			++$id;
+			++$order;
+			$classes = array_merge( array( 'menu-item', 'menu-item-type-custom', 'menu-item-object-custom', 'trrocket-lang-item', 'trrocket-lang-' . $entry['code'] ), $extra );
+			return new \WP_Post(
+				(object) array(
+					'ID'                    => $id,
+					'db_id'                 => $id,
+					'post_type'             => 'nav_menu_item',
+					'post_status'           => 'publish',
+					'post_title'            => '',
+					'post_name'             => 'trrocket-lang-' . $entry['code'],
+					'post_parent'           => 0,
+					'menu_order'            => $order,
+					'menu_item_parent'      => (string) $parent,
+					'object_id'             => (string) $id,
+					'object'                => 'custom',
+					'type'                  => 'custom',
+					'type_label'            => 'Custom Link',
+					// HTML is what the walkers expect here (the_title is not escaped in menus):
+					// flag + name, kept away from the translation engine.
+					'title'                 => '<span class="trrocket-menu-lang" translate="no" lang="' . esc_attr( $entry['code'] ) . '">' . $this->label_html( $entry, $show ) . '</span>',
+					'url'                   => (string) $entry['href'],
+					'target'                => '',
+					'attr_title'            => (string) $entry['name'],
+					'description'           => '',
+					'classes'               => $classes,
+					'xfn'                   => '',
+					'current'               => false,
+					'current_item_ancestor' => false,
+					'current_item_parent'   => false,
+					'filter'                => 'raw',
+				)
+			);
+		};
+		$nuove = array();
+		if ( $dropdown ) {
+			$current = null;
+			foreach ( $entries as $e ) {
+				if ( $e['current'] ) {
+					$current = $e;
+				}
+			}
+			$current = $current ?? $entries[0];
+			$parent  = $make( $current, 0, array( 'menu-item-has-children', 'trrocket-lang-current' ) );
+			$nuove[] = $parent;
+			foreach ( $entries as $e ) {
+				if ( $e['code'] !== $current['code'] ) {
+					$nuove[] = $make( $e, (int) $parent->db_id, array() );
+				}
+			}
+		} else {
+			foreach ( $entries as $e ) {
+				$nuove[] = $make( $e, 0, $e['current'] ? array( 'trrocket-lang-current' ) : array() );
+			}
+		}
+		// The walkers draw the items in the order of this array: first or last in the menu (and in the
+		// phone menu, which is the same menu or the theme's own one).
+		$items = 'start' === ( $s['menu_pos'] ?? 'end' ) ? array_merge( $nuove, array_values( $items ) ) : array_merge( array_values( $items ), $nuove );
+		$this->in_menu_done = true;
+		if ( isset( $args->theme_location ) && in_array( (string) $args->theme_location, self::mobile_locations(), true ) ) {
+			$this->in_mobile_done = true;
+		}
+		return $items;
+	}
+
+	/**
+	 * Block themes: «the header menu» is the Navigation block. Every Navigation block of the
+	 * page gets the languages unless one menu was chosen (nav:<id>), then only that one.
+	 *
+	 * @param string[]                                                $hooked   Hooked block types.
+	 * @param string                                                  $position Relative position.
+	 * @param string                                                  $anchor   Anchor block type.
+	 * @param \WP_Block_Template|\WP_Post|array<string,mixed>|null $context  Where the anchor is.
+	 * @return string[]
+	 */
+	public function hook_navigation( $hooked, $position, $anchor, $context ) {
+		$dove = 'start' === ( self::settings()['menu_pos'] ?? 'end' ) ? 'first_child' : 'last_child';
+		if ( ! is_array( $hooked ) || $dove !== $position || 'core/navigation' !== $anchor || is_admin() || ! self::in_menu() || ! function_exists( 'wp_is_block_theme' ) || ! wp_is_block_theme() ) {
+			return $hooked;
+		}
+		$loc = (string) ( self::settings()['menu_location'] ?? 'auto' );
+		if ( 0 === strpos( $loc, 'nav:' ) && ! ( $context instanceof \WP_Post && (int) substr( $loc, 4 ) === (int) $context->ID ) ) {
+			return $hooked;
+		}
+		$hooked[] = 'core/navigation-submenu';
+		return $hooked;
+	}
+
+	/**
+	 * The hooked submenu: the current language, the others inside. Labels are plain text
+	 * (the Navigation block does not take SVG in a label).
+	 *
+	 * @param array<string,mixed>|null $parsed   The hooked block.
+	 * @param string                   $type     Its type.
+	 * @param string                   $position Relative position.
+	 * @param array<string,mixed>      $anchor   The anchor block.
+	 * @param mixed                    $context  Where the anchor is.
+	 * @return array<string,mixed>|null
+	 */
+	public function hooked_submenu( $parsed, $type, $position, $anchor, $context ) {
+		unset( $type, $context );
+		if ( null === $parsed || ! in_array( $position, array( 'first_child', 'last_child' ), true ) || 'core/navigation' !== ( $anchor['blockName'] ?? '' ) || Preview::hidden() ) {
+			return $parsed;
+		}
+		$s       = self::settings();
+		$entries = $this->entries( array( 'type' => 'dropdown', 'current' => 'show' ), ! empty( $s['english_names'] ) );
+		if ( count( $entries ) < 2 ) {
+			return null;
+		}
+		$label = function ( array $e ) use ( $s ) {
+			$t = self::label_text( $e, (string) ( $s['show'] ?? 'both' ) );
+			return '' !== $t ? $t : strtoupper( explode( '-', (string) $e['code'] )[0] );
+		};
+		$current = $entries[0];
+		foreach ( $entries as $e ) {
+			if ( $e['current'] ) {
+				$current = $e;
+			}
+		}
+		$inner = array();
+		foreach ( $entries as $e ) {
+			if ( $e['code'] === $current['code'] ) {
+				continue;
+			}
+			$inner[] = array(
+				'blockName'    => 'core/navigation-link',
+				'attrs'        => array( 'label' => esc_html( $label( $e ) ), 'url' => (string) $e['href'], 'kind' => 'custom', 'isTopLevelLink' => false, 'className' => 'trrocket-lang-item trrocket-lang-' . $e['code'] ),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			);
+		}
+		$this->in_menu_done = true;
+		return array(
+			'blockName'    => 'core/navigation-submenu',
+			'attrs'        => array( 'label' => esc_html( $label( $current ) ), 'url' => (string) $current['href'], 'kind' => 'custom', 'className' => 'trrocket-lang-item trrocket-lang-current' ),
+			'innerBlocks'  => $inner,
+			'innerHTML'    => '',
+			'innerContent' => array_fill( 0, count( $inner ), null ),
+		);
+	}
+
+	/**
 	 * Core builder shared by the shortcode, block and floating switcher.
 	 *
 	 * @param array{type:string,show:string,current:string} $atts    Resolved options.
 	 * @param bool                                           $english Use English language names.
 	 */
 	private function build( array $atts, bool $english ): string {
+		$entries = $this->entries( $atts, $english );
+		if ( empty( $entries ) ) {
+			return '';
+		}
+		return $this->draw( $entries, $atts );
+	}
+
+	/**
+	 * The languages to show, each with its address for the page being viewed.
+	 *
+	 * @param array<string,mixed> $atts    Resolved options (type, current).
+	 * @param bool                $english Use English language names.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function entries( array $atts, bool $english ): array {
 		$router = Plugin::instance()->router();
 		// Le lingue ancora in lavorazione non compaiono nel selettore: chi le
 		// sta traducendo (di norma l'amministratore) le vede lo stesso.
@@ -590,7 +1009,7 @@ class Switcher {
 			$langs = array_values( array_diff( $langs, $router->offline_languages() ) );
 		}
 		if ( count( $langs ) < 2 ) {
-			return '';
+			return array();
 		}
 
 		$current = $router->current_language();
@@ -600,7 +1019,7 @@ class Switcher {
 		foreach ( $langs as $code ) {
 			$is_current = ( $code === $current );
 			// A dropdown always needs the current language for its toggle button.
-			if ( $is_current && 'hide' === $atts['current'] && 'dropdown' !== $atts['type'] ) {
+			if ( $is_current && 'hide' === ( $atts['current'] ?? 'show' ) && 'dropdown' !== ( $atts['type'] ?? '' ) ) {
 				continue;
 			}
 
@@ -629,10 +1048,16 @@ class Switcher {
 			);
 		}
 
-		if ( empty( $entries ) ) {
-			return '';
-		}
+		return $entries;
+	}
 
+	/**
+	 * Draw the entries in the chosen layout.
+	 *
+	 * @param array<int,array<string,mixed>> $entries Entries.
+	 * @param array<string,mixed>            $atts    Resolved options.
+	 */
+	private function draw( array $entries, array $atts ): string {
 		if ( 'dropdown' === $atts['type'] ) {
 			return $this->render_dropdown( $entries, (string) $atts['show'], (string) ( $atts['trigger'] ?? 'click' ), '0' !== (string) ( $atts['caret'] ?? '1' ) );
 		}
@@ -648,7 +1073,7 @@ class Switcher {
 			$nx = '<button type="button" class="trrocket-scroll-next" aria-label="' . esc_attr__( 'More', 'translate-rocket' ) . '"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>';
 			return '<div class="trrocket-scroll">' . $pv . '<div class="trrocket-scroll-viewport"><ul class="trrocket-switcher trrocket-scroll-track">' . $items . '</ul></div>' . $nx . '</div>';
 		}
-		return $this->render_list( $entries, 'list' === $atts['type'], (string) $atts['show'] );
+		return $this->render_list( $entries, 'list' === $atts['type'], (string) $atts['show'], 'grid' === $atts['type'] );
 	}
 
 	/**
@@ -709,8 +1134,8 @@ class Switcher {
 	 * @param bool                           $vertical Stack vertically.
 	 * @param string                         $show     both|flag|name.
 	 */
-	private function render_list( array $entries, bool $vertical, string $show ): string {
-		$class = 'trrocket-switcher' . ( $vertical ? ' trrocket-vertical' : '' );
+	private function render_list( array $entries, bool $vertical, string $show, bool $grid = false ): string {
+		$class = 'trrocket-switcher' . ( $vertical ? ' trrocket-vertical' : '' ) . ( $grid ? ' trrocket-grid' : '' );
 		$items = '';
 		foreach ( $entries as $entry ) {
 			$label = $this->label_html( $entry, $show );

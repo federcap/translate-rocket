@@ -56,7 +56,9 @@ class LabsPromo {
 			return wp_nonce_url( admin_url( 'admin-post.php?action=trrocket_labs_banner' . ( $show ? '&show=1' : '' ) ), 'trrocket_labs_banner' );
 		};
 		$page = admin_url( 'admin.php?page=' . self::SLUG );
-		if ( get_user_meta( get_current_user_id(), 'trrocket_labs_banner_min', true ) ) {
+		// One line by default since 5/10/2026 («Labs is too much in the way»): the full box only for
+		// whoever asked to see it («Show», remembered per user as «0»).
+		if ( '0' !== (string) get_user_meta( get_current_user_id(), 'trrocket_labs_banner_min', true ) ) {
 			echo '<p class="trr-lb-min">✨ <strong>TranslateRocket Labs</strong> — ' . esc_html__( 'free: translate with no API key, from any browser, automatically.', 'translate-rocket' )
 				. ' <a href="' . esc_url( $page ) . '">' . esc_html__( 'See what Labs adds', 'translate-rocket' ) . ' →</a>'
 				. ' <a class="trr-lb-toggle" href="' . esc_url( $toggle( true ) ) . '">' . esc_html__( 'Show', 'translate-rocket' ) . '</a></p>';
@@ -151,7 +153,15 @@ class LabsPromo {
 				.trr-lp-hero{text-align:center;padding:26px 16px 8px}
 				.trr-lp-hero h1{font-size:34px;line-height:1.15;margin:0 0 8px;font-weight:900;background:linear-gradient(90deg,#ec4899,#a855f7 35%,#3b82f6 68%,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 				.trr-lp-hero p{font-size:17px;color:#3c434a;max-width:720px;margin:0 auto}
-				.trr-lp-badge{display:inline-block;margin:14px 0 4px;padding:8px 20px;border-radius:999px;color:#fff;font-weight:800;background:linear-gradient(90deg,#ec4899,#8b5cf6 45%,#3b82f6 80%,#22d3ee);box-shadow:0 10px 24px rgba(139,92,246,.3)}
+				.trr-lp-plain{margin:10px 0 0;font-weight:700;color:#6d28d9}
+				.trr-lp-cmp{width:100%;border-collapse:collapse;margin:4px 0 0}
+				.trr-lp-cmp th,.trr-lp-cmp td{padding:9px 10px;border-bottom:1px solid #eceef6;text-align:left;vertical-align:top}
+				.trr-lp-cmp th{font-size:13px;color:#50575e;font-weight:600}
+				.trr-lp-cmp td.si{color:#008a20;font-weight:700;white-space:nowrap}
+				.trr-lp-cmp td.no{color:#8c8f94;white-space:nowrap}
+				.trr-lp-cmp td.lab{color:#6d28d9;font-weight:700;white-space:nowrap}
+				@media (max-width:600px){.trr-lp-cmp th,.trr-lp-cmp td{padding:8px 6px;font-size:13px}}
+				.trr-lp-example{margin:6px 0 4px;color:#3c434a;line-height:1.7}
 				.trr-lp-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:14px;margin:22px 0}
 				.trr-lp-tile{box-sizing:border-box;border-radius:18px;padding:20px 18px;color:#fff;box-shadow:0 12px 26px rgba(79,70,229,.2)}
 				.trr-lp-tile h3{color:#fff;margin:10px 0 6px;font-size:18px}
@@ -178,7 +188,39 @@ class LabsPromo {
 				<div class="trr-lp-hero">
 					<h1><span aria-hidden="true" style="-webkit-text-fill-color:initial">✨</span> TranslateRocket Labs</h1>
 					<p><?php esc_html_e( 'A free add-on for TranslateRocket that translates your site with no API key, from any browser — phones included — and does more of the work by itself.', 'translate-rocket' ); ?></p>
-					<span class="trr-lp-badge"><?php esc_html_e( 'Free, on request — one key per site', 'translate-rocket' ); ?></span>
+					<p class="trr-lp-plain"><?php esc_html_e( 'Free, on request — one key per site', 'translate-rocket' ); ?></p>
+				</div>
+
+				<?php
+				// 5/10/2026 (Federico): one place that says what is in the free plugin and what Labs adds.
+				$cmp = array(
+					array( __( 'Unlimited languages, each on its own address for Google', 'translate-rocket' ), true, true ),
+					array( __( 'Translation with your own AI key (free Groq, Cloudflare, OpenRouter; or OpenAI, Claude, Gemini, DeepL, Google)', 'translate-rocket' ), true, true ),
+					array( __( 'Free translation in Chrome and Edge, no key', 'translate-rocket' ), true, true ),
+					array( __( 'Visual editor: click a sentence on your page and change it', 'translate-rocket' ), true, true ),
+					array( __( 'SEO: translated addresses, hreflang, sitemaps, titles and descriptions', 'translate-rocket' ), true, true ),
+					array( __( 'WooCommerce, contact forms and their e-mails in the visitor\'s language', 'translate-rocket' ), true, true ),
+					array( __( 'Import from WPML, Polylang, TranslatePress, Weglot and others', 'translate-rocket' ), true, true ),
+					array( __( 'Translation with no key at all, from any browser and phones', 'translate-rocket' ), false, true ),
+					array( __( 'Every page translated by itself when you publish it', 'translate-rocket' ), false, true ),
+					array( __( 'Engines in the order you choose: if one stops, the next one translates', 'translate-rocket' ), false, true ),
+					array( __( 'A second opinion, external collaborators, a weekly report', 'translate-rocket' ), false, true ),
+				);
+				?>
+				<div class="trr-lp-box">
+					<h2><?php esc_html_e( 'What is included, and what Labs adds', 'translate-rocket' ); ?></h2>
+					<table class="trr-lp-cmp">
+						<thead><tr><th></th><th><?php esc_html_e( 'TranslateRocket (free)', 'translate-rocket' ); ?></th><th><?php esc_html_e( 'With Labs', 'translate-rocket' ); ?></th></tr></thead>
+						<tbody>
+							<?php foreach ( $cmp as $r ) : ?>
+								<tr>
+									<td><?php echo esc_html( $r[0] ); ?></td>
+									<td class="<?php echo $r[1] ? 'si' : 'no'; ?>"><?php echo $r[1] ? '✓ ' . esc_html__( 'Included', 'translate-rocket' ) : '—'; ?></td>
+									<td class="<?php echo $r[1] ? 'si' : 'lab'; ?>"><?php echo $r[1] ? '✓' : '✓ ' . esc_html__( 'Labs', 'translate-rocket' ); ?></td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
 				</div>
 
 				<div class="trr-lp-tiles">
@@ -210,12 +252,8 @@ class LabsPromo {
 
 				<div class="trr-lp-box">
 					<h2><?php esc_html_e( 'You choose the order', 'translate-rocket' ); ?></h2>
-					<div class="trr-lp-chain" aria-label="<?php esc_attr_e( 'An example of priority order', 'translate-rocket' ); ?>">
-						<span class="trr-lp-step">1 · <?php esc_html_e( 'Your API key', 'translate-rocket' ); ?></span><span class="trr-lp-arrow">→</span>
-						<span class="trr-lp-step">2 · Chrome</span><span class="trr-lp-arrow">→</span>
-						<span class="trr-lp-step">3 · <?php esc_html_e( 'Free engine', 'translate-rocket' ); ?></span><span class="trr-lp-arrow">→</span>
-						<span class="trr-lp-step">4 · <?php esc_html_e( 'Another free engine', 'translate-rocket' ); ?></span>
-					</div>
+					<?php // 5/10/2026: four bordered boxes looked like fields one could click; it is an example, so it is written as one. ?>
+					<p class="trr-lp-example"><em><?php esc_html_e( 'For example:', 'translate-rocket' ); ?></em> 1. <?php esc_html_e( 'Your API key', 'translate-rocket' ); ?> → 2. Chrome → 3. <?php esc_html_e( 'Free engine', 'translate-rocket' ); ?> → 4. <?php esc_html_e( 'Another free engine', 'translate-rocket' ); ?></p>
 					<p style="margin:10px 0 0;color:#50575e"><?php esc_html_e( 'Drag the engines into the order you want and switch each one on or off. If one is missing, out of credit or paused, the next one translates the page: one way or another, every page gets translated.', 'translate-rocket' ); ?></p>
 				</div>
 

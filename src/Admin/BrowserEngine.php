@@ -169,8 +169,11 @@ class BrowserEngine {
 	 * @param bool   $no_api_key Whether the site has no provider configured.
 	 */
 	public static function render_panel( string $lang, string $source, int $missing, bool $no_api_key ): void {
+		// 6/10/2026: drawn visible. It used to start hidden and be shown by the script in every case
+		// (only its content changes: Chrome's translator, the copy-and-paste round trip, the phone note);
+		// shown after the first paint, it pushed the table below down by its whole height.
 		?>
-		<div id="trr-browser-engine" hidden style="margin:10px 0;padding:14px 16px;border:1px solid #dcdcde;border-left:4px solid #2271b1;background:#fff;max-width:820px">
+		<div id="trr-browser-engine" style="margin:10px 0;padding:14px 16px;border:1px solid #dcdcde;border-left:4px solid #2271b1;background:#fff;max-width:820px">
 			<p style="margin:0 0 6px;font-weight:600">
 				<span id="trr-browser-title"><?php esc_html_e( 'Translate with your browser — no API key', 'translate-rocket' ); ?></span>
 				<span id="trr-browser-title-alt" hidden><?php esc_html_e( 'Translate without an API key', 'translate-rocket' ); ?></span>

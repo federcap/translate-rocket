@@ -4534,3 +4534,607 @@ msgstr ""
 #: src/Strings.php
 msgid "GiveWP e-mails"
 msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Their new text is not in your translations yet."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Find a language…"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "No language matches."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "More style options"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "colours, size, font, mobile…"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Only pages still to translate"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "More actions"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Unlimited languages, each on its own address for Google"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with your own AI key (free Groq, Cloudflare, OpenRouter; or OpenAI, Claude, Gemini, DeepL, Google)"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Free translation in Chrome and Edge, no key"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Visual editor: click a sentence on your page and change it"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "SEO: translated addresses, hreflang, sitemaps, titles and descriptions"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "WooCommerce, contact forms and their e-mails in the visitor's language"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Import from WPML, Polylang, TranslatePress, Weglot and others"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with no key at all, from any browser and phones"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Every page translated by itself when you publish it"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Engines in the order you choose: if one stops, the next one translates"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "A second opinion, external collaborators, a weekly report"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "What is included, and what Labs adds"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "TranslateRocket (free)"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Included"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "Labs"
+msgstr ""
+
+#: src/Admin/LabsPromo.php
+msgid "For example:"
+msgstr ""
+
+#: src/Admin/NoticeTidy.php
+msgid "%d notice from another plugin"
+msgid_plural "%d notices from other plugins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/NoticeTidy.php
+msgid "%d is an error"
+msgid_plural "%d are errors"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d translated items found (pages, terms or strings)."
+msgstr ""
+
+msgid "Not shown to visitors yet (offline): %s."
+msgstr ""
+
+msgid "product template"
+msgstr ""
+
+msgid "product templates"
+msgstr ""
+
+msgid "A second opinion"
+msgstr ""
+
+msgid "A secret link for a translator or a reviewer: no WordPress account, only the pages and languages you choose, and their work waits for your approval."
+msgstr ""
+
+msgid "Every day a free AI rereads what the machine engines translated and lists the doubtful sentences, with a correction. You decide."
+msgstr ""
+
+msgid "External collaborators"
+msgstr ""
+
+msgid "Sponsor on GitHub"
+msgstr ""
+
+msgid "Universal importer"
+msgstr ""
+
+msgid "With Labs"
+msgstr ""
+
+msgid "%1$s, %2$s: %3$d sentence pairs, %4$d of %5$d pages read."
+msgstr ""
+
+msgid "%d left out"
+msgstr ""
+
+msgid "Account ID"
+msgstr ""
+
+msgid "Addressing visitors"
+msgstr ""
+
+msgid "Automatic (recommended)"
+msgstr ""
+
+msgid "Best"
+msgstr ""
+
+msgid "Discard"
+msgstr ""
+
+msgid "First a scan: nothing is saved, you see what would be imported page by page. Then the import. Translations you already have in TranslateRocket are kept. Translators that work only inside the visitor's browser (a Google widget) cannot be read from the server: the scan says so."
+msgstr ""
+
+msgid "Found and still on: %s. Good: its pages can be read now."
+msgstr ""
+
+msgid "Get your free key in 2 minutes"
+msgstr ""
+
+msgid "Import what the scan found"
+msgstr ""
+
+msgid "Imported"
+msgstr ""
+
+msgid "In the menu on the left choose <strong>AI → Workers AI</strong>, then <strong>Use REST API</strong>."
+msgstr ""
+
+msgid "In use: the style for a %s."
+msgstr ""
+
+msgid "It works side by side, like TranslateRocket: the old plugin keeps serving your site while you import. After the import, each page has a «preview» link per language: the page with TranslateRocket's translations, visible only to you, next to the old plugin's version to compare. When you are happy, switch the old plugin off and put the languages online."
+msgstr ""
+
+msgid "Kind of site"
+msgstr ""
+
+msgid "Languages: pairs"
+msgstr ""
+
+msgid "Last scan"
+msgstr ""
+
+msgid "Never translate these names (they are added to Exclusions):"
+msgstr ""
+
+msgid "Note"
+msgstr ""
+
+msgid "Open %s and sign in (a Google account is enough)."
+msgstr ""
+
+msgid "Open %s and sign in (a Google account is enough, no card)."
+msgstr ""
+
+msgid "Open %s and sign up (a Google account is enough, no card)."
+msgstr ""
+
+msgid "Proposed by %1$s, %2$s. Translations already done stay as they are; new ones follow the style."
+msgstr ""
+
+msgid "Proposed house style (you can edit it before using it):"
+msgstr ""
+
+msgid "Quality"
+msgstr ""
+
+msgid "Read my site again"
+msgstr ""
+
+msgid "Read my site and propose a style"
+msgstr ""
+
+msgid "Reading the pages…"
+msgstr ""
+
+msgid "Scan the site"
+msgstr ""
+
+msgid "The site could not be read:"
+msgstr ""
+
+msgid "To see the previews, TranslateRocket must run side by side with it: the old plugin keeps the site, TranslateRocket shows its translations only to you."
+msgstr ""
+
+msgid "Tone"
+msgstr ""
+
+msgid "Translation style from the kind of site"
+msgstr ""
+
+msgid "Use this style"
+msgstr ""
+
+msgid "Volume"
+msgstr ""
+
+msgid "Your house style now:"
+msgstr ""
+
+msgid "a translated copy: read from its original"
+msgstr ""
+
+msgid "formal"
+msgstr ""
+
+msgid "informal"
+msgstr ""
+
+msgid "no translated version found"
+msgstr ""
+
+msgid "old plugin"
+msgstr ""
+
+msgid "pairs"
+msgstr ""
+
+msgid "preview"
+msgstr ""
+
+msgid "the page did not open"
+msgstr ""
+
+msgid "translated only inside the visitor's browser: out of reach from the server"
+msgstr ""
+
+msgid "translations found"
+msgstr ""
+
+msgid "%1$s of %2$s free neurons today (%3$s sentences)"
+msgstr ""
+
+msgid "%1$s of %2$s free requests today (%3$s sentences)"
+msgstr ""
+
+msgid "A free AI provider set up on this page reads your site — name, tagline, home page, main pages — and understands what kind of site it is: a hotel, a law firm, a shop, a blog. Then it proposes how to translate it: the tone, whether to address visitors formally or informally in each language, and the names never to translate. Nothing changes until you press «Use this style»."
+msgstr ""
+
+msgid "Always Llama 3.3 70B: natural sentences, keeps links and bold text, about 1,900 sentences a day."
+msgstr ""
+
+msgid "Always the plain translation model (m2m100): about 11,000 sentences a day, more literal; sentences with links are left to the next provider."
+msgstr ""
+
+msgid "Coming from a translation plugin with no importer in TranslateRocket, or one whose tables cannot be read? Keep it switched on: TranslateRocket reads each page as visitors see it, in your language and in every language the old plugin shows, and pairs each sentence with its translation. It takes a pair only where the two pages have the same structure, leaves out what changes on every visit (dates, counters) and copies, and keeps links and bold words in place."
+msgstr ""
+
+msgid "Free with your own Cloudflare account: 10,000 «neurons» a day, about 1,900 sentences with Llama 3.3 70B or 11,000 with the plain translation model. No card needed."
+msgstr ""
+
+msgid "Free with your own Groq key: about 1,000 requests a day (twenty sentences each) with gpt-oss-120b, which translates very well."
+msgstr ""
+
+msgid "Its free models (names ending in «:free») cost nothing: about 50 requests a day, often busy. Good as the last provider of your chain."
+msgstr ""
+
+msgid "On the same page copy the <strong>Account ID</strong> (it is also in the address bar, after dash.cloudflare.com/) into «Account ID»."
+msgstr ""
+
+msgid "Press <strong>Create API Key</strong>, copy it — it starts with <code>sk-or-</code> — into «API key» below. No credit is needed for the free models."
+msgstr ""
+
+msgid "Press <strong>Create API Key</strong>, give it a name, copy the key — it starts with <code>gsk_</code> — into «API key» below."
+msgstr ""
+
+msgid "Press <strong>Create a Workers AI API Token</strong>, then <strong>Create API Token</strong>: copy the token into «API key» below."
+msgstr ""
+
+msgid "Save, then press <strong>Load available models</strong>: if models appear, the key works."
+msgstr ""
+
+msgid "Save, then press <strong>Load available models</strong>: if the two models appear, the key works."
+msgstr ""
+
+msgid "Save, then press <strong>Load available models</strong>: the free models appear."
+msgstr ""
+
+msgid "Set up a free AI provider first (Cloudflare Workers AI, Groq or OpenRouter) on this page."
+msgstr ""
+
+msgid "The answer could not be read."
+msgstr ""
+
+msgid "The best model first; when 80% of the day's neurons are used, the volume model finishes the day."
+msgstr ""
+
+msgid "The new style is in use: it is in House style above, the names in Exclusions."
+msgstr ""
+
+msgid "TranslateRocket read your site by itself and prepared this proposal."
+msgstr ""
+
+msgid "today's free share is used: the next provider in your chain carries on until tomorrow"
+msgstr ""
+
+msgid "Try the key"
+msgstr ""
+
+msgid "A Groq key: 2 minutes with a Google account, no card. About 1,000 translations a day, good quality, in any browser — phones and Firefox included."
+msgstr ""
+
+msgid "Free AI, with your own free account (recommended)"
+msgstr ""
+
+msgid "Groq did not accept this key: copy it again, whole."
+msgstr ""
+
+msgid "More translations a day with Cloudflare Workers AI, also free: set it up later in AI Translation."
+msgstr ""
+
+msgid "Open %s and sign in with Google."
+msgstr ""
+
+msgid "Paste it here:"
+msgstr ""
+
+msgid "Paste the key first."
+msgstr ""
+
+msgid "Press <strong>Create API Key</strong>, give it any name, and copy the key (it starts with <code>gsk_</code>)."
+msgstr ""
+
+msgid "The browser translator runs only in recent Chrome and Edge on a computer. From here, choose «Free AI, with your own free account» above: it works in this browser too."
+msgstr ""
+
+msgid "The key works. Press Next."
+msgstr ""
+
+msgid "already in TranslateRocket: nothing new to import"
+msgstr ""
+
+msgid "First choose «Run side by side»: while TranslateRocket also serves the languages, the pages the importer reads may be its own."
+msgstr ""
+
+msgid "TranslateRocket is serving the languages itself, so the importer would read its own pages. Switch the old plugin on and choose «Run side by side», or take the languages offline while you import."
+msgstr ""
+
+msgid "Check after import"
+msgstr ""
+
+msgid "%1$s: %2$d imported translations reread, without AI — wrong language or alphabet, broken characters, sentences still in the original, lost links, different numbers."
+msgstr ""
+
+msgid "Nothing evidently wrong."
+msgstr ""
+
+msgid "Imported translation"
+msgstr ""
+
+msgid "Why"
+msgstr ""
+
+msgid "Keep"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Remove all the listed ones"
+msgstr ""
+
+msgid "Check again"
+msgstr ""
+
+msgid "…and %d more: remove or keep these, then check again."
+msgstr ""
+
+msgid "broken characters"
+msgstr ""
+
+msgid "not written in this language’s alphabet"
+msgstr ""
+
+msgid "still in the original language"
+msgstr ""
+
+msgid "links or bold words lost"
+msgstr ""
+
+msgid "different numbers from the original"
+msgstr ""
+
+msgid "far longer or shorter than the original"
+msgstr ""
+
+msgid "written in another language"
+msgstr ""
+
+msgid "%d translation looks wrong. Keep it if it is fine, or remove it: the sentence goes back to «missing» and is translated again like any other."
+msgid_plural "%d translations look wrong. Keep the ones that are fine, remove the others: those sentences go back to «missing» and are translated again like any other."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Navigation menu «%s»"
+msgstr ""
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Automatic: %s"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Automatic: the Navigation block of your header"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "In my header menu (recommended)"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "In a spot I choose on my page"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Which menu"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Where in the menu"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "At the end"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "At the start"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The languages become an item of that menu, drawn by your theme like its other items — in the phone menu too, at the top or at the bottom as chosen. With «Dropdown» the other languages open under the current one. On a page without that menu the switcher floats in the corner, so it is never missing."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Your theme shows no menu yet. Create one in Appearance → Menus (or in the Site Editor) and put it in the header; until then the switcher floats in the corner."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Spot:"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "not chosen yet — until then the switcher floats in the corner"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "at the start"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "at the end"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Choose on my page"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "or open it in a new tab"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Your home page opens with the header, menu and footer outlined: click where the switcher should go, choose the start or the end of it, and you see it there at once. Where that spot is missing or hidden — another page, or the desktop menu on a phone — the switcher floats in the corner, so it is never lost."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Choose the spot"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Also a row of languages at the bottom of every page"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "In a line"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "As a table"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Flags and names side by side under your footer, as many sites do: handy with many languages, and visitors find them where they look for them."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Grid (a table of languages)"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "In my header menu"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "The languages become the last item of your theme's menu, in its own style — on phones too. Recommended."
+msgstr ""
+
+#: src/Frontend/Switcher.php
+msgid "Click the place where the switcher should go."
+msgstr ""
+
+#: src/Frontend/Switcher.php
+msgid "Use this spot"
+msgstr ""
+
+#: src/Frontend/Switcher.php
+msgid "Chosen. Save the switcher to keep it."
+msgstr ""
+
+#: src/Frontend/Switcher.php
+msgid "Header"
+msgstr ""
+
+#: src/Frontend/Switcher.php
+msgid "Menu"
+msgstr ""
+
+#: src/Frontend/Switcher.php
+msgid "Footer"
+msgstr ""
+
+#: src/Frontend/Switcher.php
+msgid "Sidebar"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "marks a link or formatted words. On your site they stay as they are — same link, same address. Keep the marks, with their numbers, around the words that belong to them."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Done: the languages are now an item of your header menu."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "See your site"
+msgstr ""
+
+#: src/Admin/MenuNews.php
+msgid "New:"
+msgstr ""
+
+#: src/Admin/MenuNews.php
+msgid "your languages can sit in your theme's header menu, drawn like its other items — on phones too — instead of floating in a corner."
+msgstr ""
+
+#: src/Admin/MenuNews.php
+msgid "Put them in my menu"
+msgstr ""
+
+#: src/Admin/MenuNews.php
+msgid "Keep the floating switcher"
+msgstr ""

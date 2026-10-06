@@ -364,6 +364,10 @@
 		var mh = document.getElementById( 'sw-manual-hint' );
 		if ( cp ) { cp.style.display = ( 'custom' === v ) ? '' : 'none'; }
 		if ( mh ) { mh.style.display = ( 'manual' === v ) ? '' : 'none'; }
+		var mp = document.getElementById( 'sw-menu-pick' );
+		if ( mp ) { mp.style.display = ( 'menu' === v ) ? '' : 'none'; }
+		var sp = document.getElementById( 'sw-spot-pick' );
+		if ( sp ) { sp.style.display = ( 'spot' === v ) ? '' : 'none'; }
 	}
 	if ( fpEl ) {
 		fpEl.addEventListener( 'change', toggleCustomPos );
@@ -460,4 +464,48 @@
 		// Once more after images and fonts, which can still change the height above it.
 		window.addEventListener( 'load', go );
 	}
+}() );
+
+/* 6/10/2026: «In a spot I choose on my page» — the picker opens the home page in a frame (or a tab),
+   and sends back the chosen element and side. */
+( function () {
+	var open = document.getElementById( 'sw-spot-open' );
+	var modal = document.getElementById( 'sw-picker' );
+	var frame = document.getElementById( 'sw-picker-frame' );
+	var text = document.getElementById( 'sw-spot-text' );
+	var sel = document.getElementById( 'sw_spot_selector' );
+	var where = document.getElementById( 'sw_spot_where' );
+	var label = document.getElementById( 'sw_spot_label' );
+	if ( ! open || ! modal || ! frame || ! text ) { return; }
+	function show() {
+		text.textContent = sel.value ? ( label.value || sel.value ) + ' — ' + text.getAttribute( 'data-' + ( 'start' === where.value ? 'start' : 'end' ) ) : text.getAttribute( 'data-none' );
+	}
+	show();
+	function close() {
+		modal.hidden = true;
+		frame.removeAttribute( 'src' );
+		document.body.style.overflow = '';
+	}
+	open.addEventListener( 'click', function () {
+		frame.src = open.getAttribute( 'data-url' );
+		modal.hidden = false;
+		document.body.style.overflow = 'hidden';
+	} );
+	document.getElementById( 'sw-picker-close' ).addEventListener( 'click', close );
+	Array.prototype.forEach.call( modal.querySelectorAll( '.trr-sw-picker-views button' ), function ( b ) {
+		b.addEventListener( 'click', function () {
+			frame.style.width = b.getAttribute( 'data-w' );
+			Array.prototype.forEach.call( modal.querySelectorAll( '.trr-sw-picker-views button' ), function ( o ) { o.classList.toggle( 'is-on', o === b ); } );
+		} );
+	} );
+	window.addEventListener( 'message', function ( e ) {
+		if ( e.origin !== window.location.origin || ! e.data || ! e.data.trrocketSpot ) { return; }
+		if ( ! e.data.cancel ) {
+			sel.value = String( e.data.selector || '' ).slice( 0, 300 );
+			where.value = 'start' === e.data.where ? 'start' : 'end';
+			label.value = String( e.data.label || '' ).slice( 0, 120 );
+			show();
+		}
+		close();
+	} );
 }() );

@@ -101,7 +101,7 @@ class RestContent {
 		if ( $collect ) {
 			$seen           = Fragment::$seen;
 			Fragment::$seen = null;
-			$this->remember( (array) $seen, $route );
+			self::remember( (array) $seen, $route );
 		}
 		if ( $changed ) {
 			$response->set_data( $data );
@@ -110,12 +110,13 @@ class RestContent {
 	}
 
 	/**
-	 * Make the texts of a REST answer translatable, filed under the page that asked for them.
+	 * Make the texts of an answer loaded after the page (REST route, admin-ajax action)
+	 * translatable, filed under the page that asked for them.
 	 *
 	 * @param string[] $texts Texts met in the answer.
-	 * @param string   $route REST route.
+	 * @param string   $route REST route or AJAX action (only used to tell answers apart).
 	 */
-	private function remember( array $texts, string $route ): void {
+	public static function remember( array $texts, string $route ): void {
 		$items = array();
 		foreach ( $texts as $t ) {
 			$t = trim( (string) $t );

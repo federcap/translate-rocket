@@ -178,18 +178,22 @@ class Strings {
 		// gia' accodate per questa lingua: contando solo le righe della tabella
 		// traduzioni, una lingua appena aggiunta risultava "0 su 0 rilevate" e
 		// il pannello sembrava dire che non c'era niente da tradurre.
-		$detected = self::total_sources();
+		// Images are left out, as untranslated_count() and the AI button leave them out: an image's
+		// address is not text to translate (it can be swapped per language, if wanted). Counted here,
+		// a site translated in full read «14 strings still to translate — 89%» for ever, next to a
+		// button saying «Everything is translated» (4/10/2026: the 14 were the logo and photos).
+		$strings  = Database::strings_table();
+		$detected = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$strings} WHERE type <> 'image'" ); // phpcs:ignore WordPress.DB
 
 		// Only translations whose string still exists: a translation left behind by a
 		// deleted string (a page reset, an old test) made «translated» bigger than
 		// «detected», and «missing» clamped to 0 — the guide said «Everything is
 		// translated» with a new phrase still waiting (30/09/2026).
-		$strings    = Database::strings_table();
 		$translated = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$translations} tr
 				 INNER JOIN {$strings} s ON s.id = tr.string_id
-				 WHERE tr.language = %s AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''",
+				 WHERE tr.language = %s AND s.type <> 'image' AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''",
 				$lang
 			)
 		); // phpcs:ignore WordPress.DB

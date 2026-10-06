@@ -619,7 +619,10 @@ msgid "Saved."
 msgstr "Zapisano."
 
 msgid "Removed %d unused string."
-msgstr "Usunięto %d nieużywany tekst."
+msgid_plural "Removed %d unused strings."
+msgstr[0] "Usunięto %d nieużywany tekst."
+msgstr[1] "Usunięto %d nieużywane teksty."
+msgstr[2] "Usunięto %d nieużywanych tekstów."
 
 msgid "AI translation failed — check the AI provider and key, or the daily limit."
 msgstr "Tłumaczenie AI nie powiodło się — sprawdź dostawcę i klucz albo dzienny limit."
@@ -649,7 +652,10 @@ msgid "Search"
 msgstr "Szukaj"
 
 msgid "%d string"
-msgstr "%d tekst"
+msgid_plural "%d strings"
+msgstr[0] "%d tekst"
+msgstr[1] "%d teksty"
+msgstr[2] "%d tekstów"
 
 msgid "Translate %d missing with AI"
 msgstr "Przetłumacz %d brakujących z AI"
@@ -697,7 +703,10 @@ msgid "Add at least one target language first."
 msgstr "Najpierw dodaj przynajmniej jeden język docelowy."
 
 msgid "%d page updated."
-msgstr "Zaktualizowano %d stronę."
+msgid_plural "%d pages updated."
+msgstr[0] "Zaktualizowano %d stronę."
+msgstr[1] "Zaktualizowano %d strony."
+msgstr[2] "Zaktualizowano %d stron."
 
 msgid "Detaching a page makes a fast, independent copy (a real, cache-friendly page you edit in WordPress). “Back to strings” reattaches it to the source — the copy is kept (paused), not deleted — so you can re-detach later and keep your edits."
 msgstr "Odłączenie tworzy szybką, niezależną kopię (prawdziwą stronę WordPressa, przyjazną pamięci podręcznej). „Powrót do tekstów” wiąże ją znowu ze źródłem — kopia zostaje zachowana (wstrzymana), a nie usunięta — więc później możesz ją odłączyć ponownie razem ze zmianami."
@@ -4042,3 +4051,271 @@ msgstr "Treści wczytywane przez stronę (mapy, slidery…)"
 
 msgid "GiveWP e-mails"
 msgstr "E-maile GiveWP"
+
+#: src/Admin/Admin.php
+msgid "Their new text is not in your translations yet."
+msgstr "Ich nowego tekstu nie ma jeszcze w twoich tłumaczeniach."
+
+#: src/Admin/Admin.php
+msgid "Find a language…"
+msgstr "Znajdź język…"
+
+#: src/Admin/Admin.php
+msgid "No language matches."
+msgstr "Żaden język nie pasuje."
+
+#: src/Admin/Admin.php
+msgid "More style options"
+msgstr "Więcej opcji stylu"
+
+#: src/Admin/Admin.php
+msgid "colours, size, font, mobile…"
+msgstr "kolory, rozmiar, czcionka, telefon…"
+
+#: src/Admin/Admin.php
+msgid "Only pages still to translate"
+msgstr "Tylko strony do przetłumaczenia"
+
+#: src/Admin/Admin.php
+msgid "More actions"
+msgstr "Więcej działań"
+
+#: src/Admin/LabsPromo.php
+msgid "Unlimited languages, each on its own address for Google"
+msgstr "Nieograniczona liczba języków, każdy pod własnym adresem dla Google"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with your own AI key (free Groq, Cloudflare, OpenRouter; or OpenAI, Claude, Gemini, DeepL, Google)"
+msgstr "Tłumaczenie z własnym kluczem AI (darmowe Groq, Cloudflare, OpenRouter; lub OpenAI, Claude, Gemini, DeepL, Google)"
+
+#: src/Admin/LabsPromo.php
+msgid "Free translation in Chrome and Edge, no key"
+msgstr "Darmowe tłumaczenie w Chrome i Edge, bez klucza"
+
+#: src/Admin/LabsPromo.php
+msgid "Visual editor: click a sentence on your page and change it"
+msgstr "Edytor wizualny: kliknij zdanie na stronie i zmień je"
+
+#: src/Admin/LabsPromo.php
+msgid "SEO: translated addresses, hreflang, sitemaps, titles and descriptions"
+msgstr "SEO: przetłumaczone adresy, hreflang, mapy witryny, tytuły i opisy"
+
+#: src/Admin/LabsPromo.php
+msgid "WooCommerce, contact forms and their e-mails in the visitor's language"
+msgstr "WooCommerce, formularze kontaktowe i ich e-maile w języku odwiedzającego"
+
+#: src/Admin/LabsPromo.php
+msgid "Import from WPML, Polylang, TranslatePress, Weglot and others"
+msgstr "Import z WPML, Polylang, TranslatePress, Weglot i innych"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with no key at all, from any browser and phones"
+msgstr "Tłumaczenie bez żadnego klucza, z każdej przeglądarki i telefonu"
+
+#: src/Admin/LabsPromo.php
+msgid "Every page translated by itself when you publish it"
+msgstr "Każda strona tłumaczy się sama, gdy ją opublikujesz"
+
+#: src/Admin/LabsPromo.php
+msgid "Engines in the order you choose: if one stops, the next one translates"
+msgstr "Usługi w wybranej kolejności: gdy jedna się zatrzyma, tłumaczy następna"
+
+#: src/Admin/LabsPromo.php
+msgid "A second opinion, external collaborators, a weekly report"
+msgstr "Druga opinia, współpracownicy zewnętrzni, cotygodniowy raport"
+
+#: src/Admin/LabsPromo.php
+msgid "What is included, and what Labs adds"
+msgstr "Co jest w zestawie, a co dodaje Labs"
+
+#: src/Admin/LabsPromo.php
+msgid "TranslateRocket (free)"
+msgstr "TranslateRocket (darmowy)"
+
+#: src/Admin/LabsPromo.php
+msgid "Included"
+msgstr "W zestawie"
+
+#: src/Admin/LabsPromo.php
+msgid "Labs"
+msgstr "Labs"
+
+#: src/Admin/LabsPromo.php
+msgid "For example:"
+msgstr "Na przykład:"
+
+#: src/Admin/NoticeTidy.php
+msgid "%d notice from another plugin"
+msgid_plural "%d notices from other plugins"
+msgstr[0] "%d powiadomienie z innej wtyczki"
+msgstr[1] "%d powiadomienia z innych wtyczek"
+msgstr[2] "%d powiadomień z innych wtyczek"
+
+#: src/Admin/NoticeTidy.php
+msgid "%d is an error"
+msgid_plural "%d are errors"
+msgstr[0] "w tym %d błąd"
+msgstr[1] "w tym %d błędy"
+msgstr[2] "w tym %d błędów"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Navigation menu «%s»"
+msgstr "Menu nawigacji «%s»"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Automatic: %s"
+msgstr "Automatycznie: %s"
+
+#: src/Admin/Admin.php
+msgid "Automatic: the Navigation block of your header"
+msgstr "Automatycznie: blok Nawigacja w twoim nagłówku"
+
+#: src/Admin/Admin.php
+msgid "In my header menu (recommended)"
+msgstr "W menu mojego nagłówka (zalecane)"
+
+#: src/Admin/Admin.php
+msgid "In a spot I choose on my page"
+msgstr "W miejscu, które wybiorę na stronie"
+
+#: src/Admin/Admin.php
+msgid "Which menu"
+msgstr "Które menu"
+
+#: src/Admin/Admin.php
+msgid "Where in the menu"
+msgstr "Gdzie w menu"
+
+#: src/Admin/Admin.php
+msgid "At the end"
+msgstr "Na końcu"
+
+#: src/Admin/Admin.php
+msgid "At the start"
+msgstr "Na początku"
+
+#: src/Admin/Admin.php
+msgid "The languages become an item of that menu, drawn by your theme like its other items — in the phone menu too, at the top or at the bottom as chosen. With «Dropdown» the other languages open under the current one. On a page without that menu the switcher floats in the corner, so it is never missing."
+msgstr "Języki stają się pozycją tego menu, rysowaną przez twój motyw jak pozostałe — także w menu na telefonie, na górze lub na dole, jak wybierzesz. Przy «Lista rozwijana» pozostałe języki otwierają się pod bieżącym. Na stronie bez tego menu przełącznik unosi się w rogu, więc nigdy go nie brakuje."
+
+#: src/Admin/Admin.php
+msgid "Your theme shows no menu yet. Create one in Appearance → Menus (or in the Site Editor) and put it in the header; until then the switcher floats in the corner."
+msgstr "Twój motyw nie pokazuje jeszcze żadnego menu. Utwórz je w Wygląd → Menu (lub w Edytorze witryny) i umieść w nagłówku; do tego czasu przełącznik unosi się w rogu."
+
+#: src/Admin/Admin.php
+msgid "Spot:"
+msgstr "Miejsce:"
+
+#: src/Admin/Admin.php
+msgid "not chosen yet — until then the switcher floats in the corner"
+msgstr "jeszcze nie wybrane — do tego czasu przełącznik unosi się w rogu"
+
+#: src/Admin/Admin.php
+msgid "at the start"
+msgstr "na początku"
+
+#: src/Admin/Admin.php
+msgid "at the end"
+msgstr "na końcu"
+
+#: src/Admin/Admin.php
+msgid "Choose on my page"
+msgstr "Wybierz na mojej stronie"
+
+#: src/Admin/Admin.php
+msgid "or open it in a new tab"
+msgstr "albo otwórz w nowej karcie"
+
+#: src/Admin/Admin.php
+msgid "Your home page opens with the header, menu and footer outlined: click where the switcher should go, choose the start or the end of it, and you see it there at once. Where that spot is missing or hidden — another page, or the desktop menu on a phone — the switcher floats in the corner, so it is never lost."
+msgstr "Otwiera się twoja strona główna z wyróżnionym nagłówkiem, menu i stopką: kliknij, gdzie ma być przełącznik, wybierz początek albo koniec, a od razu go tam zobaczysz. Tam, gdzie tego miejsca brakuje lub jest ukryte — na innej stronie albo w menu komputerowym na telefonie — przełącznik unosi się w rogu, więc nigdy nie znika."
+
+#: src/Admin/Admin.php
+msgid "Choose the spot"
+msgstr "Wybierz miejsce"
+
+#: src/Admin/Admin.php
+msgid "Also a row of languages at the bottom of every page"
+msgstr "Także rząd języków na dole każdej strony"
+
+#: src/Admin/Admin.php
+msgid "In a line"
+msgstr "W jednym rzędzie"
+
+#: src/Admin/Admin.php
+msgid "As a table"
+msgstr "Jako tabela"
+
+#: src/Admin/Admin.php
+msgid "Flags and names side by side under your footer, as many sites do: handy with many languages, and visitors find them where they look for them."
+msgstr "Flagi i nazwy obok siebie pod stopką, jak na wielu stronach: wygodne przy wielu językach, a odwiedzający znajdą je tam, gdzie ich szukają."
+
+#: src/Admin/Admin.php
+msgid "Grid (a table of languages)"
+msgstr "Siatka (tabela języków)"
+
+#: src/Admin/Admin.php
+msgid "In my header menu"
+msgstr "W menu mojego nagłówka"
+
+#: src/Admin/Admin.php
+msgid "The languages become the last item of your theme's menu, in its own style — on phones too. Recommended."
+msgstr "Języki stają się ostatnią pozycją menu twojego motywu, w jego stylu — także na telefonie. Zalecane."
+
+#: src/Frontend/Switcher.php
+msgid "Click the place where the switcher should go."
+msgstr "Kliknij miejsce, w którym ma być przełącznik."
+
+#: src/Frontend/Switcher.php
+msgid "Use this spot"
+msgstr "Użyj tego miejsca"
+
+#: src/Frontend/Switcher.php
+msgid "Chosen. Save the switcher to keep it."
+msgstr "Wybrano. Zapisz przełącznik, aby to zachować."
+
+#: src/Frontend/Switcher.php
+msgid "Header"
+msgstr "Nagłówek"
+
+#: src/Frontend/Switcher.php
+msgid "Menu"
+msgstr "Menu"
+
+#: src/Frontend/Switcher.php
+msgid "Footer"
+msgstr "Stopka"
+
+#: src/Frontend/Switcher.php
+msgid "Sidebar"
+msgstr "Pasek boczny"
+
+#: src/Admin/Admin.php
+msgid "marks a link or formatted words. On your site they stay as they are — same link, same address. Keep the marks, with their numbers, around the words that belong to them."
+msgstr "oznacza link lub sformatowane słowa. Na twojej stronie zostają bez zmian — ten sam link, ten sam adres. Zachowaj znaczniki, z ich numerami, wokół słów, do których należą."
+
+#: src/Admin/Admin.php
+msgid "Done: the languages are now an item of your header menu."
+msgstr "Gotowe: języki są teraz pozycją menu w twoim nagłówku."
+
+#: src/Admin/Admin.php
+msgid "See your site"
+msgstr "Zobacz swoją stronę"
+
+#: src/Admin/MenuNews.php
+msgid "New:"
+msgstr "Nowość:"
+
+#: src/Admin/MenuNews.php
+msgid "your languages can sit in your theme's header menu, drawn like its other items — on phones too — instead of floating in a corner."
+msgstr "twoje języki mogą być w menu nagłówka twojego motywu, rysowane jak inne pozycje — także na telefonie — zamiast unosić się w rogu."
+
+#: src/Admin/MenuNews.php
+msgid "Put them in my menu"
+msgstr "Umieść je w moim menu"
+
+#: src/Admin/MenuNews.php
+msgid "Keep the floating switcher"
+msgstr "Zostaw pływający przełącznik"

@@ -381,6 +381,44 @@ class WooCommerce {
 	}
 
 	/**
+	 * The words the block cart and checkout show for what is in the cart: product
+	 * names, attribute names and values, shipping method names.
+	 *
+	 * @return string[]
+	 */
+	private function cart_texts(): array {
+		$out = array();
+		if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+			return $out;
+		}
+		foreach ( WC()->cart->get_cart() as $item ) {
+			$product = isset( $item['data'] ) ? $item['data'] : null;
+			if ( ! ( $product instanceof \WC_Product ) ) {
+				continue;
+			}
+			$out[]  = $product->get_name();
+			$parent = $product->get_parent_id() ? wc_get_product( $product->get_parent_id() ) : null;
+			if ( $parent ) {
+				$out[] = $parent->get_name();
+			}
+			foreach ( (array) ( $item['variation'] ?? array() ) as $key => $value ) {
+				$tax   = str_replace( 'attribute_', '', (string) $key );
+				$out[] = wc_attribute_label( $tax, $product );
+				$term  = taxonomy_exists( $tax ) ? get_term_by( 'slug', (string) $value, $tax ) : false;
+				$out[] = $term ? $term->name : (string) $value;
+			}
+		}
+		foreach ( WC()->shipping() ? (array) WC()->shipping()->get_packages() : array() as $package ) {
+			foreach ( (array) ( $package['rates'] ?? array() ) as $rate ) {
+				if ( is_object( $rate ) && method_exists( $rate, 'get_label' ) ) {
+					$out[] = $rate->get_label();
+				}
+			}
+		}
+		return array_values( array_unique( array_filter( array_map( 'strval', $out ) ) ) );
+	}
+
+	/**
 	 * The block Cart/Checkout render client-side, so the page engine can't reach
 	 * their text. Ship a tiny translator that swaps text in the block containers
 	 * (best-effort, re-applied after React re-renders). Loaded only where a block
@@ -398,10 +436,16 @@ class WooCommerce {
 			return;
 		}
 		// The block translator needs a map in the browser. On huge sites shipping
-		// the whole language map is impossible — the interface map (where Woo's
-		// UI strings live) is the bounded, relevant subset.
+		// the whole language map is impossible: it gets the translations of what the
+		// cart actually holds, plus the page's own sentences. (It used to get the
+		// «[interface]» map, filled by a collector that stopped running in June 2026:
+		// the map was empty, the translator never loaded, and on big shops the block
+		// cart showed «Colour» instead of «Colore» — 4/10/2026.)
 		$map = Strings::is_huge()
-			? Strings::map_for_page( Strings::url_hash( \TranslateRocket\Frontend\Gettext::INTERFACE_URL ), $this->lang )
+			? array_merge(
+				Strings::map_for_page( Strings::url_hash( Plugin::instance()->router()->current_page_key() ), $this->lang ),
+				Strings::translate_texts( $this->cart_texts(), $this->lang )
+			)
 			: Strings::map_for_language( $this->lang );
 		if ( empty( $map ) ) {
 			return;

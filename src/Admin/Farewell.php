@@ -256,9 +256,19 @@ class Farewell {
 				body.append( 'reason', picked ? picked.value : '' );
 				body.append( 'text', text.value || '' );
 				body.append( 'send', send ? '1' : '0' );
-				fetch( ajax, { method: 'POST', credentials: 'same-origin', body: body } ).then( then ).catch( then );
+				// Once only: the answer and the 4-second safety net used to BOTH run it, so the
+				// deactivation page opened twice (6/10/2026, seen by collaudo-addio).
+				var fatto = false;
+				function once() {
+					if ( fatto ) {
+						return;
+					}
+					fatto = true;
+					then();
+				}
+				fetch( ajax, { method: 'POST', credentials: 'same-origin', body: body } ).then( once ).catch( once );
 				// Nobody stays stuck on a box because a request hangs.
-				setTimeout( then, 4000 );
+				setTimeout( once, 4000 );
 			}
 			function leave() {
 				window.location.href = go;

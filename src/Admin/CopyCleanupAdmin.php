@@ -90,7 +90,7 @@ class CopyCleanupAdmin {
 		foreach ( $map as $row ) {
 			$by[ $row[3] ] = array( $row[2], ( $by[ $row[3] ][1] ?? 0 ) + 1 );
 		}
-		echo '<div class="notice notice-info"><p><strong>TranslateRocket</strong> — ';
+		echo '<div class="notice notice-info" data-trrocket="copy-cleanup"><p><strong>TranslateRocket</strong> — ';
 		$parts = array();
 		foreach ( $by as $id => $info ) {
 			$parts[] = sprintf(

@@ -173,6 +173,10 @@ final class Plugin {
 			( new \TranslateRocket\Admin\CopyCleanupAdmin() )->register();
 			( new \TranslateRocket\Admin\EditorButton() )->register();
 			( new \TranslateRocket\Admin\Growth() )->register();
+			// On the plugin's screens: one notice of ours at a time, other plugins' folded (5/10/2026).
+			( new \TranslateRocket\Admin\NoticeTidy() )->register();
+			// 1.7.4: once, to whoever still has the floating switcher: «put the languages in your menu» (6/10/2026).
+			( new \TranslateRocket\Admin\MenuNews() )->register();
 			( new \TranslateRocket\Admin\LabsPromo() )->register();
 			// La lingua delle schermate del plugin, scelta da ciascun utente (3/10/2026).
 			( new \TranslateRocket\Admin\PluginLanguage() )->register();
@@ -211,6 +215,10 @@ final class Plugin {
 			( new \TranslateRocket\Frontend\Search() )->boot();
 			// Blocks and headless themes fetching content from /wp-json for a translated page.
 			( new \TranslateRocket\Frontend\RestContent() )->boot();
+			// Plugins' own AJAX addresses (WP Job Manager's /jm-ajax/…): the list they return.
+			if ( Router::is_ajax_endpoint() || \TranslateRocket\Frontend\AjaxContent::is_page_request_flag() || isset( $_GET['wc-ajax'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				( new \TranslateRocket\Frontend\AjaxContent() )->boot();
+			}
 			// /it/feed/: titles, excerpts and bodies translated in the RSS/Atom XML.
 			( new \TranslateRocket\Frontend\Feed() )->boot();
 			// Someone who signs up on /it/ gets WordPress' own e-mails (new account,

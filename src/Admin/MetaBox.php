@@ -150,7 +150,7 @@ class MetaBox {
 		foreach ( $targets as $code ) {
 			$langs[]            = array(
 				'code'  => $code,
-				'label' => trim( Languages::flag( $code ) . ' ' . Languages::label( $code ) ),
+				'label' => Languages::label( $code ), // no emoji flag: on Windows it reads «GB»
 			);
 			$edit_urls[ $code ] = add_query_arg( 'trr-edit', '1', $base . '/' . $code . $path );
 		}

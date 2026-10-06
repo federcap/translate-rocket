@@ -221,6 +221,10 @@ class DeepLProvider extends AbstractProvider {
 			'pt'    => 'PT-PT',
 			'pt-br' => 'PT-BR',
 			'zh'    => 'ZH',
+			// Traditional Chinese went out as ZH (Simplified) and Norwegian as «NO», a code DeepL does not know (5/10/2026).
+			'zh-tw' => 'ZH-HANT',
+			'no'    => 'NB',
+			'es-mx' => 'ES-419',
 		);
 		$code = strtolower( $code );
 		return $map[ $code ] ?? strtoupper( substr( $code, 0, 2 ) );

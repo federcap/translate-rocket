@@ -27,6 +27,8 @@ class Admin {
 	 */
 	public function register(): void {
 		add_action( 'admin_menu', array( $this, 'menu' ) );
+		add_action( 'admin_menu', array( $this, 'tidy_menu' ), 999 );
+		add_action( 'admin_head', array( $this, 'menu_style' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_translations' ) );
 		add_action( 'admin_init', array( $this, 'maybe_import_translations' ) );
@@ -78,7 +80,7 @@ class Admin {
 			return;
 		}
 		printf(
-			'<div class="notice notice-warning"><p><strong>%s</strong> %s <a href="%s">%s</a></p></div>',
+			'<div class="notice notice-warning" data-trrocket="preview"><p><strong>%s</strong> %s <a href="%s">%s</a></p></div>',
 			esc_html__( 'TranslateRocket preview mode is on.', 'translate-rocket' ),
 			esc_html__( 'Only administrators can see the translations — visitors get the default language. When you are happy with the result, switch visibility back to "Everyone" to publish.', 'translate-rocket' ),
 			esc_url( admin_url( 'admin.php?page=translate-rocket' ) ),
@@ -96,7 +98,14 @@ class Admin {
 	 * Nothing used to say so. Now it does.
 	 */
 	public function changed_pages_notice(): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		// Only on the plugin's screens: it used to follow the person into Posts, WooCommerce and the
+		// Dashboard after every edit (5/10/2026). «Next steps» and the Translations page say it too.
+		if ( ! current_user_can( 'manage_options' ) || ! NoticeTidy::ours() ) {
+			return;
+		}
+		// «Next steps» lists the changed pages itself: the notice would only say it twice.
+		$schermata = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( $schermata && false !== strpos( (string) $schermata->id, 'translate-rocket-next' ) ) {
 			return;
 		}
 		$quante = \TranslateRocket\Rescan::count();
@@ -112,7 +121,7 @@ class Admin {
 			$elenco .= ' …';
 		}
 		printf(
-			'<div class="notice notice-warning"><p><strong>%s</strong> %s<br><em>%s</em> <a href="%s">%s</a></p></div>',
+			'<div class="notice notice-warning" data-trrocket="changed"><p><strong>%s</strong> %s<br><em>%s</em> <a href="%s">%s</a></p></div>',
 			esc_html(
 				sprintf(
 					/* translators: %d: how many pages were edited. */
@@ -125,7 +134,8 @@ class Admin {
 					$quante
 				)
 			),
-			esc_html__( 'Any new text on them has not been detected yet, so it is not in your list of strings to translate — and on the translated pages it is still showing in your source language.', 'translate-rocket' ),
+			// 5/10/2026: one sentence, not three lines (on a phone the notice took six).
+			esc_html__( 'Their new text is not in your translations yet.', 'translate-rocket' ),
 			esc_html( $elenco ),
 			esc_url( admin_url( 'admin.php?page=translate-rocket-strings' ) ),
 			esc_html__( 'Scan them now', 'translate-rocket' )
@@ -151,7 +161,7 @@ class Admin {
 				'trrocket_dismiss_provider_' . $provider->id()
 			);
 			printf(
-				'<div class="notice notice-warning"><p><strong>%s</strong> %s<br><em>%s</em> <a href="%s">%s</a></p></div>',
+				'<div class="notice notice-warning" data-trrocket="provider-down"><p><strong>%s</strong> %s<br><em>%s</em> <a href="%s">%s</a></p></div>',
 				/* translators: %s: provider name (e.g. DeepL). */
 				esc_html( sprintf( __( '%s is unavailable.', 'translate-rocket' ), $provider->label() ) ),
 				esc_html__( 'Automatic translation is falling back to the next provider in your chain (or stopping if there is none).', 'translate-rocket' ),
@@ -205,6 +215,164 @@ class Admin {
 			wp_send_json_success( array( 'translation' => $tr ) );
 		}
 		wp_send_json_error( array( 'error' => __( 'Google Translate is unavailable right now.', 'translate-rocket' ) ) );
+	}
+
+	/**
+	 * The side menu keeps the screens used most (5/10/2026): it listed thirteen items that only
+	 * repeated the buttons at the top of every screen of the plugin. The other screens stay where
+	 * they were, same address, one click away from those buttons.
+	 */
+	public function tidy_menu(): void {
+		global $submenu;
+		// Hidden, not removed: WordPress refuses a page whose menu item is gone («Sorry, you are not
+		// allowed to access this page» — seen by collaudo-menu-laterale before shipping). The items stay
+		// registered and a style keeps them out of sight (see menu_style()).
+		// The first item repeated the plugin's name: it is the Languages screen.
+		if ( isset( $submenu['translate-rocket'] ) && is_array( $submenu['translate-rocket'] ) ) {
+			foreach ( $submenu['translate-rocket'] as $i => $item ) {
+				if ( isset( $item[2] ) && 'translate-rocket' === $item[2] ) {
+					$submenu['translate-rocket'][ $i ][0] = __( 'Languages', 'translate-rocket' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+				}
+			}
+		}
+	}
+
+	/**
+	 * Flag + name as HTML. The flag is the plugin's own SVG: an emoji flag shows as two
+	 * letters («GB») in Chrome and Edge on Windows, where most of our users are.
+	 *
+	 * @param string $code Language code.
+	 */
+	public static function lang_html( string $code ): string {
+		return '<span class="trrocket-flag">' . \TranslateRocket\Flags::html( $code, Languages::flag( $code ) ) . '</span> ' . esc_html( Languages::label( $code ) );
+	}
+
+	/**
+	 * Lower case that never breaks UTF-8. On PHP 7, strtolower() follows the server's locale and,
+	 * with a single-byte one, rewrites the bytes of «Српски» or «日本語»: esc_attr() then drops the
+	 * broken text and the search finds nothing (seen on the PHP 7.4 bench, 5/10/2026).
+	 *
+	 * @param string $s Text.
+	 */
+	public static function lower( string $s ): string {
+		return function_exists( 'mb_strtolower' ) ? mb_strtolower( $s, 'UTF-8' ) : strtr( $s, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz' );
+	}
+
+	/**
+	 * The menus the switcher can go in, for the Switcher page: «Automatic» first, then the
+	 * theme's menu locations, then (block themes) the Navigation menus.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function switcher_menu_choices(): array {
+		$locs = \TranslateRocket\Frontend\Switcher::menu_locations();
+		$navs = array();
+		if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+			foreach ( get_posts( array( 'post_type' => 'wp_navigation', 'post_status' => 'publish', 'numberposts' => 20, 'orderby' => 'date', 'order' => 'ASC' ) ) as $nav ) {
+				/* translators: %s: name of a Navigation menu of a block theme. */
+				$navs[ 'nav:' . $nav->ID ] = sprintf( __( 'Navigation menu «%s»', 'translate-rocket' ), get_the_title( $nav ) ?: '#' . $nav->ID );
+			}
+		}
+		$out  = array();
+		$auto = \TranslateRocket\Frontend\Switcher::auto_location();
+		if ( '' !== $auto ) {
+			/* translators: %s: the menu chosen automatically. */
+			$out['auto'] = sprintf( __( 'Automatic: %s', 'translate-rocket' ), $locs[ $auto ] );
+		} elseif ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+			$out['auto'] = __( 'Automatic: the Navigation block of your header', 'translate-rocket' );
+		}
+		return $out ? array_merge( $out, $locs, $navs ) : array();
+	}
+
+	/**
+	 * The words a language is found by: its own name, its English name, its code.
+	 *
+	 * @param string $code Language code.
+	 * @param array  $info Native name, English name, flag.
+	 */
+	public static function lang_search_text( string $code, array $info ): string {
+		return self::lower( trim( (string) ( $info[0] ?? '' ) . ' ' . (string) ( $info[1] ?? '' ) . ' ' . $code ) );
+	}
+
+	/**
+	 * The English name next to the native one, when they differ: «Српски» alone tells
+	 * nothing to whoever does not read Cyrillic (77 languages since 5/10/2026).
+	 *
+	 * @param array $info Native name, English name, flag.
+	 */
+	public static function lang_english( array $info ): void {
+		$en = (string) ( $info[1] ?? '' );
+		if ( '' !== $en && 0 !== strcasecmp( $en, (string) ( $info[0] ?? '' ) ) ) {
+			echo ' <span class="trr-lang-en">' . esc_html( $en ) . '</span>';
+		}
+	}
+
+	/**
+	 * «Српски (Serbian)» for a drop-down, where markup cannot go.
+	 *
+	 * @param array $info Native name, English name, flag.
+	 */
+	public static function lang_option_label( array $info ): string {
+		$en = (string) ( $info[1] ?? '' );
+		return ( '' !== $en && 0 !== strcasecmp( $en, (string) ( $info[0] ?? '' ) ) ) ? $info[0] . ' (' . $en . ')' : (string) $info[0];
+	}
+
+	/**
+	 * A box that filters the language grid that follows it, as you type.
+	 */
+	public static function lang_search_box(): void {
+		echo '<p class="trr-lang-cerca"><input type="search" class="trr-lang-cerca-in" placeholder="' . esc_attr__( 'Find a language…', 'translate-rocket' ) . '" aria-label="' . esc_attr__( 'Find a language…', 'translate-rocket' ) . '" autocomplete="off" />'
+			. ' <span class="trr-lang-cerca-nulla" hidden>' . esc_html__( 'No language matches.', 'translate-rocket' ) . '</span></p>';
+		static $script = false;
+		if ( $script ) {
+			return;
+		}
+		$script = true;
+		?>
+		<script>
+		( function () {
+			document.addEventListener( 'input', function ( ev ) {
+				var box = ev.target;
+				if ( ! box.classList || ! box.classList.contains( 'trr-lang-cerca-in' ) ) { return; }
+				var grid = box.closest( 'p' ).nextElementSibling;
+				while ( grid && ! grid.classList.contains( 'trrocket-lang-grid' ) ) { grid = grid.nextElementSibling; }
+				if ( ! grid ) { return; }
+				var q = box.value.trim().toLowerCase(), shown = 0;
+				grid.querySelectorAll( '.trrocket-lang-item' ).forEach( function ( it ) {
+					// the site's own language stays hidden in the wizard grid whatever is typed
+					if ( it.style.display === 'none' && ! it.hasAttribute( 'data-cerca-nascosta' ) ) { return; }
+					var ok = ! q || ( it.getAttribute( 'data-cerca' ) || '' ).indexOf( q ) !== -1;
+					if ( ok ) { it.removeAttribute( 'data-cerca-nascosta' ); it.style.display = ''; shown++; }
+					else { it.setAttribute( 'data-cerca-nascosta', '1' ); it.style.display = 'none'; }
+				} );
+				var none = box.closest( 'p' ).querySelector( '.trr-lang-cerca-nulla' );
+				if ( none ) { none.hidden = shown > 0; }
+			} );
+		} )();
+		</script>
+		<?php
+	}
+
+	/**
+	 * Screens kept out of the side menu (still open from the buttons at the top of the plugin).
+	 */
+	const MENU_HIDDEN = array( 'translate-rocket-memory', 'translate-rocket-import', 'translate-rocket-exclusions', 'translate-rocket-copies', 'translate-rocket-diagnostics', 'translate-rocket-wizard', 'translate-rocket-help' );
+
+	/**
+	 * The style that keeps MENU_HIDDEN out of the side menu, on every admin screen (the menu is
+	 * on every one). The screen being shown stays visible, so the menu never loses its place.
+	 */
+	public function menu_style(): void {
+		$current = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+		$rules   = array();
+		foreach ( self::MENU_HIDDEN as $slug ) {
+			if ( $slug !== $current ) {
+				$rules[] = '#toplevel_page_translate-rocket .wp-submenu a[href$="page=' . $slug . '"]';
+			}
+		}
+		if ( $rules ) {
+			echo '<style id="trr-menu">' . implode( ',', $rules ) . '{display:none!important}</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed slugs.
+		}
 	}
 
 	/**
@@ -600,7 +768,27 @@ class Admin {
 			sprintf( __( 'Connection test failed for %s.', 'translate-rocket' ), $provider->label() ),
 			$res->error
 		);
-		wp_send_json_error( array( 'error' => '' !== $res->error ? $res->error : __( 'The provider did not return a translation.', 'translate-rocket' ) ) );
+		wp_send_json_error( array( 'error' => '' !== $res->error ? self::plain_provider_error( $res->error ) : __( 'The provider did not return a translation.', 'translate-rocket' ) ) );
+	}
+
+	/**
+	 * A provider's error put in words a site owner understands. The raw answer («HTTP 401: { "error":
+	 * { "message": "Incorrect API key…» in English and JSON) used to be shown as it was (5/10/2026); it
+	 * stays in Diagnostics → log, written just before. Same sentences as «Load available models».
+	 *
+	 * @param string $raw The provider's error.
+	 */
+	public static function plain_provider_error( string $raw ): string {
+		if ( preg_match( '/HTTP (401|403)\b|api key not valid|invalid[_ ]?(api[_ ]?)?key|incorrect api key|authentication|unauthori[sz]ed|forbidden/i', $raw ) ) {
+			return __( 'The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active.', 'translate-rocket' );
+		}
+		if ( preg_match( '/HTTP 429\b|rate.?limit|too many requests/i', $raw ) ) {
+			return __( 'The provider says too many requests right now. Wait a minute and try again.', 'translate-rocket' );
+		}
+		if ( ! preg_match( '/HTTP \d{3}/', $raw ) && preg_match( '/curl|timed? ?out|resolve|connect/i', $raw ) ) {
+			return __( 'Your site could not reach the provider (network or firewall). Try again later, or ask your host.', 'translate-rocket' );
+		}
+		return __( 'The provider answered with an error. Try again in a few minutes.', 'translate-rocket' );
 	}
 
 	/**
@@ -698,13 +886,12 @@ class Admin {
 			$this->ensure_language_packs( $targets );
 		}
 
+		// (A check on an old language cap, gone since 0.7.0, was left here and raised «Undefined variable
+		// $over» on every save: on a site showing PHP warnings it could break the redirect — 5/10/2026.)
 		$redirect = array(
 			'page'    => 'translate-rocket',
 			'updated' => '1',
 		);
-		if ( $over ) {
-			$redirect['limit'] = '1';
-		}
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'admin.php' ) ) );
 		exit;
 	}
@@ -1654,11 +1841,21 @@ class Admin {
 		$cur  = isset( $_POST['sw_current'] ) ? sanitize_key( $_POST['sw_current'] ) : 'show';
 		$placement = isset( $_POST['sw_placement'] ) ? sanitize_key( $_POST['sw_placement'] ) : 'manual';
 
-		$sw['type']          = in_array( $type, array( 'inline', 'list', 'dropdown', 'scroll' ), true ) ? $type : 'inline';
+		$sw['type']          = in_array( $type, array( 'inline', 'list', 'dropdown', 'scroll', 'grid' ), true ) ? $type : 'inline';
 		$sw['show']          = in_array( $show, array( 'both', 'flag', 'name', 'code', 'flagcode' ), true ) ? $show : 'both';
 		$sw['current']       = in_array( $cur, array( 'show', 'hide' ), true ) ? $cur : 'show';
-		// Placement is one either/or choice: manual (shortcode/block) OR floating.
-		$sw['floating']      = ( 'manual' !== $placement );
+		// Placement is one either/or choice: manual (shortcode/block), in the theme's menu, OR floating.
+		$sw['in_menu']       = ( 'menu' === $placement );
+		$sw['in_spot']       = ( 'spot' === $placement );
+		$sw['spot_selector'] = isset( $_POST['sw_spot_selector'] ) ? \TranslateRocket\Frontend\Switcher::clean_selector( wp_unslash( (string) $_POST['sw_spot_selector'] ) ) : (string) ( $sw['spot_selector'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- clean_selector() keeps only selector characters.
+		$sw['spot_where']    = ( isset( $_POST['sw_spot_where'] ) && 'start' === $_POST['sw_spot_where'] ) ? 'start' : 'end';
+		$sw['spot_label']    = isset( $_POST['sw_spot_label'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_spot_label'] ) ) : (string) ( $sw['spot_label'] ?? '' );
+		$sw['menu_pos']      = ( isset( $_POST['sw_menu_pos'] ) && 'start' === $_POST['sw_menu_pos'] ) ? 'start' : 'end';
+		$sw['footer_row']    = ! empty( $_POST['sw_footer_row'] );
+		$sw['footer_layout'] = ( isset( $_POST['sw_footer_layout'] ) && 'grid' === $_POST['sw_footer_layout'] ) ? 'grid' : 'row';
+		$sw['floating']      = ( ! in_array( $placement, array( 'manual', 'menu', 'spot' ), true ) );
+		$menu_loc            = isset( $_POST['sw_menu_location'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_menu_location'] ) ) : 'auto';
+		$sw['menu_location'] = ( 'auto' === $menu_loc || isset( \TranslateRocket\Frontend\Switcher::menu_locations()[ $menu_loc ] ) || preg_match( '/^nav:\d+$/', $menu_loc ) ) ? $menu_loc : 'auto';
 		$sw['float_pos']     = in_array( $placement, array( 'bottom-right', 'bottom-left', 'top-right', 'top-left', 'custom' ), true ) ? $placement : 'bottom-right';
 		$sw['float_x']       = isset( $_POST['sw_float_x'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_float_x'] ) ) : '';
 		$sw['float_y']       = isset( $_POST['sw_float_y'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_float_y'] ) ) : '';
@@ -1777,6 +1974,9 @@ class Admin {
 			<?php if ( isset( $_GET['updated'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
 				<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Switcher saved.', 'translate-rocket' ); ?></p></div>
 			<?php endif; ?>
+			<?php if ( isset( $_GET['menu_moved'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
+				<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Done: the languages are now an item of your header menu.', 'translate-rocket' ); ?> <a href="<?php echo esc_url( home_url( '/' ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'See your site', 'translate-rocket' ); ?> ↗</a></p></div>
+			<?php endif; ?>
 			<p class="trrocket-tagline"><?php esc_html_e( 'Design your switcher — create profiles (e.g. header, footer), each with its own style and a live preview.', 'translate-rocket' ); ?></p>
 
 			<div id="trr-sw-profiles" class="trrocket-card" style="max-width:none">
@@ -1809,6 +2009,87 @@ class Admin {
 					<?php wp_nonce_field( 'trrocket_save_switcher', 'trrocket_switcher_nonce' ); ?>
 					<input type="hidden" name="sw_profile" value="<?php echo esc_attr( $profile ); ?>" />
 
+					<?php // 5/10/2026: prima dove va il selettore, poi come appare; colori e rifiniture in «More style options». ?>
+					<div class="trrocket-card">
+						<h2><?php esc_html_e( 'Placement', 'translate-rocket' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Choose one: either place the switcher yourself with the shortcode / block, or let the plugin float it for you — not both.', 'translate-rocket' ); ?></p>
+						<?php
+						$placement = ! empty( $g( 'in_spot' ) ) ? 'spot' : ( ! empty( $g( 'in_menu' ) ) ? 'menu' : ( empty( $g( 'floating' ) ) ? 'manual' : (string) $g( 'float_pos' ) ) );
+						$trr_menus = self::switcher_menu_choices();
+						?>
+						<p><label><?php esc_html_e( 'Where to show the switcher', 'translate-rocket' ); ?>
+							<select name="sw_placement" id="sw_placement">
+								<?php
+								foreach ( array(
+									'menu'         => __( 'In my header menu (recommended)', 'translate-rocket' ),
+									'spot'         => __( 'In a spot I choose on my page', 'translate-rocket' ),
+									'manual'       => __( 'Manual — I add it with the shortcode / block', 'translate-rocket' ),
+									'bottom-right' => __( 'Floating — bottom right', 'translate-rocket' ),
+									'bottom-left'  => __( 'Floating — bottom left', 'translate-rocket' ),
+									'top-right'    => __( 'Floating — top right', 'translate-rocket' ),
+									'top-left'     => __( 'Floating — top left', 'translate-rocket' ),
+									'custom'       => __( 'Floating — custom position (X / Y)', 'translate-rocket' ),
+								) as $v => $l ) :
+									?>
+									<option value="<?php echo esc_attr( $v ); ?>" <?php selected( $placement, $v ); ?>><?php echo esc_html( $l ); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</label></p>
+						<p id="sw-custom-pos">
+							<label><?php esc_html_e( 'X (from left)', 'translate-rocket' ); ?> <input type="text" name="sw_float_x" value="<?php echo esc_attr( (string) $g( 'float_x' ) ); ?>" placeholder="10%" class="small-text" /></label>
+							&nbsp;
+							<label><?php esc_html_e( 'Y (from top)', 'translate-rocket' ); ?> <input type="text" name="sw_float_y" value="<?php echo esc_attr( (string) $g( 'float_y' ) ); ?>" placeholder="20px" class="small-text" /></label>
+							<br><span class="description"><?php esc_html_e( 'Use % or px, e.g. 10% / 20px.', 'translate-rocket' ); ?></span>
+						</p>
+						<div id="sw-menu-pick">
+							<?php if ( $trr_menus ) : ?>
+								<p><label><?php esc_html_e( 'Which menu', 'translate-rocket' ); ?>
+									<select name="sw_menu_location" id="sw_menu_location">
+										<?php foreach ( $trr_menus as $v => $l ) : ?>
+											<option value="<?php echo esc_attr( $v ); ?>" <?php selected( (string) $g( 'menu_location', 'auto' ), $v ); ?>><?php echo esc_html( $l ); ?></option>
+										<?php endforeach; ?>
+									</select>
+								</label></p>
+								<p class="trr-sw-menupos"><span><?php esc_html_e( 'Where in the menu', 'translate-rocket' ); ?></span>
+									<label><input type="radio" name="sw_menu_pos" value="end" <?php checked( 'start' !== (string) $g( 'menu_pos', 'end' ) ); ?> /> <?php esc_html_e( 'At the end', 'translate-rocket' ); ?></label>
+									<label><input type="radio" name="sw_menu_pos" value="start" <?php checked( 'start', (string) $g( 'menu_pos', 'end' ) ); ?> /> <?php esc_html_e( 'At the start', 'translate-rocket' ); ?></label>
+								</p>
+								<p class="description"><?php esc_html_e( 'The languages become an item of that menu, drawn by your theme like its other items — in the phone menu too, at the top or at the bottom as chosen. With «Dropdown» the other languages open under the current one. On a page without that menu the switcher floats in the corner, so it is never missing.', 'translate-rocket' ); ?></p>
+							<?php else : ?>
+								<p class="description trr-sw-nomenu"><?php esc_html_e( 'Your theme shows no menu yet. Create one in Appearance → Menus (or in the Site Editor) and put it in the header; until then the switcher floats in the corner.', 'translate-rocket' ); ?></p>
+							<?php endif; ?>
+						</div>
+						<div id="sw-spot-pick">
+							<input type="hidden" name="sw_spot_selector" id="sw_spot_selector" value="<?php echo esc_attr( (string) $g( 'spot_selector' ) ); ?>" />
+							<input type="hidden" name="sw_spot_where" id="sw_spot_where" value="<?php echo esc_attr( (string) $g( 'spot_where', 'end' ) ); ?>" />
+							<input type="hidden" name="sw_spot_label" id="sw_spot_label" value="<?php echo esc_attr( (string) $g( 'spot_label' ) ); ?>" />
+							<p class="trr-sw-spot-now"><strong><?php esc_html_e( 'Spot:', 'translate-rocket' ); ?></strong>
+								<span id="sw-spot-text" data-none="<?php esc_attr_e( 'not chosen yet — until then the switcher floats in the corner', 'translate-rocket' ); ?>" data-start="<?php esc_attr_e( 'at the start', 'translate-rocket' ); ?>" data-end="<?php esc_attr_e( 'at the end', 'translate-rocket' ); ?>"></span></p>
+							<p>
+								<button type="button" class="button button-primary" id="sw-spot-open" data-url="<?php echo esc_url( add_query_arg( 'trrocket_pick', '1', home_url( '/' ) ) ); ?>"><?php esc_html_e( 'Choose on my page', 'translate-rocket' ); ?></button>
+								<a href="<?php echo esc_url( add_query_arg( 'trrocket_pick', '1', home_url( '/' ) ) ); ?>" target="trrocket-pick" id="sw-spot-tab"><?php esc_html_e( 'or open it in a new tab', 'translate-rocket' ); ?></a>
+							</p>
+							<p class="description"><?php esc_html_e( 'Your home page opens with the header, menu and footer outlined: click where the switcher should go, choose the start or the end of it, and you see it there at once. Where that spot is missing or hidden — another page, or the desktop menu on a phone — the switcher floats in the corner, so it is never lost.', 'translate-rocket' ); ?></p>
+						</div>
+						<div class="trr-sw-picker" id="sw-picker" hidden>
+							<div class="trr-sw-picker-box">
+								<div class="trr-sw-picker-head"><strong><?php esc_html_e( 'Choose the spot', 'translate-rocket' ); ?></strong>
+									<span class="trr-sw-picker-views"><button type="button" class="button button-small is-on" data-w="100%"><?php esc_html_e( 'Desktop', 'translate-rocket' ); ?></button><button type="button" class="button button-small" data-w="390px"><?php esc_html_e( 'Phone', 'translate-rocket' ); ?></button></span>
+									<button type="button" class="button" id="sw-picker-close"><?php esc_html_e( 'Close', 'translate-rocket' ); ?></button></div>
+								<iframe id="sw-picker-frame" title="<?php esc_attr_e( 'Choose the spot', 'translate-rocket' ); ?>"></iframe>
+							</div>
+						</div>
+						<div class="trr-sw-footer">
+							<p><label><input type="checkbox" name="sw_footer_row" value="1" <?php checked( ! empty( $g( 'footer_row' ) ) ); ?> /> <strong><?php esc_html_e( 'Also a row of languages at the bottom of every page', 'translate-rocket' ); ?></strong></label></p>
+							<p class="trr-sw-footer-lay">
+								<label><input type="radio" name="sw_footer_layout" value="row" <?php checked( 'grid' !== (string) $g( 'footer_layout', 'row' ) ); ?> /> <?php esc_html_e( 'In a line', 'translate-rocket' ); ?></label>
+								<label><input type="radio" name="sw_footer_layout" value="grid" <?php checked( 'grid', (string) $g( 'footer_layout', 'row' ) ); ?> /> <?php esc_html_e( 'As a table', 'translate-rocket' ); ?></label>
+							</p>
+							<p class="description"><?php esc_html_e( 'Flags and names side by side under your footer, as many sites do: handy with many languages, and visitors find them where they look for them.', 'translate-rocket' ); ?></p>
+						</div>
+						<p id="sw-manual-hint" class="description"><?php esc_html_e( 'Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block.', 'translate-rocket' ); ?></p>
+					</div>
+
 					<div class="trrocket-card">
 						<h2><?php esc_html_e( 'Style', 'translate-rocket' ); ?></h2>
 						<table class="form-table" role="presentation">
@@ -1816,6 +2097,7 @@ class Admin {
 								<select id="sw_type" name="sw_type">
 									<option value="inline" <?php selected( $g( 'type' ), 'inline' ); ?>><?php esc_html_e( 'Inline (horizontal)', 'translate-rocket' ); ?></option>
 									<option value="list" <?php selected( $g( 'type' ), 'list' ); ?>><?php esc_html_e( 'List (vertical)', 'translate-rocket' ); ?></option>
+									<option value="grid" <?php selected( $g( 'type' ), 'grid' ); ?>><?php esc_html_e( 'Grid (a table of languages)', 'translate-rocket' ); ?></option>
 									<option value="dropdown" <?php selected( $g( 'type' ), 'dropdown' ); ?>><?php esc_html_e( 'Dropdown', 'translate-rocket' ); ?></option>
 									<option value="scroll" <?php selected( $g( 'type' ), 'scroll' ); ?>><?php esc_html_e( 'Scrollable bar (arrows, for many languages)', 'translate-rocket' ); ?></option>
 								</select>
@@ -1829,6 +2111,13 @@ class Admin {
 									<option value="code" <?php selected( $g( 'show' ), 'code' ); ?>><?php esc_html_e( 'Code only (EN, IT…)', 'translate-rocket' ); ?></option>
 								</select>
 							</td></tr>
+						</table>
+					</div>
+
+					<details class="trr-sw-more">
+						<summary><?php esc_html_e( 'More style options', 'translate-rocket' ); ?> <span class="description"><?php esc_html_e( 'colours, size, font, mobile…', 'translate-rocket' ); ?></span></summary>
+					<div class="trrocket-card">
+						<table class="form-table" role="presentation">
 							<tr><th scope="row"><?php esc_html_e( 'Current language', 'translate-rocket' ); ?></th><td>
 								<select id="sw_current" name="sw_current">
 									<option value="show" <?php selected( $g( 'current' ), 'show' ); ?>><?php esc_html_e( 'Show', 'translate-rocket' ); ?></option>
@@ -2028,34 +2317,7 @@ class Admin {
 						</table>
 					</div>
 
-					<div class="trrocket-card">
-						<h2><?php esc_html_e( 'Placement', 'translate-rocket' ); ?></h2>
-						<p class="description"><?php esc_html_e( 'Choose one: either place the switcher yourself with the shortcode / block, or let the plugin float it for you — not both.', 'translate-rocket' ); ?></p>
-						<?php $placement = empty( $g( 'floating' ) ) ? 'manual' : (string) $g( 'float_pos' ); ?>
-						<p><label><?php esc_html_e( 'Where to show the switcher', 'translate-rocket' ); ?>
-							<select name="sw_placement" id="sw_placement">
-								<?php
-								foreach ( array(
-									'manual'       => __( 'Manual — I add it with the shortcode / block', 'translate-rocket' ),
-									'bottom-right' => __( 'Floating — bottom right', 'translate-rocket' ),
-									'bottom-left'  => __( 'Floating — bottom left', 'translate-rocket' ),
-									'top-right'    => __( 'Floating — top right', 'translate-rocket' ),
-									'top-left'     => __( 'Floating — top left', 'translate-rocket' ),
-									'custom'       => __( 'Floating — custom position (X / Y)', 'translate-rocket' ),
-								) as $v => $l ) :
-									?>
-									<option value="<?php echo esc_attr( $v ); ?>" <?php selected( $placement, $v ); ?>><?php echo esc_html( $l ); ?></option>
-								<?php endforeach; ?>
-							</select>
-						</label></p>
-						<p id="sw-custom-pos">
-							<label><?php esc_html_e( 'X (from left)', 'translate-rocket' ); ?> <input type="text" name="sw_float_x" value="<?php echo esc_attr( (string) $g( 'float_x' ) ); ?>" placeholder="10%" class="small-text" /></label>
-							&nbsp;
-							<label><?php esc_html_e( 'Y (from top)', 'translate-rocket' ); ?> <input type="text" name="sw_float_y" value="<?php echo esc_attr( (string) $g( 'float_y' ) ); ?>" placeholder="20px" class="small-text" /></label>
-							<br><span class="description"><?php esc_html_e( 'Use % or px, e.g. 10% / 20px.', 'translate-rocket' ); ?></span>
-						</p>
-						<p id="sw-manual-hint" class="description"><?php esc_html_e( 'Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block.', 'translate-rocket' ); ?></p>
-					</div>
+					</details>
 
 					<?php submit_button( __( 'Save switcher', 'translate-rocket' ) ); ?>
 				</form>
@@ -2186,7 +2448,7 @@ class Admin {
 				'<a class="button %1$s" href="%2$s">%3$s</a> ',
 				$code === $lang ? 'button-primary' : '',
 				esc_url( add_query_arg( array( 'page' => 'translate-rocket-memory', 'lang' => $code ), admin_url( 'admin.php' ) ) ),
-				esc_html( Languages::flag( $code ) . ' ' . Languages::label( $code ) )
+				wp_kses( self::lang_html( (string) $code ), \TranslateRocket\Kses::html_rules() )
 			);
 		}
 		echo '</p>';
@@ -2845,6 +3107,8 @@ JS;
 			. '<span class="dashicons dashicons-heart"></span> ' . esc_html__( 'Support the project', 'translate-rocket' )
 			. '</a>';
 		echo '</nav>';
+		// On a phone the buttons are one row that scrolls sideways: bring the current one into view.
+		echo '<script>(function(){var n=document.querySelector(".trr-nav"),a=n&&n.querySelector(".is-active");if(a&&n.scrollWidth>n.clientWidth){n.scrollLeft=Math.max(0,a.offsetLeft-n.offsetLeft-16);}})();</script>';
 
 		// Gli avvisi (nostri e di altri plugin) WordPress li stampa SOPRA la schermata, e il
 		// suo common.js li sposta qui sotto solo a caricamento finito: su un sito lento anche
@@ -2966,7 +3230,7 @@ JS;
 				admin_url( 'admin.php' )
 			);
 			$cls = ( $code === $lang ) ? 'button button-primary' : 'button';
-			echo '<a class="' . esc_attr( $cls ) . '" style="margin-right:6px" href="' . esc_url( $url ) . '">' . esc_html( trim( \TranslateRocket\Languages::flag( $code ) . ' ' . \TranslateRocket\Languages::label( $code ) ) ) . '</a>';
+			echo '<a class="' . esc_attr( $cls ) . '" style="margin-right:6px" href="' . esc_url( $url ) . '">' . wp_kses( self::lang_html( (string) $code ), \TranslateRocket\Kses::html_rules() ) . '</a>';
 		}
 		echo '</div>';
 
@@ -3098,12 +3362,19 @@ JS
 							$has_key = $trr_p && $trr_p->is_configured();
 						}
 						?>
-						<div class="trr-ai-provider<?php echo $is_active ? ' is-active' : ''; ?>">
+						<?php
+						// 5/10/2026: dieci riquadri aperti erano un muro di campi. Aperti solo quello attivo e
+						// quelli nella catena di riserva; gli altri su una riga, «Show» li apre.
+						$aperto = $is_active || ! empty( $order_prio[ $pid ] );
+						?>
+						<div class="trr-ai-provider<?php echo $is_active ? ' is-active' : ''; ?><?php echo $aperto ? '' : ' is-folded'; ?>" data-provider="<?php echo esc_attr( $pid ); ?>">
 							<div class="trr-ai-phead">
 								<strong class="trr-ai-pname"><?php echo esc_html( $def['label'] ); ?></strong>
 								<?php if ( ! empty( $def['free'] ) ) : ?><span class="trr-ai-badge" style="background:#00a32a;color:#fff;border:0"><?php esc_html_e( 'Free', 'translate-rocket' ); ?></span><?php endif; ?>
 								<?php if ( $is_active ) : ?><span class="trr-ai-badge is-on"><?php esc_html_e( 'Active', 'translate-rocket' ); ?></span><?php elseif ( $has_key ) : ?><span class="trr-ai-badge"><?php echo $senza_chiave ? esc_html__( 'Ready', 'translate-rocket' ) : esc_html__( 'Key set', 'translate-rocket' ); ?></span><?php endif; ?>
+								<button type="button" class="button-link trr-ai-fold" aria-expanded="<?php echo $aperto ? 'true' : 'false'; ?>" data-show="<?php esc_attr_e( 'Show', 'translate-rocket' ); ?>" data-hide="<?php esc_attr_e( 'Hide', 'translate-rocket' ); ?>"><?php echo $aperto ? esc_html__( 'Hide', 'translate-rocket' ) : esc_html__( 'Show', 'translate-rocket' ); ?></button>
 							</div>
+							<div class="trr-ai-pbody">
 						<table class="form-table" role="presentation">
 							<?php if ( $senza_chiave ) : ?>
 							<tr>
@@ -3238,9 +3509,31 @@ JS
 							<?php if ( 'deepl' === $pid ) : ?>
 								<p class="trr-ai-pfoot"><button type="button" class="button button-small trr-deepl-usage">&#128202; <?php esc_html_e( 'Check usage', 'translate-rocket' ); ?></button> <span class="trr-deepl-usage-out description"></span></p>
 							<?php endif; ?>
+							</div>
 						</div>
 					<?php endforeach; ?>
 					</div>
+					<script>
+					( function () {
+						function apri( card, si ) {
+							card.classList.toggle( 'is-folded', ! si );
+							var b = card.querySelector( '.trr-ai-fold' );
+							if ( b ) { b.setAttribute( 'aria-expanded', si ? 'true' : 'false' ); b.textContent = b.getAttribute( si ? 'data-hide' : 'data-show' ); }
+						}
+						document.querySelectorAll( '.trr-ai-provider' ).forEach( function ( card ) {
+							var b = card.querySelector( '.trr-ai-fold' );
+							if ( b ) { b.addEventListener( 'click', function () { apri( card, card.classList.contains( 'is-folded' ) ); } ); }
+						} );
+						// choosing a provider in «Active provider» opens its card, where its key goes
+						var sel = document.getElementById( 'trrocket-active' );
+						if ( sel ) {
+							sel.addEventListener( 'change', function () {
+								var card = document.querySelector( '.trr-ai-provider[data-provider="' + sel.value + '"]' );
+								if ( card ) { apri( card, true ); card.scrollIntoView( { block: 'nearest', behavior: 'smooth' } ); }
+							} );
+						}
+					} )();
+					</script>
 
 					<h3><?php esc_html_e( 'House style', 'translate-rocket' ); ?> <?php $this->info( __( 'An extra instruction sent with every AI translation, so the wording sounds like you rather than like a dictionary. Tone, formality, words to keep in the original — anything the model should know about your brand.', 'translate-rocket' ) ); ?></h3>
 						<table class="form-table" role="presentation">
@@ -3425,7 +3718,7 @@ JS
 								$done  = $det - $miss;
 								?>
 								<tr>
-									<td><?php echo esc_html( Languages::flag( $code ) . ' ' . Languages::label( $code ) ); ?></td>
+									<td><?php echo wp_kses( self::lang_html( (string) $code ), \TranslateRocket\Kses::html_rules() ); ?></td>
 									<td><?php echo wp_kses( $this->progress_bar( $done, $det, true ) , \TranslateRocket\Kses::html_rules() ); ?></td>
 									<td data-label="<?php esc_attr_e( 'Missing', 'translate-rocket' ); ?>"><strong><?php echo (int) $miss; ?></strong></td>
 									<td>
@@ -3694,17 +3987,13 @@ JS
 		);
 
 		// Configured providers, for the connection test.
-		$prov_defs = array(
-			'deepl'     => 'DeepL',
-			'openai'    => 'OpenAI',
-			'anthropic' => 'Anthropic (Claude)',
-			'gemini'    => 'Google Gemini',
-			'google'    => 'Google Translate',
-		);
+		// Every provider with a key, from the registry: the list written here by hand stopped at the
+		// five paid ones, and Groq, Cloudflare and OpenRouter — the free ones the setup wizard
+		// recommends — had no «Test connection» (5/10/2026).
 		$configured = array();
-		foreach ( $prov_defs as $pid => $plabel ) {
-			if ( '' !== (string) ( $settings['providers'][ $pid ]['api_key'] ?? '' ) ) {
-				$configured[ $pid ] = $plabel;
+		foreach ( \TranslateRocket\Providers\Registry::all() as $prov ) {
+			if ( $prov->is_configured() ) {
+				$configured[ $prov->id() ] = $prov->label();
 			}
 		}
 
@@ -4118,6 +4407,10 @@ JS;
 
 		$place                          = isset( $_POST['wiz_switcher'] ) ? sanitize_key( $_POST['wiz_switcher'] ) : 'floating';
 		$settings['switcher']['floating'] = ( 'floating' === $place );
+		$settings['switcher']['in_menu']  = ( 'menu' === $place );
+		if ( 'menu' === $place ) {
+			$settings['switcher']['menu_location'] = 'auto';
+		}
 
 		Settings::update( $settings );
 		update_option( 'trrocket_wizard_done', 1 );
@@ -4202,18 +4495,19 @@ JS;
 						<label class="trr-wiz-srclabel"><?php esc_html_e( 'My site is written in:', 'translate-rocket' ); ?>
 							<select name="source_language" id="trr-wiz-source">
 								<?php foreach ( $builtins as $code => $info ) : ?>
-									<option value="<?php echo esc_attr( $code ); ?>" <?php selected( $code, $source ); ?>><?php echo esc_html( $info[0] ); ?></option>
+									<option value="<?php echo esc_attr( $code ); ?>" <?php selected( $code, $source ); ?>><?php echo esc_html( self::lang_option_label( $info ) ); ?></option>
 								<?php endforeach; ?>
 							</select>
 						</label>
 					</p>
 					<p class="trr-wiz-sub"><?php esc_html_e( 'Translate into:', 'translate-rocket' ); ?></p>
+					<?php self::lang_search_box(); ?>
 					<div class="trrocket-lang-grid trr-wiz-grid">
 						<?php foreach ( $builtins as $code => $info ) : ?>
-							<label class="trrocket-lang-item trr-wiz-target" data-code="<?php echo esc_attr( $code ); ?>"<?php echo ( $code === $source ) ? ' style="display:none"' : ''; ?>>
+							<label class="trrocket-lang-item trr-wiz-target" data-code="<?php echo esc_attr( $code ); ?>" data-cerca="<?php echo esc_attr( self::lang_search_text( (string) $code, $info ) ); ?>"<?php echo ( $code === $source ) ? ' style="display:none"' : ''; ?>>
 								<input type="checkbox" name="target_languages[]" value="<?php echo esc_attr( $code ); ?>" <?php checked( in_array( $code, $targets, true ) ); ?> />
 								<span class="trrocket-flag"><?php echo wp_kses( \TranslateRocket\Flags::html( (string) $code, (string) ( $info[2] ?? '' ) ) , \TranslateRocket\Kses::html_rules() ); ?></span>
-								<span><?php echo esc_html( $info[0] ); ?></span>
+								<span><?php echo esc_html( $info[0] ); ?><?php self::lang_english( $info ); ?></span>
 							</label>
 						<?php endforeach; ?>
 					</div>
@@ -4280,8 +4574,15 @@ JS;
 				<section class="trr-wiz-step" data-step="3" hidden>
 					<h2><?php esc_html_e( 'Show the language switcher', 'translate-rocket' ); ?></h2>
 					<p class="trr-wiz-lead"><?php esc_html_e( 'How should visitors switch language? You can fine-tune the look later on the Switcher tab.', 'translate-rocket' ); ?></p>
+					<?php $trr_ha_menu = array() !== self::switcher_menu_choices(); ?>
+					<?php if ( $trr_ha_menu ) : ?>
 					<label class="trr-wiz-radio">
-						<input type="radio" name="wiz_switcher" value="floating" checked />
+						<input type="radio" name="wiz_switcher" value="menu" checked />
+						<span><strong><?php esc_html_e( 'In my header menu', 'translate-rocket' ); ?></strong><br><?php esc_html_e( 'The languages become the last item of your theme\'s menu, in its own style — on phones too. Recommended.', 'translate-rocket' ); ?></span>
+					</label>
+					<?php endif; ?>
+					<label class="trr-wiz-radio">
+						<input type="radio" name="wiz_switcher" value="floating" <?php checked( ! $trr_ha_menu ); ?> />
 						<span><strong><?php esc_html_e( 'Floating button', 'translate-rocket' ); ?></strong><br><?php esc_html_e( 'A small switcher that floats in a corner on every page. Easiest — nothing else to do.', 'translate-rocket' ); ?></span>
 					</label>
 					<label class="trr-wiz-radio">
@@ -4503,7 +4804,7 @@ JS;
 					<p style="display:flex;flex-wrap:wrap;gap:8px">
 						<?php foreach ( \TranslateRocket\Coexistence::preview_targets() as $code ) : ?>
 							<a class="button" target="_blank" rel="noopener" href="<?php echo esc_url( \TranslateRocket\Coexistence::preview_url( $code ) ); ?>">
-								<?php echo esc_html( trim( Languages::flag( $code ) . ' ' . Languages::label( $code ) ) ); ?> ↗
+								<?php echo wp_kses( self::lang_html( (string) $code ), \TranslateRocket\Kses::html_rules() ); ?> ↗
 							</a>
 						<?php endforeach; ?>
 					</p>
@@ -4528,7 +4829,7 @@ JS;
 								<select id="trrocket-source" name="source_language">
 									<?php foreach ( Languages::all() as $code => $info ) : ?>
 										<option value="<?php echo esc_attr( $code ); ?>" <?php selected( $source, $code ); ?>>
-											<?php echo esc_html( $info[2] . ' ' . $info[0] ); ?>
+											<?php echo esc_html( self::lang_option_label( $info ) ); ?>
 										</option>
 									<?php endforeach; ?>
 								</select>
@@ -4543,9 +4844,9 @@ JS;
 						<br>
 						<?php
 						printf(
-							/* translators: %s: the source language name (flag + label). */
+							/* translators: %s: the source language name. */
 							esc_html__( 'Your source language (%s) isn’t listed here — it’s the language you translate from. Change it in “Site language (source)” above.', 'translate-rocket' ),
-							esc_html( trim( Languages::flag( $source ) . ' ' . Languages::label( $source ) ) )
+							esc_html( Languages::label( $source ) )
 						);
 						?>
 						<br>
@@ -4559,6 +4860,7 @@ JS;
 					$testo_on    = __( 'Online: your visitors see this language. Click to hide it while you work on it.', 'translate-rocket' );
 					$testo_off   = __( 'Offline: only you see this language. Click to publish it.', 'translate-rocket' );
 					?>
+					<?php self::lang_search_box(); ?>
 					<div class="trrocket-lang-grid trr-lang-grid">
 						<?php
 						foreach ( Languages::all() as $code => $info ) :
@@ -4568,11 +4870,11 @@ JS;
 							$scelta = in_array( $code, $targets, true );
 							$spenta = in_array( (string) $code, $offline_ora, true );
 							?>
-							<div class="trrocket-lang-item<?php echo $scelta ? ' is-chosen' : ''; ?><?php echo $spenta ? ' is-offline' : ''; ?>" data-code="<?php echo esc_attr( (string) $code ); ?>"<?php echo $scelta ? ' data-era-scelta="1"' : ''; ?> data-era-spenta="<?php echo $spenta ? '1' : '0'; ?>">
+							<div class="trrocket-lang-item<?php echo $scelta ? ' is-chosen' : ''; ?><?php echo $spenta ? ' is-offline' : ''; ?>" data-code="<?php echo esc_attr( (string) $code ); ?>" data-cerca="<?php echo esc_attr( self::lang_search_text( (string) $code, $info ) ); ?>"<?php echo $scelta ? ' data-era-scelta="1"' : ''; ?> data-era-spenta="<?php echo $spenta ? '1' : '0'; ?>">
 								<label class="trrocket-lang-pick">
 									<input type="checkbox" name="target_languages[]" value="<?php echo esc_attr( $code ); ?>" <?php checked( $scelta ); ?> />
 									<span class="trrocket-flag"><?php echo wp_kses( \TranslateRocket\Flags::html( (string) $code, (string) ( $info[2] ?? '' ) ) , \TranslateRocket\Kses::html_rules() ); ?></span>
-									<span class="trrocket-lang-name"><?php echo esc_html( $info[0] ); ?></span>
+									<span class="trrocket-lang-name"><?php echo esc_html( $info[0] ); ?><?php self::lang_english( $info ); ?></span>
 								</label>
 								<label class="trr-onoff" data-on="<?php echo esc_attr( $testo_on ); ?>" data-off="<?php echo esc_attr( $testo_off ); ?>" title="<?php echo esc_attr( $spenta ? $testo_off : $testo_on ); ?>">
 									<input type="checkbox" class="trr-onoff-in" name="offline_languages[]" value="<?php echo esc_attr( (string) $code ); ?>" <?php checked( $spenta ); ?> />
@@ -4783,7 +5085,7 @@ JS;
 								$done  = $det - (int) $stats['missing'];
 								?>
 								<tr>
-									<td><?php echo esc_html( Languages::flag( $code ) . ' ' . Languages::label( $code ) ); ?></td>
+									<td><?php echo wp_kses( self::lang_html( (string) $code ), \TranslateRocket\Kses::html_rules() ); ?></td>
 									<td><?php echo wp_kses( $this->progress_bar( $done, $det, true ) , \TranslateRocket\Kses::html_rules() ); ?></td>
 									<td data-label="<?php esc_attr_e( 'Detected', 'translate-rocket' ); ?>"><?php echo (int) $det; ?></td>
 									<td data-label="<?php esc_attr_e( 'Translated', 'translate-rocket' ); ?>"><?php echo (int) $stats['translated']; ?></td>
@@ -4931,7 +5233,7 @@ JS;
 				'<a class="button %1$s" href="%2$s">%3$s</a> ',
 				$code === $lang ? 'button-primary' : '',
 				esc_url( $this->editor_url( $code, $loc ) ),
-				esc_html( Languages::flag( $code ) . ' ' . Languages::label( $code ) )
+				wp_kses( self::lang_html( (string) $code ), \TranslateRocket\Kses::html_rules() )
 			);
 		}
 		echo '</p>';
@@ -5091,6 +5393,7 @@ JS;
 		<div class="trr-ptoolbar">
 			<input type="search" id="trr-psearch" class="regular-text" autocomplete="off"
 				placeholder="<?php esc_attr_e( 'Search pages by name or slug… (spaces count as hyphens)', 'translate-rocket' ); ?>" />
+			<label class="trr-ptodo"><input type="checkbox" id="trr-ptodo" /> <?php esc_html_e( 'Only pages still to translate', 'translate-rocket' ); ?></label>
 			<span class="description">
 				<?php
 				printf(
@@ -5136,12 +5439,12 @@ JS;
 					$label      = \TranslateRocket\Strings::heading_name( (string) $page->url, (string) $page->title );
 					?>
 					<tr
-						data-title="<?php echo esc_attr( strtolower( $label ) ); ?>"
+						data-title="<?php echo esc_attr( self::lower( $label ) ); ?>"
 						data-strings="<?php echo (int) $total; ?>"
 						data-translated="<?php echo (int) $translated; ?>"
 						data-missing="<?php echo (int) $missing; ?>"
 						data-pct="<?php echo (int) $pct; ?>"
-						data-search="<?php echo esc_attr( strtolower( $label . ' ' . $page->url ) ); ?>">
+						data-search="<?php echo esc_attr( self::lower( $label . ' ' . $page->url ) ); ?>">
 						<td>
 							<strong><?php echo esc_html( $label ); ?></strong><br>
 							<span class="description"><?php echo esc_html( $page->url ); ?></span>
@@ -5151,13 +5454,17 @@ JS;
 						<td data-label="<?php esc_attr_e( 'Missing', 'translate-rocket' ); ?>"><strong><?php echo (int) $missing; ?></strong></td>
 						<td class="trr-pcell"><?php echo wp_kses( $this->progress_bar( $translated, $total ) , \TranslateRocket\Kses::html_rules() ); ?></td>
 						<td class="trr-rowactions">
-							<a class="button button-small" href="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>
+							<a class="button button-small<?php echo $missing > 0 ? ' button-primary' : ''; ?>" href="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>
 							<?php if ( null !== $fornitore && $missing > 0 ) : ?>
 								<?php // Il valore del pulsante e' il "loc" che finisce nel POST: un solo modulo per tutta la tabella invece di uno per riga. ?>
 								<button type="submit" form="trr-ai-onepage" class="button button-small" name="loc"
 									value="<?php echo esc_attr( $page->url_hash ); ?>"
 									title="<?php esc_attr_e( 'Translate only this page with AI', 'translate-rocket' ); ?>">&#10024; <?php esc_html_e( 'AI', 'translate-rocket' ); ?></button>
 							<?php endif; ?>
+							<?php // 5/10/2026: «Start over» e «Hide» tolgono qualcosa: stanno dietro «⋯», non accanto a «Translate». ?>
+							<details class="trr-more">
+								<summary class="button button-small" title="<?php esc_attr_e( 'More actions', 'translate-rocket' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'translate-rocket' ); ?>">&#8943;</summary>
+								<div class="trr-more-menu">
 							<?php if ( $translated > 0 ) : ?>
 								<button type="submit" form="trr-reset-onepage" class="button button-small" name="loc"
 									value="<?php echo esc_attr( $page->url_hash ); ?>"
@@ -5168,6 +5475,8 @@ JS;
 								value="<?php echo esc_attr( $page->url_hash ); ?>"
 								onclick="return confirm(<?php echo esc_attr( (string) wp_json_encode( __( 'Remove this page from the list? Its translations stay in the database; the page comes back the next time it is read.', 'translate-rocket' ) ) ); ?>);"
 								title="<?php esc_attr_e( 'Hide this page from the list: nothing is deleted, and it comes back if the page is visited again', 'translate-rocket' ); ?>"><span class="dashicons dashicons-hidden" style="font-size:16px;width:16px;height:16px;vertical-align:text-bottom"></span> <?php esc_html_e( 'Hide', 'translate-rocket' ); ?></button>
+								</div>
+							</details>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -5194,17 +5503,27 @@ JS;
 
 	function norm( s ) { return ( s || '' ).toLowerCase().replace( /\s+/g, '-' ); }
 
+	var todo = document.getElementById( 'trr-ptodo' );
+
 	function applyFilter() {
 		var q = norm( input.value.trim() );
+		var soloDaFare = todo && todo.checked;
 		var shown = 0;
 		rows.forEach( function ( r ) {
-			var ok = ! q || norm( r.getAttribute( 'data-search' ) ).indexOf( q ) !== -1;
+			var ok = ( ! q || norm( r.getAttribute( 'data-search' ) ).indexOf( q ) !== -1 )
+				&& ( ! soloDaFare || parseInt( r.getAttribute( 'data-missing' ), 10 ) > 0 );
 			r.style.display = ok ? '' : 'none';
 			if ( ok ) { shown++; }
 		} );
 		if ( counter ) { counter.textContent = shown; }
 	}
 	input.addEventListener( 'input', applyFilter );
+	if ( todo ) { todo.addEventListener( 'change', applyFilter ); }
+	document.addEventListener( 'click', function ( ev ) {
+		Array.prototype.forEach.call( table.querySelectorAll( 'details.trr-more[open]' ), function ( d ) {
+			if ( ! d.contains( ev.target ) ) { d.removeAttribute( 'open' ); }
+		} );
+	} );
 
 	var ths = table.querySelectorAll( 'th.trr-sortable' );
 	Array.prototype.forEach.call( ths, function ( th ) {
@@ -5609,9 +5928,21 @@ JS;
 		if ( empty( $rows ) ) {
 			return;
 		}
+		// 6/10/2026: «the plugin changed my footer link into <1>ALP Web Design</1>» (a user, looking at this
+		// screen). The marks were explained only in a tooltip: one visible line, where they appear.
+		$con_segni = false;
+		foreach ( $rows as $r ) {
+			if ( \TranslateRocket\Frontend\InlineText::has_parts( (string) $r->original ) ) {
+				$con_segni = true;
+				break;
+			}
+		}
 		?>
 		<div class="trr-eblockwrap">
 			<h3><?php echo esc_html( $title ); ?></h3>
+			<?php if ( $con_segni ) : ?>
+				<p class="description trr-ph-hint"><span class="trr-ph">&lt;1&gt;</span>…<span class="trr-ph">&lt;/1&gt;</span> <?php esc_html_e( 'marks a link or formatted words. On your site they stay as they are — same link, same address. Keep the marks, with their numbers, around the words that belong to them.', 'translate-rocket' ); ?></p>
+			<?php endif; ?>
 			<table class="widefat striped">
 				<tbody>
 					<?php

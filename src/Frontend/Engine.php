@@ -439,6 +439,11 @@ class Engine {
 	// the plural, the one shown nearly always, stayed English (3/10/2026).
 	const DATA_SUFFIX = '/^data-(?!(gtm|lazy|wp|wpr|elementor|trr|et|vc|wf)-)(?:[a-z0-9_-]*[-_])?(text|message|msg|label|title|tooltip|placeholder|alt|caption|cta|description|heading|subtitle|empty|error|success|confirm|notice)([-_](?:plural|singular))?(-\d+)?$/';
 
+	// The word glued to the one before it: Ultimate Blocks' countdown keeps the message shown when
+	// the offer ends in «data-expirymessage» (4/10/2026). Only words that cannot be the tail of
+	// another one: «text» and «title» stay out (data-context, data-entitle are not for the visitor).
+	const DATA_GLUED = '/^data-(?!(gtm|lazy|wp|wpr|elementor|trr|et|vc|wf)-)[a-z0-9]{2,}(message|msg|label|placeholder|tooltip|caption)$/';
+
 	/**
 	 * The phrases of a data-* value that is a list split on «|» by its script, or null.
 	 *
@@ -533,7 +538,7 @@ class Engine {
 				// A data-* holding JSON is opened too (only its words count, see settings_doc()):
 				// Social Chat builds its WhatsApp box from data-button / data-box (3/10/2026).
 				$json = self::json_attr( $name ) && null !== self::settings_doc( (string) $a->nodeValue );
-				if ( in_array( $name, self::ATTRIBUTES, true ) || ( ! $json && ! preg_match( self::DATA_SUFFIX, $name ) ) ) {
+				if ( in_array( $name, self::ATTRIBUTES, true ) || ( ! $json && ! preg_match( self::DATA_SUFFIX, $name ) && ! preg_match( self::DATA_GLUED, $name ) ) ) {
 					continue;
 				}
 				$nodes[ $name ][] = $el;
@@ -697,7 +702,7 @@ class Engine {
 					$this->extra_tokens[] = $token;
 				} elseif ( 'script' === strtolower( $m[2] ) && strlen( $m[3] ) <= 300000
 					&& ! preg_match( '#\bsrc\s*=#i', $m[1] )
-					&& ! preg_match( '#\btype\s*=\s*(["\']?)(?!(text/javascript|module|application/javascript))#i', $m[1] )
+					&& self::is_js_type( $m[1] )
 					&& preg_match( '#^\s*(?://[^\n]*\n\s*|/\*.*?\*/\s*)*(?:(?:var|let|const)\s+|window\.)[A-Za-z_$][\w$]*\s*=\s*[\[{]#s', $m[3] ) ) {
 					// A theme's own block printed by hand — «<script>var theme_i18n = {…}</script>»
 					// in wp_head — carries the same kind of sentences without the -js-extra id.
@@ -1123,6 +1128,57 @@ class Engine {
 	}
 
 	/**
+	 * Whether a <script>'s attributes say JavaScript: no type, or text/javascript, module,
+	 * application/javascript. (The old test let the optional quote match nothing and read
+	 * «"text/javascript» as another type: every block a plugin printed by hand with
+	 * type="text/javascript" was skipped — Ultimate FAQ's question list, 4/10/2026.)
+	 *
+	 * @param string $attrs The tag's attributes.
+	 */
+	private static function is_js_type( string $attrs ): bool {
+		if ( ! preg_match( '#\btype\s*=\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s>]+))#i', $attrs, $t ) ) {
+			return true;
+		}
+		$type = strtolower( trim( (string) ( '' !== ( $t[1] ?? '' ) ? $t[1] : ( '' !== ( $t[2] ?? '' ) ? $t[2] : ( $t[3] ?? '' ) ) ) ) );
+		return in_array( $type, array( '', 'text/javascript', 'module', 'application/javascript' ), true );
+	}
+
+	/**
+	 * Give the <body> back the attributes the page wrote on it. A plugin that prints an element
+	 * the <head> cannot hold (a <div> from an assistant, a bar, a tracking pixel) makes the parser
+	 * open <body> right there; the real <body id="the7-body" class="elementor-kit-7 …"> that comes
+	 * later is then dropped with all its attributes. Browsers merge them; the translated page lost
+	 * them and with them the theme's fonts, colours, fixed header and footer menus (report from a
+	 * site with The7, Elementor, WooCommerce and Angie, 5/10/2026).
+	 *
+	 * @param \DOMDocument $dom  Parsed page.
+	 * @param string       $html The HTML it was parsed from.
+	 */
+	private static function keep_body_attributes( \DOMDocument $dom, string $html ): void {
+		if ( ! preg_match( '#<body\b([^>]*)>#i', $html, $m ) || '' === trim( $m[1] ) ) {
+			return;
+		}
+		$body = $dom->getElementsByTagName( 'body' )->item( 0 );
+		if ( ! ( $body instanceof \DOMElement ) ) {
+			return;
+		}
+		$probe = new \DOMDocument();
+		$prev  = libxml_use_internal_errors( true );
+		$probe->loadHTML( '<?xml encoding="utf-8" ?><html><body' . $m[1] . '></body></html>', LIBXML_NOWARNING | LIBXML_NOERROR );
+		libxml_clear_errors();
+		libxml_use_internal_errors( $prev );
+		$orig = $probe->getElementsByTagName( 'body' )->item( 0 );
+		if ( ! ( $orig instanceof \DOMElement ) ) {
+			return;
+		}
+		foreach ( $orig->attributes as $a ) {
+			if ( ! $body->hasAttribute( $a->nodeName ) ) {
+				$body->setAttribute( $a->nodeName, $a->nodeValue );
+			}
+		}
+	}
+
+	/**
 	 * Output-buffer callback.
 	 *
 	 * @param string $html Buffered page HTML.
@@ -1153,6 +1209,7 @@ class Engine {
 		libxml_use_internal_errors( $previous );
 
 		$xpath = new \DOMXPath( $dom );
+		self::keep_body_attributes( $dom, $masked );
 
 		$skip = '';
 		foreach ( self::SKIP_PARENTS as $tag ) {

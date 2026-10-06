@@ -4027,3 +4027,269 @@ msgstr "Contenido cargado por la página (mapas, sliders…)"
 
 msgid "GiveWP e-mails"
 msgstr "Correos de GiveWP"
+
+#: src/Admin/Admin.php
+msgid "Their new text is not in your translations yet."
+msgstr "Su texto nuevo aún no está en tus traducciones."
+
+#: src/Admin/Admin.php
+msgid "Find a language…"
+msgstr "Buscar un idioma…"
+
+#: src/Admin/Admin.php
+msgid "No language matches."
+msgstr "Ningún idioma coincide."
+
+#: src/Admin/Admin.php
+msgid "More style options"
+msgstr "Más opciones de estilo"
+
+#: src/Admin/Admin.php
+msgid "colours, size, font, mobile…"
+msgstr "colores, tamaño, fuente, móvil…"
+
+#: src/Admin/Admin.php
+msgid "Only pages still to translate"
+msgstr "Solo páginas aún por traducir"
+
+#: src/Admin/Admin.php
+msgid "More actions"
+msgstr "Más acciones"
+
+#: src/Admin/LabsPromo.php
+msgid "Unlimited languages, each on its own address for Google"
+msgstr "Idiomas ilimitados, cada uno con su propia dirección para Google"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with your own AI key (free Groq, Cloudflare, OpenRouter; or OpenAI, Claude, Gemini, DeepL, Google)"
+msgstr "Traducción con tu propia clave de IA (gratis Groq, Cloudflare, OpenRouter; o OpenAI, Claude, Gemini, DeepL, Google)"
+
+#: src/Admin/LabsPromo.php
+msgid "Free translation in Chrome and Edge, no key"
+msgstr "Traducción gratuita en Chrome y Edge, sin clave"
+
+#: src/Admin/LabsPromo.php
+msgid "Visual editor: click a sentence on your page and change it"
+msgstr "Editor visual: haz clic en una frase de tu página y cámbiala"
+
+#: src/Admin/LabsPromo.php
+msgid "SEO: translated addresses, hreflang, sitemaps, titles and descriptions"
+msgstr "SEO: direcciones traducidas, hreflang, sitemaps, títulos y descripciones"
+
+#: src/Admin/LabsPromo.php
+msgid "WooCommerce, contact forms and their e-mails in the visitor's language"
+msgstr "WooCommerce, formularios de contacto y sus correos en el idioma del visitante"
+
+#: src/Admin/LabsPromo.php
+msgid "Import from WPML, Polylang, TranslatePress, Weglot and others"
+msgstr "Importación desde WPML, Polylang, TranslatePress, Weglot y otros"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with no key at all, from any browser and phones"
+msgstr "Traducción sin ninguna clave, desde cualquier navegador y móviles"
+
+#: src/Admin/LabsPromo.php
+msgid "Every page translated by itself when you publish it"
+msgstr "Cada página se traduce sola cuando la publicas"
+
+#: src/Admin/LabsPromo.php
+msgid "Engines in the order you choose: if one stops, the next one translates"
+msgstr "Motores en el orden que elijas: si uno se detiene, traduce el siguiente"
+
+#: src/Admin/LabsPromo.php
+msgid "A second opinion, external collaborators, a weekly report"
+msgstr "Una segunda opinión, colaboradores externos, un informe semanal"
+
+#: src/Admin/LabsPromo.php
+msgid "What is included, and what Labs adds"
+msgstr "Qué está incluido y qué añade Labs"
+
+#: src/Admin/LabsPromo.php
+msgid "TranslateRocket (free)"
+msgstr "TranslateRocket (gratis)"
+
+#: src/Admin/LabsPromo.php
+msgid "Included"
+msgstr "Incluido"
+
+#: src/Admin/LabsPromo.php
+msgid "Labs"
+msgstr "Labs"
+
+#: src/Admin/LabsPromo.php
+msgid "For example:"
+msgstr "Por ejemplo:"
+
+#: src/Admin/NoticeTidy.php
+msgid "%d notice from another plugin"
+msgid_plural "%d notices from other plugins"
+msgstr[0] "%d aviso de otro plugin"
+msgstr[1] "%d avisos de otros plugins"
+
+#: src/Admin/NoticeTidy.php
+msgid "%d is an error"
+msgid_plural "%d are errors"
+msgstr[0] "%d es un error"
+msgstr[1] "%d son errores"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Navigation menu «%s»"
+msgstr "Menú de navegación «%s»"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Automatic: %s"
+msgstr "Automático: %s"
+
+#: src/Admin/Admin.php
+msgid "Automatic: the Navigation block of your header"
+msgstr "Automático: el bloque Navegación de tu cabecera"
+
+#: src/Admin/Admin.php
+msgid "In my header menu (recommended)"
+msgstr "En el menú de mi cabecera (recomendado)"
+
+#: src/Admin/Admin.php
+msgid "In a spot I choose on my page"
+msgstr "En un lugar que elijo en mi página"
+
+#: src/Admin/Admin.php
+msgid "Which menu"
+msgstr "Qué menú"
+
+#: src/Admin/Admin.php
+msgid "Where in the menu"
+msgstr "Dónde en el menú"
+
+#: src/Admin/Admin.php
+msgid "At the end"
+msgstr "Al final"
+
+#: src/Admin/Admin.php
+msgid "At the start"
+msgstr "Al principio"
+
+#: src/Admin/Admin.php
+msgid "The languages become an item of that menu, drawn by your theme like its other items — in the phone menu too, at the top or at the bottom as chosen. With «Dropdown» the other languages open under the current one. On a page without that menu the switcher floats in the corner, so it is never missing."
+msgstr "Los idiomas se convierten en un elemento de ese menú, dibujado por tu tema como los demás — también en el menú del móvil, arriba o abajo según elijas. Con «Menú desplegable» los demás idiomas se abren bajo el actual. En una página sin ese menú, el selector flota en la esquina, así nunca falta."
+
+#: src/Admin/Admin.php
+msgid "Your theme shows no menu yet. Create one in Appearance → Menus (or in the Site Editor) and put it in the header; until then the switcher floats in the corner."
+msgstr "Tu tema aún no muestra ningún menú. Crea uno en Apariencia → Menús (o en el Editor del sitio) y ponlo en la cabecera; hasta entonces el selector flota en la esquina."
+
+#: src/Admin/Admin.php
+msgid "Spot:"
+msgstr "Lugar:"
+
+#: src/Admin/Admin.php
+msgid "not chosen yet — until then the switcher floats in the corner"
+msgstr "aún no elegido — hasta entonces el selector flota en la esquina"
+
+#: src/Admin/Admin.php
+msgid "at the start"
+msgstr "al principio"
+
+#: src/Admin/Admin.php
+msgid "at the end"
+msgstr "al final"
+
+#: src/Admin/Admin.php
+msgid "Choose on my page"
+msgstr "Elegir en mi página"
+
+#: src/Admin/Admin.php
+msgid "or open it in a new tab"
+msgstr "o ábrela en una pestaña nueva"
+
+#: src/Admin/Admin.php
+msgid "Your home page opens with the header, menu and footer outlined: click where the switcher should go, choose the start or the end of it, and you see it there at once. Where that spot is missing or hidden — another page, or the desktop menu on a phone — the switcher floats in the corner, so it is never lost."
+msgstr "Se abre tu página de inicio con la cabecera, el menú y el pie resaltados: haz clic donde debe ir el selector, elige el principio o el final y lo verás allí al instante. Donde ese lugar falte o esté oculto — otra página, o el menú de escritorio en el móvil — el selector flota en la esquina, así nunca se pierde."
+
+#: src/Admin/Admin.php
+msgid "Choose the spot"
+msgstr "Elige el lugar"
+
+#: src/Admin/Admin.php
+msgid "Also a row of languages at the bottom of every page"
+msgstr "También una fila de idiomas al pie de cada página"
+
+#: src/Admin/Admin.php
+msgid "In a line"
+msgstr "En una línea"
+
+#: src/Admin/Admin.php
+msgid "As a table"
+msgstr "Como tabla"
+
+#: src/Admin/Admin.php
+msgid "Flags and names side by side under your footer, as many sites do: handy with many languages, and visitors find them where they look for them."
+msgstr "Banderas y nombres uno al lado del otro bajo tu pie de página, como hacen muchos sitios: práctico con muchos idiomas, y los visitantes los encuentran donde los buscan."
+
+#: src/Admin/Admin.php
+msgid "Grid (a table of languages)"
+msgstr "Cuadrícula (una tabla de idiomas)"
+
+#: src/Admin/Admin.php
+msgid "In my header menu"
+msgstr "En el menú de mi cabecera"
+
+#: src/Admin/Admin.php
+msgid "The languages become the last item of your theme's menu, in its own style — on phones too. Recommended."
+msgstr "Los idiomas se convierten en el último elemento del menú de tu tema, con su estilo — también en el móvil. Recomendado."
+
+#: src/Frontend/Switcher.php
+msgid "Click the place where the switcher should go."
+msgstr "Haz clic en el lugar donde debe ir el selector."
+
+#: src/Frontend/Switcher.php
+msgid "Use this spot"
+msgstr "Usar este lugar"
+
+#: src/Frontend/Switcher.php
+msgid "Chosen. Save the switcher to keep it."
+msgstr "Elegido. Guarda el selector para conservarlo."
+
+#: src/Frontend/Switcher.php
+msgid "Header"
+msgstr "Cabecera"
+
+#: src/Frontend/Switcher.php
+msgid "Menu"
+msgstr "Menú"
+
+#: src/Frontend/Switcher.php
+msgid "Footer"
+msgstr "Pie de página"
+
+#: src/Frontend/Switcher.php
+msgid "Sidebar"
+msgstr "Barra lateral"
+
+#: src/Admin/Admin.php
+msgid "marks a link or formatted words. On your site they stay as they are — same link, same address. Keep the marks, with their numbers, around the words that belong to them."
+msgstr "marca un enlace o palabras con formato. En tu sitio se quedan como están: mismo enlace, misma dirección. Mantén las marcas, con sus números, alrededor de las palabras a las que pertenecen."
+
+#: src/Admin/Admin.php
+msgid "Done: the languages are now an item of your header menu."
+msgstr "Hecho: los idiomas son ahora un elemento del menú de tu cabecera."
+
+#: src/Admin/Admin.php
+msgid "See your site"
+msgstr "Ver tu sitio"
+
+#: src/Admin/MenuNews.php
+msgid "New:"
+msgstr "Novedad:"
+
+#: src/Admin/MenuNews.php
+msgid "your languages can sit in your theme's header menu, drawn like its other items — on phones too — instead of floating in a corner."
+msgstr "tus idiomas pueden estar en el menú de la cabecera de tu tema, dibujados como sus demás elementos — también en el móvil — en lugar de flotar en una esquina."
+
+#: src/Admin/MenuNews.php
+msgid "Put them in my menu"
+msgstr "Ponerlos en mi menú"
+
+#: src/Admin/MenuNews.php
+msgid "Keep the floating switcher"
+msgstr "Mantener el selector flotante"

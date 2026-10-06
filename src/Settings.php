@@ -114,6 +114,15 @@ class Settings {
 				'bg_opacity'    => 100,
 				'floating'      => false,
 				'float_pos'     => 'bottom-right',
+				'in_menu'       => false,      // in the theme's menu (6/10/2026)
+				'menu_location' => 'auto',
+				'menu_pos'      => 'end',      // start | end of the menu (desktop and phone)
+				'footer_row'    => false,      // a row of languages at the bottom of every page
+				'in_spot'       => false,      // in a spot chosen on the page (picker)
+				'spot_selector' => '',
+				'spot_where'    => 'end',      // start | end of the chosen element
+				'spot_label'    => '',
+				'footer_layout' => 'row',      // row | grid     // a menu location, «auto», or nav:<id> for a block theme's Navigation menu
 				'device'        => 'both',
 				'mobile'        => 'same',
 				'width'         => 'auto',

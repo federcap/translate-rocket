@@ -190,12 +190,13 @@ class Forms {
 
 		// Validation messages are short — ship only short map entries to keep the
 		// payload tiny. On huge sites the whole-language map can't be loaded at
-		// all; validation messages are interface (gettext) strings, so the
-		// bounded interface map covers them, plus the form messages collected
-		// under their own heading.
+		// all: the form messages collected under their own heading, plus the
+		// sentences of the page the form is on (its labels and the messages its
+		// script carries). The «[interface]» map once used here has been empty
+		// since its collector stopped running in June 2026 (4/10/2026).
 		if ( Strings::is_huge() ) {
 			$source = array_merge(
-				Strings::map_for_page( Strings::url_hash( Gettext::INTERFACE_URL ), $lang ),
+				Strings::map_for_page( Strings::url_hash( Plugin::instance()->router()->current_page_key() ), $lang ),
 				Strings::map_for_page( Strings::url_hash( Forminator::URL ), $lang )
 			);
 		} else {

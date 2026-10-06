@@ -619,7 +619,8 @@ msgid "Saved."
 msgstr "保存しました。"
 
 msgid "Removed %d unused string."
-msgstr "未使用の文字列を%d件削除しました。"
+msgid_plural "Removed %d unused strings."
+msgstr[0] "未使用の文字列を%d件削除しました。"
 
 msgid "AI translation failed — check the AI provider and key, or the daily limit."
 msgstr "AI翻訳に失敗しました — AIプロバイダーとキー、または1日の上限を確認してください。"
@@ -649,7 +650,8 @@ msgid "Search"
 msgstr "検索"
 
 msgid "%d string"
-msgstr "%d件の文字列"
+msgid_plural "%d strings"
+msgstr[0] "%d件の文字列"
 
 msgid "Translate %d missing with AI"
 msgstr "未翻訳の%d件をAIで翻訳"
@@ -697,7 +699,8 @@ msgid "Add at least one target language first."
 msgstr "先に翻訳先の言語を少なくとも1つ追加してください。"
 
 msgid "%d page updated."
-msgstr "%d件のページを更新しました。"
+msgid_plural "%d pages updated."
+msgstr[0] "%d件のページを更新しました。"
 
 msgid "Detaching a page makes a fast, independent copy (a real, cache-friendly page you edit in WordPress). “Back to strings” reattaches it to the source — the copy is kept (paused), not deleted — so you can re-detach later and keep your edits."
 msgstr "ページを切り離すと、高速で独立したコピー (WordPressで編集できる、キャッシュに適した実在のページ) ができます。「文字列一覧に戻る」を押すと元のページに再接続されます — コピーは削除されず停止状態で残るので、後でまた切り離して編集内容を活かせます。"
@@ -4004,3 +4007,267 @@ msgstr "ページが読み込むコンテンツ（地図、スライダーなど
 
 msgid "GiveWP e-mails"
 msgstr "GiveWP のメール"
+
+#: src/Admin/Admin.php
+msgid "Their new text is not in your translations yet."
+msgstr "新しいテキストはまだ翻訳に含まれていません。"
+
+#: src/Admin/Admin.php
+msgid "Find a language…"
+msgstr "言語を検索…"
+
+#: src/Admin/Admin.php
+msgid "No language matches."
+msgstr "一致する言語がありません。"
+
+#: src/Admin/Admin.php
+msgid "More style options"
+msgstr "その他のスタイル設定"
+
+#: src/Admin/Admin.php
+msgid "colours, size, font, mobile…"
+msgstr "色、サイズ、フォント、スマホ…"
+
+#: src/Admin/Admin.php
+msgid "Only pages still to translate"
+msgstr "未翻訳のページのみ"
+
+#: src/Admin/Admin.php
+msgid "More actions"
+msgstr "その他の操作"
+
+#: src/Admin/LabsPromo.php
+msgid "Unlimited languages, each on its own address for Google"
+msgstr "言語数は無制限、それぞれ Google 向けの専用アドレス"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with your own AI key (free Groq, Cloudflare, OpenRouter; or OpenAI, Claude, Gemini, DeepL, Google)"
+msgstr "ご自身の AI キーで翻訳（無料の Groq、Cloudflare、OpenRouter、または OpenAI、Claude、Gemini、DeepL、Google）"
+
+#: src/Admin/LabsPromo.php
+msgid "Free translation in Chrome and Edge, no key"
+msgstr "Chrome と Edge で無料翻訳、キー不要"
+
+#: src/Admin/LabsPromo.php
+msgid "Visual editor: click a sentence on your page and change it"
+msgstr "ビジュアルエディター：ページ上の文をクリックして変更"
+
+#: src/Admin/LabsPromo.php
+msgid "SEO: translated addresses, hreflang, sitemaps, titles and descriptions"
+msgstr "SEO：翻訳されたアドレス、hreflang、サイトマップ、タイトルと説明"
+
+#: src/Admin/LabsPromo.php
+msgid "WooCommerce, contact forms and their e-mails in the visitor's language"
+msgstr "WooCommerce、お問い合わせフォームとそのメールを訪問者の言語で"
+
+#: src/Admin/LabsPromo.php
+msgid "Import from WPML, Polylang, TranslatePress, Weglot and others"
+msgstr "WPML、Polylang、TranslatePress、Weglot などからのインポート"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with no key at all, from any browser and phones"
+msgstr "キーなしで翻訳、どのブラウザーやスマホからでも"
+
+#: src/Admin/LabsPromo.php
+msgid "Every page translated by itself when you publish it"
+msgstr "公開すると各ページが自動で翻訳"
+
+#: src/Admin/LabsPromo.php
+msgid "Engines in the order you choose: if one stops, the next one translates"
+msgstr "選んだ順にエンジンを使用：1つが止まれば次が翻訳"
+
+#: src/Admin/LabsPromo.php
+msgid "A second opinion, external collaborators, a weekly report"
+msgstr "セカンドオピニオン、外部の協力者、週次レポート"
+
+#: src/Admin/LabsPromo.php
+msgid "What is included, and what Labs adds"
+msgstr "含まれる機能と Labs で追加される機能"
+
+#: src/Admin/LabsPromo.php
+msgid "TranslateRocket (free)"
+msgstr "TranslateRocket（無料）"
+
+#: src/Admin/LabsPromo.php
+msgid "Included"
+msgstr "含まれる"
+
+#: src/Admin/LabsPromo.php
+msgid "Labs"
+msgstr "Labs"
+
+#: src/Admin/LabsPromo.php
+msgid "For example:"
+msgstr "例："
+
+#: src/Admin/NoticeTidy.php
+msgid "%d notice from another plugin"
+msgid_plural "%d notices from other plugins"
+msgstr[0] "他のプラグインからの通知 %d 件"
+
+#: src/Admin/NoticeTidy.php
+msgid "%d is an error"
+msgid_plural "%d are errors"
+msgstr[0] "うち %d 件はエラー"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Navigation menu «%s»"
+msgstr "ナビゲーションメニュー「%s」"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Automatic: %s"
+msgstr "自動：%s"
+
+#: src/Admin/Admin.php
+msgid "Automatic: the Navigation block of your header"
+msgstr "自動：ヘッダーのナビゲーションブロック"
+
+#: src/Admin/Admin.php
+msgid "In my header menu (recommended)"
+msgstr "ヘッダーのメニュー内（おすすめ）"
+
+#: src/Admin/Admin.php
+msgid "In a spot I choose on my page"
+msgstr "ページ上で選んだ場所"
+
+#: src/Admin/Admin.php
+msgid "Which menu"
+msgstr "どのメニュー"
+
+#: src/Admin/Admin.php
+msgid "Where in the menu"
+msgstr "メニュー内の位置"
+
+#: src/Admin/Admin.php
+msgid "At the end"
+msgstr "最後"
+
+#: src/Admin/Admin.php
+msgid "At the start"
+msgstr "最初"
+
+#: src/Admin/Admin.php
+msgid "The languages become an item of that menu, drawn by your theme like its other items — in the phone menu too, at the top or at the bottom as chosen. With «Dropdown» the other languages open under the current one. On a page without that menu the switcher floats in the corner, so it is never missing."
+msgstr "言語はそのメニューの項目になり、テーマが他の項目と同じように表示します。スマホのメニューでも、選んだとおり上か下に入ります。「ドロップダウン」では他の言語が現在の言語の下に開きます。そのメニューがないページでは切替が隅に浮かぶので、なくなることはありません。"
+
+#: src/Admin/Admin.php
+msgid "Your theme shows no menu yet. Create one in Appearance → Menus (or in the Site Editor) and put it in the header; until then the switcher floats in the corner."
+msgstr "テーマにはまだメニューがありません。外観 → メニュー（またはサイトエディター）で作成してヘッダーに配置してください。それまでは切替が隅に浮かびます。"
+
+#: src/Admin/Admin.php
+msgid "Spot:"
+msgstr "場所："
+
+#: src/Admin/Admin.php
+msgid "not chosen yet — until then the switcher floats in the corner"
+msgstr "未選択 — それまで切替は隅に浮かびます"
+
+#: src/Admin/Admin.php
+msgid "at the start"
+msgstr "先頭"
+
+#: src/Admin/Admin.php
+msgid "at the end"
+msgstr "末尾"
+
+#: src/Admin/Admin.php
+msgid "Choose on my page"
+msgstr "ページ上で選ぶ"
+
+#: src/Admin/Admin.php
+msgid "or open it in a new tab"
+msgstr "または新しいタブで開く"
+
+#: src/Admin/Admin.php
+msgid "Your home page opens with the header, menu and footer outlined: click where the switcher should go, choose the start or the end of it, and you see it there at once. Where that spot is missing or hidden — another page, or the desktop menu on a phone — the switcher floats in the corner, so it is never lost."
+msgstr "ヘッダー・メニュー・フッターが強調された状態でホームページが開きます。切替を置きたい場所をクリックし、先頭か末尾を選ぶと、すぐにそこに表示されます。その場所がない、または隠れている場合（別のページや、スマホでのPC用メニューなど）は切替が隅に浮かぶので、見失うことはありません。"
+
+#: src/Admin/Admin.php
+msgid "Choose the spot"
+msgstr "場所を選ぶ"
+
+#: src/Admin/Admin.php
+msgid "Also a row of languages at the bottom of every page"
+msgstr "各ページの下部にも言語の列を表示"
+
+#: src/Admin/Admin.php
+msgid "In a line"
+msgstr "1行で"
+
+#: src/Admin/Admin.php
+msgid "As a table"
+msgstr "表形式で"
+
+#: src/Admin/Admin.php
+msgid "Flags and names side by side under your footer, as many sites do: handy with many languages, and visitors find them where they look for them."
+msgstr "多くのサイトと同じく、フッターの下に旗と名前を並べます。言語が多いときに便利で、訪問者が探す場所で見つかります。"
+
+#: src/Admin/Admin.php
+msgid "Grid (a table of languages)"
+msgstr "グリッド（言語の表）"
+
+#: src/Admin/Admin.php
+msgid "In my header menu"
+msgstr "ヘッダーのメニュー内"
+
+#: src/Admin/Admin.php
+msgid "The languages become the last item of your theme's menu, in its own style — on phones too. Recommended."
+msgstr "言語がテーマのメニューの最後の項目になり、テーマのスタイルで表示されます（スマホでも）。おすすめ。"
+
+#: src/Frontend/Switcher.php
+msgid "Click the place where the switcher should go."
+msgstr "切替を置く場所をクリックしてください。"
+
+#: src/Frontend/Switcher.php
+msgid "Use this spot"
+msgstr "この場所を使う"
+
+#: src/Frontend/Switcher.php
+msgid "Chosen. Save the switcher to keep it."
+msgstr "選択しました。保存すると確定します。"
+
+#: src/Frontend/Switcher.php
+msgid "Header"
+msgstr "ヘッダー"
+
+#: src/Frontend/Switcher.php
+msgid "Menu"
+msgstr "メニュー"
+
+#: src/Frontend/Switcher.php
+msgid "Footer"
+msgstr "フッター"
+
+#: src/Frontend/Switcher.php
+msgid "Sidebar"
+msgstr "サイドバー"
+
+#: src/Admin/Admin.php
+msgid "marks a link or formatted words. On your site they stay as they are — same link, same address. Keep the marks, with their numbers, around the words that belong to them."
+msgstr "はリンクや書式付きの語を示します。サイトではそのまま残ります（同じリンク、同じアドレス）。番号付きの印は、それが属する語の前後に残してください。"
+
+#: src/Admin/Admin.php
+msgid "Done: the languages are now an item of your header menu."
+msgstr "完了：言語がヘッダーメニューの項目になりました。"
+
+#: src/Admin/Admin.php
+msgid "See your site"
+msgstr "サイトを見る"
+
+#: src/Admin/MenuNews.php
+msgid "New:"
+msgstr "新機能："
+
+#: src/Admin/MenuNews.php
+msgid "your languages can sit in your theme's header menu, drawn like its other items — on phones too — instead of floating in a corner."
+msgstr "言語を隅に浮かべる代わりに、テーマのヘッダーメニューに他の項目と同じように表示できます（スマホでも）。"
+
+#: src/Admin/MenuNews.php
+msgid "Put them in my menu"
+msgstr "メニューに入れる"
+
+#: src/Admin/MenuNews.php
+msgid "Keep the floating switcher"
+msgstr "フローティングのまま使う"

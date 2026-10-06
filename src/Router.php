@@ -201,6 +201,15 @@ class Router {
 	}
 
 	/**
+	 * The address the current page's sentences are filed under: the canonical path of a
+	 * single post or page, the clean path otherwise (the same key Engine collects with).
+	 */
+	public function current_page_key(): string {
+		$qid = ( function_exists( 'is_singular' ) && is_singular() ) ? (int) get_queried_object_id() : 0;
+		return $qid > 0 ? $this->canonical_path( $qid ) : $this->current_clean_path();
+	}
+
+	/**
 	 * Canonical (default-language, real-slug) path of a post, base-relative.
 	 * Used so a page is keyed the same however it was reached (/it/chi-siamo/
 	 * and /it/about-us/ both map to /about-us/).
@@ -363,7 +372,8 @@ class Router {
 	public static function is_frontend_ajax(): bool {
 		$is_ajax = ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() )
 			|| ( defined( 'DOING_AJAX' ) && DOING_AJAX )
-			|| isset( $_GET['wc-ajax'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			|| isset( $_GET['wc-ajax'] ) // phpcs:ignore WordPress.Security.NonceVerification
+			|| self::is_ajax_endpoint();
 		if ( ! $is_ajax ) {
 			return false;
 		}
@@ -373,6 +383,33 @@ class Router {
 		}
 		$path = (string) wp_parse_url( $ref, PHP_URL_PATH );
 		return false === strpos( $path, '/wp-admin/' );
+	}
+
+	/**
+	 * Plugins that answer their front-end AJAX on an address of their own, not admin-ajax.php.
+	 * They define DOING_AJAX only at template_redirect, long after the language of the request
+	 * was settled: WP Job Manager's job list (/jm-ajax/get_listings/) came back in English on
+	 * every /it/ page, content and plugin words alike (4/10/2026). Query argument or path segment.
+	 */
+	const AJAX_ENDPOINTS = array( 'jm-ajax', 'lp-ajax-handle', 'bbp-ajax' );
+
+	/**
+	 * Whether the request goes to one of AJAX_ENDPOINTS (filter: trrocket_ajax_endpoints).
+	 */
+	public static function is_ajax_endpoint(): bool {
+		$names = function_exists( 'apply_filters' ) ? (array) apply_filters( 'trrocket_ajax_endpoints', self::AJAX_ENDPOINTS ) : self::AJAX_ENDPOINTS;
+		$uri   = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$path  = (string) wp_parse_url( $uri, PHP_URL_PATH );
+		foreach ( $names as $name ) {
+			$name = (string) $name;
+			if ( '' === $name ) {
+				continue;
+			}
+			if ( isset( $_GET[ $name ] ) || preg_match( '#/' . preg_quote( $name, '#' ) . '(/|$)#', $path ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

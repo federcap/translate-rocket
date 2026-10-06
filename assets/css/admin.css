@@ -1967,3 +1967,90 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 		justify-content: center;
 	}
 }
+
+/* 5/10/2026: other plugins' notices on the plugin's screens, folded under one line (NoticeTidy). */
+.notice.trr-altri-avvisi{padding:0;border-left-color:#c3c4c7;background:#fff}
+.notice.trr-altri-avvisi.ha-errori{border-left-color:#d63638}
+.trr-altri-avvisi > details > summary{cursor:pointer;padding:8px 12px;color:#50575e;font-size:13px;list-style-position:inside}
+.trr-altri-avvisi > details[open] > summary{border-bottom:1px solid #f0f0f1}
+.trr-altri-avvisi-dentro{padding:4px 12px 8px}
+.trr-altri-avvisi-dentro .notice{margin:8px 0}
+
+/* 5/10/2026: on the phone the header and its 12 buttons took half the screen before any work.
+   Smaller banner (no slogan), buttons in one row that scrolls sideways; the current one is
+   brought into view by admin-nav (inline script in Admin::header). */
+@media ( max-width: 782px ) {
+	.trr-hero { flex-direction: row; justify-content: space-between; padding: 10px 12px; gap: 10px; }
+	.trr-hero-full { width: min( 150px, 42% ); }
+	.trr-hero-info .trr-hero-tag, .trr-hero-sub { display: none; }
+	.trr-hero-info { text-align: right; font-size: 12px; }
+	.trr-nav {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		margin: 10px 0 14px;
+		padding: 2px 2px 6px;
+		scroll-snap-type: x proximity;
+	}
+	.trr-nav::-webkit-scrollbar { display: none; }
+	.trr-nav-item { flex: 0 0 auto; scroll-snap-align: start; }
+}
+
+/* 5/10/2026: search over the language grids, English name next to the native one. */
+.trr-lang-cerca{margin:6px 0 10px}
+.trr-lang-cerca-in{width:min(320px,100%);padding:6px 10px}
+.trr-lang-cerca-nulla{color:#646970;margin-left:8px}
+.trr-lang-en{color:#8c8f94;font-size:12px;margin-left:4px;font-weight:400}
+.button .trrocket-flag-svg,td .trrocket-flag-svg,.trrocket-flag .trrocket-flag-svg{vertical-align:middle;border-radius:2px}
+
+/* 5/10/2026: Translations list: one action in view, «Start over» and «Hide» behind «⋯». */
+.trr-ptodo{margin:0 12px;white-space:nowrap}
+.trr-more{display:inline-block;position:relative;vertical-align:top}
+.trr-more>summary{list-style:none;min-width:30px;text-align:center}
+.trr-more>summary::-webkit-details-marker{display:none}
+.trr-more-menu{position:absolute;right:0;top:calc(100% + 4px);z-index:20;background:#fff;border:1px solid #c3c4c7;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.12);padding:6px;display:flex;flex-direction:column;gap:4px;min-width:150px}
+.trr-more-menu .button{margin:0!important;text-align:left;white-space:nowrap}
+
+/* 5/10/2026: AI page: providers not in use fold to one line. */
+.trrocket-wrap .trr-ai-phead .trr-ai-fold{margin-left:auto;font-size:13px}
+.trr-ai-providers{align-items:start}
+.trr-ai-provider.is-folded .trr-ai-pbody{display:none}
+.trr-ai-provider.is-folded{background:#fff;padding:10px 14px}
+.trr-ai-provider.is-folded .trr-ai-phead{margin-bottom:0}
+/* 5/10/2026: longer source-language labels («Српски (Serbian)») must not push the wizard past a phone screen. */
+.trr-wiz-srclabel{flex-wrap:wrap;max-width:100%}
+#trr-wiz-source{max-width:100%;min-width:0}
+@media screen and ( max-width: 782px ) {
+	/* on a phone «⋯» sits at the left of the row: open the menu to the right */
+	.trr-more-menu{left:0;right:auto}
+	.trr-ptodo{display:inline-block;margin:6px 0}
+}
+/* an open provider takes the whole row; folded ones pair up, with no holes beside a tall card */
+.trr-ai-providers{grid-auto-flow:row dense}
+.trr-ai-provider:not(.is-folded){grid-column:1/-1}
+
+/* 5/10/2026: Switcher page: placement first, then layout; the rest folded. */
+.trr-sw-more{margin:0 0 16px}
+.trr-sw-more>summary{cursor:pointer;font-weight:600;font-size:14px;padding:12px 16px;background:#fff;border:1px solid #e4e4ec;border-radius:10px}
+.trr-sw-more[open]>summary{margin-bottom:12px}
+.trr-sw-more>summary .description{font-weight:400;margin-left:6px}
+/* a finger-sized «Show» / «Hide» on the AI page */
+.trrocket-wrap .trr-ai-phead .trr-ai-fold{min-width:56px;min-height:32px;padding:4px 10px;text-align:center;border-radius:6px}
+.trrocket-wrap .trr-ai-phead .trr-ai-fold:hover{background:#f0f0f1}
+/* 6/10/2026: Switcher page — where in the menu, row at the bottom */
+.trr-sw-menupos{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.trr-sw-menupos > span{font-weight:600}
+.trr-sw-footer{margin-top:14px;padding-top:12px;border-top:1px solid #eef0f3}
+.trr-sw-footer-lay{display:flex;gap:16px;margin:4px 0 0 24px}
+/* 6/10/2026: the spot picker */
+.trr-sw-picker{position:fixed;inset:0;z-index:100000;background:rgba(17,24,39,.6);display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box}
+.trr-sw-picker[hidden]{display:none}
+.trr-sw-picker-box{background:#fff;border-radius:12px;width:min(1280px,100%);height:min(860px,100%);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.trr-sw-picker-head{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #e4e4ec}
+.trr-sw-picker-head strong{margin-right:auto}
+.trr-sw-picker-views{display:flex;gap:4px}
+.trr-sw-picker-views .is-on{background:#4f46e5;color:#fff;border-color:#4f46e5}
+#sw-picker-frame{flex:1;width:100%;margin:0 auto;border:0;background:#f6f7f7;transition:width .2s}
+.trr-sw-spot-now{margin:6px 0}
+@media (max-width:782px){.trr-sw-picker{padding:0}.trr-sw-picker-box{border-radius:0;height:100%}}

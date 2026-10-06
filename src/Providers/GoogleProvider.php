@@ -108,6 +108,9 @@ class GoogleProvider extends AbstractProvider {
 			'pt-br' => 'pt',
 			'zh'    => 'zh-CN',
 			'zh-tw' => 'zh-TW',
+			'es-mx' => 'es',
+			'fr-ca' => 'fr',
+			'de-ch' => 'de',
 		);
 		$code = strtolower( $code );
 		return $map[ $code ] ?? substr( $code, 0, 2 );

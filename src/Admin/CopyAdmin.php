@@ -124,7 +124,7 @@ class CopyAdmin {
 		$lang = Copies::lang_of( $id );
 		$name = $src > 0 ? get_the_title( $src ) : '';
 
-		echo '<div class="notice notice-info"><p>';
+		echo '<div class="notice notice-info" data-trrocket="copy"><p>';
 		printf(
 			/* translators: 1: language name, 2: source page title (linked). */
 			esc_html__( '🚀 This is an independent %1$s copy of %2$s, managed by TranslateRocket. It is served automatically at its %1$s URL — you don\'t need to publish it.', 'translate-rocket' ),

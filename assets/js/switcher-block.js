@@ -51,6 +51,7 @@
 						options: [
 							{ label: __( 'Inline (horizontal)', 'translate-rocket' ), value: 'inline' },
 							{ label: __( 'List (vertical)', 'translate-rocket' ), value: 'list' },
+							{ label: __( 'Grid (a table of languages)', 'translate-rocket' ), value: 'grid' },
 							{ label: __( 'Dropdown', 'translate-rocket' ), value: 'dropdown' }
 						],
 						onChange: set( 'type' )

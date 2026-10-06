@@ -303,8 +303,11 @@ class Growth {
 		if ( ! $nostra ) {
 			return;
 		}
+		// And only on «Next steps», the screen where the person looks at what is done: on every
+		// other screen it sat above the work (5/10/2026, «too invasive»).
+		$sui_passi = false !== strpos( (string) $schermata->id, 'translate-rocket-next' );
 		$done = ( get_option( self::REVIEW_DONE ) || self::snoozed( self::REVIEW_SNOOZE ) ) ? 0 : $this->translated_count();
-		if ( ! get_option( self::REVIEW_DONE )
+		if ( $sui_passi && ! get_option( self::REVIEW_DONE )
 			&& ! self::snoozed( self::REVIEW_SNOOZE )
 			&& $age > ( self::REVIEW_MIN_DAYS * DAY_IN_SECONDS )
 			&& $done >= self::REVIEW_MIN_STRINGS ) {
@@ -325,7 +328,7 @@ class Growth {
 		}
 
 		// After 30 days: a gentle, one-time donation nudge (no tracking — just a link).
-		if ( ! get_option( self::DONATE_DONE ) && ! self::snoozed( self::DONATE_SNOOZE ) && $age > ( 30 * DAY_IN_SECONDS ) ) {
+		if ( $sui_passi && ! get_option( self::DONATE_DONE ) && ! self::snoozed( self::DONATE_SNOOZE ) && $age > ( 30 * DAY_IN_SECONDS ) ) {
 			$this->notice_shown = true;
 			echo '<div class="notice notice-success is-dismissible" data-trrocket="donate"><p>';
 			echo '❤️ ' . esc_html__( 'You’ve been translating with TranslateRocket for a while now. It’s free forever, and it stays maintained either way — if it saved you a paid plugin, a donation is a nice way to say thanks.', 'translate-rocket' );

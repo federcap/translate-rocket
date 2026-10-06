@@ -97,7 +97,7 @@ class ScriptData {
 		$any    = false;
 		foreach ( self::literals( $js ) as $lit ) {
 			$t = $lit['text'];
-			if ( ! isset( $map[ $t ] ) || '' === $map[ $t ] || $map[ $t ] === $t ) {
+			if ( ! isset( $map[ $t ] ) || '' === $map[ $t ] || $map[ $t ] === $t || ! self::same_placeholders( $t, $map[ $t ] ) ) {
 				continue;
 			}
 			$enc  = '"' === $lit['quote'] ? substr( (string) wp_json_encode( $map[ $t ] ), 1, -1 ) : addcslashes( $map[ $t ], "'\\\n\r" );
@@ -294,6 +294,28 @@ class ScriptData {
 	 */
 	const SKIP_SUBTREE = array( 'keywords', 'breakpoints', 'fonts', 'icons', 'classes', 'css', 'styles', 'selectors', 'urls', 'routes', 'nonces', 'ajax', 'rest', 'endpoints', 'hooks', 'settings_keys' );
 
+	/**
+	 * Placeholders a script fills in: printf's %s, %d, %1$s and named ones like %curr%.
+	 */
+	const PLACEHOLDER = '/%(?:\d+\$)?[sd]|%[a-z][a-z_]*%/i';
+
+	/**
+	 * Whether a translation keeps exactly the placeholders of its source (same ones, same number):
+	 * a lost or renamed «%total%» would print a broken counter.
+	 *
+	 * @param string $source      Source text.
+	 * @param string $translation Translation.
+	 */
+	public static function same_placeholders( string $source, string $translation ): bool {
+		preg_match_all( self::PLACEHOLDER, $source, $a );
+		preg_match_all( self::PLACEHOLDER, $translation, $b );
+		$a = array_map( 'strtolower', $a[0] );
+		$b = array_map( 'strtolower', $b[0] );
+		sort( $a );
+		sort( $b );
+		return $a === $b;
+	}
+
 	private static function is_text( $key, $value, bool $lax = false ): bool {
 		if ( ! is_string( $value ) ) {
 			return false;
@@ -310,8 +332,19 @@ class ScriptData {
 		if ( '' === $v || strlen( $v ) > 300 || ! preg_match( '/\p{L}/u', $v ) ) {
 			return false;
 		}
-		if ( preg_match( '~^(https?:)?//|^[/#.]|[<>{}]|^%|%[sd]~', $v ) ) {
-			return false; // An address, markup or a template.
+		if ( preg_match( '~^(https?:)?//|^[/#.]|[<>{}]~', $v ) ) {
+			return false; // An address or markup.
+		}
+		// A sentence with placeholders the script fills in — Shortcodes Ultimate's lightbox counter
+		// «%curr% of %total%», «Showing %1$s of %2$s» — is words all the same (4/10/2026: it stayed
+		// English on every site without the plugin's language pack). Its translation is used only if
+		// it keeps the very same placeholders (see same_placeholders()). Anything else with a % in
+		// front, or a %s left over, is a template and stays out.
+		if ( false !== strpos( $v, '%' ) ) {
+			$plain = trim( (string) preg_replace( self::PLACEHOLDER, '', $v ) );
+			if ( '' === $plain || preg_match( '/%[a-z0-9$]/i', $plain ) || ! preg_match( '/\p{L}{2,}/u', $plain ) ) {
+				return false;
+			}
 		}
 		if ( $lax && preg_match( "/^\\p{Lu}[\\p{L}'’-]{2,}$/u", $v ) ) {
 			return true; // «Close», «Next», «Zoom» under an i18n key.
@@ -327,6 +360,30 @@ class ScriptData {
 	 * @param string[] $found Accumulator.
 	 * @param mixed    $key   Key of $node in its parent.
 	 */
+	/**
+	 * Keys whose value may be a short piece of HTML the visitor reads: Social Chat keeps the header
+	 * and the footer of its WhatsApp box as «<p>Talk to the house</p>» in data-box (3/10/2026: left
+	 * in English, markup being refused). Only words between block tags are taken (Schema::markup_pieces).
+	 */
+	const HTML_KEYS = array( 'header', 'footer', 'content', 'html', 'body', 'description', 'message', 'text', 'intro', 'caption', 'notice', 'title', 'subtitle' );
+
+	/**
+	 * Whether a value is HTML holding sentences, under a key that says so.
+	 *
+	 * @param mixed $key   Key.
+	 * @param mixed $value Value.
+	 */
+	private static function is_markup( $key, $value ): bool {
+		if ( ! is_string( $value ) || false === strpos( $value, '<' ) || strlen( $value ) > 4000 ) {
+			return false;
+		}
+		$k = strtolower( (string) $key );
+		if ( ! in_array( $k, self::HTML_KEYS, true ) && ! preg_match( '/(^|_)(i18n|msg|message|text|html|content|header|footer|description|notice)(_|$)/', $k ) ) {
+			return false;
+		}
+		return (bool) Schema::markup_pieces( $value );
+	}
+
 	private static function walk( $node, array &$found, $key = '', bool $lax = false ): void {
 		if ( is_array( $node ) ) {
 			foreach ( $node as $k => $v ) {
@@ -337,6 +394,10 @@ class ScriptData {
 			}
 		} elseif ( self::is_text( $key, $node, $lax ) ) {
 			$found[] = trim( $node );
+		} elseif ( self::is_markup( $key, $node ) ) {
+			foreach ( Schema::markup_pieces( $node ) as $piece ) {
+				$found[] = $piece;
+			}
 		} elseif ( null !== ( $inner = self::nested( $node ) ) ) {
 			self::walk( $inner, $found, $key, $lax );
 		}
@@ -361,9 +422,17 @@ class ScriptData {
 		}
 		if ( self::is_text( $key, $node, $lax ) ) {
 			$t = trim( $node );
-			if ( isset( $map[ $t ] ) && '' !== $map[ $t ] && $map[ $t ] !== $t ) {
+			if ( isset( $map[ $t ] ) && '' !== $map[ $t ] && $map[ $t ] !== $t && self::same_placeholders( $t, $map[ $t ] ) ) {
 				$changed = true;
 				return str_replace( $t, $map[ $t ], $node );
+			}
+			return $node;
+		}
+		if ( self::is_markup( $key, $node ) ) {
+			$html = Schema::translate_markup( $node, $map );
+			if ( null !== $html ) {
+				$changed = true;
+				return $html;
 			}
 			return $node;
 		}

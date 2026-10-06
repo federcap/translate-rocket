@@ -619,7 +619,9 @@ msgid "Saved."
 msgstr "Opgeslagen."
 
 msgid "Removed %d unused string."
-msgstr "%d ongebruikte tekst verwijderd."
+msgid_plural "Removed %d unused strings."
+msgstr[0] "%d ongebruikte tekst verwijderd."
+msgstr[1] "%d ongebruikte teksten verwijderd."
 
 msgid "AI translation failed — check the AI provider and key, or the daily limit."
 msgstr "AI-vertaling mislukt — controleer de aanbieder en de sleutel, of de daglimiet."
@@ -649,7 +651,9 @@ msgid "Search"
 msgstr "Zoeken"
 
 msgid "%d string"
-msgstr "%d tekst"
+msgid_plural "%d strings"
+msgstr[0] "%d tekst"
+msgstr[1] "%d teksten"
 
 msgid "Translate %d missing with AI"
 msgstr "%d ontbrekende vertalen met AI"
@@ -697,7 +701,9 @@ msgid "Add at least one target language first."
 msgstr "Voeg eerst minstens één doeltaal toe."
 
 msgid "%d page updated."
-msgstr "%d pagina bijgewerkt."
+msgid_plural "%d pages updated."
+msgstr[0] "%d pagina bijgewerkt."
+msgstr[1] "%d pagina's bijgewerkt."
 
 msgid "Detaching a page makes a fast, independent copy (a real, cache-friendly page you edit in WordPress). “Back to strings” reattaches it to the source — the copy is kept (paused), not deleted — so you can re-detach later and keep your edits."
 msgstr "Losmaken maakt een snelle, onafhankelijke kopie (een echte, cachevriendelijke pagina die je in WordPress bewerkt). \"Terug naar de teksten\" koppelt hem weer aan de bron — de kopie blijft bewaard (gepauzeerd), niet verwijderd — zodat je hem later opnieuw kunt losmaken met je bewerkingen erin."
@@ -4023,3 +4029,269 @@ msgstr "Door de pagina geladen inhoud (kaarten, sliders…)"
 
 msgid "GiveWP e-mails"
 msgstr "E-mails van GiveWP"
+
+#: src/Admin/Admin.php
+msgid "Their new text is not in your translations yet."
+msgstr "Hun nieuwe tekst staat nog niet in je vertalingen."
+
+#: src/Admin/Admin.php
+msgid "Find a language…"
+msgstr "Taal zoeken…"
+
+#: src/Admin/Admin.php
+msgid "No language matches."
+msgstr "Geen taal gevonden."
+
+#: src/Admin/Admin.php
+msgid "More style options"
+msgstr "Meer stijlopties"
+
+#: src/Admin/Admin.php
+msgid "colours, size, font, mobile…"
+msgstr "kleuren, grootte, lettertype, mobiel…"
+
+#: src/Admin/Admin.php
+msgid "Only pages still to translate"
+msgstr "Alleen pagina's die nog vertaald moeten worden"
+
+#: src/Admin/Admin.php
+msgid "More actions"
+msgstr "Meer acties"
+
+#: src/Admin/LabsPromo.php
+msgid "Unlimited languages, each on its own address for Google"
+msgstr "Onbeperkt aantal talen, elk op een eigen adres voor Google"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with your own AI key (free Groq, Cloudflare, OpenRouter; or OpenAI, Claude, Gemini, DeepL, Google)"
+msgstr "Vertaling met je eigen AI-sleutel (gratis Groq, Cloudflare, OpenRouter; of OpenAI, Claude, Gemini, DeepL, Google)"
+
+#: src/Admin/LabsPromo.php
+msgid "Free translation in Chrome and Edge, no key"
+msgstr "Gratis vertaling in Chrome en Edge, zonder sleutel"
+
+#: src/Admin/LabsPromo.php
+msgid "Visual editor: click a sentence on your page and change it"
+msgstr "Visuele editor: klik op een zin op je pagina en pas hem aan"
+
+#: src/Admin/LabsPromo.php
+msgid "SEO: translated addresses, hreflang, sitemaps, titles and descriptions"
+msgstr "SEO: vertaalde adressen, hreflang, sitemaps, titels en beschrijvingen"
+
+#: src/Admin/LabsPromo.php
+msgid "WooCommerce, contact forms and their e-mails in the visitor's language"
+msgstr "WooCommerce, contactformulieren en hun e-mails in de taal van de bezoeker"
+
+#: src/Admin/LabsPromo.php
+msgid "Import from WPML, Polylang, TranslatePress, Weglot and others"
+msgstr "Importeren uit WPML, Polylang, TranslatePress, Weglot en andere"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation with no key at all, from any browser and phones"
+msgstr "Vertaling helemaal zonder sleutel, vanuit elke browser en telefoon"
+
+#: src/Admin/LabsPromo.php
+msgid "Every page translated by itself when you publish it"
+msgstr "Elke pagina vanzelf vertaald zodra je hem publiceert"
+
+#: src/Admin/LabsPromo.php
+msgid "Engines in the order you choose: if one stops, the next one translates"
+msgstr "Diensten in de volgorde die jij kiest: stopt er één, dan vertaalt de volgende"
+
+#: src/Admin/LabsPromo.php
+msgid "A second opinion, external collaborators, a weekly report"
+msgstr "Een second opinion, externe medewerkers, een wekelijks rapport"
+
+#: src/Admin/LabsPromo.php
+msgid "What is included, and what Labs adds"
+msgstr "Wat er inbegrepen is, en wat Labs toevoegt"
+
+#: src/Admin/LabsPromo.php
+msgid "TranslateRocket (free)"
+msgstr "TranslateRocket (gratis)"
+
+#: src/Admin/LabsPromo.php
+msgid "Included"
+msgstr "Inbegrepen"
+
+#: src/Admin/LabsPromo.php
+msgid "Labs"
+msgstr "Labs"
+
+#: src/Admin/LabsPromo.php
+msgid "For example:"
+msgstr "Bijvoorbeeld:"
+
+#: src/Admin/NoticeTidy.php
+msgid "%d notice from another plugin"
+msgid_plural "%d notices from other plugins"
+msgstr[0] "%d melding van een andere plugin"
+msgstr[1] "%d meldingen van andere plugins"
+
+#: src/Admin/NoticeTidy.php
+msgid "%d is an error"
+msgid_plural "%d are errors"
+msgstr[0] "%d is een fout"
+msgstr[1] "%d zijn fouten"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Navigation menu «%s»"
+msgstr "Navigatiemenu «%s»"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Automatic: %s"
+msgstr "Automatisch: %s"
+
+#: src/Admin/Admin.php
+msgid "Automatic: the Navigation block of your header"
+msgstr "Automatisch: het Navigatieblok van je header"
+
+#: src/Admin/Admin.php
+msgid "In my header menu (recommended)"
+msgstr "In het menu van mijn header (aanbevolen)"
+
+#: src/Admin/Admin.php
+msgid "In a spot I choose on my page"
+msgstr "Op een plek die ik op mijn pagina kies"
+
+#: src/Admin/Admin.php
+msgid "Which menu"
+msgstr "Welk menu"
+
+#: src/Admin/Admin.php
+msgid "Where in the menu"
+msgstr "Waar in het menu"
+
+#: src/Admin/Admin.php
+msgid "At the end"
+msgstr "Aan het eind"
+
+#: src/Admin/Admin.php
+msgid "At the start"
+msgstr "Aan het begin"
+
+#: src/Admin/Admin.php
+msgid "The languages become an item of that menu, drawn by your theme like its other items — in the phone menu too, at the top or at the bottom as chosen. With «Dropdown» the other languages open under the current one. On a page without that menu the switcher floats in the corner, so it is never missing."
+msgstr "De talen worden een item van dat menu, door je thema getekend zoals de andere items — ook in het telefoonmenu, bovenaan of onderaan zoals gekozen. Met «Uitklapmenu» openen de andere talen onder de huidige. Op een pagina zonder dat menu zweeft de wisselaar in de hoek, zodat hij nooit ontbreekt."
+
+#: src/Admin/Admin.php
+msgid "Your theme shows no menu yet. Create one in Appearance → Menus (or in the Site Editor) and put it in the header; until then the switcher floats in the corner."
+msgstr "Je thema toont nog geen menu. Maak er een aan via Weergave → Menu's (of in de Site-editor) en zet het in de header; tot dan zweeft de wisselaar in de hoek."
+
+#: src/Admin/Admin.php
+msgid "Spot:"
+msgstr "Plek:"
+
+#: src/Admin/Admin.php
+msgid "not chosen yet — until then the switcher floats in the corner"
+msgstr "nog niet gekozen — tot dan zweeft de wisselaar in de hoek"
+
+#: src/Admin/Admin.php
+msgid "at the start"
+msgstr "aan het begin"
+
+#: src/Admin/Admin.php
+msgid "at the end"
+msgstr "aan het eind"
+
+#: src/Admin/Admin.php
+msgid "Choose on my page"
+msgstr "Kiezen op mijn pagina"
+
+#: src/Admin/Admin.php
+msgid "or open it in a new tab"
+msgstr "of open het in een nieuw tabblad"
+
+#: src/Admin/Admin.php
+msgid "Your home page opens with the header, menu and footer outlined: click where the switcher should go, choose the start or the end of it, and you see it there at once. Where that spot is missing or hidden — another page, or the desktop menu on a phone — the switcher floats in the corner, so it is never lost."
+msgstr "Je homepage opent met de header, het menu en de footer gemarkeerd: klik waar de wisselaar moet komen, kies het begin of het eind en je ziet hem er meteen. Waar die plek ontbreekt of verborgen is — een andere pagina, of het desktopmenu op een telefoon — zweeft de wisselaar in de hoek, zodat hij nooit kwijt is."
+
+#: src/Admin/Admin.php
+msgid "Choose the spot"
+msgstr "Kies de plek"
+
+#: src/Admin/Admin.php
+msgid "Also a row of languages at the bottom of every page"
+msgstr "Ook een rij talen onderaan elke pagina"
+
+#: src/Admin/Admin.php
+msgid "In a line"
+msgstr "Op één regel"
+
+#: src/Admin/Admin.php
+msgid "As a table"
+msgstr "Als tabel"
+
+#: src/Admin/Admin.php
+msgid "Flags and names side by side under your footer, as many sites do: handy with many languages, and visitors find them where they look for them."
+msgstr "Vlaggen en namen naast elkaar onder je footer, zoals veel sites doen: handig met veel talen, en bezoekers vinden ze waar ze zoeken."
+
+#: src/Admin/Admin.php
+msgid "Grid (a table of languages)"
+msgstr "Raster (een tabel met talen)"
+
+#: src/Admin/Admin.php
+msgid "In my header menu"
+msgstr "In het menu van mijn header"
+
+#: src/Admin/Admin.php
+msgid "The languages become the last item of your theme's menu, in its own style — on phones too. Recommended."
+msgstr "De talen worden het laatste item van het menu van je thema, in zijn eigen stijl — ook op telefoons. Aanbevolen."
+
+#: src/Frontend/Switcher.php
+msgid "Click the place where the switcher should go."
+msgstr "Klik op de plek waar de wisselaar moet komen."
+
+#: src/Frontend/Switcher.php
+msgid "Use this spot"
+msgstr "Deze plek gebruiken"
+
+#: src/Frontend/Switcher.php
+msgid "Chosen. Save the switcher to keep it."
+msgstr "Gekozen. Sla de wisselaar op om het te bewaren."
+
+#: src/Frontend/Switcher.php
+msgid "Header"
+msgstr "Header"
+
+#: src/Frontend/Switcher.php
+msgid "Menu"
+msgstr "Menu"
+
+#: src/Frontend/Switcher.php
+msgid "Footer"
+msgstr "Footer"
+
+#: src/Frontend/Switcher.php
+msgid "Sidebar"
+msgstr "Zijbalk"
+
+#: src/Admin/Admin.php
+msgid "marks a link or formatted words. On your site they stay as they are — same link, same address. Keep the marks, with their numbers, around the words that belong to them."
+msgstr "markeert een link of opgemaakte woorden. Op je site blijven ze zoals ze zijn — dezelfde link, hetzelfde adres. Houd de tekens, met hun nummers, rond de woorden waar ze bij horen."
+
+#: src/Admin/Admin.php
+msgid "Done: the languages are now an item of your header menu."
+msgstr "Klaar: de talen zijn nu een item van het menu in je header."
+
+#: src/Admin/Admin.php
+msgid "See your site"
+msgstr "Bekijk je site"
+
+#: src/Admin/MenuNews.php
+msgid "New:"
+msgstr "Nieuw:"
+
+#: src/Admin/MenuNews.php
+msgid "your languages can sit in your theme's header menu, drawn like its other items — on phones too — instead of floating in a corner."
+msgstr "je talen kunnen in het headermenu van je thema staan, getekend zoals de andere items — ook op telefoons — in plaats van in een hoek te zweven."
+
+#: src/Admin/MenuNews.php
+msgid "Put them in my menu"
+msgstr "Zet ze in mijn menu"
+
+#: src/Admin/MenuNews.php
+msgid "Keep the floating switcher"
+msgstr "De zwevende wisselaar houden"

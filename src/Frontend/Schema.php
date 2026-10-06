@@ -35,6 +35,8 @@ class Schema {
 		'caption',
 		'abstract',
 		'disambiguatingDescription',
+		// JobPosting's job title (WP Job Manager, 4/10/2026): read by Google for Jobs.
+		'title',
 	);
 
 	/**
@@ -75,6 +77,11 @@ class Schema {
 	 * Yoast, Rank Math and WordPress' own schema as ["Hotel news"] (4/10/2026, every theme probed).
 	 */
 	private const LIST_KEYS = array( 'articleSection' );
+
+	/**
+	 * Tags that end a sentence in an HTML value (see markup_pieces()).
+	 */
+	private const BLOCK_TAG = '#</?(?:p|div|ul|ol|li|h[1-6]|br|hr|table|thead|tbody|tr|td|th|blockquote|section|article|dl|dt|dd)\b[^>]*>#i';
 
 	/**
 	 * The strings of a LIST_KEYS value, or none.
@@ -174,6 +181,61 @@ class Schema {
 	}
 
 	/**
+	 * The text pieces of a value written in HTML (WP Job Manager's JobPosting description,
+	 * FAQ answers some SEO plugins keep with their <p> and <strong>): the words between the
+	 * tags, each one a sentence the page itself shows. Empty when the value is not markup.
+	 * Only block tags cut: a sentence holding <strong> or <a> is left whole and untouched,
+	 * because its pieces («Yes,» «always» «for guests.») are not sentences to send anywhere.
+	 *
+	 * @param mixed $value Value.
+	 * @return string[]
+	 */
+	public static function markup_pieces( $value ): array {
+		if ( ! is_string( $value ) || false === strpos( $value, '<' ) || strlen( $value ) > self::MAX_LENGTH * 4 || ! preg_match( '#</?[a-z][^>]*>#i', $value ) ) {
+			return array();
+		}
+		$out = array();
+		foreach ( (array) preg_split( self::BLOCK_TAG, $value ) as $part ) {
+			if ( false !== strpos( (string) $part, '<' ) ) {
+				continue;
+			}
+			$t = trim( html_entity_decode( (string) $part, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+			if ( '' !== $t && mb_strlen( $t ) <= self::MAX_LENGTH && preg_match( '/\p{L}/u', $t ) ) {
+				$out[] = $t;
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * The same value with every known piece between the tags translated, or null.
+	 *
+	 * @param string               $value Value.
+	 * @param array<string,string> $map   Translations.
+	 */
+	public static function translate_markup( string $value, array $map ): ?string {
+		$some  = false;
+		$parts = preg_split( '#(' . substr( self::BLOCK_TAG, 1, -2 ) . ')#i', $value, -1, PREG_SPLIT_DELIM_CAPTURE );
+		if ( ! is_array( $parts ) ) {
+			return null;
+		}
+		foreach ( $parts as $i => $part ) {
+			if ( '' === $part || false !== strpos( $part, '<' ) ) {
+				continue;
+			}
+			$t = trim( html_entity_decode( $part, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+			if ( '' !== $t && isset( $map[ $t ] ) && '' !== $map[ $t ] && $map[ $t ] !== $t ) {
+				// The spaces around the piece stay; the translation is escaped like the HTML it goes into.
+				preg_match( '/^\s*/', $part, $a );
+				preg_match( '/\s*$/', $part, $b );
+				$parts[ $i ] = $a[0] . htmlspecialchars( $map[ $t ], ENT_NOQUOTES, 'UTF-8', false ) . $b[0];
+				$some        = true;
+			}
+		}
+		return $some ? implode( '', $parts ) : null;
+	}
+
+	/**
 	 * Collect translatable strings.
 	 *
 	 * @param mixed    $node  Node.
@@ -186,6 +248,10 @@ class Schema {
 		foreach ( $node as $key => $value ) {
 			if ( self::is_text_field( $node, $key, $value ) ) {
 				$found[] = trim( $value );
+			} elseif ( self::is_markup_field( $node, $key, $value ) ) {
+				foreach ( self::markup_pieces( $value ) as $t ) {
+					$found[] = $t;
+				}
 			} elseif ( in_array( $key, self::LIST_KEYS, true ) ) {
 				foreach ( self::list_strings( $value ) as $t ) {
 					$found[] = $t;
@@ -266,6 +332,12 @@ class Schema {
 						$changed      = true;
 					}
 				}
+			} elseif ( self::is_markup_field( $node, $key, $value ) ) {
+				$html = self::translate_markup( $value, $map );
+				if ( null !== $html ) {
+					$node[ $key ] = $html;
+					$changed      = true;
+				}
 			} elseif ( in_array( $key, self::LIST_KEYS, true ) && ( is_string( $value ) || is_array( $value ) ) ) {
 				$list = is_array( $value ) ? $value : array( $value );
 				foreach ( $list as $i => $v ) {
@@ -306,6 +378,20 @@ class Schema {
 	 */
 	private static function is_text_field( array $node, $key, $value ): bool {
 		if ( ! is_string( $key ) || ! in_array( $key, self::TEXT_KEYS, true ) || ! self::is_translatable( $value ) ) {
+			return false;
+		}
+		return ! ( 'name' === $key && self::has_type( $node, self::PROPER_NAME_TYPES ) );
+	}
+
+	/**
+	 * Whether a key/value pair holds prose written in HTML (see markup_pieces()).
+	 *
+	 * @param array $node  Node the pair belongs to.
+	 * @param mixed $key   Key.
+	 * @param mixed $value Value.
+	 */
+	private static function is_markup_field( array $node, $key, $value ): bool {
+		if ( ! is_string( $key ) || ! in_array( $key, self::TEXT_KEYS, true ) || ! self::markup_pieces( $value ) ) {
 			return false;
 		}
 		return ! ( 'name' === $key && self::has_type( $node, self::PROPER_NAME_TYPES ) );

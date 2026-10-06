@@ -261,7 +261,8 @@
 		if ( fallback ) { fallback.hidden = false; }
 	}
 
-	// Only now, once we know the answer, does the panel appear.
+	// The panel is drawn visible by the server (a late reveal pushed the page down); here only
+	// its content follows the answer.
 	whatWeCanDo().then( function ( answer ) {
 		box.hidden = false;
 		if ( 'yes' === answer ) {

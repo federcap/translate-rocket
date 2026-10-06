@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,40 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.7.4 =
+* New: the language switcher in your theme's header menu — Switcher → «In my header menu». The languages become a real item of the menu, drawn by your theme like its other items, with its submenu and its phone menu: classic themes (Astra, GeneratePress, Kadence, OceanWP…), Elementor's Nav Menu, and block themes through the Navigation block. At the start or at the end of the menu. Where a page has no such menu, the switcher floats in the corner, so it is never missing. The setup wizard offers it when the theme has a menu.
+* New: if your switcher floats in a corner, TranslateRocket offers once to move it into your header menu — one click, and you see it on your site.
+* New: put the switcher exactly where you want — Switcher → «In a spot I choose on my page» opens your home page with the header, menu, footer and sidebar outlined; click a spot, choose its start or its end, and the real switcher shows there at once. Where the spot is missing or hidden (another page, the desktop menu on a phone) the switcher floats instead.
+* New: a row of languages at the bottom of every page, in a line or as a table, and a «Grid» layout for the switcher block and shortcode: flags and names in as many columns as fit.
+* New: 40 more languages, 77 in all — among them Catalan, Serbian, Basque, Galician, Lithuanian, Latvian, Estonian, Albanian, Macedonian, Bosnian, Georgian, Armenian, Azerbaijani, Kazakh, Urdu, Tamil, Telugu, Marathi, Gujarati, Punjabi, Nepali, Sinhala, Swahili, Afrikaans, Filipino, Icelandic, Irish, Welsh, Maltese, Belarusian, Mongolian, Khmer, Burmese, Amharic, Uzbek, Luxembourgish, Esperanto, Mexican Spanish, Canadian French and Swiss German — each with its flag, its own address and the WordPress language pack for the interface. A site written in one of them can now pick it as its own language.
+* Fix: DeepL received Traditional Chinese as Simplified Chinese, and Norwegian with a code it does not know.
+* Fix: on some sites the translated pages lost the theme's design — fonts, colours, the fixed header, footer menus — because a plugin printed an element in the page head (reported with The7, Elementor and the Angie assistant). The attributes of the page body are kept now, whatever another plugin prints.
+* Fix: Diagnostics had «Test connection» only for DeepL, OpenAI, Claude, Gemini and Google Translate: Groq, Cloudflare Workers AI and OpenRouter — the free providers the setup wizard recommends — could not be tested there. Every provider with a key is listed now.
+* Improved: when a provider refuses a key or answers with an error, «Test connection» says so in a plain sentence in your language («The provider refused this API key…») instead of the provider's technical answer, which stays in the Diagnostics log.
+* Fix: saving the settings raised a PHP warning (a leftover from a limit removed long ago); on a site that shows PHP warnings it could break the page shown after saving.
+* Fix: plugins that answer on WooCommerce's own AJAX address — FiboSearch's suggestions while a visitor types — answered in the source language on a translated page, and their links led back to the source language. They are translated now and the links keep the page's language (what the visitor typed is never collected). Links to pages of the site inside any AJAX answer keep the page's language too.
+* Fix: sentences a plugin or theme writes by hand into the page for its scripts, in a block marked type="text/javascript" — Ultimate FAQ's list of questions suggested while a visitor types in the FAQ search, and many older themes' messages — were skipped and stayed in the source language. Script templates (text/template) are still left alone.
+* Fix: on large sites (over 20,000 sentences) the block cart and checkout showed product attributes in the source language («Colour» on an Italian page), and form messages could stay untranslated: both read a group of interface sentences no longer filled since June. They now use the translations of what the cart holds and of the page the form is on.
+* Fix: sentences a plugin hands to its scripts with blanks the script fills in — Shortcodes Ultimate's lightbox counter «%curr% of %total%», «Showing %1$s of %2$s» — stayed in the source language where the plugin has no language pack. They are translated now, and a translation is used only if it keeps exactly the same blanks: a counter can never come out broken.
+* Fix: Social Chat — the header and footer of the WhatsApp box stayed in the source language: they are a short piece of HTML inside the plugin's settings. Words between paragraphs and headings are now translated; the HTML stays as it is.
+* New: text a translated page loads through admin-ajax after it is shown — Ninja Tables rows, many themes' «load more» — becomes translatable, filed under the page that asked for it. Before, it was translated only if the same sentence had been met elsewhere: a table's rows never were. Only public answers are read (never a cart, an account, an order, a signed-in customer's request or anything a visitor sent), and codes a script passes around are left out.
+* New: WP Job Manager — the job list on a translated page arrives translated, with the plugin's words in the page's language. It is loaded after the page from an address of its own (/jm-ajax/), which used to answer in the source language whatever page asked. The same holds for LearnPress' and bbPress' own AJAX addresses.
+* New: Events Manager — «next month» in the calendar of a translated page shows the events translated. The month is fetched from the page itself and came back with the month name translated and the events in the source language.
+* New: structured data for Google — a job's title (JobPosting, read by Google for Jobs) and descriptions written in HTML are translated; the HTML stays as it is. A sentence that holds bold or a link is left whole, never cut into pieces.
+* Fix: words a plugin keeps in an attribute whose name runs together — the message Ultimate Blocks' countdown shows when the offer ends, the «This field cannot be blank» and «invalid» errors of Formidable Forms fields — stayed in the source language.
+* Fix: once everything was translated, the Translations page still read «14 strings still to translate — 89%» next to a button saying «Everything is translated»: the addresses of the page's images were counted as text to translate. They are not (an image can be swapped per language, if you want), and the count now agrees with the button.
+* Improved: a simpler dashboard. The side menu keeps six entries (the other screens are one click away in the buttons at the top), notices from other plugins fold into one line on TranslateRocket's screens, and the Labs box is a single line.
+* Improved: with 77 languages, a search box over the language lists (setup wizard and Languages): type a language's own name, its English name or its code. The English name now shows next to the native one — «Српски Serbian».
+* Improved: Translations — one main button per page, «Translate»; «Start over» and «Hide» are in a «⋯» menu and still ask before doing anything. A new «Only pages still to translate» filter.
+* Improved: AI Translation — the providers you do not use fold to one line; the active one and those in your fallback chain stay open, and choosing a provider opens its card.
+* Improved: Switcher — where the switcher goes comes first, then its layout; colours, sizes, font and the phone options are under «More style options».
+* Fix: on Windows, Chrome and Edge showed the dashboard's emoji flags as two letters («GB»): the plugin's own flags are used instead.
+* Fix: on PHP 7, searching languages or pages by a name in a non-Latin script (Cyrillic, Japanese, Greek…) found nothing.
+* Fix: in Dutch, Polish, Russian and Japanese three counters of the dashboard showed in English («3 pages updated.»): their plural forms are in place now.
+* Improved: the Translations screen explains <1>…</1> in a visible line where they appear: they mark a link or formatted words, which stay as they are on the site (until now only a tooltip said so).
+* Fix: on the Translations and Memory screens, the «Translate with your browser» panel appeared a moment after the page and pushed it down; it is drawn in place now.
+* Fix: on the Plugins screen, after the short «why are you leaving?» question, the deactivation page could open twice (the answer and a 4-second safety net both ran it).
+
 = 1.7.3 =
 * New: e-mails sent to the visitor by contact forms reach them in the language of the page they wrote from, with their name and answers in place; e-mails to you keep the site's language. Contact Form 7 (the «Mail (2)» automatic reply), WPForms, Fluent Forms, Ninja Forms, Formidable Forms, Everest Forms and SureForms. Their sentences appear in the translation screens under their own heading («Contact Form 7 e-mails», «WPForms e-mails»…); in an HTML message only the text is translated, and a translation that lost one of the [tags] or {tags} is not used for that line.
 * New: GiveWP's e-mails to the donor (donation receipt, offline donation instructions) follow the language of the page the donation was made from. Sentences under «GiveWP e-mails».
@@ -246,45 +280,14 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 * Improved: German admin screens address you consistently; the Labs page lists what Labs adds for teams.
 * Fixed: translations whose source string no longer existed were counted but never shown or exported; they are removed on update.
 
-= 1.5.9 =
-* New: the words only a visitor who is not logged in can see — login and registration forms (Ultimate Member, bbPress, WooCommerce «My account»), «You must be logged in to reply», the e-mail field of the review form, guest-checkout notes — are collected too. Text was collected while an administrator looked at a page, and an administrator is logged in: those words were never collected, and every visitor saw them in the source language. Now, after an administrator has read a page, the site reads it once more by itself as a guest, in the background, once a day per page.
-* New: content loaded after the page — «Load more» buttons, product filters, quick views, infinite scroll — comes back translated, with its links in the language. Themes and plugins fetch those pieces through admin-ajax; the page engine never saw them, so on /it/ everything loaded after the first screen was in the source language.
-* New: the REST API answers a translated page in its language: WooCommerce's blocks (All Products, filters, the cart), client-side navigation and headless themes get product names, titles, excerpts and descriptions translated, permalinks in the language. Ids, slugs, prices and the editor's own requests are untouched.
-* New: the sentences a theme or plugin hands to its scripts — «Product was successfully added to your cart», «View cart», «Loading…», Elementor's «Close», «Next», «Share on Facebook» — are translated and collected like any other text. A paid theme without language packs (WoodMart, Flatsome, Avada) showed them in English on every language. This reads a JSON handed over as a string too (WooCommerce's address labels «Town / City», «Postcode / ZIP», Kadence's countdown labels), a theme's own `const` or `window.name = {…}` block, and a block printed by hand in the page head.
-* New: feeds of a translated language (/it/feed/, Atom) carry translated titles, excerpts and bodies, with links in the language. Feed readers, newsletter tools and Google Discover read that file.
-* New: any `data-*` attribute whose name says it holds words (`data-product-title`, `data-none-results-text`, `data-toast-cta`, `data-tooltip-message`…) is translated, as are `data-alt` on sliders, Bootstrap's `data-bs-title` tooltips, bare names like `data-label` or `data-caption` and numbered series like `data-button-transition-text-1`; analytics labels are left alone.
-* New: import from Autoglot. Its table of paid translations — page sentences and the owner's own replacements, in every language it served — is read straight from the database, with Autoglot switched off; translated addresses and sentences it never finished are left out.
-* New: Ninja Forms fields — labels, placeholders, options, the submit button — are translated before the form is drawn. Fluent Forms is recognised (its messages too).
-* New: a visitor who signs up on /it/ keeps that language: WordPress' password-reset and new-account e-mails, and WooCommerce's account e-mails, go out in it.
-* Improved: SEO plugins. `og:locale` now names the page's language whatever the site locale is (Yoast, Rank Math, All in One SEO, SEOPress); no second `og:locale` with All in One SEO; our multilingual sitemap is listed in All in One SEO's and SEOPress's sitemap index too.
-* Improved: a breadcrumb («Home / Rooms / Sea view»), a list of tags or a pagination is no longer taken for one sentence: each link is translated on its own, and the product's name there is the same one as on its page. An icon-only link inside a sentence no longer turns the sentence into a unit.
-* Improved: the switcher's live preview shows exactly what visitors will see: a language still offline is left out of it and named underneath, instead of being drawn as if it were online.
-* Improved: right-to-left languages keep their direction — and load the theme's and WooCommerce's `-rtl.css` — even when «Translate the interface» is off.
-* Improved: imports from Polylang and WPML bring the translations of categories, tags, product categories and attribute values, the purchase note, product attributes, variation descriptions and Advanced Custom Fields; the copy cleanup checks them before offering to trash a copy.
-* Improved: imports from Polylang and WPML read pages built with SiteOrigin's Page Builder and Beaver Builder, whose text lives in a serialized field, not in the page content — as Elementor and Bricks already were.
-* Fix: a TMX or CSV brought back into the site keeps the pairs that read the same in both languages («Agrigento» stays «Agrigento»): they are decisions, and the round trip export → import lost them. The «What to do next» guide no longer says «Everything is translated» while a new phrase is waiting, when a deleted string left a translation behind.
-* Fix: a picture chosen per language is also swapped where ShortPixel, EWWW and a3 Lazy Load park the real address (`data-lazy-src`).
-* Fix: WooCommerce e-mails sent from the dashboard («Completed», a note to the customer) are translated; variations («Linen shirt – Blue») and product names inside WooCommerce's sentences too; searching on /it/ finds products by their translated name.
-
-= 1.5.8 =
-* Fix: WooCommerce e-mails sent from the dashboard — «Completed», a note to the customer, a resent invoice — were never translated: the customer who ordered in Italian got them entirely in English. Each e-mail is now written in its reader's language: the customer's in the language of the order (subject included, from WooCommerce's own language pack), the shop's own notifications in the site language — before, the shop received them in the customer's language.
-* Fix: variations and product names inside WooCommerce sentences stayed in the source language — «Linen shirt - Blue» in the cart, on the thank-you page and in the e-mails, «“Blue mug” has been added to your cart», «Be the first to review “Blue mug”», the breadcrumb's last step and the quantity label read by screen readers. Now they are translated like the product itself; this works for any theme or plugin that quotes a name inside its own wording.
-* New: searching on a translated page finds what the visitor typed in their language — «tazza» on /it/ finds the product stored as «mug». It was the most reported problem in the forums of other translation plugins.
-* New: WP Rocket integration. WP Rocket now knows your languages, as it does with WPML, Polylang and TranslatePress: a page excluded with «Never cache this URL» (or its box on the edit screen) is also excluded in every language — the /it/ copy of a members' page was cached before; the empty mini-cart it keeps is kept per language instead of one for everybody; cart, checkout and account are excluded in every language; «Clear cache» offers each language; «Remove Unused CSS» keeps the language switcher's styles.
-* Fix: imports from Polylang and WPML now bring the translations of categories, tags, product categories and attribute values (Red → Rosso in the variation choices), the purchase note, the attributes typed in a product, variation descriptions and Advanced Custom Fields filled in the translated copy. The copy cleanup no longer offers to trash a copy whose fields were not imported yet.
-* Fix: a big TMX or CSV import (2,000 translations) could stop halfway with a server error on hosts that limit a request to 40 seconds. It now runs in one database transaction: the same file takes a few seconds.
-* Fix: WooCommerce checkout: the address labels (Town / City, Postcode…) no longer show in English for a moment when the page opens or the country changes.
-* Fix: in the block cart, attribute labels («Colour:») are translated.
-* Fix: structured data for Google: a title composed as «Product - Site name» is translated.
-* Fix: with themes that restyle every button (Hello Elementor), the open language menu kept the current language white on white and narrower than the menu.
-
-= Earlier releases =
-
-Versions 0.1.0 to 1.5.7 are listed in changelog.txt, shipped with the
+Versions 0.1.0 to 1.5.9 are listed in changelog.txt, shipped with the
 plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.7.4 =
+The language switcher in your theme's header menu, or in a spot you click on your own page; a row of languages at the bottom of pages; 40 more languages (77 in all); many popular plugins translated (WP Job Manager, Events Manager, Ninja Tables, FiboSearch, Social Chat…); a simpler dashboard. Recommended.
 
 = 1.7.3 =
 E-mails from seven contact form plugins and GiveWP in the visitor's language; form confirmation messages, map markers and GiveWP donation forms translated; dates inside sentences fixed on most themes. Recommended.

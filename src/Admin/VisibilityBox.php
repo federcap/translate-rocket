@@ -71,7 +71,7 @@ class VisibilityBox {
 
 		foreach ( $targets as $lang ) {
 			$rule = Exclusions::get( (int) $post->ID, $lang );
-			echo '<p style="margin-bottom:4px"><strong>' . esc_html( Languages::flag( $lang ) . ' ' . Languages::label( $lang ) ) . '</strong></p>';
+			echo '<p style="margin-bottom:4px"><strong>' . wp_kses( Admin::lang_html( (string) $lang ), \TranslateRocket\Kses::html_rules() ) . '</strong></p>';
 
 			echo '<select name="trrocket_vis[' . esc_attr( $lang ) . ']" class="widefat">';
 			foreach ( $modes as $val => $label ) {
