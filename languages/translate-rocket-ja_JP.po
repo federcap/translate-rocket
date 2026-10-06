@@ -4271,3 +4271,11 @@ msgstr "メニューに入れる"
 #: src/Admin/MenuNews.php
 msgid "Keep the floating switcher"
 msgstr "フローティングのまま使う"
+
+#: src/Admin/Admin.php
+msgid "This profile shows only where you insert it, with its shortcode or block. The header menu, the spot you chose on your page, the floating switcher and the row at the bottom always use the Default profile."
+msgstr "このプロフィールは、ショートコードまたはブロックで挿入した場所にのみ表示されます。ヘッダーメニュー、ページ上で選んだ場所、フローティングの切り替え、下部の行は常にデフォルトのプロフィールを使います。"
+
+#: src/Admin/Admin.php
+msgid "Style the Default profile"
+msgstr "デフォルトのプロフィールを編集"

@@ -436,6 +436,9 @@
 .trrocket-menu-lang{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .trrocket-menu-lang .trrocket-flag-wrap{display:inline-flex;line-height:0}
 .trrocket-menu-lang .trrocket-flag-svg,.trrocket-menu-lang img{width:20px;height:auto;border-radius:2px;flex:0 0 auto}
+/* 6/10/2026: flags in the Navigation block (block themes) */
+.trrocket-lang-item .trrocket-flag-wrap{display:inline-flex;line-height:0;vertical-align:-2px}
+.trrocket-lang-item .trrocket-flag-wrap svg,.trrocket-lang-item .trrocket-flag-wrap img{width:20px;height:auto;border-radius:2px}
 /* the header menu has the languages, the theme's phone menu does not: float on phones only */
 @media (min-width:783px){.trrocket-floating.trrocket-only-phone{display:none!important}}
 

@@ -4293,3 +4293,11 @@ msgstr "Colocar no meu menu"
 #: src/Admin/MenuNews.php
 msgid "Keep the floating switcher"
 msgstr "Manter o seletor flutuante"
+
+#: src/Admin/Admin.php
+msgid "This profile shows only where you insert it, with its shortcode or block. The header menu, the spot you chose on your page, the floating switcher and the row at the bottom always use the Default profile."
+msgstr "Este perfil só aparece onde você o insere, com seu shortcode ou bloco. O menu do cabeçalho, o ponto escolhido na página, o seletor flutuante e a linha no rodapé usam sempre o perfil Padrão."
+
+#: src/Admin/Admin.php
+msgid "Style the Default profile"
+msgstr "Personalizar o perfil Padrão"

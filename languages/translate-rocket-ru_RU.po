@@ -4319,3 +4319,11 @@ msgstr "Поместить в моё меню"
 #: src/Admin/MenuNews.php
 msgid "Keep the floating switcher"
 msgstr "Оставить плавающий переключатель"
+
+#: src/Admin/Admin.php
+msgid "This profile shows only where you insert it, with its shortcode or block. The header menu, the spot you chose on your page, the floating switcher and the row at the bottom always use the Default profile."
+msgstr "Этот профиль показывается только там, куда вы его вставили шорткодом или блоком. Меню шапки, выбранное место на странице, плавающий переключатель и строка внизу всегда используют профиль «По умолчанию»."
+
+#: src/Admin/Admin.php
+msgid "Style the Default profile"
+msgstr "Настроить профиль «По умолчанию»"

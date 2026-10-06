@@ -66,13 +66,15 @@ class BrowserEngine {
 			wp_send_json_error( array( 'message' => __( 'No language given.', 'translate-rocket' ) ), 400 );
 		}
 
-		$pending = Translator::pending_for_browser( $lang, '', self::BATCH );
+		// One page's editor sends its hash: only that page's strings (6/10/2026).
+		$loc     = isset( $_POST['loc'] ) ? sanitize_text_field( wp_unslash( $_POST['loc'] ) ) : '';
+		$pending = Translator::pending_for_browser( $lang, $loc, self::BATCH );
 
 		wp_send_json_success(
 			array(
 				'items'   => $pending['items'],
 				'reused'  => (int) $pending['reused'],
-				'missing' => Strings::untranslated_count( $lang ),
+				'missing' => '' !== $loc ? count( Strings::untranslated_for_page_language( $loc, $lang ) ) : Strings::untranslated_count( $lang ),
 			)
 		);
 	}
@@ -104,7 +106,8 @@ class BrowserEngine {
 			}
 			$clean[] = array(
 				'text'        => (string) ( $item['text'] ?? '' ),
-				'translation' => sanitize_textarea_field( (string) ( $item['translation'] ?? '' ) ),
+				// Keeps the <1>…</1> marks: plain sanitizing stripped them, and every sentence with a link was refused (6/10/2026).
+				'translation' => \TranslateRocket\Frontend\InlineText::sanitize( (string) ( $item['translation'] ?? '' ) ),
 				'ids'         => array_map( 'intval', (array) ( $item['ids'] ?? array() ) ),
 			);
 		}
@@ -167,8 +170,9 @@ class BrowserEngine {
 	 * @param string $source     Source language code.
 	 * @param int    $missing    Strings still missing.
 	 * @param bool   $no_api_key Whether the site has no provider configured.
+	 * @param string $loc        One page only (its hash), or '' for the whole language.
 	 */
-	public static function render_panel( string $lang, string $source, int $missing, bool $no_api_key ): void {
+	public static function render_panel( string $lang, string $source, int $missing, bool $no_api_key, string $loc = '' ): void {
 		// 6/10/2026: drawn visible. It used to start hidden and be shown by the script in every case
 		// (only its content changes: Chrome's translator, the copy-and-paste round trip, the phone note);
 		// shown after the first paint, it pushed the table below down by its whole height.
@@ -230,6 +234,7 @@ class BrowserEngine {
 				'ajax'   => admin_url( 'admin-ajax.php' ),
 				'nonce'  => wp_create_nonce( 'trrocket_browser' ),
 				'lang'   => $lang,
+				'loc'    => $loc,
 				'source' => self::bcp47( $source ),
 				'target' => self::bcp47( $lang ),
 				'label'  => Languages::label( $lang ),

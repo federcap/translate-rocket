@@ -257,13 +257,48 @@
 	// chiamate falliscono, la barra di avanzamento arriva in fondo e non e'
 	// stato tradotto niente. Al primo errore il traduttore si ricrea e questa
 	// stessa frase si riprova; solo il secondo errore e' un vero rifiuto.
-	function traduciColBrowser( testo ) {
+	function traduciUnaVolta( testo ) {
 		return prendiTraduttore().then( function ( tr ) {
 			return tr.translate( testo );
 		} ).catch( function () {
 			return prendiTraduttore( true ).then( function ( tr2 ) {
 				return tr2.translate( testo );
 			} );
+		} );
+	}
+
+	// 6/10/2026: il traduttore di Chrome perde i segnaposto <1>…</1> (i link dentro la
+	// frase) e la frase veniva rifiutata. Prima la frase intera; se i segnaposto non
+	// tornano identici, si traducono i pezzi fra un segnaposto e l'altro e si rimettono.
+	var SEGNI = /<\/?\d{1,3}\/?>/g;
+	function segni( t ) { return ( String( t ).match( SEGNI ) || [] ).join( '' ); }
+	function traduciColBrowser( testo ) {
+		var voluti = segni( testo );
+		if ( '' === voluti ) {
+			return traduciUnaVolta( testo );
+		}
+		return traduciUnaVolta( testo ).then( function ( intera ) {
+			return ( intera && segni( intera ) === voluti ) ? intera : null;
+		}, function () {
+			return null;
+		} ).then( function ( intera ) {
+			if ( intera ) {
+				return intera;
+			}
+			return String( testo ).split( /(<\/?\d{1,3}\/?>)/ ).reduce( function ( catena, pezzo, k ) {
+				return catena.then( function ( acc ) {
+					if ( k % 2 === 1 || '' === pezzo.trim() ) {
+						return acc + pezzo;
+					}
+					var prima = pezzo.match( /^\s*/ )[ 0 ];
+					var dopo  = pezzo.match( /\s*$/ )[ 0 ];
+					return traduciUnaVolta( pezzo.trim() ).catch( function () {
+						return '';
+					} ).then( function ( t ) {
+						return acc + prima + ( t && t.trim() !== '' ? t.trim() : pezzo.trim() ) + dopo;
+					} );
+				} );
+			}, Promise.resolve( '' ) );
 		} );
 	}
 

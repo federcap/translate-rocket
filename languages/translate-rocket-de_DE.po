@@ -4293,3 +4293,11 @@ msgstr "In mein Menü setzen"
 #: src/Admin/MenuNews.php
 msgid "Keep the floating switcher"
 msgstr "Den schwebenden Umschalter behalten"
+
+#: src/Admin/Admin.php
+msgid "This profile shows only where you insert it, with its shortcode or block. The header menu, the spot you chose on your page, the floating switcher and the row at the bottom always use the Default profile."
+msgstr "Dieses Profil erscheint nur dort, wo Sie es mit seinem Shortcode oder Block einfügen. Das Kopfzeilenmenü, die gewählte Stelle auf Ihrer Seite, der schwebende Sprachumschalter und die Zeile unten verwenden immer das Standardprofil."
+
+#: src/Admin/Admin.php
+msgid "Style the Default profile"
+msgstr "Standardprofil gestalten"

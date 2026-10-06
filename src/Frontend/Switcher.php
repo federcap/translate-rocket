@@ -64,6 +64,12 @@ class Switcher {
 		// «hooked blocks», drawn by the block itself.
 		add_filter( 'hooked_block_types', array( $this, 'hook_navigation' ), 10, 4 );
 		add_filter( 'hooked_block_core/navigation-submenu', array( $this, 'hooked_submenu' ), 10, 5 );
+		// 6/10/2026 (Federico): in the Navigation block the languages had no flag and opened on hover
+		// whatever the switcher said. The block keeps only plain text in a label, so the flag travels
+		// as a mark and is drawn after; «On click» is handed to our submenu alone.
+		add_filter( 'render_block_core/navigation-link', array( $this, 'nav_flags' ), 10, 2 );
+		add_filter( 'render_block_core/navigation-submenu', array( $this, 'nav_flags' ), 10, 2 );
+		add_filter( 'render_block_core/navigation', array( $this, 'nav_no_hover' ), PHP_INT_MAX );
 		// Migration nicety: keep a leftover TranslatePress [language-switcher]
 		// working, but only when TranslatePress isn't the one handling it.
 		add_action( 'init', array( $this, 'register_compat_shortcodes' ), 99 );
@@ -946,9 +952,15 @@ class Switcher {
 		if ( count( $entries ) < 2 ) {
 			return null;
 		}
-		$label = function ( array $e ) use ( $s ) {
-			$t = self::label_text( $e, (string) ( $s['show'] ?? 'both' ) );
-			return '' !== $t ? $t : strtoupper( explode( '-', (string) $e['code'] )[0] );
+		$show = (string) ( $s['show'] ?? 'both' );
+		// The flag marks are for the site only: the block editor (which shows the header around the
+		// page too) would keep them as text in the label, and stalled on them.
+		$sito  = ! is_admin() && ! ( defined( 'REST_REQUEST' ) && REST_REQUEST ) && ! wp_doing_ajax();
+		$label = function ( array $e ) use ( $show, $sito ) { // phpcs:ignore -- $this is bound.
+			$t    = self::label_text( $e, $show );
+			$this->nav_svg[ $e['code'] ] = (string) $e['svg'];
+			$flag = $sito && in_array( $show, array( 'both', 'flag', 'flagcode' ), true ) ? self::FLAG_MARK_OPEN . $e['code'] . self::FLAG_MARK_CLOSE . ( '' !== $t ? ' ' : '' ) : '';
+			return $flag . ( '' !== $t || '' !== $flag ? $t : strtoupper( explode( '-', (string) $e['code'] )[0] ) );
 		};
 		$current = $entries[0];
 		foreach ( $entries as $e ) {
@@ -976,6 +988,98 @@ class Switcher {
 			'innerBlocks'  => $inner,
 			'innerHTML'    => '',
 			'innerContent' => array_fill( 0, count( $inner ), null ),
+		);
+	}
+
+	const FLAG_MARK_OPEN  = '[[trrflag:';
+
+	/**
+	 * Flags (custom ones included) of the languages put in a Navigation block.
+	 *
+	 * @var array<string,string>
+	 */
+	private $nav_svg = array();
+
+	const FLAG_MARK_CLOSE = ']]';
+
+	/**
+	 * Our Navigation-block items: the flag marks become flags in the text, and are
+	 * dropped from attributes (aria-label «English submenu» must stay plain words).
+	 *
+	 * @param string              $html  Rendered block.
+	 * @param array<string,mixed> $block Parsed block.
+	 */
+	public function nav_flags( $html, $block ) {
+		if ( ! is_string( $html ) || false === strpos( (string) ( $block['attrs']['className'] ?? '' ), 'trrocket-lang-' ) ) {
+			return $html;
+		}
+		if ( false !== strpos( (string) ( $block['attrs']['className'] ?? '' ), 'trrocket-lang-current' ) && 'click' === ( self::settings()['dd_trigger'] ?? '' ) ) {
+			$html = self::nav_on_click( $html );
+		}
+		if ( false === strpos( $html, self::FLAG_MARK_OPEN ) ) {
+			return $html;
+		}
+		$mark = '/' . preg_quote( self::FLAG_MARK_OPEN, '/' ) . '([a-z0-9-]{2,12})' . preg_quote( self::FLAG_MARK_CLOSE, '/' ) . '\s*/';
+		$html = (string) preg_replace_callback(
+			'/="[^"]*"/',
+			static function ( $m ) use ( $mark ) {
+				return (string) preg_replace( $mark, '', $m[0] );
+			},
+			$html
+		);
+		return (string) preg_replace_callback(
+			$mark,
+			function ( $m ) {
+				$svg = $this->nav_svg[ $m[1] ] ?? \TranslateRocket\Flags::markup( $m[1] );
+				return '' !== $svg ? '<span class="trrocket-flag-wrap" aria-hidden="true">' . $svg . '</span> ' : '';
+			},
+			$html
+		);
+	}
+
+	/**
+	 * WordPress adds the «open on hover» handlers to every submenu once the whole
+	 * Navigation block is drawn: ours, when it opens on click, loses them again.
+	 *
+	 * @param string $html Rendered Navigation block.
+	 */
+	public function nav_no_hover( $html ) {
+		if ( ! is_string( $html ) || false === strpos( $html, 'trrocket-lang-current' ) || ! class_exists( '\WP_HTML_Tag_Processor' ) ) {
+			return $html;
+		}
+		$p = new \WP_HTML_Tag_Processor( $html );
+		while ( $p->next_tag( array( 'tag_name' => 'LI', 'class_name' => 'trrocket-lang-current' ) ) ) {
+			if ( $p->has_class( 'open-on-click' ) ) {
+				$p->remove_attribute( 'data-wp-on--pointerenter' );
+				$p->remove_attribute( 'data-wp-on--pointerleave' );
+			}
+		}
+		return $p->get_updated_html();
+	}
+
+	/**
+	 * «Open: on click» for our languages submenu in a Navigation block, without
+	 * changing how the theme's other submenus open. The block hands this choice
+	 * only to the whole menu, so our item is drawn the way WordPress draws an
+	 * on-click submenu: the label is the button, no opening on hover.
+	 *
+	 * @param string $html Rendered submenu.
+	 */
+	private static function nav_on_click( string $html ): string {
+		$first = strpos( $html, '<li' );
+		$end   = false !== $first ? strpos( $html, '>', $first ) : false;
+		if ( false === $end ) {
+			return $html;
+		}
+		$li   = substr( $html, $first, $end - $first + 1 );
+		$li2  = str_replace( 'open-on-hover-click', 'open-on-click', $li );
+		$li2  = (string) preg_replace( '/\s+data-wp-on--pointer(?:enter|leave)="[^"]*"/', '', $li2 );
+		$html = substr( $html, 0, $first ) . $li2 . substr( $html, $end + 1 );
+		return (string) preg_replace(
+			'#<a class="wp-block-navigation-item__content"[^>]*>(.*?)</a>\s*<button([^>]*?)aria-label="([^"]*)"([^>]*?)class="wp-block-navigation__submenu-icon wp-block-navigation-submenu__toggle"[^>]*>(.*?)</button>#s',
+			'<button$2aria-label="$3"$4class="wp-block-navigation-item__content wp-block-navigation-submenu__toggle" aria-expanded="false">$1</button><span class="wp-block-navigation__submenu-icon">$5</span>',
+			$html,
+			1
 		);
 	}
 

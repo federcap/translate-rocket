@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,14 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.7.5 =
+* Fixed: «Translate in this browser» (no API key) now saves sentences that have a link or bold words inside. They used to come back without their link marks and stayed untranslated; now the marks are kept, and where the browser's translator drops them the sentence is translated piece by piece around its links.
+* Fixed: a phrase the browser's translator refuses is tried once, not again and again — the run could go round without end and the counter passed the total («Translating 162 of 154»).
+* New: «Translate in this browser» also on the screen of a single page (Translations → a page), for that page's strings only.
+* Fixed: the same link-safe translation in the visual editor's «Translate in this browser».
+* Fixed: in block themes (Navigation block) the languages in your header menu now show their flags, and open on click when the switcher is set to open on click — the rest of your menu keeps opening as before.
+* Clearer: a switcher profile other than Default says that the header menu, the spot on your page, the floating switcher and the bottom row all use the Default profile.
+
 = 1.7.4 =
 * New: the language switcher in your theme's header menu — Switcher → «In my header menu». The languages become a real item of the menu, drawn by your theme like its other items, with its submenu and its phone menu: classic themes (Astra, GeneratePress, Kadence, OceanWP…), Elementor's Nav Menu, and block themes through the Navigation block. At the start or at the end of the menu. Where a page has no such menu, the switcher floats in the corner, so it is never missing. The setup wizard offers it when the theme has a menu.
 * New: if your switcher floats in a corner, TranslateRocket offers once to move it into your header menu — one click, and you see it on your site.
@@ -285,6 +293,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.7.5 =
+Fixes translating in your browser without an API key (sentences with links are saved, a run always ends), and flags plus open-on-click for the languages in block themes' header menu. Recommended.
 
 = 1.7.4 =
 The language switcher in your theme's header menu, or in a spot you click on your own page; a row of languages at the bottom of pages; 40 more languages (77 in all); many popular plugins translated (WP Job Manager, Events Manager, Ninja Tables, FiboSearch, Social Chat…); a simpler dashboard. Recommended.

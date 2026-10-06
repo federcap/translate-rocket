@@ -2012,6 +2012,11 @@ class Admin {
 					<?php // 5/10/2026: prima dove va il selettore, poi come appare; colori e rifiniture in «More style options». ?>
 					<div class="trrocket-card">
 						<h2><?php esc_html_e( 'Placement', 'translate-rocket' ); ?></h2>
+						<?php if ( 'default' !== $profile ) : // 6/10/2026 (Federico): the header menu kept the Default profile's look while he styled «header». ?>
+							<p class="notice notice-info inline" style="margin:8px 0;padding:10px 12px"><?php esc_html_e( 'This profile shows only where you insert it, with its shortcode or block. The header menu, the spot you chose on your page, the floating switcher and the row at the bottom always use the Default profile.', 'translate-rocket' ); ?>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-switcher' ) ); ?>"><?php esc_html_e( 'Style the Default profile', 'translate-rocket' ); ?> &rarr;</a></p>
+							<input type="hidden" name="sw_placement" value="manual" />
+						<?php else : ?>
 						<p class="description"><?php esc_html_e( 'Choose one: either place the switcher yourself with the shortcode / block, or let the plugin float it for you — not both.', 'translate-rocket' ); ?></p>
 						<?php
 						$placement = ! empty( $g( 'in_spot' ) ) ? 'spot' : ( ! empty( $g( 'in_menu' ) ) ? 'menu' : ( empty( $g( 'floating' ) ) ? 'manual' : (string) $g( 'float_pos' ) ) );
@@ -2088,6 +2093,7 @@ class Admin {
 							<p class="description"><?php esc_html_e( 'Flags and names side by side under your footer, as many sites do: handy with many languages, and visitors find them where they look for them.', 'translate-rocket' ); ?></p>
 						</div>
 						<p id="sw-manual-hint" class="description"><?php esc_html_e( 'Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block.', 'translate-rocket' ); ?></p>
+						<?php endif; ?>
 					</div>
 
 					<div class="trrocket-card">
@@ -5617,6 +5623,14 @@ JS;
 		// phpcs:ignore WordPress.Security.NonceVerification
 		$show_all = ( isset( $_GET['cp'] ) && 'all' === $_GET['cp'] ) || empty( $untranslated );
 		$cp_rows  = $show_all ? $all_rows : $untranslated;
+		// The browser's own translator for this page too: no key needed (6/10/2026, Federico).
+		\TranslateRocket\Admin\BrowserEngine::render_panel(
+			$lang,
+			\TranslateRocket\Plugin::instance()->router()->default_language(),
+			count( $untranslated ),
+			null === Registry::active(),
+			$loc
+		);
 		$this->render_copy_paste( $lang, $cp_rows, $loc, $show_all ? 'all' : 'missing', count( $untranslated ) );
 
 		$this->render_string_table( $lang, $all_rows, $loc, $post_id );

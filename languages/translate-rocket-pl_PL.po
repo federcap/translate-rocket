@@ -4319,3 +4319,11 @@ msgstr "Umieść je w moim menu"
 #: src/Admin/MenuNews.php
 msgid "Keep the floating switcher"
 msgstr "Zostaw pływający przełącznik"
+
+#: src/Admin/Admin.php
+msgid "This profile shows only where you insert it, with its shortcode or block. The header menu, the spot you chose on your page, the floating switcher and the row at the bottom always use the Default profile."
+msgstr "Ten profil pojawia się tylko tam, gdzie go wstawisz, za pomocą jego shortcode'u lub bloku. Menu nagłówka, wybrane miejsce na stronie, pływający przełącznik i wiersz na dole zawsze używają profilu Domyślnego."
+
+#: src/Admin/Admin.php
+msgid "Style the Default profile"
+msgstr "Dostosuj profil Domyślny"

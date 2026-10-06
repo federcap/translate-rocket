@@ -40,6 +40,9 @@
 		body.append( 'action', action );
 		body.append( 'nonce', C.nonce );
 		body.append( 'lang', C.lang );
+		if ( C.loc ) {
+			body.append( 'loc', C.loc );
+		}
 		Object.keys( data || {} ).forEach( function ( k ) {
 			body.append( k, data[ k ] );
 		} );
@@ -131,6 +134,53 @@
 	 * Sequential on purpose — the API processes one at a time anyway, and this
 	 * keeps the browser responsive and the run stoppable.
 	 */
+	// A sentence with a link or bold word in it travels with numbered marks:
+	// "Couples with a <1>medical indication</1>". Chrome's translator drops or
+	// mangles them, the server rightly refuses a translation that lost them,
+	// and those sentences were never translated (6/10/2026). The whole sentence
+	// is tried first (better wording); if the marks do not come back exactly,
+	// the pieces between them are translated one by one and the marks put back
+	// where they were.
+	var MARK = /<\/?\d{1,3}\/?>/g;
+
+	function marks( text ) {
+		return ( String( text ).match( MARK ) || [] ).join( '' );
+	}
+
+	function tagSafe( text ) {
+		var want = marks( text );
+		if ( '' === want ) {
+			return translator.translate( text );
+		}
+		return translator.translate( text ).then( function ( whole ) {
+			return ( whole && marks( whole ) === want ) ? whole : null;
+		}, function () {
+			return null;
+		} ).then( function ( whole ) {
+			if ( whole ) {
+				return whole;
+			}
+			var bits = String( text ).split( /(<\/?\d{1,3}\/?>)/ );
+			return bits.reduce( function ( chain, bit, k ) {
+				return chain.then( function ( acc ) {
+					// Odd positions are the marks themselves; blanks stay as they are.
+					if ( k % 2 === 1 || '' === bit.trim() ) {
+						return acc + bit;
+					}
+					var lead = bit.match( /^\s*/ )[ 0 ];
+					var tail = bit.match( /\s*$/ )[ 0 ];
+					// A piece the model refuses stays as it was: the rest of the
+					// sentence is still worth having, with its links in place.
+					return translator.translate( bit.trim() ).catch( function () {
+						return '';
+					} ).then( function ( t ) {
+						return acc + lead + ( t && t.trim() !== '' ? t.trim() : bit.trim() ) + tail;
+					} );
+				} );
+			}, Promise.resolve( '' ) );
+		} );
+	}
+
 	function doBatch( items, done, total ) {
 		var out = [];
 		var i = 0;
@@ -141,7 +191,7 @@
 		// failure the translator is rebuilt and this same phrase retried; only a
 		// second failure is taken as "the model refuses this one".
 		function one( item, retried ) {
-			return translator.translate( item.text ).then( function ( translation ) {
+			return tagSafe( item.text ).then( function ( translation ) {
 				if ( translation && translation.trim() !== '' ) {
 					out.push( {
 						text: item.text,
@@ -183,6 +233,11 @@
 		var reused = 0;
 		var seen = 0;
 		var total = 0;
+		// Phrases already handed to the translator in this run. One it refused
+		// (or that the server would not store) comes back in the next batch:
+		// counted again it pushed the bar past the total ("162 of 154"), and a
+		// phrase refused every time kept the run going round forever (6/10/2026).
+		var tried = {};
 
 		function round() {
 			if ( stopping ) {
@@ -190,14 +245,21 @@
 			}
 			return post( 'trrocket_browser_pending', {} ).then( function ( data ) {
 				reused += data.reused || 0;
-				if ( ! data.items || ! data.items.length ) {
-					return null; // nothing left that needs the browser
+				var items = ( data.items || [] ).filter( function ( it ) {
+					return ! Object.prototype.hasOwnProperty.call( tried, it.text );
+				} );
+				if ( ! items.length ) {
+					return null; // nothing left, or only phrases the translator already refused
 				}
+				items.forEach( function ( it ) {
+					tried[ it.text ] = true;
+				} );
 				if ( ! total ) {
-					total = data.missing || data.items.length;
+					total = data.missing || items.length;
 				}
-				return doBatch( data.items, seen, total ).then( function ( res ) {
-					seen += data.items.length;
+				total = Math.max( total, seen + items.length );
+				return doBatch( items, seen, total ).then( function ( res ) {
+					seen += items.length;
 					saved += ( res && res.saved ) || 0;
 					return round();
 				} );

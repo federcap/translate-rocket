@@ -4295,3 +4295,11 @@ msgstr "Zet ze in mijn menu"
 #: src/Admin/MenuNews.php
 msgid "Keep the floating switcher"
 msgstr "De zwevende wisselaar houden"
+
+#: src/Admin/Admin.php
+msgid "This profile shows only where you insert it, with its shortcode or block. The header menu, the spot you chose on your page, the floating switcher and the row at the bottom always use the Default profile."
+msgstr "Dit profiel verschijnt alleen waar je het invoegt, met de shortcode of het blok. Het headermenu, de gekozen plek op je pagina, de zwevende taalkiezer en de rij onderaan gebruiken altijd het standaardprofiel."
+
+#: src/Admin/Admin.php
+msgid "Style the Default profile"
+msgstr "Standaardprofiel opmaken"
