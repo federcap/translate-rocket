@@ -578,9 +578,12 @@
 			} catch ( e ) {}
 		} );
 	}
+	// 7/10/2026 (Federico: «spunta bianco nell'attesa»): la scheda dice che sta caricando
+	frame.addEventListener( 'load', function () { wrap.classList.remove( 'is-loading' ); } );
 	function load() {
 		var on = 'menu' === where() || 'spot' === where() || footerOn();
 		card.hidden = ! on;
+		if ( on ) { wrap.classList.add( 'is-loading' ); }
 		if ( foot ) { foot.hidden = ! footerOn(); }
 		if ( footH ) { footH.hidden = ! footerOn(); }
 		if ( ! on ) { return; }

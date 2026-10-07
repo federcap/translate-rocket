@@ -93,3 +93,10 @@ tradotte vecchie (ora: numeri uguali, blocco scartato intero, forma anche del no
   `tr-plugin-prima` e la suite successiva si ferma con «FERMO»: rimettere `cp -r $S/tr-plugin-prima`.
 - `collaudo-testi-casuali.sh`: lo script coi dati JSON va stampato da un mu-plugin (nel contenuto WordPress texturizza
   le virgolette già nell'originale); aria-label sempre con lettere.
+
+## 1.7.9 — pubblicata 7/10/2026 ~14:30 (wp.org r3732627, GitHub 16c2558, sorgente 4ab71a7)
+Sicurezza (audit 11/11), incolla nel riquadro editor con `paste_pairs`, frasi intere con parti senza lettere (InlineText),
+avviso + pulsante «Usa questo profilo nel menu» (9 lingue). Prova di aggiornamento 1.7.8→1.7.9: 8/8. Banco generico: +Rank
+Math, Ninja Forms, The Events Calendar, All in One SEO, MailPoet (tutti verdi). Sito: /download/ con due pulsanti (wp.org +
+`/get/translaterocket/`), versione letta dal plugin a ogni `rilascio sito` (`_ssh/pagina-download.js`), 4 frasi tradotte
+in 21 lingue (`_ssh/trad-download/`).

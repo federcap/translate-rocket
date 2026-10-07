@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.9
+Stable tag: 1.7.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.7.10 =
+* Fixed: the excerpts of the «Latest posts» block (and any sentence ending with a «Read more» link WordPress writes itself) stayed untranslated: WordPress localizes that link on every page, so on /it/ the sentence never read like the one collected. The link now keeps its place and its words, like a date, and the sentence around it is translated.
+* Improved: the «your site, live» card of the switcher customizer shows a loading indicator instead of a white box while the page is drawn.
+* Tested: a site whose source language is not English (Spanish at the root with /it/ and /en/), the language switcher in every placement × layout on a block theme and on a classic theme, and every button of the plugin's admin pages clicked in a real browser.
+
 = 1.7.9 =
 * Security: a translation can never carry markup its original did not have — whatever brought it in (an AI answer, an import, a paste, another plugin). Scripts, event handlers and foreign tags are removed when the translation is saved, in one place for every channel; texts translated through gettext are escaped when their source had no markup; a translation placed inside a script is encoded so «</script>» cannot end it.
 * Security: a visitor can no longer make the site collect texts from invented «AJAX» addresses, read the translations of a language that is offline, or fill the page cache with spellings of the same address; the editor side panel only saves the strings of its own page; the universal importer reads this site only.
@@ -319,6 +324,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.7.10 =
+«Latest posts» excerpts and sentences ending with a «Read more» link are now translated on every site; loading indicator in the switcher's live preview. Recommended.
 
 = 1.7.9 =
 Security hardening (translations can never carry scripts or handlers, whatever their source), pasted translations in the editor panel, sentences with a bold/italic number kept whole, clearer switcher profiles. Recommended.

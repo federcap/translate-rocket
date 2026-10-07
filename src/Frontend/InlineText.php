@@ -282,6 +282,14 @@ class InlineText {
 		if ( 'time' === strtolower( $node->nodeName ) ) {
 			return true;
 		}
+		// A «Read more» link WordPress writes itself (core's Latest Posts block, the_content's
+		// more-link, most themes' excerpt links): its label is localized by WordPress on every
+		// page, so on /it/ the sentence would never read like the one collected (7/10/2026, the
+		// excerpts of a Spanish site stayed in Spanish). The link keeps its place and its words.
+		if ( 'a' === strtolower( $node->nodeName ) && $node instanceof \DOMElement
+			&& preg_match( '/(^|\s)(more-link|wp-block-latest-posts__read-more|read-more|readmore|wp-block-post-excerpt__more-link)(\s|$)/i', (string) $node->getAttribute( 'class' ) ) ) {
+			return true;
+		}
 		return '' === trim( (string) $node->textContent );
 	}
 
