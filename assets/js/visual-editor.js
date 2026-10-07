@@ -2309,7 +2309,11 @@
 			// Re-map each pasted line to its unit by the leading "N." number (robust if lines
 			// were reordered or blanks dropped); un-numbered lines fall back to their order.
 			var raw = dstTa.value.replace( /\r/g, '' ).split( '\n' );
-			var trans = new Array( pUnits.length ), leftovers = [];
+			var trans = new Array( pUnits.length ), leftovers = [], cur = -1;
+			// 8/10/2026: a line without a number is the rest of the numbered line before it (Google
+			// Translate splits long sentences); it used to fill another sentence and a cookie banner
+			// ended up showing a blog post. Lines are matched by order only when none is numbered.
+			var numbered = raw.some( function ( l ) { return /^\s*\d+[.)]/.test( l ); } );
 			raw.forEach( function ( line ) {
 				// ChatGPT e Gemini rispondono dentro un blocco di codice (lo chiede il
 				// prompt, perche' e' l'unico modo di copiare i numeri intatti): se
@@ -2319,11 +2323,20 @@
 				var mm = line.match( /^\s*(\d+)[.)]\s?([\s\S]*)$/ );
 				if ( mm ) {
 					var k = parseInt( mm[ 1 ], 10 ) - 1;
-					if ( k >= 0 && k < pUnits.length && null == trans[ k ] ) { trans[ k ] = mm[ 2 ]; return; }
+					if ( k >= 0 && k < pUnits.length && null == trans[ k ] ) { trans[ k ] = mm[ 2 ]; cur = k; return; }
+					cur = -1; // out of range or repeated: never guess
+					return;
 				}
-				if ( '' !== trimEdge( line ) ) { leftovers.push( line ); }
+				if ( '' === trimEdge( line ) ) { return; }
+				if ( numbered ) {
+					if ( cur >= 0 ) { trans[ cur ] += ' ' + trimEdge( line ); }
+					return;
+				}
+				leftovers.push( line );
 			} );
-			for ( var j = 0; j < pUnits.length; j++ ) { if ( null == trans[ j ] && leftovers.length ) { trans[ j ] = leftovers.shift(); } }
+			if ( ! numbered && leftovers.length === pUnits.length ) {
+				for ( var j = 0; j < pUnits.length; j++ ) { trans[ j ] = leftovers[ j ]; }
+			}
 			var todo = [];
 			for ( var k2 = 0; k2 < pUnits.length; k2++ ) { if ( null != trans[ k2 ] && '' !== trimEdge( trans[ k2 ] ) ) { todo.push( { u: pUnits[ k2 ], line: trans[ k2 ] } ); } }
 			if ( ! todo.length ) { return; }

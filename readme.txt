@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.7
+Stable tag: 1.7.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,13 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.7.8 =
+* Fixed: importing translations by copy and paste (Google Translate, DeepL…) matched a line without a number to the sentence in the same position, so a long text that the translator split over two lines pushed its second half onto another sentence — a cookie banner could end up showing a blog post. A line without a number now continues the line before it, and a translation that cannot belong to its original is skipped.
+* Fixed: clicking a colour preset in the switcher customizer now redraws the «your site, live» preview at once, and the preset's colours are applied to the language item in your header menu too (not only to the dropdown under it).
+* Improved: the switcher customizer tells you when the header menu is showing another profile than the one you are editing.
+* Fixed: windows and pop-ups that a plugin loads after a click and then shows (LatePoint's booking window, product comparison tables, quick views…) are now collected while you browse your site, so they can be translated. Their text used to be skipped as «hidden» and never looked at again.
+* Tested with 39 more plugins, among them Relevanssi, Ivory Search, SearchWP Live Ajax Search, Advanced Woo Search, Kadence Blocks, Happy Addons, Modern Events Calendar, WP Event Manager, LatePoint, Amelia, Bookly, YITH and HUSKY product filters, WPC Smart Compare, TablePress, wpDataTables, Popup Maker, GiveWP, Charitable, Fluent Forms, WPForms, Mailchimp for WP, Easy Digital Downloads, Ultimate Member, Paid Memberships Pro, Tutor LMS, wpDiscuz and wpForo.
+
 = 1.7.7 =
 * Fixed: content loaded after the page (AJAX) on a translated page kept its scripts and styles whole. A script holding HTML in a string — like SupportCandy's ticket form — came back cut in half, and its «Submit» button did nothing.
 * Fixed: links in content loaded by AJAX (a portfolio's next page, «load more») now stay in the visitor's language even when none of its texts is translated yet — «Read more» used to lead back to the default language.
@@ -305,6 +312,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.7.8 =
+Fixes pasted translations landing on the wrong sentence (cookie banner showing a blog post), presets in the switcher customizer and the colours of the language item in your header menu. Recommended.
 
 = 1.7.7 =
 Fixes content loaded by AJAX on translated pages: scripts stay whole (forms like SupportCandy's send again) and its links keep the visitor's language. Recommended.

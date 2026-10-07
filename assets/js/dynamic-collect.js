@@ -58,6 +58,7 @@
 	var HAS_LETTER = /\p{L}/u;
 	var LIMIT      = 600;  // strings per page view, whatever happens on the page
 	var seen       = {};
+	var pending    = {}; // queued, not sent yet
 	var queue      = [];
 	var sent       = 0;
 	var timer      = null;
@@ -105,10 +106,17 @@
 		}
 		var k = attr + '|' + t;
 		if ( seen[ k ] ) {
+			// The same words met again while the first copy still waits hidden: the visible
+			// copy counts (7/10/2026: LatePoint has «Available Services» twice - hidden in a
+			// progress bar first, then as the visible heading - and the heading was dropped).
+			if ( pending[ k ] && el && visible( el ) && ! visible( pending[ k ][ 2 ] ) ) {
+				pending[ k ][ 2 ] = el;
+			}
 			return;
 		}
 		seen[ k ] = 1;
-		queue.push( [ t, attr, el ] );
+		pending[ k ] = [ t, attr, el ];
+		queue.push( pending[ k ] );
 		schedule();
 	}
 
@@ -185,19 +193,32 @@
 			queue = [];
 			return;
 		}
-		// Only what is on screen now; what is still hidden is forgotten, and comes back
-		// through the observer if it is ever shown.
+		// Only what is on screen. What is still hidden waits and is looked at again every
+		// 2 s for a minute (7/10/2026: LatePoint's booking window, like many pop-ups, is put
+		// in the page hidden and then shown by a class change - no node is added, so the
+		// observer never saw it again and the window could never be translated). What never
+		// shows up in that minute is forgotten.
 		var batch = [];
 		var kept  = [];
 		while ( queue.length && batch.length < Math.min( 200, LIMIT - sent ) ) {
 			var item = queue.shift();
 			if ( item[ 2 ] && ! visible( item[ 2 ] ) ) {
-				delete seen[ item[ 1 ] + '|' + item[ 0 ] ];
+				item[ 3 ] = ( item[ 3 ] || 0 ) + 1;
+				if ( item[ 3 ] < 30 ) {
+					kept.push( item );
+				} else {
+					delete seen[ item[ 1 ] + '|' + item[ 0 ] ];
+					delete pending[ item[ 1 ] + '|' + item[ 0 ] ];
+				}
 				continue;
 			}
+			delete pending[ item[ 1 ] + '|' + item[ 0 ] ];
 			batch.push( [ item[ 0 ], item[ 1 ] ] );
 		}
 		queue = kept.concat( queue );
+		if ( queue.length && ! timer ) {
+			timer = window.setTimeout( flush, 2000 );
+		}
 		if ( ! batch.length ) {
 			return;
 		}

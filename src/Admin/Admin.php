@@ -1045,27 +1045,85 @@ class Admin {
 			}
 		}
 
-		$lines = preg_split( '/\r\n|\r|\n/', $raw );
-		$pos   = 0;
-		foreach ( $lines as $line ) {
-			$line = trim( $line );
-			if ( '' === $line ) {
+		$pairs = self::paste_pairs( $raw, count( $ids ) );
+		if ( null === $pairs ) {
+			$this->redirect_editor( $lang, 'noimport' );
+		}
+		$originals = Strings::originals_by_id( array_values( array_filter( $ids ) ) );
+		foreach ( $pairs as $idx => $text ) {
+			if ( ! isset( $ids[ $idx ] ) || $ids[ $idx ] <= 0 ) {
 				continue;
 			}
-			if ( preg_match( '/^(\d+)[\.\)]\s*(.*)$/u', $line, $m ) ) {
-				$idx  = (int) $m[1] - 1;
-				$text = trim( $m[2] );
-			} else {
-				$idx  = $pos;
-				$text = $line;
+			$orig = (string) ( $originals[ $ids[ $idx ] ] ?? '' );
+			if ( '' === $orig || ! self::paste_plausible( $orig, $text ) ) {
+				continue;
 			}
-			++$pos;
-			if ( '' !== $text && isset( $ids[ $idx ] ) && $ids[ $idx ] > 0 ) {
-				Strings::save_translation( $ids[ $idx ], $lang, sanitize_text_field( $text ) );
-			}
+			Strings::save_translation( $ids[ $idx ], $lang, sanitize_text_field( $text ) );
 		}
 
 		$this->redirect_editor( $lang, 'imported' );
+	}
+
+	/**
+	 * The pasted translations, by position in the list (0-based).
+	 *
+	 * 8/10/2026 (a user's site: the cookie banner showed a blog post): a line WITHOUT a number used to
+	 * take the place of the item in the same position, so a long text that Google Translate split over
+	 * two lines pushed its second half onto another sentence. Now a line without a number continues
+	 * the numbered line before it. Only a paste with no numbers at all is matched by order, and only
+	 * when it has exactly as many lines as the list.
+	 *
+	 * @param string $raw   Pasted text.
+	 * @param int    $count Items in the list.
+	 * @return array<int,string>|null Null when the paste cannot be matched safely.
+	 */
+	public static function paste_pairs( string $raw, int $count ): ?array {
+		$lines = array();
+		foreach ( (array) preg_split( '/\r\n|\r|\n/', $raw ) as $l ) {
+			$l = trim( (string) $l );
+			if ( '' !== $l && 0 !== strpos( $l, '```' ) ) {
+				$lines[] = $l;
+			}
+		}
+		$numbered = false;
+		foreach ( $lines as $l ) {
+			if ( preg_match( '/^\d+[\.\)]\s*/u', $l ) ) {
+				$numbered = true;
+				break;
+			}
+		}
+		if ( ! $numbered ) {
+			return count( $lines ) === $count ? $lines : null;
+		}
+		$out = array();
+		$cur = null;
+		foreach ( $lines as $l ) {
+			if ( preg_match( '/^(\d+)[\.\)]\s*(.*)$/u', $l, $m ) ) {
+				$idx = (int) $m[1] - 1;
+				if ( $idx < 0 || $idx >= $count || isset( $out[ $idx ] ) ) {
+					$cur = null; // out of range or repeated: never guess
+					continue;
+				}
+				$out[ $idx ] = trim( $m[2] );
+				$cur         = $idx;
+			} elseif ( null !== $cur ) {
+				$out[ $cur ] .= ' ' . $l; // the rest of the same item, broken over lines
+			}
+		}
+		return array_filter( $out, 'strlen' );
+	}
+
+	/**
+	 * A translation that cannot belong to its original: a short label that comes back as a
+	 * paragraph, or a paragraph that comes back as two words (the sign of a list that slipped).
+	 *
+	 * @param string $orig Original.
+	 * @param string $tr   Translation.
+	 */
+	public static function paste_plausible( string $orig, string $tr ): bool {
+		$lo = function_exists( 'mb_strlen' ) ? mb_strlen( $orig ) : strlen( $orig );
+		$lt = function_exists( 'mb_strlen' ) ? mb_strlen( $tr ) : strlen( $tr );
+		return $lt <= max( 60, 4 * $lo + 40 ) && $lt * 6 + 10 >= $lo;
 	}
 
 	/**
@@ -2123,6 +2181,33 @@ class Admin {
 						$placement = ! empty( $g( 'in_spot' ) ) ? 'spot' : ( ! empty( $g( 'in_menu' ) ) ? 'menu' : ( empty( $g( 'floating' ) ) ? 'manual' : (string) $g( 'float_pos' ) ) );
 						$trr_menus = self::switcher_menu_choices();
 						?>
+						<?php
+						// 8/10/2026 (Federico styled a profile called «header» and the header kept showing Default): only
+						// one profile can sit in the header menu, and the page says which one has it right now.
+						$trr_menu_owner = '';
+						if ( empty( $g( 'in_menu' ) ) ) {
+							$trr_all = Settings::get();
+							if ( ! empty( $trr_all['switcher']['in_menu'] ) ) {
+								$trr_menu_owner = __( 'Default', 'translate-rocket' );
+							}
+							foreach ( (array) ( $trr_all['switchers'] ?? array() ) as $trr_pid => $trr_p ) {
+								if ( is_array( $trr_p ) && ! empty( $trr_p['in_menu'] ) ) {
+									$trr_menu_owner = (string) $trr_pid;
+								}
+							}
+						}
+						if ( '' !== $trr_menu_owner ) :
+							?>
+							<p class="description" style="background:#fff8e5;border-left:4px solid #dba617;padding:8px 12px;margin:0 0 10px">
+								<?php
+								printf(
+									/* translators: %s: name of the profile shown in the header menu */
+									esc_html__( 'Your header menu shows the «%s» profile, not this one. To style the header with this profile, choose «In my header menu» below and save.', 'translate-rocket' ),
+									esc_html( $trr_menu_owner )
+								);
+								?>
+							</p>
+						<?php endif; ?>
 						<p><label><?php esc_html_e( 'Where to show the switcher', 'translate-rocket' ); ?>
 							<select name="sw_placement" id="sw_placement">
 								<?php
@@ -5795,7 +5880,7 @@ JS;
 		$i      = 1;
 		foreach ( $rows as $row ) {
 			$ids[]   = (int) $row->string_id;
-			$export .= $i . '. ' . $row->original . "\n";
+			$export .= $i . '. ' . preg_replace( '/\s*[\r\n]+\s*/', ' ', (string) $row->original ) . "\n"; // one line per item
 			++$i;
 		}
 

@@ -244,6 +244,9 @@
 			if ( d.hoverfx && el( 'sw_hover_fx' ) ) { el( 'sw_hover_fx' ).value = d.hoverfx; }
 			syncSwatches();
 			update();
+			// 8/10/2026 (Federico: «clicking a preset changes nothing»): values set by script fire no
+			// event, so the «your site, live» card (header menu / spot) never redrew. Tell the form.
+			if ( this.form ) { this.form.dispatchEvent( new Event( 'change', { bubbles: true } ) ); }
 		} );
 	} );
 

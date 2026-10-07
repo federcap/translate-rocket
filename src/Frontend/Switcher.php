@@ -295,6 +295,22 @@ class Switcher {
 		if ( '' !== $box ) {
 			$out .= $open . '{' . $box . '}';
 		}
+		// 8/10/2026 (Federico: «the preset was red and the header shows no red»): the colours of the
+		// preset go on the language item in the menu too, not only on the box that opens under it.
+		$top_bg = trim( (string) ( $s['bg_color'] ?? '' ) );
+		$top    = '';
+		if ( '' !== $top_bg && $ok( $top_bg ) ) {
+			$top .= 'background:' . $top_bg . '!important;';
+		}
+		if ( empty( $s['no_border'] ) && '' !== $border && $ok( $border ) ) {
+			$top .= 'border:1px solid ' . $border . '!important;';
+		}
+		if ( '' !== $radius ) {
+			$top .= 'border-radius:' . self::css_len( $radius ) . '!important;';
+		}
+		if ( '' !== $top ) {
+			$out .= '.trrocket-lang-current>a,.trrocket-lang-current>button,.trrocket-lang-current>.wp-block-navigation-item__content{' . $top . '}';
+		}
 		return $out;
 	}
 
