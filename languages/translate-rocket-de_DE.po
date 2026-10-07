@@ -4349,3 +4349,12 @@ msgstr "Rechts"
 #: src/Admin/Admin.php
 msgid "Bottom of the page"
 msgstr "Seitenende"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your header menu shows the «%s» profile, not this one. To style the header with this profile, choose «In my header menu» below and save."
+msgstr "Ihr Kopfzeilenmenü zeigt das Profil «%s», nicht dieses. Um die Kopfzeile mit diesem Profil zu gestalten, wählen Sie unten «In meinem Kopfzeilenmenü» und speichern Sie."
+
+#: src/Admin/Admin.php
+msgid "Use this profile in the header menu"
+msgstr "Dieses Profil im Kopfzeilenmenü verwenden"

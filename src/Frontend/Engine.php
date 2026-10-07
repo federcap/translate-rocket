@@ -963,10 +963,15 @@ class Engine {
 		// QR sarebbe una voce di cache diversa — cioe' il traffico che costa di piu'
 		// non userebbe mai la cache.
 		$pezzi = explode( '?', $uri, 2 );
+		// Security audit 7/10/2026: /Garden/, /garden/ and /g%61rden/ are the same page for WordPress;
+		// one cache entry for all of them, or a visitor could fill the cache with spellings.
+		$pezzi[0] = strtolower( rawurldecode( $pezzi[0] ) );
 		if ( isset( $pezzi[1] ) ) {
 			parse_str( $pezzi[1], $par );
 			$resta = array_diff_key( $par, array_flip( self::tracking_params() ) );
 			$uri   = $pezzi[0] . ( empty( $resta ) ? '' : '?' . http_build_query( $resta ) );
+		} else {
+			$uri = $pezzi[0];
 		}
 		return $uri;
 	}

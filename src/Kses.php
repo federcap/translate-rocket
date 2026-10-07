@@ -161,6 +161,74 @@ class Kses {
 
 
 	/**
+	 * A translation cleaned against its original (security audit, 7/10/2026): it may only carry
+	 * the inline formatting of translation_rules() plus the tags and attributes the ORIGINAL
+	 * already has. Whatever channel it came from (AI, import, paste, a partner plugin), a
+	 * translation can never add a script, an event handler or a tag the source never had.
+	 *
+	 * @param string $original    Source text.
+	 * @param string $translation Untrusted translation.
+	 */
+	public static function like_original( $original, $translation ) {
+		$translation = (string) $translation;
+		if ( false === strpos( $translation, '<' ) ) {
+			return $translation; // no tag: nothing to strip (kses would also turn a bare «&» into «&amp;»)
+		}
+		$rules = self::translation_rules();
+		if ( preg_match_all( '/<([a-z][a-z0-9-]*)\b([^>]*)>/i', (string) $original, $tags, PREG_SET_ORDER ) ) {
+			foreach ( $tags as $t ) {
+				$name = strtolower( $t[1] );
+				if ( in_array( $name, array( 'script', 'style', 'iframe', 'object', 'embed', 'link', 'meta', 'base', 'form' ), true ) ) {
+					continue;
+				}
+				$attrs = isset( $rules[ $name ] ) ? $rules[ $name ] : array();
+				if ( preg_match_all( '/\s([a-z][a-z0-9_:-]*)\s*=/i', $t[2], $names ) ) {
+					foreach ( $names[1] as $n ) {
+						$n = strtolower( $n );
+						if ( 0 !== strpos( $n, 'on' ) ) {
+							$attrs[ $n ] = true;
+						}
+					}
+				}
+				$rules[ $name ] = $attrs;
+			}
+		}
+		// Only the tags go through kses, one by one: the text around them stays byte for byte
+		// («&», a lone «<» or «>» in «5 < 7 > 3» — kses would turn them into entities, and the
+		// engine escapes text itself). A comment could swallow what follows it: dropped.
+		$masked = \TranslateRocket\Frontend\InlineText::mask_parts( $translation );
+		$masked = (string) preg_replace( '/<!--[\s\S]*?(?:-->|$)/', '', $masked );
+		$masked = (string) preg_replace_callback(
+			'/<\/?[a-zA-Z][^<>]*>/',
+			static function ( $m ) use ( $rules ) {
+				return wp_kses( $m[0], $rules );
+			},
+			$masked
+		);
+		return \TranslateRocket\Frontend\InlineText::unmask_parts( $masked );
+	}
+
+	/**
+	 * A translation shown where its original was plain text: when the source has no «<», «>»
+	 * or «"», the translation cannot bring them in as markup either (a gettext string echoed
+	 * into an attribute, a text node of a fragment). Entities are kept as they are.
+	 *
+	 * @param string $original    Source text.
+	 * @param string $translation Translation.
+	 */
+	public static function plain_like( $original, $translation ) {
+		$translation = (string) $translation;
+		$original    = (string) $original;
+		$map         = array();
+		foreach ( array( '<' => '&lt;', '>' => '&gt;', '"' => '&quot;' ) as $ch => $ent ) {
+			if ( false === strpos( $original, $ch ) && false !== strpos( $translation, $ch ) ) {
+				$map[ $ch ] = $ent;
+			}
+		}
+		return empty( $map ) ? $translation : strtr( $translation, $map );
+	}
+
+	/**
 	 * The inline-only allowlist for imported translation content.
 	 *
 	 * @return array<string,array<string,bool>>

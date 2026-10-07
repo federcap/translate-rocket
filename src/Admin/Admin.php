@@ -2206,6 +2206,7 @@ class Admin {
 									esc_html( $trr_menu_owner )
 								);
 								?>
+								<button type="button" class="button button-small trr-sw-take-menu" style="margin-left:8px"><?php esc_html_e( 'Use this profile in the header menu', 'translate-rocket' ); ?></button>
 							</p>
 						<?php endif; ?>
 						<p><label><?php esc_html_e( 'Where to show the switcher', 'translate-rocket' ); ?>

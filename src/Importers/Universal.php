@@ -66,6 +66,9 @@ final class Universal {
 	 * A page as a visitor gets it (no cookies), or null.
 	 */
 	public static function fetch( string $url ): ?string {
+		if ( ! self::own_url( $url ) ) {
+			return null; // security audit 7/10/2026: the importer reads this site, never another host
+		}
 		$r = wp_remote_get(
 			$url,
 			array(
@@ -84,6 +87,16 @@ final class Universal {
 	}
 
 	/**
+	 * Whether an address belongs to this site (same host as the home address).
+	 */
+	public static function own_url( string $url ): bool {
+		$h = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+		$s = strtolower( (string) wp_parse_url( home_url( '/' ), PHP_URL_SCHEME ) );
+		$u = strtolower( (string) wp_parse_url( $url, PHP_URL_SCHEME ) );
+		return '' !== $h && $h === strtolower( (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST ) ) && in_array( $u, array( 'http', 'https', $s ), true );
+	}
+
+	/**
 	 * Several pages at once (WordPress' Requests library), each as fetch() would get it.
 	 *
 	 * @param array<string,string> $urls key => url.
@@ -92,6 +105,7 @@ final class Universal {
 	public static function fetch_many( array $urls ): array {
 		$out = array();
 		$cls = class_exists( '\\WpOrg\\Requests\\Requests' ) ? '\\WpOrg\\Requests\\Requests' : ( class_exists( '\\Requests' ) ? '\\Requests' : '' );
+		$urls = array_filter( $urls, array( __CLASS__, 'own_url' ) );
 		if ( '' === $cls || count( $urls ) < 2 ) {
 			foreach ( $urls as $k => $u ) {
 				$out[ $k ] = self::fetch( $u );

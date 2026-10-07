@@ -178,8 +178,31 @@ class InlineText {
 				}
 			}
 		}
-		if ( ! $has_text || 0 === $parts || $parts > self::MAX_PARTS || ! $has_words ) {
+		if ( ! $has_text || 0 === $parts || $parts > self::MAX_PARTS ) {
 			return false;
+		}
+		// 7/10/2026: «Price <strong>25%</strong> off tonight.» — the part has no words, but it sits
+		// BETWEEN words: that is one sentence (it used to be cut into «Price» and «off tonight.»).
+		// An icon before or after a text («<i></i> Rooms») still is not.
+		if ( ! $has_words ) {
+			$first_words = -1;
+			$last_words  = -1;
+			foreach ( $children as $i => $c ) {
+				if ( 'text' === $c[0] && preg_match( '/\p{L}/u', $c[1] ) ) {
+					$first_words = -1 === $first_words ? $i : $first_words;
+					$last_words  = $i;
+				}
+			}
+			$inside = false;
+			foreach ( $children as $i => $c ) {
+				if ( 'part' === $c[0] && $i > $first_words && $i < $last_words ) {
+					$inside = true;
+					break;
+				}
+			}
+			if ( ! $inside ) {
+				return false;
+			}
 		}
 		// «<a>Home</a> / <a>Rooms</a> / Sea view»: a breadcrumb, a tag list, a
 		// pagination — links glued by separators, not a sentence. Each link is its

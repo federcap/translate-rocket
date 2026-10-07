@@ -175,6 +175,18 @@
 	   ----------------------------------------------------------------------- */
 	var SOLO_TENDINA = [ 'sw_dd_trigger', 'sw_dd_caret', 'sw_animation' ];
 
+	/* 7/10/2026 (Federico styled «header» and the menu kept showing Default): one click moves this
+	   profile into the header menu and saves. */
+	Array.prototype.forEach.call( document.querySelectorAll( '.trr-sw-take-menu' ), function ( b ) {
+		b.addEventListener( 'click', function () {
+			var sel = el( 'sw_placement' );
+			if ( ! sel || ! form ) { return; }
+			sel.value = 'menu';
+			sel.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+			if ( form.requestSubmit ) { form.requestSubmit(); } else { form.submit(); }
+		} );
+	} );
+
 	function soloTendina() {
 		var tendina = el( 'sw_type' ) && 'dropdown' === el( 'sw_type' ).value;
 		SOLO_TENDINA.forEach( function ( id ) {

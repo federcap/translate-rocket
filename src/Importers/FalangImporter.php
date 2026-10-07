@@ -62,7 +62,7 @@ class FalangImporter extends MetaLanguagesImporter {
 		);
 		$out = array();
 		foreach ( (array) $righe as $r ) {
-			$d      = maybe_unserialize( (string) $r->description );
+			$d      = is_serialized( (string) $r->description ) ? unserialize( (string) $r->description, array( 'allowed_classes' => false ) ) : $r->description; // phpcs:ignore WordPress.PHP.NoSilencedErrors,WordPress.PHP.DiscouragedPHPFunctions -- no objects from another plugin's table (security audit 7/10/2026)
 			$locale = is_array( $d ) && ! empty( $d['locale'] ) ? (string) $d['locale'] : '';
 			if ( '' === $locale || ! preg_match( '/^[a-z]{2,3}(?:_[A-Z]{2})?(?:_[a-z0-9]+)?$/', $locale ) ) {
 				continue;

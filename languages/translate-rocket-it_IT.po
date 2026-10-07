@@ -4538,3 +4538,12 @@ msgstr "Destra"
 #: src/Admin/Admin.php
 msgid "Bottom of the page"
 msgstr "Fondo della pagina"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your header menu shows the «%s» profile, not this one. To style the header with this profile, choose «In my header menu» below and save."
+msgstr "Il menu della tua intestazione mostra il profilo «%s», non questo. Per dare all'intestazione lo stile di questo profilo scegli «Nel menu della mia intestazione» qui sotto e salva."
+
+#: src/Admin/Admin.php
+msgid "Use this profile in the header menu"
+msgstr "Usa questo profilo nel menu dell'intestazione"

@@ -64,7 +64,7 @@ class RestContent {
 		}
 		$router = Plugin::instance()->router();
 		$lang   = $router->request_language();
-		if ( '' === $lang || $router->is_default( $lang ) || ! in_array( $lang, $router->secondary_languages(), true ) ) {
+		if ( '' === $lang || $router->is_default( $lang ) || ! in_array( $lang, $router->secondary_languages(), true ) || ! in_array( $lang, $router->public_languages(), true ) ) {
 			return $response;
 		}
 		if ( ! Strings::has_translations( $lang ) || \TranslateRocket\Coexistence::on() ) {

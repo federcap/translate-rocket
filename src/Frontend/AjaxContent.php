@@ -85,7 +85,7 @@ class AjaxContent {
 		}
 		$router = Plugin::instance()->router();
 		$lang   = $router->request_language();
-		if ( '' === $lang || $router->is_default( $lang ) || ! in_array( $lang, $router->secondary_languages(), true ) ) {
+		if ( '' === $lang || $router->is_default( $lang ) || ! in_array( $lang, $router->secondary_languages(), true ) || ! in_array( $lang, $router->public_languages(), true ) ) {
 			return;
 		}
 		if ( ! Strings::has_translations( $lang ) || \TranslateRocket\Coexistence::on() ) {
@@ -188,6 +188,14 @@ class AjaxContent {
 		}
 		if ( is_user_logged_in() && ! current_user_can( 'manage_options' ) ) {
 			return false;
+		}
+		// Security audit 7/10/2026: a visitor's request only collects when it is a real admin-ajax
+		// action the site registers for guests (a map's markers) — never a page address dressed up
+		// with an «ajax» parameter (?em_ajax=1 on an invented search: its 404 text would be filed).
+		if ( ! is_user_logged_in() && ! GuestScan::active() ) {
+			if ( ! wp_doing_ajax() || 'endpoint' === $this->action || 'page' === $this->action || 0 === strpos( $this->action, 'wc-ajax:' ) || ! has_action( 'wp_ajax_nopriv_' . $this->action ) ) {
+				return false;
+			}
 		}
 		foreach ( self::QUERY_ARGS as $arg ) {
 			if ( isset( $_GET[ $arg ] ) && '' !== trim( (string) wp_unslash( $_GET[ $arg ] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification

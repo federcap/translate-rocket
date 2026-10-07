@@ -4351,3 +4351,12 @@ msgstr "Rechts"
 #: src/Admin/Admin.php
 msgid "Bottom of the page"
 msgstr "Onderkant van de pagina"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your header menu shows the «%s» profile, not this one. To style the header with this profile, choose «In my header menu» below and save."
+msgstr "Het menu van je header toont het profiel «%s», niet dit profiel. Kies hieronder «In het menu van mijn header» en sla op om de header met dit profiel vorm te geven."
+
+#: src/Admin/Admin.php
+msgid "Use this profile in the header menu"
+msgstr "Dit profiel in het headermenu gebruiken"

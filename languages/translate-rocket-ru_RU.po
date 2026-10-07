@@ -4375,3 +4375,12 @@ msgstr "Справа"
 #: src/Admin/Admin.php
 msgid "Bottom of the page"
 msgstr "Низ страницы"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your header menu shows the «%s» profile, not this one. To style the header with this profile, choose «In my header menu» below and save."
+msgstr "Меню вашей шапки показывает профиль «%s», а не этот. Чтобы оформить шапку этим профилем, выберите ниже «В меню моей шапки» и сохраните."
+
+#: src/Admin/Admin.php
+msgid "Use this profile in the header menu"
+msgstr "Использовать этот профиль в меню шапки"

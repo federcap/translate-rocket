@@ -4375,3 +4375,12 @@ msgstr "Do prawej"
 #: src/Admin/Admin.php
 msgid "Bottom of the page"
 msgstr "Dół strony"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your header menu shows the «%s» profile, not this one. To style the header with this profile, choose «In my header menu» below and save."
+msgstr "Menu twojego nagłówka pokazuje profil «%s», nie ten. Aby nadać nagłówkowi styl tego profilu, wybierz poniżej «W menu mojego nagłówka» i zapisz."
+
+#: src/Admin/Admin.php
+msgid "Use this profile in the header menu"
+msgstr "Użyj tego profilu w menu nagłówka"

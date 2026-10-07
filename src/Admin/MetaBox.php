@@ -188,8 +188,9 @@ class MetaBox {
 			case 'save':
 				$items = json_decode( isset( $_POST['items'] ) ? (string) wp_unslash( $_POST['items'] ) : '[]', true ); // phpcs:ignore WordPress.Security
 				if ( is_array( $items ) ) {
+					$mine = $this->page_ids( $hash, $lang ); // security audit 7/10/2026: only this page's strings
 					foreach ( $items as $item ) {
-						if ( isset( $item['id'] ) ) {
+						if ( isset( $item['id'] ) && isset( $mine[ (int) $item['id'] ] ) ) {
 							// Manual editor: save exactly what the user typed —
 							// clearing a field intentionally empties that translation.
 							$text = isset( $item['text'] ) ? sanitize_text_field( (string) $item['text'] ) : '';
@@ -206,7 +207,13 @@ class MetaBox {
 			case 'import':
 				$raw = isset( $_POST['text'] ) ? (string) wp_unslash( $_POST['text'] ) : ''; // phpcs:ignore WordPress.Security
 				if ( '' !== trim( $raw ) ) {
-					$ids = array_map( 'intval', explode( ',', sanitize_text_field( wp_unslash( $_POST['cp_ids'] ?? '' ) ) ) );
+					$ids  = array_map( 'intval', explode( ',', sanitize_text_field( wp_unslash( $_POST['cp_ids'] ?? '' ) ) ) );
+					$mine = $this->page_ids( $hash, $lang );
+					foreach ( $ids as $k => $id ) {
+						if ( ! isset( $mine[ $id ] ) ) {
+							$ids[ $k ] = 0;
+						}
+					}
 					$this->import_paste( $ids, $raw, $lang );
 					$msg = 'imported';
 				} else {
@@ -311,25 +318,36 @@ class MetaBox {
 	 * @param string $lang Target language.
 	 */
 	private function import_paste( array $ids, string $raw, string $lang ): void {
-		$lines = preg_split( '/\r\n|\r|\n/', $raw );
-		$pos   = 0;
-		foreach ( $lines as $line ) {
-			$line = trim( $line );
-			if ( '' === $line ) {
+		// 8/10/2026: the same pairing as the strings page (Admin::paste_pairs) — a line without a
+		// number continues the line before it; a translation that cannot belong to its original is skipped.
+		$pairs = Admin::paste_pairs( $raw, count( $ids ) );
+		if ( null === $pairs ) {
+			return;
+		}
+		$originals = Strings::originals_by_id( array_values( array_filter( $ids ) ) );
+		foreach ( $pairs as $idx => $text ) {
+			if ( ! isset( $ids[ $idx ] ) || $ids[ $idx ] <= 0 ) {
 				continue;
 			}
-			if ( preg_match( '/^(\d+)[\.\)]\s*(.*)$/u', $line, $m ) ) {
-				$idx  = (int) $m[1] - 1;
-				$text = trim( $m[2] );
-			} else {
-				$idx  = $pos;
-				$text = $line;
+			$orig = (string) ( $originals[ $ids[ $idx ] ] ?? '' );
+			if ( '' === $orig || ! Admin::paste_plausible( $orig, $text ) ) {
+				continue;
 			}
-			++$pos;
-			if ( '' !== $text && isset( $ids[ $idx ] ) && $ids[ $idx ] > 0 ) {
-				Strings::save_translation( $ids[ $idx ], $lang, sanitize_text_field( $text ), 2 );
-			}
+			Strings::save_translation( $ids[ $idx ], $lang, sanitize_text_field( $text ), 2 );
 		}
+	}
+
+	/**
+	 * Ids of the strings of a page (for a language), as a set.
+	 *
+	 * @return array<int,bool>
+	 */
+	private function page_ids( string $hash, string $lang ): array {
+		$set = array();
+		foreach ( Strings::for_page_language( $hash, $lang ) as $row ) {
+			$set[ (int) $row->id ] = true;
+		}
+		return $set;
 	}
 
 	/**

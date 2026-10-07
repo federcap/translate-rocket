@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.8
+Stable tag: 1.7.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,13 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.7.9 =
+* Security: a translation can never carry markup its original did not have — whatever brought it in (an AI answer, an import, a paste, another plugin). Scripts, event handlers and foreign tags are removed when the translation is saved, in one place for every channel; texts translated through gettext are escaped when their source had no markup; a translation placed inside a script is encoded so «</script>» cannot end it.
+* Security: a visitor can no longer make the site collect texts from invented «AJAX» addresses, read the translations of a language that is offline, or fill the page cache with spellings of the same address; the editor side panel only saves the strings of its own page; the universal importer reads this site only.
+* Fixed: the «Import pasted translations» of the editor side panel now pairs lines like the strings page (a line without a number continues the one before it).
+* Improved: the switcher customizer tells you when the header menu shows another profile, with a one-click «Use this profile in the header menu».
+* Fixed: a sentence with a bold or italic part that has no letters («Price <strong>25%</strong> off tonight», «<em>€</em> 1.234,56») is now collected whole; it used to be cut in two and the second half stayed untranslated.
+
 = 1.7.8 =
 * Fixed: importing translations by copy and paste (Google Translate, DeepL…) matched a line without a number to the sentence in the same position, so a long text that the translator split over two lines pushed its second half onto another sentence — a cookie banner could end up showing a blog post. A line without a number now continues the line before it, and a translation that cannot belong to its original is skipped.
 * Fixed: clicking a colour preset in the switcher customizer now redraws the «your site, live» preview at once, and the preset's colours are applied to the language item in your header menu too (not only to the dropdown under it).
@@ -312,6 +319,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.7.9 =
+Security hardening (translations can never carry scripts or handlers, whatever their source), pasted translations in the editor panel, sentences with a bold/italic number kept whole, clearer switcher profiles. Recommended.
 
 = 1.7.8 =
 Fixes pasted translations landing on the wrong sentence (cookie banner showing a blog post), presets in the switcher customizer and the colours of the language item in your header menu. Recommended.

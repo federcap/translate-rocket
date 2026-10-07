@@ -100,7 +100,11 @@ class ScriptData {
 			if ( ! isset( $map[ $t ] ) || '' === $map[ $t ] || $map[ $t ] === $t || ! self::same_placeholders( $t, $map[ $t ] ) ) {
 				continue;
 			}
-			$enc  = '"' === $lit['quote'] ? substr( (string) wp_json_encode( $map[ $t ] ), 1, -1 ) : addcslashes( $map[ $t ], "'\\\n\r" );
+			// Security audit 7/10/2026: «</script>» or a line separator inside the literal would end
+			// the script; both are encoded so the translation stays a string whatever it contains.
+			$enc  = '"' === $lit['quote']
+				? substr( (string) wp_json_encode( $map[ $t ], JSON_HEX_TAG | JSON_UNESCAPED_SLASHES ), 1, -1 )
+				: strtr( addcslashes( $map[ $t ], "'\\\n\r" ), array( '<' => '\\x3C', '>' => '\\x3E', "\u{2028}" => '\\u2028', "\u{2029}" => '\\u2029' ) );
 			$out .= substr( $js, $cursor, $lit['start'] - $cursor ) . $enc;
 			$cursor = $lit['end'];
 			$any    = true;

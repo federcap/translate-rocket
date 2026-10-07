@@ -1031,6 +1031,12 @@ class Strings {
 		if ( '' !== $translation ) {
 			$originali = self::originals( array( $string_id ) );
 			$originale = $originali[ $string_id ] ?? '';
+			// Security audit 7/10/2026: whatever the channel, a translation never carries markup
+			// its original did not have (scripts, handlers, tags). One place, for every writer.
+			$translation = trim( Kses::like_original( (string) $originale, $translation ) );
+			if ( '' === $translation ) {
+				return false;
+			}
 			if ( \TranslateRocket\Frontend\InlineText::has_parts( $originale )
 				&& ! \TranslateRocket\Frontend\InlineText::parts_ok( $originale, $translation ) ) {
 				return false;

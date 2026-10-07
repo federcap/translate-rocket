@@ -4349,3 +4349,12 @@ msgstr "Direita"
 #: src/Admin/Admin.php
 msgid "Bottom of the page"
 msgstr "Final da página"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your header menu shows the «%s» profile, not this one. To style the header with this profile, choose «In my header menu» below and save."
+msgstr "O menu do seu cabeçalho mostra o perfil «%s», não este. Para estilizar o cabeçalho com este perfil, escolha «No menu do meu cabeçalho» abaixo e salve."
+
+#: src/Admin/Admin.php
+msgid "Use this profile in the header menu"
+msgstr "Usar este perfil no menu do cabeçalho"

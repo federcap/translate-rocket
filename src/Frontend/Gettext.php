@@ -13,6 +13,7 @@ use TranslateRocket\Plugin;
 use TranslateRocket\Strings;
 use TranslateRocket\Settings;
 use TranslateRocket\NoTranslate;
+use TranslateRocket\Kses;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -185,7 +186,7 @@ class Gettext {
 		if ( ! $this->do_collect ) {
 			$text = trim( $translation );
 			if ( '' !== $text && isset( $this->map[ $text ] ) ) {
-				return str_replace( $text, $this->map[ $text ], $translation );
+				return str_replace( $text, Kses::plain_like( $text, $this->map[ $text ] ), $translation );
 			}
 			return $translation;
 		}
@@ -209,7 +210,7 @@ class Gettext {
 		}
 
 		if ( isset( $this->map[ $text ] ) ) {
-			return str_replace( $text, $this->map[ $text ], $translation );
+			return str_replace( $text, Kses::plain_like( $text, $this->map[ $text ] ), $translation );
 		}
 		return $translation;
 	}

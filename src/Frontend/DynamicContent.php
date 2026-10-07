@@ -265,7 +265,8 @@ class DynamicContent {
 
 		$router = Plugin::instance()->router();
 		if ( '' === $lang || ! is_array( $items ) || $router->is_default( $lang )
-			|| ! in_array( $lang, $router->secondary_languages(), true ) ) {
+			|| ! in_array( $lang, $router->secondary_languages(), true )
+			|| ! in_array( $lang, $router->public_languages(), true ) ) { // offline: only whoever may preview
 			wp_send_json_error();
 		}
 

@@ -4327,3 +4327,12 @@ msgstr "右"
 #: src/Admin/Admin.php
 msgid "Bottom of the page"
 msgstr "ページ下部"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your header menu shows the «%s» profile, not this one. To style the header with this profile, choose «In my header menu» below and save."
+msgstr "ヘッダーのメニューにはこのプロファイルではなく「%s」が表示されています。このプロファイルでヘッダーを装飾するには、下の「ヘッダーのメニュー内」を選んで保存してください。"
+
+#: src/Admin/Admin.php
+msgid "Use this profile in the header menu"
+msgstr "このプロファイルをヘッダーのメニューで使う"

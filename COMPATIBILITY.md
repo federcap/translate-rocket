@@ -58,3 +58,38 @@ Prove: `_ssh/collaudi/collaudo-universale-altri.sh` (nel giro completo) = le pro
 Difetti trovati e corretti: l'universale leggeva le pagine di TranslateRocket stesso quando serviva gia' le lingue
 (ora aspetta «Modalita' affiancata» o lingue offline); «traduzioni trovate» con 0 coppie; coppie sbagliate da copie
 tradotte vecchie (ora: numeri uguali, blocco scartato intero, forma anche del nonno).
+
+## 1.7.8 — import copia‑incolla, preset switcher, menu (7/10/2026, wp.org r3732394, sorgente 8fcafe9)
+- Segnalazione di un utente (sito ES con /it/ e /en/): il banner Complianz mostrava testi di articoli. Causa: l'import
+  copia‑incolla abbinava una riga SENZA numero alla frase nella stessa posizione; una frase lunga spezzata da Google
+  Translate su due righe faceva slittare tutto il seguito. Ora `Admin::paste_pairs` (la riga senza numero continua la
+  precedente; elenco senza numeri accettato solo se le righe tornano) + `paste_plausible` (traduzione impossibile per
+  lunghezza → scartata); stesso criterio in `visual-editor.js applyPaste`. I motori AI già rifiutano risposte col
+  conteggio sbagliato: il copia‑incolla era l'unico canale posizionale. Suite `collaudo-incolla.sh` (con la 1.7.7
+  fallisce, con la 1.7.8 5/5).
+- Personalizzatore switcher: il preset non ridisegnava la scheda «il tuo sito, dal vivo» (valori messi da script, nessun
+  evento) → `dispatchEvent('change')`; `menu_css` colora anche la voce lingua nel menu (prima solo il riquadro sotto);
+  avviso in pagina quando il menu mostra un altro profilo (caso del banco tre: «header» non era in_menu, lo era
+  Default). Suite `collaudo-preset.sh` 10/10, `collaudo-hover.sh` 8/8 (apertura al passaggio/clic nel blocco
+  navigazione di Twenty Twenty‑Five).
+- Gotcha suite: i preset stanno in un `<details>` chiuso (aprirli prima del clic); la scheda del sito tiene la pagina
+  vecchia finché la nuova non è arrivata (aspettare il colore, non solo il cambio di `src`).
+- Aperti dello stesso utente, NON riproducibili senza dati: link «Vedi di più» di Smart Post Show **Pro** (la free non
+  ha il carica‑altri AJAX; `AjaxContent` localizza i link via referer), switcher di un altro sito (serve l'URL),
+  «5 stringhe rimaste» (serve screenshot).
+
+## Sicurezza 1.7.9 — audit chiuso sul banco (7/10/2026, commit locali, NON rilasciata)
+- `collaudo-sicurezza.sh` + `sicurezza.js`: 11 attacchi veri (XSS da traduzione «AI» in gettext testo/attributo, uscita
+  da uno script, titolo REST, collaboratore che scrive fuori pagina, crescita del DB da indirizzi «AJAX» inventati,
+  varianti di cache, lingua offline letta da anonimo). Con la 1.7.8 pubblicata: 6 riusciti → dopo le correzioni 11/11.
+- Correzioni: `Kses::like_original` (al salvataggio, per OGNI canale: solo i tag passano da kses, uno per uno, il testo
+  intorno resta byte per byte — `&`, «5 < 7 > 3», segnaposto `<1>`), `Kses::plain_like` solo in Gettext (il motore
+  escapa già i testi: in Fragment::text raddoppiava), ScriptData `JSON_HEX_TAG` + `\x3C`/U+2028, MetaBox limitato alle
+  frasi della pagina + stesso `paste_pairs` dell'1.7.8 (il riquadro editor aveva ancora l'abbinamento posizionale!),
+  dyn/AJAX/REST rifiutano le lingue offline agli anonimi (`public_languages`), AjaxContent raccoglie per gli anonimi solo
+  da azioni admin-ajax registrate nopriv, chiave di cache normalizzata (minuscole + decodifica), importatore universale
+  solo sul proprio host, Falang `unserialize` senza classi.
+- Gotcha: un sondaggio con `tr_sorgente` fuori da `banco_inizio` lascia la cartella del plugin diversa da
+  `tr-plugin-prima` e la suite successiva si ferma con «FERMO»: rimettere `cp -r $S/tr-plugin-prima`.
+- `collaudo-testi-casuali.sh`: lo script coi dati JSON va stampato da un mu-plugin (nel contenuto WordPress texturizza
+  le virgolette già nell'originale); aria-label sempre con lettere.
