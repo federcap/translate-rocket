@@ -54,6 +54,11 @@ class Router {
 		}
 		$this->detect_and_strip();
 		add_filter( 'home_url', array( $this, 'filter_home_url' ), 10, 2 );
+		// 7/10/2026 (Redirection: a visitor on /it/old-page/ was sent to /new-page/ in English): a redirect
+		// to one of our own pages keeps the language of the address it started from.
+		// Priority 0: Redirection hooks the same filter at 1 and, on nginx + php-cgi, sends the Location
+		// header and exits right there — whoever comes later never runs.
+		add_filter( 'wp_redirect', array( $this, 'keep_language_on_redirect' ), 0 );
 
 		if ( ! is_admin() ) {
 			add_action( 'wp_head', array( $this, 'hreflang_tags' ) );
@@ -181,6 +186,31 @@ class Router {
 	/**
 	 * The language for the current request.
 	 */
+	/**
+	 * A redirect issued while serving /it/…: an internal target without a language prefix gets
+	 * /it/ (Redirection, Safe Redirect Manager, a theme's own redirects…). Admin, login and REST
+	 * addresses, files and external hosts are left alone; so is the source language.
+	 *
+	 * @param string $location Target of the redirect.
+	 * @return string
+	 */
+	public function keep_language_on_redirect( $location ) {
+		if ( ! is_string( $location ) || '' === $location || is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return $location;
+		}
+		$lang = $this->request_language();
+		if ( '' === $lang || $this->is_default( $lang ) || ! in_array( $lang, $this->secondary_languages(), true ) ) {
+			return $location;
+		}
+		if ( preg_match( '#/(wp-admin|wp-login\.php|wp-json|xmlrpc\.php)(/|$|\?)#', $location ) ) {
+			return $location;
+		}
+		$home = (string) get_option( 'home' ); // unfiltered: home_url() already carries the language here
+		$host = (string) wp_parse_url( $home, PHP_URL_HOST );
+		$path = rtrim( (string) wp_parse_url( $home, PHP_URL_PATH ), '/' );
+		return \TranslateRocket\Frontend\Engine::localize_link( $location, $host, $path, $lang, $this->secondary_languages() );
+	}
+
 	public function current_language(): string {
 		return '' !== $this->current ? $this->current : $this->default_language();
 	}

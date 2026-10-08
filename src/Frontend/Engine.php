@@ -727,6 +727,48 @@ class Engine {
 	 *
 	 * @param string $html Serialized HTML holding the placeholders.
 	 */
+	/**
+	 * The prefixes WordPress puts before a title («Protected: », «Private: »), in the language of this
+	 * page (protected_title_format / private_title_format, localized by its language pack).
+	 *
+	 * @var string[]|null
+	 */
+	private $title_prefixes = null;
+
+	/**
+	 * «Protetto: Secret recipe» → array( 'Protetto: ', 'Secret recipe' ); null when there is no such prefix.
+	 *
+	 * @param string $text Text node, trimmed.
+	 * @return array{0:string,1:string}|null
+	 */
+	private function without_title_prefix( string $text ): ?array {
+		if ( null === $this->title_prefixes ) {
+			$this->title_prefixes = array();
+			foreach ( array( __( 'Protected: %s' ), __( 'Private: %s' ) ) as $fmt ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- WordPress's own formats, on purpose
+				$pre = (string) str_replace( '%s', '', (string) $fmt );
+				if ( '' !== trim( $pre ) ) {
+					$this->title_prefixes[] = $pre;
+				}
+			}
+			foreach ( array( 'protected_title_format', 'private_title_format' ) as $f ) {
+				$pre = (string) str_replace( '%s', '', (string) apply_filters( $f, 'protected_title_format' === $f ? __( 'Protected: %s' ) : __( 'Private: %s' ), null ) ); // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+				if ( '' !== trim( $pre ) && ! in_array( $pre, $this->title_prefixes, true ) ) {
+					$this->title_prefixes[] = $pre;
+				}
+			}
+		}
+		foreach ( $this->title_prefixes as $pre ) {
+			$p = rtrim( $pre );
+			if ( '' !== $p && 0 === strpos( $text, $p ) ) {
+				$rest = ltrim( substr( $text, strlen( $p ) ) );
+				if ( '' !== $rest && $rest !== $text && preg_match( '/\p{L}/u', $rest ) ) {
+					return array( $p . ' ', $rest );
+				}
+			}
+		}
+		return null;
+	}
+
 	private function unmask_raw_text( string $html ): string {
 		if ( empty( $this->raw_blocks ) ) {
 			return $html;
@@ -1360,6 +1402,12 @@ class Engine {
 			}
 			foreach ( $text_nodes as $node ) {
 				$candidates[] = trim( (string) $node->nodeValue );
+				// «Protetto: Titolo» in a list: the prefix is WordPress's own and localized, the title alone is
+				// the string that was collected (8/10/2026, titles of protected posts stayed untranslated).
+				$senza = $this->without_title_prefix( trim( (string) $node->nodeValue ) );
+				if ( null !== $senza ) {
+					$candidates[] = $senza[1];
+				}
 				foreach ( self::quoted( (string) $node->nodeValue ) as $q ) {
 					$candidates[] = $q;
 				}
@@ -1504,15 +1552,19 @@ class Engine {
 			// il pezzo no. Resta pero' la traduzione vecchia, se c'e', cosi' i siti che
 			// hanno gia' tradotto a pezzi non peggiorano da un aggiornamento all'altro.
 			$is_piece = isset( $unit_texts[ spl_object_id( $node ) ] );
+			$senza    = $this->without_title_prefix( $text ); // «Protected: Title» → the title alone
 			if ( $this->do_collect && ! $is_piece ) {
 				$collected[] = array(
-					'original' => $text,
+					'original' => null !== $senza ? $senza[1] : $text,
 					'type'     => 'text',
 					'context'  => null,
 				);
 			}
 			if ( isset( $map[ $text ] ) ) {
 				$node->nodeValue = str_replace( $text, $map[ $text ], (string) $node->nodeValue );
+				$changed         = true;
+			} elseif ( null !== $senza && isset( $map[ $senza[1] ] ) ) {
+				$node->nodeValue = str_replace( $text, $senza[0] . $map[ $senza[1] ], (string) $node->nodeValue );
 				$changed         = true;
 			} else {
 				$with = self::with_quoted( $text, $map );

@@ -100,3 +100,53 @@ avviso + pulsante «Usa questo profilo nel menu» (9 lingue). Prova di aggiornam
 Math, Ninja Forms, The Events Calendar, All in One SEO, MailPoet (tutti verdi). Sito: /download/ con due pulsanti (wp.org +
 `/get/translaterocket/`), versione letta dal plugin a ogni `rilascio sito` (`_ssh/pagina-download.js`), 4 frasi tradotte
 in 21 lingue (`_ssh/trad-download/`).
+
+## 1.7.10 — pubblicata 7/10/2026 ~17:35 (wp.org r3733020, GitHub d557897, sorgente c5981b0)
+- Estratti di «Ultimi articoli» non tradotti (trovato con lo scenario «sorgente spagnola», vale per ogni sito): la frase
+  finisce con il link «Read more» che WordPress localizza da sé (msgid = l'intero frammento HTML del link!), quindi su
+  /it/ la frase-unità non coincideva mai con quella raccolta. Tentata prima una mappa «etichetta → forma sorgente»
+  (tre iterazioni, scartata: la classe Gettext non è più avviata dal commit 0036e82 e il msgid non è l'etichetta);
+  soluzione finale: in `InlineText::is_empty_inline` un `<a>` con classe more-link / read-more /
+  wp-block-latest-posts__read-more / wp-block-post-excerpt__more-link è come `<time>`: `<N/>`, resta a WordPress.
+  Suite `collaudo-leggi-tutto.sh` 5/5, `collaudo-sorgente-spagnola.sh` 15/15 (ES alla radice, /it/ /en/, banner
+  cookie, incolla alla Google, switcher, hreflang, sitemap).
+- Scheda «il tuo sito, dal vivo»: indicatore di caricamento (`.is-loading` su `.trr-sw-site-wrap`).
+- Suite nuove: `collaudo-switcher-matrice.sh` + `matrice.js` 164/164 (TT5 + Hello Elementor × menu/punto/shortcode/
+  fluttuante × tendina/in linea/elenco/scorrimento/griglia + 3 posizioni nel menu); `collaudo-pulsanti-pagina.sh`
+  (ricostruita, 17/17); `collaudo-pulsanti.sh` + `pulsanti.js` (walker «ogni pulsante admin», NON ancora affidabile:
+  clic che vanno in timeout «visible, enabled and stable» pur con pulsanti fermi — da capire, non è un difetto del plugin).
+- Gotcha sonde: la tendina ha DUE `.trrocket-dd-toggle` (span-misura + button): cliccare `button.trrocket-dd-toggle`.
+- Aperti per la .11: compatibilità Essential Addons, Elementor Pro, Redirection, Jetpack (zip manca), temi classici
+  (Astra, OceanWP, GeneratePress) con lo switcher nel menu.
+
+## Serata 7/10/2026 — compatibilità (dopo la 1.7.10), verso la 1.7.11
+- 🐞 **Redirection** (2M): /it/vecchia/ → /nuova/ perdeva la lingua. Corretto: `Router::keep_language_on_redirect` su
+  `wp_redirect` a priorità **0** (Redirection aggancia a 1 e su nginx+php-cgi manda l'header ed esce), con
+  `get_option('home')` (home_url() è già prefissata dal Router: col filtro usciva /it/it/). `collaudo-redirection.sh` 9/9;
+  regressioni: canonico 8/8, Woo cliente 61/61. Commit 77545fd.
+- ✅ 16 plugin nuovi nel banco generico, tutti verdi: Essential Addons (pagina Elementor vera 26/26), CoBlocks,
+  Asgaros Forum, Restrict Content, Jetpack, Dokan, WP Recipe Maker 15/15, Shortcodes Ultimate, Strong Testimonials,
+  Easy TOC, AddToAny 20/20, Everest Forms, The SEO Framework, SEOPress, Pojo Accessibility, Genesis Blocks,
+  Essential Blocks, Booking Calendar. Kali Forms e WP User Frontend: senza modulo predefinito, da completare.
+- ✅ Temi classici col menu (Astra, OceanWP, GeneratePress) 25/25; RTL ricostruita 16/16.
+- Walker «ogni pulsante admin»: i timeout di Playwright erano clic RIUSCITI che facevano navigare la pagina (il
+  controllo «stabile» perdeva la gara con la navigazione): ora un clic seguito da un cambio di indirizzo conta come
+  riuscito. In prova.
+- ⚠️ Due volte ho sovrascritto suite esistenti con Write (collaudo-pulsanti.sh → ricostruita come
+  collaudo-pulsanti-pagina.sh; collaudo-rtl.sh → ricostruita dal log). Da ora i file in collaudi si creano solo con
+  `[ -e F ] && echo ESISTE || cat > F`.
+- Walker admin funzionante: 17/19 al penultimo giro (restava solo il chip «White» gia' selezionato: ora i comandi
+  gia' selezionati si saltano). Entra nel giro completo (collaudo-tutto, ~25 min).
+
+## Piano 1.7.12 (8/10/2026) — nuove dinamiche e nuovi plugin (la 1.7.11 = Redirection esce oggi)
+- `collaudo-core-dinamiche.sh` + `core-dinamiche.js`: Query Loop con paginazione avanzata (fetch pagina 2), blocco
+  Dettagli, commenti su /it/ (invio + redirect + comparsa), 404 e articolo con password su /it/, ricerca con e senza
+  risultati.
+- Banco generico, zip in `ricerca/ecosistema/plugin/nuovi-0810/`: Ajax Load More (con clic su «carica altri»),
+  WP Show Posts, Advanced Ads, WPCode, WP-PostRatings, Simple Lightbox, Nextend Social Login, Instagram Feed.
+- Da fare poi: Kali Forms / WP User Frontend / Events Manager con contenuto creato a mano; sito in sottocartella.
+- Notte 8/10: `collaudo-core-dinamiche.sh` 19/19 (Query Loop paginazione avanzata, Dettagli, commenti, 404, password,
+  ricerca). 🐞 corretto per la 1.7.11 (a591081): «Protetto: Titolo» nelle liste su /it/ → `Engine::without_title_prefix`
+  (prefissi di protected_title_format/private_title_format nella lingua della pagina messi da parte, titolo tradotto;
+  alla raccolta si memorizza il titolo senza prefisso). Plugin: Ajax Load More 17/17, WP Show Posts, Advanced Ads,
+  WPCode verdi.

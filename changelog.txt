@@ -1,3 +1,8 @@
+= 1.7.12 =
+* Fixed: a redirect set with Redirection (or by any plugin that uses WordPress' redirect) sent a visitor on /it/old-page/ to the new page in the source language. The language of the address the visitor started from is kept.
+* Fixed: in lists on a translated page, the titles of password-protected and private posts («Protected: …», «Private: …») stayed in the source language: WordPress localizes that prefix on every page. The prefix is now set aside and the title translated.
+* Tested with 25 more plugins (Essential Addons, Jetpack, Dokan, Ajax Load More, WPCode, Advanced Ads, SEOPress, The SEO Framework, CoBlocks, Essential Blocks, Genesis Blocks, Shortcodes Ultimate, Strong Testimonials, Easy Table of Contents, AddToAny, Everest Forms, Asgaros Forum, Restrict Content, WP Recipe Maker, Booking Calendar, Woo Variation Swatches, WP Show Posts, WP-PostRatings, Simple Lightbox, Instagram Feed…), with the language switcher in the menu of Astra, OceanWP and GeneratePress, with a right-to-left language, with a site whose source language is Spanish, and with WordPress' own Query Loop pagination, comments, password-protected posts and search on translated pages.
+
 = 1.7.10 =
 * Fixed: the excerpts of the «Latest posts» block (and any sentence ending with a «Read more» link WordPress writes itself) stayed untranslated: WordPress localizes that link on every page, so on /it/ the sentence never read like the one collected. The link now keeps its place and its words, like a date, and the sentence around it is translated.
 * Improved: the «your site, live» card of the switcher customizer shows a loading indicator instead of a white box while the page is drawn.
