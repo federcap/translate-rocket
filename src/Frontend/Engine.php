@@ -1148,9 +1148,15 @@ class Engine {
 			}
 		}
 
-		$new_path = $home_path . '/' . $current . $rest;
 		$suffix   = ( isset( $parts['query'] ) ? '?' . $parts['query'] : '' )
 			. ( isset( $parts['fragment'] ) ? '#' . $parts['fragment'] : '' );
+		// A language on a domain of its own (mywebsite.de): no /de/ prefix. A root-relative link is
+		// already right (the browser resolves it on that domain); an absolute one moves to the domain.
+		$router = Plugin::instance()->router();
+		if ( null !== $router && $router->has_own_domain( $current ) ) {
+			return isset( $parts['host'] ) ? $router->language_base( $current ) . $rest . $suffix : $href;
+		}
+		$new_path = $home_path . '/' . $current . $rest;
 		if ( isset( $parts['host'] ) ) {
 			$scheme = isset( $parts['scheme'] ) ? $parts['scheme'] . '://' : '//';
 			$port   = isset( $parts['port'] ) ? ':' . $parts['port'] : '';

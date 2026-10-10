@@ -62,6 +62,8 @@ class Settings {
 			// the sitemap and hreflang, and their URLs send visitors to the
 			// default language, while the owner keeps translating them.
 			'offline_languages'        => array(),
+			// 9/10/2026: put a language online by itself when it is fully translated (Automatic translation).
+			'auto_online'              => 0,
 			'custom_languages'         => array(),
 			'active_provider'          => '',
 			'provider_order'           => array(),

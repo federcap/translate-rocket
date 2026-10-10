@@ -576,6 +576,7 @@
 				var d = frame2.contentDocument;
 				frame2.contentWindow.scrollTo( 0, Math.max( d.documentElement.scrollHeight, d.body.scrollHeight ) );
 			} catch ( e ) {}
+			if ( foot ) { foot.classList.remove( 'is-loading' ); }
 		} );
 	}
 	// 7/10/2026 (Federico: «spunta bianco nell'attesa»): la scheda dice che sta caricando
@@ -583,7 +584,11 @@
 	function load() {
 		var on = 'menu' === where() || 'spot' === where() || footerOn();
 		card.hidden = ! on;
+		var none = document.getElementById( 'trr-sw-site-none' );
+		if ( none ) { none.hidden = on; }
 		if ( on ) { wrap.classList.add( 'is-loading' ); }
+		// 9/10/2026 (Federico): anche il fondo della pagina dice che sta caricando, non resta bianco
+		if ( foot && footerOn() ) { foot.classList.add( 'is-loading' ); }
 		if ( foot ) { foot.hidden = ! footerOn(); }
 		if ( footH ) { footH.hidden = ! footerOn(); }
 		if ( ! on ) { return; }
@@ -600,9 +605,16 @@
 				if ( mine === seq && r && r.success && r.data && r.data.url ) {
 					frame.src = r.data.url;
 					if ( frame2 && footerOn() ) { frame2.src = r.data.url + '&trr_foot=1'; }
+				} else if ( mine === seq ) {
+					// no address back: the spinner must not turn forever
+					wrap.classList.remove( 'is-loading' );
+					if ( foot ) { foot.classList.remove( 'is-loading' ); }
 				}
 			} )
-			.catch( function () {} );
+			.catch( function () {
+				wrap.classList.remove( 'is-loading' );
+				if ( foot ) { foot.classList.remove( 'is-loading' ); }
+			} );
 	}
 	function later() {
 		clearTimeout( timer );

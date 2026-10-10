@@ -67,33 +67,83 @@ class Farewell {
 	/**
 	 * The reasons offered, in the order they are shown.
 	 *
-	 * @return array<string,array{label:string,ask:string}>
+	 * @return array<string,array{label:string,ask:string,chips?:array<string,string>}>
 	 */
 	public static function reasons(): array {
 		return array(
 			'not-working'  => array(
 				'label' => __( 'I could not get it to work', 'translate-rocket' ),
 				'ask'   => __( 'What did you try, and what happened?', 'translate-rocket' ),
+				// 9/10/2026: one click, for who does not want to type (most answers had no text).
+				'chips' => array(
+					'nothing-translated' => __( 'Nothing got translated', 'translate-rocket' ),
+					'no-switcher' => __( 'The language switcher did not show up', 'translate-rocket' ),
+					'key-failed' => __( 'The AI key did not work', 'translate-rocket' ),
+					'page-error' => __( 'A translated page was blank or showed an error', 'translate-rocket' ),
+					'no-start' => __( 'I could not find where to start', 'translate-rocket' ),
+				),
 			),
 			'quality'      => array(
 				'label' => __( 'The translations were not good enough', 'translate-rocket' ),
 				'ask'   => __( 'Which language, and what was wrong with it?', 'translate-rocket' ),
+				// 9/10/2026: one click, for who does not want to type (most answers had no text).
+				'chips' => array(
+					'stayed-original' => __( 'Some text stayed in the original language', 'translate-rocket' ),
+					'wrong-meaning' => __( 'The meaning was wrong', 'translate-rocket' ),
+					'layout' => __( 'The layout or formatting broke', 'translate-rocket' ),
+					'names' => __( 'Names or brands got translated', 'translate-rocket' ),
+				),
 			),
 			'broke'        => array(
 				'label' => __( 'It broke something on my site', 'translate-rocket' ),
 				'ask'   => __( 'What broke? This is the one I most want to hear about.', 'translate-rocket' ),
+				// 9/10/2026: one click, for who does not want to type (most answers had no text).
+				'chips' => array(
+					'design' => __( 'The design or layout', 'translate-rocket' ),
+					'builder' => __( 'My page builder (Elementor, Divi…)', 'translate-rocket' ),
+					'shop' => __( 'The shop or the checkout', 'translate-rocket' ),
+					'seo' => __( 'SEO, addresses or redirects', 'translate-rocket' ),
+					'slow' => __( 'The site got slow', 'translate-rocket' ),
+					'errors' => __( 'Errors or a blank page', 'translate-rocket' ),
+				),
 			),
 			'missing'      => array(
 				'label' => __( 'Something I need is missing', 'translate-rocket' ),
 				'ask'   => __( 'What were you looking for?', 'translate-rocket' ),
+				// 9/10/2026: one click, for who does not want to type (most answers had no text).
+				'chips' => array(
+					'language' => __( 'A language', 'translate-rocket' ),
+					'auto' => __( 'Automatic translation of new content', 'translate-rocket' ),
+					'domains' => __( 'A domain per language', 'translate-rocket' ),
+					'woo' => __( 'WooCommerce', 'translate-rocket' ),
+					'import' => __( 'Import from another plugin', 'translate-rocket' ),
+					'media' => __( 'Translated images', 'translate-rocket' ),
+				),
 			),
 			'complicated'  => array(
 				'label' => __( 'Too complicated to set up', 'translate-rocket' ),
 				'ask'   => __( 'Where did you get stuck?', 'translate-rocket' ),
+				// 9/10/2026: one click, for who does not want to type (most answers had no text).
+				'chips' => array(
+					'too-many' => __( 'Too many settings', 'translate-rocket' ),
+					'keys' => __( 'The AI keys', 'translate-rocket' ),
+					'start' => __( 'Where to start', 'translate-rocket' ),
+					'switcher' => __( 'Placing the language switcher', 'translate-rocket' ),
+					'words' => __( 'The wording was unclear', 'translate-rocket' ),
+				),
 			),
 			'other-plugin' => array(
 				'label' => __( 'I am switching to another plugin', 'translate-rocket' ),
 				'ask'   => __( 'Which one, and what does it do better?', 'translate-rocket' ),
+				// 9/10/2026: one click, for who does not want to type (most answers had no text).
+				'chips' => array(
+					'translatepress' => 'TranslatePress',
+					'weglot' => 'Weglot',
+					'wpml' => 'WPML',
+					'polylang' => 'Polylang',
+					'gtranslate' => 'GTranslate',
+					'another' => __( 'Another one', 'translate-rocket' ),
+				),
 			),
 			'temporary'    => array(
 				'label' => __( 'Only turning it off for a moment', 'translate-rocket' ),
@@ -131,11 +181,43 @@ class Farewell {
 			set_transient( 'trrocket_conta_frasi', $strings, DAY_IN_SECONDS );
 		}
 		$strings = (int) $strings;
-		$provider = '';
-		foreach ( array( 'provider', 'ai_provider', 'engine' ) as $k ) {
-			if ( ! empty( $settings[ $k ] ) && is_string( $settings[ $k ] ) ) {
-				$provider = $settings[ $k ];
-				break;
+		// 9/10/2026: the engine lives in «active_provider»; the old keys read here never existed, so
+		// every answer said «provider: (empty)» and we could not tell who left without a key. Only
+		// the NAMES of the engines that have a key are sent, never a key.
+		$provider = (string) ( $settings['active_provider'] ?? '' );
+		$con_chiave = array();
+		foreach ( (array) ( $settings['providers'] ?? array() ) as $pid => $conf ) {
+			if ( is_array( $conf ) && ! empty( $conf['api_key'] ) ) {
+				$con_chiave[] = sanitize_key( (string) $pid );
+			}
+		}
+		$provider = '' !== $provider ? $provider : 'none';
+		// 9/10/2026: what the first day looked like. Almost everybody leaves on day 0, so minutes,
+		// not days; where the switcher went; how much got translated; the theme and the other
+		// active plugins (folder names only), to reproduce a conflict. Shown in full in the box.
+		$tradotte = get_transient( 'trrocket_conta_tradotte' );
+		if ( false === $tradotte ) {
+			$tradotte = 0;
+			foreach ( (array) ( $settings['target_languages'] ?? array() ) as $code ) {
+				$tradotte += \TranslateRocket\Strings::translated_count( (string) $code );
+			}
+			set_transient( 'trrocket_conta_tradotte', $tradotte, HOUR_IN_SECONDS );
+		}
+		$sw   = (array) ( $settings['switcher'] ?? array() );
+		$dove = ! empty( $sw['in_menu'] ) ? 'menu' : ( ! empty( $sw['in_spot'] ) ? 'spot' : ( ! empty( $sw['floating'] ) ? 'floating' : 'manual' ) );
+		foreach ( (array) ( $settings['switchers'] ?? array() ) as $prof ) {
+			if ( is_array( $prof ) && ! empty( $prof['in_menu'] ) ) {
+				$dove = 'menu';
+			}
+		}
+		if ( ! empty( $sw['footer_row'] ) ) {
+			$dove .= '+footer';
+		}
+		$altri = array();
+		foreach ( (array) get_option( 'active_plugins', array() ) as $pl ) {
+			$cartella = strtok( (string) $pl, '/' );
+			if ( 'translate-rocket' !== $cartella ) {
+				$altri[] = sanitize_key( (string) $cartella );
 			}
 		}
 		return array(
@@ -148,6 +230,12 @@ class Farewell {
 			'wizard'    => get_option( 'trrocket_wizard_done' ) ? 'done' : 'not done',
 			'days'      => (int) floor( ( time() - (int) get_option( Growth::INSTALLED, time() ) ) / DAY_IN_SECONDS ),
 			'locale'    => get_locale(),
+			'keys'      => $con_chiave ? implode( ',', $con_chiave ) : 'none',
+			'translated' => (int) $tradotte,
+			'switcher'  => $dove,
+			'minutes'   => (int) floor( ( time() - (int) get_option( Growth::INSTALLED, time() ) ) / MINUTE_IN_SECONDS ),
+			'theme'     => sanitize_key( (string) get_stylesheet() ),
+			'plugins'   => implode( ',', array_slice( $altri, 0, 40 ) ),
 		);
 	}
 
@@ -172,28 +260,36 @@ class Farewell {
 				<div class="trr-bye-list">
 					<?php foreach ( self::reasons() as $key => $r ) : ?>
 						<label class="trr-bye-item">
-							<input type="radio" name="trr-bye-reason" value="<?php echo esc_attr( $key ); ?>" data-ask="<?php echo esc_attr( $r['ask'] ); ?>">
+							<input type="radio" name="trr-bye-reason" value="<?php echo esc_attr( $key ); ?>" data-ask="<?php echo esc_attr( $r['ask'] ); ?>" data-chips="<?php echo esc_attr( (string) wp_json_encode( $r['chips'] ?? array() ) ); ?>">
 							<span><?php echo esc_html( $r['label'] ); ?></span>
 						</label>
 					<?php endforeach; ?>
 				</div>
+				<div class="trr-bye-chips" style="display:none"></div>
 				<p class="trr-bye-ask" style="display:none"><label for="trr-bye-text" id="trr-bye-asklabel"></label></p>
 				<textarea id="trr-bye-text" rows="3" style="display:none" class="large-text"></textarea>
+				<p class="trr-bye-mail" style="display:none">
+					<label for="trr-bye-email"><?php esc_html_e( 'Want an answer? Your e-mail (optional):', 'translate-rocket' ); ?></label>
+					<input type="email" id="trr-bye-email" class="regular-text" autocomplete="email" maxlength="120">
+				</p>
+				<?php // 9/10/2026 (Federico: «scrivi supporto rapido, spieghiamo che il supporto è tempestivo»). ?>
+				<p class="trr-bye-help">
+					<strong><?php esc_html_e( 'Fast support, free.', 'translate-rocket' ); ?></strong>
+					<?php esc_html_e( 'If something does not work, the developer answers quickly, usually the same day, and fixes it in the next update.', 'translate-rocket' ); ?>
+					<a href="https://wordpress.org/support/plugin/translate-rocket/#new-topic-0" target="_blank" rel="noopener"><?php esc_html_e( 'Ask for help instead', 'translate-rocket' ); ?></a>
+				</p>
 				<p class="trr-bye-note">
 					<?php esc_html_e( '«Send and deactivate» sends your answer to the developer at translaterocket.com, anonymously. «Skip and deactivate» sends nothing.', 'translate-rocket' ); ?>
 				</p>
 				<details class="trr-bye-what">
 					<summary><?php esc_html_e( 'Exactly what is sent', 'translate-rocket' ); ?></summary>
-					<p><?php esc_html_e( 'The reason you picked, what you wrote, and these numbers. Nothing else: no site address, no name, no e-mail, no page or translation content. Your IP address is not stored.', 'translate-rocket' ); ?></p>
+					<p><?php esc_html_e( 'The reason and the quick answers you picked, what you wrote, your e-mail only if you typed it, your browser type, and these numbers. Nothing else: no site address, no name, no page or translation content. Your IP address is not stored.', 'translate-rocket' ); ?></p>
 					<pre class="trr-bye-ctx"><?php echo esc_html( $line ); ?></pre>
 				</details>
 				<p class="trr-bye-buttons">
 					<button type="button" class="button button-primary" id="trr-bye-copy" disabled><?php esc_html_e( 'Send and deactivate', 'translate-rocket' ); ?></button>
 					<button type="button" class="button" id="trr-bye-skip"><?php esc_html_e( 'Skip and deactivate', 'translate-rocket' ); ?></button>
 					<button type="button" class="button-link trr-bye-cancel" id="trr-bye-cancel"><?php esc_html_e( 'Cancel', 'translate-rocket' ); ?></button>
-				</p>
-				<p class="trr-bye-forum">
-					<a href="https://wordpress.org/support/plugin/translate-rocket/#new-topic-0" target="_blank" rel="noopener"><?php esc_html_e( 'Open the support forum in a new tab', 'translate-rocket' ); ?></a>
 				</p>
 			</div>
 		</div>
@@ -210,8 +306,16 @@ class Farewell {
 			.trr-bye-ctx{background:#f6f7f7;padding:8px;border-radius:4px;font-size:12px;white-space:pre-wrap;margin:8px 0 0}
 			.trr-bye-buttons{margin:16px 0 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 			.trr-bye-cancel{color:#50575e;text-decoration:underline}
-			.trr-bye-forum{margin:10px 0 0;font-size:13px}
-			@media (prefers-color-scheme:dark){.trr-bye-card{background:#1d2327;color:#f0f0f1}.trr-bye-lead,.trr-bye-note,.trr-bye-what,.trr-bye-cancel{color:#c3c4c7}.trr-bye-ctx{background:#2c3338}}
+			.trr-bye-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+			.trr-bye-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #c3c4c7;border-radius:16px;padding:4px 10px;cursor:pointer;font-size:13px;line-height:1.4}
+			.trr-bye-chip input{margin:0}
+			.trr-bye-chip:has(input:checked){background:#f0f6fc;border-color:#2271b1}
+			.trr-bye-mail{margin:10px 0 0}
+			.trr-bye-mail label{display:block;margin-bottom:4px}
+			.trr-bye-mail input{width:100%;max-width:100%}
+			.trr-bye-help{margin:14px 0 0;padding:8px 12px;background:#edfaef;border-left:4px solid #00a32a;font-size:13px}
+			.trr-bye-help a{font-weight:600}
+			@media (prefers-color-scheme:dark){.trr-bye-card{background:#1d2327;color:#f0f0f1}.trr-bye-lead,.trr-bye-note,.trr-bye-what,.trr-bye-cancel{color:#c3c4c7}.trr-bye-ctx{background:#2c3338}.trr-bye-help{background:#1e3a26}.trr-bye-chip:has(input:checked){background:#1d3a52}}
 		</style>
 		<script>
 		( function () {
@@ -224,6 +328,9 @@ class Farewell {
 				text = document.getElementById( 'trr-bye-text' ),
 				ask = document.querySelector( '.trr-bye-ask' ),
 				askLabel = document.getElementById( 'trr-bye-asklabel' ),
+				chipsBox = box.querySelector( '.trr-bye-chips' ),
+				mail = box.querySelector( '.trr-bye-mail' ),
+				email = document.getElementById( 'trr-bye-email' ),
 				go = '';
 
 			// Our row's Deactivate link, and only ours.
@@ -246,6 +353,21 @@ class Farewell {
 				ask.style.display = q ? 'block' : 'none';
 				text.style.display = q ? 'block' : 'none';
 				askLabel.textContent = q || '';
+				// the quick answers of this reason, as small boxes to tick
+				var chips = {};
+				try { chips = JSON.parse( e.target.getAttribute( 'data-chips' ) || '{}' ) || {}; } catch ( err ) {}
+				chipsBox.innerHTML = '';
+				Object.keys( chips ).forEach( function ( k ) {
+					var l = document.createElement( 'label' ), c = document.createElement( 'input' );
+					l.className = 'trr-bye-chip';
+					c.type = 'checkbox';
+					c.value = k;
+					l.appendChild( c );
+					l.appendChild( document.createTextNode( chips[ k ] ) );
+					chipsBox.appendChild( l );
+				} );
+				chipsBox.style.display = Object.keys( chips ).length ? 'flex' : 'none';
+				mail.style.display = q ? 'block' : 'none';
 			} );
 
 			function remember( then, send ) {
@@ -256,6 +378,8 @@ class Farewell {
 				body.append( 'reason', picked ? picked.value : '' );
 				body.append( 'text', text.value || '' );
 				body.append( 'send', send ? '1' : '0' );
+				body.append( 'details', Array.prototype.map.call( chipsBox.querySelectorAll( 'input:checked' ), function ( c ) { return c.value; } ).join( ',' ) );
+				body.append( 'email', email.value || '' );
 				// Once only: the answer and the 4-second safety net used to BOTH run it, so the
 				// deactivation page opened twice (6/10/2026, seen by collaudo-addio).
 				var fatto = false;
@@ -313,7 +437,28 @@ class Farewell {
 
 		$reason = isset( $_POST['reason'] ) ? sanitize_key( wp_unslash( $_POST['reason'] ) ) : '';
 		$text   = isset( $_POST['text'] ) ? sanitize_textarea_field( wp_unslash( $_POST['text'] ) ) : '';
-		if ( array_key_exists( $reason, self::reasons() ) ) {
+		$motivi = self::reasons();
+		if ( array_key_exists( $reason, $motivi ) ) {
+			// 9/10/2026: the quick answers (only the ones this reason offers), the e-mail if typed,
+			// the browser family and the first-day numbers go at the top of the text, so even the
+			// receiver on translaterocket.com that only knows «text» keeps them.
+			$scelte = array();
+			$dati   = isset( $_POST['details'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_POST['details'] ) ) ) : array();
+			foreach ( $dati as $d ) {
+				$d = sanitize_key( $d );
+				if ( isset( $motivi[ $reason ]['chips'][ $d ] ) ) {
+					$scelte[] = $d;
+				}
+			}
+			$mail   = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+			$ua     = isset( $_SERVER['HTTP_USER_AGENT'] ) ? (string) $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$ctx    = self::context();
+			$testa  = '[details: ' . ( $scelte ? implode( ', ', $scelte ) : '-' ) . ']'
+				. ' [browser: ' . self::browser( $ua ) . ']'
+				. ' [minutes: ' . $ctx['minutes'] . ' | translated: ' . $ctx['translated'] . ' | switcher: ' . $ctx['switcher'] . ' | keys: ' . $ctx['keys'] . ' | theme: ' . $ctx['theme'] . ']'
+				. ( '' !== $mail && is_email( $mail ) ? ' [reply to: ' . $mail . ']' : '' )
+				. "\n[plugins: " . mb_substr( (string) $ctx['plugins'], 0, 600 ) . ']';
+			$inviato = $testa . ( '' !== $text ? "\n\n" . $text : '' );
 			update_option(
 				self::ANSWER,
 				array(
@@ -339,8 +484,11 @@ class Farewell {
 						'body'    => wp_json_encode(
 							array(
 								'reason'  => $reason,
-								'text'    => mb_substr( $text, 0, 2000 ),
-								'context' => self::context(),
+								'text'    => mb_substr( $inviato, 0, 2000 ),
+								'context' => $ctx,
+								'details' => $scelte,
+								'email'   => is_email( $mail ) ? $mail : '',
+								'browser' => self::browser( $ua ),
 							)
 						),
 					)
@@ -348,5 +496,25 @@ class Farewell {
 			}
 		}
 		wp_send_json_success();
+	}
+
+	/**
+	 * The browser family only, never the whole user agent (9/10/2026: «J'utilise firefox» — was
+	 * it the browser?).
+	 *
+	 * @param string $ua User agent.
+	 */
+	public static function browser( string $ua ): string {
+		$fam = 'other';
+		if ( false !== strpos( $ua, 'Edg/' ) ) {
+			$fam = 'edge';
+		} elseif ( false !== strpos( $ua, 'Firefox/' ) ) {
+			$fam = 'firefox';
+		} elseif ( false !== strpos( $ua, 'Chrome/' ) ) {
+			$fam = 'chrome';
+		} elseif ( false !== strpos( $ua, 'Safari/' ) ) {
+			$fam = 'safari';
+		}
+		return $fam . ( preg_match( '/Mobile|Android|iPhone|iPad/', $ua ) ? '-mobile' : '' );
 	}
 }

@@ -1,3 +1,17 @@
+= 1.8.0 =
+* New: «Automatic translation», one page to switch it on and watch it work. A bar for each language moves by itself while the page is open, an hourglass marks the language being translated right now, the engines are one list in the order really used, and a language can go online by itself once it is fully translated (it waits until the whole site has been read).
+* New: «Everything you can do — all free» at the top of the plugin: what TranslateRocket does on your site, with its state and the page where it is set, and what the free add-on Labs adds.
+* New: «Test this text» in every AI provider: a short sentence of your choice, translated with the saved key (it costs almost nothing). A green «Tested» tick stays until the key or the model changes.
+* New: free setup on request — ask from inside the plugin and we configure TranslateRocket on your site.
+* Improved: the bar and percentage of each language open its translations; the Translations page shows a small progress bar under every flag; «Published, or still being translated?» and «Progress» are now one table.
+* Improved: the language in a block-theme header menu is one button, as in the preview — the arrow inside, no underline.
+* Improved: Cloudflare Workers AI finds the Account ID from the token, and says so plainly when the one typed is wrong; a free provider that used up today's requests says so, instead of «add the API key».
+* Improved: the loading indicator of the switcher's live previews, header and bottom of the page, with words; a note explains when the live preview is not shown, and where the row at the bottom of every page is set.
+* Improved: when the browser cannot translate a page, the help suggests a free Groq key (the free Gemini plan may not be offered to users in the EU and UK).
+* Improved: the question on deactivation offers one-click answers, an optional e-mail for a reply, and says that support is fast and free.
+* Fixed: a language with nothing collected yet showed «100%».
+* For developers: the filters trrocket_language_base and trrocket_language_from_host let an add-on give a language a domain of its own; trrocket_auto_engines, trrocket_auto_status and trrocket_auto_save connect it to «Automatic translation».
+
 = 1.7.12 =
 * Fixed: a redirect set with Redirection (or by any plugin that uses WordPress' redirect) sent a visitor on /it/old-page/ to the new page in the source language. The language of the address the visitor started from is kept.
 * Fixed: in lists on a translated page, the titles of password-protected and private posts («Protected: …», «Private: …») stayed in the source language: WordPress localizes that prefix on every page. The prefix is now set aside and the title translated.

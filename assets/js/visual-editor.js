@@ -2408,8 +2408,8 @@
 					+ '<p class="trrocket-ve-bulk-help-pc"></p>';
 				box.querySelector( 'p' ).textContent = VE.i18n.brHelpTxt || '';
 				var gem = box.querySelector( '.trrocket-ve-bulk-help-gem' );
-				gem.textContent = ( VE.i18n.brHelpGemini || 'Get a free Gemini key' ) + ' ↗';
-				gem.href = VE.geminiGuide || 'https://translaterocket.com/api-keys/gemini-api-key/';
+				gem.textContent = ( VE.i18n.brHelpGemini || 'Get a free Groq key' ) + ' ↗';
+				gem.href = VE.geminiGuide || VE.aiUrl || '#';
 				box.querySelector( '.trrocket-ve-bulk-help-tip' ).textContent = VE.i18n.brHelpGeminiTip || '';
 				var ai = box.querySelector( '.trrocket-ve-bulk-help-ai' );
 				ai.textContent = VE.i18n.brHelpAi || 'AI Translation';
@@ -2482,7 +2482,10 @@
 				progBox.hidden = true;
 				msg.textContent = fail ? fmt2( VE.i18n.brDone || '%1$d · %2$d', ok, fail ) : ( VE.i18n.bulkDone || '%d translated' ).replace( '%d', String( ok ) );
 				try { updateProgress(); } catch ( e ) {}
-				if ( 0 === ok && fail > 0 ) { aiutoBrowser( 'fallito' ); } else if ( fail > 0 ) { aiutoBrowser( 'fallito' ); } else { nascondiAiuto(); }
+				// 10/10/2026 (collaudo-editor-vero, Chrome 154): 12 sentences translated and 1 not showed «Your browser could
+				// not translate this page». The box with the other ways is for when NOTHING was translated; otherwise the line
+				// «12 translated · 1 could not be translated» says it all.
+				if ( 0 === ok && fail > 0 ) { aiutoBrowser( 'fallito' ); } else { nascondiAiuto(); }
 			}
 			prendiTraduttore().then( function () {
 				pronto = true;

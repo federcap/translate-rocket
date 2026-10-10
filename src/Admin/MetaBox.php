@@ -152,7 +152,7 @@ class MetaBox {
 				'code'  => $code,
 				'label' => Languages::label( $code ), // no emoji flag: on Windows it reads «GB»
 			);
-			$edit_urls[ $code ] = add_query_arg( 'trr-edit', '1', $base . '/' . $code . $path );
+			$edit_urls[ $code ] = add_query_arg( 'trr-edit', '1', $base . '/' . $code . $path ); // main domain: the administrator is logged in there
 		}
 
 		echo '<div id="trrocket-panel" data-post="' . (int) $post->ID . '"'

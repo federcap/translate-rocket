@@ -211,7 +211,8 @@ class VisualEditor {
 				// Dove mandare chi il traduttore del browser non ce l'ha: la guida alla chiave
 				// Gemini gratuita e la schermata dove incollarla.
 				'aiUrl'    => admin_url( 'admin.php?page=translate-rocket-ai' ),
-				'geminiGuide' => 'https://translaterocket.com/api-keys/gemini-api-key/',
+				// 9/10/2026: Groq, like the setup wizard. The free Gemini plan may not be offered to users in the EU/UK.
+				'geminiGuide' => admin_url( 'admin.php?page=translate-rocket-ai' ),
 				// Labs (free, on request) translates from the server: any browser, phones too.
 				// Not offered when Labs is already installed.
 				'labsUrl'  => defined( 'TRRLABS_VERSION' ) ? '' : 'https://translaterocket.com/labs/?utm_source=plugin',
@@ -265,8 +266,8 @@ class VisualEditor {
 					'brHelpTit'      => __( 'Your browser could not translate this page', 'translate-rocket' ),
 					'brHelpSlow'     => __( 'This is taking longer than it should', 'translate-rocket' ),
 					'brHelpTxt'      => __( 'The free translator built into the browser works only in recent Chrome and Edge on a computer with enough memory and disk space. Here are three other ways, all free:', 'translate-rocket' ),
-					'brHelpGemini'   => __( 'Get a free Gemini key — 5 minutes, no card', 'translate-rocket' ),
-					'brHelpGeminiTip' => __( 'Step-by-step guide. Then paste the key in AI Translation and translate everything with one click.', 'translate-rocket' ),
+					'brHelpGemini'   => __( 'Get a free Groq key — 2 minutes, no card', 'translate-rocket' ),
+					'brHelpGeminiTip' => __( 'The AI Translation page shows how: sign in with Google, create the key, paste it. Then translate everything with one click.', 'translate-rocket' ),
 					'brHelpPaste'    => __( 'Copy → Google Translate → paste back', 'translate-rocket' ),
 					'brHelpPasteTip' => __( 'Right below: copy the text, translate it in Google Translate, paste it back.', 'translate-rocket' ),
 					'brHelpPc'       => __( 'Or open this page in the latest Chrome or Edge on a computer.', 'translate-rocket' ),

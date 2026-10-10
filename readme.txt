@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.12
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -96,7 +96,7 @@ This plugin can connect to third-party services, but only with your involvement:
 * **Google Translate (manual, always available).** Every editor offers a per-phrase link and a copy-paste box that open Google Translate (translate.google.com) prefilled, so you translate on Google's own site and paste the result back. This is just a convenience link — your browser, not the plugin, contacts Google. Service: https://translate.google.com , terms: https://policies.google.com/terms , privacy: https://policies.google.com/privacy
 * **Optional one-click Google auto-fill (off by default).** A site owner can opt in (the `TRROCKET_AUTO_GOOGLE` constant / the `trrocket_auto_google` filter) to let the server fetch a translation from Google's free endpoint with one click. This uses an undocumented endpoint and is best-effort, so it is disabled out of the box and the plugin never calls it on its own. For dependable automatic translation use the official AI providers below.
 * **translaterocket.com support ticket (optional, on request).** The Diagnostics screen has a form that opens a support ticket for you. It sends nothing until you fill it in and press Send, and what it sends is exactly what the page shows you: your name, your email address (so the answer can reach you), your subject and message, your site address and the plugin version, plus the technical report if you leave that box ticked. The report never contains API keys. To prove the request really comes from your site and not from a spam robot, the support site then makes one request back to your site's home URL with a one-time token. Nothing else is transmitted, nothing is stored on your site, and if you would rather not use it the same page still offers the copy-and-paste route. Service: https://translaterocket.com , privacy: https://translaterocket.com/privacy-policy/
-* **translaterocket.com deactivation feedback (optional, only if you press Send).** When you deactivate the plugin, a box asks why. The answer is saved on your own site. Only if you press «Send and deactivate» is it sent to https://translaterocket.com/wp-json/translaterocket/v1/farewell : the reason you picked, what you typed, and the numbers shown in the box (plugin, WordPress and PHP versions, number of languages and of detected sentences, the translation provider in use, whether the setup wizard was completed, days since install, your admin language). No site address, no name, no e-mail, no page or translation content; the IP address is not stored. «Skip and deactivate» sends nothing, and the `trrocket_farewell_send` filter turns sending off entirely. Service: https://translaterocket.com , privacy: https://translaterocket.com/privacy-policy/
+* **translaterocket.com deactivation feedback (optional, only if you press Send).** When you deactivate the plugin, a box asks why. The answer is saved on your own site. Only if you press «Send and deactivate» is it sent to https://translaterocket.com/wp-json/translaterocket/v1/farewell : the reason and the quick answers you picked, what you typed, your e-mail only if you typed it to get a reply, your browser type, and the details shown in the box (plugin, WordPress and PHP versions, number of languages and of detected and translated sentences, the translation provider in use and which providers have a key — never the keys themselves —, where the language switcher is placed, whether the setup wizard was completed, minutes and days since install, your admin language, the active theme and the folder names of the other active plugins). No site address, no name, no page or translation content; the IP address is not stored. «Skip and deactivate» sends nothing, and the `trrocket_farewell_send` filter turns sending off entirely. Service: https://translaterocket.com , privacy: https://translaterocket.com/privacy-policy/
 * **translaterocket.com (optional).** The "Help & Feedback", "Request customization", "Send feedback" and "Get tips & updates" links open translaterocket.com in your browser with your site's domain in the URL. Nothing is sent automatically — these are links you choose to click. Service: https://translaterocket.com , privacy: https://translaterocket.com/privacy-policy/
 
 == Installation ==
@@ -206,6 +206,20 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 5. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.0 =
+* New: «Automatic translation», one page to switch it on and watch it work. A bar for each language moves by itself while the page is open, an hourglass marks the language being translated right now, the engines are one list in the order really used, and a language can go online by itself once it is fully translated (it waits until the whole site has been read).
+* New: «Everything you can do — all free» at the top of the plugin: what TranslateRocket does on your site, with its state and the page where it is set, and what the free add-on Labs adds.
+* New: «Test this text» in every AI provider: a short sentence of your choice, translated with the saved key (it costs almost nothing). A green «Tested» tick stays until the key or the model changes.
+* New: free setup on request — ask from inside the plugin and we configure TranslateRocket on your site.
+* Improved: the bar and percentage of each language open its translations; the Translations page shows a small progress bar under every flag; «Published, or still being translated?» and «Progress» are now one table.
+* Improved: the language in a block-theme header menu is one button, as in the preview — the arrow inside, no underline.
+* Improved: Cloudflare Workers AI finds the Account ID from the token, and says so plainly when the one typed is wrong; a free provider that used up today's requests says so, instead of «add the API key».
+* Improved: the loading indicator of the switcher's live previews, header and bottom of the page, with words; a note explains when the live preview is not shown, and where the row at the bottom of every page is set.
+* Improved: when the browser cannot translate a page, the help suggests a free Groq key (the free Gemini plan may not be offered to users in the EU and UK).
+* Improved: the question on deactivation offers one-click answers, an optional e-mail for a reply, and says that support is fast and free.
+* Fixed: a language with nothing collected yet showed «100%».
+* For developers: the filters trrocket_language_base and trrocket_language_from_host let an add-on give a language a domain of its own; trrocket_auto_engines, trrocket_auto_status and trrocket_auto_save connect it to «Automatic translation».
 
 = 1.7.12 =
 * Fixed: a redirect set with Redirection (or by any plugin that uses WordPress' redirect) sent a visitor on /it/old-page/ to the new page in the source language. The language of the address the visitor started from is kept.
@@ -329,6 +343,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.0 =
+New «Automatic translation» page with live progress, a free/Labs overview, a test button for every AI provider, free setup on request; many fixes found on a large real site. Recommended.
 
 = 1.7.12 =
 Redirects keep the visitor's language (Redirection and others); titles of protected posts translated in lists; 25 more plugins and 3 classic themes tested. Recommended.

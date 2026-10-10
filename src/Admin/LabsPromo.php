@@ -244,6 +244,8 @@ class LabsPromo {
 						$feat( '🤝', __( 'External collaborators', 'translate-rocket' ), __( 'A secret link for a translator or a reviewer: no WordPress account, only the pages and languages you choose, and their work waits for your approval.', 'translate-rocket' ) );
 						$feat( '💎', __( 'Polish with AI', 'translate-rocket' ), __( 'With an AI key, a little of the free engines\' work is translated again every day, so quality grows over time.', 'translate-rocket' ) );
 						$feat( '📬', __( 'A weekly report', 'translate-rocket' ), __( 'Every Monday, a short e-mail: what was translated and what is still waiting.', 'translate-rocket' ) );
+						$feat( '🌐', __( 'A domain for each language', 'translate-rocket' ), __( 'mysite.de instead of mysite.com/de/: links, switcher, hreflang and sitemap follow, old addresses move with a permanent redirect.', 'translate-rocket' ) );
+						$feat( '🧑‍💻', __( 'Remote help, without your password', 'translate-rocket' ), __( 'Let TranslateRocket support set up and fix your translations: only the translation tools, for 1 to 7 days, with a log of what was done and a Revoke button.', 'translate-rocket' ) );
 						$feat( '🔄', __( 'Updates itself', 'translate-rocket' ), __( 'New versions appear in Plugins, like any other update.', 'translate-rocket' ) );
 						$feat( '🛟', __( 'Pauses on its own', 'translate-rocket' ), __( 'If a service asks to slow down, Labs pauses it and the next engine takes over.', 'translate-rocket' ) );
 						?>

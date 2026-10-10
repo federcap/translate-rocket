@@ -309,7 +309,16 @@ class Switcher {
 			$top .= 'border-radius:' . self::css_len( $radius ) . '!important;';
 		}
 		if ( '' !== $top ) {
-			$out .= '.trrocket-lang-current>a,.trrocket-lang-current>button,.trrocket-lang-current>.wp-block-navigation-item__content{' . $top . '}';
+			$out .= '.trrocket-lang-current>a,.trrocket-lang-current>.wp-block-navigation-item__content{' . $top . 'text-decoration:none!important;}';
+			// 9/10/2026 (Federico: «c'è sempre questa differenza tra live e preview»): in the block
+			// Navigation the item is a link AND an arrow button side by side. Painting both made two
+			// boxes (the arrow in its own green circle), tight and underlined. Like the preview, the
+			// whole <li> is the button, with the arrow inside; the link and the arrow stay bare.
+			// Only the <li>: WordPress gives the same classes to the <ul> that opens under it.
+			$nav   = 'li.trrocket-lang-current.wp-block-navigation-submenu';
+			$out  .= $nav . '{' . $top . 'padding:6px 12px!important;gap:6px;}';
+			$out  .= $nav . '>a,' . $nav . '>button,' . $nav . '>.wp-block-navigation-item__content{background:none!important;border:0!important;border-radius:0!important;padding:0!important;text-decoration:none!important;}';
+			$out  .= $nav . '>.wp-block-navigation__submenu-icon{margin-left:0!important;background:none!important;}';
 		}
 		return $out;
 	}

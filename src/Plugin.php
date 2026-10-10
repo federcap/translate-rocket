@@ -178,6 +178,7 @@ final class Plugin {
 			// 1.7.4: once, to whoever still has the floating switcher: «put the languages in your menu» (6/10/2026).
 			( new \TranslateRocket\Admin\MenuNews() )->register();
 			( new \TranslateRocket\Admin\LabsPromo() )->register();
+			( new \TranslateRocket\Admin\AutoPage() )->register(); // 9/10/2026: «Automatic translation»
 			// La lingua delle schermate del plugin, scelta da ciascun utente (3/10/2026).
 			( new \TranslateRocket\Admin\PluginLanguage() )->register();
 			// Una domanda sola a chi disattiva: e' l'unico modo di sapere perche' se ne va.

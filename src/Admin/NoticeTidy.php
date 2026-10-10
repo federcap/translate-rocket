@@ -95,6 +95,7 @@ class NoticeTidy {
 		if ( ! $root ) {
 			return $html;
 		}
+		$sempre  = array();
 		$own     = array();
 		$foreign = array();
 		$rest    = '';
@@ -107,6 +108,12 @@ class NoticeTidy {
 			$tag = strtolower( $node->nodeName );
 			if ( in_array( $tag, array( 'script', 'style', 'template' ), true ) ) {
 				$rest .= $doc->saveHTML( $node );
+				continue;
+			}
+			// 9/10/2026: a notice marked «trr-always» (who else can enter the site: Labs support access)
+			// is never folded nor replaced by another one.
+			if ( false !== strpos( ' ' . $node->getAttribute( 'class' ) . ' ', ' trr-always ' ) ) {
+				$sempre[] = $doc->saveHTML( $node );
 				continue;
 			}
 			if ( $node->hasAttribute( 'data-trrocket' ) ) {
@@ -136,6 +143,7 @@ class NoticeTidy {
 		if ( '' === $out && $own ) {
 			$out = reset( $own );
 		}
+		$out = implode( '', $sempre ) . $out;
 		// «Put the languages in your menu» is shown once, and must not hide the notice that matters
 		// on that screen (changed pages, the review on Next steps): it comes next to it.
 		if ( isset( $own['menu-news'] ) && false === strpos( $out, 'data-trrocket="menu-news"' ) ) {

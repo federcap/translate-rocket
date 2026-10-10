@@ -218,7 +218,7 @@ class Sitemap {
 				}
 			}
 		}
-		return $home . '/' . $lang . $path;
+		return \TranslateRocket\Plugin::instance()->router()->language_base( $lang ) . $path; // home/xx or the language's own domain
 	}
 
 	/**

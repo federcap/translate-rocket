@@ -267,6 +267,65 @@ class Router {
 	}
 
 	/**
+	 * Where a language lives: «https://site.com» for the source language, «https://site.com/de» for
+	 * the others — or, when an add-on maps a language to a domain of its own (8/10/2026, a user asked
+	 * for mywebsite.de and mywebsite.fr), «https://mywebsite.de». No trailing slash.
+	 *
+	 * @param string $lang Language code.
+	 */
+	public function language_base( string $lang ): string {
+		$lang = strtolower( $lang );
+		$home = rtrim( (string) get_option( 'home' ), '/' );
+		if ( $this->is_default( $lang ) ) {
+			return $home;
+		}
+		$base = $home . '/' . $lang;
+		if ( function_exists( 'apply_filters' ) ) {
+			/**
+			 * The base address of a secondary language (no trailing slash).
+			 *
+			 * @param string $base Default: home + '/' + code.
+			 * @param string $lang Language code.
+			 * @param string $home The site's home address.
+			 */
+			$f = (string) apply_filters( 'trrocket_language_base', $base, $lang, $home );
+			if ( '' !== $f && preg_match( '#^https?://#i', $f ) ) {
+				$base = rtrim( $f, '/' );
+			}
+		}
+		return $base;
+	}
+
+	/**
+	 * Whether a secondary language lives on a domain of its own (no /xx/ prefix there).
+	 *
+	 * @param string $lang Language code.
+	 */
+	public function has_own_domain( string $lang ): bool {
+		return ! $this->is_default( $lang ) && $this->language_base( $lang ) !== rtrim( (string) get_option( 'home' ), '/' ) . '/' . strtolower( $lang );
+	}
+
+	/**
+	 * The secondary language a host belongs to ('' when it is the site's own host).
+	 *
+	 * @param string $host Host name, without port.
+	 */
+	public function language_of_host( string $host ): string {
+		$host = strtolower( trim( $host ) );
+		if ( '' === $host || ! function_exists( 'apply_filters' ) ) {
+			return '';
+		}
+		/**
+		 * The language served on a host other than the site's own (a domain per language).
+		 *
+		 * @param string $lang '' by default.
+		 * @param string $host Host of the request or of a URL.
+		 */
+		$lang = strtolower( (string) apply_filters( 'trrocket_language_from_host', '', $host ) );
+		return ( '' !== $lang && in_array( $lang, $this->secondary_languages(), true ) ) ? $lang : '';
+	}
+
+	/**
 	 * Build the URL of the current page in a given language.
 	 */
 	public function url_for_language( string $lang, bool $with_query = true ): string {
@@ -280,8 +339,8 @@ class Router {
 			$url = remove_query_arg( Coexistence::PARAM, $url );
 			return $this->is_default( $lang ) ? $url : add_query_arg( Coexistence::PARAM, $lang, $url );
 		}
-		$base   = rtrim( (string) get_option( 'home' ), '/' );
-		$prefix = $this->is_default( $lang ) ? '' : '/' . $lang;
+		$base   = $this->language_base( $lang ); // home, home/xx, or the language's own domain
+		$prefix = '';
 		$path   = '' === $this->clean_path ? '/' : $this->clean_path;
 		// On a page reached through a translated slug (/it/albergo-aurora/) the request path
 		// carries THAT language's slug: every other language needs its own, or hreflang and the
@@ -304,10 +363,7 @@ class Router {
 	 * Homepage URL for a language (built directly, bypassing the home_url filter).
 	 */
 	public function home_for_language( string $lang ): string {
-		$lang   = strtolower( $lang );
-		$base   = rtrim( (string) get_option( 'home' ), '/' );
-		$prefix = $this->is_default( $lang ) ? '' : '/' . $lang;
-		return $base . $prefix . '/';
+		return $this->language_base( $lang ) . '/';
 	}
 
 	/**
@@ -372,6 +428,16 @@ class Router {
 			$relative = substr( $request_path, strlen( $base_path ) );
 		}
 		$relative = '/' . ltrim( (string) $relative, '/' );
+
+		// A language on a domain of its own (mywebsite.de): the whole address is that language,
+		// with no prefix to strip.
+		$host      = (string) wp_parse_url( 'http://' . ( isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '' ), PHP_URL_HOST );
+		$host_lang = $this->language_of_host( $host );
+		if ( '' !== $host_lang ) {
+			$this->current    = $host_lang;
+			$this->clean_path = $relative;
+			return;
+		}
 
 		// First path segment as a secondary language code?
 		$secondary = $this->secondary_languages();
@@ -477,6 +543,10 @@ class Router {
 		if ( '' === $url ) {
 			return $this->default_language();
 		}
+		$host_lang = $this->language_of_host( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+		if ( '' !== $host_lang ) {
+			return $host_lang;
+		}
 		$path = (string) wp_parse_url( $url, PHP_URL_PATH );
 
 		$base_path = wp_parse_url( get_option( 'home' ), PHP_URL_PATH );
@@ -525,6 +595,10 @@ class Router {
 
 		$rest = substr( $url, strlen( $base ) ); // e.g. '/about/' or ''.
 		$rest = '/' . ltrim( (string) $rest, '/' );
+
+		if ( $this->has_own_domain( $lang ) ) {
+			return $this->language_base( $lang ) . $rest;
+		}
 
 		// Re-entrancy guard: canonical/oEmbed/feed builders often pass an
 		// already-localized URL through home_url() again. If the path already

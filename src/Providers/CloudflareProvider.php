@@ -133,6 +133,41 @@ class CloudflareProvider extends FreeAiProvider {
 	}
 
 	/**
+	 * The account a token belongs to (9/10/2026: a customer typed his e-mail as Account ID; with the
+	 * token alone Cloudflare can tell). Returns '' when the token cannot list accounts.
+	 *
+	 * @param string $token Cloudflare API token.
+	 */
+	public static function find_account( string $token ): string {
+		$token = trim( $token );
+		if ( '' === $token ) {
+			return '';
+		}
+		$res = wp_remote_get(
+			'https://api.cloudflare.com/client/v4/accounts?per_page=5',
+			array(
+				'headers' => array( 'Authorization' => 'Bearer ' . $token ),
+				'timeout' => 15,
+			)
+		);
+		if ( is_wp_error( $res ) || 200 !== (int) wp_remote_retrieve_response_code( $res ) ) {
+			return '';
+		}
+		$data = json_decode( (string) wp_remote_retrieve_body( $res ), true );
+		$id   = (string) ( $data['result'][0]['id'] ?? '' );
+		return preg_match( '/^[a-f0-9]{32}$/i', $id ) ? strtolower( $id ) : '';
+	}
+
+	/**
+	 * Is this a real Account ID (32 hex characters)?
+	 *
+	 * @param string $id What was typed.
+	 */
+	public static function valid_account( string $id ): bool {
+		return (bool) preg_match( '/^[a-f0-9]{32}$/i', trim( $id ) );
+	}
+
+	/**
 	 * «Load available models» doubles as the key check: the token is verified, the account read.
 	 */
 	public function list_models(): array {

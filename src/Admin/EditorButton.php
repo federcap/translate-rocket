@@ -65,7 +65,7 @@ class EditorButton {
 				'code'  => $code,
 				'label' => Languages::label( $code ),
 				'flag'  => Languages::flag( $code ),
-				'url'   => add_query_arg( 'trr-edit', '1', $home . '/' . $code . $path ),
+				'url'   => add_query_arg( 'trr-edit', '1', $home . '/' . $code . $path ), // the editor stays on the main domain: the administrator is logged in there
 			);
 		}
 

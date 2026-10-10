@@ -514,7 +514,7 @@ class WooCommerce {
 		if ( preg_match( '#^/' . preg_quote( $lang, '#' ) . '(/|$)#', $rest ) ) {
 			return $url; // Already localised (e.g. built on a translated page).
 		}
-		return $home . '/' . $lang . $rest;
+		return $router->language_base( $lang ) . $rest; // home/xx or the language's own domain
 	}
 
 	/**

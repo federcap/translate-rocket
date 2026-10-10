@@ -150,3 +150,38 @@ in 21 lingue (`_ssh/trad-download/`).
   (prefissi di protected_title_format/private_title_format nella lingua della pagina messi da parte, titolo tradotto;
   alla raccolta si memorizza il titolo senza prefisso). Plugin: Ajax Load More 17/17, WP Show Posts, Advanced Ads,
   WPCode verdi.
+
+## 1.7.12 — pubblicata 8/10/2026 mattina (wp.org r3733777, GitHub 4505a57, sorgente ef9e0db; la .11 è stata saltata)
+Redirect che mantengono la lingua (Redirection), titoli protetti/privati nelle liste, 25 plugin + 3 temi classici + RTL
++ sorgente spagnola + dinamiche core collaudati. Regressioni prima di uscire: sicurezza 11, redirection 9, canonico 8,
+Woo 61, matrice 164, preset 10, RTL 16, banner 17, cookie 20, dinamiche core 19, spagnola 15, leggi-tutto 5,
+parte-senza-lettere 4, testi casuali 51, incolla 5, temi classici 25, pulsanti-pagina 17, inline 33, aggiornamento 8.
+Federico: «se è tutto ok rilascia direttamente» → pubblicata senza OK finale.
+
+## Un dominio per lingua (8/10/2026, richiesta forum «multi-domain») — NON rilasciato
+- Plugin gratuito (commit 495013f): `Router::language_base()` / `has_own_domain()` / `language_of_host()` + filtri
+  `trrocket_language_base` e `trrocket_language_from_host`. Switcher, hreflang, sitemap, link nel contenuto
+  (`Engine::localize_link`), Woo, WP Rocket passano tutti da `language_base`. Senza Labs nessuna differenza:
+  matrice 164/164, redirection 9, canonico 8, Woo 61, spagnola 15, dinamiche core 19, testi casuali 51, inline 33.
+- Labs (commit 877120d, e8d9215 + frasi): `src/Domains.php`, pagina TranslateRocket > Domains per language (tabella
+  lingua → dominio, pulizia dell'indirizzo, controllo «il dominio arriva a questo sito» con ping firmato, SSL), filtri
+  registrati AL CARICAMENTO del file Labs (il Router si avvia a plugins_loaded prima di Labs), 301 da /de/ al dominio
+  per gli anonimi (i loggati restano sul principale: login per dominio), allowed_redirect_hosts.
+  `collaudo-labs-domini.sh` 17/17 (dominio finto mandato al banco con l'intestazione Host). Pagina ok desktop/telefono.
+- Limiti noti: login e carrello WooCommerce sono per dominio (passando da .com a .de il carrello non segue);
+  DNS/SSL a carico dell'utente. Per uscire: TR 1.7.13 (agganci) + Labs 0.8.0 con TRRLABS_NEEDS_TR = 1.7.13.
+- **Labs 0.8.0 PUBBLICATA 8/10/2026 ~14** («Pubblica labs»; zip 627 KB su private_html, endpoint labs-update → 0.8.0;
+  Labs 6e91454). Gira con TR 1.7.12: `Domains::supported()` controlla che il Router abbia `language_base` (arriva con
+  la 1.7.13), altrimenti la pagina avvisa «serve 1.7.13» e i filtri restano spenti; TRRLABS_NEEDS_TR resta 1.7.1.
+  Prove prima: con la 1.7.12 pubblicata dove 41, gentile 27, catena 36, pagina domini 3/3; col sorgente domini 17,
+  ospiti 50. (collaudo-labs-ai-gratis è SUPERATA: lanciata per errore, rossi attesi.)
+
+## Prove «modi e lingue diverse» (8/10/2026 pomeriggio, prima del giro completo)
+- `collaudo-lingue-varie.sh` + `lingue-varie.js` (nuova): 4 siti sullo stesso banco — A inglese → ja, zh-tw, he (RTL),
+  pt-br; B tedesco (WPLANG de_DE) → en, fr; C giapponese → en, it; D francese (fr_FR) → es OFFLINE + it. 100% verdi
+  (A tutto + B/C/D 90/90). Gotcha suite: nel comando che cambia la lingua sorgente il plugin ha ancora in memoria le
+  lingue di prima → creare i contenuti in un secondo WPR; `S` e `SRC` sono variabili del banco (S di sola lettura).
+- PHP 7.4/Apache: testi casuali 51, dinamiche core 19, spagnola 15, temi classici 25, leggi-tutto 5, incolla 5.
+- Bacheca in italiano (`ADMIN_LOCALE=it_IT`, nuovo in import-comune `accedi`): walker 19, preset 10, anteprima switcher
+  13, traduzione nel browser 9 (sonda resa indipendente dalla lingua: «Sto traducendo X di Y», «Fatto»).
+- Nessun difetto del plugin trovato in questa fase. Aggiunte 13 suite nuove a `collaudo-tutto.sh`.

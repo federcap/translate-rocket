@@ -4384,3 +4384,544 @@ msgstr "Меню вашей шапки показывает профиль «%s�
 #: src/Admin/Admin.php
 msgid "Use this profile in the header menu"
 msgstr "Использовать этот профиль в меню шапки"
+
+#: src/Admin/Admin.php
+msgid "Loading the preview…"
+msgstr "Загрузка предпросмотра…"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "«Your site, live» appears when TranslateRocket places this profile by itself: in the header menu, in a spot of your page or as the row at the bottom of every page. Here it is placed by you, with %s or the «Language switcher» block, so the preview below shows it on its own."
+msgstr "«Ваш сайт вживую» появляется, когда TranslateRocket сам размещает этот профиль: в меню шапки, в выбранном месте страницы или строкой внизу каждой страницы. Этот профиль вы размещаете сами, через %s или блок «Переключатель языка», поэтому предпросмотр ниже показывает его отдельно."
+
+#: src/Admin/Admin.php
+msgid "The row of languages at the bottom of every page belongs to the «Default» profile: its look and its on/off are set there."
+msgstr "Строка языков внизу каждой страницы относится к профилю «По умолчанию»: её вид и включение настраиваются там."
+
+#: src/Admin/Admin.php
+msgid "Open the «Default» profile"
+msgstr "Открыть профиль «По умолчанию»"
+
+#: src/Frontend/VisualEditor.php
+msgid "Get a free Groq key — 2 minutes, no card"
+msgstr "Получите бесплатный ключ Groq — 2 минуты, без карты"
+
+#: src/Frontend/VisualEditor.php
+msgid "The AI Translation page shows how: sign in with Google, create the key, paste it. Then translate everything with one click."
+msgstr "Страница «Перевод с ИИ» покажет, как это сделать: войдите через Google, создайте ключ и вставьте его. Затем переведите всё одним щелчком."
+
+#: src/Admin/Farewell.php
+msgid "Nothing got translated"
+msgstr "Ничего не перевелось"
+
+#: src/Admin/Farewell.php
+msgid "The language switcher did not show up"
+msgstr "Переключатель языка не появлялся"
+
+#: src/Admin/Farewell.php
+msgid "The AI key did not work"
+msgstr "Ключ ИИ не работал"
+
+#: src/Admin/Farewell.php
+msgid "A translated page was blank or showed an error"
+msgstr "Переведённая страница была пустой или с ошибкой"
+
+#: src/Admin/Farewell.php
+msgid "I could not find where to start"
+msgstr "Я не понял, с чего начать"
+
+#: src/Admin/Farewell.php
+msgid "Some text stayed in the original language"
+msgstr "Часть текста осталась на исходном языке"
+
+#: src/Admin/Farewell.php
+msgid "The meaning was wrong"
+msgstr "Смысл был искажён"
+
+#: src/Admin/Farewell.php
+msgid "The layout or formatting broke"
+msgstr "Ломалась вёрстка или форматирование"
+
+#: src/Admin/Farewell.php
+msgid "Names or brands got translated"
+msgstr "Переводились имена или бренды"
+
+#: src/Admin/Farewell.php
+msgid "The design or layout"
+msgstr "Дизайн или вёрстку"
+
+#: src/Admin/Farewell.php
+msgid "My page builder (Elementor, Divi…)"
+msgstr "Мой конструктор страниц (Elementor, Divi…)"
+
+#: src/Admin/Farewell.php
+msgid "The shop or the checkout"
+msgstr "Магазин или оформление заказа"
+
+#: src/Admin/Farewell.php
+msgid "SEO, addresses or redirects"
+msgstr "SEO, адреса или перенаправления"
+
+#: src/Admin/Farewell.php
+msgid "The site got slow"
+msgstr "Сайт стал медленным"
+
+#: src/Admin/Farewell.php
+msgid "Errors or a blank page"
+msgstr "Ошибки или пустая страница"
+
+#: src/Admin/Farewell.php
+msgid "A language"
+msgstr "Язык"
+
+#: src/Admin/Farewell.php
+msgid "Automatic translation of new content"
+msgstr "Автоматический перевод нового контента"
+
+#: src/Admin/Farewell.php
+msgid "A domain per language"
+msgstr "Отдельный домен для каждого языка"
+
+#: src/Admin/Farewell.php
+msgid "Import from another plugin"
+msgstr "Импорт из другого плагина"
+
+#: src/Admin/Farewell.php
+msgid "Translated images"
+msgstr "Переведённые изображения"
+
+#: src/Admin/Farewell.php
+msgid "Too many settings"
+msgstr "Слишком много настроек"
+
+#: src/Admin/Farewell.php
+msgid "The AI keys"
+msgstr "Ключи ИИ"
+
+#: src/Admin/Farewell.php
+msgid "Where to start"
+msgstr "С чего начать"
+
+#: src/Admin/Farewell.php
+msgid "Placing the language switcher"
+msgstr "Размещение переключателя языка"
+
+#: src/Admin/Farewell.php
+msgid "The wording was unclear"
+msgstr "Формулировки были непонятны"
+
+#: src/Admin/Farewell.php
+msgid "Another one"
+msgstr "Другой"
+
+#: src/Admin/Farewell.php
+msgid "Want an answer? Your e-mail (optional):"
+msgstr "Хотите ответ? Ваш e-mail (необязательно):"
+
+#: src/Admin/Farewell.php
+msgid "Fast support, free."
+msgstr "Быстрая поддержка, бесплатно."
+
+#: src/Admin/Farewell.php
+msgid "If something does not work, the developer answers quickly, usually the same day, and fixes it in the next update."
+msgstr "Если что-то не работает, разработчик быстро отвечает, обычно в тот же день, и исправляет это в следующем обновлении."
+
+#: src/Admin/Farewell.php
+msgid "Ask for help instead"
+msgstr "Лучше попросить помощи"
+
+#: src/Admin/Farewell.php
+msgid "The reason and the quick answers you picked, what you wrote, your e-mail only if you typed it, your browser type, and these numbers. Nothing else: no site address, no name, no page or translation content. Your IP address is not stored."
+msgstr "Причина и выбранные быстрые ответы, то, что вы написали, ваш e-mail, только если вы его ввели, тип браузера и эти числа. Больше ничего: ни адреса сайта, ни имени, ни содержимого страниц или переводов. Ваш IP-адрес не сохраняется."
+
+#: src/Admin/Overview.php
+msgid "in the header menu"
+msgstr "в меню шапки"
+
+#: src/Admin/Overview.php
+msgid "in a spot of your page"
+msgstr "в выбранном месте страницы"
+
+#: src/Admin/Overview.php
+msgid "floating in a corner"
+msgstr "плавающий в углу"
+
+#: src/Admin/Overview.php
+msgid "Unlimited languages and pages"
+msgstr "Неограниченно языков и страниц"
+
+#: src/Admin/Overview.php
+#, php-format
+msgid "Languages added: %d"
+msgstr "Добавлено языков: %d"
+
+#: src/Admin/Overview.php
+msgid "Add your first language below"
+msgstr "Добавьте ниже свой первый язык"
+
+#: src/Admin/Overview.php
+msgid "One-click AI translation with a free key"
+msgstr "Перевод ИИ в один щелчок, с бесплатным ключом"
+
+#: src/Admin/Overview.php
+#, php-format
+msgid "On, with %s"
+msgstr "Включено, через %s"
+
+#: src/Admin/Overview.php
+msgid "Get a free Groq key: 2 minutes, no card"
+msgstr "Получите бесплатный ключ Groq: 2 минуты, без карты"
+
+#: src/Admin/Overview.php
+msgid "Translate in your browser, with no key"
+msgstr "Перевод в браузере, без ключа"
+
+#: src/Admin/Overview.php
+msgid "Ready in Chrome and Edge on a computer"
+msgstr "Готово в Chrome и Edge на компьютере"
+
+#: src/Admin/Overview.php
+msgid "Edit any sentence by hand, on the page"
+msgstr "Правьте любую фразу вручную, прямо на странице"
+
+#: src/Admin/Overview.php
+msgid "Ready: «Translate visually» in the admin bar"
+msgstr "Готово: «Перевести на странице» в панели администратора"
+
+#: src/Admin/Overview.php
+#, php-format
+msgid "On, %s"
+msgstr "Включён, %s"
+
+#: src/Admin/Overview.php
+msgid "Choose where it goes"
+msgstr "Выберите, где он будет"
+
+#: src/Admin/Overview.php
+msgid "SEO: translated addresses, hreflang, sitemap"
+msgstr "SEO: переведённые адреса, hreflang, карта сайта"
+
+#: src/Admin/Overview.php
+msgid "On by itself"
+msgstr "Работает само"
+
+#: src/Admin/Overview.php
+msgid "Import from TranslatePress, Weglot, WPML, Polylang"
+msgstr "Импорт из TranslatePress, Weglot, WPML, Polylang"
+
+#: src/Admin/Overview.php
+msgid "Ready when you need it"
+msgstr "Готово, когда понадобится"
+
+#: src/Admin/Overview.php
+msgid "Translate with no key at all, from your server"
+msgstr "Перевод совсем без ключа, с вашего сервера"
+
+#: src/Admin/Overview.php
+msgid "The whole site by itself, and every new page as you publish"
+msgstr "Весь сайт сам по себе, и каждая новая страница при публикации"
+
+#: src/Admin/Overview.php
+msgid "More free AI engines, one after the other when one runs out"
+msgstr "Больше бесплатных движков ИИ: один за другим, когда квота кончается"
+
+#: src/Admin/Overview.php
+msgid "Works from any browser, phones too"
+msgstr "Работает в любом браузере, и на телефоне тоже"
+
+#: src/Admin/Overview.php
+msgid "A domain of its own for each language"
+msgstr "Отдельный домен для каждого языка"
+
+#: src/Admin/Overview.php
+msgid "Everything you can do — all free"
+msgstr "Всё, что можно сделать — всё бесплатно"
+
+#: src/Admin/Overview.php
+msgid "No paid plan, no word limit. Green is working on your site; click a line to set it up."
+msgstr "Никаких платных тарифов и лимитов на слова. Зелёное уже работает на вашем сайте; нажмите на строку, чтобы настроить."
+
+#: src/Admin/Overview.php
+msgid "In TranslateRocket"
+msgstr "В TranslateRocket"
+
+#: src/Admin/Overview.php
+msgid "installed"
+msgstr "установлено"
+
+#: src/Admin/Overview.php
+msgid "free add-on"
+msgstr "бесплатное дополнение"
+
+#: src/Admin/Overview.php
+msgid "On"
+msgstr "Включено"
+
+#: src/Admin/Overview.php
+msgid "Off — turn it on in Labs"
+msgstr "Выключено — включите в Labs"
+
+#: src/Admin/Overview.php
+msgid "Comes with Labs"
+msgstr "Появится с Labs"
+
+#: src/Admin/Overview.php
+msgid "Get Labs — free"
+msgstr "Получить Labs — бесплатно"
+
+#: src/Admin/Overview.php
+msgid "Stuck, or something looks wrong? Write in the forum: the developer answers quickly, usually the same day."
+msgstr "Застряли или что-то не так? Напишите на форуме: разработчик отвечает быстро, обычно в тот же день."
+
+#: src/Admin/Admin.php
+msgid "Test this text"
+msgstr "Проверить этот текст"
+
+#: src/Admin/Admin.php
+msgid "Test text"
+msgstr "Тестовый текст"
+
+#: src/Admin/Admin.php
+msgid "Tested"
+msgstr "Проверено"
+
+#: src/Admin/Admin.php
+msgid "Uses the saved key and translates only this short text: it costs almost nothing. Save first if you just pasted the key. When it works, the provider gets a green «Tested» tick."
+msgstr "Использует сохранённый ключ и переводит только этот короткий текст: это почти ничего не стоит. Если вы только что вставили ключ, сначала сохраните. Если всё работает, у провайдера появится зелёная отметка «Проверено»."
+
+#: src/Admin/Admin.php
+msgid "The Cloudflare Account ID is not right. It is a code of 32 letters and numbers, shown on the right of the Workers AI page in Cloudflare (not your e-mail address)."
+msgstr "Account ID Cloudflare указан неверно. Это код из 32 букв и цифр, он есть справа на странице Workers AI в Cloudflare (это не ваш e-mail)."
+
+#: src/Admin/AutoPage.php
+msgid "Automatic translation"
+msgstr "Автоматический перевод"
+
+#: src/Admin/Admin.php
+msgid "Automatic"
+msgstr "Автоматически"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Put online by itself, fully translated: %s"
+msgstr "Опубликованы сами, полностью переведены: %s"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "about %d days left at today’s pace"
+msgstr "примерно %d дн. в сегодняшнем темпе"
+
+#: src/Admin/AutoPage.php
+msgid "less than a day left at today’s pace"
+msgstr "меньше суток в сегодняшнем темпе"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Pages read: %1$d of %2$d"
+msgstr "Прочитано страниц: %1$d из %2$d"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "last step %s ago"
+msgstr "последний шаг %s назад"
+
+#: src/Admin/AutoPage.php
+msgid "Being translated now"
+msgstr "Сейчас переводится"
+
+#: src/Admin/AutoPage.php
+msgid "Translate my site by itself"
+msgstr "Переводить мой сайт самостоятельно"
+
+#: src/Admin/AutoPage.php
+msgid "Every page, post and product, a few at a time, on your server — and every new page as you publish it. You do not need to keep anything open; while this page is open it goes faster."
+msgstr "Каждая страница, запись и товар, понемногу, на вашем сервере — и каждая новая страница при публикации. Ничего не нужно держать открытым; пока эта страница открыта, всё идёт быстрее."
+
+#: src/Admin/AutoPage.php
+msgid "Update TranslateRocket Labs to 0.9 or later"
+msgstr "Обновите TranslateRocket Labs до 0.9 или новее"
+
+#: src/Admin/AutoPage.php
+msgid "then its engines and automatic translation are switched on here. Until then they stay on the Labs page."
+msgstr "затем его движки и автоматический перевод включаются здесь. До тех пор они остаются на странице Labs."
+
+#: src/Admin/AutoPage.php
+msgid "Plugins"
+msgstr "Плагины"
+
+#: src/Admin/AutoPage.php
+msgid "comes with Labs, the free add-on: the whole site in the background, new pages as you publish, engines that need no key."
+msgstr "появляется с Labs, бесплатным дополнением: весь сайт в фоне, новые страницы при публикации, движки без ключа."
+
+#: src/Admin/AutoPage.php
+msgid "Without it: translate what is missing with your AI key, one language at a time, from"
+msgstr "Без Labs: переводите недостающее своим ключом ИИ, по одному языку, в разделе"
+
+#: src/Admin/AutoPage.php
+msgid "Put each language online by itself when it is fully translated"
+msgstr "Публиковать каждый язык самостоятельно, когда он полностью переведён"
+
+#: src/Admin/AutoPage.php
+msgid "Until then visitors and Google do not see it. With the whole site running, it waits for every page to be read first."
+msgstr "До этого его не видят ни посетители, ни Google. Пока обрабатывается весь сайт, сначала дожидается прочтения всех страниц."
+
+#: src/Admin/AutoPage.php
+msgid "live"
+msgstr "в реальном времени"
+
+#: src/Admin/AutoPage.php
+msgid "Add a language first."
+msgstr "Сначала добавьте язык."
+
+#: src/Admin/AutoPage.php
+msgid "The numbers move by themselves every 30 seconds while this page is open. ⏳ marks the languages being translated right now. The total grows as more pages are read."
+msgstr "Цифры обновляются сами каждые 30 секунд, пока эта страница открыта. ⏳ отмечает языки, которые переводятся сейчас. Итог растёт по мере чтения новых страниц."
+
+#: src/Admin/AutoPage.php
+msgid "Engines"
+msgstr "Движки"
+
+#: src/Admin/AutoPage.php
+msgid "They are tried in this order: when one runs out for the day or stops, the next one takes over."
+msgstr "Пробуются в этом порядке: когда у одного кончилась дневная квота или он остановился, его сменяет следующий."
+
+#: src/Admin/AutoPage.php
+msgid "Your AI keys"
+msgstr "Ваши ключи ИИ"
+
+#: src/Admin/AutoPage.php
+msgid "On your server"
+msgstr "На вашем сервере"
+
+#: src/Admin/AutoPage.php
+msgid "not complete, skipped"
+msgstr "не настроен, пропущен"
+
+#: src/Admin/AutoPage.php
+msgid "Microsoft Edge Translator — from your server"
+msgstr "Microsoft Edge Translator — с вашего сервера"
+
+#: src/Admin/AutoPage.php
+msgid "MyMemory — from your server, daily limit"
+msgstr "MyMemory — с вашего сервера, дневной лимит"
+
+#: src/Admin/AutoPage.php
+msgid "The translator built into Chrome and Edge — in your browser"
+msgstr "Переводчик, встроенный в Chrome и Edge — в вашем браузере"
+
+#: src/Admin/AutoPage.php
+msgid "Add or change AI keys"
+msgstr "Добавить или изменить ключи ИИ"
+
+#: src/Admin/AutoPage.php
+msgid "Change the order"
+msgstr "Изменить порядок"
+
+#: src/Admin/AutoPage.php
+msgid "I accept the conditions of the unofficial engines I switch on"
+msgstr "Я принимаю условия неофициальных движков, которые включаю"
+
+#: src/Admin/AutoPage.php
+msgid "Read the conditions"
+msgstr "Прочитать условия"
+
+#: src/Admin/AutoPage.php
+msgid "Advanced"
+msgstr "Дополнительно"
+
+#: src/Admin/AutoPage.php
+msgid "Where it runs"
+msgstr "Где работает"
+
+#: src/Admin/AutoPage.php
+msgid "On my server, by itself (recommended)"
+msgstr "На моём сервере, самостоятельно (рекомендуется)"
+
+#: src/Admin/AutoPage.php
+msgid "In my browser, while wp-admin is open"
+msgstr "В моём браузере, пока открыт wp-admin"
+
+#: src/Admin/AutoPage.php
+msgid "Both"
+msgstr "Оба варианта"
+
+#: src/Admin/AutoPage.php
+msgid "Engine order, external collaborators, domains per language, second opinion, weekly report"
+msgstr "Порядок движков, внешние помощники, домены для языков, второе мнение, еженедельный отчёт"
+
+#: src/Admin/AutoPage.php
+msgid "Prefer that we do it for you?"
+msgstr "Хотите, чтобы мы сделали это за вас?"
+
+#: src/Admin/AutoPage.php
+msgid "Free setup on request: we configure TranslateRocket on your site, start the translation and tell you when it is done. You only give us a temporary administrator account, and remove it afterwards."
+msgstr "Бесплатная настройка по запросу: мы настроим TranslateRocket на вашем сайте, запустим перевод и сообщим, когда всё будет готово. Вы даёте нам только временную учётную запись администратора и потом удаляете её."
+
+#: src/Admin/AutoPage.php
+msgid "Ask for a free setup"
+msgstr "Запросить бесплатную настройку"
+
+#: src/Admin/Admin.php
+msgid "The key is there, but today's free requests are used up. It works again tomorrow; meanwhile the next engine in the order takes over."
+msgstr "Ключ есть, но бесплатные запросы на сегодня закончились. Завтра снова заработает; пока его сменит следующий движок."
+
+#: src/Admin/Ticket.php
+msgid "Free setup request"
+msgstr "Запрос бесплатной настройки"
+
+#: src/Admin/Ticket.php
+msgid "Hello, please set up TranslateRocket on my site for me.\n\nLanguages I want:\nWhat my site is about:\n\nI can create a temporary administrator account for you, and remove it when you are done."
+msgstr "Здравствуйте, пожалуйста, настройте TranslateRocket на моём сайте.\n\nНужные языки:\nО чём мой сайт:\n\nЯ могу создать для вас временную учётную запись администратора и удалить её, когда закончите."
+
+#: src/Admin/Overview.php
+msgid "Or ask us to set it up for you, free"
+msgstr "Или попросите нас настроить бесплатно"
+
+#: src/Admin/Farewell.php
+msgid "WooCommerce"
+msgstr "WooCommerce"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "the whole site in about %d days"
+msgstr "весь сайт примерно за %d дн."
+
+#: src/Admin/AutoPage.php
+msgid "the whole site in less than a day"
+msgstr "весь сайт меньше чем за сутки"
+
+#: src/Admin/Overview.php
+msgid "Remote help: we work on your translations, without your password"
+msgstr "Удалённая помощь: мы работаем над вашими переводами без вашего пароля"
+
+#: src/Admin/LabsPromo.php
+msgid "A domain for each language"
+msgstr "Домен для каждого языка"
+
+#: src/Admin/LabsPromo.php
+msgid "mysite.de instead of mysite.com/de/: links, switcher, hreflang and sitemap follow, old addresses move with a permanent redirect."
+msgstr "mysite.de вместо mysite.com/de/: ссылки, переключатель, hreflang и карта сайта подстраиваются, старые адреса переходят с постоянным перенаправлением."
+
+#: src/Admin/LabsPromo.php
+msgid "Remote help, without your password"
+msgstr "Удалённая помощь без вашего пароля"
+
+#: src/Admin/LabsPromo.php
+msgid "Let TranslateRocket support set up and fix your translations: only the translation tools, for 1 to 7 days, with a log of what was done and a Revoke button."
+msgstr "Позвольте поддержке TranslateRocket настроить и поправить переводы: только инструменты перевода, от 1 до 7 дней, с журналом действий и кнопкой «Отозвать»."
+
+#: src/Admin/Overview.php
+msgid "Remote collaboration: invite a translator or a reviewer with a secret link — no WordPress account, you approve their work"
+msgstr "Удалённое сотрудничество: пригласите переводчика или редактора по секретной ссылке — без учётной записи WordPress, вы одобряете их работу"
+
+#: src/Admin/Overview.php
+msgid "A free AI rereads the machine translations, flags the doubtful ones and polishes them over time"
+msgstr "Бесплатный ИИ перечитывает машинные переводы, отмечает сомнительные и со временем их улучшает"
+
+#: src/Admin/Overview.php
+msgid "History of every change: who changed a translation, and the way back"
+msgstr "История каждого изменения: кто изменил перевод, и как вернуть прежний"
+
+#: src/Admin/Overview.php
+msgid "A weekly e-mail: what was translated and what is still waiting"
+msgstr "Еженедельное письмо: что переведено и что ещё ждёт"

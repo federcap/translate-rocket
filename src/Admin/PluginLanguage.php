@@ -56,11 +56,15 @@ class PluginLanguage {
 	 * In the dashboard, put TranslateRocket's catalogue in the chosen language.
 	 */
 	public function load(): void {
-		if ( ! is_admin() ) {
-			return;
-		}
 		$l = self::chosen();
 		if ( '' === $l ) {
+			// 9/10/2026: WordPress' Japanese is «ja», our file is «ja_JP»: following the profile, the whole
+			// plugin stayed in English for every Japanese site (found by collaudo-foto-italiano).
+			if ( 'ja' !== determine_locale() || is_readable( TRROCKET_PATH . 'languages/translate-rocket-ja.mo' ) ) {
+				return;
+			}
+			$l = 'ja_JP';
+		} elseif ( ! is_admin() ) {
 			return;
 		}
 		global $l10n;

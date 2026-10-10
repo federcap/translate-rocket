@@ -308,7 +308,7 @@ class WpRocket {
 					$path = preg_replace( '#/' . preg_quote( (string) $post->post_name, '#' ) . '(/?)$#', '/' . $slug . '$1', $path );
 				}
 			}
-			$out[] = $home . '/' . $lang . $path;
+			$out[] = $router->language_base( $lang ) . $path; // home/xx or the language's own domain
 		}
 		return $out;
 	}

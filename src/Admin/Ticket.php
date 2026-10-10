@@ -287,12 +287,13 @@ class Ticket {
 				</tr>
 				<tr>
 					<th scope="row"><label for="trr-tk-subject"><?php esc_html_e( 'Subject', 'translate-rocket' ); ?></label></th>
-					<td><input type="text" id="trr-tk-subject" class="large-text" placeholder="<?php esc_attr_e( 'In a few words, what is wrong?', 'translate-rocket' ); ?>" /></td>
+					<td><?php $trr_setup = isset( $_GET['setup'] ); // phpcs:ignore WordPress.Security.NonceVerification ?>
+					<input type="text" id="trr-tk-subject" class="large-text" value="<?php echo $trr_setup ? esc_attr__( 'Free setup request', 'translate-rocket' ) : ''; ?>" placeholder="<?php esc_attr_e( 'In a few words, what is wrong?', 'translate-rocket' ); ?>" /></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="trr-tk-message"><?php esc_html_e( 'What happened', 'translate-rocket' ); ?></label></th>
 					<td>
-						<textarea id="trr-tk-message" rows="6" class="large-text" placeholder="<?php esc_attr_e( 'What you were doing, what you expected, and what happened instead.', 'translate-rocket' ); ?>"></textarea>
+						<textarea id="trr-tk-message" rows="6" class="large-text" <?php echo $trr_setup ? 'autofocus' : ''; ?> placeholder="<?php esc_attr_e( 'What you were doing, what you expected, and what happened instead.', 'translate-rocket' ); ?>"><?php echo $trr_setup ? esc_textarea( __( "Hello, please set up TranslateRocket on my site for me.\n\nLanguages I want:\nWhat my site is about:\n\nI can create a temporary administrator account for you, and remove it when you are done.", 'translate-rocket' ) ) : ''; ?></textarea>
 					</td>
 				</tr>
 				<tr>

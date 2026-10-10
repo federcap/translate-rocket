@@ -775,7 +775,26 @@ class Admin {
 			wp_send_json_error( array( 'error' => __( 'No AI provider is configured.', 'translate-rocket' ) ) );
 		}
 		if ( ! $provider->is_configured() ) {
+			// 9/10/2026 (a customer's site): OpenRouter had its key, but today's 50 free requests were
+			// used up, and the test said «Add the API key first».
+			if ( '' !== (string) ( Settings::get()['providers'][ $id ]['api_key'] ?? '' ) && \TranslateRocket\Providers\FreeUsage::exhausted( $id ) ) {
+				wp_send_json_error( array( 'error' => __( 'The key is there, but today\'s free requests are used up. It works again tomorrow; meanwhile the next engine in the order takes over.', 'translate-rocket' ) ) );
+			}
 			wp_send_json_error( array( 'error' => __( 'Add the API key first.', 'translate-rocket' ) ) );
+		}
+		if ( 'cloudflare' === $id ) {
+			$tutto = Settings::get();
+			$acc   = (string) ( $tutto['providers']['cloudflare']['account'] ?? '' );
+			if ( ! \TranslateRocket\Providers\CloudflareProvider::valid_account( $acc ) ) {
+				// Try to find it from the token; if that fails, no translation request at all.
+				$trovato = \TranslateRocket\Providers\CloudflareProvider::find_account( (string) ( $tutto['providers']['cloudflare']['api_key'] ?? '' ) );
+				if ( '' === $trovato ) {
+					wp_send_json_error( array( 'error' => self::plain_provider_error( 'Could not route' ) ) );
+				}
+				$tutto['providers']['cloudflare']['account'] = $trovato;
+				Settings::update( $tutto );
+				$provider = \TranslateRocket\Providers\Registry::build( 'cloudflare', (array) $tutto['providers']['cloudflare'] );
+			}
 		}
 		$source  = \TranslateRocket\Plugin::instance()->router()->default_language();
 		$target  = '';
@@ -788,16 +807,32 @@ class Admin {
 		if ( '' === $target ) {
 			$target = ( 'en' === $source ) ? 'it' : 'en';
 		}
-		$res = $provider->translate( array( 'Hello' ), $source, $target );
+		// 9/10/2026 (Federico: «ci vorrebbe un testo test api»): a short text of your choice, so you
+		// see the quality too, not only that the key works. Never more than 200 characters.
+		$prova = isset( $_POST['text'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['text'] ) ) ) : '';
+		$prova = '' !== $prova ? mb_substr( $prova, 0, 200 ) : 'Hello';
+		$res   = $provider->translate( array( $prova ), $source, $target );
+		$prove = (array) get_option( 'trrocket_provider_tests', array() );
 		if ( $res->success && ! empty( $res->translations ) ) {
+			// «dove è testata rimane uno spunto verde»: remembered with a fingerprint of key and
+			// model, so the tick disappears by itself when either changes.
+			$prove[ $id ] = array(
+				'ok'   => 1,
+				'when' => time(),
+				'fp'   => self::provider_fingerprint( $id ),
+			);
+			update_option( 'trrocket_provider_tests', $prove, false );
 			wp_send_json_success(
 				array(
-					'source' => 'Hello',
+					'source' => $prova,
 					'sample' => (string) $res->translations[0],
 					'target' => $target,
+					'when'   => wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
 				)
 			);
 		}
+		unset( $prove[ $id ] );
+		update_option( 'trrocket_provider_tests', $prove, false );
 		\TranslateRocket\Logger::error(
 			'ai',
 			/* translators: %s: provider name. */
@@ -808,6 +843,48 @@ class Admin {
 	}
 
 	/**
+	 * Key, model and account of a provider, hashed: the green tick holds only for these.
+	 *
+	 * @param string $id Provider id.
+	 */
+	public static function provider_fingerprint( string $id ): string {
+		$conf = (array) ( Settings::get()['providers'][ $id ] ?? array() );
+		return md5( (string) ( $conf['api_key'] ?? '' ) . '|' . (string) ( $conf['model'] ?? '' ) . '|' . (string) ( $conf['account'] ?? '' ) );
+	}
+
+	/**
+	 * Was this provider tested successfully with its current key and model? Returns the time, or 0.
+	 *
+	 * @param string $id Provider id.
+	 */
+	public static function provider_tested( string $id ): int {
+		$t = (array) ( get_option( 'trrocket_provider_tests', array() )[ $id ] ?? array() );
+		return ( ! empty( $t['ok'] ) && ( $t['fp'] ?? '' ) === self::provider_fingerprint( $id ) ) ? (int) $t['when'] : 0;
+	}
+
+	/**
+	 * A provider's error put in words a site owner understands (see below).
+	 *
+	 * @param string $raw The provider's error.
+	 */
+	public static function test_sentence( string $lang ): string {
+		$frasi = array(
+			'en' => 'Welcome to our website: book your stay today.',
+			'it' => 'Benvenuti nel nostro sito: prenota oggi il tuo soggiorno.',
+			'es' => 'Bienvenido a nuestra web: reserva hoy tu estancia.',
+			'fr' => 'Bienvenue sur notre site : réservez votre séjour dès aujourd’hui.',
+			'de' => 'Willkommen auf unserer Website: buchen Sie Ihren Aufenthalt noch heute.',
+			'pt' => 'Bem-vindo ao nosso site: reserve hoje a sua estadia.',
+			'nl' => 'Welkom op onze website: boek vandaag nog je verblijf.',
+			'pl' => 'Witamy na naszej stronie: zarezerwuj pobyt już dziś.',
+			'ru' => 'Добро пожаловать на наш сайт: забронируйте отдых уже сегодня.',
+			'ja' => '私たちのサイトへようこそ。今すぐご宿泊をご予約ください。',
+		);
+		$base = strtolower( substr( $lang, 0, 2 ) );
+		return $frasi[ $base ] ?? $frasi['en'];
+	}
+
+	/**
 	 * A provider's error put in words a site owner understands. The raw answer («HTTP 401: { "error":
 	 * { "message": "Incorrect API key…» in English and JSON) used to be shown as it was (5/10/2026); it
 	 * stays in Diagnostics → log, written just before. Same sentences as «Load available models».
@@ -815,6 +892,11 @@ class Admin {
 	 * @param string $raw The provider's error.
 	 */
 	public static function plain_provider_error( string $raw ): string {
+		// 9/10/2026 (a customer's site: the e-mail address typed as Cloudflare Account ID → «HTTP 404: Could
+		// not route to /client/v4/accounts/…», shown as «try again in a few minutes», which was wrong).
+		if ( preg_match( '/Could not route|object identifier is invalid|accounts\/[^\/]*\/ai\/run.*404|HTTP 404.*accounts/i', $raw ) ) {
+			return __( 'The Cloudflare Account ID is not right. It is a code of 32 letters and numbers, shown on the right of the Workers AI page in Cloudflare (not your e-mail address).', 'translate-rocket' );
+		}
 		if ( preg_match( '/HTTP (401|403)\b|api key not valid|invalid[_ ]?(api[_ ]?)?key|incorrect api key|authentication|unauthori[sz]ed|forbidden/i', $raw ) ) {
 			return __( 'The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active.', 'translate-rocket' );
 		}
@@ -2159,10 +2241,20 @@ class Admin {
 			<div class="trrocket-card" id="trr-sw-site" <?php echo ( ! empty( $sw['in_menu'] ) || ( 'default' === $profile && ( ! empty( $sw['in_spot'] ) || ! empty( $sw['footer_row'] ) ) ) ) ? '' : 'hidden'; ?>>
 				<h2><?php esc_html_e( 'Your site, live', 'translate-rocket' ); ?></h2>
 				<p class="description"><?php esc_html_e( 'Your real header, as visitors will see it with the settings on this page — before you save. In the menu your theme draws the languages; the colours and the opening you choose here are applied to them.', 'translate-rocket' ); ?></p>
-				<div class="trr-sw-site-wrap"><iframe id="trr-sw-site-frame" title="<?php esc_attr_e( 'Your site, live', 'translate-rocket' ); ?>"></iframe></div>
+				<div class="trr-sw-site-wrap" data-wait="<?php esc_attr_e( 'Loading the preview…', 'translate-rocket' ); ?>"><iframe id="trr-sw-site-frame" title="<?php esc_attr_e( 'Your site, live', 'translate-rocket' ); ?>"></iframe></div>
 				<h3 id="trr-sw-site-foot-h" <?php echo ( 'default' === $profile && ! empty( $sw['footer_row'] ) ) ? '' : 'hidden'; ?>><?php esc_html_e( 'Bottom of the page', 'translate-rocket' ); ?></h3>
-				<div class="trr-sw-site-wrap" id="trr-sw-site-foot" <?php echo ( 'default' === $profile && ! empty( $sw['footer_row'] ) ) ? '' : 'hidden'; ?>><iframe id="trr-sw-site-frame2" title="<?php esc_attr_e( 'Bottom of the page', 'translate-rocket' ); ?>"></iframe></div>
+				<div class="trr-sw-site-wrap" id="trr-sw-site-foot" data-wait="<?php esc_attr_e( 'Loading the preview…', 'translate-rocket' ); ?>" <?php echo ( 'default' === $profile && ! empty( $sw['footer_row'] ) ) ? '' : 'hidden'; ?>><iframe id="trr-sw-site-frame2" title="<?php esc_attr_e( 'Bottom of the page', 'translate-rocket' ); ?>"></iframe></div>
 			</div>
+			<?php // 9/10/2026 (Federico: «si vede solo su Predefinito?»): when the live view is not there, say why. ?>
+			<p class="description trrocket-card" id="trr-sw-site-none" <?php echo ( ! empty( $sw['in_menu'] ) || ( 'default' === $profile && ( ! empty( $sw['in_spot'] ) || ! empty( $sw['footer_row'] ) ) ) ) ? 'hidden' : ''; ?>>
+				<?php
+				printf(
+					/* translators: %s: the shortcode of this profile */
+					esc_html__( '«Your site, live» appears when TranslateRocket places this profile by itself: in the header menu, in a spot of your page or as the row at the bottom of every page. Here it is placed by you, with %s or the «Language switcher» block, so the preview below shows it on its own.', 'translate-rocket' ),
+					'<code>' . ( 'default' === $profile ? '[translaterocket_switcher]' : '[translaterocket_switcher id=&quot;' . esc_html( $profile ) . '&quot;]' ) . '</code>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				);
+				?>
+			</p>
 			<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
 				<form method="post" action="" style="flex:1 1 380px;min-width:340px">
 					<?php wp_nonce_field( 'trrocket_save_switcher', 'trrocket_switcher_nonce' ); ?>
@@ -2230,6 +2322,12 @@ class Admin {
 								<?php endforeach; ?>
 							</select>
 						</label></p>
+						<?php if ( $trr_extra && ! empty( $settings['switcher']['footer_row'] ) ) : // 9/10/2026 (Federico: «lo switcher in fondo, a quale profilo appartiene?»). ?>
+							<p class="description" style="background:#f0f6fc;border-left:4px solid #72aee6;padding:8px 12px">
+								<?php esc_html_e( 'The row of languages at the bottom of every page belongs to the «Default» profile: its look and its on/off are set there.', 'translate-rocket' ); ?>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-switcher' ) ); ?>"><?php esc_html_e( 'Open the «Default» profile', 'translate-rocket' ); ?></a>
+							</p>
+						<?php endif; ?>
 						<p id="sw-custom-pos">
 							<label><?php esc_html_e( 'X (from left)', 'translate-rocket' ); ?> <input type="text" name="sw_float_x" value="<?php echo esc_attr( (string) $g( 'float_x' ) ); ?>" placeholder="10%" class="small-text" /></label>
 							&nbsp;
@@ -2971,7 +3069,7 @@ JS;
 	 *
 	 * @return array<string,array<string,mixed>>
 	 */
-	private static function provider_defs(): array {
+	public static function provider_defs(): array {
 		$defs = array(
 			// Free with the owner's own account (official APIs): first, since they cost nothing.
 			'cloudflare' => array(
@@ -3145,6 +3243,15 @@ JS;
 					$settings['providers'][ $pid ][ $fk ] = $v;
 				}
 			}
+			// 9/10/2026: Cloudflare token pasted, Account ID empty or wrong (an e-mail, a name): ask
+			// Cloudflare which account the token belongs to, and fill it in.
+			if ( 'cloudflare' === $pid && '' !== (string) $settings['providers'][ $pid ]['api_key']
+				&& ! \TranslateRocket\Providers\CloudflareProvider::valid_account( (string) ( $settings['providers'][ $pid ]['account'] ?? '' ) ) ) {
+				$trovato = \TranslateRocket\Providers\CloudflareProvider::find_account( (string) $settings['providers'][ $pid ]['api_key'] );
+				if ( '' !== $trovato ) {
+					$settings['providers'][ $pid ]['account'] = $trovato;
+				}
+			}
 		}
 
 		Settings::update( $settings );
@@ -3267,6 +3374,7 @@ JS;
 		$pages = array(
 			'translate-rocket-next'       => array( __( 'Next steps', 'translate-rocket' ), 'dashicons-yes-alt' ),
 			'translate-rocket'            => array( __( 'Languages', 'translate-rocket' ), 'dashicons-translation' ),
+			'translate-rocket-auto'       => array( __( 'Automatic', 'translate-rocket' ), 'dashicons-controls-play' ),
 			'translate-rocket-strings'    => array( __( 'Translations', 'translate-rocket' ), 'dashicons-edit' ),
 			'translate-rocket-memory'     => array( __( 'Memory', 'translate-rocket' ), 'dashicons-database' ),
 			'translate-rocket-ai'         => array( __( 'AI', 'translate-rocket' ), 'dashicons-superhero' ),
@@ -3589,6 +3697,8 @@ JS
 							<div class="trr-ai-phead">
 								<strong class="trr-ai-pname"><?php echo esc_html( $def['label'] ); ?></strong>
 								<?php if ( ! empty( $def['free'] ) ) : ?><span class="trr-ai-badge" style="background:#00a32a;color:#fff;border:0"><?php esc_html_e( 'Free', 'translate-rocket' ); ?></span><?php endif; ?>
+								<?php $provato = self::provider_tested( (string) $pid ); ?>
+								<span class="trr-ai-badge trr-ai-tested" <?php echo $provato ? '' : 'hidden'; ?> title="<?php echo esc_attr( $provato ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $provato ) : '' ); ?>">&#10003; <?php esc_html_e( 'Tested', 'translate-rocket' ); ?></span>
 								<?php if ( $is_active ) : ?><span class="trr-ai-badge is-on"><?php esc_html_e( 'Active', 'translate-rocket' ); ?></span><?php elseif ( $has_key ) : ?><span class="trr-ai-badge"><?php echo $senza_chiave ? esc_html__( 'Ready', 'translate-rocket' ) : esc_html__( 'Key set', 'translate-rocket' ); ?></span><?php endif; ?>
 								<button type="button" class="button-link trr-ai-fold" aria-expanded="<?php echo $aperto ? 'true' : 'false'; ?>" data-show="<?php esc_attr_e( 'Show', 'translate-rocket' ); ?>" data-hide="<?php esc_attr_e( 'Hide', 'translate-rocket' ); ?>"><?php echo $aperto ? esc_html__( 'Hide', 'translate-rocket' ) : esc_html__( 'Show', 'translate-rocket' ); ?></button>
 							</div>
@@ -3724,6 +3834,13 @@ JS
 								</tr>
 							<?php endif; ?>
 						</table>
+							<?php // 9/10/2026 (Federico: «per ogni AI un test, senza consumare crediti o pochissimi»): one word, with the saved key. ?>
+							<p class="trr-ai-pfoot trr-ai-try-row">
+								<input type="text" class="regular-text trr-ai-try-text" maxlength="200" value="<?php echo esc_attr( self::test_sentence( (string) Settings::get()['source_language'] ) ); ?>" aria-label="<?php esc_attr_e( 'Test text', 'translate-rocket' ); ?>">
+								<button type="button" class="button button-small trr-ai-try" data-provider="<?php echo esc_attr( $pid ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'trrocket_models' ) ); ?>">&#9654; <?php esc_html_e( 'Test this text', 'translate-rocket' ); ?></button>
+								<span class="trr-ai-try-out" role="status" aria-live="polite"></span>
+								<span class="description trr-ai-try-tip"><?php esc_html_e( 'Uses the saved key and translates only this short text: it costs almost nothing. Save first if you just pasted the key. When it works, the provider gets a green «Tested» tick.', 'translate-rocket' ); ?></span>
+							</p>
 							<?php if ( 'deepl' === $pid ) : ?>
 								<p class="trr-ai-pfoot"><button type="button" class="button button-small trr-deepl-usage">&#128202; <?php esc_html_e( 'Check usage', 'translate-rocket' ); ?></button> <span class="trr-deepl-usage-out description"></span></p>
 							<?php endif; ?>
@@ -3733,6 +3850,32 @@ JS
 					</div>
 					<script>
 					( function () {
+						// One-word test for each provider (the same check as Diagnostics, where nobody found it).
+						document.addEventListener( 'click', function ( ev ) {
+							var btn = ev.target.closest ? ev.target.closest( '.trr-ai-try' ) : null;
+							if ( ! btn ) { return; }
+							var out = btn.parentNode.querySelector( '.trr-ai-try-out' );
+							btn.disabled = true;
+							out.className = 'trr-ai-try-out is-pending';
+							out.textContent = <?php echo wp_json_encode( __( 'Testing…', 'translate-rocket' ) ); ?>;
+							var body = 'action=trrocket_test_provider&_wpnonce=' + encodeURIComponent( btn.getAttribute( 'data-nonce' ) ) + '&provider=' + encodeURIComponent( btn.getAttribute( 'data-provider' ) ) + '&text=' + encodeURIComponent( ( btn.parentNode.querySelector( '.trr-ai-try-text' ) || {} ).value || '' );
+							var spunta = btn.closest( '.trr-ai-provider' ) ? btn.closest( '.trr-ai-provider' ).querySelector( '.trr-ai-tested' ) : null;
+							fetch( ajaxurl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body } )
+								.then( function ( r ) { return r.json(); } )
+								.then( function ( res ) {
+									btn.disabled = false;
+									if ( res && res.success && res.data && res.data.sample ) {
+										out.className = 'trr-ai-try-out is-ok';
+										if ( spunta ) { spunta.hidden = false; spunta.title = res.data.when || ''; }
+										out.textContent = '✓ «' + ( res.data.source || 'Hello' ) + '» → «' + res.data.sample + '» (' + ( res.data.target || '' ) + ')';
+									} else {
+										out.className = 'trr-ai-try-out is-fail';
+										out.textContent = '✗ ' + ( res && res.data && res.data.error ? res.data.error : 'Error' );
+										if ( spunta ) { spunta.hidden = true; }
+									}
+								} )
+								.catch( function () { btn.disabled = false; out.className = 'trr-ai-try-out is-fail'; out.textContent = '✗'; } );
+						} );
 						function apri( card, si ) {
 							card.classList.toggle( 'is-folded', ! si );
 							var b = card.querySelector( '.trr-ai-fold' );
@@ -4977,7 +5120,8 @@ JS;
 		<div class="wrap trrocket-wrap">
 			<?php self::header( 'translate-rocket' ); ?>
 			<h1 class="trr-page-title"><?php esc_html_e( 'Languages &amp; general', 'translate-rocket' ); ?></h1>
-			<?php \TranslateRocket\Admin\LabsPromo::banner( 'home' ); ?>
+			<?php // 9/10/2026: the map of what is free (core and Labs) replaces the one-line Labs banner here. ?>
+			<?php \TranslateRocket\Admin\Overview::render(); ?>
 
 
 			<?php if ( empty( $targets ) ) : ?>
@@ -5120,6 +5264,7 @@ JS;
 							<?php $this->info( __( 'A language kept offline is invisible to visitors: it is left out of the language switcher, out of your sitemap and out of the hreflang tags, and anyone landing on one of its URLs is sent to your default language. You keep working on it normally — and you can see it on the real pages, because whoever can preview still sees everything. Put it online when you are happy with it.', 'translate-rocket' ) ); ?>
 						</h3>
 						<p class="description"><?php esc_html_e( 'Add a language today, publish it when it is ready. Nothing half-translated ever reaches your visitors or Google.', 'translate-rocket' ); ?></p>
+						<?php $trr_live_now = AutoPage::live(); // the hourglass is right from the first paint ?>
 						<table class="trr-lang-state-table">
 							<tbody>
 							<?php
@@ -5128,17 +5273,23 @@ JS;
 								$manca   = \TranslateRocket\Strings::untranslated_count( (string) $code );
 								$fatte   = \TranslateRocket\Strings::translated_count( (string) $code );
 								$totale  = $manca + $fatte;
-								$perc    = $totale > 0 ? (int) round( 100 * $fatte / $totale ) : 0;
+								$perc    = $totale > 0 ? (int) floor( 100 * $fatte / $totale ) : 0; // floor: 99.6% is not «100%»
 								$is_off  = in_array( (string) $code, $offline_ora, true );
 								?>
-								<tr class="<?php echo $is_off ? 'is-offline' : ''; ?>" data-code="<?php echo esc_attr( (string) $code ); ?>">
+								<tr class="<?php echo $is_off ? 'is-offline' : ''; ?>" data-code="<?php echo esc_attr( (string) $code ); ?>" data-trr-live="<?php echo esc_attr( (string) $code ); ?>">
 									<th scope="row">
 										<span class="trrocket-flag"><?php echo wp_kses( \TranslateRocket\Flags::html( (string) $code, '' ), \TranslateRocket\Kses::html_rules() ); ?></span>
 										<strong><?php echo esc_html( $nome ); ?></strong>
 										<code>/<?php echo esc_html( (string) $code ); ?>/</code>
 									</th>
 									<td class="trr-lang-state-prog">
-										<?php if ( $totale > 0 ) : ?>
+										<?php
+											// 9/10/2026 (Federico: «cliccando ti porta alla pagina traduzioni della corrispondente lingua»):
+											// the bar and the percentage open the Strings page of that language, and a button beside them says so.
+											$vai = $this->editor_url( (string) $code );
+											?>
+											<?php if ( $totale > 0 ) : ?>
+											<a class="trr-lang-state-link" href="<?php echo esc_url( $vai ); ?>">
 											<div class="trr-prog" title="<?php echo esc_attr( sprintf( /* translators: 1: translated strings, 2: total strings. */ __( '%1$d of %2$d translated', 'translate-rocket' ), $fatte, $totale ) ); ?>">
 												<?php
 												// Il colore va scritto qui: .trr-prog-fill non ne ha uno suo, e
@@ -5148,10 +5299,15 @@ JS;
 												?>
 												<div class="trr-prog-bar"><div class="trr-prog-fill" style="width:<?php echo (int) $perc; ?>%;background:<?php echo esc_attr( $tinta ); ?>"></div></div>
 											</div>
-											<span class="trr-lang-state-pc"><?php echo (int) $perc; ?>%</span>
+											<span class="trr-busy" <?php echo empty( $trr_live_now[ (string) $code ]['busy'] ) ? 'hidden' : ''; ?> aria-label="<?php esc_attr_e( 'Being translated now', 'translate-rocket' ); ?>">⏳</span><span class="trr-lang-state-pc"><?php echo (int) $perc; ?>%</span>
+												<span class="trr-auto-n description"><?php echo (int) $fatte . ' / ' . (int) $totale; ?></span>
+											</a>
 										<?php else : ?>
 											<span class="description"><?php esc_html_e( 'nothing collected yet', 'translate-rocket' ); ?></span>
 										<?php endif; ?>
+									</td>
+									<td class="trr-lang-state-go">
+										<a class="button button-small<?php echo $manca > 0 ? ' button-primary' : ''; ?>" href="<?php echo esc_url( $vai ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>
 									</td>
 									<td class="trr-lang-state-switch">
 										<span class="trr-state-pill trr-state-yes"><?php esc_html_e( 'online', 'translate-rocket' ); ?></span>
@@ -5161,6 +5317,7 @@ JS;
 							<?php endforeach; ?>
 							</tbody>
 						</table>
+						<script><?php echo AutoPage::live_script(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></script>
 					</div>
 					<?php endif; ?>
 
@@ -5281,40 +5438,7 @@ JS;
 				</div>
 			</form>
 
-			<?php if ( ! empty( $targets ) ) : ?>
-				<div class="trrocket-card">
-					<h2><?php esc_html_e( 'Progress', 'translate-rocket' ); ?></h2>
-					<table class="widefat striped trr-progress-table" style="margin-top:8px;">
-						<thead>
-							<tr>
-								<th><?php esc_html_e( 'Language', 'translate-rocket' ); ?></th>
-								<th style="width:40%"><?php esc_html_e( 'Progress', 'translate-rocket' ); ?></th>
-								<th><?php esc_html_e( 'Detected', 'translate-rocket' ); ?></th>
-								<th><?php esc_html_e( 'Translated', 'translate-rocket' ); ?></th>
-								<th><?php esc_html_e( 'Missing', 'translate-rocket' ); ?></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							foreach ( $targets as $code ) :
-								$stats = Strings::language_stats( $code );
-								$det   = (int) $stats['detected'];
-								$done  = $det - (int) $stats['missing'];
-								?>
-								<tr>
-									<td><?php echo wp_kses( self::lang_html( (string) $code ), \TranslateRocket\Kses::html_rules() ); ?></td>
-									<td><?php echo wp_kses( $this->progress_bar( $done, $det, true ) , \TranslateRocket\Kses::html_rules() ); ?></td>
-									<td data-label="<?php esc_attr_e( 'Detected', 'translate-rocket' ); ?>"><?php echo (int) $det; ?></td>
-									<td data-label="<?php esc_attr_e( 'Translated', 'translate-rocket' ); ?>"><?php echo (int) $stats['translated']; ?></td>
-									<td data-label="<?php esc_attr_e( 'Missing', 'translate-rocket' ); ?>"><strong><?php echo (int) $stats['missing']; ?></strong></td>
-									<td><a href="<?php echo esc_url( $this->editor_url( $code ) ); ?>"><?php esc_html_e( 'Open editor', 'translate-rocket' ); ?></a></td>
-								</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
-				</div>
-			<?php endif; ?>
+			<?php // 9/10/2026: «Progress» removed — the same numbers are in «Published, or still being translated?», live. ?>
 
 			<div class="trrocket-card">
 				<h2>🚀 <?php esc_html_e( 'Need a hand?', 'translate-rocket' ); ?></h2>
@@ -5445,16 +5569,26 @@ JS;
 		}
 
 		// Language switcher (keeps the current page when set).
-		echo '<p class="trr-langbar"><strong>' . esc_html__( 'Language:', 'translate-rocket' ) . '</strong> ';
+		// 9/10/2026 (Federico: «sotto la bandiera la barra con la percentuale tradotta, così a vista si
+		// vede»; «se c'è un processo su quella lingua fallo capire»): bar, percentage and hourglass in
+		// each button, moving by themselves.
+		$trr_live = AutoPage::live();
+		echo '<p class="trr-langbar trr-langbar-live"><strong>' . esc_html__( 'Language:', 'translate-rocket' ) . '</strong> ';
 		foreach ( $targets as $code ) {
+			$d = $trr_live[ (string) $code ] ?? array( 'pct' => 0, 'busy' => false, 'detected' => 0 );
 			printf(
-				'<a class="button %1$s" href="%2$s">%3$s</a> ',
+				'<a class="button trr-langbtn %1$s%5$s" href="%2$s" data-trr-live="%6$s"><span class="trr-langbtn-top">%3$s</span><span class="trr-langbtn-prog"><span class="trr-prog"><span class="trr-prog-bar"><span class="trr-prog-fill" style="width:%4$d%%"></span></span></span><span class="trr-busy" %7$s>⏳</span><span class="trr-auto-pc">%4$d%%</span></span></a> ',
 				$code === $lang ? 'button-primary' : '',
 				esc_url( $this->editor_url( $code, $loc ) ),
-				wp_kses( self::lang_html( (string) $code ), \TranslateRocket\Kses::html_rules() )
+				wp_kses( self::lang_html( (string) $code ), \TranslateRocket\Kses::html_rules() ),
+				(int) $d['pct'],
+				! empty( $d['busy'] ) ? ' is-busy' : '',
+				esc_attr( (string) $code ),
+				! empty( $d['busy'] ) ? '' : 'hidden'
 			);
 		}
 		echo '</p>';
+		echo '<script>' . AutoPage::live_script() . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( '' !== $loc ) {
 			$this->render_page_editor( $lang, $loc );
@@ -5473,7 +5607,12 @@ JS;
 	 * A translation-progress bar whose fill runs red -> yellow -> green with the %.
 	 */
 	private function progress_bar( int $done, int $total, bool $show_count = false ): string {
-		$pct   = $total > 0 ? (int) round( $done / $total * 100 ) : 100;
+		// 9/10/2026 (a customer's site, 13 languages and nothing collected yet): 0 of 0 showed a green
+		// «100%», as if it was all done. Nothing collected is not finished.
+		if ( $total <= 0 ) {
+			return '<div class="trr-prog"><span class="description">' . esc_html__( 'nothing collected yet', 'translate-rocket' ) . '</span></div>';
+		}
+		$pct   = (int) round( $done / $total * 100 );
 		$hue   = (int) round( $pct * 1.2 ); // 0% = red(0), 100% = green(120).
 		$color = self::hsl_to_hex( $hue, 72, 45 ); // wp_kses (safecss) drops hsl() from inline styles — emit hex.
 		$label = $show_count ? $pct . '% · ' . $done . '/' . $total : $pct . '%';
