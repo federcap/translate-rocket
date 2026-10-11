@@ -96,13 +96,25 @@ class Translator {
 	 * @param string $lang     Target language.
 	 * @param string $url_hash Limit to one page (empty = whole site).
 	 * @param int    $batch    Strings per API call.
+	 * @param string $solo     One provider id chosen by hand on the Translations screen (empty = the chain).
 	 * @return array{ok:bool,count:int,error:string}
 	 */
-	public static function translate_missing( string $lang, string $url_hash = '', int $batch = 0, bool $migliora = false ): array {
+	public static function translate_missing( string $lang, string $url_hash = '', int $batch = 0, bool $migliora = false, string $solo = '' ): array {
 		// The whole configured fallback chain, in priority order. If the first
 		// provider runs out of credit (or its key is rejected) mid-job, the next
 		// one takes over — a big translation can span several accounts.
 		$providers = Registry::ordered();
+		if ( '' !== $solo ) {
+			$scelto    = Registry::get( $solo );
+			$providers = ( $scelto && $scelto->is_configured() ) ? array( $scelto ) : array();
+			if ( empty( $providers ) ) {
+				return array(
+					'ok'    => false,
+					'count' => 0,
+					'error' => __( 'The engine you chose is not ready: check it on the AI Translation screen, or choose another one.', 'translate-rocket' ),
+				);
+			}
+		}
 		if ( empty( $providers ) ) {
 			return array(
 				'ok'    => false,

@@ -53,6 +53,7 @@ class Switcher {
 		add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'wp_footer', array( $this, 'floating' ) );
 		add_action( 'wp_footer', array( $this, 'footer_row' ), 5 );
+		add_action( 'init', array( __CLASS__, 'migrate_footer' ), 5 ); // 1.8.1: the footer is a place of its own
 		// A spot chosen on the page itself (6/10/2026), and the picker that chooses it.
 		add_action( 'wp_footer', array( $this, 'spot' ), 6 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'picker_assets' ), 20 );
@@ -146,6 +147,9 @@ class Switcher {
 				)
 			);
 		}
+		if ( null !== $t && ! empty( $t['sw']['footer_row'] ) ) {
+			$sw['footer_row'] = false; // the footer is being tried with another profile
+		}
 		return $sw;
 	}
 
@@ -205,6 +209,79 @@ class Switcher {
 	}
 
 	/**
+	 * The settings the row at the bottom of every page is drawn with: those of the profile whose
+	 * place is «Footer» (1.8.1, 10/10/2026, Federico: «one switcher for the footer, one for the
+	 * header, not mixed together»). Empty when no profile is in the footer.
+	 *
+	 * @return array<string,mixed>
+	 */
+	public static function footer_settings(): array {
+		$d = self::settings();
+		$t = self::trying();
+		if ( null !== $t && 'default' !== $t['profile'] && ! empty( $t['sw']['footer_row'] ) ) {
+			return array_merge( $d, $t['sw'] );
+		}
+		if ( ! empty( $d['footer_row'] ) ) {
+			return $d;
+		}
+		if ( null === $t || 'default' === $t['profile'] ) {
+			foreach ( (array) ( Settings::get()['switchers'] ?? array() ) as $p ) {
+				if ( is_array( $p ) && ! empty( $p['footer_row'] ) ) {
+					return array_merge( $d, $p );
+				}
+			}
+		} else {
+			foreach ( (array) ( Settings::get()['switchers'] ?? array() ) as $id => $p ) {
+				if ( (string) $id !== $t['profile'] && is_array( $p ) && ! empty( $p['footer_row'] ) ) {
+					return array_merge( $d, $p );
+				}
+			}
+		}
+		return array();
+	}
+
+	/**
+	 * Before 1.8.1 the row at the bottom was a box ticked inside the Default profile, beside its own
+	 * place (floating, header, a spot): now the footer is a place of its own, held by one profile.
+	 * Once, on every site: a Default that was ALSO showing the bottom row gives it to a new profile
+	 * «footer» with the same look, so the site looks the same; a box ticked in another profile
+	 * (it never showed anything) is cleared.
+	 */
+	public static function migrate_footer(): void {
+		if ( get_option( 'trrocket_sw_footer_181' ) ) {
+			return;
+		}
+		$s   = Settings::get();
+		$sw  = is_array( $s['switcher'] ?? null ) ? $s['switcher'] : array();
+		$alt = is_array( $s['switchers'] ?? null ) ? $s['switchers'] : array();
+		foreach ( $alt as $id => $p ) {
+			if ( is_array( $p ) ) {
+				$alt[ $id ]['footer_row'] = false;
+			}
+		}
+		if ( ! empty( $sw['footer_row'] ) && ( ! empty( $sw['in_menu'] ) || ! empty( $sw['floating'] ) || ! empty( $sw['in_spot'] ) ) ) {
+			$id = 'footer';
+			for ( $n = 2; isset( $alt[ $id ] ); $n++ ) {
+				$id = 'footer-' . $n;
+			}
+			$alt[ $id ]       = array_merge(
+				$sw,
+				array(
+					'in_menu'    => false,
+					'floating'   => false,
+					'in_spot'    => false,
+					'footer_row' => true,
+				)
+			);
+			$sw['footer_row'] = false;
+		}
+		$s['switcher']  = $sw;
+		$s['switchers'] = $alt;
+		Settings::update( $s );
+		update_option( 'trrocket_sw_footer_181', 1, false );
+	}
+
+	/**
 	 * Settings for a named profile ('default' or a custom slug), falling back to
 	 * the default profile.
 	 *
@@ -237,8 +314,8 @@ class Switcher {
 		if ( self::in_menu() ) {
 			$out .= self::menu_css( self::menu_settings() );
 		}
-		// The bottom row takes the Default profile's text colours (6/10/2026: the preview showed them, the site did not).
-		$d = self::settings();
+		// The bottom row takes the text colours of its profile (6/10/2026: the preview showed them, the site did not).
+		$d = self::footer_settings();
 		if ( ! empty( $d['footer_row'] ) ) {
 			foreach ( array( 'text_color' => '.trrocket-footer-row a,.trrocket-footer-row span', 'hover_color' => '.trrocket-footer-row a:hover,.trrocket-footer-row a:focus' ) as $k => $sel ) {
 				$c = trim( (string) ( $d[ $k ] ?? '' ) );
@@ -785,7 +862,7 @@ class Switcher {
 	 * centred, wrapping on phones. Independent of where the main switcher is.
 	 */
 	public function footer_row(): void {
-		$s = self::settings();
+		$s = self::footer_settings();
 		if ( empty( $s['footer_row'] ) || Preview::hidden() || \TranslateRocket\BuilderMode::active() ) {
 			return;
 		}

@@ -4899,3 +4899,200 @@ msgstr "Historique de chaque modification : qui a changé une traduction, et le 
 #: src/Admin/Overview.php
 msgid "A weekly e-mail: what was translated and what is still waiting"
 msgstr "Un e-mail chaque semaine : ce qui a été traduit et ce qui attend encore"
+
+#: src/Translator.php
+msgid "The engine you chose is not ready: check it on the AI Translation screen, or choose another one."
+msgstr "Le moteur choisi n’est pas prêt : vérifiez-le dans l’écran Traduction IA, ou choisissez-en un autre."
+
+#: src/Admin/Admin.php
+msgid "Automatic: your priority order"
+msgstr "Automatique : votre ordre de priorité"
+
+#: src/Admin/Admin.php
+msgid "no AI key yet"
+msgstr "pas encore de clé IA"
+
+#: src/Admin/Admin.php
+msgid "no key yet"
+msgstr "pas encore de clé"
+
+#: src/Admin/Admin.php
+msgid "needs TranslateRocket Labs"
+msgstr "nécessite TranslateRocket Labs"
+
+#: src/Admin/Admin.php
+msgid "not available on this server"
+msgstr "non disponible sur ce serveur"
+
+#: src/Admin/Admin.php
+msgid "switched on when you use it"
+msgstr "s’active quand vous l’utilisez"
+
+#: src/Admin/Admin.php
+msgid "off: switch it on in Automatic translation"
+msgstr "désactivé : activez-le dans Traduction automatique"
+
+#: src/Admin/Admin.php
+msgid "Your AI providers"
+msgstr "Vos fournisseurs d’IA"
+
+#: src/Admin/Admin.php
+msgid "Free, no key — TranslateRocket Labs"
+msgstr "Gratuit, sans clé — TranslateRocket Labs"
+
+#: src/Admin/Admin.php
+msgid "Translate with"
+msgstr "Traduire avec"
+
+#: src/Admin/Admin.php
+msgid "This browser (free, no key)"
+msgstr "Ce navigateur (gratuit, sans clé)"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translate all %d missing"
+msgstr "Traduire les %d manquants"
+
+#: src/Admin/Admin.php
+msgid "I have read this and accept it."
+msgstr "J’ai lu et j’accepte."
+
+#: src/Admin/Admin.php
+msgid "This browser cannot translate by itself: choose another engine."
+msgstr "Ce navigateur ne sait pas traduire tout seul : choisissez un autre moteur."
+
+#: src/Admin/Overview.php
+msgid "Add as many languages as you like and translate every page, post, menu, product and form. No word limit, no page limit, nothing to pay. A new language can stay offline, visible only to you, until you are happy with it."
+msgstr "Ajoutez autant de langues que vous voulez et traduisez chaque page, article, menu, produit et formulaire. Aucune limite de mots ni de pages, rien à payer. Une nouvelle langue peut rester hors ligne, visible par vous seul, jusqu’à ce qu’elle vous convienne."
+
+#: src/Admin/Overview.php
+msgid "Paste a free key from Groq, Cloudflare or OpenRouter (or a paid one: DeepL, OpenAI, Google, Anthropic) on AI Translation, then press «Translate all missing». When one provider reaches its daily limit, the next in your order takes over. On Translations you can also pick a single engine."
+msgstr "Collez une clé gratuite de Groq, Cloudflare ou OpenRouter (ou une payante : DeepL, OpenAI, Google, Anthropic) dans Traduction IA, puis cliquez sur «Traduire tout ce qui manque». Quand un fournisseur atteint sa limite du jour, le suivant de votre ordre prend le relais. Dans Traductions, vous pouvez aussi choisir un seul moteur."
+
+#: src/Admin/Overview.php
+msgid "Chrome and Edge on a computer have a translator built in: TranslateRocket uses it on the Translations screen, with no key and nothing sent to an AI company. The first time, the browser downloads its language model. On phones, use a free AI key or the copy-and-paste tool instead."
+msgstr "Chrome et Edge sur ordinateur ont un traducteur intégré : TranslateRocket l’utilise dans l’écran Traductions, sans clé et sans rien envoyer à une entreprise d’IA. La première fois, le navigateur télécharge son modèle de langue. Sur téléphone, utilisez plutôt une clé IA gratuite ou l’outil copier-coller."
+
+#: src/Admin/Overview.php
+msgid "Open any page of your site with «Translate visually» in the admin bar, click a sentence and type your translation. What you write by hand is kept: machine translation only fills in what is still missing."
+msgstr "Ouvrez n’importe quelle page de votre site avec «Traduire visuellement» dans la barre d’administration, cliquez sur une phrase et tapez votre traduction. Ce que vous écrivez à la main est conservé : la traduction automatique ne complète que ce qui manque encore."
+
+#: src/Admin/Overview.php
+msgid "The menu your visitors use to change language, with flags or names. Put it in your header menu, floating in a corner, or in a spot of your page with a block; colours, size and style are set on the Switcher screen."
+msgstr "Le menu que vos visiteurs utilisent pour changer de langue, avec drapeaux ou noms. Placez-le dans le menu d’en-tête, flottant dans un coin ou à un endroit de la page avec un bloc ; couleurs, taille et style se règlent dans l’écran Sélecteur."
+
+#: src/Admin/Overview.php
+msgid "Each language has its own addresses (/de/, /fr/…) and you can translate the page addresses too. Hreflang tags tell Google which page is in which language, and the translated pages go into your sitemap. Search engines get real HTML in every language."
+msgstr "Chaque langue a ses propres adresses (/de/, /fr/…) et vous pouvez aussi traduire les adresses des pages. Les balises hreflang indiquent à Google quelle page est dans quelle langue, et les pages traduites entrent dans votre sitemap. Les moteurs de recherche reçoivent du vrai HTML dans chaque langue."
+
+#: src/Admin/Overview.php
+msgid "Moving from another plugin? Bring the translations you already have, so you do not translate them again. The import screen shows what it found before anything is saved."
+msgstr "Vous venez d’une autre extension ? Récupérez vos traductions existantes pour ne pas les refaire. L’écran d’import montre ce qu’il a trouvé avant d’enregistrer quoi que ce soit."
+
+#: src/Admin/Overview.php
+msgid "Labs adds free engines that need no key and no account — Microsoft Edge Translator, MyMemory, Yandex — called by your server. Some are unofficial endpoints: you read and accept their conditions before they are switched on."
+msgstr "Labs ajoute des moteurs gratuits sans clé ni compte — Microsoft Edge Translator, MyMemory, Yandex — appelés par votre serveur. Certains sont des points d’accès non officiels : vous lisez et acceptez leurs conditions avant de les activer."
+
+#: src/Admin/Overview.php
+msgid "Labs reads every page of your site and translates it in the background, a little at a time, then translates each new or updated page when you publish it. You follow the progress on the Automatic translation screen."
+msgstr "Labs lit chaque page de votre site et la traduit en arrière-plan, petit à petit, puis traduit chaque page nouvelle ou modifiée dès que vous la publiez. Vous suivez l’avancement dans l’écran Traduction automatique."
+
+#: src/Admin/Overview.php
+msgid "Set up several free AI providers (Groq, OpenRouter, Cloudflare) and Labs chains them: when one reaches its daily limit, the next continues, so even a large site keeps moving."
+msgstr "Configurez plusieurs fournisseurs d’IA gratuits (Groq, OpenRouter, Cloudflare) et Labs les enchaîne : quand l’un atteint sa limite du jour, le suivant continue, et même un grand site avance."
+
+#: src/Admin/Overview.php
+msgid "The work runs on your server, not in the open browser tab: it goes on while you use a phone, a tablet or any browser, and when nobody is in wp-admin at all."
+msgstr "Le travail tourne sur votre serveur, pas dans l’onglet ouvert du navigateur : il continue pendant que vous utilisez un téléphone, une tablette ou n’importe quel navigateur, et même quand personne n’est dans wp-admin."
+
+#: src/Admin/Overview.php
+msgid "Give a language its own domain (for example yoursite.de for German) instead of a folder like /de/. Labs checks that the domain and its certificate point to your site, and sends the old addresses to the new ones."
+msgstr "Donnez à une langue son propre domaine (par exemple votresite.de pour l’allemand) au lieu d’un dossier comme /de/. Labs vérifie que le domaine et son certificat pointent vers votre site, et redirige les anciennes adresses vers les nouvelles."
+
+#: src/Admin/Overview.php
+msgid "Create a secret link for a translator, a colleague or a client: they translate or review your pages in the visual editor, without a WordPress account or your password. Their changes wait for your approval (unless you trust the link), and the link can expire or be revoked with one click."
+msgstr "Créez un lien secret pour un traducteur, un collègue ou un client : il traduit ou relit vos pages dans l’éditeur visuel, sans compte WordPress ni votre mot de passe. Ses modifications attendent votre validation (sauf lien de confiance), et le lien peut expirer ou être révoqué en un clic."
+
+#: src/Admin/Overview.php
+msgid "A second free AI reads what the machine translated, marks the sentences that look wrong for you to check and, within a daily limit you choose, rewrites them more naturally."
+msgstr "Une seconde IA gratuite relit ce que la machine a traduit, signale les phrases qui semblent fausses pour que vous les vérifiiez et, dans une limite quotidienne que vous choisissez, les réécrit plus naturellement."
+
+#: src/Admin/Overview.php
+msgid "Every change to a translation is kept: who made it (a person, a collaborator, the AI, an import), when, and what it said before. Any earlier version can be put back with one click."
+msgstr "Chaque modification d’une traduction est conservée : qui l’a faite (une personne, un collaborateur, l’IA, un import), quand, et ce qu’elle disait avant. Toute version précédente se rétablit en un clic."
+
+#: src/Admin/Overview.php
+msgid "Once a week an e-mail tells you what was translated on your site and what is still waiting, so you know where things stand without opening wp-admin."
+msgstr "Une fois par semaine, un e-mail vous indique ce qui a été traduit sur votre site et ce qui attend encore, pour savoir où vous en êtes sans ouvrir wp-admin."
+
+#: src/Admin/Admin.php
+msgid "Automatic uses your AI providers in the order set on AI Translation: when one reaches its daily limit, the next one continues. Choose one engine to use only that one — also for the «AI» button of each page. The free engines of Labs need no key: each one is switched on the first time you use it, after you accept its conditions. «This browser» uses the translator built into Chrome or Edge on this computer. Greyed-out engines show what they still need."
+msgstr "Automatique utilise vos fournisseurs d’IA dans l’ordre défini dans Traduction IA : quand l’un atteint sa limite du jour, le suivant continue. Choisissez un moteur pour n’utiliser que celui-là, aussi pour le bouton «IA» de chaque page. Les moteurs gratuits de Labs n’ont pas besoin de clé : chacun s’active à sa première utilisation, après acceptation de ses conditions. «Ce navigateur» utilise le traducteur intégré à Chrome ou Edge sur cet ordinateur. Les moteurs grisés indiquent ce qui leur manque."
+
+#: src/Admin/Admin.php
+msgid "Header — in my header menu (recommended)"
+msgstr "En-tête — dans le menu de mon en-tête (recommandé)"
+
+#: src/Admin/Admin.php
+msgid "Footer — a row of languages at the bottom of every page"
+msgstr "Pied de page — une rangée de langues en bas de chaque page"
+
+#: src/Admin/Admin.php
+msgid "Only where I add it — shortcode / block"
+msgstr "Seulement là où je l’ajoute — shortcode / bloc"
+
+#: src/Admin/Admin.php
+msgid "Each profile is one switcher in one place. Choose «Header» or «Footer» and this profile goes there; only one profile can be in the header and one in the footer. Floating and a spot on your page are set in the Default profile."
+msgstr "Chaque profil est un sélecteur à un endroit. Choisissez «En-tête» ou «Pied de page» et ce profil y va ; un seul profil peut être dans l’en-tête et un seul dans le pied de page. Flottant et un endroit de votre page se règlent dans le profil Par défaut."
+
+#: src/Admin/Admin.php
+msgid "Each profile is one switcher in one place: choose where this one goes. Only one profile can be in the header and one in the footer."
+msgstr "Chaque profil est un sélecteur à un endroit : choisissez où va celui-ci. Un seul profil peut être dans l’en-tête et un seul dans le pied de page."
+
+#: src/Admin/Admin.php
+msgid "For example: a profile «header» with small flags in the header menu, and a profile «footer» with a table of languages at the bottom of every page, each with its own look. Choosing «Header» or «Footer» here moves that place to this profile. «Only where I add it» shows the profile only where you put the [translaterocket_switcher id=\"name\"] shortcode or the «Language switcher» block."
+msgstr "Par exemple : un profil «header» avec de petits drapeaux dans le menu d’en-tête et un profil «footer» avec un tableau de langues en bas de chaque page, chacun avec son apparence. En choisissant ici «En-tête» ou «Pied de page», cet endroit passe à ce profil. «Seulement là où je l’ajoute» n’affiche le profil que là où vous mettez le shortcode [translaterocket_switcher id=\"nom\"] ou le bloc «Sélecteur de langues»."
+
+#: src/Admin/Admin.php
+msgid "For example: a profile «header» with small flags in the header menu, and a profile «footer» with a table of languages at the bottom of every page, each with its own look. Create more profiles with «Add profile» above. «Only where I add it» shows the profile only where you put the [translaterocket_switcher] shortcode or the «Language switcher» block."
+msgstr "Par exemple : un profil «header» avec de petits drapeaux dans le menu d’en-tête et un profil «footer» avec un tableau de langues en bas de chaque page, chacun avec son apparence. Créez d’autres profils avec «Ajouter un profil» ci-dessus. «Seulement là où je l’ajoute» n’affiche le profil que là où vous mettez le shortcode [translaterocket_switcher] ou le bloc «Sélecteur de langues»."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The row of languages at the bottom of every page uses the «%s» profile. Choose «Footer» here to give it this profile instead."
+msgstr "La rangée de langues en bas de chaque page utilise le profil «%s». Choisissez «Pied de page» ici pour la donner plutôt à ce profil."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Add it where you want with %s or the “Language switcher” block."
+msgstr "Ajoutez-le où vous voulez avec %s ou le bloc « Sélecteur de langues »."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%s — official service, free daily limit"
+msgstr "%s — service officiel, limite quotidienne gratuite"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%s — unofficial endpoint"
+msgstr "%s — point d’accès non officiel"
+
+#: src/Admin/Admin.php
+msgid "Your AI providers — official APIs, with your key"
+msgstr "Vos fournisseurs d’IA — API officielles, avec votre clé"
+
+#: src/Admin/Admin.php
+msgid "TranslateRocket Labs, free — official services"
+msgstr "TranslateRocket Labs, gratuit — services officiels"
+
+#: src/Admin/Admin.php
+msgid "TranslateRocket Labs, free — unofficial endpoints"
+msgstr "TranslateRocket Labs, gratuit — points d’accès non officiels"
+
+#: src/Admin/Admin.php
+msgid "An engine of TranslateRocket Labs: an official, free service with a daily limit. When the limit is used up, go on tomorrow or choose another engine. These are machine translations: review your important pages."
+msgstr "Un moteur de TranslateRocket Labs : un service officiel et gratuit, avec une limite quotidienne. Une fois la limite atteinte, reprenez demain ou choisissez un autre moteur. Ce sont des traductions automatiques : relisez vos pages importantes."
+
+#: src/Admin/Admin.php
+msgid "An engine of TranslateRocket Labs: an unofficial endpoint, not a public service of its owner. It can change or stop working at any time, and using it is your choice and your responsibility. These are machine translations: review your important pages."
+msgstr "Un moteur de TranslateRocket Labs : un point d’accès non officiel, pas un service public de son propriétaire. Il peut changer ou cesser de fonctionner à tout moment, et l’utiliser est votre choix et votre responsabilité. Ce sont des traductions automatiques : relisez vos pages importantes."

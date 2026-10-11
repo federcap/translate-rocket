@@ -133,22 +133,40 @@ class AutoPage {
 		}
 		$labs = self::labs_status();
 		$out  = array();
+		// When each language's count last moved. Rows saved recently are not enough for the hourglass:
+		// a job saving the same sentences again and again, never the last few, kept it on for ever
+		// next to a number that did not move (10/10/2026, «690 / 693» in Arabic).
+		$mosse  = (array) get_option( 'trrocket_auto_moved', array() );
+		$prima  = $mosse;
+		$adesso_ts = time();
+		$finestra  = ( $labs && ! empty( $labs['running'] ) ) ? 15 * MINUTE_IN_SECONDS : 3 * MINUTE_IN_SECONDS;
 		foreach ( $targets as $code ) {
 			$st    = Strings::language_stats( $code );
 			$det   = (int) $st['detected'];
 			$fatte = min( $det, (int) $st['translated'] );
 			$manca = max( 0, $det - $fatte );
 			$ritmo = (int) ( $oggi[ $code ] ?? 0 );
+			if ( ! isset( $mosse[ $code ] ) ) {
+				// First look: trust the recent saves; if the number then stands still, the window closes on it.
+				$mosse[ $code ] = array( $fatte, (int) ( $ora[ $code ] ?? 0 ) > 0 || ( (int) ( $recenti[ $code ] ?? 0 ) > 0 && $labs && ! empty( $labs['running'] ) ) ? $adesso_ts : 0 );
+			} elseif ( (int) $mosse[ $code ][0] !== $fatte ) {
+				$mosse[ $code ] = array( $fatte, $adesso_ts );
+			}
+			$si_muove = ( $adesso_ts - (int) $mosse[ $code ][1] ) <= $finestra;
 			$out[ $code ] = array(
 				'detected'   => $det,
 				'translated' => $fatte,
 				'missing'    => $manca,
 				'pct'        => $det > 0 ? (int) floor( 100 * $fatte / $det ) : 0,
 				'today'      => $ritmo,
-				'busy'       => $manca > 0 && ( ( $labs && ! empty( $labs['running'] ) ) ? (int) ( $recenti[ $code ] ?? 0 ) > 0 : (int) ( $ora[ $code ] ?? 0 ) > 0 ),
+				'busy'       => $manca > 0 && $si_muove && ( ( $labs && ! empty( $labs['running'] ) ) ? (int) ( $recenti[ $code ] ?? 0 ) > 0 : (int) ( $ora[ $code ] ?? 0 ) > 0 ),
 				'days'       => ( $ritmo > 0 && $manca > 0 && $labs && ! empty( $labs['on'] ) && empty( $labs['running'] ) ) ? (int) ceil( $manca / $ritmo ) : 0,
 				'online'     => ! in_array( $code, $offline, true ),
 			);
+		}
+		$mosse = array_intersect_key( $mosse, array_flip( $targets ) );
+		if ( $mosse !== $prima ) {
+			update_option( 'trrocket_auto_moved', $mosse, false );
 		}
 		return $out;
 	}
@@ -185,6 +203,7 @@ class AutoPage {
 		wp_send_json_success(
 			array(
 				'langs' => self::live(),
+				'nonce' => wp_create_nonce( 'trrocket_auto_tick' ), // a page left open for a day keeps updating
 				'job'   => $labs ? array(
 					'running' => ! empty( $labs['running'] ),
 					'done'    => (int) ( $labs['done'] ?? 0 ),
@@ -286,8 +305,11 @@ class AutoPage {
 			. 'var eta=row.querySelector(".trr-auto-eta");if(eta){eta.textContent=d.days?(d.days<=1?C.day1:f(C.days,d.days)):"";}'
 			. 'row.classList.toggle("is-busy",!!d.busy);var h=row.querySelector(".trr-busy");if(h){h.hidden=!d.busy;h.title=C.busy;}'
 			. '});});var j=r.job,el=document.getElementById("trr-auto-job");if(el&&j&&j.total>0){el.textContent=f(C.pages,j.done,j.total)+(j.days?" · "+(j.days<=1?C.site1:f(C.site,j.days)):"")+(j.last?" · "+f(C.last,j.last):"");}}'
-			. 'function tick(){var b=new URLSearchParams();b.append("action","trrocket_auto_tick");b.append("nonce",C.nonce);'
-			. 'fetch(C.ajax,{method:"POST",credentials:"same-origin",body:b}).then(function(x){return x.json();}).then(function(x){if(x&&x.success){paint(x.data);}}).catch(function(){});}'
+			// One request at a time; after two failed ones in a row (logged out, server down) the hourglasses
+			// go off instead of standing still, frozen from when the page was opened.
+			. 'var busy=0,fails=0;function stale(){if(++fails>=2){document.querySelectorAll("[data-trr-live]").forEach(function(row){row.classList.remove("is-busy");var h=row.querySelector(".trr-busy");if(h){h.hidden=true;}});}}'
+			. 'function tick(){if(busy){return;}busy=1;var b=new URLSearchParams();b.append("action","trrocket_auto_tick");b.append("nonce",C.nonce);'
+			. 'fetch(C.ajax,{method:"POST",credentials:"same-origin",body:b}).then(function(x){return x.json();}).then(function(x){if(x&&x.success&&x.data){fails=0;if(x.data.nonce){C.nonce=x.data.nonce;}paint(x.data);}else{stale();}}).catch(stale).then(function(){busy=0;});}'
 			. 'if(document.querySelector("[data-trr-live]")){tick();setInterval(function(){if(!document.hidden){tick();}},30000);}})();';
 	}
 

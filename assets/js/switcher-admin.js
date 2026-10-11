@@ -383,6 +383,10 @@
 		if ( mp ) { mp.style.display = ( 'menu' === v ) ? '' : 'none'; }
 		var sp = document.getElementById( 'sw-spot-pick' );
 		if ( sp ) { sp.style.display = ( 'spot' === v ) ? '' : 'none'; }
+		var fp = document.getElementById( 'sw-footer-pick' );
+		if ( fp ) { fp.style.display = ( 'footer' === v ) ? '' : 'none'; }
+		var fo = document.querySelector( '.trr-sw-foot-owner' );
+		if ( fo ) { fo.style.display = ( 'footer' === v ) ? 'none' : ''; }
 	}
 	if ( fpEl ) {
 		fpEl.addEventListener( 'change', toggleCustomPos );
@@ -566,8 +570,7 @@
 		size( frame2 );
 	}
 	function footerOn() {
-		var c = form.querySelector( '[name="sw_footer_row"]' );
-		return !! ( c && c.checked );
+		return 'footer' === where(); // 1.8.1: the footer is a place, chosen in «Where to show the switcher»
 	}
 	// The second view shows the end of the same page, where the row of languages is.
 	if ( frame2 ) {
@@ -577,10 +580,47 @@
 				frame2.contentWindow.scrollTo( 0, Math.max( d.documentElement.scrollHeight, d.body.scrollHeight ) );
 			} catch ( e ) {}
 			if ( foot ) { foot.classList.remove( 'is-loading' ); }
+			senzaBarre( frame2 );
 		} );
 	}
+	// 1.8.1 (Federico: «controlla la vista da mobile»): nell'anteprima niente barre di scorrimento (un
+	// carrello fuori schermo del tema allargava la pagina) — si scorre lo stesso, con la rotella o il dito.
+	function senzaBarre( f ) {
+		try {
+			var d = f.contentDocument;
+			if ( ! d || d.getElementById( 'trr-prev-css' ) ) { return; }
+			var st = d.createElement( 'style' );
+			st.id = 'trr-prev-css';
+			st.textContent = 'html,body{overflow-x:hidden!important}html{scrollbar-width:none}html::-webkit-scrollbar{display:none}';
+			( d.head || d.documentElement ).appendChild( st );
+		} catch ( e ) {}
+	}
+	// Sul telefono il tema mette il menu dietro ☰: l'anteprima lo apre, cosi' le lingue si vedono come le
+	// vede chi tocca ☰. Tornando al desktop si ricarica, chiuso.
+	var menuAperto = false;
+	function apriMenu() {
+		if ( ! phone || 'menu' !== where() ) { return; }
+		try {
+			var d = frame.contentDocument;
+			var sel = '.wp-block-navigation__responsive-container-open, .menu-toggle, .ast-mobile-menu-trigger-minimal, .ast-menu-toggle, .main-header-menu-toggle, .navbar-toggler, .oceanwp-mobile-menu-icon a, .mobile-menu-toggle, .hamburger, [aria-controls][aria-expanded="false"][class*="toggle"]';
+			var cands = d.querySelectorAll( sel );
+			for ( var i = 0; i < cands.length; i++ ) {
+				var r = cands[ i ].getBoundingClientRect();
+				if ( r.width > 0 && r.height > 0 ) {
+					cands[ i ].click();
+					menuAperto = true;
+					return;
+				}
+			}
+		} catch ( e ) {}
+	}
 	// 7/10/2026 (Federico: «spunta bianco nell'attesa»): la scheda dice che sta caricando
-	frame.addEventListener( 'load', function () { wrap.classList.remove( 'is-loading' ); } );
+	frame.addEventListener( 'load', function () {
+		wrap.classList.remove( 'is-loading' );
+		senzaBarre( frame );
+		menuAperto = false;
+		setTimeout( apriMenu, 350 );
+	} );
 	function load() {
 		var on = 'menu' === where() || 'spot' === where() || footerOn();
 		card.hidden = ! on;
@@ -591,6 +631,8 @@
 		if ( foot && footerOn() ) { foot.classList.add( 'is-loading' ); }
 		if ( foot ) { foot.hidden = ! footerOn(); }
 		if ( footH ) { footH.hidden = ! footerOn(); }
+		// 1.8.1: a profile in the footer shows the bottom of the page, not the header.
+		wrap.hidden = ! ( 'menu' === where() || 'spot' === where() );
 		if ( ! on ) { return; }
 		fit();
 		var fd = new FormData( form );
@@ -628,6 +670,11 @@
 			phone = 'phone' === b.getAttribute( 'data-view' );
 			card.classList.toggle( 'is-phone', phone );
 			fit();
+			if ( phone ) {
+				setTimeout( apriMenu, 400 );
+			} else if ( menuAperto ) {
+				load(); // back to the desktop: the header again, with the menu closed
+			}
 		} );
 	} );
 	load();

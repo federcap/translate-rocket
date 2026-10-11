@@ -2213,3 +2213,19 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-auto-pill { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; }
 .trr-auto-pill.is-online { background: #e6f6ea; color: #047857; }
 .trr-auto-pill.is-offline { background: #f0f0f1; color: #50575e; }
+
+/* 1.8.1: «Translate with» engine menu on the Translations screen */
+.trr-engine-label{font-weight:600}
+.trr-engine{max-width:440px}
+.trr-engine-ack{display:flex;flex-direction:column;gap:4px;flex-basis:100%;max-width:720px;padding:8px 10px;background:#fff8e5;border-left:4px solid #dba617;font-size:12px}
+.trr-engine-ack[hidden]{display:none}
+@media (max-width:782px){.trr-engine{max-width:100%;width:100%}#trr-engine-form{width:100%}}
+
+/* 1.8.1: the ⓘ at the end of each overview title (not on a line of its own) */
+.trr-ov-txt strong .trr-info { vertical-align: -3px; margin-left: 2px; }
+.trr-ov-txt strong .trr-info .dashicons { font-size: 16px; width: 16px; height: 16px; color: #787c82; }
+
+/* 1.8.1: the note under «Translate with» when a Labs engine is chosen (11/10/2026) */
+.trr-engine-labsnote{display:block;flex-basis:100%;max-width:720px;padding:8px 10px;background:#f0f6fc;border-left:4px solid #72aee6;font-size:12px;line-height:1.5}
+.trr-engine-labsnote.is-unofficial{background:#fff8e5;border-left-color:#dba617}
+.trr-engine-labsnote[hidden]{display:none}

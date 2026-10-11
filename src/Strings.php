@@ -214,6 +214,10 @@ class Strings {
 		global $wpdb;
 		$occurrences  = Database::occurrences_table();
 		$translations = Database::translations_table();
+		$strings      = Database::strings_table();
+		// 11/10/2026 (Federico: «è al 70% ma non mi dà la possibilità di tradurre»): a page counted its images
+		// and the sentences deleted since, which no engine can translate, and stayed at 94% for ever beside a
+		// language at 100%. Same rules as language_stats(): only sentences that exist, images left out.
 
 		return $wpdb->get_results(
 			$wpdb->prepare(
@@ -223,6 +227,7 @@ class Strings {
 						COUNT(DISTINCT o.string_id) AS total,
 						SUM( CASE WHEN tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> '' THEN 1 ELSE 0 END ) AS translated
 				 FROM {$occurrences} o
+				 INNER JOIN {$strings} st ON st.id = o.string_id AND st.type <> 'image'
 				 LEFT JOIN {$translations} tr ON tr.string_id = o.string_id AND tr.language = %s
 				 WHERE o.url <> %s
 				 GROUP BY o.url_hash
@@ -341,6 +346,9 @@ class Strings {
 				 INNER JOIN {$strings} st ON st.id = o.string_id
 				 LEFT JOIN {$translations} tr ON tr.string_id = st.id AND tr.language = %s
 				 WHERE o.url_hash = %s
+				   -- 11/10/2026: the «AI» button of a page sent image addresses to the engine, as the
+				   -- whole-language button never does (a translated address makes the image disappear).
+				   AND st.type <> 'image'
 				   AND ( tr.id IS NULL OR tr.status = 0 OR tr.translation IS NULL OR tr.translation = '' )
 				 ORDER BY st.id ASC",
 				$lang,

@@ -1972,7 +1972,16 @@ class Admin {
 		if ( ! empty( $_POST['sw_new_profile'] ) ) {
 			$slug = sanitize_key( wp_unslash( $_POST['sw_new_profile'] ) );
 			if ( '' !== $slug && 'default' !== $slug && ! isset( $settings['switchers'][ $slug ] ) ) {
-				$settings['switchers'][ $slug ] = $settings['switcher'];
+				// A copy of Default's look, in no place yet: header and footer stay where they are.
+				$settings['switchers'][ $slug ] = array_merge(
+					(array) $settings['switcher'],
+					array(
+						'in_menu'    => false,
+						'floating'   => false,
+						'in_spot'    => false,
+						'footer_row' => false,
+					)
+				);
 				Settings::update( $settings );
 			}
 			$this->redirect_switcher( $slug );
@@ -2005,6 +2014,17 @@ class Admin {
 				$settings['switcher']['in_menu']  = false;
 				$settings['switcher']['floating'] = false;
 				$settings['switcher']['in_spot']  = false;
+			}
+		}
+		// One profile in the footer (1.8.1): the one saved with «Footer» takes it.
+		if ( ! empty( $sw['footer_row'] ) ) {
+			foreach ( (array) ( $settings['switchers'] ?? array() ) as $id => $p ) {
+				if ( (string) $id !== $profile && is_array( $p ) ) {
+					$settings['switchers'][ $id ]['footer_row'] = false;
+				}
+			}
+			if ( 'default' !== $profile && is_array( $settings['switcher'] ?? null ) ) {
+				$settings['switcher']['footer_row'] = false;
 			}
 		}
 		if ( 'default' === $profile ) {
@@ -2046,11 +2066,11 @@ class Admin {
 		if ( 'after' === $sw['menu_pos'] && '' === $sw['menu_after'] ) {
 			$sw['menu_pos'] = 'end';
 		}
-		$sw['footer_row']    = ! empty( $_POST['sw_footer_row'] );
+		$sw['footer_row']    = ( 'footer' === $placement ); // 1.8.1: a place of its own, no longer a box in Default
 		$sw['footer_layout'] = ( isset( $_POST['sw_footer_layout'] ) && 'grid' === $_POST['sw_footer_layout'] ) ? 'grid' : 'row';
 		$sw['footer_align']  = ( isset( $_POST['sw_footer_align'] ) && in_array( $_POST['sw_footer_align'], array( 'left', 'right' ), true ) ) ? sanitize_key( $_POST['sw_footer_align'] ) : 'center';
 		$sw['footer_cols']   = isset( $_POST['sw_footer_cols'] ) ? max( 0, min( 6, (int) $_POST['sw_footer_cols'] ) ) : 0;
-		$sw['floating']      = ( ! in_array( $placement, array( 'manual', 'menu', 'spot' ), true ) );
+		$sw['floating']      = ( ! in_array( $placement, array( 'manual', 'menu', 'spot', 'footer' ), true ) );
 		$menu_loc            = isset( $_POST['sw_menu_location'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_menu_location'] ) ) : 'auto';
 		$sw['menu_location'] = ( 'auto' === $menu_loc || isset( \TranslateRocket\Frontend\Switcher::menu_locations()[ $menu_loc ] ) || preg_match( '/^nav:\d+$/', $menu_loc ) ) ? $menu_loc : 'auto';
 		$sw['float_pos']     = in_array( $placement, array( 'bottom-right', 'bottom-left', 'top-right', 'top-left', 'custom' ), true ) ? $placement : 'bottom-right';
@@ -2238,15 +2258,15 @@ class Admin {
 			</div>
 
 			<?php // 6/10/2026 (Federico): with the languages in the header menu the theme draws them — the preview is the real site. ?>
-			<div class="trrocket-card" id="trr-sw-site" <?php echo ( ! empty( $sw['in_menu'] ) || ( 'default' === $profile && ( ! empty( $sw['in_spot'] ) || ! empty( $sw['footer_row'] ) ) ) ) ? '' : 'hidden'; ?>>
+			<div class="trrocket-card" id="trr-sw-site" <?php echo ( ! empty( $sw['in_menu'] ) || ! empty( $sw['footer_row'] ) || ( 'default' === $profile && ! empty( $sw['in_spot'] ) ) ) ? '' : 'hidden'; ?>>
 				<h2><?php esc_html_e( 'Your site, live', 'translate-rocket' ); ?></h2>
 				<p class="description"><?php esc_html_e( 'Your real header, as visitors will see it with the settings on this page — before you save. In the menu your theme draws the languages; the colours and the opening you choose here are applied to them.', 'translate-rocket' ); ?></p>
-				<div class="trr-sw-site-wrap" data-wait="<?php esc_attr_e( 'Loading the preview…', 'translate-rocket' ); ?>"><iframe id="trr-sw-site-frame" title="<?php esc_attr_e( 'Your site, live', 'translate-rocket' ); ?>"></iframe></div>
-				<h3 id="trr-sw-site-foot-h" <?php echo ( 'default' === $profile && ! empty( $sw['footer_row'] ) ) ? '' : 'hidden'; ?>><?php esc_html_e( 'Bottom of the page', 'translate-rocket' ); ?></h3>
-				<div class="trr-sw-site-wrap" id="trr-sw-site-foot" data-wait="<?php esc_attr_e( 'Loading the preview…', 'translate-rocket' ); ?>" <?php echo ( 'default' === $profile && ! empty( $sw['footer_row'] ) ) ? '' : 'hidden'; ?>><iframe id="trr-sw-site-frame2" title="<?php esc_attr_e( 'Bottom of the page', 'translate-rocket' ); ?>"></iframe></div>
+				<div class="trr-sw-site-wrap" id="trr-sw-site-top" data-wait="<?php esc_attr_e( 'Loading the preview…', 'translate-rocket' ); ?>" <?php echo ( ! empty( $sw['in_menu'] ) || ( 'default' === $profile && ! empty( $sw['in_spot'] ) ) ) ? '' : 'hidden'; ?>><iframe id="trr-sw-site-frame" title="<?php esc_attr_e( 'Your site, live', 'translate-rocket' ); ?>"></iframe></div>
+				<h3 id="trr-sw-site-foot-h" <?php echo ! empty( $sw['footer_row'] ) ? '' : 'hidden'; ?>><?php esc_html_e( 'Bottom of the page', 'translate-rocket' ); ?></h3>
+				<div class="trr-sw-site-wrap" id="trr-sw-site-foot" data-wait="<?php esc_attr_e( 'Loading the preview…', 'translate-rocket' ); ?>" <?php echo ! empty( $sw['footer_row'] ) ? '' : 'hidden'; ?>><iframe id="trr-sw-site-frame2" title="<?php esc_attr_e( 'Bottom of the page', 'translate-rocket' ); ?>"></iframe></div>
 			</div>
 			<?php // 9/10/2026 (Federico: «si vede solo su Predefinito?»): when the live view is not there, say why. ?>
-			<p class="description trrocket-card" id="trr-sw-site-none" <?php echo ( ! empty( $sw['in_menu'] ) || ( 'default' === $profile && ( ! empty( $sw['in_spot'] ) || ! empty( $sw['footer_row'] ) ) ) ) ? 'hidden' : ''; ?>>
+			<p class="description trrocket-card" id="trr-sw-site-none" <?php echo ( ! empty( $sw['in_menu'] ) || ! empty( $sw['footer_row'] ) || ( 'default' === $profile && ! empty( $sw['in_spot'] ) ) ) ? 'hidden' : ''; ?>>
 				<?php
 				printf(
 					/* translators: %s: the shortcode of this profile */
@@ -2265,12 +2285,12 @@ class Admin {
 						<h2><?php esc_html_e( 'Placement', 'translate-rocket' ); ?></h2>
 						<?php $trr_extra = 'default' !== $profile; // 6/10/2026 (Federico): a profile like «header» can be the one in the header menu. ?>
 						<?php if ( $trr_extra ) : ?>
-							<p class="description"><?php esc_html_e( 'Choose «In my header menu» here and the menu shows this profile; only one profile can be in the menu. Floating, the spot on your page and the bottom row are set in the Default profile.', 'translate-rocket' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Each profile is one switcher in one place. Choose «Header» or «Footer» and this profile goes there; only one profile can be in the header and one in the footer. Floating and a spot on your page are set in the Default profile.', 'translate-rocket' ); ?> <?php $this->info( __( 'For example: a profile «header» with small flags in the header menu, and a profile «footer» with a table of languages at the bottom of every page, each with its own look. Choosing «Header» or «Footer» here moves that place to this profile. «Only where I add it» shows the profile only where you put the [translaterocket_switcher id="name"] shortcode or the «Language switcher» block.', 'translate-rocket' ) ); ?></p>
 						<?php else : ?>
-						<p class="description"><?php esc_html_e( 'Choose one: either place the switcher yourself with the shortcode / block, or let the plugin float it for you — not both.', 'translate-rocket' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Each profile is one switcher in one place: choose where this one goes. Only one profile can be in the header and one in the footer.', 'translate-rocket' ); ?> <?php $this->info( __( 'For example: a profile «header» with small flags in the header menu, and a profile «footer» with a table of languages at the bottom of every page, each with its own look. Create more profiles with «Add profile» above. «Only where I add it» shows the profile only where you put the [translaterocket_switcher] shortcode or the «Language switcher» block.', 'translate-rocket' ) ); ?></p>
 						<?php endif; ?>
 						<?php
-						$placement = ! empty( $g( 'in_spot' ) ) ? 'spot' : ( ! empty( $g( 'in_menu' ) ) ? 'menu' : ( empty( $g( 'floating' ) ) ? 'manual' : (string) $g( 'float_pos' ) ) );
+						$placement = ! empty( $g( 'in_spot' ) ) ? 'spot' : ( ! empty( $g( 'in_menu' ) ) ? 'menu' : ( ! empty( $g( 'footer_row' ) ) && empty( $g( 'floating' ) ) ? 'footer' : ( empty( $g( 'floating' ) ) ? 'manual' : (string) $g( 'float_pos' ) ) ) );
 						$trr_menus = self::switcher_menu_choices();
 						?>
 						<?php
@@ -2305,16 +2325,17 @@ class Admin {
 							<select name="sw_placement" id="sw_placement">
 								<?php
 								foreach ( array(
-									'menu'         => __( 'In my header menu (recommended)', 'translate-rocket' ),
+									'menu'         => __( 'Header — in my header menu (recommended)', 'translate-rocket' ),
+									'footer'       => __( 'Footer — a row of languages at the bottom of every page', 'translate-rocket' ),
 									'spot'         => __( 'In a spot I choose on my page', 'translate-rocket' ),
-									'manual'       => __( 'Manual — I add it with the shortcode / block', 'translate-rocket' ),
+									'manual'       => __( 'Only where I add it — shortcode / block', 'translate-rocket' ),
 									'bottom-right' => __( 'Floating — bottom right', 'translate-rocket' ),
 									'bottom-left'  => __( 'Floating — bottom left', 'translate-rocket' ),
 									'top-right'    => __( 'Floating — top right', 'translate-rocket' ),
 									'top-left'     => __( 'Floating — top left', 'translate-rocket' ),
 									'custom'       => __( 'Floating — custom position (X / Y)', 'translate-rocket' ),
 								) as $v => $l ) :
-									if ( $trr_extra && ! in_array( $v, array( 'menu', 'manual' ), true ) ) {
+									if ( $trr_extra && ! in_array( $v, array( 'menu', 'footer', 'manual' ), true ) ) {
 										continue;
 									}
 									?>
@@ -2322,10 +2343,30 @@ class Admin {
 								<?php endforeach; ?>
 							</select>
 						</label></p>
-						<?php if ( $trr_extra && ! empty( $settings['switcher']['footer_row'] ) ) : // 9/10/2026 (Federico: «lo switcher in fondo, a quale profilo appartiene?»). ?>
-							<p class="description" style="background:#f0f6fc;border-left:4px solid #72aee6;padding:8px 12px">
-								<?php esc_html_e( 'The row of languages at the bottom of every page belongs to the «Default» profile: its look and its on/off are set there.', 'translate-rocket' ); ?>
-								<a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-switcher' ) ); ?>"><?php esc_html_e( 'Open the «Default» profile', 'translate-rocket' ); ?></a>
+						<?php
+						// 1.8.1: which profile has the footer, when it is not this one.
+						$trr_foot_owner = '';
+						if ( empty( $g( 'footer_row' ) ) ) {
+							$trr_all = Settings::get();
+							if ( ! empty( $trr_all['switcher']['footer_row'] ) && $trr_extra ) {
+								$trr_foot_owner = __( 'Default', 'translate-rocket' );
+							}
+							foreach ( (array) ( $trr_all['switchers'] ?? array() ) as $trr_pid => $trr_p ) {
+								if ( (string) $trr_pid !== $profile && is_array( $trr_p ) && ! empty( $trr_p['footer_row'] ) ) {
+									$trr_foot_owner = (string) $trr_pid;
+								}
+							}
+						}
+						if ( '' !== $trr_foot_owner ) :
+							?>
+							<p class="description trr-sw-foot-owner" style="background:#f0f6fc;border-left:4px solid #72aee6;padding:8px 12px">
+								<?php
+								printf(
+									/* translators: %s: name of the profile at the bottom of every page */
+									esc_html__( 'The row of languages at the bottom of every page uses the «%s» profile. Choose «Footer» here to give it this profile instead.', 'translate-rocket' ),
+									esc_html( $trr_foot_owner )
+								);
+								?>
 							</p>
 						<?php endif; ?>
 						<p id="sw-custom-pos">
@@ -2382,8 +2423,8 @@ class Admin {
 								<iframe id="sw-picker-frame" title="<?php esc_attr_e( 'Choose the spot', 'translate-rocket' ); ?>"></iframe>
 							</div>
 						</div>
-						<div class="trr-sw-footer">
-							<p><label><input type="checkbox" name="sw_footer_row" value="1" <?php checked( ! empty( $g( 'footer_row' ) ) ); ?> /> <strong><?php esc_html_e( 'Also a row of languages at the bottom of every page', 'translate-rocket' ); ?></strong></label></p>
+						<?php endif; ?>
+						<div class="trr-sw-footer" id="sw-footer-pick">
 							<p class="trr-sw-footer-lay">
 								<label><input type="radio" name="sw_footer_layout" value="row" <?php checked( 'grid' !== (string) $g( 'footer_layout', 'row' ) ); ?> /> <?php esc_html_e( 'In a line', 'translate-rocket' ); ?></label>
 								<label><input type="radio" name="sw_footer_layout" value="grid" <?php checked( 'grid', (string) $g( 'footer_layout', 'row' ) ); ?> /> <?php esc_html_e( 'As a table', 'translate-rocket' ); ?></label>
@@ -2402,8 +2443,7 @@ class Admin {
 							</p>
 							<p class="description"><?php esc_html_e( 'Flags and names side by side under your footer, as many sites do: handy with many languages, and visitors find them where they look for them.', 'translate-rocket' ); ?></p>
 						</div>
-						<?php endif; ?>
-						<p id="sw-manual-hint" class="description"><?php esc_html_e( 'Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block.', 'translate-rocket' ); ?></p>
+						<p id="sw-manual-hint" class="description"><?php echo esc_html( 'default' === $profile ? __( 'Add it where you want with the [translaterocket_switcher] shortcode or the “Language switcher” block.', 'translate-rocket' ) : sprintf( /* translators: %s: the shortcode with this profile's name */ __( 'Add it where you want with %s or the “Language switcher” block.', 'translate-rocket' ), '[translaterocket_switcher id="' . $profile . '"]' ) ); ?></p>
 					</div>
 
 					<div class="trrocket-card">
@@ -3300,6 +3340,141 @@ JS;
 	}
 
 	/**
+	 * The engine menu on the Translations screen: the acceptance box for a Labs engine that needs one,
+	 * the per-page buttons following the choice, «This browser» handing over to the browser panel.
+	 * Returned as a string for wp_add_inline_script().
+	 */
+	private static function engine_js(): string {
+		return <<<'JS'
+			(function(){
+				var f=document.getElementById('trr-engine-form'),s=document.getElementById('trr-engine');if(!f||!s){return;}
+				var W=window.TRRocketEngineAck||{},ack=document.getElementById('trr-engine-ack'),nob=document.getElementById('trr-engine-nobrowser');
+				var one=document.getElementById('trr-ai-onepage');
+				function sync(){
+					var v=s.value;
+					if(ack){var w=W[v];ack.hidden=!w;var cb=ack.querySelector('input');cb.required=!!w;if(w){ack.querySelector('.trr-engine-ack-lines').textContent=w.join(' ');}}
+					if(nob){nob.hidden=true;}
+					var ln=document.getElementById('trr-engine-labsnote'),N=window.TRRocketEngineNote||{};if(ln){ln.hidden=!N[v];ln.textContent=N[v]||'';ln.classList.toggle('is-unofficial',/labs:(edge|yandex)/.test(v));}
+					// The per-page «AI» buttons follow the choice (the browser works on the whole language: they keep the priority order).
+					if(one){var h=one.querySelector('input[name="engine"]');if(!h){h=document.createElement('input');h.type='hidden';h.name='engine';one.appendChild(h);}h.value=('browser'===v||W[v])?'':v;var auto=s.querySelector('option[value=""]'),no=!h.value&&(!auto||auto.disabled);document.querySelectorAll('button[form="trr-ai-onepage"]').forEach(function(x){x.disabled=no;});}
+				}
+				s.addEventListener('change',sync);sync();
+				f.addEventListener('submit',function(e){
+					if('browser'!==s.value){return;}
+					e.preventDefault();
+					var go=document.getElementById('trr-browser-go'),box=document.getElementById('trr-browser-engine');
+					if(go&&box&&box.offsetParent!==null&&!go.disabled&&!box.querySelector('#trr-browser-fallback:not([hidden])')){box.scrollIntoView({behavior:'smooth',block:'center'});go.click();}
+					else if(nob){nob.hidden=false;}
+				});
+			})();
+JS;
+	}
+
+	/**
+	 * The engines offered on the Translations screen (10/10/2026, Federico: «let people choose which
+	 * one translates; with Labs, every engine»). Every engine is listed, the ones not usable here too,
+	 * greyed out with the reason: an AI without its key, a Labs engine without Labs.
+	 *
+	 * @return array<int,array{value:string,label:string,group:string,ok:bool,why:string,provider:string,labs:string,switch_on:bool,warning:array}>
+	 */
+	public static function engine_choices(): array {
+		$defs  = self::provider_defs();
+		$catena = Registry::ordered();
+		$out   = array(
+			array(
+				'value'     => '',
+				'label'     => __( 'Automatic: your priority order', 'translate-rocket' ),
+				'group'     => '',
+				'ok'        => ! empty( $catena ),
+				'why'       => empty( $catena ) ? __( 'no AI key yet', 'translate-rocket' ) : '',
+				'provider'  => '',
+				'labs'      => '',
+				'switch_on' => false,
+				'warning'   => array(),
+			),
+		);
+		// Labs' server engines: their id on the Automatic page => their provider id.
+		$labs_ids = array(
+			'mymemory' => 'mymemory',
+			'edge'     => 'edge-unofficial',
+			'yandex'   => 'yandex-unofficial',
+		);
+		// 11/10/2026 (Federico: «choose the engine, an official endpoint or not, and warn when it is from Labs»).
+		$ufficiale = array(
+			'mymemory' => true,
+			'edge'     => false,
+			'yandex'   => false,
+		);
+		$per_id = array();
+		foreach ( Registry::all() as $p ) {
+			$per_id[ $p->id() ] = $p;
+		}
+		foreach ( $defs as $id => $def ) {
+			if ( in_array( $id, $labs_ids, true ) ) {
+				continue;
+			}
+			$p     = $per_id[ $id ] ?? null;
+			$out[] = array(
+				'value'     => (string) $id,
+				'label'     => (string) ( $def['label'] ?? $id ),
+				'group'     => 'ai',
+				'ok'        => $p && $p->is_configured(),
+				'why'       => ( $p && $p->is_configured() ) ? '' : __( 'no key yet', 'translate-rocket' ),
+				'provider'  => (string) $id,
+				'labs'      => '',
+				'switch_on' => false,
+				'warning'   => array(),
+			);
+		}
+		$righe   = AutoPage::labs_engines();
+		$accende = has_action( 'trrocket_engine_switch_on' );
+		$nomi    = array(
+			'edge'     => 'Microsoft Edge Translator',
+			'mymemory' => 'MyMemory',
+			'yandex'   => 'Yandex Translate',
+		);
+		foreach ( $labs_ids as $lid => $pid ) {
+			$riga = null;
+			foreach ( (array) $righe as $r ) {
+				if ( ( $r['id'] ?? '' ) === $lid ) {
+					$riga = $r;
+				}
+			}
+			// Our own words, in the admin's language (Labs' labels came in English), and said plainly.
+			$label = $ufficiale[ $lid ]
+				/* translators: %s: name of a free translation service, e.g. MyMemory */
+				? sprintf( __( '%s — official service, free daily limit', 'translate-rocket' ), $nomi[ $lid ] )
+				/* translators: %s: name of a translator, e.g. Microsoft Edge Translator */
+				: sprintf( __( '%s — unofficial endpoint', 'translate-rocket' ), $nomi[ $lid ] );
+			if ( null === $righe ) {
+				$ok  = false;
+				$why = __( 'needs TranslateRocket Labs', 'translate-rocket' );
+			} elseif ( ! empty( $riga['on'] ) ) {
+				$ok  = isset( $per_id[ $pid ] ) && $per_id[ $pid ]->is_configured();
+				$why = $ok ? '' : __( 'not available on this server', 'translate-rocket' );
+			} elseif ( $accende && $riga ) {
+				$ok  = true;
+				$why = __( 'switched on when you use it', 'translate-rocket' );
+			} else {
+				$ok  = false;
+				$why = __( 'off: switch it on in Automatic translation', 'translate-rocket' );
+			}
+			$out[] = array(
+				'value'     => 'labs:' . $lid,
+				'label'     => $label,
+				'group'     => $ufficiale[ $lid ] ? 'labs-ok' : 'labs-no',
+				'ok'        => $ok,
+				'why'       => $why,
+				'provider'  => $pid,
+				'labs'      => $lid,
+				'switch_on' => $ok && $riga && empty( $riga['on'] ),
+				'warning'   => ( $ok && $riga && empty( $riga['on'] ) && empty( $riga['acked'] ) ) ? array_map( 'strval', (array) ( $riga['warning'] ?? array() ) ) : array(),
+			);
+		}
+		return $out;
+	}
+
+	/**
 	 * Run AI auto-translation for a language (optionally a single page).
 	 */
 	public function maybe_auto_translate(): void {
@@ -3320,7 +3495,43 @@ JS;
 		}
 		$loc = isset( $_POST['loc'] ) ? sanitize_text_field( wp_unslash( $_POST['loc'] ) ) : '';
 
-		$result = Translator::translate_missing( $lang, $loc );
+		// The engine chosen on the Translations screen (empty = the priority order).
+		$motore = isset( $_POST['engine'] ) ? sanitize_text_field( wp_unslash( $_POST['engine'] ) ) : '';
+		$solo   = '';
+		if ( isset( $_POST['engine_main'] ) ) { // the menu itself, not a per-page button: remembered
+			update_user_meta( get_current_user_id(), 'trrocket_strings_engine', $motore );
+		}
+		if ( '' !== $motore && 'browser' !== $motore ) {
+			foreach ( self::engine_choices() as $c ) {
+				if ( $c['value'] !== $motore ) {
+					continue;
+				}
+				if ( ! empty( $c['switch_on'] ) ) {
+					// A Labs engine still off: switched on here, the owner chose it by name.
+					if ( ! empty( $c['warning'] ) && empty( $_POST['engine_ack'] ) ) {
+						break;
+					}
+					do_action( 'trrocket_engine_switch_on', (string) $c['labs'] );
+				}
+				$solo = (string) $c['provider'];
+				break;
+			}
+			if ( '' === $solo ) {
+				set_transient(
+					'trrocket_ai_notice_' . get_current_user_id(),
+					array(
+						'ok'    => false,
+						'count' => 0,
+						'error' => __( 'The engine you chose is not ready: check it on the AI Translation screen, or choose another one.', 'translate-rocket' ),
+					),
+					60
+				);
+				wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-strings', 'lang' => $lang ), admin_url( 'admin.php' ) ) );
+				exit;
+			}
+		}
+
+		$result = Translator::translate_missing( $lang, $loc, 0, false, $solo );
 		set_transient( 'trrocket_ai_notice_' . get_current_user_id(), $result, 60 );
 		\TranslateRocket\Cache::flush();
 
@@ -5612,7 +5823,7 @@ JS;
 		if ( $total <= 0 ) {
 			return '<div class="trr-prog"><span class="description">' . esc_html__( 'nothing collected yet', 'translate-rocket' ) . '</span></div>';
 		}
-		$pct   = (int) round( $done / $total * 100 );
+		$pct   = (int) floor( $done / $total * 100 ); // as the language buttons: 525/693 is 75%, and 99.6% is not «100%»
 		$hue   = (int) round( $pct * 1.2 ); // 0% = red(0), 100% = green(120).
 		$color = self::hsl_to_hex( $hue, 72, 45 ); // wp_kses (safecss) drops hsl() from inline styles — emit hex.
 		$label = $show_count ? $pct . '% · ' . $done . '/' . $total : $pct . '%';
@@ -5695,17 +5906,90 @@ JS;
 
 			<span class="trr-actionbar-sep" aria-hidden="true"></span>
 
-			<form method="post" action="" style="margin:0;display:inline">
+			<?php
+			// Which engine translates: the priority order, one AI, a Labs engine, or this browser.
+			$scelte  = self::engine_choices();
+			// 1.8.1: the per-page «AI» buttons are there when any engine of the menu works (a Labs engine, no AI key, too).
+			$riga_ok = (bool) array_filter( $scelte, static function ( $c ) { return $c['ok']; } );
+			$scelto  = (string) get_user_meta( get_current_user_id(), 'trrocket_strings_engine', true );
+			$valido  = false;
+			foreach ( $scelte as $c ) {
+				$valido = $valido || ( $c['ok'] && $c['value'] === $scelto );
+			}
+			if ( ! $valido ) {
+				$scelto = '';
+				if ( empty( $scelte[0]['ok'] ) ) {
+					foreach ( $scelte as $c ) {
+						if ( $c['ok'] ) {
+							$scelto = $c['value'];
+							break;
+						}
+					}
+					if ( '' === $scelto ) {
+						$scelto = 'browser';
+					}
+				}
+			}
+			$gruppi = array(
+				'ai'      => __( 'Your AI providers — official APIs, with your key', 'translate-rocket' ),
+				'labs-ok' => __( 'TranslateRocket Labs, free — official services', 'translate-rocket' ),
+				'labs-no' => __( 'TranslateRocket Labs, free — unofficial endpoints', 'translate-rocket' ),
+			);
+			// The note shown under the menu when a Labs engine is chosen, on or off.
+			$note_labs = array(
+				'labs-ok' => __( 'An engine of TranslateRocket Labs: an official, free service with a daily limit. When the limit is used up, go on tomorrow or choose another engine. These are machine translations: review your important pages.', 'translate-rocket' ),
+				'labs-no' => __( 'An engine of TranslateRocket Labs: an unofficial endpoint, not a public service of its owner. It can change or stop working at any time, and using it is your choice and your responsibility. These are machine translations: review your important pages.', 'translate-rocket' ),
+			);
+			$per_note = array();
+			$avvisi = array();
+			?>
+			<form method="post" action="" style="margin:0;display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap" id="trr-engine-form">
 				<?php wp_nonce_field( 'trrocket_auto_translate', 'trrocket_auto_nonce' ); ?>
 				<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
 				<input type="hidden" name="loc" value="" />
-				<button type="submit" class="button button-primary" <?php disabled( null === $fornitore || 0 === $miss_lingua ); ?>>
+				<input type="hidden" name="engine_main" value="1" />
+				<label for="trr-engine" class="trr-engine-label"><?php esc_html_e( 'Translate with', 'translate-rocket' ); ?></label>
+				<?php $this->info( __( 'Automatic uses your AI providers in the order set on AI Translation: when one reaches its daily limit, the next one continues. Choose one engine to use only that one — also for the «AI» button of each page. The free engines of Labs need no key: each one is switched on the first time you use it, after you accept its conditions. «This browser» uses the translator built into Chrome or Edge on this computer. Greyed-out engines show what they still need.', 'translate-rocket' ) ); ?>
+				<select name="engine" id="trr-engine" class="trr-engine">
+					<?php
+					$aperto = '';
+					foreach ( $scelte as $c ) {
+						if ( $c['group'] !== $aperto ) {
+							if ( '' !== $aperto ) {
+								echo '</optgroup>';
+							}
+							$aperto = $c['group'];
+							if ( '' !== $aperto ) {
+								echo '<optgroup label="' . esc_attr( $gruppi[ $aperto ] ?? $aperto ) . '">';
+							}
+						}
+						if ( $c['warning'] ) {
+							$avvisi[ $c['value'] ] = $c['warning'];
+						}
+						if ( isset( $note_labs[ $c['group'] ] ) ) {
+							$per_note[ $c['value'] ] = $note_labs[ $c['group'] ];
+						}
+						printf(
+							'<option value="%1$s"%2$s%3$s>%4$s</option>',
+							esc_attr( $c['value'] ),
+							selected( $scelto, $c['value'], false ),
+							$c['ok'] ? '' : ' disabled',
+							esc_html( $c['label'] . ( '' !== $c['why'] ? ' — ' . $c['why'] : '' ) )
+						);
+					}
+					if ( '' !== $aperto ) {
+						echo '</optgroup>';
+					}
+					?>
+					<option value="browser" <?php selected( $scelto, 'browser' ); ?>><?php esc_html_e( 'This browser (free, no key)', 'translate-rocket' ); ?></option>
+				</select>
+				<button type="submit" class="button button-primary" id="trr-engine-go" <?php disabled( 0 === $miss_lingua ); ?>>
 					&#10024;
 					<?php
 					if ( $miss_lingua > 0 ) {
 						printf(
 							/* translators: %d: number of strings still missing. */
-							esc_html__( 'Translate all %d missing with AI', 'translate-rocket' ),
+							esc_html__( 'Translate all %d missing', 'translate-rocket' ),
 							(int) $miss_lingua
 						);
 					} else {
@@ -5713,8 +5997,19 @@ JS;
 					}
 					?>
 				</button>
+				<?php if ( $avvisi ) : ?>
+					<span class="trr-engine-ack" id="trr-engine-ack" hidden>
+						<span class="trr-engine-ack-lines"></span>
+						<label><input type="checkbox" name="engine_ack" value="1" /> <?php esc_html_e( 'I have read this and accept it.', 'translate-rocket' ); ?></label>
+					</span>
+				<?php endif; ?>
+				<span class="trr-engine-labsnote" id="trr-engine-labsnote" role="note" hidden></span>
+				<span class="description" id="trr-engine-nobrowser" hidden><?php esc_html_e( 'This browser cannot translate by itself: choose another engine.', 'translate-rocket' ); ?></span>
 			</form>
-			<?php if ( null === $fornitore ) : ?>
+			<?php
+			wp_add_inline_script( 'trrocket-admin-info', 'window.TRRocketEngineAck=' . wp_json_encode( (object) $avvisi ) . ';window.TRRocketEngineNote=' . wp_json_encode( (object) $per_note ) . ';' . self::engine_js() );
+			?>
+			<?php if ( null === $fornitore && ! $riga_ok ) : // 11/10/2026: not when a Labs engine works without a key ?>
 				<span class="description">
 					<?php
 					printf(
@@ -5812,7 +6107,7 @@ JS;
 						<td class="trr-pcell"><?php echo wp_kses( $this->progress_bar( $translated, $total ) , \TranslateRocket\Kses::html_rules() ); ?></td>
 						<td class="trr-rowactions">
 							<a class="button button-small<?php echo $missing > 0 ? ' button-primary' : ''; ?>" href="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>
-							<?php if ( null !== $fornitore && $missing > 0 ) : ?>
+							<?php if ( $riga_ok && $missing > 0 ) : ?>
 								<?php // Il valore del pulsante e' il "loc" che finisce nel POST: un solo modulo per tutta la tabella invece di uno per riga. ?>
 								<button type="submit" form="trr-ai-onepage" class="button button-small" name="loc"
 									value="<?php echo esc_attr( $page->url_hash ); ?>"

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,16 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.8.1 =
+* New: «Translate with» on the Translations screen: choose the engine — your priority order, one AI provider, a free engine from Labs, or this browser. The menu says which engines are official APIs and which are unofficial endpoints, and warns when a Labs engine is chosen. Engines that are not ready stay visible with what they still need; the choice is remembered and also used by the «AI» button of each page.
+* Improved: the language switcher is one switcher in one place. «Where to show the switcher» now offers Header and Footer: one profile for the header menu, another for the row at the bottom of every page, each with its own look. Sites that had both in the same profile keep them: the bottom row moves to a new «footer» profile with the same look.
+* Improved: «Your site, live» on a phone opens the theme's ☰ menu to show the languages, without scroll bars; a footer profile shows the bottom of the page.
+* Fixed: a page counted its images and the sentences deleted since, and stayed below 100% with nothing left to translate.
+* Fixed: the «AI» button of a single page no longer sends image addresses to the engine (a translated address made the image disappear).
+* New: a small ⓘ on every line of «Everything you can do — all free», with more detail on each feature, in TranslateRocket and in Labs.
+* Improved: the hourglass of a language shows only while its number of translated sentences is really going up; if the live numbers cannot be refreshed, it goes off instead of standing still.
+* Improved: the «AI» button of each page is there also without an AI key, when another engine of the menu works.
+
 = 1.8.0 =
 * New: «Automatic translation», one page to switch it on and watch it work. A bar for each language moves by itself while the page is open, an hourglass marks the language being translated right now, the engines are one list in the order really used, and a language can go online by itself once it is fully translated (it waits until the whole site has been read).
 * New: «Everything you can do — all free» at the top of the plugin: what TranslateRocket does on your site, with its state and the page where it is set, and what the free add-on Labs adds.
@@ -343,6 +353,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.1 =
+Choose the engine (official or not) on Translations, one switcher profile for the header and one for the footer, an ⓘ on every feature, fixes to page progress.
 
 = 1.8.0 =
 New «Automatic translation» page with live progress, a free/Labs overview, a test button for every AI provider, free setup on request; many fixes found on a large real site. Recommended.
