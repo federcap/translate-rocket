@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.2
+Stable tag: 1.8.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.8.3 =
+* New: on Translations, small labels under each page say who translated it in this language and how many sentences each — an AI provider, a free Labs engine, this browser, the visual editor, by hand, an import or reuse. A page translated in several ways shows several labels.
+* New: choosing MyMemory under «Translate with» shows a box for the e-mail address that raises its free limit from about 5,000 to about 50,000 characters a day, with a button to use the site's address and a Save button that keeps it at once.
+* Fixed: «Plugin language» now also applies to the Labs texts shown in TranslateRocket's pages, such as the conditions of the Labs engines.
+* Fixed: the «Translate with» row stays in one line, the notes under it and the «Translate with your browser» box take the full width.
+
 = 1.8.2 =
 * Fixed: a network problem, a gateway timeout (502, 504, 524), a firewall or a provider not available in your server's region no longer reads «The provider refused this API key». The HTTP code now decides the message, and is shown with it; the provider's own answer is under «Technical details».
 * Improved: «Translate all missing» runs in short steps of about 25 seconds with a progress bar, saving and continuing by itself. No single request comes near the 100-second limit of Cloudflare and of many hosts.
@@ -359,6 +365,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.3 =
+Labels showing who translated each page, the MyMemory e-mail box, Labs texts in the plugin's language, a tidier «Translate with» row.
 
 = 1.8.2 =
 Clear error messages with the HTTP code (no more «key refused» for timeouts), «Translate all missing» in short steps with a progress bar, a «Sentences per request» option.

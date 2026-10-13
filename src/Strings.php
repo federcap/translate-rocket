@@ -239,6 +239,39 @@ class Strings {
 	}
 
 	/**
+	 * Who translated each page in a language (13/10/2026, Federico: «a tag with the translator used for that page,
+	 * several when there were several, just to keep a trace»). The engine is already saved with every translated
+	 * sentence: here it is counted page by page.
+	 *
+	 * @return array<string,array<string,int>> url_hash => provider id => translated sentences, most first.
+	 */
+	public static function engines_by_page( string $lang ): array {
+		global $wpdb;
+		$occurrences  = Database::occurrences_table();
+		$translations = Database::translations_table();
+		$strings      = Database::strings_table();
+		$rows         = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT o.url_hash AS url_hash, COALESCE( NULLIF( tr.provider, '' ), 'unknown' ) AS provider, COUNT(DISTINCT o.string_id) AS n
+				 FROM {$occurrences} o
+				 INNER JOIN {$strings} st ON st.id = o.string_id AND st.type <> 'image'
+				 INNER JOIN {$translations} tr ON tr.string_id = o.string_id AND tr.language = %s
+				 WHERE tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''
+				 GROUP BY o.url_hash, provider",
+				$lang
+			)
+		); // phpcs:ignore WordPress.DB
+		$out = array();
+		foreach ( (array) $rows as $r ) {
+			$out[ (string) $r->url_hash ][ (string) $r->provider ] = (int) $r->n;
+		}
+		foreach ( $out as &$per ) {
+			arsort( $per );
+		}
+		return $out;
+	}
+
+	/**
 	 * Translation progress for the interface-strings page in a language.
 	 *
 	 * @return array{total:int,translated:int}

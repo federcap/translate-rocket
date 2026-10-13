@@ -5143,3 +5143,70 @@ msgstr "Traduction en cours… %s faites. Gardez cette page ouverte."
 #, php-format
 msgid "The connection to your site dropped (%s). What was translated is saved: press the button again to continue."
 msgstr "La connexion à votre site a été interrompue (%s). Ce qui a été traduit est enregistré : appuyez de nouveau sur le bouton pour continuer."
+
+#: src/Admin/Admin.php
+msgid "MyMemory: raise the free limit"
+msgstr "MyMemory : augmenter la limite gratuite"
+
+#: src/Admin/Admin.php
+msgid "Without an e-mail address MyMemory translates about 5,000 characters a day from your server; with one, about 50,000. Write an address you read (yours or the site's): it goes to MyMemory (Translated) with each request, so they can reach you about your use. Nothing else is needed: no account, no key. It is saved when you press the translate button, and you can change it on Labs → Automatic translation."
+msgstr "Sans adresse e-mail, MyMemory traduit environ 5 000 caractères par jour depuis votre serveur ; avec une adresse, environ 50 000. Indiquez une adresse que vous lisez (la vôtre ou celle du site) : elle est envoyée à MyMemory (Translated) avec chaque requête, pour qu’ils puissent vous joindre au sujet de votre usage. Rien d’autre n’est nécessaire : ni compte, ni clé. Elle est enregistrée quand vous appuyez sur le bouton de traduction, et vous pouvez la changer dans Labs → Traduction automatique."
+
+#: src/Admin/Admin.php
+msgid "E-mail for MyMemory"
+msgstr "E-mail pour MyMemory"
+
+#: src/Admin/Admin.php
+msgid "Use the site's e-mail"
+msgstr "Utiliser l’e-mail du site"
+
+#: src/Admin/Admin.php
+msgid "Saved: the higher limit is on."
+msgstr "Enregistrée : la limite la plus haute est active."
+
+#: src/Admin/Admin.php
+msgid "Empty: the lower limit."
+msgstr "Vide : la limite la plus basse."
+
+#: src/Admin/Admin.php
+msgid "Under each page, small labels say who translated it in this language and how many sentences each: an AI provider, a free engine of Labs, this browser, the visual editor, by hand, an import, or a copy of a sentence already translated elsewhere (reuse). A page translated in several ways shows several labels, the largest first. Hover a label for the full name."
+msgstr "Sous chaque page, de petites étiquettes indiquent qui l’a traduite dans cette langue et combien de phrases chacun : un fournisseur d’IA, un moteur gratuit de Labs, ce navigateur, l’éditeur visuel, à la main, une importation, ou la copie d’une phrase déjà traduite ailleurs (réutilisation). Une page traduite de plusieurs façons affiche plusieurs étiquettes, la plus grande d’abord. Survolez une étiquette pour le nom complet."
+
+#: src/Admin/Admin.php
+msgid "This browser"
+msgstr "Ce navigateur"
+
+#: src/Admin/Admin.php
+msgid "By hand"
+msgstr "À la main"
+
+#: src/Admin/Admin.php
+msgid "Reused"
+msgstr "Réutilisées"
+
+#: src/Admin/Admin.php
+msgid "Put together from translated parts"
+msgstr "Assemblées à partir de parties traduites"
+
+#: src/Admin/Admin.php
+msgid "Not recorded"
+msgstr "Non enregistré"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translated by %1$s: %2$s sentence"
+msgid_plural "Translated by %1$s: %2$s sentences"
+msgstr[0] "Traduite par %1$s : %2$s phrase"
+msgstr[1] "Traduite par %1$s : %2$s phrases"
+
+#: src/Admin/Admin.php
+msgid "Without an e-mail address MyMemory translates about 5,000 characters a day from your server; with one, about 50,000. Write an address you read (yours or the site's): it goes to MyMemory (Translated) with each request, so they can reach you about your use. Nothing else is needed: no account, no key. Press Save; you can also change it on Labs → Automatic translation."
+msgstr "Sans adresse e-mail, MyMemory traduit environ 5 000 caractères par jour depuis votre serveur ; avec une adresse, environ 50 000. Indiquez une adresse que vous lisez (la vôtre ou celle du site) : elle est envoyée à MyMemory (Translated) avec chaque requête, pour qu’ils puissent vous joindre au sujet de votre usage. Rien d’autre n’est nécessaire : ni compte, ni clé. Appuyez sur Enregistrer ; vous pouvez aussi la changer dans Labs → Traduction automatique."
+
+#: src/Admin/Admin.php
+msgid "This is not a valid e-mail address."
+msgstr "Ce n’est pas une adresse e-mail valide."
+
+#: src/Admin/Admin.php
+msgid "Not saved: reload the page and try again."
+msgstr "Non enregistrée : rechargez la page et réessayez."

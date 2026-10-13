@@ -49,6 +49,7 @@ class Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'wp_ajax_trrocket_models', array( $this, 'ajax_models' ) );
 		add_action( 'wp_ajax_trrocket_translate_step', array( $this, 'ajax_translate_step' ) );
+		add_action( 'wp_ajax_trrocket_mm_email', array( $this, 'ajax_mm_email' ) );
 		add_action( 'wp_ajax_trrocket_sw_preview', array( $this, 'ajax_switcher_preview' ) );
 		add_action( 'wp_ajax_trrocket_sw_try', array( $this, 'ajax_switcher_try' ) );
 		add_action( 'wp_ajax_trrocket_gt', array( $this, 'ajax_gt' ) );
@@ -3390,10 +3391,29 @@ JS;
 					if(ack){var w=W[v];ack.hidden=!w;var cb=ack.querySelector('input');cb.required=!!w;if(w){ack.querySelector('.trr-engine-ack-lines').textContent=w.join(' ');}}
 					if(nob){nob.hidden=true;}
 					var ln=document.getElementById('trr-engine-labsnote'),N=window.TRRocketEngineNote||{};if(ln){ln.hidden=!N[v];ln.textContent=N[v]||'';ln.classList.toggle('is-unofficial',/labs:(edge|yandex)/.test(v));}
+					var mm=document.getElementById('trr-engine-mm');if(mm){mm.hidden=('labs:mymemory'!==v);}
 					// The per-page «AI» buttons follow the choice (the browser works on the whole language: they keep the priority order).
 					if(one){var h=one.querySelector('input[name="engine"]');if(!h){h=document.createElement('input');h.type='hidden';h.name='engine';one.appendChild(h);}h.value=('browser'===v||W[v])?'':v;var auto=s.querySelector('option[value=""]'),no=!h.value&&(!auto||auto.disabled);document.querySelectorAll('button[form="trr-ai-onepage"]').forEach(function(x){x.disabled=no;});}
 				}
 				s.addEventListener('change',sync);sync();
+				// MyMemory's e-mail: the site's address in one click; Enter in the box must not start translating everything.
+				var mmb=document.getElementById('trr-engine-mm-site'),mme=document.getElementById('trr-engine-mm-email');
+				if(mmb&&mme){mmb.addEventListener('click',function(){mme.value=mmb.getAttribute('data-email')||'';mme.focus();});}
+				// 13/10/2026 (Federico: «how is the e-mail saved? there is no send button»): «Save» saves it at once.
+				var mms=document.getElementById('trr-engine-mm-save'),mmt=document.getElementById('trr-engine-mm-state');
+				function salvaMm(){
+					if(!mme||!mmt||!window.fetch){return;}
+					var v=mme.value.trim();
+					if(v&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){mmt.textContent=mmt.getAttribute('data-bad');return;}
+					var d=new FormData();d.append('action','trrocket_mm_email');d.append('email',v);d.append('trrocket_auto_nonce',(f.querySelector('[name="trrocket_auto_nonce"]')||{}).value||'');
+					if(mms){mms.disabled=true;}
+					fetch(window.ajaxurl,{method:'POST',body:d,credentials:'same-origin'}).then(function(r){return r.json();}).then(function(j){
+						mmt.textContent=(j&&j.success)?mmt.getAttribute(j.data&&j.data.email?'data-on':'data-off'):mmt.getAttribute('data-err');
+						if(j&&j.success){mme.value=j.data.email||'';}
+					}).catch(function(){mmt.textContent=mmt.getAttribute('data-err');}).then(function(){if(mms){mms.disabled=false;}});
+				}
+				if(mms){mms.addEventListener('click',salvaMm);}
+				if(mme){mme.addEventListener('keydown',function(e){if('Enter'===e.key){e.preventDefault();salvaMm();}});}
 				// 13/10/2026: «Translate all missing» in short steps (about 25 s each) with a bar, so no request meets
 				// the 100 s of Cloudflare or of the host. Without fetch, the form posts as before.
 				var T=window.TRRocketStep||{};
@@ -3547,6 +3567,11 @@ JS;
 		if ( '' === $motore || 'browser' === $motore ) {
 			return '';
 		}
+		// MyMemory's e-mail, written in its box under the menu (13/10/2026): kept in Labs' own setting.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- both callers checked the nonce.
+		if ( 'labs:mymemory' === $motore && isset( $_POST['engine_mm_email'] ) && is_callable( array( '\TranslateRocketLabs\Labs', 'save' ) ) ) {
+			\TranslateRocketLabs\Labs::save( array( 'mymemory_email' => sanitize_email( wp_unslash( (string) $_POST['engine_mm_email'] ) ) ) );
+		}
 		foreach ( self::engine_choices() as $c ) {
 			if ( $c['value'] !== $motore ) {
 				continue;
@@ -3622,11 +3647,69 @@ JS;
 	}
 
 	/**
+	 * MyMemory's e-mail from its box under «Translate with», saved at once with «Save» (13/10/2026): kept in Labs'
+	 * own setting, the same one Labs → Automatic translation shows.
+	 */
+	public function ajax_mm_email(): void {
+		check_ajax_referer( 'trrocket_auto_translate', 'trrocket_auto_nonce' );
+		if ( ! current_user_can( 'manage_options' ) || ! is_callable( array( '\TranslateRocketLabs\Labs', 'save' ) ) ) {
+			wp_send_json_error( null, 403 );
+		}
+		$email = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( (string) $_POST['email'] ) ) : '';
+		\TranslateRocketLabs\Labs::save( array( 'mymemory_email' => $email ) );
+		wp_send_json_success( array( 'email' => (string) ( \TranslateRocketLabs\Labs::settings()['mymemory_email'] ?? '' ) ) );
+	}
+
+	/**
 	 * A provider's raw error («HTTP 403: …», «cURL error 28: …») in plain words with its code; our own
 	 * messages (limit reached, no key yet) stay as they are.
 	 */
 	public static function shown_error( string $errore ): string {
 		return preg_match( '/HTTP \d{3}\b|curl error/i', $errore ) ? self::plain_provider_error( $errore ) : $errore;
+	}
+
+	/**
+	 * The readable name of what translated a sentence, from the provider id saved with it.
+	 */
+	public static function engine_name( string $id ): string {
+		$fissi = array(
+			'browser'           => __( 'This browser', 'translate-rocket' ),
+			'visual'            => __( 'Visual editor', 'translate-rocket' ),
+			'manual'            => __( 'By hand', 'translate-rocket' ),
+			'import'            => __( 'Imported', 'translate-rocket' ),
+			'reuse'             => __( 'Reused', 'translate-rocket' ),
+			'pieces'            => __( 'Put together from translated parts', 'translate-rocket' ),
+			'glossary'          => __( 'Glossary', 'translate-rocket' ),
+			'unknown'           => __( 'Not recorded', 'translate-rocket' ),
+			'mymemory'          => 'MyMemory (Labs)',
+			'edge-unofficial'   => 'Microsoft Edge (Labs)',
+			'yandex-unofficial' => 'Yandex (Labs)',
+			'google-unofficial' => 'Google (Labs)',
+		);
+		if ( isset( $fissi[ $id ] ) ) {
+			return $fissi[ $id ];
+		}
+		$defs = self::provider_defs();
+		return isset( $defs[ $id ]['label'] ) ? (string) $defs[ $id ]['label'] : ucfirst( str_replace( array( '-', '_' ), ' ', $id ) );
+	}
+
+	/**
+	 * The labels under a page's name: who translated it, and how many sentences each.
+	 *
+	 * @param array<string,int> $per provider id => sentences.
+	 */
+	private static function engine_tags( array $per ): string {
+		if ( empty( $per ) ) {
+			return '';
+		}
+		$out = '<span class="trr-etags">';
+		foreach ( $per as $id => $n ) {
+			$nome = self::engine_name( (string) $id );
+			/* translators: 1: who translated (e.g. DeepL), 2: number of sentences. */
+			$tit  = sprintf( _n( 'Translated by %1$s: %2$s sentence', 'Translated by %1$s: %2$s sentences', (int) $n, 'translate-rocket' ), $nome, number_format_i18n( (int) $n ) );
+			$out .= '<span class="trr-etag trr-etag-' . esc_attr( sanitize_html_class( (string) $id ) ) . '" title="' . esc_attr( $tit ) . '">' . esc_html( $nome ) . ' <b>' . esc_html( number_format_i18n( (int) $n ) ) . '</b></span>';
+		}
+		return $out . '</span>';
 	}
 
 	/**
@@ -6027,7 +6110,8 @@ JS;
 	}
 
 	private function render_pages_list( string $lang ): void {
-		$pages = Strings::pages_with_stats( $lang );
+		$pages      = Strings::pages_with_stats( $lang );
+		$per_motore = Strings::engines_by_page( $lang ); // who translated each page: the labels under its name
 		$stats = Strings::language_stats( $lang );
 
 		printf(
@@ -6097,7 +6181,7 @@ JS;
 			$per_note = array();
 			$avvisi = array();
 			?>
-			<form method="post" action="" style="margin:0;display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap" id="trr-engine-form">
+			<form method="post" action="" id="trr-engine-form">
 				<?php wp_nonce_field( 'trrocket_auto_translate', 'trrocket_auto_nonce' ); ?>
 				<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
 				<input type="hidden" name="loc" value="" />
@@ -6158,6 +6242,28 @@ JS;
 					</span>
 				<?php endif; ?>
 				<span class="trr-engine-labsnote" id="trr-engine-labsnote" role="note" hidden></span>
+				<?php
+				// 13/10/2026 (Federico: «50,000 with an e-mail address… and how is the e-mail entered?»): the box
+				// is here, where MyMemory is chosen, not only on Labs' own page.
+				if ( is_callable( array( '\TranslateRocketLabs\Labs', 'settings' ) ) ) :
+					$trr_mm = (string) ( \TranslateRocketLabs\Labs::settings()['mymemory_email'] ?? '' );
+					?>
+					<span class="trr-engine-labsnote trr-engine-mmbox" id="trr-engine-mm" hidden>
+						<strong><?php esc_html_e( 'MyMemory: raise the free limit', 'translate-rocket' ); ?></strong><br />
+						<?php esc_html_e( 'Without an e-mail address MyMemory translates about 5,000 characters a day from your server; with one, about 50,000. Write an address you read (yours or the site\'s): it goes to MyMemory (Translated) with each request, so they can reach you about your use. Nothing else is needed: no account, no key. Press Save; you can also change it on Labs → Automatic translation.', 'translate-rocket' ); ?>
+						<span class="trr-engine-mm">
+							<label for="trr-engine-mm-email" class="screen-reader-text"><?php esc_html_e( 'E-mail for MyMemory', 'translate-rocket' ); ?></label>
+							<input type="email" id="trr-engine-mm-email" name="engine_mm_email" value="<?php echo esc_attr( $trr_mm ); ?>" placeholder="<?php echo esc_attr( (string) get_option( 'admin_email' ) ); ?>" autocomplete="email" />
+							<button type="button" class="button button-small" id="trr-engine-mm-site" data-email="<?php echo esc_attr( (string) get_option( 'admin_email' ) ); ?>"><?php esc_html_e( 'Use the site\'s e-mail', 'translate-rocket' ); ?></button>
+							<button type="button" class="button button-primary button-small" id="trr-engine-mm-save"><?php esc_html_e( 'Save', 'translate-rocket' ); ?></button>
+							<span class="description" id="trr-engine-mm-state" role="status"
+								data-on="<?php esc_attr_e( 'Saved: the higher limit is on.', 'translate-rocket' ); ?>"
+								data-off="<?php esc_attr_e( 'Empty: the lower limit.', 'translate-rocket' ); ?>"
+								data-bad="<?php esc_attr_e( 'This is not a valid e-mail address.', 'translate-rocket' ); ?>"
+								data-err="<?php esc_attr_e( 'Not saved: reload the page and try again.', 'translate-rocket' ); ?>"><?php echo '' !== $trr_mm ? esc_html__( 'Saved: the higher limit is on.', 'translate-rocket' ) : esc_html__( 'Empty: the lower limit.', 'translate-rocket' ); ?></span>
+						</span>
+					</span>
+				<?php endif; ?>
 				<span class="description" id="trr-engine-nobrowser" hidden><?php esc_html_e( 'This browser cannot translate by itself: choose another engine.', 'translate-rocket' ); ?></span>
 			</form>
 			<?php
@@ -6237,7 +6343,7 @@ JS;
 				<tr>
 					<th class="trr-sortable" data-key="title" data-type="text"><?php esc_html_e( 'Page', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
 					<th class="trr-sortable" data-key="strings" data-type="num"><?php esc_html_e( 'Strings', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
-					<th class="trr-sortable" data-key="translated" data-type="num"><?php esc_html_e( 'Translated', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
+					<th class="trr-sortable" data-key="translated" data-type="num"><?php esc_html_e( 'Translated', 'translate-rocket' ); ?><span class="trr-arrow"></span> <?php $this->info( __( 'Under each page, small labels say who translated it in this language and how many sentences each: an AI provider, a free engine of Labs, this browser, the visual editor, by hand, an import, or a copy of a sentence already translated elsewhere (reuse). A page translated in several ways shows several labels, the largest first. Hover a label for the full name.', 'translate-rocket' ) ); ?></th>
 					<th class="trr-sortable" data-key="missing" data-type="num"><?php esc_html_e( 'Missing', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
 					<th class="trr-sortable" data-key="pct" data-type="num"><?php esc_html_e( 'Progress', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
 					<th><?php esc_html_e( 'Actions', 'translate-rocket' ); ?> <?php $this->info( __( 'Translate: open the page and translate it sentence by sentence. AI: translate what is missing on this page with your AI provider. Start over: remove this page’s translations and translated address in this language to translate it again from scratch — sentences also used on other pages keep their translation, and an Undo link puts everything back. Hide: take the page off this list (for old or deleted pages); nothing is deleted, and the page comes back if it is visited again.', 'translate-rocket' ) ); ?></th>
@@ -6262,6 +6368,7 @@ JS;
 						<td>
 							<strong><?php echo esc_html( $label ); ?></strong><br>
 							<span class="description"><?php echo esc_html( $page->url ); ?></span>
+							<?php echo wp_kses_post( self::engine_tags( $per_motore[ (string) $page->url_hash ] ?? array() ) ); ?>
 						</td>
 						<td data-label="<?php esc_attr_e( 'Strings', 'translate-rocket' ); ?>"><?php echo (int) $total; ?></td>
 						<td data-label="<?php esc_attr_e( 'Translated', 'translate-rocket' ); ?>"><?php echo (int) $translated; ?></td>
@@ -6345,7 +6452,8 @@ JS;
 		if ( a0 ) { a0.textContent = ' ↕'; }
 	} );
 	Array.prototype.forEach.call( ths, function ( th ) {
-		th.addEventListener( 'click', function () {
+		th.addEventListener( 'click', function ( ev ) {
+			if ( ev.target.closest && ev.target.closest( '.trr-info, .trr-tip' ) ) { return; } // its ⓘ opens, it does not sort
 			var key  = th.getAttribute( 'data-key' );
 			var type = th.getAttribute( 'data-type' );
 			var dir  = 'asc' === th.getAttribute( 'data-dir' ) ? 'desc' : 'asc';

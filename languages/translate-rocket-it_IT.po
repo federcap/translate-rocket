@@ -5332,3 +5332,70 @@ msgstr "Traduzione in corso… %s fatte. Tieni aperta questa pagina."
 #, php-format
 msgid "The connection to your site dropped (%s). What was translated is saved: press the button again to continue."
 msgstr "La connessione con il tuo sito si è interrotta (%s). Quello che è stato tradotto è salvato: premi di nuovo il pulsante per continuare."
+
+#: src/Admin/Admin.php
+msgid "MyMemory: raise the free limit"
+msgstr "MyMemory: alza il limite gratuito"
+
+#: src/Admin/Admin.php
+msgid "Without an e-mail address MyMemory translates about 5,000 characters a day from your server; with one, about 50,000. Write an address you read (yours or the site's): it goes to MyMemory (Translated) with each request, so they can reach you about your use. Nothing else is needed: no account, no key. It is saved when you press the translate button, and you can change it on Labs → Automatic translation."
+msgstr "Senza un indirizzo e-mail MyMemory traduce circa 5.000 caratteri al giorno dal tuo server; con un indirizzo, circa 50.000. Scrivi un indirizzo che leggi (il tuo o quello del sito): viene inviato a MyMemory (Translated) con ogni richiesta, così possono contattarti sul tuo uso. Non serve altro: nessun account, nessuna chiave. Si salva quando premi il pulsante per tradurre, e puoi cambiarlo in Labs → Traduzione automatica."
+
+#: src/Admin/Admin.php
+msgid "E-mail for MyMemory"
+msgstr "E-mail per MyMemory"
+
+#: src/Admin/Admin.php
+msgid "Use the site's e-mail"
+msgstr "Usa l'e-mail del sito"
+
+#: src/Admin/Admin.php
+msgid "Saved: the higher limit is on."
+msgstr "Salvata: il limite più alto è attivo."
+
+#: src/Admin/Admin.php
+msgid "Empty: the lower limit."
+msgstr "Vuota: il limite più basso."
+
+#: src/Admin/Admin.php
+msgid "Under each page, small labels say who translated it in this language and how many sentences each: an AI provider, a free engine of Labs, this browser, the visual editor, by hand, an import, or a copy of a sentence already translated elsewhere (reuse). A page translated in several ways shows several labels, the largest first. Hover a label for the full name."
+msgstr "Sotto ogni pagina, piccole etichette dicono chi l'ha tradotta in questa lingua e quante frasi ciascuno: un provider AI, un motore gratuito di Labs, questo browser, l'editor visivo, a mano, un'importazione, oppure la copia di una frase già tradotta altrove (riuso). Una pagina tradotta in più modi mostra più etichette, la più grande per prima. Passa sopra un'etichetta per il nome completo."
+
+#: src/Admin/Admin.php
+msgid "This browser"
+msgstr "Questo browser"
+
+#: src/Admin/Admin.php
+msgid "By hand"
+msgstr "A mano"
+
+#: src/Admin/Admin.php
+msgid "Reused"
+msgstr "Riuso"
+
+#: src/Admin/Admin.php
+msgid "Put together from translated parts"
+msgstr "Ricomposte da parti tradotte"
+
+#: src/Admin/Admin.php
+msgid "Not recorded"
+msgstr "Non registrato"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translated by %1$s: %2$s sentence"
+msgid_plural "Translated by %1$s: %2$s sentences"
+msgstr[0] "Tradotta da %1$s: %2$s frase"
+msgstr[1] "Tradotta da %1$s: %2$s frasi"
+
+#: src/Admin/Admin.php
+msgid "Without an e-mail address MyMemory translates about 5,000 characters a day from your server; with one, about 50,000. Write an address you read (yours or the site's): it goes to MyMemory (Translated) with each request, so they can reach you about your use. Nothing else is needed: no account, no key. Press Save; you can also change it on Labs → Automatic translation."
+msgstr "Senza un indirizzo e-mail MyMemory traduce circa 5.000 caratteri al giorno dal tuo server; con un indirizzo, circa 50.000. Scrivi un indirizzo che leggi (il tuo o quello del sito): viene inviato a MyMemory (Translated) con ogni richiesta, così possono contattarti sul tuo uso. Non serve altro: nessun account, nessuna chiave. Premi Salva; puoi cambiarlo anche in Labs → Traduzione automatica."
+
+#: src/Admin/Admin.php
+msgid "This is not a valid e-mail address."
+msgstr "Questo non è un indirizzo e-mail valido."
+
+#: src/Admin/Admin.php
+msgid "Not saved: reload the page and try again."
+msgstr "Non salvata: ricarica la pagina e riprova."

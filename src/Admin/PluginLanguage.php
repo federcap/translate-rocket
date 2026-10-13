@@ -67,20 +67,28 @@ class PluginLanguage {
 		} elseif ( ! is_admin() ) {
 			return;
 		}
-		global $l10n;
-		unload_textdomain( 'translate-rocket' );
-		if ( 'en_US' === $l ) {
-			$l10n['translate-rocket'] = new \NOOP_Translations(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride -- the original English, on purpose.
-			return;
+		// 13/10/2026 (Federico: MyMemory's conditions in English on an Italian plugin): Labs' texts shown in
+		// TranslateRocket's pages (its engines' conditions) follow the same choice.
+		$domini = array( 'translate-rocket' => TRROCKET_PATH . 'languages/' );
+		if ( defined( 'TRRLABS_PATH' ) ) {
+			$domini['translate-rocket-labs'] = TRRLABS_PATH . 'languages/';
 		}
-		// Registered under the request's own locale: since WordPress 6.5 a catalogue is only read for
-		// the locale in use, so an Italian file filed as it_IT stays silent in an English dashboard.
-		foreach ( array(
-			WP_LANG_DIR . '/plugins/translate-rocket-' . $l . '.mo',
-			TRROCKET_PATH . 'languages/translate-rocket-' . $l . '.mo',
-		) as $mo ) {
-			if ( is_readable( $mo ) && load_textdomain( 'translate-rocket', $mo, determine_locale() ) ) {
-				return;
+		global $l10n;
+		foreach ( $domini as $dominio => $cartella ) {
+			unload_textdomain( $dominio );
+			if ( 'en_US' === $l ) {
+				$l10n[ $dominio ] = new \NOOP_Translations(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride -- the original English, on purpose.
+				continue;
+			}
+			// Registered under the request's own locale: since WordPress 6.5 a catalogue is only read for
+			// the locale in use, so an Italian file filed as it_IT stays silent in an English dashboard.
+			foreach ( array(
+				WP_LANG_DIR . '/plugins/' . $dominio . '-' . $l . '.mo',
+				$cartella . $dominio . '-' . $l . '.mo',
+			) as $mo ) {
+				if ( is_readable( $mo ) && load_textdomain( $dominio, $mo, determine_locale() ) ) {
+					break;
+				}
 			}
 		}
 	}
@@ -105,7 +113,7 @@ class PluginLanguage {
 	 * @return mixed
 	 */
 	public function locale( $locale, $domain = '' ) {
-		if ( 'translate-rocket' !== $domain || ! is_admin() ) {
+		if ( ! in_array( $domain, array( 'translate-rocket', 'translate-rocket-labs' ), true ) || ! is_admin() ) {
 			return $locale;
 		}
 		$l = self::chosen();

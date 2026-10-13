@@ -5145,3 +5145,70 @@ msgstr "Bezig met vertalen… %s klaar. Houd deze pagina open."
 #, php-format
 msgid "The connection to your site dropped (%s). What was translated is saved: press the button again to continue."
 msgstr "De verbinding met je site is weggevallen (%s). Wat vertaald is, is opgeslagen: druk opnieuw op de knop om verder te gaan."
+
+#: src/Admin/Admin.php
+msgid "MyMemory: raise the free limit"
+msgstr "MyMemory: verhoog de gratis limiet"
+
+#: src/Admin/Admin.php
+msgid "Without an e-mail address MyMemory translates about 5,000 characters a day from your server; with one, about 50,000. Write an address you read (yours or the site's): it goes to MyMemory (Translated) with each request, so they can reach you about your use. Nothing else is needed: no account, no key. It is saved when you press the translate button, and you can change it on Labs → Automatic translation."
+msgstr "Zonder e-mailadres vertaalt MyMemory ongeveer 5.000 tekens per dag vanaf je server; met een adres ongeveer 50.000. Vul een adres in dat je leest (het jouwe of dat van de site): het gaat bij elk verzoek naar MyMemory (Translated), zodat ze je over je gebruik kunnen bereiken. Meer is niet nodig: geen account, geen sleutel. Het wordt opgeslagen als je op de vertaalknop drukt, en je kunt het wijzigen bij Labs → Automatische vertaling."
+
+#: src/Admin/Admin.php
+msgid "E-mail for MyMemory"
+msgstr "E-mailadres voor MyMemory"
+
+#: src/Admin/Admin.php
+msgid "Use the site's e-mail"
+msgstr "E-mailadres van de site gebruiken"
+
+#: src/Admin/Admin.php
+msgid "Saved: the higher limit is on."
+msgstr "Opgeslagen: de hogere limiet staat aan."
+
+#: src/Admin/Admin.php
+msgid "Empty: the lower limit."
+msgstr "Leeg: de lagere limiet."
+
+#: src/Admin/Admin.php
+msgid "Under each page, small labels say who translated it in this language and how many sentences each: an AI provider, a free engine of Labs, this browser, the visual editor, by hand, an import, or a copy of a sentence already translated elsewhere (reuse). A page translated in several ways shows several labels, the largest first. Hover a label for the full name."
+msgstr "Onder elke pagina tonen kleine labels wie hem in deze taal heeft vertaald en hoeveel zinnen elk: een AI-aanbieder, een gratis engine van Labs, deze browser, de visuele editor, met de hand, een import, of een kopie van een zin die elders al vertaald was (hergebruik). Een pagina die op meerdere manieren vertaald is, toont meerdere labels, de grootste eerst. Ga met de muis over een label voor de volledige naam."
+
+#: src/Admin/Admin.php
+msgid "This browser"
+msgstr "Deze browser"
+
+#: src/Admin/Admin.php
+msgid "By hand"
+msgstr "Met de hand"
+
+#: src/Admin/Admin.php
+msgid "Reused"
+msgstr "Hergebruikt"
+
+#: src/Admin/Admin.php
+msgid "Put together from translated parts"
+msgstr "Samengesteld uit vertaalde delen"
+
+#: src/Admin/Admin.php
+msgid "Not recorded"
+msgstr "Niet vastgelegd"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translated by %1$s: %2$s sentence"
+msgid_plural "Translated by %1$s: %2$s sentences"
+msgstr[0] "Vertaald door %1$s: %2$s zin"
+msgstr[1] "Vertaald door %1$s: %2$s zinnen"
+
+#: src/Admin/Admin.php
+msgid "Without an e-mail address MyMemory translates about 5,000 characters a day from your server; with one, about 50,000. Write an address you read (yours or the site's): it goes to MyMemory (Translated) with each request, so they can reach you about your use. Nothing else is needed: no account, no key. Press Save; you can also change it on Labs → Automatic translation."
+msgstr "Zonder e-mailadres vertaalt MyMemory ongeveer 5.000 tekens per dag vanaf je server; met een adres ongeveer 50.000. Vul een adres in dat je leest (het jouwe of dat van de site): het gaat bij elk verzoek naar MyMemory (Translated), zodat ze je over je gebruik kunnen bereiken. Meer is niet nodig: geen account, geen sleutel. Druk op Opslaan; je kunt het ook wijzigen bij Labs → Automatische vertaling."
+
+#: src/Admin/Admin.php
+msgid "This is not a valid e-mail address."
+msgstr "Dit is geen geldig e-mailadres."
+
+#: src/Admin/Admin.php
+msgid "Not saved: reload the page and try again."
+msgstr "Niet opgeslagen: laad de pagina opnieuw en probeer het nog eens."

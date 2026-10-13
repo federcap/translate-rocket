@@ -2219,6 +2219,14 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-engine{max-width:440px}
 .trr-engine-ack{display:flex;flex-direction:column;gap:4px;flex-basis:100%;max-width:720px;padding:8px 10px;background:#fff8e5;border-left:4px solid #dba617;font-size:12px}
 .trr-engine-ack[hidden]{display:none}
+/* 13/10/2026 (Federico: «tutto allineato bruttissimo… il box largo come gli altri»): the form takes no box of its own,
+   so its menu and button sit in the bar's row and every note under the menu (conditions, Labs note, MyMemory e-mail,
+   the progress bar) takes the bar's whole width, from its left edge. */
+#trr-engine-form{display:contents}
+.trr-engine{max-width:380px;min-width:0}
+.trr-actionbar .trr-engine-ack,.trr-actionbar .trr-engine-labsnote,.trr-actionbar .trr-step{flex:0 0 100%;max-width:none;box-sizing:border-box;margin:2px 0 0}
+.trr-engine-mm{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px;padding-top:6px;border-top:1px solid #c5d9ed}
+.trr-engine-mm input[type=email]{min-width:220px;flex:1 1 220px;max-width:320px}
 @media (max-width:782px){.trr-engine{max-width:100%;width:100%}#trr-engine-form{width:100%}}
 
 /* 1.8.1: the ⓘ at the end of each overview title (not on a line of its own) */
@@ -2236,3 +2244,13 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-step .trr-prog-fill{display:block;height:100%;background:#2271b1;transition:width .4s}
 .trr-step.is-error{padding:8px 10px;background:#fcf0f1;border-left:4px solid #d63638}
 .trr-step.is-error .trr-prog-bar{display:none}
+
+/* 13/10/2026: who translated each page (Translations list), the largest first. */
+.trr-etags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.trr-etag{display:inline-block;padding:1px 7px;border-radius:10px;background:#f0f0f1;color:#3c434a;font-size:11px;line-height:18px;white-space:nowrap}
+.trr-etag b{font-weight:600}
+.trr-etag-browser{background:#e7f5ec;color:#0a5c2e}
+.trr-etag-visual,.trr-etag-manual{background:#fdf2e3;color:#7a4a00}
+.trr-etag-import{background:#efeafc;color:#4b2a9e}
+.trr-etag-reuse,.trr-etag-pieces,.trr-etag-glossary{background:#eef1f4;color:#50575e}
+.trr-etag-unknown{background:#fff;border:1px dashed #c3c4c7;color:#787c82}

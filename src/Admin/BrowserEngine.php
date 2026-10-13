@@ -177,7 +177,7 @@ class BrowserEngine {
 		// (only its content changes: Chrome's translator, the copy-and-paste round trip, the phone note);
 		// shown after the first paint, it pushed the table below down by its whole height.
 		?>
-		<div id="trr-browser-engine" style="margin:10px 0;padding:14px 16px;border:1px solid #dcdcde;border-left:4px solid #2271b1;background:#fff;max-width:820px">
+		<div id="trr-browser-engine" style="margin:10px 0;padding:14px 16px;border:1px solid #dcdcde;border-left:4px solid #2271b1;background:#fff">
 			<p style="margin:0 0 6px;font-weight:600">
 				<span id="trr-browser-title"><?php esc_html_e( 'Translate with your browser — no API key', 'translate-rocket' ); ?></span>
 				<span id="trr-browser-title-alt" hidden><?php esc_html_e( 'Translate without an API key', 'translate-rocket' ); ?></span>
