@@ -97,9 +97,11 @@ class Translator {
 	 * @param string $url_hash Limit to one page (empty = whole site).
 	 * @param int    $batch    Strings per API call.
 	 * @param string $solo     One provider id chosen by hand on the Translations screen (empty = the chain).
-	 * @return array{ok:bool,count:int,error:string}
+	 * @param float  $deadline microtime(true) after which no new batch starts (0 = none). The caller runs it again
+	 *                         while «more» is true: short steps stay under the 100 s of Cloudflare and of many hosts.
+	 * @return array{ok:bool,count:int,error:string,more:bool}
 	 */
-	public static function translate_missing( string $lang, string $url_hash = '', int $batch = 0, bool $migliora = false, string $solo = '' ): array {
+	public static function translate_missing( string $lang, string $url_hash = '', int $batch = 0, bool $migliora = false, string $solo = '', float $deadline = 0.0 ): array {
 		// The whole configured fallback chain, in priority order. If the first
 		// provider runs out of credit (or its key is rejected) mid-job, the next
 		// one takes over — a big translation can span several accounts.
@@ -125,8 +127,10 @@ class Translator {
 
 		// Use the smallest preferred batch size in the chain, so every provider in
 		// it (LLMs included) gets an array it can handle reliably.
+		// «Sentences per request» in the AI settings, when chosen, wins: a slow or distant provider wants smaller ones.
 		if ( $batch <= 0 ) {
-			$batch = min( array_map( static fn( $p ) => $p->batch_size(), $providers ) );
+			$scelta = (int) ( Settings::get()['ai_batch'] ?? 0 );
+			$batch  = $scelta > 0 ? $scelta : min( array_map( static fn( $p ) => $p->batch_size(), $providers ) );
 		}
 
 		// «Improve with AI»: not the missing sentences but the ones the browser translated.
@@ -176,7 +180,12 @@ class Translator {
 		// Improving browser translations: never copy a browser translation back.
 		$pending = self::reuse_pass( $rows, $lang, $count, $migliora ? ( 'none' === self::reuse_mode() ? 'none' : 'no_browser' ) : self::reuse_mode() );
 
+		$fermato = false;
 		foreach ( array_chunk( array_keys( $pending ), max( 1, $batch ) ) as $texts ) {
+			if ( $deadline > 0 && microtime( true ) >= $deadline ) {
+				$fermato = true;
+				break;
+			}
 			if ( AiUsage::over_limit() ) {
 				$error = __( 'Daily AI character limit reached.', 'translate-rocket' );
 				break;
@@ -229,6 +238,8 @@ class Translator {
 			'ok'    => ( count( $dead ) < count( $providers ) ),
 			'count' => $count,
 			'error' => $error,
+			// Something is left: the step stopped at its deadline, or the 1000 read were all there was room for.
+			'more'  => $count > 0 && count( $dead ) < count( $providers ) && ( $fermato || count( $rows ) >= 1000 ),
 		);
 	}
 

@@ -98,6 +98,7 @@ class Settings {
 			'exclude_selectors'        => array(),
 			'exclude_strings'          => array(),
 			'ai_daily_limit'           => 0,
+			'ai_batch'                 => 0, // sentences per request: 0 = each provider's own size.
 			'reuse_mode'               => 'all',
 			'ai_guidance'              => '',
 			'ai_reset_day'             => 0,

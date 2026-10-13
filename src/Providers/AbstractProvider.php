@@ -138,7 +138,8 @@ abstract class AbstractProvider implements ProviderInterface {
 
 			// Retry only transient failures (network, rate limit, server overload);
 			// fail fast on real errors like 400/401/404 so we don't waste calls.
-			$transient = ( 0 === $code ) || in_array( $code, array( 429, 500, 502, 503, 504 ), true );
+			// 520, 522 and 524 are Cloudflare's «origin did not answer» codes, in front of many providers (13/10/2026 ticket).
+			$transient = ( 0 === $code ) || in_array( $code, array( 429, 500, 502, 503, 504, 520, 522, 524 ), true );
 			// A 429 for exhausted quota / billing is permanent, not a rate limit —
 			// retrying just delays a clear "you're out of credit" message.
 			if ( 429 === $code && false !== stripos( $raw, 'insufficient_quota' ) ) {

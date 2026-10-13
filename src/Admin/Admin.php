@@ -48,6 +48,7 @@ class Admin {
 		add_action( 'admin_init', array( $this, 'maybe_save_memory' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'wp_ajax_trrocket_models', array( $this, 'ajax_models' ) );
+		add_action( 'wp_ajax_trrocket_translate_step', array( $this, 'ajax_translate_step' ) );
 		add_action( 'wp_ajax_trrocket_sw_preview', array( $this, 'ajax_switcher_preview' ) );
 		add_action( 'wp_ajax_trrocket_sw_try', array( $this, 'ajax_switcher_try' ) );
 		add_action( 'wp_ajax_trrocket_gt', array( $this, 'ajax_gt' ) );
@@ -897,16 +898,46 @@ class Admin {
 		if ( preg_match( '/Could not route|object identifier is invalid|accounts\/[^\/]*\/ai\/run.*404|HTTP 404.*accounts/i', $raw ) ) {
 			return __( 'The Cloudflare Account ID is not right. It is a code of 32 letters and numbers, shown on the right of the Workers AI page in Cloudflare (not your e-mail address).', 'translate-rocket' );
 		}
-		if ( preg_match( '/HTTP (401|403)\b|api key not valid|invalid[_ ]?(api[_ ]?)?key|incorrect api key|authentication|unauthori[sz]ed|forbidden/i', $raw ) ) {
-			return __( 'The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active.', 'translate-rocket' );
+		// 13/10/2026 (ticket from a server in China): the words of the answer used to decide, so a 403 «country not
+		// supported», a firewall's 403 page or a 500 mentioning «authentication» all read «the provider refused this
+		// API key». Now the HTTP code decides first, and is shown, so the real cause can be found.
+		$codice = preg_match( '/HTTP (\d{3})\b/', $raw, $m ) ? (int) $m[1] : 0;
+		$corpo  = trim( (string) preg_replace( '/^.*?HTTP \d{3}:?/s', '', $raw ) );
+		$html   = (bool) preg_match( '/<(!doctype|html|head|body|title)\b/i', $corpo );
+		$chiave = __( 'The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active.', 'translate-rocket' );
+		$con    = static function ( string $frase ) use ( $codice ): string {
+			return $codice > 0 ? $frase . ' (HTTP ' . $codice . ')' : $frase;
+		};
+		if ( 401 === $codice ) {
+			return $con( $chiave );
 		}
-		if ( preg_match( '/HTTP 429\b|rate.?limit|too many requests/i', $raw ) ) {
-			return __( 'The provider says too many requests right now. Wait a minute and try again.', 'translate-rocket' );
+		if ( 403 === $codice ) {
+			if ( preg_match( '/country|region|territor|unsupported_country|not available in your (location|area)|location is not supported/i', $corpo ) ) {
+				return $con( __( 'The provider is not available from the country or region where your server is. Use another provider, or ask your host about a server in another region.', 'translate-rocket' ) );
+			}
+			if ( $html ) {
+				return $con( __( 'Something between your server and the provider blocked the request (a firewall or a proxy) before it reached the provider. Ask your host to allow it, or use another provider.', 'translate-rocket' ) );
+			}
+			// DeepL answers a wrong key with a bare JSON «Forbidden» pointing to its /auth docs.
+			if ( preg_match( '/api[_ ]?key|invalid[_ ]?key|auth[_ ]?key|authori[sz]ation|credential|unauthenticated|permission[_ ]denied.*key|\bauth\b|"forbidden/i', $corpo ) ) {
+				return $con( $chiave );
+			}
+			return $con( __( 'The provider refused the request. The key may not have access to this model, or the account needs attention: check it on the provider\'s site.', 'translate-rocket' ) );
 		}
-		if ( ! preg_match( '/HTTP \d{3}/', $raw ) && preg_match( '/curl|timed? ?out|resolve|connect/i', $raw ) ) {
+		// Google and Gemini answer a wrong key with 400 «API key not valid» / API_KEY_INVALID.
+		if ( ( 0 === $codice || ( $codice >= 400 && $codice < 500 && 429 !== $codice ) ) && preg_match( '/api key not valid|api_key_invalid|invalid[_ ]?(api[_ ]?)?key|incorrect api key|invalid x-api-key/i', $raw ) ) {
+			return $con( $chiave );
+		}
+		if ( 429 === $codice || ( 0 === $codice && preg_match( '/rate.?limit|too many requests/i', $raw ) ) ) {
+			return $con( __( 'The provider says too many requests right now. Wait a minute and try again.', 'translate-rocket' ) );
+		}
+		if ( $codice >= 500 ) {
+			return $con( __( 'The provider, or a gateway on the way, did not answer in time or is overloaded. Try again in a few minutes; if it keeps happening, send fewer sentences per request (AI Translation → Usage & limits).', 'translate-rocket' ) );
+		}
+		if ( 0 === $codice && preg_match( '/curl|timed? ?out|resolve|connect/i', $raw ) ) {
 			return __( 'Your site could not reach the provider (network or firewall). Try again later, or ask your host.', 'translate-rocket' );
 		}
-		return __( 'The provider answered with an error. Try again in a few minutes.', 'translate-rocket' );
+		return $con( __( 'The provider answered with an error. Try again in a few minutes.', 'translate-rocket' ) );
 	}
 
 	/**
@@ -3250,6 +3281,7 @@ JS;
 		asort( $priorities );
 		$settings['provider_order'] = array_keys( $priorities );
 		$settings['ai_daily_limit']  = isset( $_POST['ai_daily_limit'] ) ? max( 0, (int) $_POST['ai_daily_limit'] ) : 0;
+		$settings['ai_batch']        = isset( $_POST['ai_batch'] ) && in_array( (int) $_POST['ai_batch'], array( 5, 10, 20, 50 ), true ) ? (int) $_POST['ai_batch'] : 0;
 		$settings['ai_guidance']     = isset( $_POST['ai_guidance'] )
 			? mb_substr( sanitize_textarea_field( wp_unslash( $_POST['ai_guidance'] ) ), 0, \TranslateRocket\Providers\LlmProvider::GUIDANCE_MAX )
 			: '';
@@ -3327,7 +3359,10 @@ JS;
 					<?php esc_html_e( 'The AI translation could not run', 'translate-rocket' ); ?>
 				</p>
 				<?php if ( '' !== trim( $errore ) ) : ?>
-					<p style="margin:0 0 9px;color:#50575e"><?php echo esc_html( $errore ); ?></p>
+					<p style="margin:0 0 9px;color:#50575e"><?php echo esc_html( self::shown_error( $errore ) ); ?></p>
+					<?php if ( self::shown_error( $errore ) !== $errore ) : // 13/10/2026: the provider's own answer, for whoever helps ?>
+						<details style="margin:0 0 9px"><summary style="cursor:pointer;color:#50575e"><?php esc_html_e( 'Technical details', 'translate-rocket' ); ?></summary><code style="display:block;white-space:pre-wrap;word-break:break-all;margin-top:6px"><?php echo esc_html( $errore ); ?></code></details>
+					<?php endif; ?>
 				<?php endif; ?>
 				<p style="margin:0">
 					<a href="<?php echo esc_url( $ai ); ?>"><?php esc_html_e( 'Check your provider and key', 'translate-rocket' ); ?></a>
@@ -3359,8 +3394,35 @@ JS;
 					if(one){var h=one.querySelector('input[name="engine"]');if(!h){h=document.createElement('input');h.type='hidden';h.name='engine';one.appendChild(h);}h.value=('browser'===v||W[v])?'':v;var auto=s.querySelector('option[value=""]'),no=!h.value&&(!auto||auto.disabled);document.querySelectorAll('button[form="trr-ai-onepage"]').forEach(function(x){x.disabled=no;});}
 				}
 				s.addEventListener('change',sync);sync();
+				// 13/10/2026: «Translate all missing» in short steps (about 25 s each) with a bar, so no request meets
+				// the 100 s of Cloudflare or of the host. Without fetch, the form posts as before.
+				var T=window.TRRocketStep||{};
+				function passi(){
+					var go=document.getElementById('trr-engine-go'),box=document.getElementById('trr-step');
+					if(!box){box=document.createElement('div');box.id='trr-step';box.className='trr-step';box.setAttribute('role','status');box.innerHTML='<span class="trr-prog-bar"><span class="trr-prog-fill" style="width:0"></span></span> <span class="trr-step-txt"></span>';f.parentNode.insertBefore(box,f.nextSibling);}
+					var fill=box.querySelector('.trr-prog-fill'),txt=box.querySelector('.trr-step-txt'),fatte=0,giri=0;
+					box.hidden=false;box.classList.remove('is-error');if(go){go.disabled=true;}
+					function scrivi(left){txt.textContent=(left>=0?(T.busy||'').replace('%1$s',fatte).replace('%2$s',left):(T.busyPage||'').replace('%s',fatte));if(left>=0){fill.style.width=Math.max(3,Math.round(100*fatte/Math.max(1,fatte+left)))+'%';}}
+					function ferma(msg){box.classList.add('is-error');txt.textContent=msg;if(go){go.disabled=false;}}
+					function giro(){
+						var d=new FormData(f);d.append('action','trrocket_translate_step');d.append('done',fatte);
+						fetch(window.ajaxurl,{method:'POST',body:d,credentials:'same-origin'}).then(function(r){
+							if(!r.ok){throw new Error('HTTP '+r.status);}return r.json();
+						}).then(function(j){
+							if(!j||!j.success){throw new Error((j&&j.data&&j.data.error)||'?');}
+							var x=j.data;fatte=x.total;giri++;scrivi(x.left);
+							if(x.error&&!x.count){ferma(x.error);return;}
+							if(x.more&&x.count>0&&giri<400){giro();return;}
+							fill.style.width='100%';location.reload();
+						}).catch(function(err){ferma((T.lost||'').replace('%s',err&&err.message?err.message:'?'));});
+					}
+					scrivi(-1);giro();
+				}
 				f.addEventListener('submit',function(e){
-					if('browser'!==s.value){return;}
+					if('browser'!==s.value){
+						if(window.fetch&&window.FormData&&window.ajaxurl&&T.busy){e.preventDefault();passi();}
+						return;
+					}
 					e.preventDefault();
 					var go=document.getElementById('trr-browser-go'),box=document.getElementById('trr-browser-engine');
 					if(go&&box&&box.offsetParent!==null&&!go.disabled&&!box.querySelector('#trr-browser-fallback:not([hidden])')){box.scrollIntoView({behavior:'smooth',block:'center'});go.click();}
@@ -3475,10 +3537,104 @@ JS;
 	}
 
 	/**
+	 * The provider id for the engine chosen on the Translations screen: '' = the priority order,
+	 * null = not ready (no key, or a Labs engine whose conditions were not accepted).
+	 *
+	 * @param string $motore The menu value.
+	 * @param bool   $ack    The conditions box was ticked.
+	 */
+	private static function solo_engine( string $motore, bool $ack ): ?string {
+		if ( '' === $motore || 'browser' === $motore ) {
+			return '';
+		}
+		foreach ( self::engine_choices() as $c ) {
+			if ( $c['value'] !== $motore ) {
+				continue;
+			}
+			if ( ! empty( $c['switch_on'] ) ) {
+				// A Labs engine still off: switched on here, the owner chose it by name.
+				if ( ! empty( $c['warning'] ) && ! $ack ) {
+					return null;
+				}
+				do_action( 'trrocket_engine_switch_on', (string) $c['labs'] );
+			}
+			return (string) $c['provider'];
+		}
+		return null;
+	}
+
+	/**
+	 * One short step of «Translate all missing» (13/10/2026, ticket from a server behind Cloudflare in China:
+	 * one request of 115 s ended in a 524). Each step stops starting new batches after about 25 s, saves, and
+	 * says whether there is more: the page calls it again and moves a bar. The notice is kept up to date as
+	 * the steps go, so a closed tab still shows what was done.
+	 */
+	public function ajax_translate_step(): void {
+		check_ajax_referer( 'trrocket_auto_translate', 'trrocket_auto_nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'error' => __( 'You are not allowed to do this.', 'translate-rocket' ) ), 403 );
+		}
+		$lang = isset( $_POST['lang'] ) ? strtolower( sanitize_text_field( wp_unslash( $_POST['lang'] ) ) ) : '';
+		if ( ! in_array( $lang, (array) Settings::get()['target_languages'], true ) ) {
+			wp_send_json_error( array( 'error' => __( 'You are not allowed to do this.', 'translate-rocket' ) ) );
+		}
+		$loc    = isset( $_POST['loc'] ) ? sanitize_text_field( wp_unslash( $_POST['loc'] ) ) : '';
+		$motore = isset( $_POST['engine'] ) ? sanitize_text_field( wp_unslash( $_POST['engine'] ) ) : '';
+		$prima  = isset( $_POST['done'] ) ? max( 0, (int) $_POST['done'] ) : 0;
+		if ( ! empty( $_POST['engine_main'] ) && 0 === $prima ) {
+			update_user_meta( get_current_user_id(), 'trrocket_strings_engine', $motore );
+		}
+		$solo = self::solo_engine( $motore, ! empty( $_POST['engine_ack'] ) );
+		if ( null === $solo ) {
+			$r = array(
+				'ok'    => false,
+				'count' => 0,
+				'error' => __( 'The engine you chose is not ready: check it on the AI Translation screen, or choose another one.', 'translate-rocket' ),
+				'more'  => false,
+			);
+		} else {
+			if ( function_exists( 'set_time_limit' ) ) {
+				@set_time_limit( 120 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			}
+			$r = Translator::translate_missing( $lang, $loc, 0, false, $solo, microtime( true ) + 25 );
+			\TranslateRocket\Cache::flush();
+		}
+		$totale = $prima + (int) $r['count'];
+		// The notice after the last step: the total, or the error when nothing at all was translated.
+		set_transient(
+			'trrocket_ai_notice_' . get_current_user_id(),
+			array(
+				'ok'    => $totale > 0 || ( ! empty( $r['ok'] ) && '' === (string) $r['error'] ),
+				'count' => $totale,
+				'error' => (string) $r['error'],
+			),
+			300
+		);
+		wp_send_json_success(
+			array(
+				'count' => (int) $r['count'],
+				'total' => $totale,
+				'more'  => ! empty( $r['more'] ),
+				'left'  => '' === $loc ? Strings::untranslated_count( $lang ) : -1,
+				'error' => '' !== (string) $r['error'] ? self::shown_error( (string) $r['error'] ) : '',
+			)
+		);
+	}
+
+	/**
+	 * A provider's raw error («HTTP 403: …», «cURL error 28: …») in plain words with its code; our own
+	 * messages (limit reached, no key yet) stay as they are.
+	 */
+	public static function shown_error( string $errore ): string {
+		return preg_match( '/HTTP \d{3}\b|curl error/i', $errore ) ? self::plain_provider_error( $errore ) : $errore;
+	}
+
+	/**
 	 * Run AI auto-translation for a language (optionally a single page).
 	 */
 	public function maybe_auto_translate(): void {
-		if ( ! isset( $_POST['trrocket_auto_nonce'] ) ) {
+		// admin_init runs inside admin-ajax.php too: the short steps (same fields) are ajax_translate_step's.
+		if ( ! isset( $_POST['trrocket_auto_nonce'] ) || wp_doing_ajax() ) {
 			return;
 		}
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -3497,41 +3653,28 @@ JS;
 
 		// The engine chosen on the Translations screen (empty = the priority order).
 		$motore = isset( $_POST['engine'] ) ? sanitize_text_field( wp_unslash( $_POST['engine'] ) ) : '';
-		$solo   = '';
 		if ( isset( $_POST['engine_main'] ) ) { // the menu itself, not a per-page button: remembered
 			update_user_meta( get_current_user_id(), 'trrocket_strings_engine', $motore );
 		}
-		if ( '' !== $motore && 'browser' !== $motore ) {
-			foreach ( self::engine_choices() as $c ) {
-				if ( $c['value'] !== $motore ) {
-					continue;
-				}
-				if ( ! empty( $c['switch_on'] ) ) {
-					// A Labs engine still off: switched on here, the owner chose it by name.
-					if ( ! empty( $c['warning'] ) && empty( $_POST['engine_ack'] ) ) {
-						break;
-					}
-					do_action( 'trrocket_engine_switch_on', (string) $c['labs'] );
-				}
-				$solo = (string) $c['provider'];
-				break;
-			}
-			if ( '' === $solo ) {
-				set_transient(
-					'trrocket_ai_notice_' . get_current_user_id(),
-					array(
-						'ok'    => false,
-						'count' => 0,
-						'error' => __( 'The engine you chose is not ready: check it on the AI Translation screen, or choose another one.', 'translate-rocket' ),
-					),
-					60
-				);
-				wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-strings', 'lang' => $lang ), admin_url( 'admin.php' ) ) );
-				exit;
-			}
+		$solo = self::solo_engine( $motore, ! empty( $_POST['engine_ack'] ) );
+		if ( null === $solo ) {
+			set_transient(
+				'trrocket_ai_notice_' . get_current_user_id(),
+				array(
+					'ok'    => false,
+					'count' => 0,
+					'error' => __( 'The engine you chose is not ready: check it on the AI Translation screen, or choose another one.', 'translate-rocket' ),
+				),
+				60
+			);
+			wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-strings', 'lang' => $lang ), admin_url( 'admin.php' ) ) );
+			exit;
 		}
 
 		$result = Translator::translate_missing( $lang, $loc, 0, false, $solo );
+		if ( 0 === (int) $result['count'] && '' !== (string) $result['error'] ) {
+			$result['ok'] = false; // nothing done and an error: say the error, not «AI translated 0 strings» (13/10/2026)
+		}
 		set_transient( 'trrocket_ai_notice_' . get_current_user_id(), $result, 60 );
 		\TranslateRocket\Cache::flush();
 
@@ -4189,6 +4332,17 @@ JS
 										);
 										?>
 									</p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row"><label for="trr-ai-batch"><?php esc_html_e( 'Sentences per request', 'translate-rocket' ); ?></label> <?php $this->info( __( 'How many sentences go to the AI in one request. Automatic uses the size that suits each provider. Choose fewer when the provider is slow or far from your server, or when you see timeouts or gateway errors (502, 504, 524): each request is then shorter. More sentences per request is faster on a quick connection.', 'translate-rocket' ) ); ?></th>
+								<td>
+									<select id="trr-ai-batch" name="ai_batch">
+										<option value="0" <?php selected( (int) ( $settings['ai_batch'] ?? 0 ), 0 ); ?>><?php esc_html_e( 'Automatic', 'translate-rocket' ); ?></option>
+										<?php foreach ( array( 5, 10, 20, 50 ) as $trr_n ) : ?>
+											<option value="<?php echo (int) $trr_n; ?>" <?php selected( (int) ( $settings['ai_batch'] ?? 0 ), $trr_n ); ?>><?php echo (int) $trr_n; ?></option>
+										<?php endforeach; ?>
+									</select>
 								</td>
 							</tr>
 							<tr>
@@ -6007,7 +6161,15 @@ JS;
 				<span class="description" id="trr-engine-nobrowser" hidden><?php esc_html_e( 'This browser cannot translate by itself: choose another engine.', 'translate-rocket' ); ?></span>
 			</form>
 			<?php
-			wp_add_inline_script( 'trrocket-admin-info', 'window.TRRocketEngineAck=' . wp_json_encode( (object) $avvisi ) . ';window.TRRocketEngineNote=' . wp_json_encode( (object) $per_note ) . ';' . self::engine_js() );
+			$trr_step = array(
+				/* translators: 1: sentences translated so far, 2: sentences still missing. Keep %1$s and %2$s. */
+				'busy'     => __( 'Translating… %1$s done, %2$s still missing. Keep this page open.', 'translate-rocket' ),
+				/* translators: %s: sentences translated so far. */
+				'busyPage' => __( 'Translating… %s done. Keep this page open.', 'translate-rocket' ),
+				/* translators: %s: the technical reason, e.g. HTTP 524. */
+				'lost'     => __( 'The connection to your site dropped (%s). What was translated is saved: press the button again to continue.', 'translate-rocket' ),
+			);
+			wp_add_inline_script( 'trrocket-admin-info', 'window.TRRocketEngineAck=' . wp_json_encode( (object) $avvisi ) . ';window.TRRocketEngineNote=' . wp_json_encode( (object) $per_note ) . ';window.TRRocketStep=' . wp_json_encode( $trr_step ) . ';' . self::engine_js() );
 			?>
 			<?php if ( null === $fornitore && ! $riga_ok ) : // 11/10/2026: not when a Labs engine works without a key ?>
 				<span class="description">

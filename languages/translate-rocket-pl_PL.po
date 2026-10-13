@@ -5122,3 +5122,50 @@ msgstr "Silnik TranslateRocket Labs: oficjalna, darmowa usługa z limitem dzienn
 #: src/Admin/Admin.php
 msgid "An engine of TranslateRocket Labs: an unofficial endpoint, not a public service of its owner. It can change or stop working at any time, and using it is your choice and your responsibility. These are machine translations: review your important pages."
 msgstr "Silnik TranslateRocket Labs: nieoficjalny punkt dostępu, a nie publiczna usługa jego właściciela. Może się zmienić lub przestać działać w każdej chwili, a korzystanie z niego to Twój wybór i Twoja odpowiedzialność. To tłumaczenia maszynowe: sprawdź swoje ważne strony."
+
+#: src/Admin/Admin.php
+msgid "The provider is not available from the country or region where your server is. Use another provider, or ask your host about a server in another region."
+msgstr "Dostawca nie jest dostępny z kraju lub regionu, w którym jest Twój serwer. Użyj innego dostawcy albo poproś hosting o serwer w innym regionie."
+
+#: src/Admin/Admin.php
+msgid "Something between your server and the provider blocked the request (a firewall or a proxy) before it reached the provider. Ask your host to allow it, or use another provider."
+msgstr "Coś między Twoim serwerem a dostawcą (zapora lub proxy) zablokowało żądanie, zanim dotarło do dostawcy. Poproś hosting o jego dopuszczenie albo użyj innego dostawcy."
+
+#: src/Admin/Admin.php
+msgid "The provider refused the request. The key may not have access to this model, or the account needs attention: check it on the provider's site."
+msgstr "Dostawca odrzucił żądanie. Być może klucz nie ma dostępu do tego modelu albo konto wymaga uwagi: sprawdź je na stronie dostawcy."
+
+#: src/Admin/Admin.php
+msgid "The provider, or a gateway on the way, did not answer in time or is overloaded. Try again in a few minutes; if it keeps happening, send fewer sentences per request (AI Translation → Usage & limits)."
+msgstr "Dostawca lub bramka po drodze nie odpowiedzieli na czas albo są przeciążeni. Spróbuj ponownie za kilka minut; jeśli to się powtarza, wysyłaj mniej zdań na żądanie (Tłumaczenie AI → Użycie i limity)."
+
+#: src/Admin/Admin.php
+msgid "You are not allowed to do this."
+msgstr "Nie masz uprawnień, aby to zrobić."
+
+#: src/Admin/Admin.php
+msgid "Technical details"
+msgstr "Szczegóły techniczne"
+
+#: src/Admin/Admin.php
+msgid "Sentences per request"
+msgstr "Zdania na żądanie"
+
+#: src/Admin/Admin.php
+msgid "How many sentences go to the AI in one request. Automatic uses the size that suits each provider. Choose fewer when the provider is slow or far from your server, or when you see timeouts or gateway errors (502, 504, 524): each request is then shorter. More sentences per request is faster on a quick connection."
+msgstr "Ile zdań trafia do AI w jednym żądaniu. Automatycznie oznacza rozmiar dopasowany do każdego dostawcy. Wybierz mniej, gdy dostawca jest wolny lub daleko od Twojego serwera albo gdy widzisz przekroczenia czasu lub błędy bramki (502, 504, 524): każde żądanie jest wtedy krótsze. Więcej zdań na żądanie jest szybsze przy szybkim połączeniu."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translating… %1$s done, %2$s still missing. Keep this page open."
+msgstr "Tłumaczenie… gotowe: %1$s, brakuje jeszcze: %2$s. Nie zamykaj tej strony."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translating… %s done. Keep this page open."
+msgstr "Tłumaczenie… gotowe: %s. Nie zamykaj tej strony."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The connection to your site dropped (%s). What was translated is saved: press the button again to continue."
+msgstr "Połączenie z Twoją witryną zostało przerwane (%s). To, co przetłumaczono, jest zapisane: naciśnij przycisk ponownie, aby kontynuować."

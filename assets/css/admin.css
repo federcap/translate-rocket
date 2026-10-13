@@ -2229,3 +2229,10 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-engine-labsnote{display:block;flex-basis:100%;max-width:720px;padding:8px 10px;background:#f0f6fc;border-left:4px solid #72aee6;font-size:12px;line-height:1.5}
 .trr-engine-labsnote.is-unofficial{background:#fff8e5;border-left-color:#dba617}
 .trr-engine-labsnote[hidden]{display:none}
+/* 13/10/2026: «Translate all missing» in short steps */
+.trr-step{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0;max-width:720px;font-size:13px}
+.trr-step[hidden]{display:none}
+.trr-step .trr-prog-bar{flex:0 0 220px;max-width:100%;height:10px;background:#e6e6ec;border-radius:6px;overflow:hidden}
+.trr-step .trr-prog-fill{display:block;height:100%;background:#2271b1;transition:width .4s}
+.trr-step.is-error{padding:8px 10px;background:#fcf0f1;border-left:4px solid #d63638}
+.trr-step.is-error .trr-prog-bar{display:none}

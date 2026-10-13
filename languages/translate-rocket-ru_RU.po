@@ -5122,3 +5122,50 @@ msgstr "Движок TranslateRocket Labs: официальный бесплат
 #: src/Admin/Admin.php
 msgid "An engine of TranslateRocket Labs: an unofficial endpoint, not a public service of its owner. It can change or stop working at any time, and using it is your choice and your responsibility. These are machine translations: review your important pages."
 msgstr "Движок TranslateRocket Labs: неофициальная точка доступа, а не публичный сервис её владельца. Она может измениться или перестать работать в любой момент, и её использование — ваш выбор и ваша ответственность. Это машинный перевод: проверьте важные страницы."
+
+#: src/Admin/Admin.php
+msgid "The provider is not available from the country or region where your server is. Use another provider, or ask your host about a server in another region."
+msgstr "Провайдер недоступен из страны или региона, где находится ваш сервер. Используйте другого провайдера или попросите хостинг о сервере в другом регионе."
+
+#: src/Admin/Admin.php
+msgid "Something between your server and the provider blocked the request (a firewall or a proxy) before it reached the provider. Ask your host to allow it, or use another provider."
+msgstr "Что-то между вашим сервером и провайдером (файрвол или прокси) заблокировало запрос до того, как он дошёл до провайдера. Попросите хостинг разрешить его или используйте другого провайдера."
+
+#: src/Admin/Admin.php
+msgid "The provider refused the request. The key may not have access to this model, or the account needs attention: check it on the provider's site."
+msgstr "Провайдер отклонил запрос. Возможно, у ключа нет доступа к этой модели или аккаунт требует внимания: проверьте его на сайте провайдера."
+
+#: src/Admin/Admin.php
+msgid "The provider, or a gateway on the way, did not answer in time or is overloaded. Try again in a few minutes; if it keeps happening, send fewer sentences per request (AI Translation → Usage & limits)."
+msgstr "Провайдер или шлюз на пути не ответил вовремя или перегружен. Повторите через несколько минут; если это повторяется, отправляйте меньше предложений за запрос (ИИ-перевод → Использование и лимиты)."
+
+#: src/Admin/Admin.php
+msgid "You are not allowed to do this."
+msgstr "У вас нет прав на это действие."
+
+#: src/Admin/Admin.php
+msgid "Technical details"
+msgstr "Технические подробности"
+
+#: src/Admin/Admin.php
+msgid "Sentences per request"
+msgstr "Предложений за запрос"
+
+#: src/Admin/Admin.php
+msgid "How many sentences go to the AI in one request. Automatic uses the size that suits each provider. Choose fewer when the provider is slow or far from your server, or when you see timeouts or gateway errors (502, 504, 524): each request is then shorter. More sentences per request is faster on a quick connection."
+msgstr "Сколько предложений уходит к ИИ за один запрос. «Автоматически» использует размер, подходящий каждому провайдеру. Выберите меньше, если провайдер медленный или далеко от вашего сервера, или если видите тайм-ауты и ошибки шлюза (502, 504, 524): каждый запрос станет короче. Больше предложений за запрос быстрее при хорошем соединении."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translating… %1$s done, %2$s still missing. Keep this page open."
+msgstr "Идёт перевод… готово: %1$s, осталось: %2$s. Не закрывайте эту страницу."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translating… %s done. Keep this page open."
+msgstr "Идёт перевод… готово: %s. Не закрывайте эту страницу."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The connection to your site dropped (%s). What was translated is saved: press the button again to continue."
+msgstr "Связь с вашим сайтом прервалась (%s). Переведённое сохранено: нажмите кнопку ещё раз, чтобы продолжить."

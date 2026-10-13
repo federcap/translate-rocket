@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.8.2 =
+* Fixed: a network problem, a gateway timeout (502, 504, 524), a firewall or a provider not available in your server's region no longer reads «The provider refused this API key». The HTTP code now decides the message, and is shown with it; the provider's own answer is under «Technical details».
+* Improved: «Translate all missing» runs in short steps of about 25 seconds with a progress bar, saving and continuing by itself. No single request comes near the 100-second limit of Cloudflare and of many hosts.
+* New: «Sentences per request» in AI Translation → Usage & limits (Automatic, 5, 10, 20, 50): fewer for a slow or distant provider, more on a quick connection.
+* Improved: requests that meet Cloudflare's 520, 522 and 524 errors are tried again, like 502, 503 and 504.
+
 = 1.8.1 =
 * New: «Translate with» on the Translations screen: choose the engine — your priority order, one AI provider, a free engine from Labs, or this browser. The menu says which engines are official APIs and which are unofficial endpoints, and warns when a Labs engine is chosen. Engines that are not ready stay visible with what they still need; the choice is remembered and also used by the «AI» button of each page.
 * Improved: the language switcher is one switcher in one place. «Where to show the switcher» now offers Header and Footer: one profile for the header menu, another for the row at the bottom of every page, each with its own look. Sites that had both in the same profile keep them: the bottom row moves to a new «footer» profile with the same look.
@@ -353,6 +359,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.2 =
+Clear error messages with the HTTP code (no more «key refused» for timeouts), «Translate all missing» in short steps with a progress bar, a «Sentences per request» option.
 
 = 1.8.1 =
 Choose the engine (official or not) on Translations, one switcher profile for the header and one for the footer, an ⓘ on every feature, fixes to page progress.
