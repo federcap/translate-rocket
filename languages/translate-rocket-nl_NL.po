@@ -5212,3 +5212,11 @@ msgstr "Dit is geen geldig e-mailadres."
 #: src/Admin/Admin.php
 msgid "Not saved: reload the page and try again."
 msgstr "Niet opgeslagen: laad de pagina opnieuw en probeer het nog eens."
+
+#: src/Admin/MetaBox.php
+msgid "Publish it first: its translations are tied to its address, which a draft does not have yet."
+msgstr "Publiceer hem eerst: de vertalingen horen bij het adres, en een concept heeft er nog geen."
+
+#: src/Admin/MetaBox.php
+msgid "Only an administrator can do this."
+msgstr "Alleen een beheerder kan dit doen."

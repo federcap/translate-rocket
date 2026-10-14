@@ -181,6 +181,16 @@ class MetaBox {
 		}
 
 		$action = isset( $_POST['do'] ) ? sanitize_key( $_POST['do'] ) : 'load';
+		// 14/10/2026 (security check): a draft has no address of its own yet — its permalink is «?p=ID», whose path
+		// is «/», the home page — so a Contributor's draft reached the home page's translations (and the menu's and
+		// footer's, shared with it). The panel works on published content only.
+		if ( 'publish' !== get_post_status( $post_id ) ) {
+			wp_send_json_error( array( 'error' => __( 'Publish it first: its translations are tied to its address, which a draft does not have yet.', 'translate-rocket' ) ) );
+		}
+		// Removing a page's translations and spending the AI credit or the Google allowance are the site owner's.
+		if ( in_array( $action, array( 'reset', 'ai', 'gt', 'gt_all' ), true ) && ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Only an administrator can do this.', 'translate-rocket' ) ) );
+		}
 		$hash   = Strings::url_hash( $this->post_clean_path( get_post( $post_id ) ) );
 		$msg    = '';
 
@@ -344,8 +354,10 @@ class MetaBox {
 	 */
 	private function page_ids( string $hash, string $lang ): array {
 		$set = array();
+		// The query names the column string_id (14/10/2026: ->id was always empty, so «Save» and «Import» of the
+		// panel saved nothing, for anybody).
 		foreach ( Strings::for_page_language( $hash, $lang ) as $row ) {
-			$set[ (int) $row->id ] = true;
+			$set[ (int) $row->string_id ] = true;
 		}
 		return $set;
 	}

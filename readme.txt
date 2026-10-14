@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.3
+Stable tag: 1.8.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.8.4 =
+* Security: the translation panel in the post editor works on published content only, and removing a page's translations or running the AI or Google from it is for administrators. A Contributor's draft could reach the home page's translations.
+* Security: only an administrator can send the visitors of a translated page to another site.
+* Fixed: «Save» and «Import» in the translation panel of the post editor saved nothing.
+* Labs 0.9.2 (security): the support access is limited to TranslateRocket's own tools on the site too, and the Labs page and the domains per language stay the owner's.
+
 = 1.8.3 =
 * New: on Translations, small labels under each page say who translated it in this language and how many sentences each — an AI provider, a free Labs engine, this browser, the visual editor, by hand, an import or reuse. A page translated in several ways shows several labels.
 * New: choosing MyMemory under «Translate with» shows a box for the e-mail address that raises its free limit from about 5,000 to about 50,000 characters a day, with a button to use the site's address and a Save button that keeps it at once.
@@ -365,6 +371,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.4 =
+Security update: please update. The editor's translation panel is limited to published content and administrators for removals and AI; its Save works again.
 
 = 1.8.3 =
 Labels showing who translated each page, the MyMemory e-mail box, Labs texts in the plugin's language, a tidier «Translate with» row.

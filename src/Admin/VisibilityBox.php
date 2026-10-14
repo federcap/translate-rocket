@@ -123,6 +123,11 @@ class VisibilityBox {
 			$mode = isset( $modes[ $lang ] ) ? sanitize_text_field( $modes[ $lang ] ) : '';
 			$url  = isset( $urls[ $lang ] ) ? esc_url_raw( $urls[ $lang ] ) : '';
 			$msg  = isset( $msgs[ $lang ] ) ? wp_kses_post( $msgs[ $lang ] ) : '';
+			// 14/10/2026 (security check): an Author could send a translated page's visitors to any site. Only an
+			// administrator may redirect away from this site; anyone else, to a page of the same site.
+			if ( 'url' === $mode && '' !== $url && ! current_user_can( 'manage_options' ) && '' === wp_validate_redirect( $url, '' ) ) {
+				continue;
+			}
 			Exclusions::set( (int) $post_id, $lang, $mode, $url, $msg );
 		}
 	}

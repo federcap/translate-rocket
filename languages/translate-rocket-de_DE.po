@@ -5210,3 +5210,11 @@ msgstr "Das ist keine gültige E-Mail-Adresse."
 #: src/Admin/Admin.php
 msgid "Not saved: reload the page and try again."
 msgstr "Nicht gespeichert: Lade die Seite neu und versuche es noch einmal."
+
+#: src/Admin/MetaBox.php
+msgid "Publish it first: its translations are tied to its address, which a draft does not have yet."
+msgstr "Veröffentliche sie zuerst: Ihre Übersetzungen hängen an ihrer Adresse, die ein Entwurf noch nicht hat."
+
+#: src/Admin/MetaBox.php
+msgid "Only an administrator can do this."
+msgstr "Nur ein Administrator kann das tun."

@@ -5187,3 +5187,11 @@ msgstr "有効なメールアドレスではありません。"
 #: src/Admin/Admin.php
 msgid "Not saved: reload the page and try again."
 msgstr "保存できませんでした。ページを再読み込みして、もう一度お試しください。"
+
+#: src/Admin/MetaBox.php
+msgid "Publish it first: its translations are tied to its address, which a draft does not have yet."
+msgstr "先に公開してください。翻訳はアドレスに結び付いていますが、下書きにはまだアドレスがありません。"
+
+#: src/Admin/MetaBox.php
+msgid "Only an administrator can do this."
+msgstr "この操作は管理者のみが行えます。"

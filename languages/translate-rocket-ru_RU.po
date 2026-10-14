@@ -5237,3 +5237,11 @@ msgstr "Это недействительный адрес e-mail."
 #: src/Admin/Admin.php
 msgid "Not saved: reload the page and try again."
 msgstr "Не сохранено: перезагрузите страницу и попробуйте снова."
+
+#: src/Admin/MetaBox.php
+msgid "Publish it first: its translations are tied to its address, which a draft does not have yet."
+msgstr "Сначала опубликуйте: переводы привязаны к адресу страницы, а у черновика его ещё нет."
+
+#: src/Admin/MetaBox.php
+msgid "Only an administrator can do this."
+msgstr "Это может сделать только администратор."
