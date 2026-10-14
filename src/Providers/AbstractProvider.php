@@ -32,6 +32,22 @@ abstract class AbstractProvider implements ProviderInterface {
 	protected $models_error = '';
 
 	/**
+	 * What the last list_models() request got back, as «HTTP 200: body…» or the network error: for the
+	 * plain message and the «Technical details» of the AI page (14/10/2026).
+	 *
+	 * @var string
+	 */
+	protected $models_raw = '';
+
+	/**
+	 * One attempt and a short wait: a test the owner is waiting for, not a background job (14/10/2026:
+	 * three attempts of 45 s could keep «Test this text» busy past the 100 s of Cloudflare).
+	 *
+	 * @var bool
+	 */
+	protected $quick = false;
+
+	/**
 	 * @param array<string,mixed> $config Provider config slice.
 	 */
 	public function __construct( array $config ) {
@@ -43,6 +59,29 @@ abstract class AbstractProvider implements ProviderInterface {
 	 */
 	public function models_error(): string {
 		return $this->models_error;
+	}
+
+	/**
+	 * The raw answer behind the last list_models() ('' when it was not asked).
+	 */
+	public function models_raw(): string {
+		return $this->models_raw;
+	}
+
+	/**
+	 * Make the next requests quick: one attempt, at most 25 seconds.
+	 */
+	public function quick(): void {
+		$this->quick = true;
+	}
+
+	/**
+	 * The error for a 200 that does not carry a translation (a proxy's page, an empty body): what came back
+	 * goes with it, so the message and the technical details can say what it was.
+	 */
+	protected function unreadable( string $raw ): string {
+		$raw = trim( $raw );
+		return $this->label() . ': HTTP 200, unreadable answer: ' . ( '' === $raw ? '(empty)' : substr( $raw, 0, 300 ) );
 	}
 
 	public function is_configured(): bool {
@@ -70,13 +109,16 @@ abstract class AbstractProvider implements ProviderInterface {
 	 */
 	protected function get( string $url, array $headers = array(), int $timeout = 20 ): array {
 		$this->models_error = '';
+		$this->models_raw   = '';
 		$response           = wp_remote_get( $url, array( 'headers' => $headers, 'timeout' => $timeout ) );
 		if ( is_wp_error( $response ) ) {
 			$this->models_error = 'net';
+			$this->models_raw   = $response->get_error_message();
 			return array( 'error' => $response->get_error_message() );
 		}
 		$code = (int) wp_remote_retrieve_response_code( $response );
 		$raw  = (string) wp_remote_retrieve_body( $response );
+		$this->models_raw = 'HTTP ' . $code . ': ' . substr( trim( $raw ), 0, 300 );
 		if ( $code < 200 || $code >= 300 ) {
 			// Gemini answers a wrong key with 400 «API_KEY_INVALID», not 401.
 			$this->models_error = ( 400 === $code && false !== stripos( $raw, 'API_KEY_INVALID' ) ) ? 'http-401' : 'http-' . $code;
@@ -113,10 +155,10 @@ abstract class AbstractProvider implements ProviderInterface {
 		$args = array(
 			'headers' => $headers,
 			'body'    => $body,
-			'timeout' => $timeout,
+			'timeout' => $this->quick ? min( $timeout, 25 ) : $timeout,
 		);
 
-		$attempts = 3;
+		$attempts = $this->quick ? 1 : 3;
 		$code     = 0;
 		$raw      = '';
 		$err      = '';

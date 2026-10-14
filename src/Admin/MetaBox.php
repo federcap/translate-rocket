@@ -274,6 +274,10 @@ class MetaBox {
 	 */
 	private function payload( string $hash, string $lang, int $post_id = 0 ): array {
 		$rows    = Strings::for_page_language( $hash, $lang );
+		$altrui  = $this->not_theirs( array_map( static function ( $r ) { return (int) $r->string_id; }, $rows ) );
+		if ( $altrui ) {
+			$rows = array_values( array_filter( $rows, static function ( $r ) use ( $altrui ) { return ! isset( $altrui[ (int) $r->string_id ] ); } ) );
+		}
 		$strings = array();
 		$done    = 0;
 		foreach ( $rows as $row ) {
@@ -359,7 +363,33 @@ class MetaBox {
 		foreach ( Strings::for_page_language( $hash, $lang ) as $row ) {
 			$set[ (int) $row->string_id ] = true;
 		}
-		return $set;
+		return array_diff_key( $set, $this->not_theirs( array_keys( $set ) ) );
+	}
+
+	/**
+	 * The sentences of this page that are not the page's own, for a user who is not an administrator
+	 * (14/10/2026, security research): the header, the menu, the footer and every widget are on all the
+	 * pages, so an Author changing them from their own post changed the whole site — and a sidebar drawn
+	 * for an administrator could carry titles of private posts. Those sentences stay the site owner's.
+	 *
+	 * @param int[] $ids Sentences on the page.
+	 * @return array<int,true> Ids to leave out (none for an administrator).
+	 */
+	private function not_theirs( array $ids ): array {
+		if ( current_user_can( 'manage_options' ) || empty( $ids ) ) {
+			return array();
+		}
+		global $wpdb;
+		$occ  = \TranslateRocket\Database::occurrences_table();
+		$out  = array();
+		foreach ( array_chunk( array_map( 'intval', $ids ), 500 ) as $chunk ) {
+			$in   = implode( ',', $chunk ); // integers only
+			$rows = $wpdb->get_col( "SELECT string_id FROM {$occ} WHERE string_id IN ({$in}) GROUP BY string_id HAVING COUNT(DISTINCT url_hash) > 1" ); // phpcs:ignore WordPress.DB
+			foreach ( (array) $rows as $sid ) {
+				$out[ (int) $sid ] = true;
+			}
+		}
+		return $out;
 	}
 
 	/**

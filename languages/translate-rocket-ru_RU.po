@@ -5238,6 +5238,99 @@ msgstr "Это недействительный адрес e-mail."
 msgid "Not saved: reload the page and try again."
 msgstr "Не сохранено: перезагрузите страницу и попробуйте снова."
 
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your own site did not answer the request (%s): reload the page and try again; if it repeats, ask your host."
+msgstr "Ваш собственный сайт не ответил на запрос (%s): перезагрузите страницу и попробуйте снова; если повторяется, обратитесь к хостингу."
+
+#: src/Admin/Admin.php
+msgid "The provider refused to translate this text because of its safety filter (it judged the content sensitive). Translate this sentence by hand, or with another provider."
+msgstr "Провайдер отказался переводить этот текст из-за фильтра безопасности (счёл содержание чувствительным). Переведите это предложение вручную или другим провайдером."
+
+#: src/Admin/Admin.php
+msgid "Instead of the provider's answer, your server received a web page (often a proxy, a firewall or a login page of the network). Ask your host to let your site reach the provider directly."
+msgstr "Вместо ответа провайдера ваш сервер получил веб-страницу (часто это прокси, файрвол или страница входа в сеть). Попросите хостинг дать сайту прямой доступ к провайдеру."
+
+#: src/Admin/Admin.php
+msgid "The provider answered, but not with a translation in the expected form. Try again; if it happens again, choose another model or another provider."
+msgstr "Провайдер ответил, но не переводом в ожидаемом виде. Попробуйте снова; если повторится, выберите другую модель или другого провайдера."
+
+#: src/Admin/Admin.php
+msgid "The provider's account has no credit left, or its free share is used up. Add credit or check the plan on the provider's site, or let the next engine take over."
+msgstr "На аккаунте провайдера закончились средства или бесплатная квота. Пополните баланс или проверьте тариф на сайте провайдера либо позвольте продолжить следующему движку."
+
+#: src/Admin/Admin.php
+msgid "The chosen model does not exist or this key cannot use it. Press «Load available models» and pick one from the list."
+msgstr "Выбранная модель не существует или этот ключ не может её использовать. Нажмите «Загрузить доступные модели» и выберите одну из списка."
+
+#: src/Admin/Admin.php
+msgid "The text sent was too long for this model. Choose fewer sentences per request (AI Translation → Usage & limits), or a model with a larger context."
+msgstr "Отправленный текст слишком длинный для этой модели. Выберите меньше предложений за запрос (ИИ-перевод → Использование и лимиты) или модель с большим контекстом."
+
+#: src/Admin/Admin.php
+msgid "The provider did not answer within the time limit (timeout). It may be slow or far from your server: try again, or choose fewer sentences per request (AI Translation → Usage & limits)."
+msgstr "Провайдер не ответил за отведённое время (тайм-аут). Возможно, он медленный или далеко от вашего сервера: попробуйте снова или выберите меньше предложений за запрос (ИИ-перевод → Использование и лимиты)."
+
+#: src/Admin/Admin.php
+msgid "Your server could not find the provider's address (a DNS problem on your server). Ask your host to check the server's DNS."
+msgstr "Ваш сервер не нашёл адрес провайдера (проблема DNS на сервере). Попросите хостинг проверить DNS сервера."
+
+#: src/Admin/Admin.php
+msgid "The secure connection to the provider failed (SSL certificate). Ask your host to update the server's certificates (CA bundle) and OpenSSL."
+msgstr "Не удалось установить защищённое соединение с провайдером (сертификат SSL). Попросите хостинг обновить сертификаты сервера (CA bundle) и OpenSSL."
+
+#: src/Admin/Admin.php
+msgid "Your server could not connect to the provider: the connection was refused or blocked (often an outgoing firewall). Ask your host to allow it."
+msgstr "Ваш сервер не смог подключиться к провайдеру: соединение отклонено или заблокировано (часто исходящим файрволом). Попросите хостинг разрешить его."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s–%2$s of %3$s strings"
+msgstr "%1$s–%2$s из %3$s строк"
+
+#: src/Admin/Admin.php
+msgid "Everything is translated in this language."
+msgstr "На этом языке всё переведено."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Page %1$s of %2$s"
+msgstr "Страница %1$s из %2$s"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "More: %s"
+msgstr "Ещё: %s"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your source language (%1$s) isn’t listed here — it’s the language you translate from. Change it in “%2$s” above."
+msgstr "Ваш исходный язык (%1$s) здесь не указан — это язык, с которого вы переводите. Измените его выше в «%2$s»."
+
+#: src/Admin/Admin.php
+msgid "Show all languages (%d)"
+msgstr "Показать все языки (%d)"
+
+#: src/Admin/Admin.php
+msgid "Show only my languages"
+msgstr "Показать только мои языки"
+
+#: src/Admin/Admin.php
+msgid "This page's translations and translated address were removed: translate it again below, with AI, in your browser or by hand."
+msgstr "Переводы и переведённый адрес этой страницы удалены: переведите её заново ниже — с ИИ, в браузере или вручную."
+
+#: src/Admin/Admin.php
+msgid "Translate again: remove this page's translations and translated address (undo available)"
+msgstr "Перевести заново: удалить переводы и переведённый адрес этой страницы (можно отменить)"
+
+#: src/Admin/NextSteps.php
+msgid "Edit languages"
+msgstr "Изменить языки"
+
+#: src/Admin/Overview.php
+msgid "free add-on: no paid plan, no card"
+msgstr "бесплатное дополнение: без платного тарифа, без карты"
+
 #: src/Admin/MetaBox.php
 msgid "Publish it first: its translations are tied to its address, which a draft does not have yet."
 msgstr "Сначала опубликуйте: переводы привязаны к адресу страницы, а у черновика его ещё нет."
@@ -5245,3 +5338,79 @@ msgstr "Сначала опубликуйте: переводы привязан
 #: src/Admin/MetaBox.php
 msgid "Only an administrator can do this."
 msgstr "Это может сделать только администратор."
+
+#: src/Admin/Admin.php
+msgid "Search in every language"
+msgstr "Поиск на всех языках"
+
+#: src/Admin/Admin.php
+msgid "The site search finds pages by their translated text"
+msgstr "Поиск по сайту находит страницы по переведённому тексту"
+
+#: src/Admin/Admin.php
+msgid "Without this, the search box of a translated page finds nothing: WordPress searches the text in your site's own language. With it, a visitor on /it/ who types «colazione» finds your page about breakfast. Only the text you wrote for each page counts — its title, excerpt and content — never menus, buttons, footers or cookie banners, which are on every page. Every word must be on the page, the title weighs most, and the theme's own search box, Elementor's search widget and the Search block work as they are. The index builds by itself in the background and follows every change."
+msgstr "Без этой опции поле поиска на переведённой странице ничего не находит: WordPress ищет по тексту на языке вашего сайта. С ней посетитель на /it/, набравший «colazione», найдёт вашу страницу о завтраке. Учитывается только текст, который вы написали для каждой страницы, — заголовок, отрывок и содержание, — но не меню, кнопки, подвалы или баннеры cookie, которые есть на каждой странице. Каждое слово должно быть на странице, заголовок весит больше всего, а поле поиска темы, виджет поиска Elementor и блок «Поиск» работают как есть. Индекс строится сам в фоне и следует за каждым изменением."
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are off on this site"
+msgstr "Автоматические обновления на этом сайте отключены"
+
+#: src/Admin/NextSteps.php
+msgid "Your host or a setting switched them off for every plugin. Fixes, security ones included, reach your site only when you update by hand: look at Plugins now and then, or ask your host to turn them on."
+msgstr "Ваш хостинг или настройка отключили их для всех плагинов. Исправления, в том числе безопасности, приходят только при ручном обновлении: иногда заглядывайте в «Плагины» или попросите хостинг их включить."
+
+#: src/Admin/NextSteps.php
+msgid "Turn on automatic updates (recommended)"
+msgstr "Включите автоматические обновления (рекомендуется)"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes, security ones above all, reach your site the same day, without you having to remember. Your settings and translations stay as they are; WordPress updates TranslateRocket (and Labs, if you have it) by itself."
+msgstr "Исправления, прежде всего безопасности, приходят на ваш сайт в тот же день, без необходимости об этом помнить. Настройки и переводы остаются как есть; WordPress сам обновляет TranslateRocket (и Labs, если он у вас есть)."
+
+#: src/Admin/NextSteps.php
+msgid "Turn them on"
+msgstr "Включить"
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are on"
+msgstr "Автоматические обновления включены"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes reach your site by themselves."
+msgstr "Исправления приходят на ваш сайт сами."
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Labs %s available — update"
+msgstr "Labs %s доступен — обновить"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%s available — update"
+msgstr "%s доступна — обновить"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Security update: %1$s %2$s."
+msgstr "Обновление безопасности: %1$s %2$s."
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%1$s %2$s is available."
+msgstr "Доступен %1$s %2$s."
+
+#: src/Admin/UpdateNotice.php
+msgid "Please update now: it fixes a security problem."
+msgstr "Обновите сейчас: это исправляет проблему безопасности."
+
+#: src/Admin/UpdateNotice.php
+msgid "It takes a few seconds; your settings and translations stay as they are."
+msgstr "Это займёт несколько секунд; настройки и переводы останутся прежними."
+
+#: src/Admin/UpdateNotice.php
+msgid "Update now"
+msgstr "Обновить сейчас"
+
+#: src/Admin/Admin.php
+msgid "The provider's daily limit is used up (on its free plan, or the one of your account). It starts again within 24 hours; meanwhile the next engine in your chain carries on, if there is one."
+msgstr "Дневной лимит поставщика исчерпан (бесплатного тарифа или вашего аккаунта). Он обновится в течение 24 часов; а пока работу продолжает следующий движок в вашей цепочке, если он есть."

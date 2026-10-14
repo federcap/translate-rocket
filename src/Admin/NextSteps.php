@@ -329,7 +329,7 @@ class NextSteps {
 		// 1. Le lingue.
 		$passi[] = empty( $targets )
 			? self::step( 'da-fare', __( 'Choose your languages', 'translate-rocket' ), __( 'Which language your site is written in, and which ones you want it to speak.', 'translate-rocket' ), __( 'Open the setup', 'translate-rocket' ), admin_url( 'admin.php?page=translate-rocket-wizard' ) )
-			: self::step( 'fatto', __( 'Your languages', 'translate-rocket' ), self::lingue_testo( $targets ), __( 'Change them', 'translate-rocket' ), admin_url( 'admin.php?page=translate-rocket' ) );
+			: self::step( 'fatto', __( 'Your languages', 'translate-rocket' ), self::lingue_testo( $targets ), __( 'Edit languages', 'translate-rocket' ), admin_url( 'admin.php?page=translate-rocket' ) );
 		if ( empty( $targets ) ) {
 			return $passi;   // senza lingue il resto non ha senso.
 		}
@@ -379,6 +379,19 @@ class NextSteps {
 				: self::step( 'fatto', __( 'All your languages are online', 'translate-rocket' ), __( 'Visitors and search engines can reach every one of them.', 'translate-rocket' ), '', '' );
 		}
 
+		// 6b. Automatic updates (14/10/2026, Federico: «automatic updates recommended, in Labs and in the plugin»):
+		// a security fix reached the sites the same day only where they were on.
+		if ( current_user_can( 'update_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/update.php';
+			if ( function_exists( 'wp_is_auto_update_enabled_for_type' ) && ! wp_is_auto_update_enabled_for_type( 'plugin' ) ) {
+				$passi[] = self::step( 'nota', __( 'Automatic updates are off on this site', 'translate-rocket' ), __( 'Your host or a setting switched them off for every plugin. Fixes, security ones included, reach your site only when you update by hand: look at Plugins now and then, or ask your host to turn them on.', 'translate-rocket' ), '', '' );
+			} elseif ( ! empty( self::without_auto_updates() ) ) {
+				$passi[] = self::step( 'da-fare', __( 'Turn on automatic updates (recommended)', 'translate-rocket' ), __( 'Fixes, security ones above all, reach your site the same day, without you having to remember. Your settings and translations stay as they are; WordPress updates TranslateRocket (and Labs, if you have it) by itself.', 'translate-rocket' ), __( 'Turn them on', 'translate-rocket' ), wp_nonce_url( admin_url( 'admin-post.php?action=trrocket_auto_updates' ), 'trrocket_auto_updates' ) );
+			} else {
+				$passi[] = self::step( 'fatto', __( 'Automatic updates are on', 'translate-rocket' ), __( 'Fixes reach your site by themselves.', 'translate-rocket' ), '', '' );
+			}
+		}
+
 		// 7. Cosa lascia indietro l'altro plugin: pagine, modelli, menu.
 		// ⚠️ Da qui in poi si leggono i dati di un plugin che non e' nostro: se cambia
 		// forma, si perde questo pezzo dell'elenco, non tutto il pannello.
@@ -408,6 +421,36 @@ class NextSteps {
 		}
 
 		return $passi;
+	}
+
+	/**
+	 * TranslateRocket and Labs files that WordPress does not update by itself yet.
+	 *
+	 * @return string[]
+	 */
+	public static function without_auto_updates(): array {
+		$nostri = array( plugin_basename( TRROCKET_FILE ) );
+		if ( defined( 'TRRLABS_FILE' ) ) {
+			$nostri[] = plugin_basename( TRRLABS_FILE );
+		}
+		return array_values( array_diff( $nostri, (array) get_site_option( 'auto_update_plugins', array() ) ) );
+	}
+
+	/**
+	 * «Turn them on»: WordPress's own automatic updates, for TranslateRocket and Labs (the same switch as the
+	 * Plugins screen's «Enable auto-updates»).
+	 */
+	public static function auto_updates(): void {
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'translate-rocket' ) );
+		}
+		check_admin_referer( 'trrocket_auto_updates' );
+		$auto = (array) get_site_option( 'auto_update_plugins', array() );
+		update_site_option( 'auto_update_plugins', array_values( array_unique( array_merge( $auto, self::without_auto_updates() ) ) ) );
+		self::forget();
+		$back = wp_get_referer();
+		wp_safe_redirect( $back ? $back : admin_url( 'admin.php?page=translate-rocket-next' ) );
+		exit;
 	}
 
 	/**

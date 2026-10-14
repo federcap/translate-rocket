@@ -22,12 +22,24 @@
 			}
 
 			var msg   = document.querySelector( '.trr-models-msg[data-provider="' + pid + '"]' );
-			var say   = function ( text, bad ) {
+			// 14/10/2026: the plain sentence, and what the provider really answered under «Technical details».
+			var say   = function ( text, bad, detail ) {
 				if ( ! msg ) {
 					if ( bad ) { window.alert( text ); }
 					return;
 				}
 				msg.textContent = text;
+				if ( detail ) {
+					var d = document.createElement( 'details' );
+					var s = document.createElement( 'summary' );
+					var c = document.createElement( 'code' );
+					s.textContent = CFG.i18n.details || 'Technical details';
+					c.textContent = detail;
+					c.style.cssText = 'display:block;white-space:pre-wrap;word-break:break-all;margin-top:4px';
+					d.appendChild( s );
+					d.appendChild( c );
+					msg.appendChild( d );
+				}
 				msg.className   = 'trr-models-msg ' + ( bad ? 'is-bad' : 'is-ok' );
 				msg.hidden      = false;
 			};
@@ -58,14 +70,18 @@
 				'provider-error': CFG.i18n.provErr
 			};
 			fetch( CFG.ajaxurl, { method: 'POST', credentials: 'same-origin', body: fd } )
-				.then( function ( r ) { return r.json(); } )
+				.then( function ( r ) {
+					// Our own site did not answer properly (a gateway, a timeout of the host): say so with its code.
+					if ( ! r.ok ) { throw new Error( 'HTTP ' + r.status ); }
+					return r.json();
+				} )
 				.then( function ( r ) {
 					btn.disabled    = false;
 					btn.textContent = label;
 					if ( ! r || ! r.success || ! r.data || ! r.data.models || ! r.data.models.length ) {
 						sel.style.display = 'none';
 						var code = r && r.data && r.data.error ? r.data.error : '';
-						say( why[ code ] || CFG.i18n.none, true );
+						say( ( r && r.data && r.data.message ) || why[ code ] || CFG.i18n.none, true, r && r.data && r.data.detail ? r.data.detail : '' );
 						if ( ( 'no-key' === code || 'key-refused' === code ) && keyEl ) { keyEl.focus(); }
 						return;
 					}
@@ -86,10 +102,10 @@
 					sel.style.display = '';
 					say( CFG.i18n.found.replace( '%d', r.data.models.length ), false );
 				} )
-				.catch( function () {
+				.catch( function ( err ) {
 					btn.disabled    = false;
 					btn.textContent = label;
-					say( CFG.i18n.net, true );
+					say( ( CFG.i18n.site || CFG.i18n.net ).replace( '%s', err && err.message ? err.message : '?' ), true );
 				} );
 		} );
 	} );

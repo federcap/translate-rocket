@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.4
+Stable tag: 1.8.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,22 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.8.5 =
+* New: search in every language. On a translated page the site's search box finds pages by their translated text (title, excerpt, content, Elementor), never by menus, buttons, footers or cookie banners. The theme's search box, Elementor's search widget and the Search block work as they are. A switch with an info button turns it off.
+* New: the plugin's screens in six more languages: Turkish, Indonesian, Simplified Chinese, Korean, Arabic and Persian.
+* New: when a new version of TranslateRocket or Labs is out, a pill beside the version and a notice with «Update now» say it inside the plugin — red when it is a security release.
+* New: Next steps recommends automatic updates, with one click for TranslateRocket and Labs, and says so honestly when the host has turned them off.
+* Improved: an AI provider's error is said in plain words with its HTTP code (no credit, wrong model, text too long, safety filter, firewall or proxy page, timeout, DNS, SSL…), the provider's own answer under «Technical details»; «Load available models» and the provider test say the same.
+* Improved: a provider's daily limit (for example Groq's tokens per day) is said as a daily limit, not «wait a minute», and the notice shows only on TranslateRocket's screens, without the provider's account codes in sight.
+* Improved: simpler screens — Languages, Translations, Automatic, AI, Switcher, Memory, Next steps in front and the rest under «More»; the translation memory in pages; the list of 80 languages folded until you open it; the «pages changed» notice only on Translations; Labs marked FREE in green.
+* Fixed: «Scan site» stopped after 1,000 pages and posts: on a site with 5,600 pages the rest stayed at 0/0. It now visits every published page, post and product, a block at a time.
+* Security: the cache of translated pages no longer stores the page of a visitor who unlocked a password-protected post, has their name saved for comments or has a cart — no password-protected page is cached at all.
+* Security: the wording collected from WooCommerce emails leaves out the order number, the details under each item (gift card codes, licence keys) and the note written to the customer.
+* Security: in the editor's translation panel, a user who is not an administrator works only on the sentences of their own page, not on the header, menu and footer shared by the whole site.
+* Security: a tag left open in a translation is shown as text, never as markup; the site's requests to itself follow WordPress's own SSL setting (https_local_ssl_verify).
+* Labs 0.9.3: «Translate the whole site» goes on from where it was — pages already translated in every language are skipped, also in a job already running — with Pause and Resume; each page stops after 45 seconds and comes back, instead of being cut by the server's time limit.
+* Labs 0.9.3 (security): links for external collaborators are kept encrypted in the database, a whole-site link no longer shows private or password-protected pages nor e-mails, the history export is safe to open in a spreadsheet, the support access acts only through TranslateRocket's own code in wp-admin too, and the background reading of a page never follows a redirect to another site.
+
 = 1.8.4 =
 * Security: the translation panel in the post editor works on published content only, and removing a page's translations or running the AI or Google from it is for administrators. A Contributor's draft could reach the home page's translations.
 * Security: only an administrator can send the visitors of a translated page to another site.
@@ -371,6 +387,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.5 =
+Security fixes (page cache, WooCommerce emails, editor panel) — please update. Also: search in every language, six new languages for the plugin, plain-words provider errors, «Scan site» beyond 1,000 pages.
 
 = 1.8.4 =
 Security update: please update. The editor's translation panel is limited to published content and administrators for removals and AI; its Save works again.

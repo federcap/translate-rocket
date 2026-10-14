@@ -99,6 +99,7 @@ class Settings {
 			'exclude_strings'          => array(),
 			'ai_daily_limit'           => 0,
 			'ai_batch'                 => 0, // sentences per request: 0 = each provider's own size.
+			'translated_search'        => true, // the site search finds pages by their translated text (14/10/2026)
 			'reuse_mode'               => 'all',
 			'ai_guidance'              => '',
 			'ai_reset_day'             => 0,

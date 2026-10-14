@@ -74,7 +74,7 @@ final class Universal {
 			array(
 				'timeout'     => 25,
 				'redirection' => 3,
-				'sslverify'   => false, // a site calling itself: certificates fail on many local set-ups.
+				'sslverify'   => apply_filters( 'https_local_ssl_verify', false ), // a site calling itself, as WordPress does for its cron: certificates fail on many local set-ups.
 				'headers'     => array( 'Accept-Language' => '', 'User-Agent' => 'TranslateRocket-Universal-Importer' ),
 				'cookies'     => array(),
 			)

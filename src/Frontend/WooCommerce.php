@@ -566,7 +566,9 @@ class WooCommerce {
 
 		$settings = Settings::get();
 		$targets  = array_values( (array) ( $settings['target_languages'] ?? array() ) );
-		if ( ! empty( $targets ) ) {
+		// 14/10/2026 (security research): a subject with the order number in it («Your order #10432…») was a new
+		// sentence for every order, kept in the database. Only the wording without numbers is recorded.
+		if ( ! empty( $targets ) && ! preg_match( '/\d{3,}/', $subject ) ) {
 			Strings::remember_batch(
 				array( array( 'original' => $subject, 'type' => 'text' ) ),
 				$targets,
@@ -794,17 +796,25 @@ class WooCommerce {
 		}
 
 		$xpath = new \DOMXPath( $dom );
-		$nodes = $xpath->query( "//text()[not(ancestor::script) and not(ancestor::style) and not(ancestor::title) and not(ancestor::address) and not(parent::*[contains(concat(' ',normalize-space(@class),' '),' sku ')])]" );
+		$nodes = $xpath->query( "//text()[not(ancestor::script) and not(ancestor::style) and not(ancestor::title) and not(ancestor::address) and not(parent::*[contains(concat(' ',normalize-space(@class),' '),' sku ')]) and not(ancestor::*[contains(concat(' ',normalize-space(@class),' '),' wc-item-meta ')]) and not(ancestor::*[contains(concat(' ',normalize-space(@class),' '),' email-order-item-meta ')]) and not(ancestor::blockquote)]" );
+		// 14/10/2026 (security research): the details under each item (gift card codes, licence keys, booking
+		// references: «wc-item-meta») and the note written to the customer («blockquote») belong to one order,
+		// not to the template: they are never recorded.
 		if ( ! $nodes ) {
 			return;
 		}
 
 		$personal = self::personal( $order );
+		// «Order #10432 (14 October 2026)»: the heading of one order, not the template's wording.
+		$numero = ( $order instanceof \WC_Abstract_Order && method_exists( $order, 'get_order_number' ) ) ? (string) $order->get_order_number() : '';
 		$items    = array();
 		foreach ( $nodes as $node ) {
 			$text = trim( (string) $node->nodeValue );
 			if ( '' === $text || ! preg_match( '/\p{L}/u', $text ) ) {
 				continue; // prices, quantities, punctuation: nothing to translate
+			}
+			if ( '' !== $numero && preg_match( '/(^|\D)' . preg_quote( $numero, '/' ) . '(\D|$)/', $text ) ) {
+				continue;
 			}
 			if ( function_exists( 'mb_strlen' ) ? mb_strlen( $text ) > 400 : strlen( $text ) > 400 ) {
 				continue;

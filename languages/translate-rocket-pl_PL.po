@@ -5238,6 +5238,99 @@ msgstr "To nie jest prawidłowy adres e-mail."
 msgid "Not saved: reload the page and try again."
 msgstr "Nie zapisano: odśwież stronę i spróbuj ponownie."
 
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your own site did not answer the request (%s): reload the page and try again; if it repeats, ask your host."
+msgstr "Twoja witryna nie odpowiedziała na żądanie (%s): odśwież stronę i spróbuj ponownie; jeśli to się powtarza, zapytaj hosting."
+
+#: src/Admin/Admin.php
+msgid "The provider refused to translate this text because of its safety filter (it judged the content sensitive). Translate this sentence by hand, or with another provider."
+msgstr "Dostawca odmówił przetłumaczenia tego tekstu z powodu filtra bezpieczeństwa (uznał treść za drażliwą). Przetłumacz to zdanie ręcznie lub u innego dostawcy."
+
+#: src/Admin/Admin.php
+msgid "Instead of the provider's answer, your server received a web page (often a proxy, a firewall or a login page of the network). Ask your host to let your site reach the provider directly."
+msgstr "Zamiast odpowiedzi dostawcy Twój serwer otrzymał stronę internetową (często proxy, zaporę albo stronę logowania sieci). Poproś hosting, aby witryna łączyła się z dostawcą bezpośrednio."
+
+#: src/Admin/Admin.php
+msgid "The provider answered, but not with a translation in the expected form. Try again; if it happens again, choose another model or another provider."
+msgstr "Dostawca odpowiedział, ale nie tłumaczeniem w oczekiwanej formie. Spróbuj ponownie; jeśli to się powtórzy, wybierz inny model albo innego dostawcę."
+
+#: src/Admin/Admin.php
+msgid "The provider's account has no credit left, or its free share is used up. Add credit or check the plan on the provider's site, or let the next engine take over."
+msgstr "Na koncie u dostawcy nie ma już środków albo darmowy przydział się wyczerpał. Doładuj konto lub sprawdź plan na stronie dostawcy, albo pozwól przejąć kolejnemu silnikowi."
+
+#: src/Admin/Admin.php
+msgid "The chosen model does not exist or this key cannot use it. Press «Load available models» and pick one from the list."
+msgstr "Wybrany model nie istnieje albo ten klucz nie może go używać. Naciśnij «Wczytaj dostępne modele» i wybierz jeden z listy."
+
+#: src/Admin/Admin.php
+msgid "The text sent was too long for this model. Choose fewer sentences per request (AI Translation → Usage & limits), or a model with a larger context."
+msgstr "Wysłany tekst był za długi dla tego modelu. Wybierz mniej zdań na żądanie (Tłumaczenie AI → Użycie i limity) albo model z większym kontekstem."
+
+#: src/Admin/Admin.php
+msgid "The provider did not answer within the time limit (timeout). It may be slow or far from your server: try again, or choose fewer sentences per request (AI Translation → Usage & limits)."
+msgstr "Dostawca nie odpowiedział w wyznaczonym czasie (timeout). Może być wolny lub daleko od Twojego serwera: spróbuj ponownie albo wybierz mniej zdań na żądanie (Tłumaczenie AI → Użycie i limity)."
+
+#: src/Admin/Admin.php
+msgid "Your server could not find the provider's address (a DNS problem on your server). Ask your host to check the server's DNS."
+msgstr "Twój serwer nie znalazł adresu dostawcy (problem z DNS na serwerze). Poproś hosting o sprawdzenie DNS serwera."
+
+#: src/Admin/Admin.php
+msgid "The secure connection to the provider failed (SSL certificate). Ask your host to update the server's certificates (CA bundle) and OpenSSL."
+msgstr "Bezpieczne połączenie z dostawcą nie powiodło się (certyfikat SSL). Poproś hosting o aktualizację certyfikatów serwera (CA bundle) i OpenSSL."
+
+#: src/Admin/Admin.php
+msgid "Your server could not connect to the provider: the connection was refused or blocked (often an outgoing firewall). Ask your host to allow it."
+msgstr "Twój serwer nie mógł połączyć się z dostawcą: połączenie zostało odrzucone lub zablokowane (często zapora wychodząca). Poproś hosting o jego dopuszczenie."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s–%2$s of %3$s strings"
+msgstr "%1$s–%2$s z %3$s tekstów"
+
+#: src/Admin/Admin.php
+msgid "Everything is translated in this language."
+msgstr "W tym języku wszystko jest przetłumaczone."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Page %1$s of %2$s"
+msgstr "Strona %1$s z %2$s"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "More: %s"
+msgstr "Więcej: %s"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your source language (%1$s) isn’t listed here — it’s the language you translate from. Change it in “%2$s” above."
+msgstr "Twój język źródłowy (%1$s) nie jest tu wymieniony — to język, z którego tłumaczysz. Zmień go powyżej w „%2$s”."
+
+#: src/Admin/Admin.php
+msgid "Show all languages (%d)"
+msgstr "Pokaż wszystkie języki (%d)"
+
+#: src/Admin/Admin.php
+msgid "Show only my languages"
+msgstr "Pokaż tylko moje języki"
+
+#: src/Admin/Admin.php
+msgid "This page's translations and translated address were removed: translate it again below, with AI, in your browser or by hand."
+msgstr "Tłumaczenia i przetłumaczony adres tej strony zostały usunięte: przetłumacz ją ponownie poniżej, przez AI, w przeglądarce lub ręcznie."
+
+#: src/Admin/Admin.php
+msgid "Translate again: remove this page's translations and translated address (undo available)"
+msgstr "Przetłumacz ponownie: usuń tłumaczenia i przetłumaczony adres tej strony (można cofnąć)"
+
+#: src/Admin/NextSteps.php
+msgid "Edit languages"
+msgstr "Edytuj języki"
+
+#: src/Admin/Overview.php
+msgid "free add-on: no paid plan, no card"
+msgstr "darmowy dodatek: bez płatnego planu, bez karty"
+
 #: src/Admin/MetaBox.php
 msgid "Publish it first: its translations are tied to its address, which a draft does not have yet."
 msgstr "Najpierw ją opublikuj: tłumaczenia są powiązane z jej adresem, którego szkic jeszcze nie ma."
@@ -5245,3 +5338,79 @@ msgstr "Najpierw ją opublikuj: tłumaczenia są powiązane z jej adresem, któr
 #: src/Admin/MetaBox.php
 msgid "Only an administrator can do this."
 msgstr "Tylko administrator może to zrobić."
+
+#: src/Admin/Admin.php
+msgid "Search in every language"
+msgstr "Wyszukiwanie w każdym języku"
+
+#: src/Admin/Admin.php
+msgid "The site search finds pages by their translated text"
+msgstr "Wyszukiwarka witryny znajduje strony po przetłumaczonym tekście"
+
+#: src/Admin/Admin.php
+msgid "Without this, the search box of a translated page finds nothing: WordPress searches the text in your site's own language. With it, a visitor on /it/ who types «colazione» finds your page about breakfast. Only the text you wrote for each page counts — its title, excerpt and content — never menus, buttons, footers or cookie banners, which are on every page. Every word must be on the page, the title weighs most, and the theme's own search box, Elementor's search widget and the Search block work as they are. The index builds by itself in the background and follows every change."
+msgstr "Bez tej opcji pole wyszukiwania na przetłumaczonej stronie nic nie znajduje: WordPress przeszukuje tekst w języku Twojej witryny. Z nią odwiedzający na /it/, który wpisze «colazione», znajdzie Twoją stronę o śniadaniu. Liczy się tylko tekst, który napisałeś dla każdej strony — tytuł, zajawka i treść — nigdy menu, przyciski, stopki czy banery cookie, obecne na każdej stronie. Każde słowo musi być na stronie, tytuł waży najwięcej, a pole wyszukiwania motywu, widżet wyszukiwania Elementora i blok Wyszukiwanie działają bez zmian. Indeks buduje się sam w tle i śledzi każdą zmianę."
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are off on this site"
+msgstr "Automatyczne aktualizacje są wyłączone w tej witrynie"
+
+#: src/Admin/NextSteps.php
+msgid "Your host or a setting switched them off for every plugin. Fixes, security ones included, reach your site only when you update by hand: look at Plugins now and then, or ask your host to turn them on."
+msgstr "Twój hosting lub ustawienie wyłączyło je dla wszystkich wtyczek. Poprawki, także bezpieczeństwa, docierają tylko po ręcznej aktualizacji: zaglądaj czasem do Wtyczek albo poproś hosting o ich włączenie."
+
+#: src/Admin/NextSteps.php
+msgid "Turn on automatic updates (recommended)"
+msgstr "Włącz automatyczne aktualizacje (zalecane)"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes, security ones above all, reach your site the same day, without you having to remember. Your settings and translations stay as they are; WordPress updates TranslateRocket (and Labs, if you have it) by itself."
+msgstr "Poprawki, zwłaszcza bezpieczeństwa, docierają do Twojej witryny tego samego dnia, bez pamiętania o tym. Ustawienia i tłumaczenia zostają bez zmian; WordPress sam aktualizuje TranslateRocket (i Labs, jeśli go masz)."
+
+#: src/Admin/NextSteps.php
+msgid "Turn them on"
+msgstr "Włącz je"
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are on"
+msgstr "Automatyczne aktualizacje są włączone"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes reach your site by themselves."
+msgstr "Poprawki docierają do Twojej witryny same."
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Labs %s available — update"
+msgstr "Labs %s dostępny — zaktualizuj"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%s available — update"
+msgstr "%s dostępna — zaktualizuj"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Security update: %1$s %2$s."
+msgstr "Aktualizacja bezpieczeństwa: %1$s %2$s."
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%1$s %2$s is available."
+msgstr "Dostępny jest %1$s %2$s."
+
+#: src/Admin/UpdateNotice.php
+msgid "Please update now: it fixes a security problem."
+msgstr "Zaktualizuj teraz: naprawia problem z bezpieczeństwem."
+
+#: src/Admin/UpdateNotice.php
+msgid "It takes a few seconds; your settings and translations stay as they are."
+msgstr "To zajmie kilka sekund; ustawienia i tłumaczenia zostaną bez zmian."
+
+#: src/Admin/UpdateNotice.php
+msgid "Update now"
+msgstr "Aktualizuj teraz"
+
+#: src/Admin/Admin.php
+msgid "The provider's daily limit is used up (on its free plan, or the one of your account). It starts again within 24 hours; meanwhile the next engine in your chain carries on, if there is one."
+msgstr "Dzienny limit dostawcy został wyczerpany (w darmowym planie lub na Twoim koncie). Odnowi się w ciągu 24 godzin; w tym czasie pracę przejmuje następny silnik z Twojej kolejności, jeśli jest."

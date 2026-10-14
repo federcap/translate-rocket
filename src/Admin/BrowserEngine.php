@@ -173,6 +173,11 @@ class BrowserEngine {
 	 * @param string $loc        One page only (its hash), or '' for the whole language.
 	 */
 	public static function render_panel( string $lang, string $source, int $missing, bool $no_api_key, string $loc = '' ): void {
+		// 14/10/2026 (visual check on the showcase site): with nothing missing, a whole panel with a greyed-out
+		// «Translate 0 missing in this browser» only pushed the list down. Nothing to translate, no panel.
+		if ( $missing <= 0 ) {
+			return;
+		}
 		// 6/10/2026: drawn visible. It used to start hidden and be shown by the script in every case
 		// (only its content changes: Chrome's translator, the copy-and-paste round trip, the phone note);
 		// shown after the first paint, it pushed the table below down by its whole height.

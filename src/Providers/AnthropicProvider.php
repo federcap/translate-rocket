@@ -54,7 +54,10 @@ class AnthropicProvider extends LlmProvider {
 		$data = json_decode( $result['body'] ?? '', true );
 		$text = $data['content'][0]['text'] ?? '';
 		if ( '' === $text ) {
-			return TranslationResult::fail( 'Anthropic: empty response.' );
+			if ( 'refusal' === ( $data['stop_reason'] ?? '' ) ) {
+				return TranslationResult::fail( 'Anthropic: blocked by the safety filter (refusal).' );
+			}
+			return TranslationResult::fail( $this->unreadable( (string) ( $result['body'] ?? '' ) ) );
 		}
 		return TranslationResult::ok( array( (string) $text ) );
 	}

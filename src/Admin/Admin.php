@@ -46,11 +46,13 @@ class Admin {
 		add_action( 'admin_init', array( $this, 'maybe_save_switcher' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_exclusions' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_memory' ) );
+		add_action( 'admin_post_trrocket_auto_updates', array( NextSteps::class, 'auto_updates' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'wp_ajax_trrocket_models', array( $this, 'ajax_models' ) );
 		add_action( 'wp_ajax_trrocket_translate_step', array( $this, 'ajax_translate_step' ) );
 		add_action( 'wp_ajax_trrocket_mm_email', array( $this, 'ajax_mm_email' ) );
 		add_action( 'wp_ajax_trrocket_sw_preview', array( $this, 'ajax_switcher_preview' ) );
+		add_action( 'wp_ajax_trrocket_scan_urls', array( $this, 'ajax_scan_urls' ) );
 		add_action( 'wp_ajax_trrocket_sw_try', array( $this, 'ajax_switcher_try' ) );
 		add_action( 'wp_ajax_trrocket_gt', array( $this, 'ajax_gt' ) );
 		add_action( 'wp_ajax_trrocket_deepl_usage', array( $this, 'ajax_deepl_usage' ) );
@@ -106,9 +108,11 @@ class Admin {
 		if ( ! current_user_can( 'manage_options' ) || ! NoticeTidy::ours() ) {
 			return;
 		}
-		// «Next steps» lists the changed pages itself: the notice would only say it twice.
+		// 14/10/2026 (visual check: three notices before every page, on a phone the title only half-way down):
+		// the changed pages are a thing to do, counted in «N things waiting for you» on every screen and listed
+		// in «Next steps». The whole notice stays only on Translations, where «Scan site» is.
 		$schermata = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( $schermata && false !== strpos( (string) $schermata->id, 'translate-rocket-next' ) ) {
+		if ( ! $schermata || false === strpos( (string) $schermata->id, 'translate-rocket-strings' ) ) {
 			return;
 		}
 		$quante = \TranslateRocket\Rescan::count();
@@ -154,6 +158,12 @@ class Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+		// 14/10/2026 (globaltoolszone): only on TranslateRocket's own screens, not on Plugins, Posts and every
+		// other page of the dashboard.
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || false === strpos( (string) $screen->id, 'translate-rocket' ) ) {
+			return;
+		}
 		foreach ( Registry::all() as $provider ) {
 			$reason = get_transient( 'trrocket_provider_down_' . $provider->id() );
 			if ( ! is_string( $reason ) || '' === $reason ) {
@@ -163,14 +173,17 @@ class Admin {
 				add_query_arg( 'trrocket_dismiss_provider', $provider->id() ),
 				'trrocket_dismiss_provider_' . $provider->id()
 			);
+			// The provider's own words (in English, with its account codes) go under «Technical details».
+			$plain = self::shown_error( $reason );
 			printf(
-				'<div class="notice notice-warning" data-trrocket="provider-down"><p><strong>%s</strong> %s<br><em>%s</em> <a href="%s">%s</a></p></div>',
+				'<div class="notice notice-warning" data-trrocket="provider-down"><p><strong>%s</strong> %s<br>%s <a href="%s">%s</a></p>%s</div>',
 				/* translators: %s: provider name (e.g. DeepL). */
 				esc_html( sprintf( __( '%s is unavailable.', 'translate-rocket' ), $provider->label() ) ),
 				esc_html__( 'Automatic translation is falling back to the next provider in your chain (or stopping if there is none).', 'translate-rocket' ),
-				esc_html( $reason ),
+				esc_html( $plain ),
 				esc_url( $dismiss ),
-				esc_html__( 'Dismiss', 'translate-rocket' )
+				esc_html__( 'Dismiss', 'translate-rocket' ),
+				$plain !== $reason ? '<details class="trr-err-details"><summary>' . esc_html__( 'Technical details', 'translate-rocket' ) . '</summary><code>' . esc_html( $reason ) . '</code></details>' : ''
 			);
 		}
 	}
@@ -562,6 +575,16 @@ class Admin {
 			\TranslateRocket\Plugin::asset_ver( 'assets/js/admin-info.js' ),
 			true
 		);
+		// 14/10/2026: every provider test shows the plain sentence and, folded, what the provider really answered;
+		// when our own site does not answer (a gateway, the host's time limit) it says that, with the code.
+		wp_add_inline_script(
+			'trrocket-admin-info',
+			'window.TRRocketSito=' . wp_json_encode( __( 'Your own site did not answer the request (%s): reload the page and try again; if it repeats, ask your host.', 'translate-rocket' ) ) . ';'
+			. 'window.TRRocketDettagli=function(out,det){if(!out||!det){return;}var d=document.createElement("details"),s=document.createElement("summary"),c=document.createElement("code");'
+			. 's.textContent=' . wp_json_encode( __( 'Technical details', 'translate-rocket' ) ) . ';c.textContent=det;c.style.cssText="display:block;white-space:pre-wrap;word-break:break-all;margin-top:4px;font-size:11px";'
+			. 'd.style.marginTop="4px";d.appendChild(s);d.appendChild(c);out.appendChild(d);};',
+			'before'
+		);
 
 		// The Languages page lets you upload a custom flag image (wp.media), and
 		// carries the green/grey online switch beside every language.
@@ -627,6 +650,9 @@ class Admin {
 						'found'   => __( '%d models available — pick one from the list.', 'translate-rocket' ),
 						'pick'    => __( '— pick a model —', 'translate-rocket' ),
 						'chars'   => __( 'characters used', 'translate-rocket' ),
+						'details' => __( 'Technical details', 'translate-rocket' ),
+						/* translators: %s: the technical reason, e.g. HTTP 524. */
+						'site'    => __( 'Your own site did not answer the request (%s): reload the page and try again; if it repeats, ask your host.', 'translate-rocket' ),
 					),
 				)
 			);
@@ -644,8 +670,14 @@ class Admin {
 				'trrocket-scan',
 				'TRRocketScan',
 				array(
-					'urls' => $this->scannable_urls(),
-					'i18n' => array(
+					// 14/10/2026 (a customer with 5,600 pages saw 1,001): the first block comes with the page,
+					// the rest is asked for block by block while the scan runs (ajax_scan_urls).
+					'urls'  => array_merge( array( home_url( '/' ) ), self::scannable_urls( 0 ) ),
+					'total' => self::scannable_total(),
+					'block' => self::SCAN_BLOCK,
+					'ajax'  => admin_url( 'admin-ajax.php' ),
+					'nonce' => wp_create_nonce( 'trrocket_scan_urls' ),
+					'i18n'  => array(
 						'confirm'  => __( 'Scan all published pages to detect translatable text? Keep this tab open until it finishes.', 'translate-rocket' ),
 						'scanning' => __( 'Scanning', 'translate-rocket' ),
 						'done'     => __( 'Scan complete — reloading…', 'translate-rocket' ),
@@ -656,21 +688,54 @@ class Admin {
 		}
 	}
 
+	/** Addresses handed to the scan at a time. */
+	const SCAN_BLOCK = 500;
+
 	/**
-	 * Front-end URLs (source language) of all published pages/posts, for the
-	 * one-click site scan. The browser fetches each so the engine collects its
-	 * strings — no server-side self-requests (which would stall few-worker hosts).
+	 * The content types the scan visits: every public one with its own pages (posts, pages,
+	 * WooCommerce products, events…), not media files.
 	 *
 	 * @return string[]
 	 */
-	private function scannable_urls(): array {
-		$urls = array( home_url( '/' ) );
+	private static function scannable_types(): array {
+		$types = array_values( array_diff( get_post_types( array( 'public' => true ) ), array( 'attachment' ) ) );
+		return $types ? $types : array( 'page', 'post' );
+	}
+
+	/**
+	 * How many published items the scan visits (the home page not counted).
+	 */
+	private static function scannable_total(): int {
+		$n = 0;
+		foreach ( self::scannable_types() as $t ) {
+			$c  = wp_count_posts( $t );
+			$n += (int) ( $c->publish ?? 0 );
+		}
+		return $n;
+	}
+
+	/**
+	 * Front-end URLs (source language) of one block of published items, for the
+	 * one-click site scan. The browser fetches each so the engine collects its
+	 * strings — no server-side self-requests (which would stall few-worker hosts).
+	 * Before 14/10/2026 it stopped at 1,000: a site with 5,600 pages saw 1,001 and
+	 * the rest stayed at 0/0.
+	 *
+	 * @param int $offset Items already handed out.
+	 * @return string[]
+	 */
+	private static function scannable_urls( int $offset ): array {
+		$urls = array();
 		$ids  = get_posts(
 			array(
-				'post_type'   => array( 'page', 'post' ),
-				'post_status' => 'publish',
-				'numberposts' => 1000,
-				'fields'      => 'ids',
+				'post_type'        => self::scannable_types(),
+				'post_status'      => 'publish',
+				'numberposts'      => self::SCAN_BLOCK,
+				'offset'           => max( 0, $offset ),
+				'orderby'          => 'ID',
+				'order'            => 'ASC',
+				'fields'           => 'ids',
+				'suppress_filters' => true,
 			)
 		);
 		foreach ( (array) $ids as $id ) {
@@ -680,6 +745,18 @@ class Admin {
 			}
 		}
 		return array_values( array_unique( $urls ) );
+	}
+
+	/**
+	 * AJAX: the next block of addresses for the site scan.
+	 */
+	public function ajax_scan_urls(): void {
+		check_ajax_referer( 'trrocket_scan_urls' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'error' => 'forbidden' ) );
+		}
+		$offset = isset( $_POST['offset'] ) ? max( 0, (int) $_POST['offset'] ) : 0;
+		wp_send_json_success( array( 'urls' => self::scannable_urls( $offset ) ) );
 	}
 
 	/**
@@ -707,7 +784,16 @@ class Admin {
 		$models = $provider->list_models();
 		if ( empty( $models ) ) {
 			$why = method_exists( $provider, 'models_error' ) ? (string) $provider->models_error() : '';
-			if ( in_array( $why, array( 'http-401', 'http-403' ), true ) ) {
+			$raw = method_exists( $provider, 'models_raw' ) ? (string) $provider->models_raw() : '';
+			// 14/10/2026 (Federico: «show the available models, check the servers' answers, timeouts…»): the same
+			// plain sentence as everywhere else, with its HTTP code, and the answer itself for «Technical details».
+			// A 200 whose body is not JSON (a proxy's page) is not «no models»: it is an unreadable answer.
+			if ( '' === $why && '' !== $raw && null === json_decode( (string) preg_replace( '/^HTTP 200: /', '', $raw ), true ) ) {
+				$raw = (string) preg_replace( '/^HTTP 200: /', 'HTTP 200, unreadable answer: ', $raw );
+				$why = 'provider-error';
+			}
+			$frase = '' !== $raw && '' !== $why ? self::plain_provider_error( $raw ) : '';
+			if ( in_array( $why, array( 'http-401', 'http-403' ), true ) && 0 === strpos( $frase, __( 'The provider refused this API key. Check that you copied it whole, with no spaces, and that it is still active.', 'translate-rocket' ) ) ) {
 				$why = 'key-refused';
 			} elseif ( 'http-429' === $why ) {
 				$why = 'busy';
@@ -716,7 +802,13 @@ class Admin {
 			} elseif ( 'net' !== $why ) {
 				$why = 'provider-error';
 			}
-			wp_send_json_error( array( 'error' => $why ) );
+			wp_send_json_error(
+				array(
+					'error'   => $why,
+					'message' => $frase,
+					'detail'  => $raw,
+				)
+			);
 		}
 		wp_send_json_success( array( 'models' => array_values( $models ) ) );
 	}
@@ -813,6 +905,9 @@ class Admin {
 		// see the quality too, not only that the key works. Never more than 200 characters.
 		$prova = isset( $_POST['text'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['text'] ) ) ) : '';
 		$prova = '' !== $prova ? mb_substr( $prova, 0, 200 ) : 'Hello';
+		if ( method_exists( $provider, 'quick' ) ) {
+			$provider->quick(); // the owner is waiting: one attempt, 25 s at most (14/10/2026)
+		}
 		$res   = $provider->translate( array( $prova ), $source, $target );
 		$prove = (array) get_option( 'trrocket_provider_tests', array() );
 		if ( $res->success && ! empty( $res->translations ) ) {
@@ -841,7 +936,12 @@ class Admin {
 			sprintf( __( 'Connection test failed for %s.', 'translate-rocket' ), $provider->label() ),
 			$res->error
 		);
-		wp_send_json_error( array( 'error' => '' !== $res->error ? self::plain_provider_error( $res->error ) : __( 'The provider did not return a translation.', 'translate-rocket' ) ) );
+		wp_send_json_error(
+			array(
+				'error'  => '' !== $res->error ? self::shown_error( $res->error ) : __( 'The provider did not return a translation.', 'translate-rocket' ),
+				'detail' => (string) $res->error,
+			)
+		);
 	}
 
 	/**
@@ -909,8 +1009,28 @@ class Admin {
 		$con    = static function ( string $frase ) use ( $codice ): string {
 			return $codice > 0 ? $frase . ' (HTTP ' . $codice . ')' : $frase;
 		};
+		$cerca  = static function ( string $re ) use ( $raw ): bool {
+			return (bool) preg_match( $re, $raw );
+		};
+		// 14/10/2026 (Federico: «every answer of the servers handled well»): what a 200 can hide first.
+		if ( $cerca( '/safety filter|content_filter|blockReason|PROHIBITED_CONTENT|\(refusal\)/i' ) ) {
+			return $con( __( 'The provider refused to translate this text because of its safety filter (it judged the content sensitive). Translate this sentence by hand, or with another provider.', 'translate-rocket' ) );
+		}
+		if ( $cerca( '/unreadable answer|empty response|unexpected response|could not match \d+ items|item count mismatch/i' ) ) {
+			if ( $html ) {
+				return $con( __( 'Instead of the provider\'s answer, your server received a web page (often a proxy, a firewall or a login page of the network). Ask your host to let your site reach the provider directly.', 'translate-rocket' ) );
+			}
+			return $con( __( 'The provider answered, but not with a translation in the expected form. Try again; if it happens again, choose another model or another provider.', 'translate-rocket' ) );
+		}
+		$credito = __( 'The provider\'s account has no credit left, or its free share is used up. Add credit or check the plan on the provider\'s site, or let the next engine take over.', 'translate-rocket' );
+		$modello = __( 'The chosen model does not exist or this key cannot use it. Press «Load available models» and pick one from the list.', 'translate-rocket' );
+		$lungo   = __( 'The text sent was too long for this model. Choose fewer sentences per request (AI Translation → Usage & limits), or a model with a larger context.', 'translate-rocket' );
+		$tempo   = __( 'The provider did not answer within the time limit (timeout). It may be slow or far from your server: try again, or choose fewer sentences per request (AI Translation → Usage & limits).', 'translate-rocket' );
 		if ( 401 === $codice ) {
 			return $con( $chiave );
+		}
+		if ( 402 === $codice ) {
+			return $con( $credito );
 		}
 		if ( 403 === $codice ) {
 			if ( preg_match( '/country|region|territor|unsupported_country|not available in your (location|area)|location is not supported/i', $corpo ) ) {
@@ -925,9 +1045,26 @@ class Admin {
 			}
 			return $con( __( 'The provider refused the request. The key may not have access to this model, or the account needs attention: check it on the provider\'s site.', 'translate-rocket' ) );
 		}
+		if ( 404 === $codice || ( $codice >= 400 && $codice < 500 && $cerca( '/model[_ ]?not[_ ]?found|does not exist|no such model|unknown model|invalid model|model.{0,40}(not found|deprecated|decommissioned|not supported)/i' ) ) ) {
+			return $con( $modello );
+		}
+		if ( 408 === $codice ) {
+			return $con( $tempo );
+		}
+		if ( 413 === $codice || ( $codice >= 400 && $codice < 500 && $cerca( '/context.?length|too long|too many tokens|maximum.{0,20}tokens|request too large|payload too large/i' ) ) ) {
+			return $con( $lungo );
+		}
+		if ( ( 429 === $codice || ( $codice >= 400 && $codice < 500 ) ) && $cerca( '/insufficient_quota|quota|credit|billing|payment|balance|exceeded your current/i' ) && ! $cerca( '/rate.?limit|per minute|requests per/i' ) ) {
+			return $con( $credito );
+		}
 		// Google and Gemini answer a wrong key with 400 «API key not valid» / API_KEY_INVALID.
 		if ( ( 0 === $codice || ( $codice >= 400 && $codice < 500 && 429 !== $codice ) ) && preg_match( '/api key not valid|api_key_invalid|invalid[_ ]?(api[_ ]?)?key|incorrect api key|invalid x-api-key/i', $raw ) ) {
 			return $con( $chiave );
+		}
+		// 14/10/2026 (globaltoolszone: Groq «Rate limit reached … tokens per day (TPD): Limit 200000», shown raw on every
+		// screen as if a minute would do): a DAILY limit is not «wait a minute».
+		if ( ( 429 === $codice || 0 === $codice ) && $cerca( '/per day|\bTPD\b|\bRPD\b|daily (limit|quota)|limit.{0,20}per.?day|requests? per day|tokens? per day/i' ) ) {
+			return $con( __( 'The provider\'s daily limit is used up (on its free plan, or the one of your account). It starts again within 24 hours; meanwhile the next engine in your chain carries on, if there is one.', 'translate-rocket' ) );
 		}
 		if ( 429 === $codice || ( 0 === $codice && preg_match( '/rate.?limit|too many requests/i', $raw ) ) ) {
 			return $con( __( 'The provider says too many requests right now. Wait a minute and try again.', 'translate-rocket' ) );
@@ -935,8 +1072,23 @@ class Admin {
 		if ( $codice >= 500 ) {
 			return $con( __( 'The provider, or a gateway on the way, did not answer in time or is overloaded. Try again in a few minutes; if it keeps happening, send fewer sentences per request (AI Translation → Usage & limits).', 'translate-rocket' ) );
 		}
-		if ( 0 === $codice && preg_match( '/curl|timed? ?out|resolve|connect/i', $raw ) ) {
-			return __( 'Your site could not reach the provider (network or firewall). Try again later, or ask your host.', 'translate-rocket' );
+		if ( 0 === $codice ) {
+			$curl = preg_match( '/cURL error (\d+)/i', $raw, $c ) ? ' (cURL ' . $c[1] . ')' : '';
+			if ( $cerca( '/cURL error 28\b|timed? ?out|timeout/i' ) ) {
+				return $tempo . $curl;
+			}
+			if ( $cerca( '/cURL error 6\b|resolve host|could not resolve|name or service not known|getaddrinfo/i' ) ) {
+				return __( 'Your server could not find the provider\'s address (a DNS problem on your server). Ask your host to check the server\'s DNS.', 'translate-rocket' ) . $curl;
+			}
+			if ( $cerca( '/cURL error (35|51|58|60|77)\b|SSL|certificate/i' ) ) {
+				return __( 'The secure connection to the provider failed (SSL certificate). Ask your host to update the server\'s certificates (CA bundle) and OpenSSL.', 'translate-rocket' ) . $curl;
+			}
+			if ( $cerca( '/cURL error 7\b|failed to connect|connection refused|couldn\'t connect|network is unreachable/i' ) ) {
+				return __( 'Your server could not connect to the provider: the connection was refused or blocked (often an outgoing firewall). Ask your host to allow it.', 'translate-rocket' ) . $curl;
+			}
+			if ( $cerca( '/curl|connect/i' ) ) {
+				return __( 'Your site could not reach the provider (network or firewall). Try again later, or ask your host.', 'translate-rocket' ) . $curl;
+			}
 		}
 		return $con( __( 'The provider answered with an error. Try again in a few minutes.', 'translate-rocket' ) );
 	}
@@ -1021,6 +1173,7 @@ class Admin {
 		$settings['translate_meta']      = ! empty( $_POST['translate_meta'] );
 		$settings['translate_interface'] = ! empty( $_POST['translate_interface'] );
 		$settings['auto_redirect']       = ! empty( $_POST['auto_redirect'] );
+		$settings['translated_search']   = ! empty( $_POST['translated_search'] );
 		$settings['cache_pages']         = ! empty( $_POST['cache_pages'] );
 		$settings['show_poweredby']      = ! empty( $_POST['show_poweredby'] );
 
@@ -2864,15 +3017,21 @@ class Admin {
 		submit_button( __( 'Search', 'translate-rocket' ), 'secondary', '', false );
 		echo '</form>';
 
-		$rows = Strings::search( $lang, $term, 300, $only );
+		// 14/10/2026: 50 at a time, with the real total and the pages (it was the first 300, said «300 strings»).
+		$per    = 50;
+		$totale = Strings::search_count( $lang, $term, $only );
+		$pagine = max( 1, (int) ceil( $totale / $per ) );
+		$pg     = isset( $_GET['pg'] ) ? min( $pagine, max( 1, (int) $_GET['pg'] ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$rows   = Strings::search( $lang, $term, $per, $only, ( $pg - 1 ) * $per );
+		$pager  = self::memory_pager( $lang, $term, $only, $pg, $pagine );
 		printf(
 			'<p class="description">%s</p>',
 			esc_html(
-				sprintf(
+				$totale > $per
+					/* translators: 1: first shown, 2: last shown, 3: all matching strings. */
+					? sprintf( __( '%1$s–%2$s of %3$s strings', 'translate-rocket' ), number_format_i18n( ( $pg - 1 ) * $per + 1 ), number_format_i18n( min( $totale, $pg * $per ) ), number_format_i18n( $totale ) )
 					/* translators: %d: number of matching strings. */
-					_n( '%d string', '%d strings', count( $rows ), 'translate-rocket' ),
-					count( $rows )
-				)
+					: sprintf( _n( '%d string', '%d strings', $totale, 'translate-rocket' ), $totale )
 			)
 		);
 
@@ -2897,8 +3056,10 @@ class Admin {
 				);
 				$this->info( __( 'Sends the sentences the free browser translator translated to the active AI provider, for better quality. Translations you edited yourself are never touched. It uses your AI credit and counts towards the daily character limit.', 'translate-rocket' ) );
 			}
-		} else {
+		} elseif ( $miss_total > 0 ) {
 			echo '<span class="description">' . esc_html__( 'Set up an AI provider on the AI page to bulk-translate the missing strings — or use your browser below, which needs no key.', 'translate-rocket' ) . '</span>';
+		} else {
+			echo '<span class="description">&#10003; ' . esc_html__( 'Everything is translated in this language.', 'translate-rocket' ) . '</span>';
 		}
 		echo '</p>';
 
@@ -2922,6 +3083,8 @@ class Admin {
 		echo '<input type="hidden" name="lang" value="' . esc_attr( $lang ) . '" />';
 		echo '<input type="hidden" name="s" value="' . esc_attr( $term ) . '" />';
 		echo '<input type="hidden" name="onlymiss" value="' . ( $only ? '1' : '' ) . '" />';
+		echo '<input type="hidden" name="pg" value="' . (int) $pg . '" />';
+		echo $pager; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped in memory_pager().
 		echo '<table class="widefat striped trr-mem"><tbody>';
 		foreach ( $rows as $row ) {
 			$key     = $row->type . ( $row->context ? '/' . $row->context : '' );
@@ -2936,6 +3099,7 @@ class Admin {
 			echo '</tr>';
 		}
 		echo '</tbody></table>';
+		echo $pager; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped in memory_pager().
 		echo '<div class="trr-esavebar"><button type="submit" class="button button-primary">' . esc_html__( 'Save changes', 'translate-rocket' ) . '</button></div>';
 		echo '</form>';
 
@@ -3076,6 +3240,9 @@ JS;
 		if ( $rifiutate > 0 ) {
 			$args['badparts'] = $rifiutate;
 		}
+		if ( ! empty( $_POST['pg'] ) && (int) $_POST['pg'] > 1 ) {
+			$args['pg'] = (int) $_POST['pg'];
+		}
 		if ( isset( $_POST['s'] ) && '' !== $_POST['s'] ) {
 			$args['s'] = sanitize_text_field( wp_unslash( $_POST['s'] ) );
 		}
@@ -3084,6 +3251,31 @@ JS;
 		}
 		wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php' ) ) );
 		exit;
+	}
+
+	/**
+	 * «‹ Previous · Page 2 of 17 · Next ›» for the Memory list, keeping the search and «Only missing».
+	 */
+	private static function memory_pager( string $lang, string $term, bool $only, int $pg, int $pagine ): string {
+		if ( $pagine <= 1 ) {
+			return '';
+		}
+		$url = static function ( int $n ) use ( $lang, $term, $only ): string {
+			$a = array( 'page' => 'translate-rocket-memory', 'lang' => $lang, 'pg' => $n );
+			if ( '' !== $term ) {
+				$a['s'] = $term;
+			}
+			if ( $only ) {
+				$a['onlymiss'] = '1';
+			}
+			return esc_url( add_query_arg( $a, admin_url( 'admin.php' ) ) );
+		};
+		$out  = '<p class="trr-mem-pager" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0">';
+		$out .= $pg > 1 ? '<a class="button" href="' . $url( $pg - 1 ) . '">&lsaquo; ' . esc_html__( 'Previous', 'translate-rocket' ) . '</a>' : '<span class="button disabled" aria-disabled="true">&lsaquo; ' . esc_html__( 'Previous', 'translate-rocket' ) . '</span>';
+		/* translators: 1: this page, 2: all pages. */
+		$out .= '<span>' . esc_html( sprintf( __( 'Page %1$s of %2$s', 'translate-rocket' ), number_format_i18n( $pg ), number_format_i18n( $pagine ) ) ) . '</span>';
+		$out .= $pg < $pagine ? '<a class="button" href="' . $url( $pg + 1 ) . '">' . esc_html__( 'Next', 'translate-rocket' ) . ' &rsaquo;</a>' : '<span class="button disabled" aria-disabled="true">' . esc_html__( 'Next', 'translate-rocket' ) . ' &rsaquo;</span>';
+		return $out . '</p>';
 	}
 
 	private function redirect_editor( string $lang, string $flag, int $rifiutate = 0 ): void {
@@ -3401,16 +3593,20 @@ JS;
 				if(mmb&&mme){mmb.addEventListener('click',function(){mme.value=mmb.getAttribute('data-email')||'';mme.focus();});}
 				// 13/10/2026 (Federico: «how is the e-mail saved? there is no send button»): «Save» saves it at once.
 				var mms=document.getElementById('trr-engine-mm-save'),mmt=document.getElementById('trr-engine-mm-state');
+				// 14/10/2026 (found by the full run, on a slow bench): the answer of an earlier save arrived after a newer
+				// action and wrote «Saved» over «not a valid address». Each action has a number; only the last one speaks.
+				var mmSeq=0;
 				function salvaMm(){
 					if(!mme||!mmt||!window.fetch){return;}
-					var v=mme.value.trim();
+					var mio=++mmSeq,v=mme.value.trim();
 					if(v&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){mmt.textContent=mmt.getAttribute('data-bad');return;}
 					var d=new FormData();d.append('action','trrocket_mm_email');d.append('email',v);d.append('trrocket_auto_nonce',(f.querySelector('[name="trrocket_auto_nonce"]')||{}).value||'');
-					if(mms){mms.disabled=true;}
+					mmt.textContent='…';
 					fetch(window.ajaxurl,{method:'POST',body:d,credentials:'same-origin'}).then(function(r){return r.json();}).then(function(j){
+						if(mio!==mmSeq){return;}
 						mmt.textContent=(j&&j.success)?mmt.getAttribute(j.data&&j.data.email?'data-on':'data-off'):mmt.getAttribute('data-err');
-						if(j&&j.success){mme.value=j.data.email||'';}
-					}).catch(function(){mmt.textContent=mmt.getAttribute('data-err');}).then(function(){if(mms){mms.disabled=false;}});
+						if(j&&j.success&&mme.value.trim()===v){mme.value=j.data.email||'';}
+					}).catch(function(){if(mio===mmSeq){mmt.textContent=mmt.getAttribute('data-err');}});
 				}
 				if(mms){mms.addEventListener('click',salvaMm);}
 				if(mme){mme.addEventListener('keydown',function(e){if('Enter'===e.key){e.preventDefault();salvaMm();}});}
@@ -3665,7 +3861,7 @@ JS;
 	 * messages (limit reached, no key yet) stay as they are.
 	 */
 	public static function shown_error( string $errore ): string {
-		return preg_match( '/HTTP \d{3}\b|curl error/i', $errore ) ? self::plain_provider_error( $errore ) : $errore;
+		return preg_match( '/HTTP \d{3}\b|curl error|unreadable answer|safety filter|could not match \d+ items|item count mismatch/i', $errore ) ? self::plain_provider_error( $errore ) : $errore;
 	}
 
 	/**
@@ -3807,20 +4003,24 @@ JS;
 	 * Branded header with pill navigation, shared by every plugin screen.
 	 */
 	public static function header( string $current ): void {
-		// Same order as the WP submenu on the left, with an icon before each name.
+		// 14/10/2026 (Federico, 11/10: «in order, at the top: Languages, Translations, Automatic, AI, Switcher,
+		// Memory, then the rest»): the pages used every day first; the rest under «More», which on a phone (one
+		// row that scrolls sideways, where a drop-down would be cut off) stays as plain buttons at the end.
 		$pages = array(
-			'translate-rocket-next'       => array( __( 'Next steps', 'translate-rocket' ), 'dashicons-yes-alt' ),
 			'translate-rocket'            => array( __( 'Languages', 'translate-rocket' ), 'dashicons-translation' ),
-			'translate-rocket-auto'       => array( __( 'Automatic', 'translate-rocket' ), 'dashicons-controls-play' ),
 			'translate-rocket-strings'    => array( __( 'Translations', 'translate-rocket' ), 'dashicons-edit' ),
-			'translate-rocket-memory'     => array( __( 'Memory', 'translate-rocket' ), 'dashicons-database' ),
+			'translate-rocket-auto'       => array( __( 'Automatic', 'translate-rocket' ), 'dashicons-controls-play' ),
 			'translate-rocket-ai'         => array( __( 'AI', 'translate-rocket' ), 'dashicons-superhero' ),
-			'translate-rocket-import'     => array( __( 'Import', 'translate-rocket' ), 'dashicons-download' ),
 			'translate-rocket-switcher'   => array( __( 'Switcher', 'translate-rocket' ), 'dashicons-flag' ),
-			'translate-rocket-exclusions' => array( __( 'Exclusions', 'translate-rocket' ), 'dashicons-shield' ),
-			'translate-rocket-copies'     => array( __( 'Copies', 'translate-rocket' ), 'dashicons-admin-page' ),
+			'translate-rocket-memory'     => array( __( 'Memory', 'translate-rocket' ), 'dashicons-database' ),
+			'translate-rocket-next'       => array( __( 'Next steps', 'translate-rocket' ), 'dashicons-yes-alt' ),
+		);
+		$altre = array(
+			'translate-rocket-import'      => array( __( 'Import', 'translate-rocket' ), 'dashicons-download' ),
+			'translate-rocket-exclusions'  => array( __( 'Exclusions', 'translate-rocket' ), 'dashicons-shield' ),
+			'translate-rocket-copies'      => array( __( 'Copies', 'translate-rocket' ), 'dashicons-admin-page' ),
 			'translate-rocket-diagnostics' => array( __( 'Diagnostics', 'translate-rocket' ), 'dashicons-heart' ),
-			'translate-rocket-help'       => array( __( 'Help', 'translate-rocket' ), 'dashicons-sos' ),
+			'translate-rocket-help'        => array( __( 'Help', 'translate-rocket' ), 'dashicons-sos' ),
 		);
 
 		$unseen = \TranslateRocket\Logger::count_unseen();
@@ -3834,14 +4034,14 @@ JS;
 		echo '<img class="trr-hero-full" src="' . esc_url( TRROCKET_URL . 'assets/img/logo-white.png' ) . '" alt="TranslateRocket™" width="1200" height="226" />';
 		echo '<div class="trr-hero-info">';
 		echo '<div class="trr-hero-tag">' . esc_html__( 'Free, AI-powered translation for WordPress', 'translate-rocket' ) . '</div>';
-		echo '<div class="trr-hero-sub">' . esc_html__( 'Unlimited languages · Visual editor · SEO-ready', 'translate-rocket' ) . ' · <span class="trr-hero-ver">v' . esc_html( TRROCKET_VERSION ) . '</span></div>';
+		echo '<div class="trr-hero-sub">' . esc_html__( 'Unlimited languages · Visual editor · SEO-ready', 'translate-rocket' ) . ' · <span class="trr-hero-ver">v' . esc_html( TRROCKET_VERSION ) . '</span>' . UpdateNotice::pill() . '</div>';
 		\TranslateRocket\Admin\PluginLanguage::render();
 		echo '</div>';
 		echo '</div>';
 
 		echo '<nav class="trr-nav">';
-		foreach ( $pages as $slug => $p ) {
-			$cls = ( $slug === $current ) ? 'trr-nav-item is-active' : 'trr-nav-item';
+		$pillola = static function ( string $slug, array $p, string $extra = '' ) use ( $current, $unseen, $in_attesa ): string {
+			$cls   = ( $slug === $current ) ? 'trr-nav-item is-active' : 'trr-nav-item';
 			$badge = '';
 			if ( 'translate-rocket-diagnostics' === $slug && $unseen > 0 ) {
 				$cls  .= ' has-issues';
@@ -3851,18 +4051,35 @@ JS;
 				$cls  .= ' has-steps';
 				$badge = ' <span class="trr-nav-badge trr-nav-steps">' . esc_html( (string) $in_attesa ) . '</span>';
 			}
-			echo wp_kses(
-				'<a class="' . esc_attr( $cls ) . '" href="' . esc_url( admin_url( 'admin.php?page=' . $slug ) ) . '">'
+			return '<a class="' . esc_attr( $cls . $extra ) . '" href="' . esc_url( admin_url( 'admin.php?page=' . $slug ) ) . '">'
 				. '<span class="dashicons ' . esc_attr( $p[1] ) . '"></span> ' . esc_html( $p[0] )
 				. $badge
-				. '</a>',
-				\TranslateRocket\Kses::html_rules()
-			);
+				. '</a>';
+		};
+		foreach ( $pages as $slug => $p ) {
+			echo wp_kses( $pillola( $slug, $p ), \TranslateRocket\Kses::html_rules() );
+		}
+		// «More ▾»: on a computer a drop-down; it shows which page is open in it, and the problems badge of Diagnostics.
+		$dentro = isset( $altre[ $current ] );
+		$menu   = '';
+		foreach ( $altre as $slug => $p ) {
+			$menu .= $pillola( $slug, $p );
+		}
+		echo wp_kses(
+			'<details class="trr-nav-more' . ( $dentro ? ' is-current' : '' ) . '"><summary class="trr-nav-item' . ( $dentro ? ' is-active' : '' ) . ( $unseen > 0 ? ' has-issues' : '' ) . '">'
+			. '<span class="dashicons dashicons-ellipsis"></span> ' . esc_html( $dentro ? sprintf( /* translators: %s: name of the open page, e.g. Diagnostics. */ __( 'More: %s', 'translate-rocket' ), $altre[ $current ][0] ) : __( 'More', 'translate-rocket' ) )
+			. ( $unseen > 0 ? ' <span class="trr-nav-badge">' . esc_html( (string) $unseen ) . '</span>' : '' )
+			. ' <span aria-hidden="true">&#9662;</span></summary><div class="trr-nav-more-menu">' . $menu . '</div></details>',
+			\TranslateRocket\Kses::html_rules()
+		);
+		foreach ( $altre as $slug => $p ) {
+			echo wp_kses( $pillola( $slug, $p, ' trr-nav-phone' ), \TranslateRocket\Kses::html_rules() );
 		}
 		// «Labs ✨»: what the free add-on adds (or Labs itself, once installed). Opens only when clicked.
 		$labs = \TranslateRocket\Admin\LabsPromo::slug();
 		echo '<a class="trr-nav-item trr-nav-labs' . ( $labs === $current ? ' is-active' : '' ) . '" href="' . esc_url( admin_url( 'admin.php?page=' . $labs ) ) . '">'
 			. '<span class="dashicons dashicons-star-filled"></span> ' . esc_html__( 'Labs ✨', 'translate-rocket' )
+			. ' <span class="trr-free-badge">FREE</span>' // 14/10/2026 (Federico: «in green FREE, make it clear it is really free»)
 			. '</a>';
 		// Optional donation link: keeps the plugin free + supporters get priority help.
 		echo '<a class="trr-nav-item trr-nav-support" href="https://translaterocket.com/donate/" target="_blank" rel="noopener" title="'
@@ -3871,7 +4088,8 @@ JS;
 			. '</a>';
 		echo '</nav>';
 		// On a phone the buttons are one row that scrolls sideways: bring the current one into view.
-		echo '<script>(function(){var n=document.querySelector(".trr-nav"),a=n&&n.querySelector(".is-active");if(a&&n.scrollWidth>n.clientWidth){n.scrollLeft=Math.max(0,a.offsetLeft-n.offsetLeft-16);}})();</script>';
+		echo '<script>(function(){var n=document.querySelector(".trr-nav"),a=n&&n.querySelector(":scope > a.is-active:not(.trr-nav-phone),:scope > a.trr-nav-phone.is-active");if(a&&n.scrollWidth>n.clientWidth){n.scrollLeft=Math.max(0,a.offsetLeft-n.offsetLeft-16);}'
+			. 'var m=n&&n.querySelector(".trr-nav-more");if(m){document.addEventListener("click",function(e){if(m.open&&!m.contains(e.target)){m.open=false;}});document.addEventListener("keydown",function(e){if("Escape"===e.key){m.open=false;}});}})();</script>';
 
 		// Gli avvisi (nostri e di altri plugin) WordPress li stampa SOPRA la schermata, e il
 		// suo common.js li sposta qui sotto solo a caricamento finito: su un sito lento anche
@@ -4298,7 +4516,7 @@ JS
 							var body = 'action=trrocket_test_provider&_wpnonce=' + encodeURIComponent( btn.getAttribute( 'data-nonce' ) ) + '&provider=' + encodeURIComponent( btn.getAttribute( 'data-provider' ) ) + '&text=' + encodeURIComponent( ( btn.parentNode.querySelector( '.trr-ai-try-text' ) || {} ).value || '' );
 							var spunta = btn.closest( '.trr-ai-provider' ) ? btn.closest( '.trr-ai-provider' ).querySelector( '.trr-ai-tested' ) : null;
 							fetch( ajaxurl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body } )
-								.then( function ( r ) { return r.json(); } )
+								.then( function ( r ) { if ( ! r.ok ) { throw new Error( 'HTTP ' + r.status ); } return r.json(); } )
 								.then( function ( res ) {
 									btn.disabled = false;
 									if ( res && res.success && res.data && res.data.sample ) {
@@ -4308,10 +4526,11 @@ JS
 									} else {
 										out.className = 'trr-ai-try-out is-fail';
 										out.textContent = '✗ ' + ( res && res.data && res.data.error ? res.data.error : 'Error' );
+										window.TRRocketDettagli( out, res && res.data ? res.data.detail : '' );
 										if ( spunta ) { spunta.hidden = true; }
 									}
 								} )
-								.catch( function () { btn.disabled = false; out.className = 'trr-ai-try-out is-fail'; out.textContent = '✗'; } );
+								.catch( function ( err ) { btn.disabled = false; out.className = 'trr-ai-try-out is-fail'; out.textContent = '✗ ' + window.TRRocketSito.replace( '%s', err && err.message ? err.message : '?' ); } );
 						} );
 						function apri( card, si ) {
 							card.classList.toggle( 'is-folded', ! si );
@@ -5103,7 +5322,7 @@ JS;
 		out.textContent = ( window.TRRocketDiag || {} ).testing || 'Testing…';
 		var body = 'action=trrocket_test_provider&_wpnonce=' + encodeURIComponent( nonce ) + '&provider=' + encodeURIComponent( btn.getAttribute( 'data-provider' ) );
 		fetch( ajaxurl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body } )
-			.then( function ( r ) { return r.json(); } )
+			.then( function ( r ) { if ( ! r.ok ) { throw new Error( 'HTTP ' + r.status ); } return r.json(); } )
 			.then( function ( res ) {
 				btn.disabled = false;
 				if ( res && res.success ) {
@@ -5112,9 +5331,10 @@ JS;
 				} else {
 					out.className = 'trr-test-result is-fail';
 					out.textContent = '✗ ' + ( res && res.data && res.data.error ? res.data.error : 'Error' );
+					if ( window.TRRocketDettagli ) { window.TRRocketDettagli( out, res && res.data ? res.data.detail : '' ); }
 				}
 			} )
-			.catch( function () { btn.disabled = false; out.className = 'trr-test-result is-fail'; out.textContent = '✗'; } );
+			.catch( function ( err ) { btn.disabled = false; out.className = 'trr-test-result is-fail'; out.textContent = '✗ ' + ( window.TRRocketSito || '%s' ).replace( '%s', err && err.message ? err.message : '?' ); } );
 	} );
 }() );
 JS;
@@ -5653,10 +5873,13 @@ JS;
 						<?php esc_html_e( 'Pick the languages you want to add. Each gets its own URL prefix, e.g. /en/.', 'translate-rocket' ); ?>
 						<br>
 						<?php
+						// 14/10/2026: the field's name comes from its own label, so every language names it as it is shown
+						// (the Italian sentence used to point to «Site language (source)», in English).
 						printf(
-							/* translators: %s: the source language name. */
-							esc_html__( 'Your source language (%s) isn’t listed here — it’s the language you translate from. Change it in “Site language (source)” above.', 'translate-rocket' ),
-							esc_html( Languages::label( $source ) )
+							/* translators: 1: the source language name, 2: the name of the field above, e.g. Site language (source). */
+							esc_html__( 'Your source language (%1$s) isn’t listed here — it’s the language you translate from. Change it in “%2$s” above.', 'translate-rocket' ),
+							esc_html( Languages::label( $source ) ),
+							esc_html__( 'Site language (source)', 'translate-rocket' )
 						);
 						?>
 						<br>
@@ -5670,8 +5893,36 @@ JS;
 					$testo_on    = __( 'Online: your visitors see this language. Click to hide it while you work on it.', 'translate-rocket' );
 					$testo_off   = __( 'Offline: only you see this language. Click to publish it.', 'translate-rocket' );
 					?>
-					<?php self::lang_search_box(); ?>
-					<div class="trrocket-lang-grid trr-lang-grid">
+					<?php
+					self::lang_search_box();
+					// 14/10/2026 (visual check: 80 languages always open made the page 3,900 px, 7,400 on a phone): with
+					// languages chosen, only those show; typing in the search box shows every match; one button opens all.
+					$trr_chiusa = ! empty( array_diff( (array) $targets, array( $source ) ) );
+					$trr_tutte  = count( Languages::all() ) - 1;
+					if ( $trr_chiusa ) :
+						?>
+						<p style="margin:-4px 0 10px"><button type="button" class="button button-small" id="trr-lang-all"
+							data-open="<?php echo esc_attr( sprintf( /* translators: %d: how many languages there are. */ __( 'Show all languages (%d)', 'translate-rocket' ), $trr_tutte ) ); ?>"
+							data-close="<?php esc_attr_e( 'Show only my languages', 'translate-rocket' ); ?>"><?php echo esc_html( sprintf( /* translators: %d: how many languages there are. */ __( 'Show all languages (%d)', 'translate-rocket' ), $trr_tutte ) ); ?></button></p>
+						<script>
+						// The grid comes after this script: wait for the page (found by collaudo-cerca-lingue, 14/10/2026).
+						document.addEventListener( 'DOMContentLoaded', function () {
+							var b = document.getElementById( 'trr-lang-all' ), g = document.querySelector( '.trr-lang-grid' ), q = document.querySelector( '.trr-lang-cerca-in' );
+							if ( ! b || ! g ) { return; }
+							b.addEventListener( 'click', function () {
+								var chiusa = g.classList.toggle( 'is-folded' );
+								b.textContent = b.getAttribute( chiusa ? 'data-open' : 'data-close' );
+							} );
+							if ( q ) { q.addEventListener( 'input', function () { g.classList.toggle( 'is-searching', '' !== q.value.trim() ); } ); }
+							// a language ticked while searching stays in view after the search is cleared
+							g.addEventListener( 'change', function ( e ) {
+								var it = e.target.closest && e.target.closest( '.trrocket-lang-item' );
+								if ( it && 'target_languages[]' === e.target.name ) { it.classList.toggle( 'is-chosen', e.target.checked ); }
+							} );
+						} );
+						</script>
+					<?php endif; ?>
+					<div class="trrocket-lang-grid trr-lang-grid<?php echo $trr_chiusa ? ' is-folded' : ''; ?>">
 						<?php
 						foreach ( Languages::all() as $code => $info ) :
 							if ( $code === $source ) {
@@ -5860,6 +6111,15 @@ JS;
 								<label>
 									<input type="checkbox" name="auto_redirect" value="1" <?php checked( ! empty( $settings['auto_redirect'] ) ); ?> />
 									<?php esc_html_e( 'Redirect new visitors to their browser language', 'translate-rocket' ); ?>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><?php esc_html_e( 'Search in every language', 'translate-rocket' ); ?> <?php $this->info( __( 'Without this, the search box of a translated page finds nothing: WordPress searches the text in your site\'s own language. With it, a visitor on /it/ who types «colazione» finds your page about breakfast. Only the text you wrote for each page counts — its title, excerpt and content — never menus, buttons, footers or cookie banners, which are on every page. Every word must be on the page, the title weighs most, and the theme\'s own search box, Elementor\'s search widget and the Search block work as they are. The index builds by itself in the background and follows every change.', 'translate-rocket' ) ); ?></th>
+							<td>
+								<label>
+									<input type="checkbox" name="translated_search" value="1" <?php checked( ! isset( $settings['translated_search'] ) || ! empty( $settings['translated_search'] ) ); ?> />
+									<?php esc_html_e( 'The site search finds pages by their translated text', 'translate-rocket' ); ?>
 								</label>
 							</td>
 						</tr>

@@ -101,7 +101,9 @@ abstract class LlmProvider extends AbstractProvider {
 
 		$decoded = self::extract_json_array( $res->translations[0] ?? '' );
 		if ( null === $decoded || count( $decoded ) !== count( $texts ) ) {
-			return TranslationResult::fail( 'Unexpected AI response (could not match ' . count( $texts ) . ' items).' );
+			// 14/10/2026 (matrix of provider answers): with its code and what the model really wrote, for the plain
+			// message and «Technical details».
+			return TranslationResult::fail( $this->label() . ': HTTP 200, unexpected answer (could not match ' . count( $texts ) . ' items): ' . substr( trim( (string) ( $res->translations[0] ?? '' ) ), 0, 300 ) );
 		}
 
 		return TranslationResult::ok( array_map( 'strval', $decoded ) );

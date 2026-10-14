@@ -42,7 +42,10 @@ class OpenAIProvider extends LlmProvider {
 		$data = json_decode( $result['body'] ?? '', true );
 		$text = $data['choices'][0]['message']['content'] ?? '';
 		if ( '' === $text ) {
-			return TranslationResult::fail( 'OpenAI: empty response.' );
+			if ( 'content_filter' === ( $data['choices'][0]['finish_reason'] ?? '' ) || ! empty( $data['choices'][0]['message']['refusal'] ) ) {
+				return TranslationResult::fail( 'OpenAI: blocked by the safety filter (content_filter).' );
+			}
+			return TranslationResult::fail( $this->unreadable( (string) ( $result['body'] ?? '' ) ) );
 		}
 		return TranslationResult::ok( array( (string) $text ) );
 	}

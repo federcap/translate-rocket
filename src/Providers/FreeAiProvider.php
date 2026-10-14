@@ -42,7 +42,7 @@ abstract class FreeAiProvider extends LlmProvider {
 		$r = wp_remote_post(
 			$url,
 			array(
-				'timeout' => 60,
+				'timeout' => $this->quick ? 25 : 60,
 				'headers' => array_merge( array( 'Content-Type' => 'application/json', 'User-Agent' => self::USER_AGENT ), $headers ),
 				'body'    => wp_json_encode( $body ),
 			)
@@ -65,7 +65,9 @@ abstract class FreeAiProvider extends LlmProvider {
 			} elseif ( isset( $out['data']['errors'][0]['message'] ) ) {
 				$msg = (string) $out['data']['errors'][0]['message'];
 			}
-			$out['error'] = 'HTTP ' . $code . ( '' !== $msg ? ': ' . $msg : '' );
+			// No message of its own (a firewall's HTML page, a gateway): what came back goes along, so the
+			// plain message can tell a firewall from a refused key (14/10/2026).
+			$out['error'] = 'HTTP ' . $code . ': ' . ( '' !== $msg ? $msg : substr( trim( $raw ), 0, 300 ) );
 		}
 		return $out;
 	}
@@ -78,8 +80,15 @@ abstract class FreeAiProvider extends LlmProvider {
 	 */
 	protected function post_patient( string $url, array $body, array $headers ): array {
 		$r = $this->post_json( $url, $body, $headers );
+		if ( $this->quick ) {
+			return $r;
+		}
 		if ( 429 === $r['code'] && $r['retry'] > 0 && $r['retry'] <= 25 ) {
 			sleep( $r['retry'] + 1 );
+			$r = $this->post_json( $url, $body, $headers );
+		} elseif ( 0 === $r['code'] || in_array( $r['code'], array( 500, 502, 503, 504, 520, 522, 524 ), true ) ) {
+			// A network hiccup or an overloaded gateway: once more after a breath (14/10/2026).
+			sleep( 2 );
 			$r = $this->post_json( $url, $body, $headers );
 		}
 		return $r;

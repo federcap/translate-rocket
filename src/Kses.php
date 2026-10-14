@@ -92,6 +92,8 @@ class Kses {
 		);
 		return array(
 			'div'      => $common,
+			'details'  => array_merge( $common, array( 'open' => true ) ), // 14/10/2026: «More ▾» in the plugin's header
+			'summary'  => $common,
 			'span'     => $common,
 			'p'        => $common,
 			'ul'       => $common,
@@ -205,6 +207,10 @@ class Kses {
 			},
 			$masked
 		);
+		// 14/10/2026 (security inventory): a tag left open («<img src=x onerror=…» with no «>») was
+		// not a tag for the line above, so it stayed as it was, and on the page the browser closed it
+		// with the «>» of the next tag, «onerror» included. A «<» that does not open a whole tag is text.
+		$masked = (string) preg_replace( '/<(?=[a-zA-Z\/!?])(?![^<>]*>)/', '&lt;', $masked );
 		return \TranslateRocket\Frontend\InlineText::unmask_parts( $masked );
 	}
 

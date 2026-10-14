@@ -2111,7 +2111,11 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-ov-labs { background: linear-gradient(180deg, #f7f5ff, #fff); border-left: 1px solid #e6e7f0; }
 .trr-ov-col h3 { margin: 0 0 8px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
 .trr-ov-tag { font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 10px; background: #f0f0f1; color: #50575e; }
-.trr-ov-free { background: #ede9fe; color: #5b21b6; }
+.trr-ov-free { background: #e7f5ec; color: #0a5c2e; }
+/* 14/10/2026 (Federico: «Labs: put FREE in green, make it clear it is really free»). */
+.trr-free-badge { display: inline-block; margin-left: 5px; padding: 0 7px; border-radius: 999px; background: #00a32a; color: #fff; font-size: 10px; font-weight: 800; letter-spacing: .06em; line-height: 17px; vertical-align: middle; }
+.trr-free-big { font-size: 12px; line-height: 20px; padding: 0 10px; }
+.trr-nav-labs .trr-free-badge { margin-left: 2px; }
 .trr-ov-col ul { margin: 0; }
 .trr-ov-col li { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; margin: 0; border-bottom: 1px dashed #eceef3; }
 .trr-ov-col li:last-child { border-bottom: 0; }
@@ -2254,3 +2258,26 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-etag-import{background:#efeafc;color:#4b2a9e}
 .trr-etag-reuse,.trr-etag-pieces,.trr-etag-glossary{background:#eef1f4;color:#50575e}
 .trr-etag-unknown{background:#fff;border:1px dashed #c3c4c7;color:#787c82}
+
+/* 14/10/2026: «More ▾» in the header — a drop-down on a computer; on a phone (one row scrolling sideways, where a
+   drop-down would be cut off) its pages are plain buttons at the end of the row. */
+.trr-nav-more { position: relative; }
+.trr-nav-more > summary { list-style: none; cursor: pointer; }
+.trr-nav-more > summary::-webkit-details-marker { display: none; }
+.trr-nav-more-menu { position: absolute; z-index: 50; top: calc( 100% + 6px ); left: 0; display: flex; flex-direction: column; gap: 4px; min-width: 190px; padding: 8px; background: #fff; border: 1px solid #e2e2e7; border-radius: 12px; box-shadow: 0 10px 30px rgba( 0, 0, 0, .12 ); }
+.trr-nav-more-menu .trr-nav-item { border-color: transparent; box-shadow: none; justify-content: flex-start; }
+.trr-nav-more-menu .trr-nav-item:hover { border-color: #e2e2e7; }
+.trr-nav-phone { display: none; }
+@media ( max-width: 782px ) {
+	.trr-nav-more { display: none; }
+	.trr-nav-phone { display: inline-flex; flex: 0 0 auto; }
+}
+
+/* 14/10/2026: the language grid folded to the chosen languages (Languages page); a search shows every match. */
+.trr-lang-grid.is-folded:not(.is-searching) .trrocket-lang-item:not(.is-chosen) { display: none; }
+
+/* 14/10/2026: a newer TranslateRocket or Labs, beside the version in the header (red for a security release). */
+.trr-hero-update { display: inline-block; margin-left: 6px; padding: 1px 9px; border-radius: 999px; background: #00a32a; color: #fff !important; font-weight: 700; font-size: 11px; text-decoration: none; }
+.trr-hero-update:hover { background: #008a20; }
+.trr-hero-update.is-security { background: #d63638; }
+.trr-hero-update.is-security:hover { background: #b32d2e; }

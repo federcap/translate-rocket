@@ -24,7 +24,7 @@ class Database {
 	/**
 	 * Schema version. Bump when the table structure changes.
 	 */
-	const DB_VERSION = '5';
+	const DB_VERSION = '6'; // 6: the search index (14/10/2026)
 
 	/**
 	 * Source strings table name.
@@ -59,7 +59,7 @@ class Database {
 	public static function missing_tables(): array {
 		global $wpdb;
 		$missing = array();
-		foreach ( array( self::strings_table(), self::translations_table(), self::occurrences_table() ) as $table ) {
+		foreach ( array( self::strings_table(), self::translations_table(), self::occurrences_table(), \TranslateRocket\Frontend\Search::table() ) as $table ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- schema check, table name is internal.
 			$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
 			if ( $found !== $table ) {
@@ -281,9 +281,20 @@ class Database {
 			KEY url_hash (url_hash)
 		) {$charset};";
 
+		// The search index (6, 14/10/2026): which content sentences each page has, and where (title, excerpt, body).
+		$search     = \TranslateRocket\Frontend\Search::table();
+		$sql_search = "CREATE TABLE {$search} (
+			post_id BIGINT UNSIGNED NOT NULL,
+			string_id BIGINT UNSIGNED NOT NULL,
+			weight TINYINT UNSIGNED NOT NULL DEFAULT 1,
+			PRIMARY KEY  (post_id,string_id),
+			KEY string_id (string_id)
+		) {$charset};";
+
 		dbDelta( $sql_strings );
 		dbDelta( $sql_translations );
 		dbDelta( $sql_occurrences );
+		dbDelta( $sql_search );
 
 		// If a table still isn't there, the plugin can't store anything — make that
 		// loud rather than letting saves fail silently later.

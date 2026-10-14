@@ -105,7 +105,7 @@ class GuestScan {
 			array(
 				'timeout'    => 0.01,
 				'blocking'   => false,
-				'sslverify'  => false,
+				'sslverify'  => apply_filters( 'https_local_ssl_verify', false ), // the site calling itself, as WordPress does for its cron
 				'cookies'    => array(),
 				'user-agent' => 'TranslateRocket guest scan',
 			)

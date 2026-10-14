@@ -1,111 +1,405 @@
 <?php
 /**
- * Search in the visitor's language.
+ * Site search in every language.
  *
  * @package TranslateRocket
  */
 
 namespace TranslateRocket\Frontend;
 
-use TranslateRocket\Plugin;
 use TranslateRocket\Database;
+use TranslateRocket\Plugin;
+use TranslateRocket\Settings;
+use TranslateRocket\Strings;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WordPress searches the database, and the database holds the source language
- * only: a visitor on /it/ typing «tazza» found nothing, because the product is
- * stored as «mug». It is the first complaint in the TranslatePress forum
- * («Cannot find products when searching their translated titles»), 28/09/2026.
+ * The search of a translated page finds pages by their translated text (14/10/2026, Federico: «a powerful, smart
+ * search, that tells the text apart from buttons and cookie-consent scripts»).
  *
- * On a translated page the search also looks for the ORIGINAL of every
- * translation that contains the words typed, so the same posts come up as in
- * the source language. Nothing changes on the default language.
+ * WordPress searches the database, where the text is in the source language: on /it/ a visitor typing «colazione»
+ * found nothing on a site written in English. Every sentence of the site is already here in every language, with
+ * the pages it was seen on; but those include menus, buttons, footers, cookie banners and chat widgets, the same on
+ * every page. So an index keeps only the sentences that are in the text the author wrote for that page — its title,
+ * excerpt and content (Elementor's saved data and builder shortcodes' text included) — weighted by where they are.
+ * A search on a translated page looks each word up in that language's translations within the index, keeps the
+ * pages that have every word (even in different sentences), ranks them, and hands them to the normal WordPress
+ * search: the theme's search box, Elementor's search widget and the Search block work unchanged.
  */
 class Search {
 
+	const CRON      = 'trrocket_search_index';
+	const CURSOR    = 'trrocket_search_cursor';
+	const BATCH     = 40;
+	const W_TITLE   = 10;
+	const W_EXCERPT = 4;
+	const W_CONTENT = 1;
+
 	/**
-	 * Language of this request.
+	 * Set while our own native-search query runs, so it is not rewritten again.
 	 *
-	 * @var string
+	 * @var bool
 	 */
-	private $lang = '';
+	private static $inner = false;
+
+	public static function table(): string {
+		global $wpdb;
+		return $wpdb->prefix . 'trrocket_search';
+	}
 
 	/**
-	 * Most originals added to one search, to keep the query small.
+	 * On unless switched off in the settings (or by the filter).
 	 */
-	const MAX = 20;
+	public static function enabled(): bool {
+		return (bool) apply_filters( 'trrocket_search_enabled', ! isset( Settings::get()['translated_search'] ) || ! empty( Settings::get()['translated_search'] ) );
+	}
+
+	public function register(): void {
+		add_action( 'pre_get_posts', array( $this, 'query' ), 20 );
+		add_action( 'trrocket_page_collected', array( __CLASS__, 'on_collected' ), 10, 2 );
+		add_action( 'save_post', array( __CLASS__, 'on_save' ), 20, 2 );
+		add_action( 'deleted_post', array( __CLASS__, 'forget' ) );
+		add_action( 'trashed_post', array( __CLASS__, 'forget' ) );
+		add_action( self::CRON, array( __CLASS__, 'build_batch' ) );
+		add_action( 'init', array( __CLASS__, 'schedule' ), 30 );
+	}
+
+	/* ------------------------------------------------------------------ index */
 
 	/**
-	 * Hook into the front end.
+	 * The first build, in small batches in the background, until every published page is in.
 	 */
-	public function boot(): void {
+	public static function schedule(): void {
+		if ( 'done' === get_option( self::CURSOR ) || wp_next_scheduled( self::CRON ) ) {
+			return;
+		}
+		wp_schedule_single_event( time() + 30, self::CRON );
+	}
+
+	/**
+	 * One batch of the build: the next published pages after the cursor.
+	 */
+	public static function build_batch(): void {
+		global $wpdb;
+		$dopo = (int) get_option( self::CURSOR, 0 );
+		$tipi = self::post_types();
+		if ( empty( $tipi ) ) {
+			update_option( self::CURSOR, 'done', false );
+			return;
+		}
+		$segnaposti = implode( ',', array_fill( 0, count( $tipi ), '%s' ) );
+		$ids        = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts} WHERE ID > %d AND post_status = 'publish' AND post_type IN ({$segnaposti}) ORDER BY ID ASC LIMIT %d", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				array_merge( array( $dopo ), $tipi, array( self::BATCH ) )
+			)
+		); // phpcs:ignore WordPress.DB
+		foreach ( (array) $ids as $id ) {
+			self::index_post( (int) $id );
+		}
+		if ( count( (array) $ids ) < self::BATCH ) {
+			update_option( self::CURSOR, 'done', false );
+			return;
+		}
+		update_option( self::CURSOR, (int) end( $ids ), false );
+		wp_schedule_single_event( time() + 10, self::CRON );
+	}
+
+	/**
+	 * A page was read again: its sentences may have changed.
+	 *
+	 * @param mixed  $secondary Target languages (unused).
+	 * @param string $url       The page's path.
+	 */
+	public static function on_collected( $secondary, $url = '' ): void {
+		unset( $secondary );
+		$url = (string) $url;
+		if ( '' === $url || '[' === substr( $url, 0, 1 ) ) {
+			return;
+		}
+		$id = url_to_postid( home_url( $url ) );
+		if ( 0 === $id && '/' === $url ) {
+			$id = (int) get_option( 'page_on_front' );
+		}
+		if ( $id > 0 ) {
+			self::index_post( $id );
+		}
+	}
+
+	/**
+	 * A page was saved: its text may have changed.
+	 *
+	 * @param int      $id   Post ID.
+	 * @param \WP_Post $post Post.
+	 */
+	public static function on_save( $id, $post = null ): void {
+		if ( wp_is_post_revision( (int) $id ) || wp_is_post_autosave( (int) $id ) ) {
+			return;
+		}
+		self::index_post( (int) $id );
+	}
+
+	/**
+	 * A page gone from the site leaves the index.
+	 *
+	 * @param int $id Post ID.
+	 */
+	public static function forget( $id ): void {
+		global $wpdb;
+		$wpdb->delete( self::table(), array( 'post_id' => (int) $id ), array( '%d' ) ); // phpcs:ignore WordPress.DB
+	}
+
+	/**
+	 * The searchable post types (public, not excluded from search).
+	 *
+	 * @return string[]
+	 */
+	public static function post_types(): array {
+		return array_values( get_post_types( array( 'public' => true, 'exclude_from_search' => false ) ) );
+	}
+
+	/**
+	 * Put one page's content sentences in the index (and only those).
+	 */
+	public static function index_post( int $id ): int {
+		global $wpdb;
+		self::forget( $id );
+		$post = get_post( $id );
+		if ( ! $post || 'publish' !== $post->post_status || ! in_array( $post->post_type, self::post_types(), true ) || post_password_required( $post ) ) {
+			return 0;
+		}
+		$link = get_permalink( $post );
+		if ( ! $link ) {
+			return 0;
+		}
+		$paths = array_unique( array_filter( array( wp_make_link_relative( $link ), (int) get_option( 'page_on_front' ) === $id ? '/' : '' ) ) );
+		$occ   = Database::occurrences_table();
+		$st    = Database::strings_table();
+		$righe = array();
+		foreach ( $paths as $path ) {
+			$righe = array_merge(
+				$righe,
+				(array) $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT DISTINCT s.id, s.original FROM {$occ} o JOIN {$st} s ON s.id = o.string_id AND s.type = 'text' WHERE o.url_hash = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						Strings::url_hash( $path )
+					)
+				)
+			); // phpcs:ignore WordPress.DB
+		}
+		if ( empty( $righe ) ) {
+			return 0;
+		}
+		$titolo  = self::norm( (string) $post->post_title );
+		$estratto = self::norm( (string) $post->post_excerpt );
+		$corpo   = self::norm( self::author_text( $post ) );
+		$valori  = array();
+		$visti   = array();
+		foreach ( $righe as $r ) {
+			$sid = (int) $r->id;
+			if ( isset( $visti[ $sid ] ) ) {
+				continue;
+			}
+			$visti[ $sid ] = true;
+			$frase         = self::norm( (string) preg_replace( '#</?\d+/?>#', ' ', (string) $r->original ) );
+			if ( mb_strlen( $frase ) < 2 ) {
+				continue;
+			}
+			// The page's title is its heading: the whole sentence is the title (or the title holds it).
+			$peso = 0;
+			if ( '' !== $titolo && ( $frase === $titolo || false !== mb_strpos( $titolo, $frase ) ) ) {
+				$peso = self::W_TITLE;
+			} elseif ( '' !== $estratto && false !== mb_strpos( $estratto, $frase ) ) {
+				$peso = self::W_EXCERPT;
+			} elseif ( '' !== $corpo && false !== mb_strpos( $corpo, $frase ) ) {
+				$peso = self::W_CONTENT;
+			}
+			if ( $peso > 0 ) {
+				$valori[] = $wpdb->prepare( '(%d,%d,%d)', $id, $sid, $peso );
+			}
+		}
+		if ( empty( $valori ) ) {
+			return 0;
+		}
+		foreach ( array_chunk( $valori, 200 ) as $parte ) {
+			$wpdb->query( 'INSERT IGNORE INTO ' . self::table() . ' (post_id, string_id, weight) VALUES ' . implode( ',', $parte ) ); // phpcs:ignore WordPress.DB
+		}
+		return count( $valori );
+	}
+
+	/**
+	 * The text the author wrote for a page: its content, and the texts saved by page builders that keep them
+	 * outside it (Elementor). Shortcode brackets go, the text inside them stays (Divi, WPBakery).
+	 */
+	public static function author_text( \WP_Post $post ): string {
+		$testo = (string) $post->post_content;
+		$dati  = get_post_meta( $post->ID, '_elementor_data', true );
+		if ( is_string( $dati ) && '' !== $dati ) {
+			$albero = json_decode( $dati, true );
+			if ( is_array( $albero ) ) {
+				$foglie = array();
+				array_walk_recursive(
+					$albero,
+					static function ( $v, $k ) use ( &$foglie ) {
+						// Settings with words in them; not ids, colours, sizes, urls or class names.
+						if ( is_string( $v ) && ! in_array( (string) $k, array( 'id', 'elType', 'widgetType', '_element_id', 'url', 'link', 'css_classes', '_css_classes' ), true ) && preg_match( '/\pL{2,}/u', $v ) && ! preg_match( '#^(https?:|/|\#[0-9a-f]{3,8}$)#i', $v ) ) {
+							$foglie[] = $v;
+						}
+					}
+				);
+				$testo .= ' ' . implode( ' ', $foglie );
+			}
+		}
+		return (string) preg_replace( '/\[\/?[a-zA-Z0-9_\-]+(?:\s[^\]]*)?\]/', ' ', $testo );
+	}
+
+	/**
+	 * Text compared the way the page shows it: no tags, entities decoded, the typographic marks WordPress adds
+	 * when it prints (dashes, quotes, ellipsis) made plain, one space, lower case.
+	 */
+	public static function norm( string $s ): string {
+		$s = html_entity_decode( wp_strip_all_tags( $s ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$s = strtr(
+			$s,
+			array(
+				"\xc2\xa0"     => ' ',
+				"\xe2\x80\x93" => '-',
+				"\xe2\x80\x94" => '-',
+				"\xe2\x80\x98" => "'",
+				"\xe2\x80\x99" => "'",
+				"\xe2\x80\x9c" => '"',
+				"\xe2\x80\x9d" => '"',
+				"\xe2\x80\xa6" => '...',
+			)
+		);
+		return trim( mb_strtolower( (string) preg_replace( '/\s+/u', ' ', $s ) ) );
+	}
+
+	/* ------------------------------------------------------------------ search */
+
+	/**
+	 * The search of a translated page: the pages whose content has every word, best first.
+	 *
+	 * @return int[] Post IDs.
+	 */
+	public static function find( string $terms, string $lang, int $limit = 300 ): array {
+		global $wpdb;
+		$parole = array();
+		foreach ( preg_split( '/[\s,;.!?¿¡:"()]+/u', mb_strtolower( trim( $terms ) ) ) as $p ) {
+			// Two letters at least (one is enough for Chinese and Japanese: a character is a word).
+			if ( '' !== $p && ( mb_strlen( $p ) >= 2 || preg_match( '/\p{Han}|\p{Hiragana}|\p{Katakana}/u', $p ) ) ) {
+				$parole[ $p ] = true;
+			}
+		}
+		$parole = array_slice( array_keys( $parole ), 0, 6 );
+		if ( empty( $parole ) ) {
+			return array();
+		}
+		$idx = self::table();
+		$tr  = Database::translations_table();
+		$st  = Database::strings_table();
+		$punti = null;
+		foreach ( $parole as $p ) {
+			$like  = '%' . $wpdb->esc_like( $p ) . '%';
+			$righe = $wpdb->get_results(
+				$wpdb->prepare(
+					// The word in this language's translation, or in the source text (someone typing in the site's
+					// own language on a translated page finds too).
+					"SELECT i.post_id, SUM(i.weight) AS w FROM {$idx} i
+					 JOIN {$st} s ON s.id = i.string_id
+					 LEFT JOIN {$tr} t ON t.string_id = i.string_id AND t.language = %s AND t.status > 0
+					 WHERE t.translation LIKE %s OR s.original LIKE %s
+					 GROUP BY i.post_id", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$lang,
+					$like,
+					$like
+				)
+			); // phpcs:ignore WordPress.DB
+			$questa = array();
+			foreach ( (array) $righe as $r ) {
+				$questa[ (int) $r->post_id ] = (int) $r->w;
+			}
+			if ( null === $punti ) {
+				$punti = $questa;
+			} else {
+				// Every word must be on the page.
+				foreach ( $punti as $pid => $w ) {
+					if ( isset( $questa[ $pid ] ) ) {
+						$punti[ $pid ] = $w + $questa[ $pid ];
+					} else {
+						unset( $punti[ $pid ] );
+					}
+				}
+			}
+			if ( empty( $punti ) ) {
+				return array();
+			}
+		}
+		// The words together, as typed, in one sentence: those pages first.
+		if ( count( $parole ) > 1 ) {
+			$frase = '%' . $wpdb->esc_like( implode( ' ', $parole ) ) . '%';
+			$vicine = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT DISTINCT i.post_id FROM {$idx} i JOIN {$tr} t ON t.string_id = i.string_id AND t.language = %s AND t.status > 0 WHERE t.translation LIKE %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$lang,
+					$frase
+				)
+			); // phpcs:ignore WordPress.DB
+			foreach ( (array) $vicine as $pid ) {
+				if ( isset( $punti[ (int) $pid ] ) ) {
+					$punti[ (int) $pid ] += 20;
+				}
+			}
+		}
+		arsort( $punti );
+		return array_slice( array_keys( $punti ), 0, $limit );
+	}
+
+	/**
+	 * The main search of a translated page: our pages first, then whatever WordPress's own search finds in the
+	 * source text (someone typing in the site's language), nothing else.
+	 *
+	 * @param \WP_Query $q The query.
+	 */
+	public function query( $q ): void {
+		if ( self::$inner || is_admin() || ! $q instanceof \WP_Query || ! $q->is_main_query() || ! $q->is_search() || ! self::enabled() ) {
+			return;
+		}
 		$router = Plugin::instance()->router();
 		$lang   = $router->current_language();
 		if ( '' === $lang || $router->is_default( $lang ) ) {
 			return;
 		}
-		$this->lang = $lang;
-		add_filter( 'posts_search', array( $this, 'widen' ), 20, 2 );
-	}
-
-	/**
-	 * Add «OR (the original text)» to the search clause of a search query.
-	 *
-	 * @param mixed $search SQL clause WordPress built (starts with " AND ").
-	 * @param mixed $query  WP_Query.
-	 * @return mixed
-	 */
-	public function widen( $search, $query ) {
-		global $wpdb;
-		if ( ! is_string( $search ) || '' === trim( $search ) || ! ( $query instanceof \WP_Query ) || ! $query->is_search() ) {
-			return $search;
+		$terms = trim( (string) $q->get( 's' ) );
+		if ( '' === $terms ) {
+			return;
 		}
-		$typed = trim( (string) $query->get( 's' ) );
-		if ( '' === $typed || ( function_exists( 'mb_strlen' ) ? mb_strlen( $typed ) : strlen( $typed ) ) < 3 ) {
-			return $search;
-		}
-		$originals = $this->originals( $typed );
-		if ( empty( $originals ) ) {
-			return $search;
-		}
-		$or = array();
-		foreach ( $originals as $original ) {
-			$like = '%' . $wpdb->esc_like( $original ) . '%';
-			$or[] = $wpdb->prepare( "({$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s OR {$wpdb->posts}.post_content LIKE %s)", $like, $like, $like );
-		}
-		$inner = preg_replace( '/^\s*AND\s+/i', '', $search );
-		return ' AND ( ' . $inner . ' OR ' . implode( ' OR ', $or ) . ' ) ';
-	}
-
-	/**
-	 * Source texts whose translation into this language contains what was typed.
-	 *
-	 * @param string $typed Search words.
-	 * @return string[]
-	 */
-	private function originals( string $typed ): array {
-		global $wpdb;
-		$strings      = Database::strings_table();
-		$translations = Database::translations_table();
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table names are ours.
-		$rows = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT s.original FROM {$translations} t INNER JOIN {$strings} s ON s.id = t.string_id
-				 WHERE t.language = %s AND t.status > 0 AND t.translation LIKE %s AND CHAR_LENGTH(s.original) <= 200
-				 LIMIT %d",
-				$this->lang,
-				'%' . $wpdb->esc_like( $typed ) . '%',
-				self::MAX
+		$nostri = self::find( $terms, $lang );
+		// WordPress's own search, in the source text, for whoever types in the site's language.
+		self::$inner = true;
+		$nativi      = get_posts(
+			array(
+				's'                => $terms,
+				'post_type'        => $q->get( 'post_type' ) ? $q->get( 'post_type' ) : 'any',
+				'fields'           => 'ids',
+				'posts_per_page'   => 100,
+				'suppress_filters' => false,
 			)
-		); // phpcs:ignore WordPress.DB
-		$out = array();
-		foreach ( (array) $rows as $original ) {
-			$original = trim( wp_strip_all_tags( html_entity_decode( (string) $original, ENT_QUOTES, 'UTF-8' ) ) );
-			if ( '' !== $original ) {
-				$out[ $original ] = true;
-			}
-		}
-		return array_keys( $out );
+		);
+		self::$inner = false;
+		$ids         = array_values( array_unique( array_merge( $nostri, array_map( 'intval', (array) $nativi ) ) ) );
+		$q->set( 'post__in', empty( $ids ) ? array( 0 ) : $ids );
+		$q->set( 'orderby', 'post__in' );
+		// The words stay in «s» (the theme shows «Results for …»), but WordPress must not search them again in the
+		// source text: that would keep only the pages that have them in English.
+		add_filter(
+			'posts_search',
+			static function ( $search, $query ) use ( $q ) {
+				return $query === $q ? '' : $search;
+			},
+			10,
+			2
+		);
 	}
 }

@@ -111,6 +111,10 @@ final class Plugin {
 		// REST API, where is_admin() is false — hooking it there would miss
 		// exactly the edits people make most.
 		\TranslateRocket\Rescan::boot();
+		// The site search in every language (14/10/2026): its index follows saves made over REST too, like Rescan.
+		if ( ! $coexist ) {
+			( new \TranslateRocket\Frontend\Search() )->register();
+		}
 		// Same reason for the page cache: a page edited in the block editor is
 		// saved over REST, and until 1.4.4 the cached translated page survived
 		// the edit (visitors kept seeing the old text for up to six hours).
@@ -168,6 +172,7 @@ final class Plugin {
 			$this->admin = new Admin();
 			$this->admin->register();
 			( new \TranslateRocket\Admin\MetaBox() )->register();
+			( new \TranslateRocket\Admin\UpdateNotice() )->register(); // a newer TranslateRocket or Labs, said on the plugin's screens
 			( new \TranslateRocket\Admin\VisibilityBox() )->register();
 			( new \TranslateRocket\Admin\CopyAdmin() )->register();
 			( new \TranslateRocket\Admin\CopyCleanupAdmin() )->register();
@@ -213,7 +218,7 @@ final class Plugin {
 			// WooCommerce: translate JS-localised strings + AJAX cart fragments.
 			( new \TranslateRocket\Frontend\WooCommerce() )->boot();
 			// Search on /it/ finds what the visitor typed in Italian.
-			( new \TranslateRocket\Frontend\Search() )->boot();
+			( new \TranslateRocket\Frontend\SearchWiden() )->boot();
 			// Blocks and headless themes fetching content from /wp-json for a translated page.
 			( new \TranslateRocket\Frontend\RestContent() )->boot();
 			// Plugins' own AJAX addresses (WP Job Manager's /jm-ajax/…): the list they return.

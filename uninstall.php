@@ -20,6 +20,9 @@ if ( is_array( $trrocket_settings ) && ! empty( $trrocket_settings['delete_data_
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}trrocket_translations" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}trrocket_strings" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}trrocket_occurrences" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}trrocket_search" );
+	delete_option( 'trrocket_search_cursor' );
+	wp_clear_scheduled_hook( 'trrocket_search_index' );
 
 	// Per-post meta: translated slugs (_trrocket_slug_*) and visibility rules (_trrocket_vis*).
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE %s", $wpdb->esc_like( '_trrocket_' ) . '%' ) );

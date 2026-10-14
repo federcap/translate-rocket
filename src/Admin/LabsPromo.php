@@ -25,6 +25,7 @@ class LabsPromo {
 	 */
 	public function register(): void {
 		add_action( 'admin_menu', array( $this, 'menu' ), 30 );
+		add_action( 'admin_menu', array( __CLASS__, 'free_on_labs_menu' ), 999 );
 		add_action( 'admin_post_trrocket_labs_banner', array( $this, 'toggle_banner' ) );
 	}
 
@@ -101,6 +102,25 @@ class LabsPromo {
 	}
 
 	/**
+	 * The green «FREE» beside Labs in the WordPress menu (14/10/2026, Federico: «put FREE in green, make it clear it is
+	 * really free»). Inline style: the menu shows on every admin page, where the plugin's stylesheet is not loaded.
+	 */
+	const FREE = ' <span class="trr-free-badge" style="display:inline-block;margin-left:5px;padding:0 6px;border-radius:999px;background:#00a32a;color:#fff;font-size:9px;font-weight:800;letter-spacing:.06em;line-height:16px;vertical-align:middle">FREE</span>';
+
+	/**
+	 * Labs itself, once installed, adds its own «Labs ✨» entry: the badge is added to it here, so it is there
+	 * also with a Labs that does not know about it.
+	 */
+	public static function free_on_labs_menu(): void {
+		global $submenu;
+		foreach ( (array) ( $submenu['translate-rocket'] ?? array() ) as $i => $voce ) {
+			if ( 'translate-rocket-labs' === ( $voce[2] ?? '' ) && false === strpos( (string) $voce[0], 'trr-free-badge' ) ) {
+				$submenu['translate-rocket'][ $i ][0] .= self::FREE; // phpcs:ignore WordPress.WP.GlobalVariablesOverride -- a label, on purpose.
+			}
+		}
+	}
+
+	/**
 	 * Where «Labs ✨» leads: this page, or Labs itself when installed.
 	 */
 	public static function slug(): string {
@@ -126,7 +146,7 @@ class LabsPromo {
 		add_submenu_page(
 			'translate-rocket',
 			__( 'TranslateRocket Labs', 'translate-rocket' ),
-			__( 'Labs ✨', 'translate-rocket' ),
+			__( 'Labs ✨', 'translate-rocket' ) . self::FREE,
 			'manage_options',
 			self::SLUG,
 			array( $this, 'render' )

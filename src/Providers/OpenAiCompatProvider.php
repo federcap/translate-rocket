@@ -59,7 +59,7 @@ abstract class OpenAiCompatProvider extends FreeAiProvider {
 				continue;
 			}
 			FreeUsage::add( $this->id(), (float) ( $r['data']['usage']['total_tokens'] ?? 0 ), 0 );
-			return array( 'text' => (string) ( $r['data']['choices'][0]['message']['content'] ?? '' ) );
+			return array( 'text' => (string) ( $r['data']['choices'][0]['message']['content'] ?? '' ), 'finish' => (string) ( $r['data']['choices'][0]['finish_reason'] ?? '' ), 'raw' => (string) ( $r['raw'] ?? '' ) );
 		}
 		return $ultimo;
 	}
@@ -70,7 +70,10 @@ abstract class OpenAiCompatProvider extends FreeAiProvider {
 			return TranslationResult::fail( $r['error'] );
 		}
 		if ( '' === trim( $r['text'] ) ) {
-			return TranslationResult::fail( $this->label() . ': empty response.' );
+			if ( 'content_filter' === ( $r['finish'] ?? '' ) ) {
+				return TranslationResult::fail( $this->label() . ': blocked by the safety filter (content_filter).' );
+			}
+			return TranslationResult::fail( $this->unreadable( (string) ( $r['raw'] ?? '' ) ) );
 		}
 		return TranslationResult::ok( array( $r['text'] ) );
 	}

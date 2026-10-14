@@ -23,7 +23,34 @@
 
 	btn.addEventListener( 'click', function () {
 		var urls = ( S.urls || [] ).slice();
-		var total = urls.length;
+		// 14/10/2026: the page brings the home page and the first block; the others are asked for
+		// on the way (before, the scan stopped at 1,000 pages).
+		var total = Math.max( urls.length, 1 + ( parseInt( S.total, 10 ) || 0 ) );
+		var given = urls.length - 1; // items handed out so far (the home page is not one of them)
+		var block = parseInt( S.block, 10 ) || 500;
+		function more( then ) {
+			if ( ! S.ajax || given >= total - 1 ) {
+				then( false );
+				return;
+			}
+			var body = new URLSearchParams();
+			body.append( 'action', 'trrocket_scan_urls' );
+			body.append( '_ajax_nonce', S.nonce );
+			body.append( 'offset', String( given ) );
+			fetch( S.ajax, { method: 'POST', credentials: 'same-origin', body: body } )
+				.then( function ( r ) { return r.json(); } )
+				.then( function ( j ) {
+					var got = ( j && j.success && j.data && j.data.urls ) ? j.data.urls : [];
+					given += block;
+					for ( var k = 0; k < got.length; k++ ) {
+						if ( urls.indexOf( got[ k ] ) < 0 ) {
+							urls.push( got[ k ] );
+						}
+					}
+					then( got.length > 0 );
+				} )
+				.catch( function () { then( false ); } );
+		}
 		if ( ! total ) {
 			setLabel( S.i18n.none );
 			return;
@@ -38,7 +65,16 @@
 
 		var i = 0;
 		function step() {
-			if ( i >= total ) {
+			if ( i >= urls.length && i < total ) {
+				more( function ( ok ) {
+					if ( ! ok ) {
+						total = urls.length; // nothing more to ask for: finish with what there is
+					}
+					step();
+				} );
+				return;
+			}
+			if ( i >= total || i >= urls.length ) {
 				if ( fill ) {
 					fill.style.width = '100%';
 				}

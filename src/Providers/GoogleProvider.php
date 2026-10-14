@@ -76,7 +76,7 @@ class GoogleProvider extends AbstractProvider {
 
 		$data = json_decode( $result['body'] ?? '', true );
 		if ( ! is_array( $data ) || empty( $data['data']['translations'] ) ) {
-			return TranslationResult::fail( 'Google: unexpected response.' );
+			return TranslationResult::fail( $this->unreadable( (string) ( $result['body'] ?? '' ) ) );
 		}
 
 		$out = array();

@@ -425,7 +425,31 @@ class Strings {
 	 * @param bool   $only_missing Only rows without a translation yet.
 	 * @return array<int,object>
 	 */
-	public static function search( string $lang, string $term = '', int $limit = 300, bool $only_missing = false ): array {
+	public static function search( string $lang, string $term = '', int $limit = 300, bool $only_missing = false, int $offset = 0 ): array {
+		global $wpdb;
+		list( $sql, $args ) = self::search_sql( 'st.id AS string_id, st.original, st.type, st.context, tr.translation, tr.status', $lang, $term, $only_missing );
+		$sql   .= ' ORDER BY st.id ASC LIMIT %d OFFSET %d';
+		$args[] = $limit;
+		$args[] = max( 0, $offset );
+		return $wpdb->get_results( $wpdb->prepare( $sql, $args ) ); // phpcs:ignore WordPress.DB
+	}
+
+	/**
+	 * How many strings search() would find with no limit: the Memory screen shows them 50 at a time (14/10/2026,
+	 * the visual check: 300 rows at once made a page of 20,000 pixels, and «300 strings» hid the real total).
+	 */
+	public static function search_count( string $lang, string $term = '', bool $only_missing = false ): int {
+		global $wpdb;
+		list( $sql, $args ) = self::search_sql( 'COUNT(*)', $lang, $term, $only_missing );
+		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $args ) ); // phpcs:ignore WordPress.DB
+	}
+
+	/**
+	 * The query of search() and search_count().
+	 *
+	 * @return array{0:string,1:array<int,mixed>}
+	 */
+	private static function search_sql( string $campi, string $lang, string $term, bool $only_missing ): array {
 		global $wpdb;
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
@@ -442,16 +466,13 @@ class Strings {
 			$where[] = "( tr.id IS NULL OR tr.status = 0 OR tr.translation IS NULL OR tr.translation = '' )";
 		}
 
-		$sql = "SELECT st.id AS string_id, st.original, st.type, st.context, tr.translation, tr.status
+		$sql = "SELECT {$campi}
 				FROM {$strings} st
 				LEFT JOIN {$translations} tr ON tr.string_id = st.id AND tr.language = %s";
 		if ( ! empty( $where ) ) {
 			$sql .= ' WHERE ' . implode( ' AND ', $where );
 		}
-		$sql .= ' ORDER BY st.id ASC LIMIT %d';
-		$args[] = $limit;
-
-		return $wpdb->get_results( $wpdb->prepare( $sql, $args ) ); // phpcs:ignore WordPress.DB
+		return array( $sql, $args );
 	}
 
 	/**

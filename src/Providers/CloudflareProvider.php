@@ -66,7 +66,13 @@ class CloudflareProvider extends FreeAiProvider {
 	private function run( string $model, array $body ): array {
 		$r = $this->post_patient( $this->url( $model ), $body, $this->headers() );
 		if ( isset( $r['error'] ) || empty( $r['data']['success'] ) ) {
-			return array( 'error' => $this->label() . ': ' . ( $r['error'] ?? ( 'HTTP ' . $r['code'] ) ) );
+			// A 200 with «success: false» carries its reason in errors[0].message; a body that is not JSON at all
+			// (a proxy's page) goes along as it came.
+			if ( ! isset( $r['error'] ) ) {
+				$perche = (string) ( $r['data']['errors'][0]['message'] ?? '' );
+				return array( 'error' => '' !== $perche ? $this->label() . ': HTTP ' . $r['code'] . ': ' . $perche : $this->unreadable( (string) $r['raw'] ) );
+			}
+			return array( 'error' => $this->label() . ': ' . $r['error'] );
 		}
 		FreeUsage::add( $this->id(), (float) ( $r['data']['result']['usage']['neurons'] ?? 0 ), 0 );
 		return array( 'result' => (array) $r['data']['result'] );
@@ -80,7 +86,7 @@ class CloudflareProvider extends FreeAiProvider {
 		$resp = $r['result']['response'] ?? '';
 		// Cloudflare may hand the JSON list already decoded: give it back as JSON text.
 		$testo = is_array( $resp ) ? (string) wp_json_encode( $resp, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) : (string) $resp;
-		return '' === trim( $testo ) ? TranslationResult::fail( $this->label() . ': empty response.' ) : TranslationResult::ok( array( $testo ) );
+		return '' === trim( $testo ) ? TranslationResult::fail( $this->unreadable( (string) wp_json_encode( $r['result'] ) ) ) : TranslationResult::ok( array( $testo ) );
 	}
 
 	public function translate( array $texts, string $source, string $target ): TranslationResult {

@@ -191,7 +191,7 @@ class Overview {
 					</ul>
 				</div>
 				<div class="trr-ov-col trr-ov-labs">
-					<h3><?php esc_html_e( 'With Labs', 'translate-rocket' ); ?> <span class="trr-ov-tag trr-ov-free"><?php esc_html_e( 'free add-on', 'translate-rocket' ); ?></span></h3>
+					<h3><?php esc_html_e( 'With Labs', 'translate-rocket' ); ?> <span class="trr-free-badge trr-free-big">FREE</span> <span class="trr-ov-tag trr-ov-free"><?php esc_html_e( 'free add-on: no paid plan, no card', 'translate-rocket' ); ?></span></h3>
 					<ul>
 						<?php foreach ( $plus as $r ) : ?>
 							<?php $stato = $labs ? ( $r['on'] ? 'is-on' : 'is-off' ) : 'is-locked'; ?>

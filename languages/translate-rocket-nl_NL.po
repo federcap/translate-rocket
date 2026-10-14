@@ -5213,6 +5213,99 @@ msgstr "Dit is geen geldig e-mailadres."
 msgid "Not saved: reload the page and try again."
 msgstr "Niet opgeslagen: laad de pagina opnieuw en probeer het nog eens."
 
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your own site did not answer the request (%s): reload the page and try again; if it repeats, ask your host."
+msgstr "Je eigen site gaf geen antwoord op het verzoek (%s): laad de pagina opnieuw en probeer het nog eens; gebeurt het weer, vraag het je host."
+
+#: src/Admin/Admin.php
+msgid "The provider refused to translate this text because of its safety filter (it judged the content sensitive). Translate this sentence by hand, or with another provider."
+msgstr "De aanbieder weigerde deze tekst te vertalen vanwege zijn veiligheidsfilter (hij vond de inhoud gevoelig). Vertaal deze zin met de hand of met een andere aanbieder."
+
+#: src/Admin/Admin.php
+msgid "Instead of the provider's answer, your server received a web page (often a proxy, a firewall or a login page of the network). Ask your host to let your site reach the provider directly."
+msgstr "In plaats van het antwoord van de aanbieder kreeg je server een webpagina (vaak een proxy, een firewall of een inlogpagina van het netwerk). Vraag je host om je site de aanbieder rechtstreeks te laten bereiken."
+
+#: src/Admin/Admin.php
+msgid "The provider answered, but not with a translation in the expected form. Try again; if it happens again, choose another model or another provider."
+msgstr "De aanbieder antwoordde, maar niet met een vertaling in de verwachte vorm. Probeer het opnieuw; gebeurt het weer, kies dan een ander model of een andere aanbieder."
+
+#: src/Admin/Admin.php
+msgid "The provider's account has no credit left, or its free share is used up. Add credit or check the plan on the provider's site, or let the next engine take over."
+msgstr "Het account bij de aanbieder heeft geen tegoed meer, of het gratis deel is op. Voeg tegoed toe of controleer het abonnement op de site van de aanbieder, of laat de volgende engine het overnemen."
+
+#: src/Admin/Admin.php
+msgid "The chosen model does not exist or this key cannot use it. Press «Load available models» and pick one from the list."
+msgstr "Het gekozen model bestaat niet of deze sleutel mag het niet gebruiken. Druk op «Beschikbare modellen laden» en kies er een uit de lijst."
+
+#: src/Admin/Admin.php
+msgid "The text sent was too long for this model. Choose fewer sentences per request (AI Translation → Usage & limits), or a model with a larger context."
+msgstr "De verzonden tekst was te lang voor dit model. Kies minder zinnen per verzoek (AI-vertaling → Gebruik & limieten) of een model met een grotere context."
+
+#: src/Admin/Admin.php
+msgid "The provider did not answer within the time limit (timeout). It may be slow or far from your server: try again, or choose fewer sentences per request (AI Translation → Usage & limits)."
+msgstr "De aanbieder antwoordde niet binnen de tijdslimiet (time-out). Hij is misschien traag of ver van je server: probeer het opnieuw of kies minder zinnen per verzoek (AI-vertaling → Gebruik & limieten)."
+
+#: src/Admin/Admin.php
+msgid "Your server could not find the provider's address (a DNS problem on your server). Ask your host to check the server's DNS."
+msgstr "Je server kon het adres van de aanbieder niet vinden (een DNS-probleem op je server). Vraag je host om de DNS van de server te controleren."
+
+#: src/Admin/Admin.php
+msgid "The secure connection to the provider failed (SSL certificate). Ask your host to update the server's certificates (CA bundle) and OpenSSL."
+msgstr "De beveiligde verbinding met de aanbieder is mislukt (SSL-certificaat). Vraag je host om de certificaten van de server (CA-bundel) en OpenSSL bij te werken."
+
+#: src/Admin/Admin.php
+msgid "Your server could not connect to the provider: the connection was refused or blocked (often an outgoing firewall). Ask your host to allow it."
+msgstr "Je server kon geen verbinding maken met de aanbieder: de verbinding werd geweigerd of geblokkeerd (vaak een uitgaande firewall). Vraag je host om die toe te staan."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s–%2$s of %3$s strings"
+msgstr "%1$s–%2$s van %3$s teksten"
+
+#: src/Admin/Admin.php
+msgid "Everything is translated in this language."
+msgstr "In deze taal is alles vertaald."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Page %1$s of %2$s"
+msgstr "Pagina %1$s van %2$s"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "More: %s"
+msgstr "Meer: %s"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your source language (%1$s) isn’t listed here — it’s the language you translate from. Change it in “%2$s” above."
+msgstr "Je brontaal (%1$s) staat hier niet — dat is de taal waaruit je vertaalt. Wijzig hem hierboven bij “%2$s”."
+
+#: src/Admin/Admin.php
+msgid "Show all languages (%d)"
+msgstr "Alle talen tonen (%d)"
+
+#: src/Admin/Admin.php
+msgid "Show only my languages"
+msgstr "Alleen mijn talen tonen"
+
+#: src/Admin/Admin.php
+msgid "This page's translations and translated address were removed: translate it again below, with AI, in your browser or by hand."
+msgstr "De vertalingen en het vertaalde adres van deze pagina zijn verwijderd: vertaal hem hieronder opnieuw, met AI, in je browser of met de hand."
+
+#: src/Admin/Admin.php
+msgid "Translate again: remove this page's translations and translated address (undo available)"
+msgstr "Opnieuw vertalen: de vertalingen en het vertaalde adres van deze pagina verwijderen (ongedaan te maken)"
+
+#: src/Admin/NextSteps.php
+msgid "Edit languages"
+msgstr "Talen bewerken"
+
+#: src/Admin/Overview.php
+msgid "free add-on: no paid plan, no card"
+msgstr "gratis add-on: geen betaald abonnement, geen kaart"
+
 #: src/Admin/MetaBox.php
 msgid "Publish it first: its translations are tied to its address, which a draft does not have yet."
 msgstr "Publiceer hem eerst: de vertalingen horen bij het adres, en een concept heeft er nog geen."
@@ -5220,3 +5313,79 @@ msgstr "Publiceer hem eerst: de vertalingen horen bij het adres, en een concept 
 #: src/Admin/MetaBox.php
 msgid "Only an administrator can do this."
 msgstr "Alleen een beheerder kan dit doen."
+
+#: src/Admin/Admin.php
+msgid "Search in every language"
+msgstr "Zoeken in elke taal"
+
+#: src/Admin/Admin.php
+msgid "The site search finds pages by their translated text"
+msgstr "De zoekfunctie van de site vindt pagina's op hun vertaalde tekst"
+
+#: src/Admin/Admin.php
+msgid "Without this, the search box of a translated page finds nothing: WordPress searches the text in your site's own language. With it, a visitor on /it/ who types «colazione» finds your page about breakfast. Only the text you wrote for each page counts — its title, excerpt and content — never menus, buttons, footers or cookie banners, which are on every page. Every word must be on the page, the title weighs most, and the theme's own search box, Elementor's search widget and the Search block work as they are. The index builds by itself in the background and follows every change."
+msgstr "Zonder deze optie vindt het zoekveld van een vertaalde pagina niets: WordPress zoekt in de tekst in de taal van je site. Met deze optie vindt een bezoeker op /it/ die «colazione» typt je pagina over het ontbijt. Alleen de tekst die je voor elke pagina hebt geschreven telt — titel, samenvatting en inhoud —, nooit menu's, knoppen, footers of cookiebanners, die op elke pagina staan. Elk woord moet op de pagina staan, de titel weegt het zwaarst, en het zoekveld van het thema, de zoekwidget van Elementor en het blok Zoeken werken zoals ze zijn. De index bouwt zichzelf op de achtergrond op en volgt elke wijziging."
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are off on this site"
+msgstr "Automatische updates staan uit op deze site"
+
+#: src/Admin/NextSteps.php
+msgid "Your host or a setting switched them off for every plugin. Fixes, security ones included, reach your site only when you update by hand: look at Plugins now and then, or ask your host to turn them on."
+msgstr "Je host of een instelling heeft ze voor alle plugins uitgezet. Correcties, ook beveiligingscorrecties, komen alleen aan als je met de hand bijwerkt: kijk af en toe bij Plugins, of vraag je host om ze aan te zetten."
+
+#: src/Admin/NextSteps.php
+msgid "Turn on automatic updates (recommended)"
+msgstr "Automatische updates aanzetten (aanbevolen)"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes, security ones above all, reach your site the same day, without you having to remember. Your settings and translations stay as they are; WordPress updates TranslateRocket (and Labs, if you have it) by itself."
+msgstr "Correcties, vooral beveiligingscorrecties, bereiken je site dezelfde dag, zonder dat je eraan hoeft te denken. Instellingen en vertalingen blijven zoals ze zijn; WordPress werkt TranslateRocket (en Labs, als je het hebt) zelf bij."
+
+#: src/Admin/NextSteps.php
+msgid "Turn them on"
+msgstr "Aanzetten"
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are on"
+msgstr "Automatische updates staan aan"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes reach your site by themselves."
+msgstr "Correcties bereiken je site vanzelf."
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Labs %s available — update"
+msgstr "Labs %s beschikbaar — bijwerken"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%s available — update"
+msgstr "%s beschikbaar — bijwerken"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Security update: %1$s %2$s."
+msgstr "Beveiligingsupdate: %1$s %2$s."
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%1$s %2$s is available."
+msgstr "%1$s %2$s is beschikbaar."
+
+#: src/Admin/UpdateNotice.php
+msgid "Please update now: it fixes a security problem."
+msgstr "Werk nu bij: het verhelpt een beveiligingsprobleem."
+
+#: src/Admin/UpdateNotice.php
+msgid "It takes a few seconds; your settings and translations stay as they are."
+msgstr "Het duurt een paar seconden; instellingen en vertalingen blijven zoals ze zijn."
+
+#: src/Admin/UpdateNotice.php
+msgid "Update now"
+msgstr "Nu bijwerken"
+
+#: src/Admin/Admin.php
+msgid "The provider's daily limit is used up (on its free plan, or the one of your account). It starts again within 24 hours; meanwhile the next engine in your chain carries on, if there is one."
+msgstr "De daglimiet van de aanbieder is op (die van het gratis abonnement, of van je account). Die begint binnen 24 uur opnieuw; intussen gaat de volgende engine in je volgorde verder, als die er is."

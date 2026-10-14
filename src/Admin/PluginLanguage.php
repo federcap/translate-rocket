@@ -37,6 +37,13 @@ class PluginLanguage {
 			'pl_PL' => 'Polski',
 			'ru_RU' => 'Русский',
 			'ja_JP' => '日本語',
+			// 14/10/2026: six more, translated in _ssh/lingue-nuove.
+			'tr_TR' => 'Türkçe',
+			'id_ID' => 'Bahasa Indonesia',
+			'zh_CN' => '简体中文',
+			'ko_KR' => '한국어',
+			'ar'    => 'العربية',
+			'fa_IR' => 'فارسی',
 		);
 	}
 

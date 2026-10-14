@@ -5211,6 +5211,99 @@ msgstr "Das ist keine gültige E-Mail-Adresse."
 msgid "Not saved: reload the page and try again."
 msgstr "Nicht gespeichert: Lade die Seite neu und versuche es noch einmal."
 
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your own site did not answer the request (%s): reload the page and try again; if it repeats, ask your host."
+msgstr "Deine eigene Website hat auf die Anfrage nicht geantwortet (%s): Lade die Seite neu und versuche es erneut; wenn es sich wiederholt, frage deinen Hoster."
+
+#: src/Admin/Admin.php
+msgid "The provider refused to translate this text because of its safety filter (it judged the content sensitive). Translate this sentence by hand, or with another provider."
+msgstr "Der Anbieter hat sich wegen seines Sicherheitsfilters geweigert, diesen Text zu übersetzen (er hielt den Inhalt für heikel). Übersetze diesen Satz von Hand oder mit einem anderen Anbieter."
+
+#: src/Admin/Admin.php
+msgid "Instead of the provider's answer, your server received a web page (often a proxy, a firewall or a login page of the network). Ask your host to let your site reach the provider directly."
+msgstr "Statt der Antwort des Anbieters hat dein Server eine Webseite erhalten (oft ein Proxy, eine Firewall oder eine Anmeldeseite des Netzwerks). Bitte deinen Hoster, deine Website den Anbieter direkt erreichen zu lassen."
+
+#: src/Admin/Admin.php
+msgid "The provider answered, but not with a translation in the expected form. Try again; if it happens again, choose another model or another provider."
+msgstr "Der Anbieter hat geantwortet, aber nicht mit einer Übersetzung in der erwarteten Form. Versuche es erneut; passiert es wieder, wähle ein anderes Modell oder einen anderen Anbieter."
+
+#: src/Admin/Admin.php
+msgid "The provider's account has no credit left, or its free share is used up. Add credit or check the plan on the provider's site, or let the next engine take over."
+msgstr "Das Konto beim Anbieter hat kein Guthaben mehr, oder das kostenlose Kontingent ist aufgebraucht. Lade Guthaben auf oder prüfe den Tarif auf der Website des Anbieters, oder lass die nächste Engine übernehmen."
+
+#: src/Admin/Admin.php
+msgid "The chosen model does not exist or this key cannot use it. Press «Load available models» and pick one from the list."
+msgstr "Das gewählte Modell existiert nicht oder dieser Schlüssel darf es nicht nutzen. Drücke «Verfügbare Modelle laden» und wähle eines aus der Liste."
+
+#: src/Admin/Admin.php
+msgid "The text sent was too long for this model. Choose fewer sentences per request (AI Translation → Usage & limits), or a model with a larger context."
+msgstr "Der gesendete Text war zu lang für dieses Modell. Wähle weniger Sätze pro Anfrage (KI-Übersetzung → Nutzung & Limits) oder ein Modell mit größerem Kontext."
+
+#: src/Admin/Admin.php
+msgid "The provider did not answer within the time limit (timeout). It may be slow or far from your server: try again, or choose fewer sentences per request (AI Translation → Usage & limits)."
+msgstr "Der Anbieter hat nicht innerhalb der Zeitgrenze geantwortet (Timeout). Er ist vielleicht langsam oder weit von deinem Server entfernt: Versuche es erneut oder wähle weniger Sätze pro Anfrage (KI-Übersetzung → Nutzung & Limits)."
+
+#: src/Admin/Admin.php
+msgid "Your server could not find the provider's address (a DNS problem on your server). Ask your host to check the server's DNS."
+msgstr "Dein Server konnte die Adresse des Anbieters nicht finden (ein DNS-Problem auf deinem Server). Bitte deinen Hoster, das DNS des Servers zu prüfen."
+
+#: src/Admin/Admin.php
+msgid "The secure connection to the provider failed (SSL certificate). Ask your host to update the server's certificates (CA bundle) and OpenSSL."
+msgstr "Die sichere Verbindung zum Anbieter ist fehlgeschlagen (SSL-Zertifikat). Bitte deinen Hoster, die Zertifikate des Servers (CA-Bundle) und OpenSSL zu aktualisieren."
+
+#: src/Admin/Admin.php
+msgid "Your server could not connect to the provider: the connection was refused or blocked (often an outgoing firewall). Ask your host to allow it."
+msgstr "Dein Server konnte sich nicht mit dem Anbieter verbinden: Die Verbindung wurde abgelehnt oder blockiert (oft eine ausgehende Firewall). Bitte deinen Hoster, sie zuzulassen."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s–%2$s of %3$s strings"
+msgstr "%1$s–%2$s von %3$s Zeichenketten"
+
+#: src/Admin/Admin.php
+msgid "Everything is translated in this language."
+msgstr "In dieser Sprache ist alles übersetzt."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Page %1$s of %2$s"
+msgstr "Seite %1$s von %2$s"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "More: %s"
+msgstr "Mehr: %s"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your source language (%1$s) isn’t listed here — it’s the language you translate from. Change it in “%2$s” above."
+msgstr "Deine Ausgangssprache (%1$s) steht nicht in der Liste — es ist die Sprache, aus der du übersetzt. Ändere sie oben unter „%2$s“."
+
+#: src/Admin/Admin.php
+msgid "Show all languages (%d)"
+msgstr "Alle Sprachen anzeigen (%d)"
+
+#: src/Admin/Admin.php
+msgid "Show only my languages"
+msgstr "Nur meine Sprachen anzeigen"
+
+#: src/Admin/Admin.php
+msgid "This page's translations and translated address were removed: translate it again below, with AI, in your browser or by hand."
+msgstr "Die Übersetzungen und die übersetzte Adresse dieser Seite wurden entfernt: Übersetze sie unten neu, mit KI, im Browser oder von Hand."
+
+#: src/Admin/Admin.php
+msgid "Translate again: remove this page's translations and translated address (undo available)"
+msgstr "Neu übersetzen: Übersetzungen und übersetzte Adresse dieser Seite entfernen (rückgängig machbar)"
+
+#: src/Admin/NextSteps.php
+msgid "Edit languages"
+msgstr "Sprachen bearbeiten"
+
+#: src/Admin/Overview.php
+msgid "free add-on: no paid plan, no card"
+msgstr "kostenloses Add-on: kein Bezahltarif, keine Karte"
+
 #: src/Admin/MetaBox.php
 msgid "Publish it first: its translations are tied to its address, which a draft does not have yet."
 msgstr "Veröffentliche sie zuerst: Ihre Übersetzungen hängen an ihrer Adresse, die ein Entwurf noch nicht hat."
@@ -5218,3 +5311,79 @@ msgstr "Veröffentliche sie zuerst: Ihre Übersetzungen hängen an ihrer Adresse
 #: src/Admin/MetaBox.php
 msgid "Only an administrator can do this."
 msgstr "Nur ein Administrator kann das tun."
+
+#: src/Admin/Admin.php
+msgid "Search in every language"
+msgstr "Suche in jeder Sprache"
+
+#: src/Admin/Admin.php
+msgid "The site search finds pages by their translated text"
+msgstr "Die Website-Suche findet Seiten über ihren übersetzten Text"
+
+#: src/Admin/Admin.php
+msgid "Without this, the search box of a translated page finds nothing: WordPress searches the text in your site's own language. With it, a visitor on /it/ who types «colazione» finds your page about breakfast. Only the text you wrote for each page counts — its title, excerpt and content — never menus, buttons, footers or cookie banners, which are on every page. Every word must be on the page, the title weighs most, and the theme's own search box, Elementor's search widget and the Search block work as they are. The index builds by itself in the background and follows every change."
+msgstr "Ohne diese Option findet das Suchfeld einer übersetzten Seite nichts: WordPress sucht im Text in der Sprache deiner Website. Mit ihr findet ein Besucher auf /it/, der «colazione» eingibt, deine Seite über das Frühstück. Es zählt nur der Text, den du für jede Seite geschrieben hast — Titel, Auszug und Inhalt —, nie Menüs, Schaltflächen, Fußzeilen oder Cookie-Banner, die auf jeder Seite stehen. Jedes Wort muss auf der Seite stehen, der Titel wiegt am meisten, und das Suchfeld des Themes, das Such-Widget von Elementor und der Suche-Block funktionieren unverändert. Der Index baut sich im Hintergrund selbst auf und folgt jeder Änderung."
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are off on this site"
+msgstr "Automatische Updates sind auf dieser Website aus"
+
+#: src/Admin/NextSteps.php
+msgid "Your host or a setting switched them off for every plugin. Fixes, security ones included, reach your site only when you update by hand: look at Plugins now and then, or ask your host to turn them on."
+msgstr "Dein Hoster oder eine Einstellung hat sie für alle Plugins ausgeschaltet. Korrekturen, auch Sicherheitskorrekturen, kommen nur an, wenn du von Hand aktualisierst: Schau ab und zu unter Plugins nach oder bitte deinen Hoster, sie einzuschalten."
+
+#: src/Admin/NextSteps.php
+msgid "Turn on automatic updates (recommended)"
+msgstr "Automatische Updates einschalten (empfohlen)"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes, security ones above all, reach your site the same day, without you having to remember. Your settings and translations stay as they are; WordPress updates TranslateRocket (and Labs, if you have it) by itself."
+msgstr "Korrekturen, vor allem Sicherheitskorrekturen, erreichen deine Website noch am selben Tag, ohne dass du daran denken musst. Einstellungen und Übersetzungen bleiben, wie sie sind; WordPress aktualisiert TranslateRocket (und Labs, falls vorhanden) selbst."
+
+#: src/Admin/NextSteps.php
+msgid "Turn them on"
+msgstr "Einschalten"
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are on"
+msgstr "Automatische Updates sind eingeschaltet"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes reach your site by themselves."
+msgstr "Korrekturen erreichen deine Website von selbst."
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Labs %s available — update"
+msgstr "Labs %s verfügbar — aktualisieren"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%s available — update"
+msgstr "%s verfügbar — aktualisieren"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Security update: %1$s %2$s."
+msgstr "Sicherheitsupdate: %1$s %2$s."
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%1$s %2$s is available."
+msgstr "%1$s %2$s ist verfügbar."
+
+#: src/Admin/UpdateNotice.php
+msgid "Please update now: it fixes a security problem."
+msgstr "Bitte jetzt aktualisieren: Es behebt ein Sicherheitsproblem."
+
+#: src/Admin/UpdateNotice.php
+msgid "It takes a few seconds; your settings and translations stay as they are."
+msgstr "Es dauert ein paar Sekunden; Einstellungen und Übersetzungen bleiben, wie sie sind."
+
+#: src/Admin/UpdateNotice.php
+msgid "Update now"
+msgstr "Jetzt aktualisieren"
+
+#: src/Admin/Admin.php
+msgid "The provider's daily limit is used up (on its free plan, or the one of your account). It starts again within 24 hours; meanwhile the next engine in your chain carries on, if there is one."
+msgstr "Das Tageslimit des Anbieters ist aufgebraucht (das des kostenlosen Tarifs oder deines Kontos). Es beginnt innerhalb von 24 Stunden neu; bis dahin macht die nächste Engine deiner Reihenfolge weiter, falls es eine gibt."

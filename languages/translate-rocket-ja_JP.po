@@ -5188,6 +5188,99 @@ msgstr "有効なメールアドレスではありません。"
 msgid "Not saved: reload the page and try again."
 msgstr "保存できませんでした。ページを再読み込みして、もう一度お試しください。"
 
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your own site did not answer the request (%s): reload the page and try again; if it repeats, ask your host."
+msgstr "あなたのサイトがリクエストに応答しませんでした（%s）。ページを再読み込みしてもう一度お試しください。繰り返す場合はホスティング会社にご相談ください。"
+
+#: src/Admin/Admin.php
+msgid "The provider refused to translate this text because of its safety filter (it judged the content sensitive). Translate this sentence by hand, or with another provider."
+msgstr "プロバイダーが安全フィルターのためにこのテキストの翻訳を拒否しました（内容が繊細と判断されました）。この文は手動か、別のプロバイダーで翻訳してください。"
+
+#: src/Admin/Admin.php
+msgid "Instead of the provider's answer, your server received a web page (often a proxy, a firewall or a login page of the network). Ask your host to let your site reach the provider directly."
+msgstr "プロバイダーの応答の代わりに、サーバーが Web ページを受け取りました（多くはプロキシ、ファイアウォール、ネットワークのログインページです）。サイトがプロバイダーに直接接続できるよう、ホスティング会社に依頼してください。"
+
+#: src/Admin/Admin.php
+msgid "The provider answered, but not with a translation in the expected form. Try again; if it happens again, choose another model or another provider."
+msgstr "プロバイダーは応答しましたが、想定した形の翻訳ではありませんでした。もう一度お試しください。繰り返す場合は、別のモデルか別のプロバイダーを選んでください。"
+
+#: src/Admin/Admin.php
+msgid "The provider's account has no credit left, or its free share is used up. Add credit or check the plan on the provider's site, or let the next engine take over."
+msgstr "プロバイダーのアカウントのクレジットがなくなったか、無料枠を使い切りました。クレジットを追加するかプロバイダーのサイトでプランを確認するか、次のエンジンに任せてください。"
+
+#: src/Admin/Admin.php
+msgid "The chosen model does not exist or this key cannot use it. Press «Load available models» and pick one from the list."
+msgstr "選んだモデルは存在しないか、このキーでは使えません。「利用可能なモデルを読み込む」を押して、一覧から選んでください。"
+
+#: src/Admin/Admin.php
+msgid "The text sent was too long for this model. Choose fewer sentences per request (AI Translation → Usage & limits), or a model with a larger context."
+msgstr "送信したテキストはこのモデルには長すぎました。1 回のリクエストの文数を減らす（AI 翻訳 → 使用量と上限）か、コンテキストの大きいモデルを選んでください。"
+
+#: src/Admin/Admin.php
+msgid "The provider did not answer within the time limit (timeout). It may be slow or far from your server: try again, or choose fewer sentences per request (AI Translation → Usage & limits)."
+msgstr "プロバイダーが制限時間内に応答しませんでした（タイムアウト）。遅いか、サーバーから遠い可能性があります。もう一度試すか、1 回のリクエストの文数を減らしてください（AI 翻訳 → 使用量と上限）。"
+
+#: src/Admin/Admin.php
+msgid "Your server could not find the provider's address (a DNS problem on your server). Ask your host to check the server's DNS."
+msgstr "サーバーがプロバイダーのアドレスを見つけられませんでした（サーバーの DNS の問題）。サーバーの DNS を確認するようホスティング会社に依頼してください。"
+
+#: src/Admin/Admin.php
+msgid "The secure connection to the provider failed (SSL certificate). Ask your host to update the server's certificates (CA bundle) and OpenSSL."
+msgstr "プロバイダーとの安全な接続に失敗しました（SSL 証明書）。サーバーの証明書（CA バンドル）と OpenSSL を更新するようホスティング会社に依頼してください。"
+
+#: src/Admin/Admin.php
+msgid "Your server could not connect to the provider: the connection was refused or blocked (often an outgoing firewall). Ask your host to allow it."
+msgstr "サーバーがプロバイダーに接続できませんでした。接続が拒否またはブロックされました（多くは送信側のファイアウォールです）。許可するようホスティング会社に依頼してください。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s–%2$s of %3$s strings"
+msgstr "%3$s 件中 %1$s–%2$s 件"
+
+#: src/Admin/Admin.php
+msgid "Everything is translated in this language."
+msgstr "この言語はすべて翻訳済みです。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Page %1$s of %2$s"
+msgstr "%2$s ページ中 %1$s ページ"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "More: %s"
+msgstr "その他：%s"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your source language (%1$s) isn’t listed here — it’s the language you translate from. Change it in “%2$s” above."
+msgstr "元の言語（%1$s）はここには表示されません。翻訳元の言語だからです。上の「%2$s」で変更できます。"
+
+#: src/Admin/Admin.php
+msgid "Show all languages (%d)"
+msgstr "すべての言語を表示（%d）"
+
+#: src/Admin/Admin.php
+msgid "Show only my languages"
+msgstr "自分の言語だけを表示"
+
+#: src/Admin/Admin.php
+msgid "This page's translations and translated address were removed: translate it again below, with AI, in your browser or by hand."
+msgstr "このページの翻訳と翻訳済みアドレスを削除しました。下で、AI、ブラウザー、または手動でもう一度翻訳してください。"
+
+#: src/Admin/Admin.php
+msgid "Translate again: remove this page's translations and translated address (undo available)"
+msgstr "もう一度翻訳：このページの翻訳と翻訳済みアドレスを削除（元に戻せます）"
+
+#: src/Admin/NextSteps.php
+msgid "Edit languages"
+msgstr "言語を編集"
+
+#: src/Admin/Overview.php
+msgid "free add-on: no paid plan, no card"
+msgstr "無料アドオン：有料プランなし、カード不要"
+
 #: src/Admin/MetaBox.php
 msgid "Publish it first: its translations are tied to its address, which a draft does not have yet."
 msgstr "先に公開してください。翻訳はアドレスに結び付いていますが、下書きにはまだアドレスがありません。"
@@ -5195,3 +5288,79 @@ msgstr "先に公開してください。翻訳はアドレスに結び付いて
 #: src/Admin/MetaBox.php
 msgid "Only an administrator can do this."
 msgstr "この操作は管理者のみが行えます。"
+
+#: src/Admin/Admin.php
+msgid "Search in every language"
+msgstr "すべての言語で検索"
+
+#: src/Admin/Admin.php
+msgid "The site search finds pages by their translated text"
+msgstr "サイト内検索が翻訳済みのテキストからページを見つけます"
+
+#: src/Admin/Admin.php
+msgid "Without this, the search box of a translated page finds nothing: WordPress searches the text in your site's own language. With it, a visitor on /it/ who types «colazione» finds your page about breakfast. Only the text you wrote for each page counts — its title, excerpt and content — never menus, buttons, footers or cookie banners, which are on every page. Every word must be on the page, the title weighs most, and the theme's own search box, Elementor's search widget and the Search block work as they are. The index builds by itself in the background and follows every change."
+msgstr "このオプションがないと、翻訳ページの検索ボックスは何も見つけられません。WordPress はサイト本来の言語のテキストを検索するからです。オプションをオンにすると、/it/ で「colazione」と入力した訪問者が朝食のページを見つけられます。対象は各ページのために書いたテキスト（タイトル、抜粋、本文）だけで、すべてのページにあるメニュー、ボタン、フッター、Cookie バナーは含みません。すべての単語がページにある必要があり、タイトルが最も重視されます。テーマの検索ボックス、Elementor の検索ウィジェット、検索ブロックはそのまま使えます。インデックスはバックグラウンドで自動的に作られ、変更のたびに更新されます。"
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are off on this site"
+msgstr "このサイトでは自動更新がオフになっています"
+
+#: src/Admin/NextSteps.php
+msgid "Your host or a setting switched them off for every plugin. Fixes, security ones included, reach your site only when you update by hand: look at Plugins now and then, or ask your host to turn them on."
+msgstr "ホスティング会社か設定によって、すべてのプラグインで自動更新がオフになっています。セキュリティを含む修正は、手動で更新したときにだけ届きます。ときどきプラグイン画面を確認するか、ホスティング会社にオンにするよう依頼してください。"
+
+#: src/Admin/NextSteps.php
+msgid "Turn on automatic updates (recommended)"
+msgstr "自動更新をオンにする（推奨）"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes, security ones above all, reach your site the same day, without you having to remember. Your settings and translations stay as they are; WordPress updates TranslateRocket (and Labs, if you have it) by itself."
+msgstr "修正、特にセキュリティ修正が、覚えておかなくても当日のうちにサイトに届きます。設定と翻訳はそのままで、WordPress が TranslateRocket（Labs があれば Labs も）を自動で更新します。"
+
+#: src/Admin/NextSteps.php
+msgid "Turn them on"
+msgstr "オンにする"
+
+#: src/Admin/NextSteps.php
+msgid "Automatic updates are on"
+msgstr "自動更新はオンです"
+
+#: src/Admin/NextSteps.php
+msgid "Fixes reach your site by themselves."
+msgstr "修正は自動的にサイトに届きます。"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Labs %s available — update"
+msgstr "Labs %s が利用可能 — 更新"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%s available — update"
+msgstr "%s が利用可能 — 更新"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "Security update: %1$s %2$s."
+msgstr "セキュリティ更新：%1$s %2$s。"
+
+#: src/Admin/UpdateNotice.php
+#, php-format
+msgid "%1$s %2$s is available."
+msgstr "%1$s %2$s が利用できます。"
+
+#: src/Admin/UpdateNotice.php
+msgid "Please update now: it fixes a security problem."
+msgstr "今すぐ更新してください。セキュリティの問題を修正します。"
+
+#: src/Admin/UpdateNotice.php
+msgid "It takes a few seconds; your settings and translations stay as they are."
+msgstr "数秒で終わります。設定と翻訳はそのまま残ります。"
+
+#: src/Admin/UpdateNotice.php
+msgid "Update now"
+msgstr "今すぐ更新"
+
+#: src/Admin/Admin.php
+msgid "The provider's daily limit is used up (on its free plan, or the one of your account). It starts again within 24 hours; meanwhile the next engine in your chain carries on, if there is one."
+msgstr "プロバイダーの1日の上限に達しました（無料プランまたはアカウントの上限）。24時間以内にリセットされます。それまでは、設定した順序の次のエンジンがあれば、そちらが引き継ぎます。"

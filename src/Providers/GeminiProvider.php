@@ -54,7 +54,13 @@ class GeminiProvider extends LlmProvider {
 		$data = json_decode( $result['body'] ?? '', true );
 		$text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
 		if ( '' === $text ) {
-			return TranslationResult::fail( 'Gemini: empty response.' );
+			// A 200 with no text: Gemini's safety filter says so in promptFeedback or in finishReason.
+			$blocco = (string) ( $data['promptFeedback']['blockReason'] ?? '' );
+			$fine   = (string) ( $data['candidates'][0]['finishReason'] ?? '' );
+			if ( '' !== $blocco || in_array( $fine, array( 'SAFETY', 'RECITATION', 'BLOCKLIST', 'PROHIBITED_CONTENT', 'SPII' ), true ) ) {
+				return TranslationResult::fail( 'Gemini: blocked by the safety filter (' . ( '' !== $blocco ? $blocco : $fine ) . ').' );
+			}
+			return TranslationResult::fail( $this->unreadable( (string) ( $result['body'] ?? '' ) ) );
 		}
 		return TranslationResult::ok( array( (string) $text ) );
 	}

@@ -137,7 +137,7 @@ class DeepLProvider extends AbstractProvider {
 
 		$data = json_decode( $result['body'] ?? '', true );
 		if ( ! is_array( $data ) || empty( $data['translations'] ) ) {
-			return TranslationResult::fail( 'DeepL: unexpected response.' );
+			return TranslationResult::fail( $this->unreadable( (string) ( $result['body'] ?? '' ) ) );
 		}
 
 		$out = array();

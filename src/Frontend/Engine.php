@@ -992,6 +992,21 @@ class Engine {
 		if ( function_exists( 'is_cart' ) && ( is_cart() || is_checkout() || is_account_page() ) ) {
 			return false;
 		}
+		// 14/10/2026 (security research): a visitor who is not logged in can still see a page of their own —
+		// a password-protected post they unlocked, their name and e-mail in the comment form, their comment
+		// waiting for moderation, their cart. Stored, it was served to everyone for six hours. As the page-cache
+		// plugins do: no cache for such visitors, and none for a password-protected post at all.
+		foreach ( array_keys( $_COOKIE ) as $c ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- only the names are compared.
+			if ( preg_match( '/^(wp-postpass_|comment_author_|woocommerce_items_in_cart|woocommerce_cart_hash|wp_woocommerce_session_|wordpress_logged_in_|wp-settings-)/', (string) $c ) ) {
+				return false;
+			}
+		}
+		if ( function_exists( 'is_singular' ) && is_singular() ) {
+			$p = get_queried_object();
+			if ( $p instanceof \WP_Post && '' !== (string) $p->post_password ) {
+				return false;
+			}
+		}
 		return true;
 	}
 
