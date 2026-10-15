@@ -32,6 +32,12 @@ class Cache {
 			return false; // Never serve a shared cache to a logged-in user.
 		}
 		$on = ! empty( Settings::get()['cache_pages'] );
+		// 1.8.6: with another page cache on the site, ours steps aside by itself — two caches on top of each
+		// other keep serving an old translation even after the outer one is cleared (Conflicts). The saved
+		// setting does not change: without that cache, ours is back.
+		if ( $on && array() !== Conflicts::page_caches() ) {
+			$on = false;
+		}
 		return (bool) apply_filters( 'trrocket_enable_cache', $on );
 	}
 
@@ -211,6 +217,26 @@ class Cache {
 			if ( function_exists( $fn ) ) {
 				$fn();
 			}
+		}
+
+		// 1.8.6 (cache research 14/10): the caches that were never cleared when a translation changed.
+		do_action( 'wphb_clear_page_cache' ); // Hummingbird.
+		if ( class_exists( '\FlyingPress\Purge' ) && method_exists( '\FlyingPress\Purge', 'purge_everything' ) ) {
+			\FlyingPress\Purge::purge_everything();
+		}
+		if ( class_exists( 'WpeCommon' ) ) { // WP Engine.
+			if ( method_exists( 'WpeCommon', 'purge_varnish_cache' ) ) {
+				\WpeCommon::purge_varnish_cache();
+			}
+			if ( method_exists( 'WpeCommon', 'purge_memcached' ) ) {
+				\WpeCommon::purge_memcached();
+			}
+		}
+		if ( isset( $GLOBALS['kinsta_cache'] ) && is_object( $GLOBALS['kinsta_cache'] ) && isset( $GLOBALS['kinsta_cache']->kinsta_cache_purge ) && method_exists( $GLOBALS['kinsta_cache']->kinsta_cache_purge, 'purge_complete_caches' ) ) {
+			$GLOBALS['kinsta_cache']->kinsta_cache_purge->purge_complete_caches(); // Kinsta.
+		}
+		if ( class_exists( 'VarnishPurger' ) ) { // Proxy Cache Purge: it purges everything on its own «full» events.
+			do_action( 'trrocket_varnish_purge_all' );
 		}
 
 		self::purge_remote_later();

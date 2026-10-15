@@ -75,6 +75,23 @@ final class FreeUsage {
 		return $l > 0 ? min( 1, self::used( $id ) / $l ) : 0;
 	}
 
+	/**
+	 * What is left of today's free share, in words for the engine menu (14/10/2026, Federico: «show the limits
+	 * left here»). '' for a provider without a free daily share.
+	 *
+	 * @param string $id Provider id.
+	 */
+	public static function left_note( string $id ): string {
+		if ( self::limit( $id ) <= 0 ) {
+			return '';
+		}
+		if ( self::exhausted( $id ) ) {
+			return __( 'today\'s free limit used up — back tomorrow', 'translate-rocket' );
+		}
+		/* translators: %d: percentage of today's free share still available. */
+		return sprintf( __( '%d%% of today\'s free limit left', 'translate-rocket' ), (int) max( 0, round( 100 * ( 1 - self::share( $id ) ) ) ) );
+	}
+
 	public static function exhausted( string $id ): bool {
 		return self::limit( $id ) > 0 && self::share( $id ) >= self::STOP_AT;
 	}

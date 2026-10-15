@@ -25,6 +25,48 @@ class EditorButton {
 	 */
 	public function register(): void {
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue' ) );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_languages' ) );
+	}
+
+	/**
+	 * «Languages» on every block (1.8.6): in the post editor and in the Site Editor alike (templates,
+	 * template parts, navigation), so it does not need a post.
+	 */
+	public function enqueue_languages(): void {
+		$router = Plugin::instance()->router();
+		$codes  = array_values( array_unique( array_merge( array( (string) $router->default_language() ), (array) $router->secondary_languages() ) ) );
+		if ( count( $codes ) < 2 ) {
+			return;
+		}
+		wp_enqueue_script(
+			'trrocket-block-languages',
+			TRROCKET_URL . 'assets/js/block-languages.js',
+			array( 'wp-hooks', 'wp-compose', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-blocks' ),
+			Plugin::asset_ver( 'assets/js/block-languages.js' ),
+			true
+		);
+		$langs = array();
+		foreach ( $codes as $code ) {
+			$langs[] = array(
+				'code'  => $code,
+				'label' => Languages::label( $code ),
+			);
+		}
+		wp_localize_script(
+			'trrocket-block-languages',
+			'trrocketBlockLangs',
+			array(
+				'langs' => $langs,
+				'i18n'  => array(
+					'title' => __( 'Languages', 'translate-rocket' ),
+					'label' => __( 'Show this block', 'translate-rocket' ),
+					'help'  => __( 'A block shown only in some languages is kept exactly as you wrote it (it is not translated): write it in that language. A block hidden in some languages is translated as usual everywhere else.', 'translate-rocket' ),
+					'all'   => __( 'In every language', 'translate-rocket' ),
+					'only'  => __( 'Only in these languages', 'translate-rocket' ),
+					'hide'  => __( 'Hidden in these languages', 'translate-rocket' ),
+				),
+			)
+		);
 	}
 
 	/**

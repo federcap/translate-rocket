@@ -70,6 +70,34 @@ class TranslatePressImporter implements ImporterInterface {
 		return $wpdb->prefix . 'trp_dictionary_' . $clean( $default ) . '_' . $clean( $target );
 	}
 
+	/**
+	 * Which rows of a dictionary are real translations (14/10/2026, from TranslatePress' own code): status 1
+	 * (machine) and 2 (reviewed by a person); never 0 (not translated) nor 3 (a «similar» sentence TranslatePress
+	 * copied by itself), and never an obsolete block (block_type 2, a column older versions do not have).
+	 *
+	 * @param string $table Dictionary table.
+	 */
+	private function real_rows( string $table ): string {
+		global $wpdb;
+		$where = "status IN (1,2) AND translated <> ''";
+		$col   = $wpdb->get_var( $wpdb->prepare( 'SHOW COLUMNS FROM `' . esc_sql( $table ) . '` LIKE %s', 'block_type' ) ); // phpcs:ignore WordPress.DB
+		if ( null !== $col ) {
+			$where .= ' AND ( block_type IS NULL OR block_type <> 2 )';
+		}
+		return $where;
+	}
+
+	/**
+	 * An address, not a sentence: TranslatePress keeps translated links in the same table. Links are
+	 * localised by the engine itself, so such a row is never imported as text.
+	 *
+	 * @param string $text Original.
+	 */
+	private static function only_address( string $text ): bool {
+		$t = trim( $text );
+		return '' !== $t && ! preg_match( '/\s/u', $t ) && (bool) preg_match( '#^(https?://|//|/|www\.)#i', $t );
+	}
+
 	private function table_exists( string $table ): bool {
 		global $wpdb;
 		return (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB
@@ -88,7 +116,7 @@ class TranslatePressImporter implements ImporterInterface {
 			}
 			$table = $this->dictionary_table( $s['default-language'], $target );
 			if ( $this->table_exists( $table ) ) {
-				$total += (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$table}` WHERE status > 0 AND translated <> ''" ); // phpcs:ignore WordPress.DB
+				$total += (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$table}` WHERE " . $this->real_rows( $table ) ); // phpcs:ignore WordPress.DB
 			}
 			// The gettext (theme/plugin interface) table is intentionally NOT imported:
 			// the interface is translated via WordPress' own language packs, and that
@@ -126,8 +154,11 @@ class TranslatePressImporter implements ImporterInterface {
 			// 1) Page-content dictionary.
 			$table = $this->dictionary_table( $s['default-language'], $target );
 			if ( $this->table_exists( $table ) ) {
-				$rows = $wpdb->get_results( "SELECT original, translated, status FROM `{$table}` WHERE status > 0 AND translated <> ''" ); // phpcs:ignore WordPress.DB
+				$rows = $wpdb->get_results( "SELECT original, translated, status FROM `{$table}` WHERE " . $this->real_rows( $table ) ); // phpcs:ignore WordPress.DB
 				foreach ( $rows as $row ) {
+					if ( self::only_address( (string) $row->original ) ) {
+						continue;
+					}
 					// TranslatePress stores its segments in RENDERED form — HTML
 					// entities included ("Bed &amp; Breakfast", "pi&ugrave;"). Our
 					// engine matches DECODED DOM text ("Bed & Breakfast", "più"),

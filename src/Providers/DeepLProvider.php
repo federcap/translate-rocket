@@ -34,6 +34,15 @@ class DeepLProvider extends AbstractProvider {
 			return TranslationResult::fail( 'Missing DeepL API key.' );
 		}
 
+		// 15/10/2026 (translaterocket.com, reproduced): DeepL answered 456 «quota exceeded» to every batch while the
+		// same key reported 0 of 1,000,000 used. Each batch asked again and waited for the same refusal: a long job
+		// of nothing. Once refused, DeepL rests for an hour and the work goes straight to the next engine.
+		// The «Test» button (quick) always asks DeepL itself: the owner may have just fixed the account.
+		$fermo = $this->quick ? '' : get_transient( self::blocked_key( $key ) );
+		if ( is_string( $fermo ) && '' !== $fermo ) {
+			return TranslationResult::fail( $fermo );
+		}
+
 		$host   = ( ':fx' === substr( $key, -3 ) ) ? 'https://api-free.deepl.com' : 'https://api.deepl.com';
 		$params = array(
 			'source_lang' => strtoupper( substr( $source, 0, 2 ) ),
@@ -119,18 +128,34 @@ class DeepLProvider extends AbstractProvider {
 				// message. A 456 with "0 of 1,000,000 used" is not a spent
 				// allowance, and saying "quota exhausted" sends people to stare
 				// at a counter that reads zero.
-				$uso = self::usage( $this->api_key() );
+				delete_transient( 'trrocket_deepl_usage_' . md5( $key ) ); // the counter as it is now, not 15 minutes ago
+				$uso   = self::usage( $key );
+				$detto = json_decode( (string) preg_replace( '/^HTTP \d+: /', '', $result['error'] ), true );
+				$detto = is_array( $detto ) ? trim( (string) ( $detto['message'] ?? '' ) ) : '';
+				$trace = (string) ( $result['trace'] ?? '' );
 				if ( is_array( $uso ) && isset( $uso['count'], $uso['limit'] ) && (int) $uso['count'] < (int) $uso['limit'] ) {
-					return TranslationResult::fail(
-						sprintf(
-							/* translators: 1: characters used, 2: character limit. */
-							__( 'DeepL refused with "quota exceeded", but your account still reports %1$s of %2$s characters used. That combination means the key itself is blocked, not the allowance: DeepL does this when the account has no verified payment method. Check your account on deepl.com/account.', 'translate-rocket' ),
-							number_format_i18n( (int) $uso['count'] ),
-							number_format_i18n( (int) $uso['limit'] )
-						)
+					// Not a spent allowance: the facts, DeepL's own words and the code its support needs, no guess.
+					$msg = sprintf(
+						/* translators: 1: characters used, 2: character limit. */
+						__( 'DeepL refuses to translate with this key ("quota exceeded"), although the same key reports %1$s of %2$s characters used. The block is on DeepL\'s side, not in your allowance and not in TranslateRocket.', 'translate-rocket' ),
+						number_format_i18n( (int) $uso['count'] ),
+						number_format_i18n( (int) $uso['limit'] )
 					);
+					if ( '' !== $detto ) {
+						/* translators: %s: DeepL's own message, in English. */
+						$msg .= ' ' . sprintf( __( 'DeepL says: «%s»', 'translate-rocket' ), wp_strip_all_tags( $detto ) );
+					}
+					$msg .= ' ' . __( 'Open your account on deepl.com (plan, usage and any notice there); if everything looks right, write to DeepL support.', 'translate-rocket' );
+					if ( '' !== $trace ) {
+						/* translators: %s: DeepL's trace code for the refused request. */
+						$msg .= ' ' . sprintf( __( 'Give them this code: %s.', 'translate-rocket' ), $trace );
+					}
+				} else {
+					$msg = __( 'DeepL: the monthly character allowance is used up (quota exceeded). It resets at the start of your DeepL billing cycle.', 'translate-rocket' );
 				}
-				return TranslationResult::fail( __( 'DeepL: the monthly character allowance is used up. It resets at the start of your DeepL billing cycle.', 'translate-rocket' ) );
+				$msg .= ' ' . __( 'Meanwhile your next engine carries on, and DeepL is tried again in an hour.', 'translate-rocket' );
+				set_transient( self::blocked_key( $key ), $msg, HOUR_IN_SECONDS );
+				return TranslationResult::fail( $msg );
 			}
 			return TranslationResult::fail( 'DeepL: ' . $result['error'] );
 		}
@@ -158,7 +183,17 @@ class DeepLProvider extends AbstractProvider {
 		if ( count( $out ) !== count( $texts ) ) {
 			return TranslationResult::fail( 'DeepL: item count mismatch.' );
 		}
+		delete_transient( self::blocked_key( $key ) );
 		return TranslationResult::ok( $out );
+	}
+
+	/**
+	 * Where the «DeepL refused, rest for an hour» note of one key is kept (never the key itself).
+	 *
+	 * @param string $key DeepL key.
+	 */
+	public static function blocked_key( string $key ): string {
+		return 'trrocket_deepl_blocked_' . md5( $key );
 	}
 
 	/**

@@ -2281,3 +2281,123 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-hero-update:hover { background: #008a20; }
 .trr-hero-update.is-security { background: #d63638; }
 .trr-hero-update.is-security:hover { background: #b32d2e; }
+
+/* 1.8.6: visits per language */
+.trr-stats .trr-stats-line { width: 100%; height: 60px; display: block; margin: 6px 0 12px; background: #fafaff; border-radius: 6px; }
+.trr-stats-table { width: 100%; border-collapse: collapse; }
+.trr-stats-table th { text-align: left; font-weight: 600; padding: 6px 8px 2px 0; white-space: nowrap; width: 1%; }
+.trr-stats-table th svg, .trr-stats-browser svg { width: 18px; height: 13px; vertical-align: -2px; border-radius: 2px; }
+.trr-stats-bar { padding: 6px 8px 2px; }
+.trr-stats-bar span { display: block; height: 10px; border-radius: 5px; background: linear-gradient(90deg, #4f46e5, #22d3ee); }
+.trr-stats-n { white-space: nowrap; width: 1%; padding: 6px 0 2px; text-align: right; }
+.trr-stats-pages td { padding: 0 0 8px; font-size: 12px; color: #50575e; overflow-wrap: anywhere; }
+.trr-stats-browser { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 6px 0; }
+.trr-stats-new { display: inline-block; font-size: 11px; padding: 0 6px; border-radius: 9px; background: #fff4e5; color: #8a4b00; }
+.trr-stats-hint { background: #f0f6fc; border-left: 4px solid #2271b1; padding: 8px 12px; margin: 10px 0 0; }
+@media (max-width: 782px) { .trr-stats-table th { white-space: normal; } }
+
+/* 1.8.6: a different menu per language */
+/* 15/10/2026 (full check, 1.8.6): with one column per language the table widened the whole settings table to 1,738 px.
+   width:0 + min-width:100% = as wide as its cell and no wider; more languages scroll inside the box. */
+.trr-menu-lang-wrap { overflow-x: auto; width: 0; min-width: 100%; max-width: 100%; }
+.trr-menu-lang { min-width: 420px; }
+.trr-menu-lang select { max-width: 180px; }
+
+/* 1.8.6: another plugin doing the same job */
+.trr-conflict-note { margin: 6px 0 0; padding: 6px 10px; background: #f0f6fc; border-left: 4px solid #72aee6; font-size: 13px; }
+.trr-conflict-js { margin: 12px 0; }
+
+/* 1.8.6 (14/10/2026, Federico: «spunte verdi più importanti, più carattere, ogni riga porta alla sua pagina») */
+.trr-ov-col li { position: relative; align-items: center; padding: 9px 8px; margin: 0 -8px; border-radius: 8px; transition: background .15s ease; }
+.trr-ov-col li:hover { background: #f6f7fb; }
+.trr-ov-labs li:hover { background: #efeaff; }
+.trr-ov-ico { flex: 0 0 34px; width: 34px; height: 34px; font-size: 18px; line-height: 34px; text-align: center; border-radius: 9px; background: #eef2ff; color: #4f46e5; }
+.trr-ov-labs .trr-ov-ico { background: #f3e8ff; color: #7c3aed; }
+.trr-ov-col li.is-on .trr-ov-ico { background: #dcfce7; color: #047857; }
+.trr-ov-txt { flex: 1 1 auto; min-width: 0; }
+.trr-ov-txt strong { font-size: 13.5px; }
+.trr-ov-go { font-weight: 600; }
+.trr-ov-go::after { content: ""; position: absolute; inset: 0; border-radius: 8px; }
+.trr-ov-col li .trr-info { position: relative; z-index: 2; }
+.trr-ov-dot { flex: 0 0 26px; height: 26px; font-size: 14px; font-weight: 800; }
+.trr-ov-col li.is-on .trr-ov-dot { background: #16a34a; color: #fff; box-shadow: 0 0 0 3px #dcfce7; }
+.trr-ov-col li.is-todo .trr-ov-dot { background: #f59e0b; color: #fff; }
+.trr-ov-col li.is-off .trr-ov-dot { background: #fff; color: #94a3b8; border: 2px solid #cbd5e1; }
+.trr-ov-col li.is-locked .trr-ov-dot { background: #7c3aed; color: #fff; }
+@media (prefers-reduced-motion: reduce) { .trr-ov-col li { transition: none; } }
+
+/* 1.8.6 (14/10/2026): «Translate into» aligned with «Site language» — label left, field column right */
+.trr-into-row { display: flex; align-items: baseline; gap: 0; margin: 6px 0 8px; }
+.trr-into-th { flex: 0 0 200px; margin: 0; padding-right: 20px; font-size: 14px; }
+.trr-into-td { margin: 0; flex: 1 1 auto; }
+.trr-card-langs > .trr-lang-cerca, .trr-card-langs > .trr-lang-allp { margin-left: 220px; }
+.trr-card-langs > .trr-lang-cerca .trr-lang-cerca-in { width: 100%; max-width: 360px; }
+@media (max-width: 782px) {
+	.trr-into-row { display: block; }
+	.trr-into-th { margin-bottom: 4px; }
+	.trr-card-langs > .trr-lang-cerca, .trr-card-langs > .trr-lang-allp { margin-left: 0; }
+}
+
+/* 14/10/2026 (Federico: «one menu, the browser in it as the default, free and unlimited on the left in green, the
+   limits in full, and the quality»): the «Translate with» picker drawn over the menu. The menu itself stays in the
+   page (keyboard fallback, the form, the tests), just out of sight. */
+.trr-engine-native.is-replaced{position:absolute!important;width:1px!important;height:1px!important;min-width:0!important;padding:0!important;margin:0!important;border:0!important;opacity:0;clip-path:inset(50%);pointer-events:none}
+.trr-epick{position:relative;display:inline-block;min-width:0;max-width:100%}
+.trr-epick[hidden]{display:none}
+.trr-epick-btn{display:flex;align-items:center;gap:8px;width:420px;max-width:100%;min-height:36px;padding:4px 8px 4px 6px;background:#fff;border:1px solid #8c8f94;border-radius:6px;cursor:pointer;text-align:left;font:inherit;color:#1d2327}
+.trr-epick-btn:hover{border-color:#2271b1}
+.trr-epick-btn:focus{outline:2px solid #2271b1;outline-offset:1px}
+.trr-epick-btn .trr-ename small{display:none}
+.trr-epick-caret{margin-left:auto;color:#50575e;font-size:12px}
+.trr-epick-list{position:absolute;z-index:1000;top:calc(100% + 4px);left:0;width:520px;max-width:calc(100vw - 32px);max-height:min(60vh,520px);overflow:auto;padding:6px;background:#fff;border:1px solid #c3c4c7;border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,.18);outline:none}
+.trr-epick-list[hidden]{display:none}
+.trr-epick-group{display:block;margin:8px 4px 4px;padding:0 4px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#50575e}
+.trr-epick-group:first-child{margin-top:2px}
+.trr-epick-group-free{color:#008a20}
+.trr-epick-group-limit{color:#996800}
+.trr-epick-group-paid{color:#135e96}
+.trr-epick-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;cursor:pointer}
+.trr-epick-item:hover,.trr-epick-item.is-focus{background:#f0f6fc}
+.trr-epick-item.is-on{background:#e7f0fa;box-shadow:inset 3px 0 0 #2271b1}
+.trr-epick-item.is-off{cursor:not-allowed;opacity:.55}
+.trr-epick-item.is-off:hover{background:none}
+.trr-ename{display:flex;flex-direction:column;min-width:0;flex:1 1 auto;line-height:1.3}
+.trr-ename strong{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trr-ename small{color:#646970;font-size:12px;white-space:normal}
+.trr-etier{flex:0 0 auto;min-width:64px;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:700;letter-spacing:.03em;text-align:center;text-transform:uppercase;line-height:1.5}
+.trr-etier:empty{min-width:0;padding:0}
+.trr-etier-free{background:#00a32a;color:#fff}
+.trr-etier-limit{background:#fcf0c3;color:#6e4b00;border:1px solid #dba617}
+.trr-etier-paid{background:#e7f0fa;color:#135e96;border:1px solid #72aee6}
+.trr-equal{flex:0 0 auto;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap;background:#f0f0f1;color:#50575e}
+.trr-equal-good{background:#e0f3f5;color:#0a6b78}
+.trr-equal-very-good{background:#e6f6ea;color:#047857}
+.trr-equal-excellent{background:#047857;color:#fff}
+/* the box under the menu: what the chosen engine is, in full */
+.trr-engine-info{display:flex;flex-direction:column;gap:2px;flex:0 0 100%;box-sizing:border-box;max-width:none;margin:2px 0 0;padding:8px 10px;background:#f6f7f7;border-left:4px solid #c3c4c7;font-size:12px;line-height:1.5}
+.trr-engine-info[hidden]{display:none}
+.trr-engine-info-free{background:#edfaef;border-left-color:#00a32a}
+.trr-engine-info-limit{background:#fcf9e8;border-left-color:#dba617}
+.trr-engine-info-paid{background:#f0f6fc;border-left-color:#72aee6}
+.trr-einfo-row b{font-weight:600}
+@media (max-width:782px){.trr-epick,.trr-epick-btn{width:100%}.trr-epick-list{width:100%;max-width:none}}
+
+/* 15/10/2026 (visual check on a phone, 390 px): the bar of each language had «as much room as needed», so the
+   «Translate» button sat beside it on some rows and below it on others. One line for the bar, then the button and
+   the online/offline state, always below and from the left. The menus-per-language table needs no minimum width
+   now that its rows are the languages: it fits the phone. */
+@media screen and ( max-width: 782px ) {
+	.trr-lang-state-prog { flex: 1 0 100%; }
+	.trr-lang-state-table .trr-lang-state-go,
+	.trr-lang-state-table .trr-lang-state-switch { flex: 0 0 auto; }
+	.trr-menu-lang { min-width: 0; width: 100%; }
+	.trr-menu-lang select { width: 100%; max-width: 100%; }
+}
+
+/* 15/10/2026 (visual check, Arabic on a phone): the «⋯» menu of a row floated out of the screen by 21 px in
+   right-to-left languages. On a phone it opens inside the row, full width: it cannot leave the screen. */
+@media screen and ( max-width: 782px ) {
+	.trrocket-wrap table#trr-ptable details.trr-more[open] { flex-basis: 100%; width: 100%; display: block; }
+	.trrocket-wrap table#trr-ptable .trr-more-menu { position: static; margin-top: 6px; box-shadow: none; width: 100%; box-sizing: border-box; }
+	.trrocket-wrap table#trr-ptable .trr-more-menu .button { width: 100%; white-space: normal; text-align: start; }
+}

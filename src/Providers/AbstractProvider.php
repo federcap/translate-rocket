@@ -196,6 +196,8 @@ abstract class AbstractProvider implements ProviderInterface {
 		if ( '' !== $err ) {
 			return array( 'error' => $err );
 		}
-		return array( 'error' => 'HTTP ' . $code . ': ' . substr( $raw, 0, 300 ) );
+		// 15/10/2026: the provider's own trace code (DeepL: x-trace-id), the one thing its support asks for.
+		$trace = isset( $response ) && ! is_wp_error( $response ) ? (string) wp_remote_retrieve_header( $response, 'x-trace-id' ) : '';
+		return array( 'error' => 'HTTP ' . $code . ': ' . substr( $raw, 0, 300 ), 'trace' => $trace );
 	}
 }

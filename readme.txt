@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.5
+Stable tag: 1.8.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,18 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.8.6 =
+* Fix: a language kept offline while you translate it, and preview mode, sent visitors back to the same address over and over («too many redirects»; a redirect loop for search engines) instead of to the page in your default language. Present since 1.7.11.
+* New: one «Translate with» menu. The browser translator is in it (the default when you have no key), with every engine marked FREE (green), FREE with a daily limit, or paid — and under the menu, for the chosen engine: quality, limit, what it needs, where it runs and where your text goes. What is left of today's free limit is shown beside each engine.
+* New: visits per language, without cookies — how many visits each language gets, its most read pages, and the languages your visitors' browsers speak, with a hint when many of them read a language your site does not have yet. Off until you switch it on.
+* New: content per language — a «Languages» panel on every block and on every Elementor widget, section and container: show it only in some languages, or hide it in some.
+* New: a different menu per language, for classic and block themes.
+* New: other plugins doing the same job are detected. When a page cache is already active, TranslateRocket's own cache steps aside and says so; when two plugins optimize JavaScript, a warning says to keep that on in one only. More cache plugins are cleared when a translation changes (Hummingbird, FlyingPress, WP Engine, Kinsta, Varnish).
+* New: the Translations screen shows 50 pages at a time with «Show more», and searches, filters and sorts on the server — fast with thousands of pages.
+* Improved: the overview — every row opens its settings, with clearer green checks.
+* Improved: when DeepL refuses a key that has not used its allowance, the message says so with DeepL's own words and the code its support asks for; DeepL rests for an hour and the next engine carries on.
+* Fix: importing from TranslatePress skips its rows that are not real translations.
+
 = 1.8.5 =
 * New: search in every language. On a translated page the site's search box finds pages by their translated text (title, excerpt, content, Elementor), never by menus, buttons, footers or cookie banners. The theme's search box, Elementor's search widget and the Search block work as they are. A switch with an info button turns it off.
 * New: the plugin's screens in six more languages: Turkish, Indonesian, Simplified Chinese, Korean, Arabic and Persian.
@@ -387,6 +399,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.6 =
+Fix: offline languages and preview mode no longer send visitors into a redirect loop — please update. Also: one «Translate with» menu with free engines in green, visits per language, content and menus per language.
 
 = 1.8.5 =
 Security fixes (page cache, WooCommerce emails, editor panel) — please update. Also: search in every language, six new languages for the plugin, plain-words provider errors, «Scan site» beyond 1,000 pages.

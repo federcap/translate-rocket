@@ -6209,3 +6209,386 @@ msgstr "지금 업데이트"
 #: src/Admin/Admin.php
 msgid "The provider's daily limit is used up (on its free plan, or the one of your account). It starts again within 24 hours; meanwhile the next engine in your chain carries on, if there is one."
 msgstr "제공자의 일일 한도를 모두 사용했습니다(무료 요금제 또는 계정의 한도). 24시간 이내에 다시 시작되며, 그동안 순서상 다음 엔진이 있으면 그 엔진이 이어서 작업합니다."
+
+#: src/MenuPerLanguage.php
+#, php-format
+msgid "Navigation «%s»"
+msgstr "내비게이션 「%s」"
+
+#: src/MenuPerLanguage.php
+msgid "Your theme has no menu places yet."
+msgstr "테마에 아직 메뉴 위치가 없습니다."
+
+#: src/MenuPerLanguage.php
+msgid "The same, translated"
+msgstr "같은 메뉴(번역)"
+
+#: src/Admin/Admin.php
+msgid "This browser (Chrome or Edge on a computer)"
+msgstr "이 브라우저(컴퓨터의 Chrome 또는 Edge)"
+
+#: src/Admin/Admin.php
+msgid "Fair"
+msgstr "보통"
+
+#: src/Admin/Admin.php
+msgid "Good"
+msgstr "좋음"
+
+#: src/Admin/Admin.php
+msgid "Very good"
+msgstr "매우 좋음"
+
+#: src/Admin/Admin.php
+msgid "Excellent"
+msgstr "최상"
+
+#: src/Admin/Admin.php
+msgid "On your server, in the background"
+msgstr "서버에서, 백그라운드로"
+
+#: src/Admin/Admin.php
+msgid "Each provider's own limit"
+msgstr "각 제공자의 자체 한도"
+
+#: src/Admin/Admin.php
+msgid "At least one AI key on AI Translation"
+msgstr "AI 번역에 AI 키가 하나 이상"
+
+#: src/Admin/Admin.php
+msgid "The providers in your priority order"
+msgstr "설정한 우선순위의 제공자"
+
+#: src/Admin/Admin.php
+msgid "No limit"
+msgstr "제한 없음"
+
+#: src/Admin/Admin.php
+msgid "Nothing: Chrome or Edge on a computer (the first time it downloads its language model)"
+msgstr "필요 없음: 컴퓨터의 Chrome 또는 Edge(처음 한 번 언어 모델을 내려받음)"
+
+#: src/Admin/Admin.php
+msgid "In this browser, while this page is open"
+msgstr "이 브라우저에서, 이 페이지가 열려 있는 동안"
+
+#: src/Admin/Admin.php
+msgid "Nowhere: the text stays on this computer"
+msgstr "어디에도 보내지 않음: 텍스트는 이 컴퓨터에 남습니다"
+
+#: src/Admin/Admin.php
+msgid "No fixed daily limit"
+msgstr "고정된 일일 한도 없음"
+
+#: src/Admin/Admin.php
+msgid "TranslateRocket Labs (free); you accept its conditions once"
+msgstr "TranslateRocket Labs(무료). 이용 조건은 한 번만 동의"
+
+#: src/Admin/Admin.php
+msgid "Microsoft, through an unofficial endpoint"
+msgstr "Microsoft(비공식 엔드포인트 경유)"
+
+#: src/Admin/Admin.php
+msgid "Yandex (Russia), through an unofficial endpoint"
+msgstr "Yandex(러시아, 비공식 엔드포인트 경유)"
+
+#: src/Admin/Admin.php
+msgid "About 1,000 requests a day"
+msgstr "하루 약 1,000회 요청"
+
+#: src/Admin/Admin.php
+msgid "A free Groq key: 2 minutes, no card"
+msgstr "무료 Groq 키: 2분, 카드 불필요"
+
+#: src/Admin/Admin.php
+msgid "Groq (USA)"
+msgstr "Groq(미국)"
+
+#: src/Admin/Admin.php
+msgid "10,000 neurons a day (a few thousand sentences)"
+msgstr "하루 10,000뉴런(문장 수천 개)"
+
+#: src/Admin/Admin.php
+msgid "A free Cloudflare account and its API token"
+msgstr "무료 Cloudflare 계정과 API 토큰"
+
+#: src/Admin/Admin.php
+msgid "Cloudflare"
+msgstr "Cloudflare"
+
+#: src/Admin/Admin.php
+msgid "50 requests a day with the free models (1,000 after a one-off $10 of credit)"
+msgstr "무료 모델로 하루 50회 요청(한 번 10달러 충전 후 1,000회)"
+
+#: src/Admin/Admin.php
+msgid "A free OpenRouter key"
+msgstr "무료 OpenRouter 키"
+
+#: src/Admin/Admin.php
+msgid "OpenRouter and the provider of the model"
+msgstr "OpenRouter와 모델 제공자"
+
+#: src/Admin/Admin.php
+msgid "About 5,000 characters a day, 50,000 with an e-mail address"
+msgstr "하루 약 5,000자, 이메일 주소가 있으면 50,000자"
+
+#: src/Admin/Admin.php
+msgid "TranslateRocket Labs (free)"
+msgstr "TranslateRocket Labs(무료)"
+
+#: src/Admin/Admin.php
+msgid "MyMemory / Translated (it may keep it in its public translation memory)"
+msgstr "MyMemory / Translated(공개 번역 메모리에 보관될 수 있음)"
+
+#: src/Admin/Admin.php
+msgid "Free plan with a monthly character allowance, then paid"
+msgstr "월간 문자 한도가 있는 무료 요금제, 이후 유료"
+
+#: src/Admin/Admin.php
+msgid "A DeepL key"
+msgstr "DeepL 키"
+
+#: src/Admin/Admin.php
+msgid "DeepL (EU)"
+msgstr "DeepL(EU)"
+
+#: src/Admin/Admin.php
+msgid "Paid per use"
+msgstr "사용량에 따라 유료"
+
+#: src/Admin/Admin.php
+msgid "An OpenAI key with credit"
+msgstr "잔액이 있는 OpenAI 키"
+
+#: src/Admin/Admin.php
+msgid "OpenAI"
+msgstr "OpenAI"
+
+#: src/Admin/Admin.php
+msgid "An Anthropic key with credit"
+msgstr "잔액이 있는 Anthropic 키"
+
+#: src/Admin/Admin.php
+msgid "Anthropic"
+msgstr "Anthropic"
+
+#: src/Admin/Admin.php
+msgid "Free tier with limits (not for sites aimed at the EU, Switzerland or the UK), then paid per use"
+msgstr "제한이 있는 무료 등급(EU, 스위스, 영국 대상 사이트는 제외), 이후 사용량에 따라 유료"
+
+#: src/Admin/Admin.php
+msgid "A Gemini key"
+msgstr "Gemini 키"
+
+#: src/Admin/Admin.php
+msgid "Google"
+msgstr "Google"
+
+#: src/Admin/Admin.php
+msgid "About 500,000 characters a month free, then paid per use"
+msgstr "매월 약 500,000자 무료, 이후 사용량에 따라 유료"
+
+#: src/Admin/Admin.php
+msgid "A Google Cloud key"
+msgstr "Google Cloud 키"
+
+#: src/Admin/Admin.php
+msgid "Google Cloud"
+msgstr "Google Cloud"
+
+#: src/Admin/Admin.php
+msgid "A key"
+msgstr "키"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The languages visitors can switch to. Each gets its own URL prefix (e.g. /it/) and its own set of translations. Your source language (%1$s) is not in this list: it is the language you translate from — change it in «%2$s» above."
+msgstr "방문자가 전환할 수 있는 언어입니다. 언어마다 고유한 URL 접두사(예: /it/)와 번역이 있습니다. 원본 언어(%1$s)는 이 목록에 없습니다. 번역의 출발 언어이기 때문입니다. 위의 「%2$s」에서 바꿀 수 있습니다."
+
+#: src/Admin/Admin.php
+msgid "A language you add starts offline: only you see it while you translate it. Flip its switch to green when it is ready."
+msgstr "추가한 언어는 비공개 상태로 시작합니다. 번역하는 동안에는 나만 볼 수 있습니다. 준비가 되면 스위치를 초록색으로 바꾸세요."
+
+#: src/Admin/Admin.php
+msgid "Visits per language"
+msgstr "언어별 방문 수"
+
+#: src/Admin/Admin.php
+msgid "How many visits each language gets, its most read pages, and the languages your visitors' browsers speak — so you see which language is worth adding next. Counted by a small signal the browser sends after the page has loaded (it works with page caches and CDNs too): no cookie, no IP address, nothing personal, so no consent banner is needed for it. Robots, search engines and administrators are not counted. The numbers appear on this screen, below."
+msgstr "언어별 방문 수, 가장 많이 읽힌 페이지, 방문자 브라우저의 언어를 보여 줍니다. 다음에 어떤 언어를 추가할지 알 수 있습니다. 페이지가 로드된 뒤 브라우저가 보내는 작은 신호로 집계합니다(페이지 캐시와 CDN에서도 작동). 쿠키도, IP 주소도, 개인 정보도 없으므로 동의 배너가 필요 없습니다. 로봇, 검색 엔진, 관리자는 집계하지 않습니다. 숫자는 이 화면 아래에 표시됩니다."
+
+#: src/Admin/Admin.php
+msgid "Count the visits of each language (no cookies)"
+msgstr "언어별 방문 수 집계(쿠키 없음)"
+
+#: src/Admin/Admin.php
+msgid "A different menu per language"
+msgstr "언어마다 다른 메뉴"
+
+#: src/Admin/Admin.php
+msgid "Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead — other pages, other order, written in that language (it is not translated). Create it first in Appearance → Menus (or in the Site Editor for block themes), then choose it here. To hide only some items in some languages, use «Show in» on each item in Appearance → Menus."
+msgstr "보통 각 언어에서는 메뉴가 번역되어 표시됩니다. 여기서는 언어마다 완전히 별도의 메뉴를 둘 수 있습니다. 다른 페이지, 다른 순서로, 그 언어로 작성된 메뉴입니다(번역되지 않음). 먼저 「외모 → 메뉴」(블록 테마는 사이트 편집기)에서 만든 다음 여기서 선택하세요. 일부 항목만 일부 언어에서 숨기려면 「외모 → 메뉴」의 각 항목에서 「표시할 언어」를 사용하세요."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Off by itself: %s already caches your pages. Two caches on top of each other keep showing an old translation even after you clear them; translated pages stay fast, served by that cache, and when you change a translation TranslateRocket clears it too."
+msgstr "자동으로 꺼짐: %s이(가) 이미 페이지를 캐시하고 있습니다. 캐시 두 개가 겹치면 비운 뒤에도 예전 번역이 계속 보입니다. 번역된 페이지는 그 캐시가 제공해 빠르게 유지되고, 번역을 바꾸면 TranslateRocket이 그 캐시도 비웁니다."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%s all optimize JavaScript (combine, defer or delay it). Together they can break menus, forms and the language switcher: keep these features on in only one of them."
+msgstr "%s 모두 JavaScript를 최적화합니다(결합, 지연, 연기). 함께 쓰면 메뉴, 양식, 언어 전환기가 깨질 수 있습니다. 이 기능은 그중 하나에서만 켜 두세요."
+
+#: src/Admin/Admin.php
+msgid "FREE — no limits"
+msgstr "무료 — 제한 없음"
+
+#: src/Admin/Admin.php
+msgid "FREE — with a daily limit"
+msgstr "무료 — 일일 한도 있음"
+
+#: src/Admin/Admin.php
+msgid "With your paid key"
+msgstr "유료 키로"
+
+#: src/Admin/Admin.php
+msgid "Limit"
+msgstr "한도"
+
+#: src/Admin/Admin.php
+msgid "Needs"
+msgstr "필요한 것"
+
+#: src/Admin/Admin.php
+msgid "Runs"
+msgstr "작동 위치"
+
+#: src/Admin/Admin.php
+msgid "Your text goes to"
+msgstr "텍스트 전송 대상"
+
+#: src/Admin/Admin.php
+msgid "FREE"
+msgstr "무료"
+
+#: src/Admin/Admin.php
+msgid "FREE · daily limit"
+msgstr "무료 · 일일 한도"
+
+#: src/Admin/Admin.php
+msgid "Your paid key"
+msgstr "유료 키"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Showing %1$s of %2$s pages"
+msgstr "%2$s개 페이지 중 %1$s개 표시"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Show %d more"
+msgstr "%d개 더 보기"
+
+#: src/Admin/EditorButton.php
+msgid "Show this block"
+msgstr "이 블록 표시"
+
+#: src/Admin/EditorButton.php
+msgid "A block shown only in some languages is kept exactly as you wrote it (it is not translated): write it in that language. A block hidden in some languages is translated as usual everywhere else."
+msgstr "일부 언어에서만 표시되는 블록은 작성한 그대로 유지됩니다(번역되지 않음). 그 언어로 작성하세요. 일부 언어에서 숨긴 블록은 나머지 언어에서 평소처럼 번역됩니다."
+
+#: src/Admin/EditorButton.php
+msgid "In every language"
+msgstr "모든 언어에서"
+
+#: src/Admin/EditorButton.php
+msgid "Only in these languages"
+msgstr "이 언어에서만"
+
+#: src/Admin/EditorButton.php
+msgid "Hidden in these languages"
+msgstr "이 언어에서 숨김"
+
+#: src/Admin/Overview.php
+msgid "On — open its settings"
+msgstr "켜짐 — 설정 열기"
+
+#: src/Admin/Overview.php
+msgid "Comes with Labs, the free add-on — see what it does"
+msgstr "무료 애드온 Labs에 포함 — 무엇을 하는지 보기"
+
+#: src/Admin/StatsCard.php
+msgid "last 30 days"
+msgstr "최근 30일"
+
+#: src/Admin/StatsCard.php
+msgid "Counted by a small signal the browser sends after the page has loaded, so it works with page caches and CDNs too. No cookie, no IP address and nothing personal is kept: only how many visits each language and page had each day, and the language of the visitor's browser. Robots, search engines and you (the administrators) are not counted. Days older than 400 are deleted by themselves."
+msgstr "페이지가 로드된 뒤 브라우저가 보내는 작은 신호로 집계하므로 페이지 캐시와 CDN에서도 작동합니다. 쿠키, IP 주소, 개인 정보는 저장하지 않습니다. 저장하는 것은 언어별·페이지별 하루 방문 수와 방문자 브라우저의 언어뿐입니다. 로봇, 검색 엔진, 그리고 관리자인 여러분은 집계하지 않습니다. 400일이 지난 데이터는 자동으로 삭제됩니다."
+
+#: src/Admin/StatsCard.php
+msgid "No visits counted yet: they appear here from the next visit on."
+msgstr "아직 집계된 방문이 없습니다. 다음 방문부터 여기에 표시됩니다."
+
+#: src/Admin/StatsCard.php
+msgid "Visits per day"
+msgstr "일별 방문 수"
+
+#: src/Admin/StatsCard.php
+msgid "The languages of your visitors' browsers"
+msgstr "방문자 브라우저의 언어"
+
+#: src/Admin/StatsCard.php
+msgid "not on your site yet"
+msgstr "아직 사이트에 없음"
+
+#: src/Admin/StatsCard.php
+#, php-format
+msgid "%1$d%% of your visitors read %2$s, and your site has no %2$s yet: adding it is one click in the list above."
+msgstr "방문자의 %1$d%%가 %2$s를 사용하지만 사이트에는 아직 %2$s가 없습니다. 위 목록에서 한 번만 클릭하면 추가할 수 있습니다."
+
+#: src/Integrations/ElementorLanguages.php
+msgid "TranslateRocket — Languages"
+msgstr "TranslateRocket — 언어"
+
+#: src/Integrations/ElementorLanguages.php
+msgid "Show this element"
+msgstr "이 요소 표시"
+
+#: src/Integrations/ElementorLanguages.php
+msgid "Shown only in some languages, it is kept exactly as you wrote it (not translated): write it in that language. Hidden in some, it is translated as usual everywhere else. In this editor it always stays visible."
+msgstr "일부 언어에서만 표시하면 작성한 그대로 유지됩니다(번역되지 않음). 그 언어로 작성하세요. 일부 언어에서 숨기면 나머지 언어에서는 평소처럼 번역됩니다. 이 편집기에서는 항상 보입니다."
+
+#: src/Providers/DeepLProvider.php
+#, php-format
+msgid "DeepL refuses to translate with this key (\"quota exceeded\"), although the same key reports %1$s of %2$s characters used. The block is on DeepL's side, not in your allowance and not in TranslateRocket."
+msgstr "DeepL이 이 키로 번역을 거부합니다(\"quota exceeded\"). 그런데 같은 키의 사용량은 %2$s자 중 %1$s자입니다. 차단은 DeepL 쪽 문제이며, 사용 한도나 TranslateRocket의 문제가 아닙니다."
+
+#: src/Providers/DeepLProvider.php
+#, php-format
+msgid "DeepL says: «%s»"
+msgstr "DeepL 메시지: 「%s」"
+
+#: src/Providers/DeepLProvider.php
+msgid "Open your account on deepl.com (plan, usage and any notice there); if everything looks right, write to DeepL support."
+msgstr "deepl.com에서 계정을 열어 보세요(요금제, 사용량, 공지). 모두 정상으로 보이면 DeepL 지원팀에 문의하세요."
+
+#: src/Providers/DeepLProvider.php
+#, php-format
+msgid "Give them this code: %s."
+msgstr "이 코드를 알려 주세요: %s."
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL: the monthly character allowance is used up (quota exceeded). It resets at the start of your DeepL billing cycle."
+msgstr "DeepL: 월간 문자 한도를 모두 사용했습니다(quota exceeded). DeepL 결제 주기가 시작될 때 초기화됩니다."
+
+#: src/Providers/DeepLProvider.php
+msgid "Meanwhile your next engine carries on, and DeepL is tried again in an hour."
+msgstr "그동안 다음 엔진이 이어서 작업하고, DeepL은 1시간 뒤에 다시 시도합니다."
+
+#: src/Providers/FreeUsage.php
+msgid "today's free limit used up — back tomorrow"
+msgstr "오늘의 무료 한도 소진 — 내일 다시"
+
+#: src/Providers/FreeUsage.php
+#, php-format
+msgid "%d%% of today's free limit left"
+msgstr "오늘 무료 한도 %d%% 남음"

@@ -22,5 +22,6 @@ class Deactivator {
 		flush_rewrite_rules();
 		// The search index builds in the background: nothing left scheduled for a plugin that is off.
 		wp_clear_scheduled_hook( 'trrocket_search_index' );
+		wp_clear_scheduled_hook( 'trrocket_stats_prune' );
 	}
 }

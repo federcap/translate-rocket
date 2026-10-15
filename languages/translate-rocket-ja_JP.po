@@ -5364,3 +5364,386 @@ msgstr "今すぐ更新"
 #: src/Admin/Admin.php
 msgid "The provider's daily limit is used up (on its free plan, or the one of your account). It starts again within 24 hours; meanwhile the next engine in your chain carries on, if there is one."
 msgstr "プロバイダーの1日の上限に達しました（無料プランまたはアカウントの上限）。24時間以内にリセットされます。それまでは、設定した順序の次のエンジンがあれば、そちらが引き継ぎます。"
+
+#: src/MenuPerLanguage.php
+#, php-format
+msgid "Navigation «%s»"
+msgstr "ナビゲーション「%s」"
+
+#: src/MenuPerLanguage.php
+msgid "Your theme has no menu places yet."
+msgstr "お使いのテーマにはまだメニューの位置がありません。"
+
+#: src/MenuPerLanguage.php
+msgid "The same, translated"
+msgstr "同じメニュー（翻訳）"
+
+#: src/Admin/Admin.php
+msgid "This browser (Chrome or Edge on a computer)"
+msgstr "このブラウザー（パソコンの Chrome または Edge）"
+
+#: src/Admin/Admin.php
+msgid "Fair"
+msgstr "まずまず"
+
+#: src/Admin/Admin.php
+msgid "Good"
+msgstr "良い"
+
+#: src/Admin/Admin.php
+msgid "Very good"
+msgstr "とても良い"
+
+#: src/Admin/Admin.php
+msgid "Excellent"
+msgstr "非常に良い"
+
+#: src/Admin/Admin.php
+msgid "On your server, in the background"
+msgstr "あなたのサーバーで、バックグラウンドで"
+
+#: src/Admin/Admin.php
+msgid "Each provider's own limit"
+msgstr "各プロバイダーの上限"
+
+#: src/Admin/Admin.php
+msgid "At least one AI key on AI Translation"
+msgstr "「AI 翻訳」に AI キーが少なくとも1つ"
+
+#: src/Admin/Admin.php
+msgid "The providers in your priority order"
+msgstr "設定した優先順のプロバイダー"
+
+#: src/Admin/Admin.php
+msgid "No limit"
+msgstr "上限なし"
+
+#: src/Admin/Admin.php
+msgid "Nothing: Chrome or Edge on a computer (the first time it downloads its language model)"
+msgstr "不要：パソコンの Chrome または Edge（初回のみ言語モデルをダウンロードします）"
+
+#: src/Admin/Admin.php
+msgid "In this browser, while this page is open"
+msgstr "このブラウザーで、このページを開いている間"
+
+#: src/Admin/Admin.php
+msgid "Nowhere: the text stays on this computer"
+msgstr "どこにも送られません：テキストはこのパソコンに残ります"
+
+#: src/Admin/Admin.php
+msgid "No fixed daily limit"
+msgstr "1日の上限は固定されていません"
+
+#: src/Admin/Admin.php
+msgid "TranslateRocket Labs (free); you accept its conditions once"
+msgstr "TranslateRocket Labs（無料）。利用条件への同意は1回だけ"
+
+#: src/Admin/Admin.php
+msgid "Microsoft, through an unofficial endpoint"
+msgstr "Microsoft（非公式のエンドポイント経由）"
+
+#: src/Admin/Admin.php
+msgid "Yandex (Russia), through an unofficial endpoint"
+msgstr "Yandex（ロシア、非公式のエンドポイント経由）"
+
+#: src/Admin/Admin.php
+msgid "About 1,000 requests a day"
+msgstr "1日約1,000リクエスト"
+
+#: src/Admin/Admin.php
+msgid "A free Groq key: 2 minutes, no card"
+msgstr "無料の Groq キー：2分、カード不要"
+
+#: src/Admin/Admin.php
+msgid "Groq (USA)"
+msgstr "Groq（米国）"
+
+#: src/Admin/Admin.php
+msgid "10,000 neurons a day (a few thousand sentences)"
+msgstr "1日10,000ニューロン（数千文）"
+
+#: src/Admin/Admin.php
+msgid "A free Cloudflare account and its API token"
+msgstr "無料の Cloudflare アカウントとその API トークン"
+
+#: src/Admin/Admin.php
+msgid "Cloudflare"
+msgstr "Cloudflare"
+
+#: src/Admin/Admin.php
+msgid "50 requests a day with the free models (1,000 after a one-off $10 of credit)"
+msgstr "無料モデルで1日50リクエスト（1回だけ10ドルをチャージすると1,000）"
+
+#: src/Admin/Admin.php
+msgid "A free OpenRouter key"
+msgstr "無料の OpenRouter キー"
+
+#: src/Admin/Admin.php
+msgid "OpenRouter and the provider of the model"
+msgstr "OpenRouter とモデルの提供元"
+
+#: src/Admin/Admin.php
+msgid "About 5,000 characters a day, 50,000 with an e-mail address"
+msgstr "1日約5,000文字、メールアドレスがあれば50,000文字"
+
+#: src/Admin/Admin.php
+msgid "TranslateRocket Labs (free)"
+msgstr "TranslateRocket Labs（無料）"
+
+#: src/Admin/Admin.php
+msgid "MyMemory / Translated (it may keep it in its public translation memory)"
+msgstr "MyMemory / Translated（公開翻訳メモリーに保存されることがあります）"
+
+#: src/Admin/Admin.php
+msgid "Free plan with a monthly character allowance, then paid"
+msgstr "毎月の文字数枠がある無料プラン、その後は有料"
+
+#: src/Admin/Admin.php
+msgid "A DeepL key"
+msgstr "DeepL キー"
+
+#: src/Admin/Admin.php
+msgid "DeepL (EU)"
+msgstr "DeepL（EU）"
+
+#: src/Admin/Admin.php
+msgid "Paid per use"
+msgstr "使用量に応じた有料"
+
+#: src/Admin/Admin.php
+msgid "An OpenAI key with credit"
+msgstr "残高のある OpenAI キー"
+
+#: src/Admin/Admin.php
+msgid "OpenAI"
+msgstr "OpenAI"
+
+#: src/Admin/Admin.php
+msgid "An Anthropic key with credit"
+msgstr "残高のある Anthropic キー"
+
+#: src/Admin/Admin.php
+msgid "Anthropic"
+msgstr "Anthropic"
+
+#: src/Admin/Admin.php
+msgid "Free tier with limits (not for sites aimed at the EU, Switzerland or the UK), then paid per use"
+msgstr "制限付きの無料枠（EU、スイス、英国向けのサイトは不可）、その後は使用量に応じた有料"
+
+#: src/Admin/Admin.php
+msgid "A Gemini key"
+msgstr "Gemini キー"
+
+#: src/Admin/Admin.php
+msgid "Google"
+msgstr "Google"
+
+#: src/Admin/Admin.php
+msgid "About 500,000 characters a month free, then paid per use"
+msgstr "毎月約50万文字まで無料、その後は使用量に応じた有料"
+
+#: src/Admin/Admin.php
+msgid "A Google Cloud key"
+msgstr "Google Cloud キー"
+
+#: src/Admin/Admin.php
+msgid "Google Cloud"
+msgstr "Google Cloud"
+
+#: src/Admin/Admin.php
+msgid "A key"
+msgstr "キー"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The languages visitors can switch to. Each gets its own URL prefix (e.g. /it/) and its own set of translations. Your source language (%1$s) is not in this list: it is the language you translate from — change it in «%2$s» above."
+msgstr "訪問者が切り替えられる言語です。各言語には独自の URL プレフィックス（例：/it/）と独自の翻訳があります。元の言語（%1$s）はこの一覧にはありません。翻訳元の言語だからです。変更するには上の「%2$s」で設定します。"
+
+#: src/Admin/Admin.php
+msgid "A language you add starts offline: only you see it while you translate it. Flip its switch to green when it is ready."
+msgstr "追加した言語は非公開の状態から始まります。翻訳している間はあなたにだけ表示されます。準備ができたらスイッチを緑にしてください。"
+
+#: src/Admin/Admin.php
+msgid "Visits per language"
+msgstr "言語ごとの訪問数"
+
+#: src/Admin/Admin.php
+msgid "How many visits each language gets, its most read pages, and the languages your visitors' browsers speak — so you see which language is worth adding next. Counted by a small signal the browser sends after the page has loaded (it works with page caches and CDNs too): no cookie, no IP address, nothing personal, so no consent banner is needed for it. Robots, search engines and administrators are not counted. The numbers appear on this screen, below."
+msgstr "各言語の訪問数、よく読まれているページ、訪問者のブラウザーの言語がわかるので、次に追加すべき言語が見えます。ページの読み込み後にブラウザーが送る小さな信号で数えます（ページキャッシュや CDN があっても動きます）。Cookie も IP アドレスも個人情報も使わないため、同意バナーは不要です。ロボット、検索エンジン、管理者は数えません。数字はこの画面の下に表示されます。"
+
+#: src/Admin/Admin.php
+msgid "Count the visits of each language (no cookies)"
+msgstr "各言語の訪問数を数える（Cookie なし）"
+
+#: src/Admin/Admin.php
+msgid "A different menu per language"
+msgstr "言語ごとに別のメニュー"
+
+#: src/Admin/Admin.php
+msgid "Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead — other pages, other order, written in that language (it is not translated). Create it first in Appearance → Menus (or in the Site Editor for block themes), then choose it here. To hide only some items in some languages, use «Show in» on each item in Appearance → Menus."
+msgstr "通常、各言語ではメニューが翻訳されて表示されます。ここでは、言語ごとに独自のメニューを持たせることができます。別のページ、別の順序で、その言語で書かれたメニューです（翻訳はされません）。まず「外観 → メニュー」（ブロックテーマではサイトエディター）で作成し、ここで選んでください。一部の項目だけを一部の言語で隠すには、「外観 → メニュー」の各項目の「表示する言語」を使います。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Off by itself: %s already caches your pages. Two caches on top of each other keep showing an old translation even after you clear them; translated pages stay fast, served by that cache, and when you change a translation TranslateRocket clears it too."
+msgstr "自動でオフ：%s がすでにページをキャッシュしています。キャッシュが二重になると、消去したあとも古い翻訳が表示され続けます。翻訳ページはそのキャッシュから配信されて速いままで、翻訳を変更すると TranslateRocket がそのキャッシュも消去します。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%s all optimize JavaScript (combine, defer or delay it). Together they can break menus, forms and the language switcher: keep these features on in only one of them."
+msgstr "%s はどれも JavaScript を最適化します（結合、遅延、延期）。一緒に使うとメニュー、フォーム、言語切り替えが壊れることがあります。これらの機能はどれか1つでだけ有効にしてください。"
+
+#: src/Admin/Admin.php
+msgid "FREE — no limits"
+msgstr "無料 — 上限なし"
+
+#: src/Admin/Admin.php
+msgid "FREE — with a daily limit"
+msgstr "無料 — 1日の上限あり"
+
+#: src/Admin/Admin.php
+msgid "With your paid key"
+msgstr "有料キーで"
+
+#: src/Admin/Admin.php
+msgid "Limit"
+msgstr "上限"
+
+#: src/Admin/Admin.php
+msgid "Needs"
+msgstr "必要なもの"
+
+#: src/Admin/Admin.php
+msgid "Runs"
+msgstr "動作場所"
+
+#: src/Admin/Admin.php
+msgid "Your text goes to"
+msgstr "テキストの送信先"
+
+#: src/Admin/Admin.php
+msgid "FREE"
+msgstr "無料"
+
+#: src/Admin/Admin.php
+msgid "FREE · daily limit"
+msgstr "無料 · 1日の上限"
+
+#: src/Admin/Admin.php
+msgid "Your paid key"
+msgstr "有料キー"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Showing %1$s of %2$s pages"
+msgstr "%2$s ページ中 %1$s ページを表示"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Show %d more"
+msgstr "さらに %d 件表示"
+
+#: src/Admin/EditorButton.php
+msgid "Show this block"
+msgstr "このブロックを表示"
+
+#: src/Admin/EditorButton.php
+msgid "A block shown only in some languages is kept exactly as you wrote it (it is not translated): write it in that language. A block hidden in some languages is translated as usual everywhere else."
+msgstr "一部の言語でだけ表示するブロックは、書いたとおりのまま残ります（翻訳されません）。その言語で書いてください。一部の言語で非表示にしたブロックは、それ以外の言語ではいつもどおり翻訳されます。"
+
+#: src/Admin/EditorButton.php
+msgid "In every language"
+msgstr "すべての言語で"
+
+#: src/Admin/EditorButton.php
+msgid "Only in these languages"
+msgstr "これらの言語でのみ"
+
+#: src/Admin/EditorButton.php
+msgid "Hidden in these languages"
+msgstr "これらの言語では非表示"
+
+#: src/Admin/Overview.php
+msgid "On — open its settings"
+msgstr "オン — 設定を開く"
+
+#: src/Admin/Overview.php
+msgid "Comes with Labs, the free add-on — see what it does"
+msgstr "無料アドオン Labs に含まれます — 何ができるか見る"
+
+#: src/Admin/StatsCard.php
+msgid "last 30 days"
+msgstr "過去30日"
+
+#: src/Admin/StatsCard.php
+msgid "Counted by a small signal the browser sends after the page has loaded, so it works with page caches and CDNs too. No cookie, no IP address and nothing personal is kept: only how many visits each language and page had each day, and the language of the visitor's browser. Robots, search engines and you (the administrators) are not counted. Days older than 400 are deleted by themselves."
+msgstr "ページの読み込み後にブラウザーが送る小さな信号で数えるので、ページキャッシュや CDN があっても動きます。Cookie、IP アドレス、個人情報は一切保存しません。保存するのは、各言語と各ページの1日ごとの訪問数と、訪問者のブラウザーの言語だけです。ロボット、検索エンジン、そして管理者のあなたは数えません。400日より古い日は自動で削除されます。"
+
+#: src/Admin/StatsCard.php
+msgid "No visits counted yet: they appear here from the next visit on."
+msgstr "まだ訪問は数えられていません。次の訪問からここに表示されます。"
+
+#: src/Admin/StatsCard.php
+msgid "Visits per day"
+msgstr "1日あたりの訪問数"
+
+#: src/Admin/StatsCard.php
+msgid "The languages of your visitors' browsers"
+msgstr "訪問者のブラウザーの言語"
+
+#: src/Admin/StatsCard.php
+msgid "not on your site yet"
+msgstr "まだサイトにありません"
+
+#: src/Admin/StatsCard.php
+#, php-format
+msgid "%1$d%% of your visitors read %2$s, and your site has no %2$s yet: adding it is one click in the list above."
+msgstr "訪問者の %1$d%% が %2$s を使っていますが、サイトにはまだ %2$s がありません。上の一覧からワンクリックで追加できます。"
+
+#: src/Integrations/ElementorLanguages.php
+msgid "TranslateRocket — Languages"
+msgstr "TranslateRocket — 言語"
+
+#: src/Integrations/ElementorLanguages.php
+msgid "Show this element"
+msgstr "この要素を表示"
+
+#: src/Integrations/ElementorLanguages.php
+msgid "Shown only in some languages, it is kept exactly as you wrote it (not translated): write it in that language. Hidden in some, it is translated as usual everywhere else. In this editor it always stays visible."
+msgstr "一部の言語でだけ表示する場合は、書いたとおりのまま残ります（翻訳されません）。その言語で書いてください。一部の言語で非表示にした場合は、それ以外の言語でいつもどおり翻訳されます。このエディターでは常に表示されたままです。"
+
+#: src/Providers/DeepLProvider.php
+#, php-format
+msgid "DeepL refuses to translate with this key (\"quota exceeded\"), although the same key reports %1$s of %2$s characters used. The block is on DeepL's side, not in your allowance and not in TranslateRocket."
+msgstr "DeepL はこのキーでの翻訳を拒否しています（\"quota exceeded\"）。しかし同じキーの使用量は %2$s 文字中 %1$s 文字です。ブロックは DeepL 側のもので、あなたの枠や TranslateRocket の問題ではありません。"
+
+#: src/Providers/DeepLProvider.php
+#, php-format
+msgid "DeepL says: «%s»"
+msgstr "DeepL のメッセージ：「%s」"
+
+#: src/Providers/DeepLProvider.php
+msgid "Open your account on deepl.com (plan, usage and any notice there); if everything looks right, write to DeepL support."
+msgstr "deepl.com でアカウントを開いてください（プラン、使用量、お知らせ）。問題がなさそうなら DeepL サポートに連絡してください。"
+
+#: src/Providers/DeepLProvider.php
+#, php-format
+msgid "Give them this code: %s."
+msgstr "このコードを伝えてください：%s。"
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL: the monthly character allowance is used up (quota exceeded). It resets at the start of your DeepL billing cycle."
+msgstr "DeepL：毎月の文字数枠を使い切りました（quota exceeded）。DeepL の請求サイクルの開始時にリセットされます。"
+
+#: src/Providers/DeepLProvider.php
+msgid "Meanwhile your next engine carries on, and DeepL is tried again in an hour."
+msgstr "その間は次のエンジンが引き継ぎ、DeepL は1時間後にもう一度試します。"
+
+#: src/Providers/FreeUsage.php
+msgid "today's free limit used up — back tomorrow"
+msgstr "本日の無料枠を使い切りました — 明日また使えます"
+
+#: src/Providers/FreeUsage.php
+#, php-format
+msgid "%d%% of today's free limit left"
+msgstr "本日の無料枠の残り %d%%"

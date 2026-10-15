@@ -24,7 +24,7 @@ class Database {
 	/**
 	 * Schema version. Bump when the table structure changes.
 	 */
-	const DB_VERSION = '6'; // 6: the search index (14/10/2026)
+	const DB_VERSION = '7'; // 6: the search index (14/10/2026); 7: visits per language (1.8.6)
 
 	/**
 	 * Source strings table name.
@@ -59,7 +59,7 @@ class Database {
 	public static function missing_tables(): array {
 		global $wpdb;
 		$missing = array();
-		foreach ( array( self::strings_table(), self::translations_table(), self::occurrences_table(), \TranslateRocket\Frontend\Search::table() ) as $table ) {
+		foreach ( array( self::strings_table(), self::translations_table(), self::occurrences_table(), \TranslateRocket\Frontend\Search::table(), \TranslateRocket\Stats::table() ) as $table ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- schema check, table name is internal.
 			$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
 			if ( $found !== $table ) {
@@ -291,10 +291,24 @@ class Database {
 			KEY string_id (string_id)
 		) {$charset};";
 
+		// Visits per language (7, 1.8.6): one row per day, language, page and browser language — no visitor data.
+		$stats     = \TranslateRocket\Stats::table();
+		$sql_stats = "CREATE TABLE {$stats} (
+			day DATE NOT NULL,
+			lang VARCHAR(20) NOT NULL,
+			path_hash CHAR(40) NOT NULL,
+			path VARCHAR(191) NOT NULL,
+			browser VARCHAR(3) NOT NULL DEFAULT '',
+			views INT UNSIGNED NOT NULL DEFAULT 0,
+			PRIMARY KEY  (day,lang,path_hash,browser),
+			KEY lang_day (lang,day)
+		) {$charset};";
+
 		dbDelta( $sql_strings );
 		dbDelta( $sql_translations );
 		dbDelta( $sql_occurrences );
 		dbDelta( $sql_search );
+		dbDelta( $sql_stats );
 
 		// If a table still isn't there, the plugin can't store anything — make that
 		// loud rather than letting saves fail silently later.

@@ -97,6 +97,10 @@ final class Plugin {
 		// Content shown only in some languages: the [translaterocket_language]
 		// shortcode, and the trrocket-only-xx / trrocket-hide-xx classes on blocks.
 		( new \TranslateRocket\Frontend\LanguageOnly() )->boot();
+		// The same rule from the Advanced tab of every Elementor element (1.8.6): in the editor and on the site.
+		( new \TranslateRocket\Integrations\ElementorLanguages() )->boot();
+		// A whole menu of its own for a language (1.8.6), front end only.
+		( new \TranslateRocket\MenuPerLanguage() )->register();
 		// Posts still holding qTranslate / WPGlobus / WP Multilang markers: once that
 		// plugin is off, show the source-language part instead of every language at once.
 		( new \TranslateRocket\Frontend\InlineCleanup() )->boot();
@@ -111,6 +115,8 @@ final class Plugin {
 		// REST API, where is_admin() is false — hooking it there would miss
 		// exactly the edits people make most.
 		\TranslateRocket\Rescan::boot();
+		// Visits per language (1.8.6): the receiver answers visitors' browsers, so it is booted outside the admin branch.
+		( new \TranslateRocket\Stats() )->register();
 		// The site search in every language (14/10/2026): its index follows saves made over REST too, like Rescan.
 		if ( ! $coexist ) {
 			( new \TranslateRocket\Frontend\Search() )->register();
@@ -119,6 +125,15 @@ final class Plugin {
 		// saved over REST, and until 1.4.4 the cached translated page survived
 		// the edit (visitors kept seeing the old text for up to six hours).
 		add_action( 'save_post', array( 'TranslateRocket\\Cache', 'post_changed' ), 10, 2 );
+		// Proxy Cache Purge (Varnish) empties its whole cache on the events it is told about (1.8.6).
+		add_filter(
+			'varnish_http_purge_events_full',
+			static function ( $events ) {
+				$events   = (array) $events;
+				$events[] = 'trrocket_varnish_purge_all';
+				return $events;
+			}
+		);
 		add_action( 'deleted_post', array( 'TranslateRocket\\Cache', 'post_changed' ), 10, 2 );
 		add_action( 'trashed_post', array( 'TranslateRocket\\Cache', 'post_changed' ) );
 		add_action( 'untrashed_post', array( 'TranslateRocket\\Cache', 'post_changed' ) );

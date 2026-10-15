@@ -21,6 +21,8 @@ if ( is_array( $trrocket_settings ) && ! empty( $trrocket_settings['delete_data_
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}trrocket_strings" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}trrocket_occurrences" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}trrocket_search" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}trrocket_stats" );
+	wp_clear_scheduled_hook( 'trrocket_stats_prune' );
 	delete_option( 'trrocket_search_cursor' );
 	wp_clear_scheduled_hook( 'trrocket_search_index' );
 

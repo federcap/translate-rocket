@@ -205,6 +205,13 @@ class Router {
 		if ( preg_match( '#/(wp-admin|wp-login\.php|wp-json|xmlrpc\.php)(/|$|\?)#', $location ) ) {
 			return $location;
 		}
+		// 15/10/2026 (found by a full check, since 1.7.11): a language kept offline, or preview mode, sends the
+		// visitor to the default-language page — and this filter put «/de/» back in front of it: a 302 to the
+		// same address, for ever («too many redirects» for people, a redirect loop for Google). A language the
+		// viewer may not see is exactly the one a redirect must leave.
+		if ( \TranslateRocket\Frontend\Preview::language_blocked() ) {
+			return $location;
+		}
 		$home = (string) get_option( 'home' ); // unfiltered: home_url() already carries the language here
 		$host = (string) wp_parse_url( $home, PHP_URL_HOST );
 		$path = rtrim( (string) wp_parse_url( $home, PHP_URL_PATH ), '/' );

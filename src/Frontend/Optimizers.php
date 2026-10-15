@@ -42,6 +42,10 @@ class Optimizers {
 		'trrocket-form-messages',
 		'trrocket-woo-blocks',
 		'translate-rocket/assets/js/',
+		// 1.8.6 (cache research 14/10): one token covers the inline data too (trrocketVE, trrocketDyn,
+		// trrocket_lang…) and the visual editor and spot picker; Labs' own scripts as well.
+		'trrocket',
+		'translate-rocket-labs/assets/',
 	);
 
 	/**
@@ -64,6 +68,15 @@ class Optimizers {
 			'sgo_javascript_combine_exclude',
 			'sgo_javascript_combine_excluded_inline_content',
 			'wp-optimize-minify-default-exclusions',
+			// 1.8.6: Breeze (Cloudways), Perfmatters, FlyingPress, SiteGround async — their documented lists.
+			'breeze_filter_js_exclude',
+			'default_scripts_gnore_from_delay',
+			'perfmatters_delay_js_exclusions',
+			'perfmatters_defer_js_exclusions',
+			'perfmatters_minify_js_exclusions',
+			'flying_press_exclude_from_delay:js',
+			'flying_press_exclude_from_defer:js',
+			'sgo_js_async_exclude',
 		) as $filtro ) {
 			add_filter( $filtro, array( $this, 'aggiungi' ), 20 );
 		}

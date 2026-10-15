@@ -53,6 +53,7 @@ class Admin {
 		add_action( 'wp_ajax_trrocket_mm_email', array( $this, 'ajax_mm_email' ) );
 		add_action( 'wp_ajax_trrocket_sw_preview', array( $this, 'ajax_switcher_preview' ) );
 		add_action( 'wp_ajax_trrocket_scan_urls', array( $this, 'ajax_scan_urls' ) );
+		add_action( 'wp_ajax_trrocket_pages_rows', array( $this, 'ajax_pages_rows' ) );
 		add_action( 'wp_ajax_trrocket_sw_try', array( $this, 'ajax_switcher_try' ) );
 		add_action( 'wp_ajax_trrocket_gt', array( $this, 'ajax_gt' ) );
 		add_action( 'wp_ajax_trrocket_deepl_usage', array( $this, 'ajax_deepl_usage' ) );
@@ -1174,6 +1175,8 @@ class Admin {
 		$settings['translate_interface'] = ! empty( $_POST['translate_interface'] );
 		$settings['auto_redirect']       = ! empty( $_POST['auto_redirect'] );
 		$settings['translated_search']   = ! empty( $_POST['translated_search'] );
+		$settings['stats']               = ! empty( $_POST['stats'] );
+		$settings['menus_per_language']  = \TranslateRocket\MenuPerLanguage::clean( isset( $_POST['menus_per_language'] ) ? wp_unslash( $_POST['menus_per_language'] ) : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- checked value by value in clean().
 		$settings['cache_pages']         = ! empty( $_POST['cache_pages'] );
 		$settings['show_poweredby']      = ! empty( $_POST['show_poweredby'] );
 
@@ -3588,6 +3591,68 @@ JS;
 					if(one){var h=one.querySelector('input[name="engine"]');if(!h){h=document.createElement('input');h.type='hidden';h.name='engine';one.appendChild(h);}h.value=('browser'===v||W[v])?'':v;var auto=s.querySelector('option[value=""]'),no=!h.value&&(!auto||auto.disabled);document.querySelectorAll('button[form="trr-ai-onepage"]').forEach(function(x){x.disabled=no;});}
 				}
 				s.addEventListener('change',sync);sync();
+				// 14/10/2026: one menu. The list shows each engine with its tier on the left (FREE in green, FREE with a
+				// daily limit in amber, a paid key in blue), the quality on the right and the limit under the name.
+				var I=document.getElementById('trr-engine-info'),pk=document.getElementById('trr-epick'),pb=document.getElementById('trr-epick-btn'),pl=document.getElementById('trr-epick-list');
+				function a(o,k){return o?(o.getAttribute('data-'+k)||''):'';}
+				function el(tag,cls,txt){var e=document.createElement(tag);if(cls){e.className=cls;}if(txt){e.textContent=txt;}return e;}
+				function badge(t){return el('span','trr-etier trr-etier-'+(t||'auto'),t?a(I,'t-'+t):'');}
+				function riga(o,dove){
+					var t=a(o,'tier');dove.appendChild(badge(t));
+					var c=el('span','trr-ename');c.appendChild(el('strong','',a(o,'name')||o.textContent));
+					var sub=o.disabled?a(o,'why'):a(o,'limit');if(sub){c.appendChild(el('small','',sub));}
+					dove.appendChild(c);
+					if(a(o,'quality')){dove.appendChild(el('span','trr-equal trr-equal-'+a(o,'qkey'),a(o,'quality')));}
+				}
+				function info(){
+					if(!I){return;}var o=s.options[s.selectedIndex];I.textContent='';
+					if(!o||!a(o,'tier')&&!a(o,'needs')){I.hidden=true;return;}
+					[['quality','quality'],['limit','limit'],['needs','needs'],['where','where'],['goes','goes']].forEach(function(k){
+						var v=a(o,k[1]);if(!v){return;}var r=el('span','trr-einfo-row');r.appendChild(el('b','',a(I,'l-'+k[0])+': '));r.appendChild(document.createTextNode(v));I.appendChild(r);
+					});
+					I.className='trr-engine-info trr-engine-info-'+(a(o,'tier')||'auto');I.hidden=!I.firstChild;
+				}
+				function pannello(){
+					var bx=document.getElementById('trr-browser-engine'),bg=document.getElementById('trr-browser-go');
+					if(bx){bx.style.display=('browser'===s.value)?'':'none';}
+					if(bg){bg.style.display='none';}
+				}
+				function bottone(){if(!pb){return;}pb.textContent='';var o=s.options[s.selectedIndex];if(o){riga(o,pb);}pb.appendChild(el('span','trr-epick-caret','\u25BE'));}
+				function chiudi(f){if(!pl||pl.hidden){return;}pl.hidden=true;pb.setAttribute('aria-expanded','false');if(f){pb.focus();}}
+				function scegli(v){if(s.value!==v){s.value=v;s.dispatchEvent(new Event('change',{bubbles:true}));}chiudi(true);}
+				function apri(){
+					pl.textContent='';var gr='';
+					Array.prototype.forEach.call(s.options,function(o,i){
+						var g=o.parentNode&&'OPTGROUP'===o.parentNode.tagName?o.parentNode.label:'';
+						if(g!==gr){gr=g;if(g){pl.appendChild(el('span','trr-epick-group trr-epick-group-'+a(o,'tier'),g));}}
+						var it=el('span','trr-epick-item'+(o.disabled?' is-off':'')+(i===s.selectedIndex?' is-on':''));
+						it.id='trr-epick-o'+i;it.setAttribute('role','option');it.setAttribute('aria-selected',i===s.selectedIndex?'true':'false');if(o.disabled){it.setAttribute('aria-disabled','true');}
+						it.setAttribute('data-v',o.value);riga(o,it);
+						it.addEventListener('click',function(){if(!o.disabled){scegli(o.value);}});
+						pl.appendChild(it);
+					});
+					pl.hidden=false;pb.setAttribute('aria-expanded','true');pl.focus();
+					var on=pl.querySelector('.is-on');if(on){pl.setAttribute('aria-activedescendant',on.id);on.scrollIntoView({block:'nearest'});}
+				}
+				function muovi(d){
+					var tutti=Array.prototype.slice.call(pl.querySelectorAll('.trr-epick-item:not(.is-off)'));if(!tutti.length){return;}
+					var cur=pl.querySelector('.is-focus')||pl.querySelector('.is-on'),i=tutti.indexOf(cur);i=Math.max(0,Math.min(tutti.length-1,(i<0?0:i+d)));
+					tutti.forEach(function(x){x.classList.remove('is-focus');});tutti[i].classList.add('is-focus');pl.setAttribute('aria-activedescendant',tutti[i].id);tutti[i].scrollIntoView({block:'nearest'});
+				}
+				if(pk&&pb&&pl){
+					s.classList.add('is-replaced');pk.hidden=false;bottone();
+					pb.addEventListener('click',function(){if(pl.hidden){apri();}else{chiudi(true);}});
+					pb.addEventListener('keydown',function(e){if('ArrowDown'===e.key||'ArrowUp'===e.key){e.preventDefault();apri();}});
+					pl.addEventListener('keydown',function(e){
+						if('ArrowDown'===e.key){e.preventDefault();muovi(1);}else if('ArrowUp'===e.key){e.preventDefault();muovi(-1);}
+						else if('Enter'===e.key||' '===e.key){e.preventDefault();var x=pl.querySelector('.is-focus');if(x){scegli(x.getAttribute('data-v'));}else{chiudi(true);}}
+						else if('Escape'===e.key||'Tab'===e.key){chiudi('Escape'===e.key);}
+					});
+					document.addEventListener('click',function(e){if(!pk.contains(e.target)){chiudi(false);}});
+				}
+				s.addEventListener('change',function(){bottone();info();pannello();});info();pannello();
+				// browser-engine.js shows its panel after it has asked the browser: hide it again when another engine is chosen.
+				window.setTimeout(pannello,0);window.addEventListener('load',pannello);
 				// MyMemory's e-mail: the site's address in one click; Enter in the box must not start translating everything.
 				var mmb=document.getElementById('trr-engine-mm-site'),mme=document.getElementById('trr-engine-mm-email');
 				if(mmb&&mme){mmb.addEventListener('click',function(){mme.value=mmb.getAttribute('data-email')||'';mme.focus();});}
@@ -3692,9 +3757,10 @@ JS;
 				continue;
 			}
 			$p     = $per_id[ $id ] ?? null;
+			$resto = ( $p && $p->is_configured() ) ? \TranslateRocket\Providers\FreeUsage::left_note( (string) $id ) : '';
 			$out[] = array(
 				'value'     => (string) $id,
-				'label'     => (string) ( $def['label'] ?? $id ),
+				'label'     => (string) ( $def['label'] ?? $id ) . ( '' !== $resto ? ' — ' . $resto : '' ),
 				'group'     => 'ai',
 				'ok'        => $p && $p->is_configured(),
 				'why'       => ( $p && $p->is_configured() ) ? '' : __( 'no key yet', 'translate-rocket' ),
@@ -3737,9 +3803,16 @@ JS;
 				$ok  = false;
 				$why = __( 'off: switch it on in Automatic translation', 'translate-rocket' );
 			}
+			/**
+			 * What is left today of a Labs engine (characters of MyMemory, a pause of Edge or Yandex), said by Labs.
+			 *
+			 * @param string $note        Words for the menu, '' = nothing.
+			 * @param string $provider_id The engine's provider id.
+			 */
+			$resto = $ok ? (string) apply_filters( 'trrocket_engine_left', '', $pid ) : '';
 			$out[] = array(
 				'value'     => 'labs:' . $lid,
-				'label'     => $label,
+				'label'     => $label . ( '' !== $resto ? ' — ' . $resto : '' ),
 				'group'     => $ufficiale[ $lid ] ? 'labs-ok' : 'labs-no',
 				'ok'        => $ok,
 				'why'       => $why,
@@ -3749,6 +3822,66 @@ JS;
 				'warning'   => ( $ok && $riga && empty( $riga['on'] ) && empty( $riga['acked'] ) ) ? array_map( 'strval', (array) ( $riga['warning'] ?? array() ) ) : array(),
 			);
 		}
+		// 14/10/2026 (Federico: «one menu, the browser in it as the default, free and unlimited on the left in green,
+		// the limits said with full details, and the quality»): every engine with its tier and what it means.
+		$out[] = array(
+			'value'     => 'browser',
+			'label'     => __( 'This browser (Chrome or Edge on a computer)', 'translate-rocket' ),
+			'group'     => 'free',
+			'ok'        => true,
+			'why'       => '',
+			'provider'  => '',
+			'labs'      => '',
+			'switch_on' => false,
+			'warning'   => array(),
+		);
+		$q    = array(
+			'fair'      => __( 'Fair', 'translate-rocket' ),
+			'good'      => __( 'Good', 'translate-rocket' ),
+			'very-good' => __( 'Very good', 'translate-rocket' ),
+			'excellent' => __( 'Excellent', 'translate-rocket' ),
+		);
+		$srv  = __( 'On your server, in the background', 'translate-rocket' );
+		$meta = array(
+			''              => array( '', '', __( 'Each provider\'s own limit', 'translate-rocket' ), __( 'At least one AI key on AI Translation', 'translate-rocket' ), $srv, __( 'The providers in your priority order', 'translate-rocket' ) ),
+			'browser'       => array( 'free', 'good', __( 'No limit', 'translate-rocket' ), __( 'Nothing: Chrome or Edge on a computer (the first time it downloads its language model)', 'translate-rocket' ), __( 'In this browser, while this page is open', 'translate-rocket' ), __( 'Nowhere: the text stays on this computer', 'translate-rocket' ) ),
+			'labs:edge'     => array( 'free', 'good', __( 'No fixed daily limit', 'translate-rocket' ), __( 'TranslateRocket Labs (free); you accept its conditions once', 'translate-rocket' ), $srv, __( 'Microsoft, through an unofficial endpoint', 'translate-rocket' ) ),
+			'labs:yandex'   => array( 'free', 'fair', __( 'No fixed daily limit', 'translate-rocket' ), __( 'TranslateRocket Labs (free); you accept its conditions once', 'translate-rocket' ), $srv, __( 'Yandex (Russia), through an unofficial endpoint', 'translate-rocket' ) ),
+			'groq'          => array( 'limit', 'very-good', __( 'About 1,000 requests a day', 'translate-rocket' ), __( 'A free Groq key: 2 minutes, no card', 'translate-rocket' ), $srv, __( 'Groq (USA)', 'translate-rocket' ) ),
+			'cloudflare'    => array( 'limit', 'good', __( '10,000 neurons a day (a few thousand sentences)', 'translate-rocket' ), __( 'A free Cloudflare account and its API token', 'translate-rocket' ), $srv, __( 'Cloudflare', 'translate-rocket' ) ),
+			'openrouter'    => array( 'limit', 'very-good', __( '50 requests a day with the free models (1,000 after a one-off $10 of credit)', 'translate-rocket' ), __( 'A free OpenRouter key', 'translate-rocket' ), $srv, __( 'OpenRouter and the provider of the model', 'translate-rocket' ) ),
+			'labs:mymemory' => array( 'limit', 'fair', __( 'About 5,000 characters a day, 50,000 with an e-mail address', 'translate-rocket' ), __( 'TranslateRocket Labs (free)', 'translate-rocket' ), $srv, __( 'MyMemory / Translated (it may keep it in its public translation memory)', 'translate-rocket' ) ),
+			'deepl'         => array( 'paid', 'excellent', __( 'Free plan with a monthly character allowance, then paid', 'translate-rocket' ), __( 'A DeepL key', 'translate-rocket' ), $srv, __( 'DeepL (EU)', 'translate-rocket' ) ),
+			'openai'        => array( 'paid', 'excellent', __( 'Paid per use', 'translate-rocket' ), __( 'An OpenAI key with credit', 'translate-rocket' ), $srv, __( 'OpenAI', 'translate-rocket' ) ),
+			'anthropic'     => array( 'paid', 'excellent', __( 'Paid per use', 'translate-rocket' ), __( 'An Anthropic key with credit', 'translate-rocket' ), $srv, __( 'Anthropic', 'translate-rocket' ) ),
+			'gemini'        => array( 'paid', 'excellent', __( 'Free tier with limits (not for sites aimed at the EU, Switzerland or the UK), then paid per use', 'translate-rocket' ), __( 'A Gemini key', 'translate-rocket' ), $srv, __( 'Google', 'translate-rocket' ) ),
+			'google'        => array( 'paid', 'very-good', __( 'About 500,000 characters a month free, then paid per use', 'translate-rocket' ), __( 'A Google Cloud key', 'translate-rocket' ), $srv, __( 'Google Cloud', 'translate-rocket' ) ),
+		);
+		$ordine = array( 'free' => 1, 'limit' => 2, 'paid' => 3 );
+		foreach ( $out as $k => $c ) {
+			$m = $meta[ $c['value'] ] ?? array( 'paid', '', __( 'Paid per use', 'translate-rocket' ), __( 'A key', 'translate-rocket' ), $srv, '' );
+			$out[ $k ]['labsg']   = in_array( $c['group'], array( 'labs-ok', 'labs-no' ), true ) ? $c['group'] : '';
+			$out[ $k ]['group']   = '' === $c['value'] ? '' : $m[0];
+			$out[ $k ]['quality'] = '' !== $m[1] ? $q[ $m[1] ] : '';
+			$out[ $k ]['qkey']    = $m[1];
+			$out[ $k ]['limit']   = $m[2];
+			$out[ $k ]['needs']   = $m[3];
+			$out[ $k ]['where']   = $m[4];
+			$out[ $k ]['goes']    = $m[5];
+		}
+		// Automatic first, then free and unlimited, free with a daily limit, paid; the ready ones first in each.
+		$pos = array_flip( array_keys( $meta ) );
+		usort(
+			$out,
+			static function ( $a, $b ) use ( $ordine, $pos ) {
+				$ga = '' === $a['value'] ? 0 : ( $ordine[ $a['group'] ] ?? 4 );
+				$gb = '' === $b['value'] ? 0 : ( $ordine[ $b['group'] ] ?? 4 );
+				if ( $ga !== $gb ) {
+					return $ga <=> $gb;
+				}
+				return ( $pos[ $a['value'] ] ?? 99 ) <=> ( $pos[ $b['value'] ] ?? 99 );
+			}
+		);
 		return $out;
 	}
 
@@ -5848,7 +5981,7 @@ JS;
 
 			<form method="post" action="">
 				<?php wp_nonce_field( 'trrocket_save_settings', 'trrocket_settings_nonce' ); ?>
-				<div class="trrocket-card">
+				<div class="trrocket-card trr-card-langs">
 					<h2><?php esc_html_e( 'Languages', 'translate-rocket' ); ?></h2>
 					<table class="form-table" role="presentation">
 						<tr>
@@ -5868,23 +6001,22 @@ JS;
 						</tr>
 					</table>
 
-					<h3><?php esc_html_e( 'Translate into', 'translate-rocket' ); ?> <?php $this->info( __( 'The languages visitors can switch to. Each gets its own URL prefix (e.g. /it/) and its own set of translations.', 'translate-rocket' ) ); ?></h3>
-					<p class="description">
-						<?php esc_html_e( 'Pick the languages you want to add. Each gets its own URL prefix, e.g. /en/.', 'translate-rocket' ); ?>
-						<br>
-						<?php
-						// 14/10/2026: the field's name comes from its own label, so every language names it as it is shown
-						// (the Italian sentence used to point to «Site language (source)», in English).
-						printf(
-							/* translators: 1: the source language name, 2: the name of the field above, e.g. Site language (source). */
-							esc_html__( 'Your source language (%1$s) isn’t listed here — it’s the language you translate from. Change it in “%2$s” above.', 'translate-rocket' ),
-							esc_html( Languages::label( $source ) ),
-							esc_html__( 'Site language (source)', 'translate-rocket' )
-						);
-						?>
-						<br>
-						<?php esc_html_e( 'A language you add now starts offline: nobody sees it while you translate it. Flip its switch to green when it is ready.', 'translate-rocket' ); ?>
-					</p>
+					<?php // 14/10/2026 (Federico: «può essere allineato in una maniera più efficace»): the same two columns as «Site language» above. ?>
+					<div class="trr-into-row">
+						<h3 class="trr-into-th"><?php esc_html_e( 'Translate into', 'translate-rocket' ); ?>
+							<?php
+							$this->info(
+								sprintf(
+									/* translators: 1: the source language name, 2: the name of the field above, e.g. Site language (source). */
+									__( 'The languages visitors can switch to. Each gets its own URL prefix (e.g. /it/) and its own set of translations. Your source language (%1$s) is not in this list: it is the language you translate from — change it in «%2$s» above.', 'translate-rocket' ),
+									Languages::label( $source ),
+									__( 'Site language (source)', 'translate-rocket' )
+								)
+							);
+							?>
+						</h3>
+						<p class="description trr-into-td"><?php esc_html_e( 'A language you add starts offline: only you see it while you translate it. Flip its switch to green when it is ready.', 'translate-rocket' ); ?></p>
+					</div>
 
 					<?php
 					// Ogni lingua scelta si porta accanto il suo interruttore: verde
@@ -5901,7 +6033,7 @@ JS;
 					$trr_tutte  = count( Languages::all() ) - 1;
 					if ( $trr_chiusa ) :
 						?>
-						<p style="margin:-4px 0 10px"><button type="button" class="button button-small" id="trr-lang-all"
+						<p class="trr-lang-allp" style="margin:-4px 0 10px"><button type="button" class="button button-small" id="trr-lang-all"
 							data-open="<?php echo esc_attr( sprintf( /* translators: %d: how many languages there are. */ __( 'Show all languages (%d)', 'translate-rocket' ), $trr_tutte ) ); ?>"
 							data-close="<?php esc_attr_e( 'Show only my languages', 'translate-rocket' ); ?>"><?php echo esc_html( sprintf( /* translators: %d: how many languages there are. */ __( 'Show all languages (%d)', 'translate-rocket' ), $trr_tutte ) ); ?></button></p>
 						<script>
@@ -6087,7 +6219,7 @@ JS;
 								</label>
 							</td>
 						</tr>
-						<tr>
+						<tr id="trr-set-seo">
 							<th scope="row"><?php esc_html_e( 'SEO meta', 'translate-rocket' ); ?> <?php $this->info( __( 'Also translate the SEO title and meta description — the text shown in Google results and the browser tab.', 'translate-rocket' ) ); ?></th>
 							<td>
 								<label>
@@ -6124,12 +6256,40 @@ JS;
 							</td>
 						</tr>
 						<tr>
+							<th scope="row"><?php esc_html_e( 'Visits per language', 'translate-rocket' ); ?> <?php $this->info( __( 'How many visits each language gets, its most read pages, and the languages your visitors\' browsers speak — so you see which language is worth adding next. Counted by a small signal the browser sends after the page has loaded (it works with page caches and CDNs too): no cookie, no IP address, nothing personal, so no consent banner is needed for it. Robots, search engines and administrators are not counted. The numbers appear on this screen, below.', 'translate-rocket' ) ); ?></th>
+							<td>
+								<label>
+									<input type="checkbox" name="stats" value="1" <?php checked( ! empty( $settings['stats'] ) ); ?> />
+									<?php esc_html_e( 'Count the visits of each language (no cookies)', 'translate-rocket' ); ?>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><?php esc_html_e( 'A different menu per language', 'translate-rocket' ); ?> <?php $this->info( __( 'Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead — other pages, other order, written in that language (it is not translated). Create it first in Appearance → Menus (or in the Site Editor for block themes), then choose it here. To hide only some items in some languages, use «Show in» on each item in Appearance → Menus.', 'translate-rocket' ) ); ?></th>
+							<td><?php \TranslateRocket\MenuPerLanguage::render_rows(); ?></td>
+						</tr>
+						<tr>
 							<th scope="row"><?php esc_html_e( 'Page cache', 'translate-rocket' ); ?> <?php $this->info( __( 'Store the finished translated HTML of each page so repeat visits skip the on-the-fly translation — about 2× faster on repeat visits (e.g. ~0.55s → ~0.29s in our test). Only anonymous visitors are served from the cache, it skips dynamic pages (cart, checkout, account), and it clears automatically whenever you change a translation, edit a page, or update settings. On by default — turn it off only if you already use a page-cache plugin (e.g. WP Rocket), which already caches each language’s URL.', 'translate-rocket' ) ); ?></th>
 							<td>
 								<label>
 									<input type="checkbox" name="cache_pages" value="1" <?php checked( ! empty( $settings['cache_pages'] ) ); ?> />
 									<?php esc_html_e( 'Cache translated pages for anonymous visitors', 'translate-rocket' ); ?>
 								</label>
+								<?php
+								// 1.8.6: another page cache is already there — ours steps aside by itself, and says so.
+								$trr_altre = \TranslateRocket\Conflicts::page_caches();
+								if ( $trr_altre && ! empty( $settings['cache_pages'] ) ) :
+									?>
+									<p class="trr-conflict-note">
+										<?php
+										printf(
+											/* translators: %s: names of the page caches found on the site. */
+											esc_html__( 'Off by itself: %s already caches your pages. Two caches on top of each other keep showing an old translation even after you clear them; translated pages stay fast, served by that cache, and when you change a translation TranslateRocket clears it too.', 'translate-rocket' ),
+											'<strong>' . esc_html( implode( ', ', $trr_altre ) ) . '</strong>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped here.
+										);
+										?>
+									</p>
+								<?php endif; ?>
 							</td>
 						</tr>
 						<tr>
@@ -6147,6 +6307,22 @@ JS;
 			</form>
 
 			<?php // 9/10/2026: «Progress» removed — the same numbers are in «Published, or still being translated?», live. ?>
+			<?php \TranslateRocket\Admin\StatsCard::render(); // 1.8.6: visits per language, when switched on ?>
+			<?php
+			// 1.8.6 (Federico: «rilevare i plugin che fanno lo stesso lavoro»): two JavaScript optimizers at once.
+			$trr_js = \TranslateRocket\Conflicts::js_optimizers();
+			if ( count( $trr_js ) >= 2 ) :
+				?>
+				<div class="notice notice-warning inline trr-conflict-js"><p>
+					<?php
+					printf(
+						/* translators: %s: names of two or more plugins that optimize JavaScript. */
+						esc_html__( '%s all optimize JavaScript (combine, defer or delay it). Together they can break menus, forms and the language switcher: keep these features on in only one of them.', 'translate-rocket' ),
+						'<strong>' . esc_html( implode( ', ', $trr_js ) ) . '</strong>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped here.
+					);
+					?>
+				</p></div>
+			<?php endif; ?>
 
 			<div class="trrocket-card">
 				<h2>🚀 <?php esc_html_e( 'Need a hand?', 'translate-rocket' ); ?></h2>
@@ -6410,6 +6586,10 @@ JS;
 			// 1.8.1: the per-page «AI» buttons are there when any engine of the menu works (a Labs engine, no AI key, too).
 			$riga_ok = (bool) array_filter( $scelte, static function ( $c ) { return $c['ok']; } );
 			$scelto  = (string) get_user_meta( get_current_user_id(), 'trrocket_strings_engine', true );
+			// Nothing chosen and no AI key: the browser, free and with no limit, is the default (14/10/2026).
+			if ( '' === $scelto && empty( Registry::ordered() ) ) {
+				$scelto = 'browser';
+			}
 			$valido  = false;
 			foreach ( $scelte as $c ) {
 				$valido = $valido || ( $c['ok'] && $c['value'] === $scelto );
@@ -6429,9 +6609,9 @@ JS;
 				}
 			}
 			$gruppi = array(
-				'ai'      => __( 'Your AI providers — official APIs, with your key', 'translate-rocket' ),
-				'labs-ok' => __( 'TranslateRocket Labs, free — official services', 'translate-rocket' ),
-				'labs-no' => __( 'TranslateRocket Labs, free — unofficial endpoints', 'translate-rocket' ),
+				'free'  => __( 'FREE — no limits', 'translate-rocket' ),
+				'limit' => __( 'FREE — with a daily limit', 'translate-rocket' ),
+				'paid'  => __( 'With your paid key', 'translate-rocket' ),
 			);
 			// The note shown under the menu when a Labs engine is chosen, on or off.
 			$note_labs = array(
@@ -6446,9 +6626,9 @@ JS;
 				<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
 				<input type="hidden" name="loc" value="" />
 				<input type="hidden" name="engine_main" value="1" />
-				<label for="trr-engine" class="trr-engine-label"><?php esc_html_e( 'Translate with', 'translate-rocket' ); ?></label>
+				<label for="trr-engine" class="trr-engine-label" id="trr-engine-label-txt"><?php esc_html_e( 'Translate with', 'translate-rocket' ); ?></label>
 				<?php $this->info( __( 'Automatic uses your AI providers in the order set on AI Translation: when one reaches its daily limit, the next one continues. Choose one engine to use only that one — also for the «AI» button of each page. The free engines of Labs need no key: each one is switched on the first time you use it, after you accept its conditions. «This browser» uses the translator built into Chrome or Edge on this computer. Greyed-out engines show what they still need.', 'translate-rocket' ) ); ?>
-				<select name="engine" id="trr-engine" class="trr-engine">
+				<select name="engine" id="trr-engine" class="trr-engine trr-engine-native">
 					<?php
 					$aperto = '';
 					foreach ( $scelte as $c ) {
@@ -6464,23 +6644,36 @@ JS;
 						if ( $c['warning'] ) {
 							$avvisi[ $c['value'] ] = $c['warning'];
 						}
-						if ( isset( $note_labs[ $c['group'] ] ) ) {
-							$per_note[ $c['value'] ] = $note_labs[ $c['group'] ];
+						if ( isset( $note_labs[ $c['labsg'] ] ) ) {
+							$per_note[ $c['value'] ] = $note_labs[ $c['labsg'] ];
 						}
 						printf(
-							'<option value="%1$s"%2$s%3$s>%4$s</option>',
+							'<option value="%1$s"%2$s%3$s data-tier="%5$s" data-quality="%6$s" data-qkey="%7$s" data-limit="%8$s" data-needs="%9$s" data-where="%10$s" data-goes="%11$s" data-why="%12$s" data-name="%13$s">%4$s</option>',
 							esc_attr( $c['value'] ),
 							selected( $scelto, $c['value'], false ),
 							$c['ok'] ? '' : ' disabled',
-							esc_html( $c['label'] . ( '' !== $c['why'] ? ' — ' . $c['why'] : '' ) )
+							esc_html( $c['label'] . ( '' !== $c['why'] ? ' — ' . $c['why'] : '' ) ),
+							esc_attr( (string) $c['group'] ),
+							esc_attr( (string) $c['quality'] ),
+							esc_attr( (string) $c['qkey'] ),
+							esc_attr( (string) $c['limit'] ),
+							esc_attr( (string) $c['needs'] ),
+							esc_attr( (string) $c['where'] ),
+							esc_attr( (string) $c['goes'] ),
+							esc_attr( (string) $c['why'] ),
+							esc_attr( (string) $c['label'] )
 						);
 					}
 					if ( '' !== $aperto ) {
 						echo '</optgroup>';
 					}
 					?>
-					<option value="browser" <?php selected( $scelto, 'browser' ); ?>><?php esc_html_e( 'This browser (free, no key)', 'translate-rocket' ); ?></option>
 				</select>
+				<?php // 14/10/2026 (Federico: «one menu, the browser in it as the default, free on the left in green, the limits and the quality»): drawn by the script from the menu above. ?>
+				<span class="trr-epick" id="trr-epick" hidden>
+					<button type="button" class="trr-epick-btn" id="trr-epick-btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="trr-engine-label-txt trr-epick-btn"></button>
+					<span class="trr-epick-list" id="trr-epick-list" role="listbox" tabindex="-1" hidden aria-labelledby="trr-engine-label-txt"></span>
+				</span>
 				<button type="submit" class="button button-primary" id="trr-engine-go" <?php disabled( 0 === $miss_lingua ); ?>>
 					&#10024;
 					<?php
@@ -6501,6 +6694,15 @@ JS;
 						<label><input type="checkbox" name="engine_ack" value="1" /> <?php esc_html_e( 'I have read this and accept it.', 'translate-rocket' ); ?></label>
 					</span>
 				<?php endif; ?>
+				<span class="trr-engine-info" id="trr-engine-info" role="note" hidden
+					data-l-quality="<?php esc_attr_e( 'Quality', 'translate-rocket' ); ?>"
+					data-l-limit="<?php esc_attr_e( 'Limit', 'translate-rocket' ); ?>"
+					data-l-needs="<?php esc_attr_e( 'Needs', 'translate-rocket' ); ?>"
+					data-l-where="<?php esc_attr_e( 'Runs', 'translate-rocket' ); ?>"
+					data-l-goes="<?php esc_attr_e( 'Your text goes to', 'translate-rocket' ); ?>"
+					data-t-free="<?php esc_attr_e( 'FREE', 'translate-rocket' ); ?>"
+					data-t-limit="<?php esc_attr_e( 'FREE · daily limit', 'translate-rocket' ); ?>"
+					data-t-paid="<?php esc_attr_e( 'Your paid key', 'translate-rocket' ); ?>"></span>
 				<span class="trr-engine-labsnote" id="trr-engine-labsnote" role="note" hidden></span>
 				<?php
 				// 13/10/2026 (Federico: «50,000 with an e-mail address… and how is the e-mail entered?»): the box
@@ -6578,9 +6780,9 @@ JS;
 				<?php
 				printf(
 					/* translators: 1: number of visible pages, 2: total pages. */
-					esc_html__( 'Showing %1$s of %2$d pages', 'translate-rocket' ),
-					'<strong id="trr-pcount">' . (int) $count . '</strong>',
-					(int) $count
+					esc_html__( 'Showing %1$s of %2$s pages', 'translate-rocket' ),
+					'<strong id="trr-pcount">' . (int) min( $count, self::PAGES_BLOCK ) . '</strong>',
+					'<strong id="trr-ptotal">' . (int) $count . '</strong>'
 				);
 				?>
 			</span>
@@ -6598,7 +6800,7 @@ JS;
 			<?php wp_nonce_field( 'trrocket_forget_page', 'trrocket_forget_nonce' ); ?>
 			<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
 		</form>
-		<table class="widefat striped" id="trr-ptable">
+		<table class="widefat striped" id="trr-ptable" data-lang="<?php echo esc_attr( $lang ); ?>" data-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'trrocket_pages_rows' ) ); ?>" data-total="<?php echo (int) $count; ?>" data-block="<?php echo (int) self::PAGES_BLOCK; ?>">
 			<thead>
 				<tr>
 					<th class="trr-sortable" data-key="title" data-type="text"><?php esc_html_e( 'Page', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
@@ -6611,7 +6813,36 @@ JS;
 			</thead>
 			<tbody>
 				<?php
-				foreach ( $pages as $page ) :
+				// 14/10/2026 (Federico: «2,051 pages make the screen very heavy»): the first block only; search, filter,
+				// sort and «Show more» ask the server for the next ones (ajax_pages_rows).
+				foreach ( array_slice( $pages, 0, self::PAGES_BLOCK ) as $page ) {
+					echo $this->page_row( $page, $lang, $per_motore, $riga_ok ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with esc_* in page_row().
+				}
+				?>
+			</tbody>
+		</table>
+		<p class="trr-pmore-wrap"<?php echo $count > self::PAGES_BLOCK ? '' : ' hidden'; ?>><button type="button" class="button" id="trr-pmore"><?php echo esc_html( sprintf( /* translators: %d: how many more pages are shown. */ __( 'Show %d more', 'translate-rocket' ), self::PAGES_BLOCK ) ); ?></button> <span class="spinner" id="trr-pspin"></span></p>
+
+		<?php
+		wp_add_inline_script( 'trrocket-admin-info', self::pages_list_js() );
+	}
+
+
+	/** Pages drawn at a time on the Translations screen. */
+	const PAGES_BLOCK = 50;
+
+	/**
+	 * One row of the pages table (also drawn for «Show more», search and sort, through ajax_pages_rows()).
+	 *
+	 * @param object $page       Row of Strings::pages_with_stats().
+	 * @param string $lang       Language.
+	 * @param array  $per_motore Strings::engines_by_page().
+	 * @param bool   $riga_ok    An engine works, so the per-page «AI» button is there.
+	 */
+	private function page_row( $page, string $lang, array $per_motore, bool $riga_ok ): string {
+		ob_start();
+		?>
+				<?php
 					$total      = (int) $page->total;
 					$translated = (int) $page->translated;
 					$missing    = max( 0, $total - $translated );
@@ -6660,12 +6891,99 @@ JS;
 							</details>
 						</td>
 					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
-
 		<?php
-		wp_add_inline_script( 'trrocket-admin-info', self::pages_list_js() );
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * The pages that match the search and the filter, in the order asked.
+	 *
+	 * @param object[] $pages Strings::pages_with_stats().
+	 * @param string   $q     Search (name or address; spaces count as hyphens).
+	 * @param bool     $todo  Only the pages with something missing.
+	 * @param string   $key   title|strings|translated|missing|pct, or '' for the list's own order.
+	 * @param string   $dir   asc|desc.
+	 * @return object[]
+	 */
+	private static function pages_filtered( array $pages, string $q, bool $todo, string $key, string $dir ): array {
+		$q   = str_replace( ' ', '-', self::lower( trim( $q ) ) );
+		$out = array();
+		foreach ( $pages as $page ) {
+			$total   = (int) $page->total;
+			$missing = max( 0, $total - (int) $page->translated );
+			if ( $todo && $missing < 1 ) {
+				continue;
+			}
+			if ( '' !== $q ) {
+				$label = \TranslateRocket\Strings::heading_name( (string) $page->url, (string) $page->title );
+				if ( false === strpos( str_replace( ' ', '-', self::lower( $label . ' ' . $page->url ) ), $q ) ) {
+					continue;
+				}
+			}
+			$out[] = $page;
+		}
+		if ( in_array( $key, array( 'title', 'strings', 'translated', 'missing', 'pct' ), true ) ) {
+			$val = static function ( $p ) use ( $key ) {
+				$t = (int) $p->total;
+				$d = (int) $p->translated;
+				switch ( $key ) {
+					case 'title':
+						return self::lower( \TranslateRocket\Strings::heading_name( (string) $p->url, (string) $p->title ) );
+					case 'strings':
+						return $t;
+					case 'translated':
+						return $d;
+					case 'missing':
+						return max( 0, $t - $d );
+					default:
+						return $t > 0 ? (int) round( $d / $t * 100 ) : 100;
+				}
+			};
+			usort(
+				$out,
+				static function ( $a, $b ) use ( $val, $dir ) {
+					$r = $val( $a ) <=> $val( $b );
+					return 'desc' === $dir ? -$r : $r;
+				}
+			);
+		}
+		return $out;
+	}
+
+	/**
+	 * AJAX: the next block of the pages table — for «Show more», the search box, the filter and the sort.
+	 */
+	public function ajax_pages_rows(): void {
+		check_ajax_referer( 'trrocket_pages_rows' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'error' => 'forbidden' ), 403 );
+		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- checked above.
+		$lang = isset( $_POST['lang'] ) ? strtolower( sanitize_text_field( wp_unslash( $_POST['lang'] ) ) ) : '';
+		if ( ! in_array( $lang, (array) Settings::get()['target_languages'], true ) ) {
+			wp_send_json_error( array( 'error' => 'bad-language' ) );
+		}
+		$q      = isset( $_POST['q'] ) ? sanitize_text_field( wp_unslash( $_POST['q'] ) ) : '';
+		$todo   = ! empty( $_POST['todo'] );
+		$key    = isset( $_POST['key'] ) ? sanitize_key( wp_unslash( $_POST['key'] ) ) : '';
+		$dir    = ( isset( $_POST['dir'] ) && 'desc' === $_POST['dir'] ) ? 'desc' : 'asc';
+		$offset = isset( $_POST['offset'] ) ? max( 0, (int) $_POST['offset'] ) : 0;
+		// phpcs:enable
+		$pages   = self::pages_filtered( Strings::pages_with_stats( $lang ), $q, $todo, $key, $dir );
+		$scelte  = self::engine_choices();
+		$riga_ok = (bool) array_filter( $scelte, static function ( $c ) { return $c['ok']; } );
+		$html    = '';
+		$per     = Strings::engines_by_page( $lang );
+		foreach ( array_slice( $pages, $offset, self::PAGES_BLOCK ) as $page ) {
+			$html .= $this->page_row( $page, $lang, $per, $riga_ok );
+		}
+		wp_send_json_success(
+			array(
+				'html'  => $html,
+				'total' => count( $pages ),
+				'next'  => min( count( $pages ), $offset + self::PAGES_BLOCK ),
+			)
+		);
 	}
 
 	/**
@@ -6680,26 +6998,46 @@ JS;
 	if ( ! input || ! table ) { return; }
 	var tbody   = table.tBodies[0];
 	var counter = document.getElementById( 'trr-pcount' );
-	var rows    = Array.prototype.slice.call( tbody.rows );
+	var totale  = document.getElementById( 'trr-ptotal' );
+	var todo    = document.getElementById( 'trr-ptodo' );
+	var more    = document.getElementById( 'trr-pmore' );
+	var spin    = document.getElementById( 'trr-pspin' );
+	var block   = parseInt( table.getAttribute( 'data-block' ), 10 ) || 50;
+	var stato   = { key: '', dir: 'asc', next: Math.min( block, parseInt( table.getAttribute( 'data-total' ), 10 ) || 0 ), seq: 0 };
 
-	function norm( s ) { return ( s || '' ).toLowerCase().replace( /\s+/g, '-' ); }
-
-	var todo = document.getElementById( 'trr-ptodo' );
-
-	function applyFilter() {
-		var q = norm( input.value.trim() );
-		var soloDaFare = todo && todo.checked;
-		var shown = 0;
-		rows.forEach( function ( r ) {
-			var ok = ( ! q || norm( r.getAttribute( 'data-search' ) ).indexOf( q ) !== -1 )
-				&& ( ! soloDaFare || parseInt( r.getAttribute( 'data-missing' ), 10 ) > 0 );
-			r.style.display = ok ? '' : 'none';
-			if ( ok ) { shown++; }
-		} );
-		if ( counter ) { counter.textContent = shown; }
+	// 14/10/2026 (Federico: «with every page loaded the screen gets very heavy»): the server sends 50 rows at a
+	// time; the search box, «Only pages still to translate» and the column sort ask it again from the start.
+	function carica( daCapo ) {
+		var mio = ++stato.seq;
+		var body = new URLSearchParams();
+		body.append( 'action', 'trrocket_pages_rows' );
+		body.append( '_ajax_nonce', table.getAttribute( 'data-nonce' ) );
+		body.append( 'lang', table.getAttribute( 'data-lang' ) );
+		body.append( 'q', input.value.trim() );
+		body.append( 'todo', todo && todo.checked ? '1' : '' );
+		body.append( 'key', stato.key );
+		body.append( 'dir', stato.dir );
+		body.append( 'offset', daCapo ? '0' : String( stato.next ) );
+		if ( spin ) { spin.classList.add( 'is-active' ); }
+		fetch( table.getAttribute( 'data-ajax' ), { method: 'POST', credentials: 'same-origin', body: body } )
+			.then( function ( r ) { return r.json(); } )
+			.then( function ( j ) {
+				if ( mio !== stato.seq || ! j || ! j.success ) { return; }
+				if ( daCapo ) { tbody.innerHTML = ''; }
+				tbody.insertAdjacentHTML( 'beforeend', j.data.html );
+				stato.next = j.data.next;
+				if ( counter ) { counter.textContent = tbody.rows.length; }
+				if ( totale ) { totale.textContent = j.data.total; }
+				if ( more ) { more.parentNode.hidden = stato.next >= j.data.total; }
+			} )
+			.catch( function () {} )
+			.then( function () { if ( spin && mio === stato.seq ) { spin.classList.remove( 'is-active' ); } } );
 	}
-	input.addEventListener( 'input', applyFilter );
-	if ( todo ) { todo.addEventListener( 'change', applyFilter ); }
+	var attesa;
+	input.addEventListener( 'input', function () { clearTimeout( attesa ); attesa = setTimeout( function () { carica( true ); }, 300 ); } );
+	input.addEventListener( 'keydown', function ( e ) { if ( 'Enter' === e.key ) { e.preventDefault(); clearTimeout( attesa ); carica( true ); } } );
+	if ( todo ) { todo.addEventListener( 'change', function () { carica( true ); } ); }
+	if ( more ) { more.addEventListener( 'click', function () { carica( false ); } ); }
 	document.addEventListener( 'click', function ( ev ) {
 		Array.prototype.forEach.call( table.querySelectorAll( 'details.trr-more[open]' ), function ( d ) {
 			if ( ! d.contains( ev.target ) ) { d.removeAttribute( 'open' ); }
@@ -6710,13 +7048,9 @@ JS;
 	Array.prototype.forEach.call( ths, function ( th ) {
 		var a0 = th.querySelector( '.trr-arrow' );
 		if ( a0 ) { a0.textContent = ' ↕'; }
-	} );
-	Array.prototype.forEach.call( ths, function ( th ) {
 		th.addEventListener( 'click', function ( ev ) {
 			if ( ev.target.closest && ev.target.closest( '.trr-info, .trr-tip' ) ) { return; } // its ⓘ opens, it does not sort
-			var key  = th.getAttribute( 'data-key' );
-			var type = th.getAttribute( 'data-type' );
-			var dir  = 'asc' === th.getAttribute( 'data-dir' ) ? 'desc' : 'asc';
+			var dir = 'asc' === th.getAttribute( 'data-dir' ) ? 'desc' : 'asc';
 			Array.prototype.forEach.call( ths, function ( o ) {
 				o.removeAttribute( 'data-dir' );
 				var a = o.querySelector( '.trr-arrow' );
@@ -6725,14 +7059,9 @@ JS;
 			th.setAttribute( 'data-dir', dir );
 			var arrow = th.querySelector( '.trr-arrow' );
 			if ( arrow ) { arrow.textContent = 'asc' === dir ? ' ▲' : ' ▼'; arrow.classList.add( 'is-active' ); }
-			var mult = 'asc' === dir ? 1 : -1;
-			rows.sort( function ( a, b ) {
-				var va = a.getAttribute( 'data-' + key ) || '';
-				var vb = b.getAttribute( 'data-' + key ) || '';
-				if ( 'num' === type ) { return ( parseFloat( va ) - parseFloat( vb ) ) * mult; }
-				return va.localeCompare( vb ) * mult;
-			} );
-			rows.forEach( function ( r ) { tbody.appendChild( r ); } );
+			stato.key = th.getAttribute( 'data-key' );
+			stato.dir = dir;
+			carica( true );
 		} );
 	} );
 }() );
@@ -7247,6 +7576,15 @@ JS;
 	 * assets/js/admin-info.js) — easier to read than a hover tooltip.
 	 */
 	private function info( string $text ): void {
+		self::info_static( $text );
+	}
+
+	/**
+	 * The same «i», for the screens drawn by other classes (StatsCard, 1.8.6).
+	 *
+	 * @param string $text What the popover says.
+	 */
+	public static function info_static( string $text ): void {
 		echo '<button type="button" class="trr-info" aria-label="' . esc_attr__( 'More info', 'translate-rocket' )
 			. '" data-info="' . esc_attr( $text ) . '"><span class="dashicons dashicons-info-outline"></span></button>';
 	}

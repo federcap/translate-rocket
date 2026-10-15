@@ -100,6 +100,8 @@ class Settings {
 			'ai_daily_limit'           => 0,
 			'ai_batch'                 => 0, // sentences per request: 0 = each provider's own size.
 			'translated_search'        => true, // the site search finds pages by their translated text (14/10/2026)
+			'stats'                    => false, // visits per language, counted without cookies (1.8.6)
+			'menus_per_language'       => array(), // location or nav:ID => lang => menu id (1.8.6)
 			'reuse_mode'               => 'all',
 			'ai_guidance'              => '',
 			'ai_reset_day'             => 0,
