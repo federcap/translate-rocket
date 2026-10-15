@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.6
+Stable tag: 1.8.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.8.6.1 =
+* Fix: on large sites, the «AI» button of a page and «Translate N missing» on AI Translation could end in «504 Gateway Timeout»: they translated everything in one request. They now work in short steps of about 25 seconds, like «Translate all missing», with a progress bar and a «Continue translating» button, so no request reaches the server's time limit. What was already translated is kept.
+
 = 1.8.6 =
 * Fix: a language kept offline while you translate it, and preview mode, sent visitors back to the same address over and over («too many redirects»; a redirect loop for search engines) instead of to the page in your default language. Present since 1.7.11.
 * New: one «Translate with» menu. The browser translator is in it (the default when you have no key), with every engine marked FREE (green), FREE with a daily limit, or paid — and under the menu, for the chosen engine: quality, limit, what it needs, where it runs and where your text goes. What is left of today's free limit is shown beside each engine.
@@ -399,6 +402,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.6.1 =
+Fix: no more «504 Gateway Timeout» when translating a page or a whole language on large sites.
 
 = 1.8.6 =
 Fix: offline languages and preview mode no longer send visitors into a redirect loop — please update. Also: one «Translate with» menu with free engines in green, visits per language, content and menus per language.

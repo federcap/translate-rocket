@@ -5770,3 +5770,17 @@ msgstr "heutiges Gratislimit aufgebraucht — morgen wieder"
 #, php-format
 msgid "%d%% of today's free limit left"
 msgstr "noch %d%% des heutigen Gratislimits übrig"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "AI translated %d strings. There is more to translate: it goes on in short steps, so the server never times out."
+msgstr "Die KI hat %d Texte übersetzt. Es gibt noch mehr zu übersetzen: Es geht in kurzen Schritten weiter, damit der Server nie in eine Zeitüberschreitung läuft."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Still missing: %d."
+msgstr "Noch fehlend: %d."
+
+#: src/Admin/Admin.php
+msgid "Continue translating"
+msgstr "Weiter übersetzen"

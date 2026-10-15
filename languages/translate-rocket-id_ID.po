@@ -6592,3 +6592,17 @@ msgstr "batas gratis hari ini habis — kembali besok"
 #, php-format
 msgid "%d%% of today's free limit left"
 msgstr "tersisa %d%% dari batas gratis hari ini"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "AI translated %d strings. There is more to translate: it goes on in short steps, so the server never times out."
+msgstr "AI menerjemahkan %d teks. Masih ada yang perlu diterjemahkan: prosesnya berlanjut dalam langkah-langkah singkat agar server tidak pernah kehabisan waktu."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Still missing: %d."
+msgstr "Masih kurang: %d."
+
+#: src/Admin/Admin.php
+msgid "Continue translating"
+msgstr "Lanjutkan menerjemahkan"

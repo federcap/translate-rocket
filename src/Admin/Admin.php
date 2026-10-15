@@ -3678,7 +3678,7 @@ JS;
 				// 13/10/2026: «Translate all missing» in short steps (about 25 s each) with a bar, so no request meets
 				// the 100 s of Cloudflare or of the host. Without fetch, the form posts as before.
 				var T=window.TRRocketStep||{};
-				function passi(){
+				function passi(pagina){
 					var go=document.getElementById('trr-engine-go'),box=document.getElementById('trr-step');
 					if(!box){box=document.createElement('div');box.id='trr-step';box.className='trr-step';box.setAttribute('role','status');box.innerHTML='<span class="trr-prog-bar"><span class="trr-prog-fill" style="width:0"></span></span> <span class="trr-step-txt"></span>';f.parentNode.insertBefore(box,f.nextSibling);}
 					var fill=box.querySelector('.trr-prog-fill'),txt=box.querySelector('.trr-step-txt'),fatte=0,giri=0;
@@ -3687,6 +3687,8 @@ JS;
 					function ferma(msg){box.classList.add('is-error');txt.textContent=msg;if(go){go.disabled=false;}}
 					function giro(){
 						var d=new FormData(f);d.append('action','trrocket_translate_step');d.append('done',fatte);
+						// 15/10/2026: the «AI» button of one page goes the same way, in short steps (it was one request: 504).
+						if(pagina){d.set('loc',pagina.loc);d.set('engine',pagina.engine);d.delete('engine_main');}
 						fetch(window.ajaxurl,{method:'POST',body:d,credentials:'same-origin'}).then(function(r){
 							if(!r.ok){throw new Error('HTTP '+r.status);}return r.json();
 						}).then(function(j){
@@ -3699,6 +3701,13 @@ JS;
 					}
 					scrivi(-1);giro();
 				}
+				if(one){one.addEventListener('submit',function(e){
+					if(!(window.fetch&&window.FormData&&window.ajaxurl&&T.busy)||!e.submitter||!e.submitter.value){return;}
+					e.preventDefault();var h=one.querySelector('input[name="engine"]');
+					document.querySelectorAll('button[form="trr-ai-onepage"]').forEach(function(x){x.disabled=true;});
+					f.scrollIntoView({behavior:'smooth',block:'start'});
+					passi({loc:e.submitter.value,engine:h?h.value:''});
+				});}
 				f.addEventListener('submit',function(e){
 					if('browser'!==s.value){
 						if(window.fetch&&window.FormData&&window.ajaxurl&&T.busy){e.preventDefault();passi();}
@@ -4083,7 +4092,17 @@ JS;
 			exit;
 		}
 
-		$result = Translator::translate_missing( $lang, $loc, 0, false, $solo );
+		// 15/10/2026 (ticket, 5,600 pages: «take a long time to load and return a 504 Gateway Timeout»): this plain form —
+		// the «AI» button of each page, «Translate N missing» on AI Translation — translated everything in one request,
+		// 118 s for a language on the bench. Now it stops starting new batches after about 25 s like the short steps,
+		// saves, and the notice offers to continue. With JavaScript the page goes on by itself (engine_js).
+		if ( function_exists( 'set_time_limit' ) ) {
+			@set_time_limit( 120 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		}
+		$result = Translator::translate_missing( $lang, $loc, 0, false, $solo, microtime( true ) + 25 );
+		$result['more']   = ! empty( $result['more'] );
+		$result['again']  = array( 'lang' => $lang, 'loc' => $loc, 'engine' => $motore, 'engine_ack' => ! empty( $_POST['engine_ack'] ) ? '1' : '' );
+		$result['left']   = '' === $loc ? Strings::untranslated_count( $lang ) : -1;
 		if ( 0 === (int) $result['count'] && '' !== (string) $result['error'] ) {
 			$result['ok'] = false; // nothing done and an error: say the error, not «AI translated 0 strings» (13/10/2026)
 		}
@@ -6440,7 +6459,25 @@ JS;
 		$ai_notice = get_transient( 'trrocket_ai_notice_' . get_current_user_id() );
 		if ( is_array( $ai_notice ) ) {
 			delete_transient( 'trrocket_ai_notice_' . get_current_user_id() );
-			if ( ! empty( $ai_notice['ok'] ) ) {
+			if ( ! empty( $ai_notice['ok'] ) && ! empty( $ai_notice['more'] ) && ! empty( $ai_notice['again'] ) ) {
+				// 15/10/2026: stopped after ~25 s with more to do — one click goes on (without JavaScript too).
+				$ag = (array) $ai_notice['again'];
+				echo '<div class="notice notice-info"><form method="post" action="" style="margin:.5em 0"><p style="margin:0 0 .5em">'
+					. sprintf(
+						/* translators: %d: number of strings translated. */
+						esc_html__( 'AI translated %d strings. There is more to translate: it goes on in short steps, so the server never times out.', 'translate-rocket' ),
+						(int) $ai_notice['count']
+					) . ( isset( $ai_notice['left'] ) && (int) $ai_notice['left'] > 0 ? ' ' . sprintf(
+						/* translators: %d: sentences still missing in this language. */
+						esc_html__( 'Still missing: %d.', 'translate-rocket' ),
+						(int) $ai_notice['left']
+					) : '' ) . '</p>';
+				wp_nonce_field( 'trrocket_auto_translate', 'trrocket_auto_nonce' );
+				foreach ( array( 'lang', 'loc', 'engine', 'engine_ack' ) as $k ) {
+					echo '<input type="hidden" name="' . esc_attr( $k ) . '" value="' . esc_attr( (string) ( $ag[ $k ] ?? '' ) ) . '" />';
+				}
+				echo '<button type="submit" class="button button-primary trr-continua">' . esc_html__( 'Continue translating', 'translate-rocket' ) . '</button></form></div>';
+			} elseif ( ! empty( $ai_notice['ok'] ) ) {
 				echo '<div class="notice notice-success is-dismissible"><p>'
 					. sprintf(
 						/* translators: %d: number of strings translated. */

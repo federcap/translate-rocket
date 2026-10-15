@@ -6592,3 +6592,17 @@ msgstr "今天的免费额度已用完 — 明天恢复"
 #, php-format
 msgid "%d%% of today's free limit left"
 msgstr "今天的免费额度还剩 %d%%"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "AI translated %d strings. There is more to translate: it goes on in short steps, so the server never times out."
+msgstr "AI 已翻译 %d 条文本。还有内容需要翻译：会以简短的步骤继续，因此服务器绝不会超时。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Still missing: %d."
+msgstr "仍缺少：%d。"
+
+#: src/Admin/Admin.php
+msgid "Continue translating"
+msgstr "继续翻译"

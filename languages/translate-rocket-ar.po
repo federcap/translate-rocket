@@ -6717,3 +6717,17 @@ msgstr "نفد الحد المجاني لليوم — يعود غدًا"
 #, php-format
 msgid "%d%% of today's free limit left"
 msgstr "تبقّى %d%% من الحد المجاني لليوم"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "AI translated %d strings. There is more to translate: it goes on in short steps, so the server never times out."
+msgstr "ترجم الذكاء الاصطناعي %d نصًا. ما زال هناك المزيد للترجمة: يستمر العمل بخطوات قصيرة حتى لا تنتهي مهلة الخادم أبدًا."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Still missing: %d."
+msgstr "ما زال ناقصًا: %d."
+
+#: src/Admin/Admin.php
+msgid "Continue translating"
+msgstr "متابعة الترجمة"

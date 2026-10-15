@@ -6617,3 +6617,17 @@ msgstr "bugünkü ücretsiz sınır doldu — yarın yeniden"
 #, php-format
 msgid "%d%% of today's free limit left"
 msgstr "bugünkü ücretsiz sınırın %%%d kadarı kaldı"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "AI translated %d strings. There is more to translate: it goes on in short steps, so the server never times out."
+msgstr "Yapay zekâ %d metni çevirdi. Çevrilecek başka metin var: sunucu hiçbir zaman zaman aşımına uğramasın diye kısa adımlarla devam eder."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Still missing: %d."
+msgstr "Hâlâ eksik: %d."
+
+#: src/Admin/Admin.php
+msgid "Continue translating"
+msgstr "Çevirmeye devam et"

@@ -6615,3 +6615,17 @@ msgstr ""
 #, php-format
 msgid "%d%% of today's free limit left"
 msgstr ""
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "AI translated %d strings. There is more to translate: it goes on in short steps, so the server never times out."
+msgstr ""
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Still missing: %d."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Continue translating"
+msgstr ""

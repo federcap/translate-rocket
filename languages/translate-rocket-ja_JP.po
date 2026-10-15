@@ -5747,3 +5747,17 @@ msgstr "本日の無料枠を使い切りました — 明日また使えます"
 #, php-format
 msgid "%d%% of today's free limit left"
 msgstr "本日の無料枠の残り %d%%"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "AI translated %d strings. There is more to translate: it goes on in short steps, so the server never times out."
+msgstr "AI が %d 件の文字列を翻訳しました。まだ翻訳が残っています。サーバーがタイムアウトしないよう、短いステップで続けます。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Still missing: %d."
+msgstr "残り：%d 件。"
+
+#: src/Admin/Admin.php
+msgid "Continue translating"
+msgstr "翻訳を続ける"
