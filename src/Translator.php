@@ -25,9 +25,11 @@ class Translator {
 	 *
 	 * @param string $lang     Target language.
 	 * @param string $url_hash Limit to one page (empty = whole site, capped).
-	 * @return array{ok:bool,count:int,error:string}
+	 * @param float  $deadline microtime(true) after which no new sentence starts (0 = none): one request per sentence,
+	 *                         a big page would outlast the 60 s of many servers (15/10/2026, time probe).
+	 * @return array{ok:bool,count:int,error:string,more:bool}
 	 */
-	public static function google_missing( string $lang, string $url_hash = '' ): array {
+	public static function google_missing( string $lang, string $url_hash = '', float $deadline = 0.0 ): array {
 		if ( ! GoogleFree::auto_enabled() ) {
 			return array(
 				'ok'    => false,
@@ -63,7 +65,12 @@ class Translator {
 		// glossary terms, and collapse duplicate texts into one request each.
 		$pending = self::reuse_pass( $rows, $lang, $count, self::reuse_mode() );
 
+		$fermato = false;
 		foreach ( $pending as $text => $ids ) {
+			if ( $deadline > 0 && microtime( true ) >= $deadline ) {
+				$fermato = true;
+				break;
+			}
 			$tr = GoogleFree::translate_html( $text, $source, $lang );
 			if ( false !== $tr && '' !== trim( (string) $tr ) ) {
 				self::save_group( $ids, $lang, (string) $tr, 'google-free', $text, $count );
@@ -87,6 +94,7 @@ class Translator {
 			'error' => ( $fail >= 5 )
 				? __( 'Google Translate stopped responding (it may be rate-limiting). Some strings were translated — try again in a moment for the rest.', 'translate-rocket' )
 				: '',
+			'more'  => $fermato && $fail < 5,
 		);
 	}
 

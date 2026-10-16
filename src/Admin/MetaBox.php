@@ -193,6 +193,7 @@ class MetaBox {
 		}
 		$hash   = Strings::url_hash( $this->post_clean_path( get_post( $post_id ) ) );
 		$msg    = '';
+		$more   = false;
 
 		switch ( $action ) {
 			case 'save':
@@ -232,8 +233,14 @@ class MetaBox {
 				break;
 
 			case 'ai':
-				$result = Translator::translate_missing( $lang, $hash );
+				// 15/10/2026 (time probe, after the 504 ticket): a big page with a slow engine took minutes in one
+				// request. Short steps (20 s: in the block editor they queue behind its own requests): the panel asks again while «more» is true.
+				if ( function_exists( 'set_time_limit' ) ) {
+					@set_time_limit( 120 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				}
+				$result = Translator::translate_missing( $lang, $hash, 0, false, '', microtime( true ) + 20 );
 				$msg    = $result['ok'] ? ( 'ai:' . (int) $result['count'] ) : ( 'err:' . $result['error'] );
+				$more   = ! empty( $result['more'] );
 				break;
 
 			case 'gt':
@@ -253,8 +260,12 @@ class MetaBox {
 				if ( ! \TranslateRocket\GoogleFree::auto_enabled() ) {
 					wp_send_json_error( array( 'error' => 'disabled' ) );
 				}
-				$result = Translator::google_missing( $lang, $hash );
+				if ( function_exists( 'set_time_limit' ) ) {
+					@set_time_limit( 120 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				}
+				$result = Translator::google_missing( $lang, $hash, microtime( true ) + 20 );
 				$msg    = $result['ok'] ? ( 'gt:' . (int) $result['count'] ) : ( 'err:' . $result['error'] );
+				$more   = ! empty( $result['more'] );
 				break;
 
 			case 'reset':
@@ -264,7 +275,7 @@ class MetaBox {
 		}
 
 		\TranslateRocket\Cache::flush();
-		wp_send_json_success( array_merge( array( 'msg' => $msg ), $this->payload( $hash, $lang, $post_id ) ) );
+		wp_send_json_success( array_merge( array( 'msg' => $msg, 'more' => $more ), $this->payload( $hash, $lang, $post_id ) ) );
 	}
 
 	/**

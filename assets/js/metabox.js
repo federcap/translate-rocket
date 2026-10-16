@@ -430,23 +430,39 @@
 		} );
 	}
 
-	function doAI() {
+	// 15/10/2026: the server works in short steps (a big page with a slow engine took minutes in one request and the
+	// host answered 504). While it says «more», ask again; the counter shows it is moving.
+	function steps( action ) {
+		var fatte = 0;
 		setMsg( t( 'working' ) );
-		api( 'ai' ).then( function ( r ) {
-			if ( r && r.success ) {
+		( function passo() {
+			api( action ).then( function ( r ) {
+				if ( ! r || ! r.success ) {
+					setMsg( ( r && r.data && r.data.error ) ? r.data.error : t( 'error' ) );
+					return;
+				}
+				var m = /^(ai|gt):(\d+)$/.exec( r.data.msg || '' );
+				fatte += m ? parseInt( m[ 2 ], 10 ) : 0;
 				render( r.data );
-			}
-		} );
+				if ( r.data.more ) {
+					setMsg( t( 'working' ) + ' ' + fatte );
+					passo();
+				} else if ( /^err:/.test( r.data.msg || '' ) ) {
+					setMsg( r.data.msg.slice( 4 ) );
+				}
+			} ).catch( function () {
+				setMsg( t( 'error' ) );
+			} );
+		}() );
+	}
+
+	function doAI() {
+		steps( 'ai' );
 	}
 
 	// Bulk-translate every missing string on this page with the free Google engine.
 	function doGTAll() {
-		setMsg( t( 'working' ) );
-		api( 'gt_all' ).then( function ( r ) {
-			if ( r && r.success ) {
-				render( r.data );
-			}
-		} );
+		steps( 'gt_all' );
 	}
 
 	function doReset() {

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.6.1
+Stable tag: 1.8.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.8.7 =
+* Faster on large sites (tested with 5,000 pages and 75,000 sentences): the counts of every language and of every page are kept until something really changes, instead of being counted again on every screen. The admin screens no longer slow down because of TranslateRocket (the next-steps panel could add 7 to 15 seconds to every page, the WordPress page list included); Translations opens in about 3 seconds instead of 15.
+* Faster search in the translated languages: the sentences are read once for all the words typed, with exactly the same results and order as before (about three times faster on a large site).
+* Fix: «Translate all missing with AI» and «Improve with AI» in Translation memory, and «Translate with AI» and the free Google translation in the page editor's TranslateRocket box, translated everything in one request and could end in «504 Gateway Timeout» on large sites. They now work in short steps: the memory offers «Continue translating», the editor box goes on by itself and shows how many sentences it has translated.
+
 = 1.8.6.1 =
 * Fix: on large sites, the «AI» button of a page and «Translate N missing» on AI Translation could end in «504 Gateway Timeout»: they translated everything in one request. They now work in short steps of about 25 seconds, like «Translate all missing», with a progress bar and a «Continue translating» button, so no request reaches the server's time limit. What was already translated is kept.
 
@@ -402,6 +407,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.7 =
+Faster admin screens and search on large sites; no more 504 from the bulk AI buttons in Translation memory and in the page editor.
 
 = 1.8.6.1 =
 Fix: no more «504 Gateway Timeout» when translating a page or a whole language on large sites.

@@ -171,6 +171,24 @@ class Strings {
 	 * @return array{detected:int,translated:int,missing:int}
 	 */
 	public static function language_stats( string $lang ): array {
+		// 16/10/2026 (big-site probe): the «next steps» drawer asks this for every language on every admin screen, the
+		// WordPress page list included — 7 to 15 s a screen on a site of 5.000 pages. Counted again only when something
+		// changed (see conto()).
+		return self::conto(
+			'ls',
+			$lang,
+			static function () use ( $lang ) {
+				return self::language_stats_now( $lang );
+			}
+		);
+	}
+
+	/**
+	 * language_stats() counted now.
+	 *
+	 * @return array{detected:int,translated:int,missing:int}
+	 */
+	private static function language_stats_now( string $lang ): array {
 		global $wpdb;
 		$translations = Database::translations_table();
 
@@ -189,11 +207,12 @@ class Strings {
 		// deleted string (a page reset, an old test) made «translated» bigger than
 		// «detected», and «missing» clamped to 0 — the guide said «Everything is
 		// translated» with a new phrase still waiting (30/09/2026).
+		// The list of sentences that are not images read once (same count as joining row by row, a third faster).
 		$translated = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$translations} tr
-				 INNER JOIN {$strings} s ON s.id = tr.string_id
-				 WHERE tr.language = %s AND s.type <> 'image' AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''",
+				 WHERE tr.language = %s AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''
+				   AND tr.string_id IN ( SELECT /*+ SUBQUERY(MATERIALIZATION) */ s.id FROM {$strings} s WHERE s.type <> 'image' )",
 				$lang
 			)
 		); // phpcs:ignore WordPress.DB
@@ -218,24 +237,84 @@ class Strings {
 		// 11/10/2026 (Federico: «è al 70% ma non mi dà la possibilità di tradurre»): a page counted its images
 		// and the sentences deleted since, which no engine can translate, and stayed at 94% for ever beside a
 		// language at 100%. Same rules as language_stats(): only sentences that exist, images left out.
-
-		return $wpdb->get_results(
+		// 16/10/2026 (big-site probe, 5.000 pages / 226.000 occurrences): 6 s, on every visit of the Translations screen
+		// and on every «Show more». Kept until something really changes (see stats_key()).
+		$firma  = self::stats_key( $lang );
+		$tenuti = get_transient( 'trrocket_psp_' . $lang ); // one place per language, the signature inside
+		if ( is_array( $tenuti ) && isset( $tenuti['firma'] ) && $firma === $tenuti['firma'] ) {
+			return (array) $tenuti['righe'];
+		}
+		$righe = (array) $wpdb->get_results(
 			$wpdb->prepare(
+				// The same numbers as joining strings and translations row by row (checked on the big site, with images,
+				// empty and unfinished translations, orphan rows), but each list is read once: 11 s -> 2 s on 226.000 rows.
 				"SELECT o.url_hash AS url_hash,
 						MAX(o.url) AS url,
 						MAX(o.title) AS title,
-						COUNT(DISTINCT o.string_id) AS total,
-						SUM( CASE WHEN tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> '' THEN 1 ELSE 0 END ) AS translated
+						COUNT(*) AS total,
+						SUM( o.string_id IN (
+							SELECT tr.string_id FROM {$translations} tr
+							WHERE tr.language = %s AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''
+						) ) AS translated
 				 FROM {$occurrences} o
-				 INNER JOIN {$strings} st ON st.id = o.string_id AND st.type <> 'image'
-				 LEFT JOIN {$translations} tr ON tr.string_id = o.string_id AND tr.language = %s
 				 WHERE o.url <> %s
+				   AND o.string_id IN ( SELECT /*+ SUBQUERY(MATERIALIZATION) */ st.id FROM {$strings} st WHERE st.type <> 'image' )
 				 GROUP BY o.url_hash
 				 ORDER BY url ASC",
 				$lang,
 				self::INTERFACE_URL
 			)
 		); // phpcs:ignore WordPress.DB
+		set_transient( 'trrocket_psp_' . $lang, array( 'firma' => $firma, 'righe' => $righe ), 10 * MINUTE_IN_SECONDS );
+		return $righe;
+	}
+
+	/**
+	 * A count of one language, kept until something that can change it changes.
+	 *
+	 * @param string   $what  Which count (part of the name it is kept under).
+	 * @param string   $lang  Language.
+	 * @param callable $conta Counts it now.
+	 * @return mixed
+	 */
+	private static function conto( string $what, string $lang, callable $conta ) {
+		global $wpdb;
+		static $fatti = array();
+		// What changes when a count can change: a translation saved (map generation), sentences added or deleted,
+		// translations added or deleted in this language. Read at every call, never kept: the AI step translates and
+		// then asks how many are left, in the same request. Three indexed counts: milliseconds.
+		$gen    = get_option( 'trrocket_map_gen', array() );
+		$st     = Database::strings_table();
+		$tr     = Database::translations_table();
+		$n      = $wpdb->get_row( $wpdb->prepare( "SELECT (SELECT COUNT(*) FROM {$st}) AS s, (SELECT MAX(id) FROM {$st}) AS ms, (SELECT COUNT(*) FROM {$tr} WHERE language = %s) AS t", $lang ), ARRAY_N ); // phpcs:ignore WordPress.DB
+		$firma = md5( $lang . '|' . ( is_array( $gen ) ? (int) ( $gen[ $lang ] ?? 1 ) : 1 ) . '|' . implode( '|', (array) $n ) );
+		$nome  = 'trrocket_cn' . $what . '_' . $lang; // one place per count and language, the signature inside
+		if ( isset( $fatti[ $nome ] ) && $firma === $fatti[ $nome ]['firma'] ) {
+			return $fatti[ $nome ]['v'];
+		}
+		$tenuto = get_transient( $nome );
+		if ( ! is_array( $tenuto ) || ! isset( $tenuto['firma'] ) || $firma !== $tenuto['firma'] ) {
+			$tenuto = array( 'firma' => $firma, 'v' => $conta() );
+			set_transient( $nome, $tenuto, 10 * MINUTE_IN_SECONDS );
+		}
+		$fatti[ $nome ] = $tenuto;
+		return $tenuto['v'];
+	}
+
+	/**
+	 * The name the per-page numbers of a language are kept under: it changes, and so they are counted again, when a
+	 * translation is saved (the map generation), when sentences or pages are added or deleted, when a page is taken
+	 * off the list (trrocket_pages_gen) and when translations are added or deleted. Read at every call: indexed counts,
+	 * milliseconds even with hundreds of thousands of rows.
+	 */
+	private static function stats_key( string $lang ): string {
+		global $wpdb;
+		$gen = get_option( 'trrocket_map_gen', array() );
+		$oc  = Database::occurrences_table();
+		$st  = Database::strings_table();
+		$tr  = Database::translations_table();
+		$n   = $wpdb->get_row( $wpdb->prepare( "SELECT (SELECT MAX(id) FROM {$oc}) AS mo, (SELECT COUNT(*) FROM {$st}) AS s, (SELECT MAX(id) FROM {$st}) AS ms, (SELECT COUNT(*) FROM {$tr} WHERE language = %s) AS t", $lang ), ARRAY_N ); // phpcs:ignore WordPress.DB
+		return md5( $lang . '|' . ( is_array( $gen ) ? (int) ( $gen[ $lang ] ?? 1 ) : 1 ) . '|' . (int) get_option( 'trrocket_pages_gen', 0 ) . '|' . implode( '|', (array) $n ) );
 	}
 
 	/**
@@ -247,17 +326,25 @@ class Strings {
 	 */
 	public static function engines_by_page( string $lang ): array {
 		global $wpdb;
+		$firma  = self::stats_key( $lang ); // 2,4 s on the big site: kept like pages_with_stats()
+		$tenuti = get_transient( 'trrocket_pse_' . $lang );
+		if ( is_array( $tenuti ) && isset( $tenuti['firma'] ) && $firma === $tenuti['firma'] ) {
+			return (array) $tenuti['righe'];
+		}
 		$occurrences  = Database::occurrences_table();
 		$translations = Database::translations_table();
 		$strings      = Database::strings_table();
 		$rows         = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT o.url_hash AS url_hash, COALESCE( NULLIF( tr.provider, '' ), 'unknown' ) AS provider, COUNT(DISTINCT o.string_id) AS n
+				// As in pages_with_stats(): each list read once (2,7 s -> 1,2 s on the big site, same rows).
+				"SELECT o.url_hash AS url_hash, ok.provider AS provider, COUNT(*) AS n
 				 FROM {$occurrences} o
-				 INNER JOIN {$strings} st ON st.id = o.string_id AND st.type <> 'image'
-				 INNER JOIN {$translations} tr ON tr.string_id = o.string_id AND tr.language = %s
-				 WHERE tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''
-				 GROUP BY o.url_hash, provider",
+				 INNER JOIN (
+					SELECT /*+ NO_MERGE() */ tr.string_id, COALESCE( NULLIF( tr.provider, '' ), 'unknown' ) AS provider FROM {$translations} tr
+					WHERE tr.language = %s AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''
+				 ) ok ON ok.string_id = o.string_id
+				 WHERE o.string_id IN ( SELECT /*+ SUBQUERY(MATERIALIZATION) */ st.id FROM {$strings} st WHERE st.type <> 'image' )
+				 GROUP BY o.url_hash, ok.provider",
 				$lang
 			)
 		); // phpcs:ignore WordPress.DB
@@ -268,6 +355,8 @@ class Strings {
 		foreach ( $out as &$per ) {
 			arsort( $per );
 		}
+		unset( $per );
+		set_transient( 'trrocket_pse_' . $lang, array( 'firma' => $firma, 'righe' => $out ), 10 * MINUTE_IN_SECONDS );
 		return $out;
 	}
 
@@ -487,6 +576,13 @@ class Strings {
 	 * @param string $lang Language code.
 	 */
 	public static function untranslated_count( string $lang ): int {
+		return (int) self::conto( 'uc', $lang, static function () use ( $lang ) { return self::untranslated_count_now( $lang ); } );
+	}
+
+	/**
+	 * untranslated_count() counted now.
+	 */
+	private static function untranslated_count_now( string $lang ): int {
 		global $wpdb;
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
@@ -513,6 +609,13 @@ class Strings {
 	 * @param string $lang Language code.
 	 */
 	public static function translated_count( string $lang ): int {
+		return (int) self::conto( 'tc', $lang, static function () use ( $lang ) { return self::translated_count_now( $lang ); } );
+	}
+
+	/**
+	 * translated_count() counted now.
+	 */
+	private static function translated_count_now( string $lang ): int {
 		global $wpdb;
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
@@ -1210,6 +1313,7 @@ class Strings {
 		global $wpdb;
 		$occurrences = Database::occurrences_table();
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$occurrences} WHERE url_hash = %s", $url_hash ) ); // phpcs:ignore WordPress.DB
+		update_option( 'trrocket_pages_gen', (int) get_option( 'trrocket_pages_gen', 0 ) + 1, false ); // the page lists count again
 	}
 
 	/**

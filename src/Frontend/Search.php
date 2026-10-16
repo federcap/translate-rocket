@@ -299,58 +299,59 @@ class Search {
 		$idx = self::table();
 		$tr  = Database::translations_table();
 		$st  = Database::strings_table();
-		$punti = null;
-		foreach ( $parole as $p ) {
-			$like  = '%' . $wpdb->esc_like( $p ) . '%';
-			$righe = $wpdb->get_results(
-				$wpdb->prepare(
-					// The word in this language's translation, or in the source text (someone typing in the site's
-					// own language on a translated page finds too).
-					"SELECT i.post_id, SUM(i.weight) AS w FROM {$idx} i
-					 JOIN {$st} s ON s.id = i.string_id
-					 LEFT JOIN {$tr} t ON t.string_id = i.string_id AND t.language = %s AND t.status > 0
-					 WHERE t.translation LIKE %s OR s.original LIKE %s
-					 GROUP BY i.post_id", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					$lang,
-					$like,
-					$like
-				)
-			); // phpcs:ignore WordPress.DB
-			$questa = array();
-			foreach ( (array) $righe as $r ) {
-				$questa[ (int) $r->post_id ] = (int) $r->w;
-			}
-			if ( null === $punti ) {
-				$punti = $questa;
-			} else {
-				// Every word must be on the page.
-				foreach ( $punti as $pid => $w ) {
-					if ( isset( $questa[ $pid ] ) ) {
-						$punti[ $pid ] = $w + $questa[ $pid ];
-					} else {
-						unset( $punti[ $pid ] );
-					}
-				}
-			}
-			if ( empty( $punti ) ) {
-				return array();
-			}
+		// 16/10/2026 (big-site probe, 5.000 pages): one reading of the sentences for all the words and the whole phrase
+		// together. A query per word read every sentence again: 2,6 s a word, 15 s for a search of three words that any
+		// visitor, or a bot, can start. Same rules and the same scores as before (checked page by page):
+		//   - a page is found when every word is on it, in this language's translation or in the source text;
+		//   - its score is the weight of the sentences that have each word, word by word;
+		//   - the words together, as typed, in one translated sentence: +20.
+		$colonne_t = array();
+		$colonne_s = array();
+		$dove_t    = array();
+		$dove_s    = array();
+		$args_t    = array();
+		$args_s    = array();
+		foreach ( $parole as $k => $p ) {
+			$like        = '%' . $wpdb->esc_like( $p ) . '%';
+			$colonne_t[] = "( t.translation LIKE %s ) IS TRUE AS p{$k}";
+			$colonne_s[] = "( s.original LIKE %s ) IS TRUE AS p{$k}";
+			$dove_t[]    = 't.translation LIKE %s';
+			$dove_s[]    = 's.original LIKE %s';
+			$args_t[]    = $like;
+			$args_s[]    = $like;
 		}
-		// The words together, as typed, in one sentence: those pages first.
-		if ( count( $parole ) > 1 ) {
-			$frase = '%' . $wpdb->esc_like( implode( ' ', $parole ) ) . '%';
-			$vicine = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT DISTINCT i.post_id FROM {$idx} i JOIN {$tr} t ON t.string_id = i.string_id AND t.language = %s AND t.status > 0 WHERE t.translation LIKE %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					$lang,
-					$frase
-				)
-			); // phpcs:ignore WordPress.DB
-			foreach ( (array) $vicine as $pid ) {
-				if ( isset( $punti[ (int) $pid ] ) ) {
-					$punti[ (int) $pid ] += 20;
-				}
-			}
+		$frase       = count( $parole ) > 1 ? '%' . $wpdb->esc_like( implode( ' ', $parole ) ) . '%' : '';
+		$colonne_t[] = '' !== $frase ? '( t.translation LIKE %s ) IS TRUE AS fr' : '0 AS fr';
+		$colonne_s[] = '0 AS fr';
+		$somma       = array();
+		$tutte       = array();
+		$per_id      = array();
+		foreach ( array_keys( $parole ) as $k ) {
+			$per_id[] = "MAX(p{$k}) AS p{$k}";
+			$somma[]  = "m.p{$k}";
+			$tutte[]  = "MAX(m.p{$k}) = 1";
+		}
+		$sql = "SELECT i.post_id, SUM( i.weight * ( " . implode( ' + ', $somma ) . " ) ) AS w, MAX(m.fr) AS fr
+			FROM {$idx} i
+			JOIN (
+				SELECT id, " . implode( ', ', $per_id ) . ", MAX(fr) AS fr FROM (
+					SELECT t.string_id AS id, " . implode( ', ', $colonne_t ) . "
+					FROM {$tr} t WHERE t.language = %s AND t.status > 0 AND ( " . implode( ' OR ', $dove_t ) . " )
+					UNION ALL
+					SELECT s.id, " . implode( ', ', $colonne_s ) . "
+					FROM {$st} s WHERE ( " . implode( ' OR ', $dove_s ) . " )
+				) u GROUP BY id
+			) m ON m.id = i.string_id
+			GROUP BY i.post_id
+			HAVING " . implode( ' AND ', $tutte );
+		$valori = array_merge( $args_t, '' !== $frase ? array( $frase ) : array(), array( $lang ), $args_t, $args_s, $args_s );
+		$righe  = $wpdb->get_results( $wpdb->prepare( $sql, $valori ) ); // phpcs:ignore WordPress.DB
+		$punti  = array();
+		foreach ( (array) $righe as $r ) {
+			$punti[ (int) $r->post_id ] = (int) $r->w + ( (int) $r->fr ? 20 : 0 );
+		}
+		if ( empty( $punti ) ) {
+			return array();
 		}
 		arsort( $punti );
 		return array_slice( array_keys( $punti ), 0, $limit );

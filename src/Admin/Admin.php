@@ -2956,7 +2956,8 @@ class Admin {
 				)
 			) . '</p></div>';
 		}
-		if ( isset( $_GET['aiimproved'] ) ) {
+		$ancora = isset( $_GET['aimore'] ) && in_array( $_GET['aimore'], array( 'all', 'improve' ), true );
+		if ( isset( $_GET['aiimproved'] ) && ! $ancora ) {
 			$n = (int) $_GET['aiimproved'];
 			if ( $n < 0 ) {
 				self::avviso_ai_fallita( '' );
@@ -2970,7 +2971,7 @@ class Admin {
 				) . '</p></div>';
 			}
 		}
-		if ( isset( $_GET['aidone'] ) ) {
+		if ( isset( $_GET['aidone'] ) && ! $ancora ) {
 			$n = (int) $_GET['aidone'];
 			if ( $n < 0 ) {
 				self::avviso_ai_fallita( '' );
@@ -2983,6 +2984,17 @@ class Admin {
 					)
 				) . '</p></div>';
 			}
+		}
+		// Stopped after 25 s with work left: the same button again, from here.
+		if ( $ancora ) {
+			echo '<div class="notice notice-info"><p>' . esc_html(
+				sprintf(
+					/* translators: %d: number of strings translated. */
+					__( 'AI translated %d strings. There is more to translate: it goes on in short steps, so the server never times out.', 'translate-rocket' ),
+					(int) ( $_GET['aidone'] ?? $_GET['aiimproved'] ?? 0 )
+				)
+			) . ' <button type="submit" form="' . ( 'all' === $_GET['aimore'] ? 'trr-mem-ai' : 'trr-mem-improve' ) . '" class="button button-primary trr-continua">'
+				. esc_html__( 'Continue translating', 'translate-rocket' ) . '</button></p></div>';
 		}
 		// phpcs:enable
 
@@ -3191,8 +3203,13 @@ JS;
 		}
 
 		// «Improve with AI»: send the sentences the browser translated to the AI.
+		// 15/10/2026 (time probe, after the 504 ticket): both bulk buttons stop starting new batches after 25 s, so the
+		// request ends well before the 60 s of many hosts; the notice then offers «Continue translating».
+		if ( ( isset( $_POST['trr_ai_improve'] ) || isset( $_POST['trr_ai_all'] ) ) && function_exists( 'set_time_limit' ) ) {
+			@set_time_limit( 120 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		}
 		if ( isset( $_POST['trr_ai_improve'] ) ) {
-			$res = Translator::translate_missing( $lang, '', 0, true );
+			$res = Translator::translate_missing( $lang, '', 0, true, '', microtime( true ) + 25 );
 			\TranslateRocket\Cache::flush();
 			wp_safe_redirect(
 				add_query_arg(
@@ -3200,6 +3217,7 @@ JS;
 						'page'       => 'translate-rocket-memory',
 						'lang'       => $lang,
 						'aiimproved' => $res['ok'] ? (int) $res['count'] : -1,
+						'aimore'     => ! empty( $res['more'] ) ? 'improve' : false,
 					),
 					admin_url( 'admin.php' )
 				)
@@ -3209,13 +3227,16 @@ JS;
 
 		// Bulk AI: translate every still-missing string for this language.
 		if ( isset( $_POST['trr_ai_all'] ) ) {
-			$res = Translator::translate_missing( $lang );
+			$res = Translator::translate_missing( $lang, '', 0, false, '', microtime( true ) + 25 );
 			\TranslateRocket\Cache::flush();
 			$args = array(
 				'page'   => 'translate-rocket-memory',
 				'lang'   => $lang,
 				'aidone' => $res['ok'] ? (int) $res['count'] : -1,
 			);
+			if ( ! empty( $res['more'] ) ) {
+				$args['aimore'] = 'all';
+			}
 			if ( isset( $_POST['s'] ) && '' !== $_POST['s'] ) {
 				$args['s'] = sanitize_text_field( wp_unslash( $_POST['s'] ) );
 			}
