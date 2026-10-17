@@ -358,6 +358,51 @@ class Search {
 	}
 
 	/**
+	 * The secondary languages people can read (the public ones), for «every language».
+	 *
+	 * @return string[]
+	 */
+	public static function search_languages(): array {
+		$router = Plugin::instance()->router();
+		return array_values( array_diff( $router->public_languages(), array( $router->default_language() ) ) );
+	}
+
+	/**
+	 * The pages that match: our index in the given languages first, then WordPress's own search in the
+	 * site's language (someone typing in it). Shared by the results page and the suggestions (1.8.8).
+	 *
+	 * @param string          $terms Words typed.
+	 * @param string[]        $langs Languages to look in.
+	 * @param string|string[] $types Post types, or «any».
+	 * @param int             $limit Most results.
+	 * @return int[]
+	 */
+	public static function ids_for( string $terms, array $langs, $types, int $limit ): array {
+		$nostri = array();
+		foreach ( $langs as $l ) {
+			$nostri = array_merge( $nostri, self::find( $terms, (string) $l, $limit ) );
+		}
+		self::$inner = true;
+		$nativi      = get_posts(
+			array(
+				's'                => $terms,
+				'post_type'        => $types,
+				'fields'           => 'ids',
+				'posts_per_page'   => min( 100, $limit ),
+				'suppress_filters' => false,
+			)
+		);
+		self::$inner = false;
+		$ids         = array_values( array_unique( array_merge( $nostri, array_map( 'intval', (array) $nativi ) ) ) );
+		// Our index has every searchable type: keep the ones asked for.
+		if ( 'any' !== $types && $ids ) {
+			$tipi = array_map( 'strval', (array) $types );
+			$ids  = array_values( array_filter( $ids, static function ( $id ) use ( $tipi ) { return in_array( (string) get_post_type( $id ), $tipi, true ); } ) );
+		}
+		return array_slice( $ids, 0, $limit );
+	}
+
+	/**
 	 * The main search of a translated page: our pages first, then whatever WordPress's own search finds in the
 	 * source text (someone typing in the site's language), nothing else.
 	 *
@@ -369,27 +414,18 @@ class Search {
 		}
 		$router = Plugin::instance()->router();
 		$lang   = $router->current_language();
-		if ( '' === $lang || $router->is_default( $lang ) ) {
+		// 1.8.8: «Search in every language» (the search box's filter, or the owner's choice): the words are
+		// looked for in the translations of every public language, from any page.
+		$tutte = ! empty( $_GET['trr_all'] ) || ( ! empty( SearchBox::settings()['all_languages'] ) && ! isset( $_GET['trr_one'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! $tutte && ( '' === $lang || $router->is_default( $lang ) ) ) {
 			return;
 		}
 		$terms = trim( (string) $q->get( 's' ) );
 		if ( '' === $terms ) {
 			return;
 		}
-		$nostri = self::find( $terms, $lang );
-		// WordPress's own search, in the source text, for whoever types in the site's language.
-		self::$inner = true;
-		$nativi      = get_posts(
-			array(
-				's'                => $terms,
-				'post_type'        => $q->get( 'post_type' ) ? $q->get( 'post_type' ) : 'any',
-				'fields'           => 'ids',
-				'posts_per_page'   => 100,
-				'suppress_filters' => false,
-			)
-		);
-		self::$inner = false;
-		$ids         = array_values( array_unique( array_merge( $nostri, array_map( 'intval', (array) $nativi ) ) ) );
+		$lingue = $tutte ? self::search_languages() : array( $lang );
+		$ids    = self::ids_for( $terms, $lingue, $q->get( 'post_type' ) ? $q->get( 'post_type' ) : 'any', 300 );
 		$q->set( 'post__in', empty( $ids ) ? array( 0 ) : $ids );
 		$q->set( 'orderby', 'post__in' );
 		// The words stay in «s» (the theme shows «Results for …»), but WordPress must not search them again in the

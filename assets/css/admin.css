@@ -2374,7 +2374,9 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-equal-very-good{background:#e6f6ea;color:#047857}
 .trr-equal-excellent{background:#047857;color:#fff}
 /* the box under the menu: what the chosen engine is, in full */
-.trr-engine-info{display:flex;flex-direction:column;gap:2px;flex:0 0 100%;box-sizing:border-box;max-width:none;margin:2px 0 0;padding:8px 10px;background:#f6f7f7;border-left:4px solid #c3c4c7;font-size:12px;line-height:1.5}
+/* 16/10/2026 (Federico: «il testo è tutto a sinistra»): the facts side by side, label above value, across the width; one under the other on a phone */
+.trr-engine-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 18px;flex:0 0 100%;box-sizing:border-box;max-width:none;margin:2px 0 0;padding:10px 14px;background:#f6f7f7;border-left:4px solid #c3c4c7;font-size:12px;line-height:1.45}
+.trr-einfo-row b{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:#50575e;margin-bottom:1px}
 .trr-engine-info[hidden]{display:none}
 .trr-engine-info-free{background:#edfaef;border-left-color:#00a32a}
 .trr-engine-info-limit{background:#fcf9e8;border-left-color:#dba617}
@@ -2401,3 +2403,119 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 	.trrocket-wrap table#trr-ptable .trr-more-menu { position: static; margin-top: 6px; box-shadow: none; width: 100%; box-sizing: border-box; }
 	.trrocket-wrap table#trr-ptable .trr-more-menu .button { width: 100%; white-space: normal; text-align: start; }
 }
+
+/* 1.8.8 — Simple / Advanced (Federico, 16/10/2026: «what is free, immediate and fast at first sight»).
+   In the Simple view the advanced parts stay in the page (saving keeps them) but are not shown. */
+.trr-simple .trr-adv { display: none !important; }
+.trr-view {
+	display: inline-flex;
+	margin-left: auto;
+	border: 1px solid #c3c4c7;
+	border-radius: 999px;
+	overflow: hidden;
+	background: #fff;
+	flex: 0 0 auto;
+}
+.trr-view-btn {
+	padding: 6px 14px;
+	font-size: 13px;
+	line-height: 1.4;
+	color: #3c434a;
+	text-decoration: none;
+	white-space: nowrap;
+}
+.trr-view-btn:hover, .trr-view-btn:focus { color: #4f46e5; }
+.trr-view-btn.is-on { background: #4f46e5; color: #fff; }
+.trr-view-btn.is-on:hover, .trr-view-btn.is-on:focus { color: #fff; }
+[dir="rtl"] .trr-view { margin-left: 0; margin-right: auto; }
+.trr-steps3 {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	margin: 12px 0 16px;
+	padding: 0;
+	list-style: none;
+	counter-reset: trr-step;
+}
+.trr-steps3 li {
+	position: relative;
+	margin: 0;
+	padding: 14px 14px 14px 52px;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 10px;
+	counter-increment: trr-step;
+}
+.trr-steps3 li::before {
+	content: counter(trr-step);
+	position: absolute;
+	left: 14px;
+	top: 14px;
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	background: #f0f0f1;
+	color: #3c434a;
+	font-weight: 600;
+	text-align: center;
+	line-height: 26px;
+}
+[dir="rtl"] .trr-steps3 li { padding: 14px 52px 14px 14px; }
+[dir="rtl"] .trr-steps3 li::before { left: auto; right: 14px; }
+.trr-steps3 li.is-now { border-color: #4f46e5; box-shadow: 0 0 0 1px #4f46e5; }
+.trr-steps3 li.is-now::before { background: #4f46e5; color: #fff; }
+.trr-steps3 li.is-done::before { content: "\2713"; background: #00a32a; color: #fff; }
+.trr-steps3 strong { display: block; font-size: 14px; margin-bottom: 2px; }
+.trr-steps3 span { color: #50575e; font-size: 13px; }
+.trr-steps3-look { margin: -4px 0 16px; }
+@media (max-width: 782px) {
+	.trr-steps3 { grid-template-columns: 1fr; }
+	.trr-view { margin-left: 0; }
+}
+/* 1.8.8 — search box options */
+.trr-sbox-opts { margin: 8px 0 0; padding: 8px 12px; border: 1px solid #dcdcde; border-radius: 6px; background: #f6f7f7; }
+.trr-sbox-opts p { margin: 6px 0; }
+.trr-sbox-opts label { margin-right: 14px; display: inline-block; }
+.trr-sbox-type { margin: 4px 14px 0 0; }
+
+/* 1.8.8 — «Recommended: …» under the options */
+.trr-consigliato{margin:6px 0 0;font-size:12px;color:#1a7a33}
+.trr-consigliato::before{content:"\2714";margin-right:5px}
+[dir="rtl"] .trr-consigliato::before{margin-right:0;margin-left:5px}
+/* 16/10/2026 — quality as four bars (like a phone's signal), the word beside them */
+.trr-equal{display:inline-flex;align-items:center;gap:6px}
+.trr-qbars{display:inline-flex;align-items:flex-end;gap:2px;height:12px}
+.trr-qbars i{display:block;width:3px;border-radius:1px;background:currentColor;opacity:.22}
+.trr-qbars i:nth-child(1){height:4px}.trr-qbars i:nth-child(2){height:7px}.trr-qbars i:nth-child(3){height:10px}.trr-qbars i:nth-child(4){height:12px}
+.trr-qbars i.on{opacity:1}
+.trr-step.is-warn{padding:8px 10px;background:#fcf9e8;border-left:4px solid #dba617}
+.trr-step.is-warn .trr-prog-bar{display:none}
+/* 16/10/2026 — the pages table while it reloads (filter, search, sort): faded, with a spinner */
+#trr-ptable{position:relative}
+#trr-ptable.trr-loading tbody{opacity:.35;pointer-events:none;transition:opacity .15s}
+#trr-ptable.trr-loading::after{content:"";position:absolute;left:50%;top:80px;width:28px;height:28px;margin-left:-14px;border:3px solid #c3c4c7;border-top-color:#4f46e5;border-radius:50%;animation:trr-gira .8s linear infinite}
+@keyframes trr-gira{to{transform:rotate(360deg)}}
+.trr-ptodo-wait{display:none;margin-left:6px;color:#4f46e5;font-size:12px}
+.trr-ptodo.is-loading .trr-ptodo-wait{display:inline}
+
+/* 16/10/2026 — the gear beside each engine in the picker, the «kept as it was» tag, the description under «Find a language» */
+.trr-egear{margin-left:auto;padding:2px 6px;color:#50575e;text-decoration:none;font-size:15px;line-height:1;border-radius:4px}
+.trr-egear:hover,.trr-egear:focus{color:#4f46e5;background:#f0f0f1}
+.trr-etag-kept{background:#f0f0f1;color:#50575e;border:1px dashed #c3c4c7}
+.trr-under-search{margin:6px 0 0}
+
+/* 1.8.8 — Search screen: the preview at computer and phone width */
+.trr-sbp{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+.trr-sbp-one{flex:1 1 320px;min-width:0}
+.trr-sbp-label{font-size:12px;color:#50575e;margin-bottom:6px}
+.trr-sbp-frame{border:1px solid #dcdcde;border-radius:8px;background:#fff;padding:18px;min-height:90px;position:relative;overflow:visible}
+.trr-sbp-phone{max-width:390px}
+.trr-sbp-frame .trrocket-search--overlay .trrocket-search-panel{position:absolute;inset:0;padding:24px 12px}
+.trr-sb-style{display:inline-block;margin:0 16px 6px 0}
+
+/* 16/10/2026: preset clicked = lit at once; preview veiled with a wheel until the server draws it */
+.trr-preset.is-picked { outline: 2px solid #2271b1; outline-offset: 1px; border-color: #2271b1; }
+.trr-preset.is-busy .trr-preset-label::after { content: ""; display: inline-block; width: 11px; height: 11px; margin-left: 6px; vertical-align: -1px; border: 2px solid #c3c4c7; border-top-color: #2271b1; border-radius: 50%; animation: trr-sw-spin .8s linear infinite; }
+#trr-sw-preview { position: relative; }
+#trr-sw-preview.is-loading > * { opacity: .45; transition: opacity .15s; }
+#trr-sw-preview.is-loading::after { content: ""; position: absolute; top: 50%; left: 50%; width: 24px; height: 24px; margin: -12px 0 0 -12px; border: 3px solid #c3c4c7; border-top-color: #2271b1; border-radius: 50%; animation: trr-sw-spin .8s linear infinite; z-index: 3; }

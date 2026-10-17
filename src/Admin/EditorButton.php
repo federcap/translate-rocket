@@ -45,6 +45,7 @@ class EditorButton {
 			Plugin::asset_ver( 'assets/js/block-languages.js' ),
 			true
 		);
+		wp_set_script_translations( 'trrocket-block-languages', 'translate-rocket', TRROCKET_PATH . 'languages' ); // 1.8.8: the editor's texts in the plugin's language (JSON made by genera-json-js.py)
 		$langs = array();
 		foreach ( $codes as $code ) {
 			$langs[] = array(

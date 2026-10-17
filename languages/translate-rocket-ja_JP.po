@@ -5761,3 +5761,432 @@ msgstr "残り：%d 件。"
 #: src/Admin/Admin.php
 msgid "Continue translating"
 msgstr "翻訳を続ける"
+
+#: assets/js/search-block.js
+msgid "A search box that searches in the language of the page."
+msgstr "ページの言語で検索する検索ボックスです。"
+
+#: assets/js/search-block.js
+msgid "As in the profile"
+msgstr "プロファイルのとおり"
+
+#: assets/js/search-block.js
+msgid "As in the settings"
+msgstr "設定のとおり"
+
+#: assets/js/search-block.js
+msgid "Look of the search box"
+msgstr "検索ボックスの見た目"
+
+#: assets/js/search-block.js
+msgid "No"
+msgstr "いいえ"
+
+#: assets/js/search-block.js
+msgid "Profile (set up on the Search screen)"
+msgstr "プロファイル（「検索」画面で設定）"
+
+#: assets/js/search-block.js
+msgid "The language of the page"
+msgstr "ページの言語"
+
+#: assets/js/search-block.js
+msgid "TranslateRocket search"
+msgstr "TranslateRocket 検索"
+
+#: assets/js/search-block.js
+msgid "Yes"
+msgstr "はい"
+
+#: src/Admin/Admin.php
+msgid "0 with the free engines; with a paid key, a cap that fits your plan"
+msgstr "無料エンジンなら 0。有料キーなら、プランに合った上限"
+
+#: src/Admin/Admin.php
+msgid "Appearance → Menus"
+msgstr "外観 → メニュー"
+
+#: src/Admin/Admin.php
+msgid "Choose the languages"
+msgstr "言語を選ぶ"
+
+#: src/Admin/Admin.php
+msgid "Everyone"
+msgstr "全員"
+
+#: src/Admin/Admin.php
+msgid "Flip its switch to Online when you like it."
+msgstr "気に入ったら、スイッチを「オンライン」にします。"
+
+#: src/Admin/Admin.php
+msgid "Kept as it was"
+msgstr "そのまま保持"
+
+#: src/Admin/Admin.php
+msgid "Look at your translated site"
+msgstr "翻訳されたサイトを見る"
+
+#: src/Admin/Admin.php
+msgid "No engine is ready: translate by hand or with your browser"
+msgstr "使えるエンジンがありません。手作業かブラウザーで翻訳してください"
+
+#: src/Admin/Admin.php
+msgid "Open the sentences"
+msgstr "文を開く"
+
+#: src/Admin/Admin.php
+msgid "Press «Translate» next to a language: no key, no account."
+msgstr "言語の横の「翻訳」を押すだけ。キーもアカウントも不要です。"
+
+#: src/Admin/Admin.php
+msgid "Put it online"
+msgstr "公開する"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Recommended: %s"
+msgstr "おすすめ：%s"
+
+#: src/Admin/Admin.php
+msgid "Review"
+msgstr "確認"
+
+#: src/Admin/Admin.php
+msgid "See them in Translation memory"
+msgstr "翻訳メモリで見る"
+
+#: src/Admin/Admin.php
+msgid "Set up this engine"
+msgstr "このエンジンを設定"
+
+#: src/Admin/Admin.php
+msgid "Start"
+msgstr "開始"
+
+#: src/Admin/Admin.php
+msgid "The iubenda cookie banner already speaks the language of each page: TranslateRocket tells it which one, and never translates its legal text. If you have a privacy policy in each language on iubenda, write its number here, one per line (for example en=12345678): on the English pages the banner and its links open the English policy. With the new iubenda multilingual snippet you need nothing here."
+msgstr "iubenda のクッキーバナーはすでに各ページの言語で表示されます。TranslateRocket がどの言語かを伝え、法的文書は決して翻訳しません。iubenda に言語ごとのプライバシーポリシーがある場合は、その番号を 1 行に 1 つずつここに書きます（例：en=12345678）。英語ページではバナーとそのリンクが英語のポリシーを開きます。新しい iubenda の多言語スニペットなら、ここには何も要りません。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The menus are created and edited in %s. The columns are the places your theme has for menus; «The same, translated» keeps your usual menu, translated."
+msgstr "メニューは %s で作成・編集します。列はテーマがメニュー用に持っている場所です。「同じものを翻訳」は普段のメニューを翻訳したまま使います。"
+
+#: src/Admin/Admin.php
+msgid "The sentences kept as they were go back to «missing», to try them with another engine or by hand"
+msgstr "そのまま保持した文を「未翻訳」に戻し、別のエンジンか手作業で試せるようにします"
+
+#: src/Admin/Admin.php
+msgid "Tick them below and save."
+msgstr "下でチェックして保存します。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translate again the %d kept ones"
+msgstr "保持した %d 件を再翻訳"
+
+#: src/Admin/Admin.php
+msgid "Translate this page with the engine chosen above"
+msgstr "上で選んだエンジンでこのページを翻訳"
+
+#: src/Admin/Admin.php
+msgid "Translate your site in three steps"
+msgstr "3 ステップでサイトを翻訳"
+
+#: src/Admin/Admin.php
+msgid "Translate, for free"
+msgstr "無料で翻訳"
+
+#: src/Admin/Admin.php
+msgid "Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead: other pages, another order, written in that language (it is not translated). How: 1) in Appearance → Menus (block themes: in the Site Editor) create the menu and name it, for example «Menu DE»; 2) come back here and choose it next to that language; 3) save. Each column is one of the places your theme has for menus (header, footer…): choose, for that place, the menu to show in that language."
+msgstr "通常は各言語にあなたのメニューが翻訳されて表示されます。ここでは代わりに、言語ごとに独自のメニューを持たせられます。別のページ、別の順序で、その言語で書いたもの（翻訳はされません）。手順：1) 外観 → メニュー（ブロックテーマならサイトエディター）でメニューを作って名前を付ける（例：「Menu DE」）。2) ここに戻ってその言語の横で選ぶ。3) 保存。各列はテーマがメニュー用に持つ場所（ヘッダー、フッター…）です。その場所に、その言語で表示するメニューを選びます。"
+
+#: src/Admin/Admin.php
+msgid "iubenda policy per language"
+msgstr "言語ごとの iubenda ポリシー"
+
+#: src/Admin/Admin.php
+msgid "off (better for search engines)"
+msgstr "オフ（検索エンジンに有利）"
+
+#: src/Admin/Admin.php
+msgid "off: another page cache is already active on this site"
+msgstr "オフ：このサイトでは別のページキャッシュがすでに有効です"
+
+#: src/Admin/Admin.php
+msgid "on"
+msgstr "オン"
+
+#: src/Admin/Admin.php
+msgid "the day your plan renews; 0 if you use only free engines"
+msgstr "プランが更新される日。無料エンジンだけなら 0"
+
+#: src/Admin/Farewell.php
+#, php-format
+msgid "I agree to be contacted about this problem only. The e-mail is deleted after 6 months, and never used for anything else (%s)."
+msgstr "この問題についてのみ連絡を受けることに同意します。メールアドレスは 6 か月後に削除され、他の目的には一切使いません（%s）。"
+
+#: src/Admin/Farewell.php
+msgid "Keep it active and get help"
+msgstr "有効のままにして助けを受ける"
+
+#: src/Admin/Farewell.php
+msgid "Leave your e-mail and we will contact you to solve it (optional):"
+msgstr "メールアドレスを残していただければ、解決のためご連絡します（任意）："
+
+#: src/Admin/Farewell.php
+msgid "Try the Simple view: three steps"
+msgstr "シンプル表示を試す：3 ステップ"
+
+#: src/Admin/Farewell.php
+msgid "Wait a moment: we fix it for you, free, usually the same day."
+msgstr "少々お待ちを：無料で直します。たいてい当日中に。"
+
+#: src/Admin/Farewell.php
+msgid "privacy policy"
+msgstr "プライバシーポリシー"
+
+#: src/Admin/SearchPage.php
+msgid "A search box that always searches in the language of the page. Make profiles (header, footer, phone menu…), each with its own look, its own options and a live preview."
+msgstr "常にページの言語で検索する検索ボックス。プロファイル（ヘッダー、フッター、スマホメニュー…）を作り、それぞれに見た目とオプション、ライブプレビューを。"
+
+#: src/Admin/SearchPage.php
+msgid "Always in sight, under the box"
+msgstr "常に表示、ボックスの下"
+
+#: src/Admin/SearchPage.php
+msgid "At the bottom of every page"
+msgstr "各ページの最下部"
+
+#: src/Admin/SearchPage.php
+msgid "At the end of the menu the language switcher uses (Appearance → Menus decides which)."
+msgstr "言語切替が使うメニューの末尾（どのメニューかは 外観 → メニュー で決まります）。"
+
+#: src/Admin/SearchPage.php
+msgid "Behind a «Filters» button"
+msgstr "「フィルター」ボタンの中"
+
+#: src/Admin/SearchPage.php
+msgid "Computer"
+msgstr "パソコン"
+
+#: src/Admin/SearchPage.php
+msgid "Computer and phone"
+msgstr "パソコンとスマホ"
+
+#: src/Admin/SearchPage.php
+msgid "Computer only"
+msgstr "パソコンのみ"
+
+#: src/Admin/SearchPage.php
+msgid "Each profile is one search box in one place. Only one profile can be in the header menu, one in the phone menu and one at the bottom: choosing a place takes it from the profile that had it."
+msgstr "各プロファイルは 1 か所に 1 つの検索ボックスです。ヘッダーメニュー、スマホメニュー、最下部にはそれぞれ 1 つのプロファイルしか置けません。場所を選ぶと、それまで持っていたプロファイルから移ります。"
+
+#: src/Admin/SearchPage.php
+msgid "Empty = «Search…» already in the language of each page. Your own text is translated like the rest of the site."
+msgstr "空欄＝各ページの言語で「検索…」を表示。独自の文言はサイトの他の部分と同様に翻訳されます。"
+
+#: src/Admin/SearchPage.php
+msgid "Field"
+msgstr "入力欄"
+
+#: src/Admin/SearchPage.php
+msgid "Filters for the visitor"
+msgstr "訪問者向けフィルター"
+
+#: src/Admin/SearchPage.php
+msgid "In a menu, a magnifier takes the least room; at the bottom of the page, a field is clearer."
+msgstr "メニューでは虫眼鏡が最も場所を取らず、ページ最下部では入力欄のほうが分かりやすいです。"
+
+#: src/Admin/SearchPage.php
+msgid "In my phone menu (burger)"
+msgstr "スマホメニュー（ハンバーガー）内"
+
+#: src/Admin/SearchPage.php
+msgid "Languages & general"
+msgstr "言語と全般"
+
+#: src/Admin/SearchPage.php
+msgid "Look"
+msgstr "見た目"
+
+#: src/Admin/SearchPage.php
+msgid "Look in"
+msgstr "検索対象"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens a field"
+msgstr "クリックで入力欄が開く虫眼鏡"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens the search over the page"
+msgstr "ページ全面に検索を開く虫眼鏡"
+
+#: src/Admin/SearchPage.php
+msgid "Make one profile «Computer only» (a field in the header) and another «Phone only» (a magnifier in the burger menu) to have the right box on each screen."
+msgstr "「パソコンのみ」のプロファイル（ヘッダーに入力欄）と「スマホのみ」のプロファイル（ハンバーガーメニューに虫眼鏡）を作れば、画面ごとに最適なボックスになります。"
+
+#: src/Admin/SearchPage.php
+msgid "Paste the shortcode in a page, a widget or your builder, or add the block «TranslateRocket search»."
+msgstr "ショートコードをページ、ウィジェット、ビルダーに貼り付けるか、「TranslateRocket 検索」ブロックを追加します。"
+
+#: src/Admin/SearchPage.php
+msgid "Phone only"
+msgstr "スマホのみ"
+
+#: src/Admin/SearchPage.php
+msgid "Profiles"
+msgstr "プロファイル"
+
+#: src/Admin/SearchPage.php
+msgid "Rounded field"
+msgstr "角丸の入力欄"
+
+#: src/Admin/SearchPage.php
+msgid "Save this profile"
+msgstr "このプロファイルを保存"
+
+#: src/Admin/SearchPage.php
+msgid "Saved. The preview below shows it as it is now."
+msgstr "保存しました。下のプレビューは現在の状態です。"
+
+#: src/Admin/SearchPage.php
+msgid "Search box"
+msgstr "検索ボックス"
+
+#: src/Admin/SearchPage.php
+msgid "Search the translations of every language"
+msgstr "すべての言語の翻訳を検索"
+
+#: src/Admin/SearchPage.php
+msgid "Search…"
+msgstr "検索…"
+
+#: src/Admin/SearchPage.php
+msgid "Show suggestions"
+msgstr "候補を表示"
+
+#: src/Admin/SearchPage.php
+msgid "Shown on"
+msgstr "表示先"
+
+#: src/Admin/SearchPage.php
+msgid "Small buttons the visitor can use: the kind of content (All · Posts · Pages · Products…) and «Every language». Always in sight under the box, or behind a «Filters» button."
+msgstr "訪問者が使える小さなボタン：コンテンツの種類（すべて・投稿・固定ページ・商品…）と「すべての言語」。ボックスの下に常に表示するか、「フィルター」ボタンの中に収めます。"
+
+#: src/Admin/SearchPage.php
+msgid "Suggestions while typing"
+msgstr "入力中の候補"
+
+#: src/Admin/SearchPage.php
+msgid "Text in the empty field"
+msgstr "空欄のときの文言"
+
+#: src/Admin/SearchPage.php
+msgid "The box as your visitors see it, with the look and the options of this profile, at computer and phone width. It follows your changes as you make them; save to keep them."
+msgstr "このプロファイルの見た目とオプションで、訪問者に見えるとおりのボックスをパソコン幅とスマホ幅で表示します。変更はすぐ反映されます。残すには保存してください。"
+
+#: src/Admin/SearchPage.php
+msgid "What it searches"
+msgstr "検索対象"
+
+#: src/Admin/SearchPage.php
+msgid "Which kinds of content the box searches. None ticked: everything the site search can find."
+msgstr "ボックスが検索するコンテンツの種類。何もチェックしなければ、サイト検索で見つかるものすべて。"
+
+#: src/Admin/SearchPage.php
+msgid "Width of the field"
+msgstr "入力欄の幅"
+
+#: src/Admin/SearchPage.php
+msgid "by type"
+msgstr "種類別"
+
+#: src/Admin/SearchPage.php
+msgid "how many:"
+msgstr "件数："
+
+#: src/Admin/SearchPage.php
+msgid "none in a menu; «always in sight» on a search page"
+msgstr "メニューでは「なし」、検索ページでは「常に表示」"
+
+#: src/Admin/SearchPage.php
+msgid "none ticked (everything)"
+msgstr "チェックなし（すべて）"
+
+#: src/Admin/SearchPage.php
+msgid "off: the language of the page"
+msgstr "オフ：ページの言語"
+
+#: src/Admin/SearchPage.php
+msgid "on, 6"
+msgstr "オン、6"
+
+#: src/Admin/SearchPage.php
+msgid "«Every language»"
+msgstr "「すべての言語」"
+
+#: src/Admin/SearchPage.php
+msgid "— the shortcode of this profile; the block «TranslateRocket search» has a profile choice too."
+msgstr "— このプロファイルのショートコード。「TranslateRocket 検索」ブロックでもプロファイルを選べます。"
+
+#: src/Admin/View.php
+msgid "Simple"
+msgstr "シンプル"
+
+#: src/Frontend/SearchBox.php
+msgid "All"
+msgstr "すべて"
+
+#: src/Frontend/SearchBox.php
+msgid "Every language"
+msgstr "すべての言語"
+
+#: src/Frontend/SearchBox.php
+msgid "Filters"
+msgstr "フィルター"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%d sentence was kept as it was: a name, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgid_plural "%d sentences were kept as they were: names, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgstr[0] "%d 件の文をそのまま保持しました。名前や、サイトの言語ではないテキストなど、エンジンが翻訳できないものです。ページは完了扱いになります。ページの「⋯」メニューの「保持した文を再翻訳」で別のエンジンを試せます。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s translated. %2$s sentences were not translated by this engine: often they are not written in the site's language. You can translate them by hand or with another engine."
+msgstr "%1$s 件を翻訳しました。%2$s 件の文はこのエンジンでは翻訳されませんでした。多くはサイトの言語で書かれていないものです。手作業か別のエンジンで翻訳できます。"
+
+#: src/Admin/SearchPage.php
+msgid "A row at the end of every page, before the theme's footer."
+msgstr "各ページの末尾、テーマのフッターの前に 1 行。"
+
+#: src/Admin/SearchPage.php
+msgid "Empty = the theme's size. Examples: 14em, 240px, 100%."
+msgstr "空欄＝テーマのサイズ。例：14em、240px、100%。"
+
+#: src/Admin/SearchPage.php
+msgid "From the third letter the matching pages appear under the box, with their title in the page's language. Answers are kept ten minutes, so a busy site asks the database once per word."
+msgstr "3 文字目から、一致するページがボックスの下にページの言語のタイトルで表示されます。結果は 10 分間保持されるので、アクセスの多いサイトでも単語ごとにデータベースへ 1 回しか問い合わせません。"
+
+#: src/Admin/SearchPage.php
+msgid "Normally the box searches the translations of the page's language: on /de/ a visitor types in German and finds the German pages. «Every language» also looks in the other languages, for a site whose visitors mix them."
+msgstr "通常、ボックスはページの言語の翻訳を検索します。/de/ では訪問者がドイツ語で入力し、ドイツ語のページが見つかります。「すべての言語」は他の言語も検索します。訪問者が言語を混ぜて使うサイト向けです。"
+
+#: src/Admin/SearchPage.php
+msgid "Only in the theme's phone menu, the one behind the ☰ button."
+msgstr "テーマのスマホメニュー（☰ ボタンの中）だけ。"
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "Which menu is the header menu, and which the phone menu, is decided in %s (the menu assigned to the theme's main place, and to its phone place when it has one)."
+msgstr "どのメニューがヘッダー用で、どれがスマホ用かは %s で決まります（テーマのメイン位置に割り当てたメニューと、スマホ位置がある場合はそのメニュー）。"
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "«Search in every language» is off on %s: the box would search only the site's own language."
+msgstr "「すべての言語で検索」が %s でオフです。ボックスはサイト自身の言語でしか検索しません。"
+
+#: src/Admin/Admin.php
+msgid "Only kept as they were"
+msgstr "そのまま保持した文のみ"

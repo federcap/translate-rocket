@@ -40,6 +40,7 @@ class SwitcherBlock {
 			Plugin::asset_ver( 'assets/js/switcher-block.js' ),
 			true
 		);
+		wp_set_script_translations( 'trrocket-switcher-block', 'translate-rocket', TRROCKET_PATH . 'languages' ); // 1.8.8: the editor's texts in the plugin's language (JSON made by genera-json-js.py)
 
 		register_block_type(
 			'translaterocket/switcher',

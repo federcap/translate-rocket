@@ -129,14 +129,24 @@
 		fd.append( '_ajax_nonce', CFG.nonce );
 		fd.append( 'view', view );
 		var mine = ++seq;
+		// Every redraw shows itself (16/10/2026, suite da-utente: «Telefono» worked without showing it).
+		preview.classList.add( 'is-loading' );
 		fetch( CFG.ajaxurl, { method: 'POST', credentials: 'same-origin', body: fd } )
 			.then( function ( r ) { return r.json(); } )
 			.then( function ( r ) {
 				// Only the answer to the latest change counts.
-				if ( mine !== seq || ! r || ! r.success || ! r.data ) { return; }
+				if ( mine !== seq ) { return; }
+				drawn();
+				if ( ! r || ! r.success || ! r.data ) { return; }
 				draw( r.data, wasOpen );
 			} )
-			.catch( function () {} );
+			.catch( drawn );
+	}
+
+	// The preview is drawn (or failed): the veil and the busy preset go away.
+	function drawn() {
+		preview.classList.remove( 'is-loading' );
+		Array.prototype.forEach.call( document.querySelectorAll( '.trr-preset.is-busy' ), function ( o ) { o.classList.remove( 'is-busy' ); } );
 	}
 
 	// Colours and sliders fire at every step: one request when the hand stops.
@@ -239,6 +249,11 @@
 	Array.prototype.forEach.call( document.querySelectorAll( '.trr-preset' ), function ( btn ) {
 		btn.addEventListener( 'click', function () {
 			var d = this.dataset || {};
+			// 16/10/2026 (Federico: «clicking a style loses a few seconds, show a loading»): the
+			// button lights up at once and the preview dims until the server draws it again.
+			Array.prototype.forEach.call( document.querySelectorAll( '.trr-preset' ), function ( o ) { o.classList.remove( 'is-picked', 'is-busy' ); } );
+			this.classList.add( 'is-picked', 'is-busy' );
+			preview.classList.add( 'is-loading' );
 			setVal( 'sw_text_color', d.text || '' );
 			setVal( 'sw_bg_color', d.bg || '' );
 			setVal( 'sw_border_color', d.border || '' );
@@ -660,6 +675,8 @@
 	}
 	function later() {
 		clearTimeout( timer );
+		// The spinner shows at once, not after the pause: the page is working (16/10/2026).
+		if ( ! card.hidden && ! wrap.hidden ) { wrap.classList.add( 'is-loading' ); }
 		timer = setTimeout( load, 700 );
 	}
 	form.addEventListener( 'change', later );

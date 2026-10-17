@@ -1044,10 +1044,15 @@ class Switcher {
 	 *
 	 * @param object $args wp_nav_menu() arguments.
 	 */
-	private static function is_wanted_menu( $args ): bool {
+	public static function is_wanted_menu( $args ): bool { // public: the search box (1.8.8) goes in the same menu
 		$loc = self::wanted_location();
 		if ( '' === $loc || ! is_object( $args ) ) {
 			return false;
+		}
+		// 1.8.8 (WoodMart 8.5 code, header-elements/main-menu.php): the header builder's «Main menu» calls the
+		// menu picked in the builder by ID, not by location. Its class says it is the main one.
+		if ( isset( $args->menu_class ) && preg_match( '/\bwd-nav-(?:main|fs)\b/', (string) $args->menu_class ) ) {
+			return true;
 		}
 		if ( isset( $args->theme_location ) && '' !== (string) $args->theme_location ) {
 			return (string) $args->theme_location === $loc || in_array( (string) $args->theme_location, self::mobile_locations(), true );

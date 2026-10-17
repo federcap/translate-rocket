@@ -67,9 +67,27 @@ class FormMails {
 	const GIVE_URL = '[givewp e-mails]';
 
 	/**
+	 * Where Gravity Forms' notification wording is filed (1.8.8).
+	 */
+	const GRAVITY_URL = '[gravity forms e-mails]';
+
+	/**
+	 * Where the e-mails of plugins without an integration of their own are filed (1.8.8).
+	 */
+	const VISITOR_URL = '[e-mails to visitors]';
+
+	/**
 	 * The forms' tags: Contact Form 7's [your-name], WPForms' {field_id="1"} and {all_fields}.
 	 */
 	const TAGS = '/\[[^\]]*\]|\{[^}]*\}/';
+
+	/**
+	 * Set by every integration that already put an e-mail in the visitor's language, so the generic
+	 * wp_mail pass leaves it alone (its lines are no longer the owner's wording).
+	 *
+	 * @var bool
+	 */
+	public static $handled = false;
 
 	/**
 	 * Hooks.
@@ -79,6 +97,10 @@ class FormMails {
 			return;
 		}
 		add_filter( 'wpcf7_contact_form_property_mail_2', array( $this, 'cf7_reply' ), 20, 2 );
+		// 16/10/2026 (competitors' code, ×4): every other plugin's e-mail to the visitor — membership, booking,
+		// newsletter, directory — in the language of the page it was sent from. Only when the recipient is an
+		// address the visitor typed in this very request: the owner's own e-mails never change language.
+		add_filter( 'wp_mail', array( $this, 'visitor_mail' ), 20 );
 		// WPForms (6M sites): the notification sent to the address the visitor typed in the form.
 		add_filter( 'wpforms_entry_email_atts', array( $this, 'wpforms_notification' ), 20, 5 );
 		// Fluent Forms (600k sites): its notifications, before the {inputs.name} shortcodes are filled in.
@@ -104,12 +126,84 @@ class FormMails {
 		add_filter( 'wpcf7_display_message', array( $this, 'cf7_message' ), 20 );
 		// Otter Blocks (300k sites): its form's success and error messages, answered through the REST API.
 		add_filter( 'otter_form_data_preparation', array( $this, 'otter_messages' ), 20 );
+		// 1.8.8 (Gravity Forms docs: gform_notification, gform_confirmation): the e-mail to the visitor and
+		// what they see after sending, in the language of the page they sent it from.
+		add_filter( 'gform_notification', array( $this, 'gravity_notification' ), 20, 3 );
+		add_filter( 'gform_confirmation', array( $this, 'gravity_confirmation' ), 20, 4 );
 		// GiveWP (100k sites): the e-mails to the donor, before their {tags} are filled in.
 		foreach ( array( 'donation-receipt', 'offline-donation-instruction' ) as $id ) {
 			add_filter( "give_{$id}_get_email_subject", array( $this, 'give_text' ), 20 );
 			add_filter( "give_{$id}_get_email_message", array( $this, 'give_text' ), 20 );
 			add_filter( "give_{$id}_get_email_header", array( $this, 'give_text' ), 20 );
 		}
+	}
+
+	/**
+	 * A plugin's e-mail (wp_mail) to the visitor, in the language of the page it was sent from.
+	 *
+	 * @param mixed $args wp_mail arguments (to, subject, message, headers, attachments).
+	 * @return mixed
+	 */
+	public function visitor_mail( $args ) {
+		if ( ! is_array( $args ) || self::$handled || wp_doing_cron() || ( is_admin() && ! wp_doing_ajax() ) ) {
+			return $args;
+		}
+		$router = Plugin::instance()->router();
+		$lang   = $router->request_language();
+		if ( '' === $lang || $router->is_default( $lang ) || ! in_array( $lang, $router->secondary_languages(), true ) ) {
+			return $args;
+		}
+		$to = $args['to'] ?? '';
+		$to = is_array( $to ) ? $to : explode( ',', (string) $to );
+		$to = array_filter( array_map( static function ( $a ) { return strtolower( trim( (string) preg_replace( '/^.*<([^>]+)>.*$/', '$1', (string) $a ) ) ); }, $to ) );
+		if ( empty( $to ) || in_array( strtolower( (string) get_option( 'admin_email' ) ), $to, true ) ) {
+			return $args;
+		}
+		$typed = self::typed_addresses();
+		if ( empty( $typed ) || ! array_intersect( $to, $typed ) ) {
+			return $args; // not to the visitor
+		}
+		$subject = isset( $args['subject'] ) ? (string) $args['subject'] : '';
+		$message = isset( $args['message'] ) ? (string) $args['message'] : '';
+		if ( '' === trim( $message ) ) {
+			return $args;
+		}
+		self::remember( self::VISITOR_URL, array_merge( array( $subject ), self::lines( $message ) ) );
+		if ( ! Strings::has_translations( $lang ) ) {
+			return $args;
+		}
+		$map             = Strings::translate_texts( array_merge( array( trim( $subject ) ), self::lines( $message ) ), $lang );
+		$args['subject'] = self::put( $subject, $map );
+		$args['message'] = self::put_body( $message, $map );
+		return $args;
+	}
+
+	/**
+	 * The e-mail addresses the visitor typed in this request (any field of the form), lower-case.
+	 *
+	 * @return string[]
+	 */
+	private static function typed_addresses(): array {
+		$out  = array();
+		$walk = static function ( $v ) use ( &$walk, &$out ) {
+			if ( is_array( $v ) ) {
+				foreach ( $v as $x ) {
+					$walk( $x );
+				}
+			} elseif ( is_string( $v ) && strlen( $v ) < 200 && is_email( trim( $v ) ) ) {
+				$out[ strtolower( trim( $v ) ) ] = true;
+			}
+		};
+		$walk( wp_unslash( $_POST ) ); // phpcs:ignore WordPress.Security.NonceVerification -- read only, to recognise the visitor
+		// JSON bodies (REST, fetch)
+		$raw = (string) file_get_contents( 'php://input' );
+		if ( '' !== $raw && '{' === $raw[0] ) {
+			$j = json_decode( $raw, true );
+			if ( is_array( $j ) ) {
+				$walk( $j );
+			}
+		}
+		return array_keys( $out );
 	}
 
 	/**
@@ -120,6 +214,7 @@ class FormMails {
 	 * @return mixed
 	 */
 	public function give_text( $text ) {
+		self::$handled = true;
 		if ( ! is_string( $text ) || '' === trim( $text ) ) {
 			return $text;
 		}
@@ -259,6 +354,7 @@ class FormMails {
 	 * @return mixed
 	 */
 	public function sureforms_notifications( $notifications ) {
+		self::$handled = true;
 		if ( ! is_array( $notifications ) ) {
 			return $notifications;
 		}
@@ -318,6 +414,7 @@ class FormMails {
 	 * @return mixed
 	 */
 	public function everest_notification( $email ) {
+		self::$handled = true;
 		if ( ! $this->evf_to_visitor || ! is_array( $email ) ) {
 			return $email;
 		}
@@ -351,6 +448,7 @@ class FormMails {
 	 * @param mixed $action The action (a post object; its post_content holds the settings).
 	 */
 	public function formidable_email( $action ): void {
+		self::$handled = true;
 		if ( ! is_object( $action ) || ! isset( $action->post_content ) || ! is_array( $action->post_content ) ) {
 			return;
 		}
@@ -393,6 +491,7 @@ class FormMails {
 	 * @return mixed
 	 */
 	public function ninja_email( $settings ) {
+		self::$handled = true;
 		// The «Success Message» action: what the visitor reads once the form is sent.
 		if ( is_array( $settings ) && 'successmessage' === ( $settings['type'] ?? '' ) && isset( $settings['success_msg'] ) && is_string( $settings['success_msg'] ) ) {
 			$settings['success_msg'] = self::message( $settings['success_msg'] );
@@ -437,6 +536,7 @@ class FormMails {
 	 * @return mixed
 	 */
 	public function fluent_notification( $feed, $insert_id = null, $form_data = null, $form = null ) {
+		self::$handled = true;
 		unset( $insert_id, $form_data, $form );
 		if ( ! is_array( $feed ) || 'notifications' !== ( $feed['meta_key'] ?? '' ) || ! isset( $feed['settings'] ) || ! is_array( $feed['settings'] ) ) {
 			return $feed;
@@ -473,6 +573,7 @@ class FormMails {
 	 * @return mixed
 	 */
 	public function wpforms_notification( $email, $fields = null, $entry = null, $form_data = null, $notification_id = null ) {
+		self::$handled = true;
 		unset( $fields, $entry );
 		if ( ! is_array( $email ) || ! is_array( $form_data ) ) {
 			return $email;
@@ -497,6 +598,61 @@ class FormMails {
 	}
 
 	/**
+	 * Gravity Forms: a notification sent to an address typed in the form (the visitor), in their language.
+	 * Notifications to the site's own addresses stay in the site's language.
+	 *
+	 * @param mixed $notification Notification settings (subject, message, toType…).
+	 * @param mixed $form         Form.
+	 * @param mixed $entry        Entry.
+	 * @return mixed
+	 */
+	public function gravity_notification( $notification, $form = null, $entry = null ) {
+		self::$handled = true;
+		unset( $form, $entry );
+		if ( ! is_array( $notification ) || 'field' !== ( $notification['toType'] ?? '' ) ) {
+			return $notification;
+		}
+		$subject = isset( $notification['subject'] ) ? (string) $notification['subject'] : '';
+		$message = isset( $notification['message'] ) ? (string) $notification['message'] : '';
+		self::remember( self::GRAVITY_URL, array_merge( array( $subject ), self::lines( $message ) ) );
+
+		$router = Plugin::instance()->router();
+		$lang   = $router->request_language();
+		if ( '' === $lang || $router->is_default( $lang ) || ! Strings::has_translations( $lang ) ) {
+			return $notification;
+		}
+		$map                     = Strings::translate_texts( array_merge( array( trim( $subject ) ), self::lines( $message ) ), $lang );
+		$notification['subject'] = self::put( $subject, $map );
+		$notification['message'] = self::put_body( $message, $map );
+		return $notification;
+	}
+
+	/**
+	 * Gravity Forms' confirmation: the message translated, a redirect to the page in the same language.
+	 *
+	 * @param mixed $confirmation Message (HTML) or array( 'redirect' => URL ).
+	 * @param mixed $form         Form.
+	 * @param mixed $entry        Entry.
+	 * @param mixed $ajax         Sent with AJAX.
+	 * @return mixed
+	 */
+	public function gravity_confirmation( $confirmation, $form = null, $entry = null, $ajax = false ) {
+		unset( $form, $entry, $ajax );
+		if ( is_string( $confirmation ) ) {
+			return self::message( $confirmation );
+		}
+		if ( is_array( $confirmation ) && isset( $confirmation['redirect'] ) && is_string( $confirmation['redirect'] ) ) {
+			$router = Plugin::instance()->router();
+			$lang   = $router->request_language();
+			if ( '' !== $lang && ! $router->is_default( $lang ) ) {
+				$home                     = (string) get_option( 'home' );
+				$confirmation['redirect'] = Engine::localize_link( $confirmation['redirect'], (string) wp_parse_url( $home, PHP_URL_HOST ), rtrim( (string) wp_parse_url( $home, PHP_URL_PATH ), '/' ), $lang, $router->secondary_languages() );
+			}
+		}
+		return $confirmation;
+	}
+
+	/**
 	 * Contact Form 7's automatic reply, read while a form is being sent.
 	 *
 	 * @param mixed $mail The «mail_2» property.
@@ -504,6 +660,7 @@ class FormMails {
 	 * @return mixed
 	 */
 	public function cf7_reply( $mail, $form = null ) {
+		self::$handled = true;
 		unset( $form );
 		// Only while a visitor's submission is processed (the property is read in the editor too).
 		if ( ! is_array( $mail ) || empty( $mail['active'] ) || ! isset( $_POST['_wpcf7'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check of who is sending; Contact Form 7 verifies the submission.

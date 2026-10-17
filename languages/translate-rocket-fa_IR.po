@@ -6631,3 +6631,433 @@ msgstr "هنوز مانده: %d."
 #: src/Admin/Admin.php
 msgid "Continue translating"
 msgstr "ادامهٔ ترجمه"
+
+#: assets/js/search-block.js
+msgid "A search box that searches in the language of the page."
+msgstr "یک کادر جستجو که به زبان صفحه جستجو می‌کند."
+
+#: assets/js/search-block.js
+msgid "As in the profile"
+msgstr "مانند نمایه"
+
+#: assets/js/search-block.js
+msgid "As in the settings"
+msgstr "مانند تنظیمات"
+
+#: assets/js/search-block.js
+msgid "Look of the search box"
+msgstr "ظاهر کادر جستجو"
+
+#: assets/js/search-block.js
+msgid "No"
+msgstr "خیر"
+
+#: assets/js/search-block.js
+msgid "Profile (set up on the Search screen)"
+msgstr "نمایه (در صفحهٔ جستجو تنظیم می‌شود)"
+
+#: assets/js/search-block.js
+msgid "The language of the page"
+msgstr "زبان صفحه"
+
+#: assets/js/search-block.js
+msgid "TranslateRocket search"
+msgstr "جستجوی TranslateRocket"
+
+#: assets/js/search-block.js
+msgid "Yes"
+msgstr "بله"
+
+#: src/Admin/Admin.php
+msgid "0 with the free engines; with a paid key, a cap that fits your plan"
+msgstr "۰ برای موتورهای رایگان؛ با کلید پولی، سقفی متناسب با طرح شما"
+
+#: src/Admin/Admin.php
+msgid "Appearance → Menus"
+msgstr "نمایش ← فهرست‌ها"
+
+#: src/Admin/Admin.php
+msgid "Choose the languages"
+msgstr "زبان‌ها را انتخاب کنید"
+
+#: src/Admin/Admin.php
+msgid "Everyone"
+msgstr "همه"
+
+#: src/Admin/Admin.php
+msgid "Flip its switch to Online when you like it."
+msgstr "وقتی پسندیدید، کلیدش را روی «آنلاین» بگذارید."
+
+#: src/Admin/Admin.php
+msgid "Kept as it was"
+msgstr "همان‌طور که بود ماند"
+
+#: src/Admin/Admin.php
+msgid "Look at your translated site"
+msgstr "سایت ترجمه‌شدهٔ خود را ببینید"
+
+#: src/Admin/Admin.php
+msgid "No engine is ready: translate by hand or with your browser"
+msgstr "هیچ موتوری آماده نیست: دستی یا با مرورگرتان ترجمه کنید"
+
+#: src/Admin/Admin.php
+msgid "Open the sentences"
+msgstr "جمله‌ها را باز کنید"
+
+#: src/Admin/Admin.php
+msgid "Press «Translate» next to a language: no key, no account."
+msgstr "کنار یک زبان «ترجمه» را بزنید: بدون کلید، بدون حساب."
+
+#: src/Admin/Admin.php
+msgid "Put it online"
+msgstr "آنلاینش کنید"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Recommended: %s"
+msgstr "پیشنهادی: %s"
+
+#: src/Admin/Admin.php
+msgid "Review"
+msgstr "بازبینی"
+
+#: src/Admin/Admin.php
+msgid "See them in Translation memory"
+msgstr "آنها را در حافظهٔ ترجمه ببینید"
+
+#: src/Admin/Admin.php
+msgid "Set up this engine"
+msgstr "این موتور را تنظیم کنید"
+
+#: src/Admin/Admin.php
+msgid "Start"
+msgstr "شروع"
+
+#: src/Admin/Admin.php
+msgid "The iubenda cookie banner already speaks the language of each page: TranslateRocket tells it which one, and never translates its legal text. If you have a privacy policy in each language on iubenda, write its number here, one per line (for example en=12345678): on the English pages the banner and its links open the English policy. With the new iubenda multilingual snippet you need nothing here."
+msgstr "بنر کوکی iubenda از قبل به زبان هر صفحه حرف می‌زند: TranslateRocket به آن می‌گوید کدام زبان، و هرگز متن حقوقی‌اش را ترجمه نمی‌کند. اگر در iubenda برای هر زبان یک سیاست حریم خصوصی دارید، شمارهٔ آن را اینجا بنویسید، هر کدام در یک خط (مثلاً en=12345678): در صفحه‌های انگلیسی، بنر و پیوندهایش سیاست انگلیسی را باز می‌کنند. با قطعه‌کد چندزبانهٔ جدید iubenda اینجا به چیزی نیاز ندارید."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The menus are created and edited in %s. The columns are the places your theme has for menus; «The same, translated» keeps your usual menu, translated."
+msgstr "فهرست‌ها در %s ساخته و ویرایش می‌شوند. ستون‌ها جایگاه‌هایی هستند که پوستهٔ شما برای فهرست دارد؛ «همان، ترجمه‌شده» فهرست همیشگی‌تان را ترجمه‌شده نگه می‌دارد."
+
+#: src/Admin/Admin.php
+msgid "The sentences kept as they were go back to «missing», to try them with another engine or by hand"
+msgstr "جمله‌هایی که همان‌طور ماندند به «ناقص» برمی‌گردند تا با موتوری دیگر یا دستی امتحان شوند"
+
+#: src/Admin/Admin.php
+msgid "Tick them below and save."
+msgstr "در پایین تیک بزنید و ذخیره کنید."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translate again the %d kept ones"
+msgstr "%d جملهٔ باقی‌مانده را دوباره ترجمه کن"
+
+#: src/Admin/Admin.php
+msgid "Translate this page with the engine chosen above"
+msgstr "این صفحه را با موتور انتخاب‌شده در بالا ترجمه کن"
+
+#: src/Admin/Admin.php
+msgid "Translate your site in three steps"
+msgstr "سایتتان را در سه گام ترجمه کنید"
+
+#: src/Admin/Admin.php
+msgid "Translate, for free"
+msgstr "ترجمه کنید، رایگان"
+
+#: src/Admin/Admin.php
+msgid "Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead: other pages, another order, written in that language (it is not translated). How: 1) in Appearance → Menus (block themes: in the Site Editor) create the menu and name it, for example «Menu DE»; 2) come back here and choose it next to that language; 3) save. Each column is one of the places your theme has for menus (header, footer…): choose, for that place, the menu to show in that language."
+msgstr "معمولاً هر زبان فهرست شما را ترجمه‌شده نشان می‌دهد. اینجا یک زبان می‌تواند به‌جایش فهرستی کاملاً مخصوص خودش داشته باشد: صفحه‌های دیگر، ترتیبی دیگر، نوشته‌شده به همان زبان (ترجمه نمی‌شود). روش: ۱) در نمایش ← فهرست‌ها (پوسته‌های بلوکی: در ویرایشگر سایت) فهرست را بسازید و نامی بدهید، مثلاً «Menu DE»؛ ۲) به اینجا برگردید و آن را کنار آن زبان انتخاب کنید؛ ۳) ذخیره کنید. هر ستون یکی از جایگاه‌های فهرست در پوستهٔ شماست (سربرگ، پابرگ…): برای آن جایگاه، فهرستی را که به آن زبان نمایش داده می‌شود انتخاب کنید."
+
+#: src/Admin/Admin.php
+msgid "iubenda policy per language"
+msgstr "سیاست iubenda برای هر زبان"
+
+#: src/Admin/Admin.php
+msgid "off (better for search engines)"
+msgstr "خاموش (برای موتورهای جستجو بهتر است)"
+
+#: src/Admin/Admin.php
+msgid "off: another page cache is already active on this site"
+msgstr "خاموش: کش صفحهٔ دیگری در این سایت فعال است"
+
+#: src/Admin/Admin.php
+msgid "on"
+msgstr "روشن"
+
+#: src/Admin/Admin.php
+msgid "the day your plan renews; 0 if you use only free engines"
+msgstr "روزی که طرح شما تمدید می‌شود؛ ۰ اگر فقط از موتورهای رایگان استفاده می‌کنید"
+
+#: src/Admin/Farewell.php
+#, php-format
+msgid "I agree to be contacted about this problem only. The e-mail is deleted after 6 months, and never used for anything else (%s)."
+msgstr "موافقم که فقط دربارهٔ همین مشکل با من تماس بگیرند. ایمیل پس از ۶ ماه حذف می‌شود و هرگز برای چیز دیگری به کار نمی‌رود (%s)."
+
+#: src/Admin/Farewell.php
+msgid "Keep it active and get help"
+msgstr "فعال نگه دارید و کمک بگیرید"
+
+#: src/Admin/Farewell.php
+msgid "Leave your e-mail and we will contact you to solve it (optional):"
+msgstr "ایمیلتان را بگذارید تا برای حل آن با شما تماس بگیریم (اختیاری):"
+
+#: src/Admin/Farewell.php
+msgid "Try the Simple view: three steps"
+msgstr "نمای ساده را امتحان کنید: سه گام"
+
+#: src/Admin/Farewell.php
+msgid "Wait a moment: we fix it for you, free, usually the same day."
+msgstr "یک لحظه صبر کنید: ما رایگان برایتان درستش می‌کنیم، معمولاً همان روز."
+
+#: src/Admin/Farewell.php
+msgid "privacy policy"
+msgstr "سیاست حریم خصوصی"
+
+#: src/Admin/SearchPage.php
+msgid "A search box that always searches in the language of the page. Make profiles (header, footer, phone menu…), each with its own look, its own options and a live preview."
+msgstr "کادر جستجویی که همیشه به زبان صفحه جستجو می‌کند. نمایه بسازید (سربرگ، پابرگ، منوی موبایل…)، هر کدام با ظاهر و گزینه‌های خودش و پیش‌نمایش زنده."
+
+#: src/Admin/SearchPage.php
+msgid "Always in sight, under the box"
+msgstr "همیشه در دید، زیر کادر"
+
+#: src/Admin/SearchPage.php
+msgid "At the bottom of every page"
+msgstr "در پایین هر صفحه"
+
+#: src/Admin/SearchPage.php
+msgid "At the end of the menu the language switcher uses (Appearance → Menus decides which)."
+msgstr "در انتهای فهرستی که تغییر زبان از آن استفاده می‌کند (نمایش ← فهرست‌ها تعیین می‌کند کدام)."
+
+#: src/Admin/SearchPage.php
+msgid "Behind a «Filters» button"
+msgstr "پشت دکمهٔ «فیلترها»"
+
+#: src/Admin/SearchPage.php
+msgid "Computer"
+msgstr "رایانه"
+
+#: src/Admin/SearchPage.php
+msgid "Computer and phone"
+msgstr "رایانه و موبایل"
+
+#: src/Admin/SearchPage.php
+msgid "Computer only"
+msgstr "فقط رایانه"
+
+#: src/Admin/SearchPage.php
+msgid "Each profile is one search box in one place. Only one profile can be in the header menu, one in the phone menu and one at the bottom: choosing a place takes it from the profile that had it."
+msgstr "هر نمایه یک کادر جستجو در یک جایگاه است. فقط یک نمایه می‌تواند در منوی سربرگ باشد، یکی در منوی موبایل و یکی در پایین: انتخاب یک جایگاه آن را از نمایه‌ای که داشت می‌گیرد."
+
+#: src/Admin/SearchPage.php
+msgid "Empty = «Search…» already in the language of each page. Your own text is translated like the rest of the site."
+msgstr "خالی = «جستجو…» از قبل به زبان هر صفحه. متن خودتان مثل بقیهٔ سایت ترجمه می‌شود."
+
+#: src/Admin/SearchPage.php
+msgid "Field"
+msgstr "کادر"
+
+#: src/Admin/SearchPage.php
+msgid "Filters for the visitor"
+msgstr "فیلترها برای بازدیدکننده"
+
+#: src/Admin/SearchPage.php
+msgid "In a menu, a magnifier takes the least room; at the bottom of the page, a field is clearer."
+msgstr "در منو، ذره‌بین کمترین جا را می‌گیرد؛ در پایین صفحه، کادر واضح‌تر است."
+
+#: src/Admin/SearchPage.php
+msgid "In my phone menu (burger)"
+msgstr "در منوی موبایل من (همبرگری)"
+
+#: src/Admin/SearchPage.php
+msgid "Languages & general"
+msgstr "زبان‌ها و عمومی"
+
+#: src/Admin/SearchPage.php
+msgid "Look"
+msgstr "ظاهر"
+
+#: src/Admin/SearchPage.php
+msgid "Look in"
+msgstr "جستجو در"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens a field"
+msgstr "ذره‌بینی که یک کادر باز می‌کند"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens the search over the page"
+msgstr "ذره‌بینی که جستجو را روی صفحه باز می‌کند"
+
+#: src/Admin/SearchPage.php
+msgid "Make one profile «Computer only» (a field in the header) and another «Phone only» (a magnifier in the burger menu) to have the right box on each screen."
+msgstr "یک نمایهٔ «فقط رایانه» (یک کادر در سربرگ) و یکی «فقط موبایل» (ذره‌بین در منوی همبرگری) بسازید تا در هر صفحه کادر مناسب را داشته باشید."
+
+#: src/Admin/SearchPage.php
+msgid "Paste the shortcode in a page, a widget or your builder, or add the block «TranslateRocket search»."
+msgstr "کد کوتاه را در یک صفحه، ابزارک یا صفحه‌ساز خود بچسبانید، یا بلوک «جستجوی TranslateRocket» را اضافه کنید."
+
+#: src/Admin/SearchPage.php
+msgid "Phone only"
+msgstr "فقط موبایل"
+
+#: src/Admin/SearchPage.php
+msgid "Profiles"
+msgstr "نمایه‌ها"
+
+#: src/Admin/SearchPage.php
+msgid "Rounded field"
+msgstr "کادر گرد"
+
+#: src/Admin/SearchPage.php
+msgid "Save this profile"
+msgstr "این نمایه را ذخیره کن"
+
+#: src/Admin/SearchPage.php
+msgid "Saved. The preview below shows it as it is now."
+msgstr "ذخیره شد. پیش‌نمایش زیر آن را همان‌طور که اکنون هست نشان می‌دهد."
+
+#: src/Admin/SearchPage.php
+msgid "Search box"
+msgstr "کادر جستجو"
+
+#: src/Admin/SearchPage.php
+msgid "Search the translations of every language"
+msgstr "جستجو در ترجمه‌های همهٔ زبان‌ها"
+
+#: src/Admin/SearchPage.php
+msgid "Search…"
+msgstr "جستجو…"
+
+#: src/Admin/SearchPage.php
+msgid "Show suggestions"
+msgstr "نمایش پیشنهادها"
+
+#: src/Admin/SearchPage.php
+msgid "Shown on"
+msgstr "نمایش در"
+
+#: src/Admin/SearchPage.php
+msgid "Small buttons the visitor can use: the kind of content (All · Posts · Pages · Products…) and «Every language». Always in sight under the box, or behind a «Filters» button."
+msgstr "دکمه‌های کوچکی که بازدیدکننده می‌تواند استفاده کند: نوع محتوا (همه · نوشته‌ها · صفحه‌ها · محصولات…) و «همهٔ زبان‌ها». همیشه در دید زیر کادر، یا پشت دکمهٔ «فیلترها»."
+
+#: src/Admin/SearchPage.php
+msgid "Suggestions while typing"
+msgstr "پیشنهاد هنگام تایپ"
+
+#: src/Admin/SearchPage.php
+msgid "Text in the empty field"
+msgstr "متن در کادر خالی"
+
+#: src/Admin/SearchPage.php
+msgid "The box as your visitors see it, with the look and the options of this profile, at computer and phone width. It follows your changes as you make them; save to keep them."
+msgstr "کادر همان‌طور که بازدیدکنندگان می‌بینند، با ظاهر و گزینه‌های این نمایه، در عرض رایانه و موبایل. تغییرات شما را همان لحظه دنبال می‌کند؛ برای نگه داشتن ذخیره کنید."
+
+#: src/Admin/SearchPage.php
+msgid "What it searches"
+msgstr "در چه چیزی جستجو می‌کند"
+
+#: src/Admin/SearchPage.php
+msgid "Which kinds of content the box searches. None ticked: everything the site search can find."
+msgstr "کادر در کدام نوع محتوا جستجو می‌کند. هیچ‌کدام تیک نخورده: هر چیزی که جستجوی سایت می‌تواند پیدا کند."
+
+#: src/Admin/SearchPage.php
+msgid "Width of the field"
+msgstr "عرض کادر"
+
+#: src/Admin/SearchPage.php
+msgid "by type"
+msgstr "بر اساس نوع"
+
+#: src/Admin/SearchPage.php
+msgid "how many:"
+msgstr "چند تا:"
+
+#: src/Admin/SearchPage.php
+msgid "none in a menu; «always in sight» on a search page"
+msgstr "در منو هیچ؛ «همیشه در دید» در صفحهٔ جستجو"
+
+#: src/Admin/SearchPage.php
+msgid "none ticked (everything)"
+msgstr "هیچ‌کدام تیک نخورده (همه)"
+
+#: src/Admin/SearchPage.php
+msgid "off: the language of the page"
+msgstr "خاموش: زبان صفحه"
+
+#: src/Admin/SearchPage.php
+msgid "on, 6"
+msgstr "روشن، ۶"
+
+#: src/Admin/SearchPage.php
+msgid "«Every language»"
+msgstr "«همهٔ زبان‌ها»"
+
+#: src/Admin/SearchPage.php
+msgid "— the shortcode of this profile; the block «TranslateRocket search» has a profile choice too."
+msgstr "— کد کوتاه این نمایه؛ بلوک «جستجوی TranslateRocket» هم انتخاب نمایه دارد."
+
+#: src/Admin/View.php
+msgid "Simple"
+msgstr "ساده"
+
+#: src/Frontend/SearchBox.php
+msgid "All"
+msgstr "همه"
+
+#: src/Frontend/SearchBox.php
+msgid "Every language"
+msgstr "همهٔ زبان‌ها"
+
+#: src/Frontend/SearchBox.php
+msgid "Filters"
+msgstr "فیلترها"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%d sentence was kept as it was: a name, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgid_plural "%d sentences were kept as they were: names, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgstr[0] "%d جمله همان‌طور که بود ماند: نامی یا متنی نه به زبان سایت، که موتور نمی‌تواند ترجمه کند. صفحه کامل به حساب می‌آید؛ «جمله‌های باقی‌مانده را دوباره ترجمه کن» در منوی «⋯» یک صفحه آنها را با موتوری دیگر امتحان می‌کند."
+msgstr[1] "%d جمله همان‌طور که بودند ماندند: نام‌ها یا متن‌هایی نه به زبان سایت، که موتور نمی‌تواند ترجمه کند. صفحه کامل به حساب می‌آید؛ «جمله‌های باقی‌مانده را دوباره ترجمه کن» در منوی «⋯» یک صفحه آنها را با موتوری دیگر امتحان می‌کند."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s translated. %2$s sentences were not translated by this engine: often they are not written in the site's language. You can translate them by hand or with another engine."
+msgstr "%1$s ترجمه شد. %2$s جمله را این موتور ترجمه نکرد: اغلب به زبان سایت نوشته نشده‌اند. می‌توانید دستی یا با موتوری دیگر ترجمه‌شان کنید."
+
+#: src/Admin/SearchPage.php
+msgid "A row at the end of every page, before the theme's footer."
+msgstr "یک ردیف در انتهای هر صفحه، پیش از پابرگ پوسته."
+
+#: src/Admin/SearchPage.php
+msgid "Empty = the theme's size. Examples: 14em, 240px, 100%."
+msgstr "خالی = اندازهٔ پوسته. مثال: 14em، 240px، 100%."
+
+#: src/Admin/SearchPage.php
+msgid "From the third letter the matching pages appear under the box, with their title in the page's language. Answers are kept ten minutes, so a busy site asks the database once per word."
+msgstr "از حرف سوم، صفحه‌های مطابق زیر کادر ظاهر می‌شوند، با عنوانشان به زبان صفحه. پاسخ‌ها ده دقیقه نگه داشته می‌شوند تا سایت پربازدید برای هر واژه فقط یک بار از پایگاه داده بپرسد."
+
+#: src/Admin/SearchPage.php
+msgid "Normally the box searches the translations of the page's language: on /de/ a visitor types in German and finds the German pages. «Every language» also looks in the other languages, for a site whose visitors mix them."
+msgstr "معمولاً کادر در ترجمه‌های زبان صفحه جستجو می‌کند: در ‎/de/‎ بازدیدکننده آلمانی می‌نویسد و صفحه‌های آلمانی را می‌یابد. «همهٔ زبان‌ها» در زبان‌های دیگر هم می‌گردد، برای سایتی که بازدیدکنندگانش زبان‌ها را قاطی می‌کنند."
+
+#: src/Admin/SearchPage.php
+msgid "Only in the theme's phone menu, the one behind the ☰ button."
+msgstr "فقط در منوی موبایل پوسته، همان که پشت دکمهٔ ☰ است."
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "Which menu is the header menu, and which the phone menu, is decided in %s (the menu assigned to the theme's main place, and to its phone place when it has one)."
+msgstr "اینکه کدام فهرست سربرگ است و کدام موبایل، در %s تعیین می‌شود (فهرستی که به جایگاه اصلی پوسته و، اگر داشته باشد، به جایگاه موبایل آن اختصاص یافته)."
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "«Search in every language» is off on %s: the box would search only the site's own language."
+msgstr "«جستجو در همهٔ زبان‌ها» در %s خاموش است: کادر فقط در زبان خود سایت جستجو می‌کند."
+
+#: src/Admin/Admin.php
+msgid "Only kept as they were"
+msgstr "فقط آنهایی که همان‌طور ماندند"

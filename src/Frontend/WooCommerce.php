@@ -594,6 +594,7 @@ class WooCommerce {
 	 * @return mixed
 	 */
 	public function email_content( $content ) {
+		\TranslateRocket\Frontend\FormMails::$handled = true; // WooCommerce's e-mails have their own language here
 		$lang                    = $this->email_lang;
 		$is_customer             = $this->email_is_customer;
 		$order                   = $this->email_order;
@@ -845,9 +846,14 @@ class WooCommerce {
 	 * @return mixed
 	 */
 	public function script_data( $data, $handle ) {
-		unset( $handle );
 		if ( ! is_array( $data ) || '' === $this->lang ) {
 			return $data;
+		}
+		// 16/10/2026 (competitors' code): the mini-cart fragments live in the browser's sessionStorage under one
+		// key; after a change of language the visitor kept seeing the cart in the previous language until
+		// WooCommerce refreshed it. One key per language, nothing else changes.
+		if ( 'wc-cart-fragments' === (string) $handle && isset( $data['fragment_name'] ) && is_string( $data['fragment_name'] ) ) {
+			$data['fragment_name'] .= '_' . sanitize_key( $this->lang );
 		}
 		$texts = array();
 		foreach ( $data as $key => $val ) {

@@ -28,6 +28,8 @@
 	var SKIP_TAGS  = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, TEXTAREA: 1, CODE: 1, PRE: 1, TEMPLATE: 1, SVG: 1 };
 	// Administrator tooling (debug panels, page-builder helpers): never page content.
 	var TOOLS      = ( cfg.tools || [] ).map( function ( p ) { return String( p ).toLowerCase(); } );
+	// Whole class names, not prefixes (16/10/2026): «elementor-hidden-mobile» is the site's per-device visibility.
+	var EXACT      = ( cfg.exact || [] ).map( function ( p ) { return String( p ).toLowerCase(); } );
 
 	function isTool( el ) {
 		var id  = ( el.id || '' ).toLowerCase();
@@ -38,7 +40,7 @@
 				return true;
 			}
 			for ( j = 0; j < cls.length; j++ ) {
-				if ( cls[ j ].indexOf( TOOLS[ i ] ) === 0 ) {
+				if ( EXACT.indexOf( TOOLS[ i ] ) !== -1 ? cls[ j ] === TOOLS[ i ] : cls[ j ].indexOf( TOOLS[ i ] ) === 0 ) {
 					return true;
 				}
 			}
@@ -80,6 +82,10 @@
 				return true;
 			}
 			if ( el.getAttribute && el.getAttribute( 'translate' ) === 'no' ) {
+				return true;
+			}
+			// Cookie banners (16/10/2026): legal text the provider already has in each language — never collected.
+			if ( el.id && /^(iubenda-cs-banner|iubenda-iframe|CybotCookiebotDialog|CookieDeclaration|usercentrics-root|usercentrics-cmp-ui)/.test( el.id ) ) {
 				return true;
 			}
 			// The «do not translate» marks of other tools (Google's class, TranslatePress, Weglot),

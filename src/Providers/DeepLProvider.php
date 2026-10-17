@@ -138,8 +138,8 @@ class DeepLProvider extends AbstractProvider {
 					$msg = sprintf(
 						/* translators: 1: characters used, 2: character limit. */
 						__( 'DeepL refuses to translate with this key ("quota exceeded"), although the same key reports %1$s of %2$s characters used. The block is on DeepL\'s side, not in your allowance and not in TranslateRocket.', 'translate-rocket' ),
-						number_format_i18n( (int) $uso['count'] ),
-						number_format_i18n( (int) $uso['limit'] )
+						\TranslateRocket\Admin\Formati::number( (int) $uso['count'] ),
+						\TranslateRocket\Admin\Formati::number( (int) $uso['limit'] )
 					);
 					if ( '' !== $detto ) {
 						/* translators: %s: DeepL's own message, in English. */

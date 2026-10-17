@@ -34,6 +34,9 @@ class Seo {
 	public function boot(): void {
 		// SEOPress hands over the whole <link> / <meta> tag.
 		add_filter( 'seopress_titles_canonical', array( $this, 'seopress_canonical' ), 20 );
+		// Google Site Kit compares the site's home URL with the one it registered: on a page in another language
+		// home_url() carries the language and Site Kit says «URL changed» (16/10/2026, competitors' code).
+		add_filter( 'googlesitekit_canonical_home_url', static function () { return (string) get_option( 'home' ); }, 20 );
 		add_filter( 'seopress_social_og_url', array( $this, 'seopress_og_url' ), 20 );
 		add_filter( 'seopress_sitemaps_xml_index', array( $this, 'seopress_index' ), 20 );
 		// All in One SEO: '' means «compute it yourself».

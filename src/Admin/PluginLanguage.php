@@ -56,6 +56,7 @@ class PluginLanguage {
 		// «al primo uso» nella lingua del profilo, senza passare da plugin_locale: si ricarica qui,
 		// subito dopo (translate-rocket.php lo registra su init a priorita' 0).
 		add_action( 'init', array( $this, 'load' ), 1 );
+		add_filter( 'load_script_translation_file', array( $this, 'script_json' ), 10, 3 );
 		add_action( 'admin_post_' . self::ACTION, array( $this, 'save' ) );
 	}
 
@@ -98,6 +99,31 @@ class PluginLanguage {
 				}
 			}
 		}
+	}
+
+	/**
+	 * The editor's scripts read their texts from JSON files named after WordPress' locale: with a plugin
+	 * language chosen, the file of that language is used instead (1.8.8).
+	 *
+	 * @param string|false $file   File WordPress would read.
+	 * @param string       $handle Script handle.
+	 * @param string       $domain Text domain.
+	 * @return string|false
+	 */
+	public function script_json( $file, string $handle, string $domain ) {
+		$l = self::chosen();
+		if ( 'translate-rocket' !== $domain || '' === $l || ! is_string( $file ) ) {
+			return $file;
+		}
+		$wp = determine_locale();
+		if ( 'en_US' === $l ) {
+			return false;
+		}
+		$mio = str_replace( '-' . $wp . '-', '-' . $l . '-', $file );
+		if ( $mio === $file ) {
+			$mio = preg_replace( '#(translate-rocket)-([a-zA-Z_]+)-([0-9a-f]{32}\.json)$#', '$1-' . $l . '-$3', $file );
+		}
+		return is_readable( (string) $mio ) ? $mio : $file;
 	}
 
 	/**

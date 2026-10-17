@@ -182,6 +182,7 @@ class DynamicContent {
 				'sig'   => wp_hash( 'trrocket_dyn_collect|' . $page ),
 				'title' => $title,
 				'tools' => array_values( \TranslateRocket\NoTranslate::tool_prefixes() ),
+				'exact' => \TranslateRocket\NoTranslate::EXACT_CLASSES,
 			)
 		);
 		wp_enqueue_script( $handle );

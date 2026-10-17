@@ -6631,3 +6631,433 @@ msgstr "Hâlâ eksik: %d."
 #: src/Admin/Admin.php
 msgid "Continue translating"
 msgstr "Çevirmeye devam et"
+
+#: assets/js/search-block.js
+msgid "A search box that searches in the language of the page."
+msgstr "Sayfanın dilinde arama yapan bir arama kutusu."
+
+#: assets/js/search-block.js
+msgid "As in the profile"
+msgstr "Profildeki gibi"
+
+#: assets/js/search-block.js
+msgid "As in the settings"
+msgstr "Ayarlardaki gibi"
+
+#: assets/js/search-block.js
+msgid "Look of the search box"
+msgstr "Arama kutusunun görünümü"
+
+#: assets/js/search-block.js
+msgid "No"
+msgstr "Hayır"
+
+#: assets/js/search-block.js
+msgid "Profile (set up on the Search screen)"
+msgstr "Profil (Arama ekranında ayarlanır)"
+
+#: assets/js/search-block.js
+msgid "The language of the page"
+msgstr "Sayfanın dili"
+
+#: assets/js/search-block.js
+msgid "TranslateRocket search"
+msgstr "TranslateRocket arama"
+
+#: assets/js/search-block.js
+msgid "Yes"
+msgstr "Evet"
+
+#: src/Admin/Admin.php
+msgid "0 with the free engines; with a paid key, a cap that fits your plan"
+msgstr "Ücretsiz motorlarla 0; ücretli anahtarla planınıza uygun bir üst sınır"
+
+#: src/Admin/Admin.php
+msgid "Appearance → Menus"
+msgstr "Görünüm → Menüler"
+
+#: src/Admin/Admin.php
+msgid "Choose the languages"
+msgstr "Dilleri seçin"
+
+#: src/Admin/Admin.php
+msgid "Everyone"
+msgstr "Herkes"
+
+#: src/Admin/Admin.php
+msgid "Flip its switch to Online when you like it."
+msgstr "Beğendiğinizde anahtarını «Çevrimiçi» yapın."
+
+#: src/Admin/Admin.php
+msgid "Kept as it was"
+msgstr "Olduğu gibi bırakıldı"
+
+#: src/Admin/Admin.php
+msgid "Look at your translated site"
+msgstr "Çevrilmiş sitenize bakın"
+
+#: src/Admin/Admin.php
+msgid "No engine is ready: translate by hand or with your browser"
+msgstr "Hazır motor yok: elle ya da tarayıcınızla çevirin"
+
+#: src/Admin/Admin.php
+msgid "Open the sentences"
+msgstr "Cümleleri aç"
+
+#: src/Admin/Admin.php
+msgid "Press «Translate» next to a language: no key, no account."
+msgstr "Bir dilin yanındaki «Çevir»e basın: anahtar yok, hesap yok."
+
+#: src/Admin/Admin.php
+msgid "Put it online"
+msgstr "Yayına alın"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Recommended: %s"
+msgstr "Önerilen: %s"
+
+#: src/Admin/Admin.php
+msgid "Review"
+msgstr "Gözden geçir"
+
+#: src/Admin/Admin.php
+msgid "See them in Translation memory"
+msgstr "Çeviri belleğinde gör"
+
+#: src/Admin/Admin.php
+msgid "Set up this engine"
+msgstr "Bu motoru ayarla"
+
+#: src/Admin/Admin.php
+msgid "Start"
+msgstr "Başla"
+
+#: src/Admin/Admin.php
+msgid "The iubenda cookie banner already speaks the language of each page: TranslateRocket tells it which one, and never translates its legal text. If you have a privacy policy in each language on iubenda, write its number here, one per line (for example en=12345678): on the English pages the banner and its links open the English policy. With the new iubenda multilingual snippet you need nothing here."
+msgstr "iubenda çerez bildirimi zaten her sayfanın dilini konuşur: TranslateRocket ona hangisi olduğunu söyler ve yasal metnini asla çevirmez. iubenda'da her dil için bir gizlilik politikanız varsa numarasını buraya her satıra bir tane yazın (örneğin en=12345678): İngilizce sayfalarda bildirim ve bağlantıları İngilizce politikayı açar. Yeni çok dilli iubenda parçacığıyla buraya hiçbir şey gerekmez."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The menus are created and edited in %s. The columns are the places your theme has for menus; «The same, translated» keeps your usual menu, translated."
+msgstr "Menüler %s içinde oluşturulur ve düzenlenir. Sütunlar temanızın menüler için ayırdığı yerlerdir; «Aynısı, çevrilmiş» her zamanki menünüzü çevrilmiş olarak korur."
+
+#: src/Admin/Admin.php
+msgid "The sentences kept as they were go back to «missing», to try them with another engine or by hand"
+msgstr "Olduğu gibi bırakılan cümleler yeniden «eksik» olur; başka bir motorla ya da elle denemek için"
+
+#: src/Admin/Admin.php
+msgid "Tick them below and save."
+msgstr "Aşağıda işaretleyip kaydedin."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translate again the %d kept ones"
+msgstr "Bırakılan %d cümleyi yeniden çevir"
+
+#: src/Admin/Admin.php
+msgid "Translate this page with the engine chosen above"
+msgstr "Bu sayfayı yukarıda seçilen motorla çevir"
+
+#: src/Admin/Admin.php
+msgid "Translate your site in three steps"
+msgstr "Sitenizi üç adımda çevirin"
+
+#: src/Admin/Admin.php
+msgid "Translate, for free"
+msgstr "Çevirin, ücretsiz"
+
+#: src/Admin/Admin.php
+msgid "Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead: other pages, another order, written in that language (it is not translated). How: 1) in Appearance → Menus (block themes: in the Site Editor) create the menu and name it, for example «Menu DE»; 2) come back here and choose it next to that language; 3) save. Each column is one of the places your theme has for menus (header, footer…): choose, for that place, the menu to show in that language."
+msgstr "Genellikle her dil menünüzü çevrilmiş olarak gösterir. Burada ise bir dil tamamen kendine ait bir menüye sahip olabilir: başka sayfalar, başka sıra, o dilde yazılmış (çevrilmez). Nasıl: 1) Görünüm → Menüler'de (blok temalar: Site Düzenleyici'de) menüyü oluşturup adlandırın, örneğin «Menu DE»; 2) buraya dönüp o dilin yanında seçin; 3) kaydedin. Her sütun temanızın menüler için ayırdığı yerlerden biridir (üst bilgi, alt bilgi…): o yer için, o dilde gösterilecek menüyü seçin."
+
+#: src/Admin/Admin.php
+msgid "iubenda policy per language"
+msgstr "Dil başına iubenda politikası"
+
+#: src/Admin/Admin.php
+msgid "off (better for search engines)"
+msgstr "kapalı (arama motorları için daha iyi)"
+
+#: src/Admin/Admin.php
+msgid "off: another page cache is already active on this site"
+msgstr "kapalı: bu sitede zaten başka bir sayfa önbelleği etkin"
+
+#: src/Admin/Admin.php
+msgid "on"
+msgstr "açık"
+
+#: src/Admin/Admin.php
+msgid "the day your plan renews; 0 if you use only free engines"
+msgstr "planınızın yenilendiği gün; yalnızca ücretsiz motor kullanıyorsanız 0"
+
+#: src/Admin/Farewell.php
+#, php-format
+msgid "I agree to be contacted about this problem only. The e-mail is deleted after 6 months, and never used for anything else (%s)."
+msgstr "Yalnızca bu sorun hakkında benimle iletişime geçilmesini kabul ediyorum. E-posta 6 ay sonra silinir ve başka hiçbir şey için kullanılmaz (%s)."
+
+#: src/Admin/Farewell.php
+msgid "Keep it active and get help"
+msgstr "Etkin tut ve yardım al"
+
+#: src/Admin/Farewell.php
+msgid "Leave your e-mail and we will contact you to solve it (optional):"
+msgstr "E-postanızı bırakın, çözmek için sizinle iletişime geçelim (isteğe bağlı):"
+
+#: src/Admin/Farewell.php
+msgid "Try the Simple view: three steps"
+msgstr "Basit görünümü deneyin: üç adım"
+
+#: src/Admin/Farewell.php
+msgid "Wait a moment: we fix it for you, free, usually the same day."
+msgstr "Bir dakika: sizin için düzeltiriz, ücretsiz, genellikle aynı gün."
+
+#: src/Admin/Farewell.php
+msgid "privacy policy"
+msgstr "gizlilik politikası"
+
+#: src/Admin/SearchPage.php
+msgid "A search box that always searches in the language of the page. Make profiles (header, footer, phone menu…), each with its own look, its own options and a live preview."
+msgstr "Her zaman sayfanın dilinde arama yapan bir arama kutusu. Profiller oluşturun (üst bilgi, alt bilgi, telefon menüsü…), her biri kendi görünümü, seçenekleri ve canlı önizlemesiyle."
+
+#: src/Admin/SearchPage.php
+msgid "Always in sight, under the box"
+msgstr "Her zaman görünür, kutunun altında"
+
+#: src/Admin/SearchPage.php
+msgid "At the bottom of every page"
+msgstr "Her sayfanın altında"
+
+#: src/Admin/SearchPage.php
+msgid "At the end of the menu the language switcher uses (Appearance → Menus decides which)."
+msgstr "Dil değiştiricinin kullandığı menünün sonunda (hangisi olduğunu Görünüm → Menüler belirler)."
+
+#: src/Admin/SearchPage.php
+msgid "Behind a «Filters» button"
+msgstr "«Filtreler» düğmesinin arkasında"
+
+#: src/Admin/SearchPage.php
+msgid "Computer"
+msgstr "Bilgisayar"
+
+#: src/Admin/SearchPage.php
+msgid "Computer and phone"
+msgstr "Bilgisayar ve telefon"
+
+#: src/Admin/SearchPage.php
+msgid "Computer only"
+msgstr "Yalnızca bilgisayar"
+
+#: src/Admin/SearchPage.php
+msgid "Each profile is one search box in one place. Only one profile can be in the header menu, one in the phone menu and one at the bottom: choosing a place takes it from the profile that had it."
+msgstr "Her profil tek bir yerde tek bir arama kutusudur. Üst menüde yalnızca bir profil, telefon menüsünde bir ve altta bir profil olabilir: bir yer seçmek onu daha önce sahip olan profilden alır."
+
+#: src/Admin/SearchPage.php
+msgid "Empty = «Search…» already in the language of each page. Your own text is translated like the rest of the site."
+msgstr "Boş = her sayfanın dilinde «Ara…». Kendi metniniz sitenin geri kalanı gibi çevrilir."
+
+#: src/Admin/SearchPage.php
+msgid "Field"
+msgstr "Alan"
+
+#: src/Admin/SearchPage.php
+msgid "Filters for the visitor"
+msgstr "Ziyaretçi için filtreler"
+
+#: src/Admin/SearchPage.php
+msgid "In a menu, a magnifier takes the least room; at the bottom of the page, a field is clearer."
+msgstr "Menüde büyüteç en az yer kaplar; sayfanın altında ise bir alan daha anlaşılırdır."
+
+#: src/Admin/SearchPage.php
+msgid "In my phone menu (burger)"
+msgstr "Telefon menümde (hamburger)"
+
+#: src/Admin/SearchPage.php
+msgid "Languages & general"
+msgstr "Diller ve genel"
+
+#: src/Admin/SearchPage.php
+msgid "Look"
+msgstr "Görünüm"
+
+#: src/Admin/SearchPage.php
+msgid "Look in"
+msgstr "Şurada ara"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens a field"
+msgstr "Alan açan büyüteç"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens the search over the page"
+msgstr "Aramayı sayfanın üzerinde açan büyüteç"
+
+#: src/Admin/SearchPage.php
+msgid "Make one profile «Computer only» (a field in the header) and another «Phone only» (a magnifier in the burger menu) to have the right box on each screen."
+msgstr "Her ekranda doğru kutu olsun diye bir «Yalnızca bilgisayar» profili (üst bilgide bir alan) ve bir «Yalnızca telefon» profili (hamburger menüde bir büyüteç) oluşturun."
+
+#: src/Admin/SearchPage.php
+msgid "Paste the shortcode in a page, a widget or your builder, or add the block «TranslateRocket search»."
+msgstr "Kısa kodu bir sayfaya, bir bileşene ya da sayfa oluşturucunuza yapıştırın veya «TranslateRocket arama» bloğunu ekleyin."
+
+#: src/Admin/SearchPage.php
+msgid "Phone only"
+msgstr "Yalnızca telefon"
+
+#: src/Admin/SearchPage.php
+msgid "Profiles"
+msgstr "Profiller"
+
+#: src/Admin/SearchPage.php
+msgid "Rounded field"
+msgstr "Yuvarlatılmış alan"
+
+#: src/Admin/SearchPage.php
+msgid "Save this profile"
+msgstr "Bu profili kaydet"
+
+#: src/Admin/SearchPage.php
+msgid "Saved. The preview below shows it as it is now."
+msgstr "Kaydedildi. Aşağıdaki önizleme şu anki halini gösterir."
+
+#: src/Admin/SearchPage.php
+msgid "Search box"
+msgstr "Arama kutusu"
+
+#: src/Admin/SearchPage.php
+msgid "Search the translations of every language"
+msgstr "Her dilin çevirilerinde ara"
+
+#: src/Admin/SearchPage.php
+msgid "Search…"
+msgstr "Ara…"
+
+#: src/Admin/SearchPage.php
+msgid "Show suggestions"
+msgstr "Önerileri göster"
+
+#: src/Admin/SearchPage.php
+msgid "Shown on"
+msgstr "Gösterildiği yer"
+
+#: src/Admin/SearchPage.php
+msgid "Small buttons the visitor can use: the kind of content (All · Posts · Pages · Products…) and «Every language». Always in sight under the box, or behind a «Filters» button."
+msgstr "Ziyaretçinin kullanabileceği küçük düğmeler: içerik türü (Tümü · Yazılar · Sayfalar · Ürünler…) ve «Her dil». Kutunun altında her zaman görünür ya da «Filtreler» düğmesinin arkasında."
+
+#: src/Admin/SearchPage.php
+msgid "Suggestions while typing"
+msgstr "Yazarken öneriler"
+
+#: src/Admin/SearchPage.php
+msgid "Text in the empty field"
+msgstr "Boş alandaki metin"
+
+#: src/Admin/SearchPage.php
+msgid "The box as your visitors see it, with the look and the options of this profile, at computer and phone width. It follows your changes as you make them; save to keep them."
+msgstr "Ziyaretçilerinizin gördüğü haliyle kutu, bu profilin görünümü ve seçenekleriyle, bilgisayar ve telefon genişliğinde. Değişikliklerinizi anında izler; korumak için kaydedin."
+
+#: src/Admin/SearchPage.php
+msgid "What it searches"
+msgstr "Neyi arar"
+
+#: src/Admin/SearchPage.php
+msgid "Which kinds of content the box searches. None ticked: everything the site search can find."
+msgstr "Kutunun hangi içerik türlerinde aradığı. Hiçbiri işaretli değilse: site aramasının bulabildiği her şey."
+
+#: src/Admin/SearchPage.php
+msgid "Width of the field"
+msgstr "Alanın genişliği"
+
+#: src/Admin/SearchPage.php
+msgid "by type"
+msgstr "türe göre"
+
+#: src/Admin/SearchPage.php
+msgid "how many:"
+msgstr "kaç tane:"
+
+#: src/Admin/SearchPage.php
+msgid "none in a menu; «always in sight» on a search page"
+msgstr "menüde hiçbiri; arama sayfasında «her zaman görünür»"
+
+#: src/Admin/SearchPage.php
+msgid "none ticked (everything)"
+msgstr "hiçbiri işaretli değil (her şey)"
+
+#: src/Admin/SearchPage.php
+msgid "off: the language of the page"
+msgstr "kapalı: sayfanın dili"
+
+#: src/Admin/SearchPage.php
+msgid "on, 6"
+msgstr "açık, 6"
+
+#: src/Admin/SearchPage.php
+msgid "«Every language»"
+msgstr "«Her dil»"
+
+#: src/Admin/SearchPage.php
+msgid "— the shortcode of this profile; the block «TranslateRocket search» has a profile choice too."
+msgstr "— bu profilin kısa kodu; «TranslateRocket arama» bloğunda da profil seçimi var."
+
+#: src/Admin/View.php
+msgid "Simple"
+msgstr "Basit"
+
+#: src/Frontend/SearchBox.php
+msgid "All"
+msgstr "Tümü"
+
+#: src/Frontend/SearchBox.php
+msgid "Every language"
+msgstr "Her dil"
+
+#: src/Frontend/SearchBox.php
+msgid "Filters"
+msgstr "Filtreler"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%d sentence was kept as it was: a name, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgid_plural "%d sentences were kept as they were: names, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgstr[0] "%d cümle olduğu gibi bırakıldı: bir ad ya da sitenin dilinde olmayan, motorun çeviremediği bir metin. Sayfa tamamlanmış sayılır; bir sayfanın «⋯» menüsündeki «Bırakılanları yeniden çevir» onları başka bir motorla dener."
+msgstr[1] "%d cümle olduğu gibi bırakıldı: adlar ya da sitenin dilinde olmayan, motorun çeviremediği metinler. Sayfa tamamlanmış sayılır; bir sayfanın «⋯» menüsündeki «Bırakılanları yeniden çevir» onları başka bir motorla dener."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s translated. %2$s sentences were not translated by this engine: often they are not written in the site's language. You can translate them by hand or with another engine."
+msgstr "%1$s çevrildi. %2$s cümle bu motor tarafından çevrilmedi: genellikle sitenin dilinde yazılmamışlardır. Elle ya da başka bir motorla çevirebilirsiniz."
+
+#: src/Admin/SearchPage.php
+msgid "A row at the end of every page, before the theme's footer."
+msgstr "Her sayfanın sonunda, temanın alt bilgisinden önce bir satır."
+
+#: src/Admin/SearchPage.php
+msgid "Empty = the theme's size. Examples: 14em, 240px, 100%."
+msgstr "Boş = temanın boyutu. Örnekler: 14em, 240px, 100%."
+
+#: src/Admin/SearchPage.php
+msgid "From the third letter the matching pages appear under the box, with their title in the page's language. Answers are kept ten minutes, so a busy site asks the database once per word."
+msgstr "Üçüncü harften itibaren eşleşen sayfalar, sayfanın dilindeki başlıklarıyla kutunun altında görünür. Yanıtlar on dakika saklanır; böylece yoğun bir site veritabanına kelime başına bir kez sorar."
+
+#: src/Admin/SearchPage.php
+msgid "Normally the box searches the translations of the page's language: on /de/ a visitor types in German and finds the German pages. «Every language» also looks in the other languages, for a site whose visitors mix them."
+msgstr "Normalde kutu sayfanın dilindeki çevirilerde arar: /de/ üzerinde ziyaretçi Almanca yazar ve Almanca sayfaları bulur. «Her dil», ziyaretçileri dilleri karıştıran bir site için diğer dillerde de arar."
+
+#: src/Admin/SearchPage.php
+msgid "Only in the theme's phone menu, the one behind the ☰ button."
+msgstr "Yalnızca temanın telefon menüsünde, ☰ düğmesinin arkasındakinde."
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "Which menu is the header menu, and which the phone menu, is decided in %s (the menu assigned to the theme's main place, and to its phone place when it has one)."
+msgstr "Hangi menünün üst menü, hangisinin telefon menüsü olduğu %s içinde belirlenir (temanın ana yerine atanan menü ve varsa telefon yerine atanan menü)."
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "«Search in every language» is off on %s: the box would search only the site's own language."
+msgstr "«Her dilde ara» %s üzerinde kapalı: kutu yalnızca sitenin kendi dilinde arardı."
+
+#: src/Admin/Admin.php
+msgid "Only kept as they were"
+msgstr "Yalnızca olduğu gibi bırakılanlar"

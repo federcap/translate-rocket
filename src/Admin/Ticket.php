@@ -269,7 +269,7 @@ class Ticket {
 
 		$utente = wp_get_current_user();
 		?>
-		<div class="trr-ticket">
+		<div class="trr-ticket" id="trr-ticket">
 			<p class="description" style="margin:0 0 12px">
 				<?php esc_html_e( 'Or write to me from here. Nothing leaves your site until you press Send, and what gets sent is exactly what you can read on this page — no keys, no page content, no visitor data.', 'translate-rocket' ); ?>
 			</p>

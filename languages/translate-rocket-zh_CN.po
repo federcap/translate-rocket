@@ -6606,3 +6606,432 @@ msgstr "仍缺少：%d。"
 #: src/Admin/Admin.php
 msgid "Continue translating"
 msgstr "继续翻译"
+
+#: assets/js/search-block.js
+msgid "A search box that searches in the language of the page."
+msgstr "按页面语言进行搜索的搜索框。"
+
+#: assets/js/search-block.js
+msgid "As in the profile"
+msgstr "与配置相同"
+
+#: assets/js/search-block.js
+msgid "As in the settings"
+msgstr "与设置相同"
+
+#: assets/js/search-block.js
+msgid "Look of the search box"
+msgstr "搜索框外观"
+
+#: assets/js/search-block.js
+msgid "No"
+msgstr "否"
+
+#: assets/js/search-block.js
+msgid "Profile (set up on the Search screen)"
+msgstr "配置（在“搜索”页面设置）"
+
+#: assets/js/search-block.js
+msgid "The language of the page"
+msgstr "页面语言"
+
+#: assets/js/search-block.js
+msgid "TranslateRocket search"
+msgstr "TranslateRocket 搜索"
+
+#: assets/js/search-block.js
+msgid "Yes"
+msgstr "是"
+
+#: src/Admin/Admin.php
+msgid "0 with the free engines; with a paid key, a cap that fits your plan"
+msgstr "免费引擎填 0；付费密钥则填与套餐相符的上限"
+
+#: src/Admin/Admin.php
+msgid "Appearance → Menus"
+msgstr "外观 → 菜单"
+
+#: src/Admin/Admin.php
+msgid "Choose the languages"
+msgstr "选择语言"
+
+#: src/Admin/Admin.php
+msgid "Everyone"
+msgstr "所有人"
+
+#: src/Admin/Admin.php
+msgid "Flip its switch to Online when you like it."
+msgstr "满意后，把它的开关切到“上线”。"
+
+#: src/Admin/Admin.php
+msgid "Kept as it was"
+msgstr "保持原样"
+
+#: src/Admin/Admin.php
+msgid "Look at your translated site"
+msgstr "查看翻译后的网站"
+
+#: src/Admin/Admin.php
+msgid "No engine is ready: translate by hand or with your browser"
+msgstr "没有可用的引擎：请手动翻译或用浏览器翻译"
+
+#: src/Admin/Admin.php
+msgid "Open the sentences"
+msgstr "打开句子"
+
+#: src/Admin/Admin.php
+msgid "Press «Translate» next to a language: no key, no account."
+msgstr "点击语言旁的“翻译”：无需密钥，无需账号。"
+
+#: src/Admin/Admin.php
+msgid "Put it online"
+msgstr "上线"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Recommended: %s"
+msgstr "推荐：%s"
+
+#: src/Admin/Admin.php
+msgid "Review"
+msgstr "检查"
+
+#: src/Admin/Admin.php
+msgid "See them in Translation memory"
+msgstr "在翻译记忆中查看"
+
+#: src/Admin/Admin.php
+msgid "Set up this engine"
+msgstr "设置此引擎"
+
+#: src/Admin/Admin.php
+msgid "Start"
+msgstr "开始"
+
+#: src/Admin/Admin.php
+msgid "The iubenda cookie banner already speaks the language of each page: TranslateRocket tells it which one, and never translates its legal text. If you have a privacy policy in each language on iubenda, write its number here, one per line (for example en=12345678): on the English pages the banner and its links open the English policy. With the new iubenda multilingual snippet you need nothing here."
+msgstr "iubenda 的 cookie 横幅已经会说每个页面的语言：TranslateRocket 告诉它是哪一种，并且从不翻译其法律文本。如果你在 iubenda 上为每种语言都有隐私政策，请在此逐行填写其编号（例如 en=12345678）：英文页面上横幅及其链接会打开英文政策。使用 iubenda 新的多语言代码片段时，这里无需填写。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The menus are created and edited in %s. The columns are the places your theme has for menus; «The same, translated» keeps your usual menu, translated."
+msgstr "菜单在 %s 中创建和编辑。各列是主题提供的菜单位置；“同一菜单，翻译后”保留你平常的菜单并翻译它。"
+
+#: src/Admin/Admin.php
+msgid "The sentences kept as they were go back to «missing», to try them with another engine or by hand"
+msgstr "保持原样的句子会回到“缺失”状态，以便用其他引擎或手动再试"
+
+#: src/Admin/Admin.php
+msgid "Tick them below and save."
+msgstr "在下方勾选并保存。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translate again the %d kept ones"
+msgstr "重新翻译保持原样的 %d 句"
+
+#: src/Admin/Admin.php
+msgid "Translate this page with the engine chosen above"
+msgstr "用上方选择的引擎翻译此页面"
+
+#: src/Admin/Admin.php
+msgid "Translate your site in three steps"
+msgstr "三步翻译你的网站"
+
+#: src/Admin/Admin.php
+msgid "Translate, for free"
+msgstr "免费翻译"
+
+#: src/Admin/Admin.php
+msgid "Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead: other pages, another order, written in that language (it is not translated). How: 1) in Appearance → Menus (block themes: in the Site Editor) create the menu and name it, for example «Menu DE»; 2) come back here and choose it next to that language; 3) save. Each column is one of the places your theme has for menus (header, footer…): choose, for that place, the menu to show in that language."
+msgstr "通常每种语言显示的是你的菜单的翻译版。在这里，一种语言可以改为拥有完全独立的菜单：不同页面、不同顺序，用该语言写成（不会被翻译）。做法：1) 在外观 → 菜单（区块主题：在站点编辑器）中创建菜单并命名，例如“Menu DE”；2) 回到这里，在该语言旁选择它；3) 保存。每一列是主题提供的一个菜单位置（页眉、页脚……）：为该位置选择在该语言下显示的菜单。"
+
+#: src/Admin/Admin.php
+msgid "iubenda policy per language"
+msgstr "每种语言的 iubenda 政策"
+
+#: src/Admin/Admin.php
+msgid "off (better for search engines)"
+msgstr "关闭（对搜索引擎更好）"
+
+#: src/Admin/Admin.php
+msgid "off: another page cache is already active on this site"
+msgstr "关闭：此网站已启用其他页面缓存"
+
+#: src/Admin/Admin.php
+msgid "on"
+msgstr "开启"
+
+#: src/Admin/Admin.php
+msgid "the day your plan renews; 0 if you use only free engines"
+msgstr "套餐续费的日期；只用免费引擎则填 0"
+
+#: src/Admin/Farewell.php
+#, php-format
+msgid "I agree to be contacted about this problem only. The e-mail is deleted after 6 months, and never used for anything else (%s)."
+msgstr "我同意仅就此问题与我联系。邮箱将在 6 个月后删除，绝不用于其他用途（%s）。"
+
+#: src/Admin/Farewell.php
+msgid "Keep it active and get help"
+msgstr "保持启用并获取帮助"
+
+#: src/Admin/Farewell.php
+msgid "Leave your e-mail and we will contact you to solve it (optional):"
+msgstr "留下你的邮箱，我们会联系你解决（可选）："
+
+#: src/Admin/Farewell.php
+msgid "Try the Simple view: three steps"
+msgstr "试试简单视图：三步"
+
+#: src/Admin/Farewell.php
+msgid "Wait a moment: we fix it for you, free, usually the same day."
+msgstr "稍等：我们免费为你修复，通常当天完成。"
+
+#: src/Admin/Farewell.php
+msgid "privacy policy"
+msgstr "隐私政策"
+
+#: src/Admin/SearchPage.php
+msgid "A search box that always searches in the language of the page. Make profiles (header, footer, phone menu…), each with its own look, its own options and a live preview."
+msgstr "始终按页面语言搜索的搜索框。创建配置（页眉、页脚、手机菜单……），各有外观、选项和实时预览。"
+
+#: src/Admin/SearchPage.php
+msgid "Always in sight, under the box"
+msgstr "始终可见，在搜索框下方"
+
+#: src/Admin/SearchPage.php
+msgid "At the bottom of every page"
+msgstr "每个页面底部"
+
+#: src/Admin/SearchPage.php
+msgid "At the end of the menu the language switcher uses (Appearance → Menus decides which)."
+msgstr "在语言切换器所用菜单的末尾（由外观 → 菜单决定是哪个）。"
+
+#: src/Admin/SearchPage.php
+msgid "Behind a «Filters» button"
+msgstr "收在“筛选”按钮后"
+
+#: src/Admin/SearchPage.php
+msgid "Computer"
+msgstr "电脑"
+
+#: src/Admin/SearchPage.php
+msgid "Computer and phone"
+msgstr "电脑和手机"
+
+#: src/Admin/SearchPage.php
+msgid "Computer only"
+msgstr "仅电脑"
+
+#: src/Admin/SearchPage.php
+msgid "Each profile is one search box in one place. Only one profile can be in the header menu, one in the phone menu and one at the bottom: choosing a place takes it from the profile that had it."
+msgstr "每个配置是一个位置上的一个搜索框。页眉菜单、手机菜单和页面底部各只能有一个配置：选择某个位置会把它从原先的配置那里拿走。"
+
+#: src/Admin/SearchPage.php
+msgid "Empty = «Search…» already in the language of each page. Your own text is translated like the rest of the site."
+msgstr "留空 = 以各页面语言显示“搜索…”。你自己的文字会像网站其他内容一样被翻译。"
+
+#: src/Admin/SearchPage.php
+msgid "Field"
+msgstr "输入框"
+
+#: src/Admin/SearchPage.php
+msgid "Filters for the visitor"
+msgstr "访客筛选项"
+
+#: src/Admin/SearchPage.php
+msgid "In a menu, a magnifier takes the least room; at the bottom of the page, a field is clearer."
+msgstr "在菜单中，放大镜最省空间；在页面底部，输入框更清楚。"
+
+#: src/Admin/SearchPage.php
+msgid "In my phone menu (burger)"
+msgstr "在我的手机菜单（汉堡菜单）中"
+
+#: src/Admin/SearchPage.php
+msgid "Languages & general"
+msgstr "语言与常规"
+
+#: src/Admin/SearchPage.php
+msgid "Look"
+msgstr "外观"
+
+#: src/Admin/SearchPage.php
+msgid "Look in"
+msgstr "搜索范围"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens a field"
+msgstr "点击展开输入框的放大镜"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens the search over the page"
+msgstr "在页面上方弹出搜索的放大镜"
+
+#: src/Admin/SearchPage.php
+msgid "Make one profile «Computer only» (a field in the header) and another «Phone only» (a magnifier in the burger menu) to have the right box on each screen."
+msgstr "创建一个“仅电脑”配置（页眉中的输入框）和一个“仅手机”配置（汉堡菜单中的放大镜），让每种屏幕都有合适的搜索框。"
+
+#: src/Admin/SearchPage.php
+msgid "Paste the shortcode in a page, a widget or your builder, or add the block «TranslateRocket search»."
+msgstr "把短代码粘贴到页面、小工具或页面构建器中，或添加“TranslateRocket 搜索”区块。"
+
+#: src/Admin/SearchPage.php
+msgid "Phone only"
+msgstr "仅手机"
+
+#: src/Admin/SearchPage.php
+msgid "Profiles"
+msgstr "配置"
+
+#: src/Admin/SearchPage.php
+msgid "Rounded field"
+msgstr "圆角输入框"
+
+#: src/Admin/SearchPage.php
+msgid "Save this profile"
+msgstr "保存此配置"
+
+#: src/Admin/SearchPage.php
+msgid "Saved. The preview below shows it as it is now."
+msgstr "已保存。下方预览显示的是当前状态。"
+
+#: src/Admin/SearchPage.php
+msgid "Search box"
+msgstr "搜索框"
+
+#: src/Admin/SearchPage.php
+msgid "Search the translations of every language"
+msgstr "搜索所有语言的翻译"
+
+#: src/Admin/SearchPage.php
+msgid "Search…"
+msgstr "搜索…"
+
+#: src/Admin/SearchPage.php
+msgid "Show suggestions"
+msgstr "显示建议"
+
+#: src/Admin/SearchPage.php
+msgid "Shown on"
+msgstr "显示于"
+
+#: src/Admin/SearchPage.php
+msgid "Small buttons the visitor can use: the kind of content (All · Posts · Pages · Products…) and «Every language». Always in sight under the box, or behind a «Filters» button."
+msgstr "访客可用的小按钮：内容类型（全部 · 文章 · 页面 · 产品……）和“所有语言”。始终显示在搜索框下方，或收在“筛选”按钮后。"
+
+#: src/Admin/SearchPage.php
+msgid "Suggestions while typing"
+msgstr "输入时的建议"
+
+#: src/Admin/SearchPage.php
+msgid "Text in the empty field"
+msgstr "输入框为空时的文字"
+
+#: src/Admin/SearchPage.php
+msgid "The box as your visitors see it, with the look and the options of this profile, at computer and phone width. It follows your changes as you make them; save to keep them."
+msgstr "访客看到的搜索框，带有此配置的外观和选项，分别以电脑和手机宽度显示。它会即时跟随你的修改；保存后才会保留。"
+
+#: src/Admin/SearchPage.php
+msgid "What it searches"
+msgstr "搜索内容"
+
+#: src/Admin/SearchPage.php
+msgid "Which kinds of content the box searches. None ticked: everything the site search can find."
+msgstr "搜索框搜索哪些类型的内容。都不勾选：网站搜索能找到的一切。"
+
+#: src/Admin/SearchPage.php
+msgid "Width of the field"
+msgstr "输入框宽度"
+
+#: src/Admin/SearchPage.php
+msgid "by type"
+msgstr "按类型"
+
+#: src/Admin/SearchPage.php
+msgid "how many:"
+msgstr "数量："
+
+#: src/Admin/SearchPage.php
+msgid "none in a menu; «always in sight» on a search page"
+msgstr "菜单中不显示；搜索页中“始终可见”"
+
+#: src/Admin/SearchPage.php
+msgid "none ticked (everything)"
+msgstr "都不勾选（全部）"
+
+#: src/Admin/SearchPage.php
+msgid "off: the language of the page"
+msgstr "关闭：页面语言"
+
+#: src/Admin/SearchPage.php
+msgid "on, 6"
+msgstr "开启，6"
+
+#: src/Admin/SearchPage.php
+msgid "«Every language»"
+msgstr "“所有语言”"
+
+#: src/Admin/SearchPage.php
+msgid "— the shortcode of this profile; the block «TranslateRocket search» has a profile choice too."
+msgstr "——此配置的短代码；“TranslateRocket 搜索”区块也可以选择配置。"
+
+#: src/Admin/View.php
+msgid "Simple"
+msgstr "简单"
+
+#: src/Frontend/SearchBox.php
+msgid "All"
+msgstr "全部"
+
+#: src/Frontend/SearchBox.php
+msgid "Every language"
+msgstr "所有语言"
+
+#: src/Frontend/SearchBox.php
+msgid "Filters"
+msgstr "筛选"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%d sentence was kept as it was: a name, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgid_plural "%d sentences were kept as they were: names, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgstr[0] "%d 句保持原样：是名称或非网站语言的文本，引擎无法翻译。该页面按已完成计算；页面“⋯”菜单中的“重新翻译保持原样的句子”可用其他引擎再试。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s translated. %2$s sentences were not translated by this engine: often they are not written in the site's language. You can translate them by hand or with another engine."
+msgstr "已翻译 %1$s。%2$s 句未被此引擎翻译：通常是因为它们不是用网站语言写的。你可以手动翻译或用其他引擎翻译。"
+
+#: src/Admin/SearchPage.php
+msgid "A row at the end of every page, before the theme's footer."
+msgstr "每个页面末尾、主题页脚之前的一行。"
+
+#: src/Admin/SearchPage.php
+msgid "Empty = the theme's size. Examples: 14em, 240px, 100%."
+msgstr "留空 = 主题的尺寸。例如：14em、240px、100%。"
+
+#: src/Admin/SearchPage.php
+msgid "From the third letter the matching pages appear under the box, with their title in the page's language. Answers are kept ten minutes, so a busy site asks the database once per word."
+msgstr "从第三个字母开始，匹配的页面会显示在搜索框下方，标题为页面语言。结果保留十分钟，繁忙的网站每个词只查询一次数据库。"
+
+#: src/Admin/SearchPage.php
+msgid "Normally the box searches the translations of the page's language: on /de/ a visitor types in German and finds the German pages. «Every language» also looks in the other languages, for a site whose visitors mix them."
+msgstr "通常搜索框搜索页面语言的翻译：在 /de/ 上访客用德语输入，找到德语页面。“所有语言”也会在其他语言中查找，适合访客混用多种语言的网站。"
+
+#: src/Admin/SearchPage.php
+msgid "Only in the theme's phone menu, the one behind the ☰ button."
+msgstr "仅在主题的手机菜单中，即 ☰ 按钮后面的菜单。"
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "Which menu is the header menu, and which the phone menu, is decided in %s (the menu assigned to the theme's main place, and to its phone place when it has one)."
+msgstr "哪个是页眉菜单、哪个是手机菜单，由 %s 决定（分配给主题主位置的菜单，以及有手机位置时分配给它的菜单）。"
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "«Search in every language» is off on %s: the box would search only the site's own language."
+msgstr "“在所有语言中搜索”在 %s 上已关闭：搜索框将只搜索网站自身的语言。"
+
+#: src/Admin/Admin.php
+msgid "Only kept as they were"
+msgstr "仅保持原样的"

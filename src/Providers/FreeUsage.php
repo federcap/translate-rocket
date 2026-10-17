@@ -103,10 +103,10 @@ final class FreeUsage {
 		$u = self::today( $id );
 		if ( 'neurons' === ( self::LIMITS[ $id ][1] ?? '' ) ) {
 			/* translators: 1: neurons used, 2: neurons a day, 3: sentences */
-			$r = sprintf( __( '%1$s of %2$s free neurons today (%3$s sentences)', 'translate-rocket' ), number_format_i18n( self::used( $id ) ), number_format_i18n( self::limit( $id ) ), number_format_i18n( $u['sentences'] ) );
+			$r = sprintf( __( '%1$s of %2$s free neurons today (%3$s sentences)', 'translate-rocket' ), \TranslateRocket\Admin\Formati::number( self::used( $id ) ), \TranslateRocket\Admin\Formati::number( self::limit( $id ) ), \TranslateRocket\Admin\Formati::number( $u['sentences'] ) );
 		} else {
 			/* translators: 1: requests used, 2: requests a day, 3: sentences */
-			$r = sprintf( __( '%1$s of %2$s free requests today (%3$s sentences)', 'translate-rocket' ), number_format_i18n( self::used( $id ) ), number_format_i18n( self::limit( $id ) ), number_format_i18n( $u['sentences'] ) );
+			$r = sprintf( __( '%1$s of %2$s free requests today (%3$s sentences)', 'translate-rocket' ), \TranslateRocket\Admin\Formati::number( self::used( $id ) ), \TranslateRocket\Admin\Formati::number( self::limit( $id ) ), \TranslateRocket\Admin\Formati::number( $u['sentences'] ) );
 		}
 		if ( self::exhausted( $id ) ) {
 			$r .= ' · ' . __( 'today\'s free share is used: the next provider in your chain carries on until tomorrow', 'translate-rocket' );

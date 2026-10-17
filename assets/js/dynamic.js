@@ -85,6 +85,10 @@
 			if ( el.getAttribute && el.getAttribute( 'translate' ) === 'no' ) {
 				return true;
 			}
+			// Cookie banners (16/10/2026): legal text the provider already has in each language, set by the server.
+			if ( el.id && /^(iubenda-cs-banner|iubenda-iframe|CybotCookiebotDialog|CookieDeclaration|usercentrics-root|usercentrics-cmp-ui)/.test( el.id ) ) {
+				return true;
+			}
 			// The «do not translate» marks of other tools (Google's class, TranslatePress, Weglot),
 			// as on the server; on <html>/<body> they only silence the browser's popup.
 			if ( el.tagName !== 'HTML' && el.tagName !== 'BODY' && el.getAttribute && ( ( el.classList && ( el.classList.contains( 'notranslate' ) || el.classList.contains( 'skiptranslate' ) ) ) || el.hasAttribute( 'data-no-translation' ) || el.hasAttribute( 'data-wg-notranslate' ) || el.hasAttribute( 'data-notranslate' ) ) ) {

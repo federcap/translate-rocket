@@ -75,12 +75,25 @@ final class Plugin {
 		// Side by side it reads no language from the address (see Router::boot).
 		$this->router = new Router();
 		$this->router->boot();
+		// 1.8.8 (read in the competitors' code): WooCommerce lists a plugin that never declared itself as
+		// «incompatible» with high-performance order storage and the block checkout. TranslateRocket reads and
+		// writes the order's language through the order object, so both are fine: say so.
+		add_action(
+			'before_woocommerce_init',
+			static function () {
+				if ( class_exists( '\\Automattic\\WooCommerce\\Utilities\\FeaturesUtil' ) ) {
+					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', TRROCKET_FILE, true );
+					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', TRROCKET_FILE, true );
+				}
+			}
+		);
 
 		// Language switcher shortcode [translaterocket_switcher]. Side by side it
 		// renders nothing (Preview::hidden), but the shortcode stays registered.
 		( new \TranslateRocket\Frontend\Switcher() )->boot();
 		// Language switcher Gutenberg block + block-based widget.
 		( new \TranslateRocket\Frontend\SwitcherBlock() )->register();
+		( new \TranslateRocket\Frontend\SearchBox() )->register(); // 1.8.8: shortcode, block, menu entry
 
 		// Front-end visual editor (also registers its AJAX endpoints on admin).
 		( new \TranslateRocket\Frontend\VisualEditor() )->boot();
@@ -145,6 +158,8 @@ final class Plugin {
 		// WP Rocket asks multilingual plugins it does not know through filters: answer
 		// them, or it takes the site for single-language (see Integrations\WpRocket).
 		( new \TranslateRocket\Integrations\WpRocket() )->boot();
+		( new \TranslateRocket\Integrations\ArubaHiSpeed() )->boot(); // 1.8.8: translated pages out of Aruba's cache too
+		( new \TranslateRocket\Integrations\WoodMart() )->boot(); // 1.8.8: mega menus cached per language
 		// The CDN purge (NitroPack, Cloudflare), a minute after the last change.
 		add_action( Cache::REMOTE_EVENT, array( 'TranslateRocket\\Cache', 'purge_remote' ) );
 
@@ -183,6 +198,9 @@ final class Plugin {
 				( new \TranslateRocket\Frontend\Forminator() )->boot();
 				// WPForms, Fluent Forms and Ninja Forms send through admin-ajax: their e-mail to the visitor follows the page's language.
 				( new \TranslateRocket\Frontend\FormMails() )->boot();
+				// 1.8.8 (WoodMart, Flatsome, Porto: live search on admin-ajax): what the visitor types in their
+				// language finds the pages, as the search page does.
+				( new \TranslateRocket\Frontend\SearchWiden() )->boot();
 			}
 			$this->admin = new Admin();
 			$this->admin->register();
@@ -210,6 +228,8 @@ final class Plugin {
 				add_action( $quando, array( '\\TranslateRocket\\Admin\\NextSteps', 'forget' ), 10, 0 );
 			}
 			( new \TranslateRocket\Admin\BrowserEngine() )->register();
+			( new \TranslateRocket\Admin\View() )->register(); // 1.8.8: Simple / Advanced
+			( new \TranslateRocket\Admin\SearchPage() )->register(); // 1.8.8: the search box, its own screen with profiles
 		} elseif ( $coexist ) {
 			// Side by side: nothing reaches visitors. Only the administrator's
 			// string collection while browsing, and ?trr-preview=xx pages.

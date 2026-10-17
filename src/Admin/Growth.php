@@ -316,7 +316,7 @@ class Growth {
 			printf(
 				/* translators: %s: number of strings translated on this site. */
 				esc_html__( 'TranslateRocket has translated %s strings on this site, for free. It has no paid version: reviews are the only thing that helps other people find it. Would you leave one?', 'translate-rocket' ),
-				'<strong>' . esc_html( number_format_i18n( $done ) ) . '</strong>'
+				'<strong>' . esc_html( Formati::number( $done ) ) . '</strong>'
 			);
 			echo ' <a class="button button-primary button-small trr-review-go" style="margin-left:6px" href="' . esc_url( self::REVIEW_URL ) . '" target="_blank" rel="noopener">' . esc_html__( 'Write a review', 'translate-rocket' ) . '</a>';
 			echo ' &middot; <a href="' . esc_url( $this->link( 'support' ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Something is wrong instead', 'translate-rocket' ) . '</a>';

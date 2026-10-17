@@ -58,13 +58,13 @@ class StatsCard {
 			$pct = (int) round( 100 * $v / $tot );
 			echo '<tr><th scope="row">' . wp_kses( \TranslateRocket\Flags::svg( $code ), \TranslateRocket\Kses::html_rules() ) . ' ' . esc_html( Languages::label( $code ) ) . '</th>';
 			echo '<td class="trr-stats-bar"><span style="width:' . (int) max( 2, $pct ) . '%"></span></td>';
-			echo '<td class="trr-stats-n">' . esc_html( number_format_i18n( $v ) ) . ' <span class="description">(' . (int) $pct . '%)</span></td></tr>';
+			echo '<td class="trr-stats-n">' . esc_html( Formati::number( $v ) ) . ' <span class="description">(' . (int) $pct . '%)</span></td></tr>';
 			$pagine = Stats::top_pages( $code, $giorni, 3 );
 			if ( $pagine ) {
 				echo '<tr class="trr-stats-pages"><td></td><td colspan="2">';
 				$parti = array();
 				foreach ( $pagine as $path => $nv ) {
-					$parti[] = '<code>' . esc_html( $path ) . '</code> ' . esc_html( number_format_i18n( $nv ) );
+					$parti[] = '<code>' . esc_html( $path ) . '</code> ' . esc_html( Formati::number( $nv ) );
 				}
 				echo wp_kses_post( implode( ' · ', $parti ) );
 				echo '</td></tr>';

@@ -39,6 +39,8 @@ class Sitemap {
 		// If Rank Math or Yoast is active, also list our sitemap in their sitemap
 		// index, so it's discoverable from the one index users submit to Google.
 		add_filter( 'rank_math/sitemap/index', array( $this, 'index_entry' ) );
+		// WordPress' own wp-sitemap.xml (sites without an SEO plugin): the translated addresses too (16/10/2026).
+		add_filter( 'wp_sitemaps_posts_url_list', array( $this, 'core_url_list' ), 20, 2 );
 		add_filter( 'wpseo_sitemap_index', array( $this, 'index_entry' ) );
 	}
 
@@ -166,6 +168,46 @@ class Sitemap {
 		// is esc_attr/esc_url at build time (see entry()). wp_kses() is not usable here —
 		// it would strip the namespaced <xhtml:link> alternate-language nodes.
 		echo $out; // phpcs:ignore WordPress.Security.EscapeOutput -- XML output, each value escaped at build time; wp_kses strips namespaced XML.
+	}
+
+	/**
+	 * WordPress' core sitemap lists the source pages only: add every public language's address after each one,
+	 * with the translated slug when there is one. A page excluded from a language is left out of it.
+	 *
+	 * @param mixed  $url_list  Entries of this sitemap page (['loc' => …]).
+	 * @param string $post_type Post type of the page.
+	 * @return mixed
+	 */
+	public function core_url_list( $url_list, $post_type = '' ) {
+		unset( $post_type );
+		if ( ! is_array( $url_list ) || \TranslateRocket\Coexistence::on() ) {
+			return $url_list;
+		}
+		$router = Plugin::instance()->router();
+		$source = $router->default_language();
+		$langs  = array_values( array_diff( (array) $router->public_languages(), array( $source ) ) );
+		if ( empty( $langs ) ) {
+			return $url_list;
+		}
+		$home = rtrim( (string) get_option( 'home' ), '/' );
+		$out  = array();
+		foreach ( $url_list as $entry ) {
+			$out[] = $entry;
+			$loc   = is_array( $entry ) && isset( $entry['loc'] ) ? (string) $entry['loc'] : '';
+			if ( '' === $loc || 0 !== strpos( $loc, $home ) || false !== strpos( $loc, '?' ) ) {
+				continue;
+			}
+			$id = (int) url_to_postid( $loc );
+			foreach ( $langs as $lang ) {
+				if ( $id > 0 && '' !== (string) ( \TranslateRocket\Exclusions::get( $id, (string) $lang )['mode'] ?? '' ) ) {
+					continue;
+				}
+				$copia        = is_array( $entry ) ? $entry : array();
+				$copia['loc'] = $this->lang_url( $id, $loc, (string) $lang, $source, $home );
+				$out[]        = $copia;
+			}
+		}
+		return $out;
 	}
 
 	/**

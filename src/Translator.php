@@ -178,6 +178,7 @@ class Translator {
 
 		$source = Plugin::instance()->router()->default_language();
 		$count  = 0;
+		$kept   = 0; // sentences the engine answered nothing for, kept as they were (16/10/2026)
 		$error  = '';
 		$dead   = array(); // provider id => permanent-error message (out of credit / bad key).
 
@@ -201,6 +202,7 @@ class Translator {
 
 			$hit = self::first_ok( $providers, $dead, $texts, $source, $lang, $error );
 			if ( null !== $hit ) {
+				$vuote = array();
 				foreach ( $hit['translations'] as $i => $translation ) {
 					$translation = (string) $translation;
 					if ( isset( $texts[ $i ] ) && '' !== trim( $translation ) ) {
@@ -210,9 +212,33 @@ class Translator {
 					}
 					if ( isset( $texts[ $i ] ) && '' !== trim( $translation ) && self::parts_kept( $texts[ $i ], $translation ) ) {
 						self::save_group( $pending[ $texts[ $i ] ], $lang, $translation, $hit['provider'], $texts[ $i ], $count );
+					} elseif ( isset( $texts[ $i ] ) ) {
+						$vuote[] = $texts[ $i ];
 					}
 				}
 				AiUsage::add( array_sum( array_map( 'mb_strlen', $texts ) ) );
+				// 16/10/2026 (Federico: a page stuck at 89 % «looks like the plugin cannot do it»): a sentence the
+				// engine answered nothing for — a name, or text not in the site's language, that Labs' engines return
+				// unchanged and drop — is asked once more on its own; if it still gives nothing, the sentence is kept
+				// as it was and counted as done («kept»): the page is complete, and the list says how many were kept.
+				// Only after an engine that answered: a failed batch keeps everything pending.
+				foreach ( $vuote as $text ) {
+					if ( $deadline > 0 && microtime( true ) >= $deadline ) {
+						break;
+					}
+					$one = self::first_ok( $providers, $dead, array( $text ), $source, $lang, $error );
+					$uno = ( null !== $one && isset( $one['translations'][0] ) ) ? trim( (string) $one['translations'][0] ) : '';
+					if ( '' !== $uno && self::parts_kept( $text, $uno ) ) {
+						self::save_group( $pending[ $text ], $lang, $uno, $one['provider'], $text, $count );
+						AiUsage::add( mb_strlen( $text ) );
+					} elseif ( null !== $one ) {
+						foreach ( $pending[ $text ] as $id ) {
+							if ( Strings::save_translation( (int) $id, $lang, $text, 1, 'kept' ) ) {
+								++$kept;
+							}
+						}
+					}
+				}
 				continue;
 			}
 
@@ -245,6 +271,7 @@ class Translator {
 		return array(
 			'ok'    => ( count( $dead ) < count( $providers ) ),
 			'count' => $count,
+			'kept'  => $kept,
 			'error' => $error,
 			// Something is left: the step stopped at its deadline, or the 1000 read were all there was room for.
 			'more'  => $count > 0 && count( $dead ) < count( $providers ) && ( $fermato || count( $rows ) >= 1000 ),

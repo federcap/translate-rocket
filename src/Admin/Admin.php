@@ -408,7 +408,7 @@ class Admin {
 	/**
 	 * Screens kept out of the side menu (still open from the buttons at the top of the plugin).
 	 */
-	const MENU_HIDDEN = array( 'translate-rocket-memory', 'translate-rocket-import', 'translate-rocket-exclusions', 'translate-rocket-copies', 'translate-rocket-diagnostics', 'translate-rocket-wizard', 'translate-rocket-help' );
+	const MENU_HIDDEN = array( 'translate-rocket-next', 'translate-rocket-memory', 'translate-rocket-import', 'translate-rocket-exclusions', 'translate-rocket-copies', 'translate-rocket-diagnostics', 'translate-rocket-wizard', 'translate-rocket-help' );
 
 	/**
 	 * The style that keeps MENU_HIDDEN out of the side menu, on every admin screen (the menu is
@@ -424,6 +424,17 @@ class Admin {
 		}
 		if ( $rules ) {
 			echo '<style id="trr-menu">' . implode( ',', $rules ) . '{display:none!important}</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed slugs.
+		}
+		if ( View::simple() ) {
+			// Simple view (1.8.8): only its three screens in the side menu (and the open one), the rest under Advanced.
+			$keep = array_merge( View::SIMPLE_PAGES, array( $current ) );
+			$css  = '#toplevel_page_translate-rocket .wp-submenu li:not(.wp-submenu-head){display:none!important}';
+			foreach ( array_unique( $keep ) as $slug ) {
+				if ( '' !== $slug ) {
+					$css .= '#toplevel_page_translate-rocket .wp-submenu li:has(> a[href$="page=' . $slug . '"]){display:list-item!important}';
+				}
+			}
+			echo '<style id="trr-menu-simple">' . $css . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed slugs, sanitize_key() for the open one.
 		}
 	}
 
@@ -451,7 +462,7 @@ class Admin {
 		add_submenu_page(
 			'translate-rocket',
 			__( 'What to do next', 'translate-rocket' ),
-			__( 'Next steps', 'translate-rocket' ) . ( $in_attesa > 0 ? ' <span class="update-plugins count-' . (int) $in_attesa . '"><span class="plugin-count">' . (int) $in_attesa . '</span></span>' : '' ),
+			__( 'Next steps', 'translate-rocket' ), // 1.8.8: out of the side menu (MENU_HIDDEN); the drawer on every screen leads here
 			'manage_options',
 			'translate-rocket-next',
 			array( '\\TranslateRocket\\Admin\\NextSteps', 'page' )
@@ -1175,6 +1186,7 @@ class Admin {
 		$settings['translate_interface'] = ! empty( $_POST['translate_interface'] );
 		$settings['auto_redirect']       = ! empty( $_POST['auto_redirect'] );
 		$settings['translated_search']   = ! empty( $_POST['translated_search'] );
+		$settings['iubenda_policies']    = \TranslateRocket\Integrations\ConsentBanners::clean_policies( isset( $_POST['iubenda_policies'] ) ? sanitize_textarea_field( wp_unslash( $_POST['iubenda_policies'] ) ) : '' );
 		$settings['stats']               = ! empty( $_POST['stats'] );
 		$settings['menus_per_language']  = \TranslateRocket\MenuPerLanguage::clean( isset( $_POST['menus_per_language'] ) ? wp_unslash( $_POST['menus_per_language'] ) : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- checked value by value in clean().
 		$settings['cache_pages']         = ! empty( $_POST['cache_pages'] );
@@ -1451,6 +1463,9 @@ class Admin {
 	 * Remove a page from tracking entirely (stale / accidental 404 cleanup).
 	 */
 	public function maybe_forget_page(): void {
+		if ( isset( $_POST['trrocket_rekept_nonce'] ) ) {
+			$this->rekept_page();
+		}
 		if ( ! isset( $_POST['trrocket_forget_nonce'] ) ) {
 			return;
 		}
@@ -2929,6 +2944,7 @@ class Admin {
 		}
 		$term = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 		$only = ! empty( $_GET['onlymiss'] );
+		$kept = ! empty( $_GET['kept'] ); // 1.8.8: only the sentences kept as they were
 		if ( isset( $_GET['saved'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Saved.', 'translate-rocket' ) . '</p></div>';
 		}
@@ -3029,22 +3045,23 @@ class Admin {
 		echo '<input type="hidden" name="lang" value="' . esc_attr( $lang ) . '" />';
 		echo '<input type="search" name="s" value="' . esc_attr( $term ) . '" placeholder="' . esc_attr__( 'Search source or translation…', 'translate-rocket' ) . '" class="regular-text" />';
 		echo ' <label><input type="checkbox" name="onlymiss" value="1" ' . checked( $only, true, false ) . '> ' . esc_html__( 'Only missing', 'translate-rocket' ) . '</label> ';
+		echo ' <label><input type="checkbox" name="kept" value="1" ' . checked( $kept, true, false ) . '> ' . esc_html__( 'Only kept as they were', 'translate-rocket' ) . '</label> ';
 		submit_button( __( 'Search', 'translate-rocket' ), 'secondary', '', false );
 		echo '</form>';
 
 		// 14/10/2026: 50 at a time, with the real total and the pages (it was the first 300, said «300 strings»).
 		$per    = 50;
-		$totale = Strings::search_count( $lang, $term, $only );
+		$totale = Strings::search_count( $lang, $term, $only, $kept );
 		$pagine = max( 1, (int) ceil( $totale / $per ) );
 		$pg     = isset( $_GET['pg'] ) ? min( $pagine, max( 1, (int) $_GET['pg'] ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$rows   = Strings::search( $lang, $term, $per, $only, ( $pg - 1 ) * $per );
-		$pager  = self::memory_pager( $lang, $term, $only, $pg, $pagine );
+		$rows   = Strings::search( $lang, $term, $per, $only, ( $pg - 1 ) * $per, $kept );
+		$pager  = self::memory_pager( $lang, $term, $only, $pg, $pagine, $kept );
 		printf(
 			'<p class="description">%s</p>',
 			esc_html(
 				$totale > $per
 					/* translators: 1: first shown, 2: last shown, 3: all matching strings. */
-					? sprintf( __( '%1$s–%2$s of %3$s strings', 'translate-rocket' ), number_format_i18n( ( $pg - 1 ) * $per + 1 ), number_format_i18n( min( $totale, $pg * $per ) ), number_format_i18n( $totale ) )
+					? sprintf( __( '%1$s–%2$s of %3$s strings', 'translate-rocket' ), Formati::number( ( $pg - 1 ) * $per + 1 ), Formati::number( min( $totale, $pg * $per ) ), Formati::number( $totale ) )
 					/* translators: %d: number of matching strings. */
 					: sprintf( _n( '%d string', '%d strings', $totale, 'translate-rocket' ), $totale )
 			)
@@ -3280,11 +3297,11 @@ JS;
 	/**
 	 * «‹ Previous · Page 2 of 17 · Next ›» for the Memory list, keeping the search and «Only missing».
 	 */
-	private static function memory_pager( string $lang, string $term, bool $only, int $pg, int $pagine ): string {
+	private static function memory_pager( string $lang, string $term, bool $only, int $pg, int $pagine, bool $kept = false ): string {
 		if ( $pagine <= 1 ) {
 			return '';
 		}
-		$url = static function ( int $n ) use ( $lang, $term, $only ): string {
+		$url = static function ( int $n ) use ( $lang, $term, $only, $kept ): string {
 			$a = array( 'page' => 'translate-rocket-memory', 'lang' => $lang, 'pg' => $n );
 			if ( '' !== $term ) {
 				$a['s'] = $term;
@@ -3292,12 +3309,15 @@ JS;
 			if ( $only ) {
 				$a['onlymiss'] = '1';
 			}
+			if ( $kept ) {
+				$a['kept'] = '1';
+			}
 			return esc_url( add_query_arg( $a, admin_url( 'admin.php' ) ) );
 		};
 		$out  = '<p class="trr-mem-pager" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0">';
 		$out .= $pg > 1 ? '<a class="button" href="' . $url( $pg - 1 ) . '">&lsaquo; ' . esc_html__( 'Previous', 'translate-rocket' ) . '</a>' : '<span class="button disabled" aria-disabled="true">&lsaquo; ' . esc_html__( 'Previous', 'translate-rocket' ) . '</span>';
 		/* translators: 1: this page, 2: all pages. */
-		$out .= '<span>' . esc_html( sprintf( __( 'Page %1$s of %2$s', 'translate-rocket' ), number_format_i18n( $pg ), number_format_i18n( $pagine ) ) ) . '</span>';
+		$out .= '<span>' . esc_html( sprintf( __( 'Page %1$s of %2$s', 'translate-rocket' ), Formati::number( $pg ), Formati::number( $pagine ) ) ) . '</span>';
 		$out .= $pg < $pagine ? '<a class="button" href="' . $url( $pg + 1 ) . '">' . esc_html__( 'Next', 'translate-rocket' ) . ' &rsaquo;</a>' : '<span class="button disabled" aria-disabled="true">' . esc_html__( 'Next', 'translate-rocket' ) . ' &rsaquo;</span>';
 		return $out . '</p>';
 	}
@@ -3623,13 +3643,15 @@ JS;
 					var c=el('span','trr-ename');c.appendChild(el('strong','',a(o,'name')||o.textContent));
 					var sub=o.disabled?a(o,'why'):a(o,'limit');if(sub){c.appendChild(el('small','',sub));}
 					dove.appendChild(c);
-					if(a(o,'quality')){dove.appendChild(el('span','trr-equal trr-equal-'+a(o,'qkey'),a(o,'quality')));}
+					// 16/10/2026 (Federico: «is fair better than good? a bar indicator would be nice»): four bars, filled up to the level.
+					if(a(o,'quality')){var lv={'fair':1,'good':2,'very-good':3,'excellent':4}[a(o,'qkey')]||0,q=el('span','trr-equal trr-equal-'+a(o,'qkey'),''),bb=el('span','trr-qbars','');bb.setAttribute('aria-hidden','true');for(var j=1;j<=4;j++){bb.appendChild(el('i',j<=lv?'on':'',''));}q.appendChild(bb);q.appendChild(document.createTextNode(a(o,'quality')));q.title=a(o,'quality')+' ('+lv+'/4)';dove.appendChild(q);}
+					if(dove!==pb&&a(o,'setup')){var g=el('a','trr-egear','\u2699');g.href=a(o,'setup');g.title=a(I,'l-setup')||'';g.setAttribute('aria-label',g.title);g.addEventListener('click',function(ev){ev.stopPropagation();});dove.appendChild(g);}
 				}
 				function info(){
 					if(!I){return;}var o=s.options[s.selectedIndex];I.textContent='';
 					if(!o||!a(o,'tier')&&!a(o,'needs')){I.hidden=true;return;}
 					[['quality','quality'],['limit','limit'],['needs','needs'],['where','where'],['goes','goes']].forEach(function(k){
-						var v=a(o,k[1]);if(!v){return;}var r=el('span','trr-einfo-row');r.appendChild(el('b','',a(I,'l-'+k[0])+': '));r.appendChild(document.createTextNode(v));I.appendChild(r);
+						var v=a(o,k[1]);if(!v){return;}var r=el('span','trr-einfo-row');r.appendChild(el('b','',a(I,'l-'+k[0])));r.appendChild(document.createTextNode(v));I.appendChild(r);
 					});
 					I.className='trr-engine-info trr-engine-info-'+(a(o,'tier')||'auto');I.hidden=!I.firstChild;
 				}
@@ -3702,21 +3724,27 @@ JS;
 				function passi(pagina){
 					var go=document.getElementById('trr-engine-go'),box=document.getElementById('trr-step');
 					if(!box){box=document.createElement('div');box.id='trr-step';box.className='trr-step';box.setAttribute('role','status');box.innerHTML='<span class="trr-prog-bar"><span class="trr-prog-fill" style="width:0"></span></span> <span class="trr-step-txt"></span>';f.parentNode.insertBefore(box,f.nextSibling);}
-					var fill=box.querySelector('.trr-prog-fill'),txt=box.querySelector('.trr-step-txt'),fatte=0,giri=0;
+					var fill=box.querySelector('.trr-prog-fill'),txt=box.querySelector('.trr-step-txt'),fatte=0,giri=0,tenute=0;
 					box.hidden=false;box.classList.remove('is-error');if(go){go.disabled=true;}
 					function scrivi(left){txt.textContent=(left>=0?(T.busy||'').replace('%1$s',fatte).replace('%2$s',left):(T.busyPage||'').replace('%s',fatte));if(left>=0){fill.style.width=Math.max(3,Math.round(100*fatte/Math.max(1,fatte+left)))+'%';}}
-					function ferma(msg){box.classList.add('is-error');txt.textContent=msg;if(go){go.disabled=false;}}
+					function ferma(msg){box.classList.add('is-error');txt.textContent=msg;if(go){go.disabled=false;}
+							// 16/10/2026 (Federico: «it stopped with the message but the hourglass stays: a bug»): the page is not reloaded
+							// on a stop, so the ⏳ drawn at load would stay on; nothing is being translated any more.
+							document.querySelectorAll('.trr-busy').forEach(function(b){b.hidden=true;});document.querySelectorAll('.is-busy').forEach(function(b){b.classList.remove('is-busy');});}
 					function giro(){
-						var d=new FormData(f);d.append('action','trrocket_translate_step');d.append('done',fatte);
+						var d=new FormData(f);d.append('action','trrocket_translate_step');d.append('done',fatte);d.append('kept',tenute);
 						// 15/10/2026: the «AI» button of one page goes the same way, in short steps (it was one request: 504).
 						if(pagina){d.set('loc',pagina.loc);d.set('engine',pagina.engine);d.delete('engine_main');}
 						fetch(window.ajaxurl,{method:'POST',body:d,credentials:'same-origin'}).then(function(r){
 							if(!r.ok){throw new Error('HTTP '+r.status);}return r.json();
 						}).then(function(j){
 							if(!j||!j.success){throw new Error((j&&j.data&&j.data.error)||'?');}
-							var x=j.data;fatte=x.total;giri++;scrivi(x.left);
+							var x=j.data;fatte=x.total;tenute=x.kept||0;giri++;scrivi(x.left);
 							if(x.error&&!x.count){ferma(x.error);return;}
 							if(x.more&&x.count>0&&giri<400){giro();return;}
+								// 16/10/2026: the engine left sentences behind (often not in the site's language): say so, with
+								// the way to them, instead of reloading as if all were done.
+								if(x.stuck){box.classList.add('is-warn');txt.textContent=(T.stuck||'').replace('%1$s',fatte).replace('%2$s',x.left)+' ';var lk=document.createElement('a');lk.href=x.stuck;lk.textContent=T.stuckLink||'';txt.appendChild(lk);if(go){go.disabled=false;}document.querySelectorAll('.trr-busy').forEach(function(b){b.hidden=true;});return;}
 							fill.style.width='100%';location.reload();
 						}).catch(function(err){ferma((T.lost||'').replace('%s',err&&err.message?err.message:'?'));});
 					}
@@ -3984,12 +4012,25 @@ JS;
 			\TranslateRocket\Cache::flush();
 		}
 		$totale = $prima + (int) $r['count'];
+		$tenute = ( isset( $_POST['kept'] ) ? max( 0, (int) $_POST['kept'] ) : 0 ) + (int) ( $r['kept'] ?? 0 );
+		$resta  = '' === $loc ? Strings::untranslated_count( $lang ) : -1;
+		if ( empty( $r['more'] ) ) {
+			// 16/10/2026 (Federico: «it stopped and the hourglass stayed»): the work is over, the hourglass goes off now
+			// (it reads «the count moved in the last minutes», which stayed true after the last step).
+			$mosse = (array) get_option( 'trrocket_auto_moved', array() );
+			if ( isset( $mosse[ $lang ] ) && is_array( $mosse[ $lang ] ) ) {
+				$mosse[ $lang ][1] = 0;
+				update_option( 'trrocket_auto_moved', $mosse, false );
+			}
+			delete_transient( 'trrocket_auto_live' );
+		}
 		// The notice after the last step: the total, or the error when nothing at all was translated.
 		set_transient(
 			'trrocket_ai_notice_' . get_current_user_id(),
 			array(
-				'ok'    => $totale > 0 || ( ! empty( $r['ok'] ) && '' === (string) $r['error'] ),
+				'ok'    => $totale > 0 || $tenute > 0 || ( ! empty( $r['ok'] ) && '' === (string) $r['error'] ),
 				'count' => $totale,
+				'kept'  => $tenute,
 				'error' => (string) $r['error'],
 			),
 			300
@@ -3998,9 +4039,12 @@ JS;
 			array(
 				'count' => (int) $r['count'],
 				'total' => $totale,
+				'kept'  => $tenute,
 				'more'  => ! empty( $r['more'] ),
-				'left'  => '' === $loc ? Strings::untranslated_count( $lang ) : -1,
+				'left'  => $resta,
 				'error' => '' !== (string) $r['error'] ? self::shown_error( (string) $r['error'] ) : '',
+				// Sentences the engine gave nothing back for (often not in the site's language): where to see them.
+				'stuck' => empty( $r['more'] ) && 0 === (int) $r['count'] && 0 === $tenute && $resta > 0 ? admin_url( 'admin.php?page=translate-rocket-memory&lang=' . rawurlencode( $lang ) . '&onlymiss=1' ) : '',
 			)
 		);
 	}
@@ -4037,6 +4081,7 @@ JS;
 			'manual'            => __( 'By hand', 'translate-rocket' ),
 			'import'            => __( 'Imported', 'translate-rocket' ),
 			'reuse'             => __( 'Reused', 'translate-rocket' ),
+			'kept'              => __( 'Kept as it was', 'translate-rocket' ), // a name, or text in another language, the engine could not translate (16/10/2026)
 			'pieces'            => __( 'Put together from translated parts', 'translate-rocket' ),
 			'glossary'          => __( 'Glossary', 'translate-rocket' ),
 			'unknown'           => __( 'Not recorded', 'translate-rocket' ),
@@ -4065,8 +4110,8 @@ JS;
 		foreach ( $per as $id => $n ) {
 			$nome = self::engine_name( (string) $id );
 			/* translators: 1: who translated (e.g. DeepL), 2: number of sentences. */
-			$tit  = sprintf( _n( 'Translated by %1$s: %2$s sentence', 'Translated by %1$s: %2$s sentences', (int) $n, 'translate-rocket' ), $nome, number_format_i18n( (int) $n ) );
-			$out .= '<span class="trr-etag trr-etag-' . esc_attr( sanitize_html_class( (string) $id ) ) . '" title="' . esc_attr( $tit ) . '">' . esc_html( $nome ) . ' <b>' . esc_html( number_format_i18n( (int) $n ) ) . '</b></span>';
+			$tit  = sprintf( _n( 'Translated by %1$s: %2$s sentence', 'Translated by %1$s: %2$s sentences', (int) $n, 'translate-rocket' ), $nome, Formati::number( (int) $n ) );
+			$out .= '<span class="trr-etag trr-etag-' . esc_attr( sanitize_html_class( (string) $id ) ) . '" title="' . esc_attr( $tit ) . '">' . esc_html( $nome ) . ' <b>' . esc_html( Formati::number( (int) $n ) ) . '</b></span>';
 		}
 		return $out . '</span>';
 	}
@@ -4173,6 +4218,29 @@ JS;
 	 * AI provider settings + bulk auto-translate page.
 	 */
 	/**
+	 * «Translate again the kept ones» (16/10/2026): the sentences of a page kept as they were go back to «missing».
+	 */
+	private function rekept_page(): void {
+		if ( ! current_user_can( 'manage_options' ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['trrocket_rekept_nonce'] ?? '' ) ), 'trrocket_rekept_page' ) ) {
+			return;
+		}
+		$lang = isset( $_POST['lang'] ) ? strtolower( sanitize_text_field( wp_unslash( $_POST['lang'] ) ) ) : '';
+		$loc  = isset( $_POST['loc'] ) ? sanitize_text_field( wp_unslash( $_POST['loc'] ) ) : '';
+		if ( '' === $loc || ! in_array( $lang, (array) Settings::get()['target_languages'], true ) ) {
+			return;
+		}
+		global $wpdb;
+		$tt = \TranslateRocket\Database::translations_table();
+		$oc = \TranslateRocket\Database::occurrences_table();
+		Strings::deleting( "tr.language = %s AND tr.provider = 'kept' AND tr.string_id IN (SELECT o.string_id FROM {$oc} o WHERE o.url_hash = %s)", array( $lang, $loc ), 'rekept' );
+		$n = (int) $wpdb->query( $wpdb->prepare( "DELETE tr FROM {$tt} tr INNER JOIN {$oc} o ON o.string_id = tr.string_id WHERE o.url_hash = %s AND tr.language = %s AND tr.provider = 'kept'", $loc, $lang ) ); // phpcs:ignore WordPress.DB
+		Strings::flush_maps( $lang );
+		\TranslateRocket\Cache::flush();
+		wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-strings', 'lang' => $lang, 'rekept' => $n ), admin_url( 'admin.php' ) ) );
+		exit;
+	}
+
+	/**
 	 * Branded header with pill navigation, shared by every plugin screen.
 	 */
 	public static function header( string $current ): void {
@@ -4185,16 +4253,29 @@ JS;
 			'translate-rocket-auto'       => array( __( 'Automatic', 'translate-rocket' ), 'dashicons-controls-play' ),
 			'translate-rocket-ai'         => array( __( 'AI', 'translate-rocket' ), 'dashicons-superhero' ),
 			'translate-rocket-switcher'   => array( __( 'Switcher', 'translate-rocket' ), 'dashicons-flag' ),
+			'translate-rocket-search'     => array( __( 'Search', 'translate-rocket' ), 'dashicons-search' ), // 1.8.8: the search box, its own screen
 			'translate-rocket-memory'     => array( __( 'Memory', 'translate-rocket' ), 'dashicons-database' ),
-			'translate-rocket-next'       => array( __( 'Next steps', 'translate-rocket' ), 'dashicons-yes-alt' ),
 		);
 		$altre = array(
+			'translate-rocket-next'        => array( __( 'Next steps', 'translate-rocket' ), 'dashicons-yes-alt' ), // 1.8.8: among the others, the drawer already says what is left
 			'translate-rocket-import'      => array( __( 'Import', 'translate-rocket' ), 'dashicons-download' ),
 			'translate-rocket-exclusions'  => array( __( 'Exclusions', 'translate-rocket' ), 'dashicons-shield' ),
 			'translate-rocket-copies'      => array( __( 'Copies', 'translate-rocket' ), 'dashicons-admin-page' ),
 			'translate-rocket-diagnostics' => array( __( 'Diagnostics', 'translate-rocket' ), 'dashicons-heart' ),
 			'translate-rocket-help'        => array( __( 'Help', 'translate-rocket' ), 'dashicons-sos' ),
 		);
+
+		// 1.8.8 (Federico, 16/10: «what is free, immediate and fast at first sight, the rest in the advanced
+		// interface»): the Simple view shows three screens; Advanced shows them all. Nothing is lost: a click away.
+		$semplice = View::simple();
+		if ( $semplice ) {
+			$pages = array(
+				'translate-rocket'          => array( __( 'Start', 'translate-rocket' ), 'dashicons-translation' ),
+				'translate-rocket-strings'  => array( __( 'Translations', 'translate-rocket' ), 'dashicons-edit' ),
+				'translate-rocket-switcher' => array( __( 'Switcher', 'translate-rocket' ), 'dashicons-flag' ),
+			);
+			$altre = array();
+		}
 
 		$unseen = \TranslateRocket\Logger::count_unseen();
 		// Il numero dei passi in attesa si vede da OGNI schermata del plugin, sulla
@@ -4232,6 +4313,11 @@ JS;
 		foreach ( $pages as $slug => $p ) {
 			echo wp_kses( $pillola( $slug, $p ), \TranslateRocket\Kses::html_rules() );
 		}
+		if ( $semplice && ! isset( $pages[ $current ] ) && 0 === strpos( $current, 'translate-rocket' ) ) {
+			// A screen of Advanced opened from a link (a notice, Diagnostics with an error): its button, so the bar says where you are.
+			echo '<span class="trr-nav-item is-active">' . esc_html( (string) get_admin_page_title() ) . '</span>';
+		}
+		if ( ! $semplice ) :
 		// «More ▾»: on a computer a drop-down; it shows which page is open in it, and the problems badge of Diagnostics.
 		$dentro = isset( $altre[ $current ] );
 		$menu   = '';
@@ -4259,6 +4345,8 @@ JS;
 			. esc_attr__( 'TranslateRocket is 100% free. Support development to keep it free — supporters get priority support & custom help.', 'translate-rocket' ) . '">'
 			. '<span class="dashicons dashicons-heart"></span> ' . esc_html__( 'Support the project', 'translate-rocket' )
 			. '</a>';
+		endif;
+		echo View::toggle( $current ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in toggle().
 		echo '</nav>';
 		// On a phone the buttons are one row that scrolls sideways: bring the current one into view.
 		echo '<script>(function(){var n=document.querySelector(".trr-nav"),a=n&&n.querySelector(":scope > a.is-active:not(.trr-nav-phone),:scope > a.trr-nav-phone.is-active");if(a&&n.scrollWidth>n.clientWidth){n.scrollLeft=Math.max(0,a.offsetLeft-n.offsetLeft-16);}'
@@ -4281,7 +4369,7 @@ JS;
 		// Il cassetto: da qualunque schermata si vede cosa manca senza perdere la
 		// pagina su cui si sta lavorando. Non sulla schermata dedicata, che ha gia'
 		// l'elenco per intero.
-		if ( 'translate-rocket-next' !== $current ) {
+		if ( 'translate-rocket-next' !== $current && ! View::simple() ) { // 1.8.8: the Simple home has its three steps already
 			try {
 				\TranslateRocket\Admin\NextSteps::drawer();
 			} catch ( \Throwable $e ) {
@@ -4521,7 +4609,7 @@ JS
 						// quelli nella catena di riserva; gli altri su una riga, «Show» li apre.
 						$aperto = $is_active || ! empty( $order_prio[ $pid ] );
 						?>
-						<div class="trr-ai-provider<?php echo $is_active ? ' is-active' : ''; ?><?php echo $aperto ? '' : ' is-folded'; ?>" data-provider="<?php echo esc_attr( $pid ); ?>">
+						<div class="trr-ai-provider<?php echo $is_active ? ' is-active' : ''; ?><?php echo $aperto ? '' : ' is-folded'; ?>" data-provider="<?php echo esc_attr( $pid ); ?>" id="trr-prov-<?php echo esc_attr( $pid ); ?>">
 							<div class="trr-ai-phead">
 								<strong class="trr-ai-pname"><?php echo esc_html( $def['label'] ); ?></strong>
 								<?php if ( ! empty( $def['free'] ) ) : ?><span class="trr-ai-badge" style="background:#00a32a;color:#fff;border:0"><?php esc_html_e( 'Free', 'translate-rocket' ); ?></span><?php endif; ?>
@@ -4592,8 +4680,8 @@ JS
 												$deepl_meter = esc_html__( 'Quota this cycle: %1$s of %2$s characters (%3$d%%).', 'translate-rocket' );
 												printf(
 													$deepl_meter, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- format string escaped above; args escaped below.
-													esc_html( number_format_i18n( $deepl_usage['count'] ) ),
-													esc_html( number_format_i18n( $deepl_usage['limit'] ) ),
+													esc_html( Formati::number( $deepl_usage['count'] ) ),
+													esc_html( Formati::number( $deepl_usage['limit'] ) ),
 													(int) $deepl_pct
 												);
 												if ( $deepl_pct >= 100 ) {
@@ -4714,6 +4802,11 @@ JS
 							var b = card.querySelector( '.trr-ai-fold' );
 							if ( b ) { b.addEventListener( 'click', function () { apri( card, card.classList.contains( 'is-folded' ) ); } ); }
 						} );
+						// the gear beside an engine on Translations lands here: its card open, in view (16/10/2026)
+						if ( /^#trr-prov-/.test( location.hash ) ) {
+							var mia = document.getElementById( location.hash.slice( 1 ) );
+							if ( mia ) { apri( mia, true ); setTimeout( function () { mia.scrollIntoView( { block: 'start' } ); }, 150 ); }
+						}
 						// choosing a provider in «Active provider» opens its card, where its key goes
 						var sel = document.getElementById( 'trrocket-active' );
 						if ( sel ) {
@@ -4803,10 +4896,11 @@ JS
 										printf(
 											/* translators: %s: number of characters used today. */
 											esc_html__( '0 = unlimited. Used today: %s characters.', 'translate-rocket' ),
-											'<strong>' . esc_html( number_format_i18n( \TranslateRocket\AiUsage::used_today() ) ) . '</strong>'
+											'<strong>' . esc_html( Formati::number( \TranslateRocket\AiUsage::used_today() ) ) . '</strong>'
 										);
 										?>
 									</p>
+									<?php $this->consigliato( __( '0 with the free engines; with a paid key, a cap that fits your plan', 'translate-rocket' ) ); ?>
 								</td>
 							</tr>
 							<tr>
@@ -4818,6 +4912,7 @@ JS
 											<option value="<?php echo (int) $trr_n; ?>" <?php selected( (int) ( $settings['ai_batch'] ?? 0 ), $trr_n ); ?>><?php echo (int) $trr_n; ?></option>
 										<?php endforeach; ?>
 									</select>
+									<?php $this->consigliato( __( 'Automatic', 'translate-rocket' ) ); ?>
 								</td>
 							</tr>
 							<tr>
@@ -4825,13 +4920,13 @@ JS
 								<td>
 									<?php $u = \TranslateRocket\AiUsage::usage(); ?>
 									<p style="margin:0 0 8px;font-size:14px">
-										<strong><?php echo esc_html( number_format_i18n( (int) $u['chars'] ) ); ?></strong> <?php esc_html_e( 'characters', 'translate-rocket' ); ?>
-										&nbsp;·&nbsp; <strong><?php echo esc_html( number_format_i18n( (int) $u['requests'] ) ); ?></strong> <?php esc_html_e( 'requests', 'translate-rocket' ); ?>
+										<strong><?php echo esc_html( Formati::number( (int) $u['chars'] ) ); ?></strong> <?php esc_html_e( 'characters', 'translate-rocket' ); ?>
+										&nbsp;·&nbsp; <strong><?php echo esc_html( Formati::number( (int) $u['requests'] ) ); ?></strong> <?php esc_html_e( 'requests', 'translate-rocket' ); ?>
 										&nbsp;<span class="description"><?php
 										printf(
 											/* translators: %s: start date of the current usage period. */
 											esc_html__( '(since %s)', 'translate-rocket' ),
-											esc_html( date_i18n( (string) get_option( 'date_format' ), strtotime( $u['since'] . ' UTC' ) ) )
+											esc_html( Formati::date( (int) strtotime( $u['since'] . ' UTC' ) ) )
 										);
 										?></span>
 									</p>
@@ -4846,9 +4941,9 @@ JS
 									$est = \TranslateRocket\Savings::estimate( (int) $sv['chars'] );
 									?>
 									<p style="margin:0;font-size:14px">
-										<strong style="color:#1a7a33">&asymp; &euro;<?php echo esc_html( number_format_i18n( $est['eur'], 2 ) ); ?></strong>
-										&nbsp;·&nbsp; <strong><?php echo esc_html( number_format_i18n( (int) $sv['chars'] ) ); ?></strong> <?php esc_html_e( 'characters', 'translate-rocket' ); ?>
-										&nbsp;·&nbsp; <strong><?php echo esc_html( number_format_i18n( (int) $sv['strings'] ) ); ?></strong> <?php esc_html_e( 'strings translated for free', 'translate-rocket' ); ?>
+										<strong style="color:#1a7a33">&asymp; <?php echo esc_html( Formati::euro( (float) $est['eur'] ) ); ?></strong>
+										&nbsp;·&nbsp; <strong><?php echo esc_html( Formati::number( (int) $sv['chars'] ) ); ?></strong> <?php esc_html_e( 'characters', 'translate-rocket' ); ?>
+										&nbsp;·&nbsp; <strong><?php echo esc_html( Formati::number( (int) $sv['strings'] ) ); ?></strong> <?php esc_html_e( 'strings translated for free', 'translate-rocket' ); ?>
 									</p>
 									<p class="description">
 										<?php
@@ -4866,6 +4961,7 @@ JS
 								<td>
 									<input type="number" min="0" max="31" id="trr-ai-reset-day" name="ai_reset_day" value="<?php echo (int) ( $settings['ai_reset_day'] ?? 0 ); ?>" class="small-text" />
 									<p class="description"><?php esc_html_e( '0 = manual only. 1–31 = reset on that day each month (shorter months use their last day).', 'translate-rocket' ); ?></p>
+									<?php $this->consigliato( __( 'the day your plan renews; 0 if you use only free engines', 'translate-rocket' ) ); ?>
 								</td>
 							</tr>
 							<tr>
@@ -4876,6 +4972,7 @@ JS
 										<?php esc_html_e( 'Don’t let bots / crawlers trigger AI translation', 'translate-rocket' ); ?>
 									</label>
 									<p class="description"><?php esc_html_e( 'Only matters with auto-translation enabled; recommended on.', 'translate-rocket' ); ?></p>
+									<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
 								</td>
 							</tr>
 						</table>
@@ -5960,9 +6057,32 @@ JS;
 		?>
 		<div class="wrap trrocket-wrap">
 			<?php self::header( 'translate-rocket' ); ?>
-			<h1 class="trr-page-title"><?php esc_html_e( 'Languages &amp; general', 'translate-rocket' ); ?></h1>
+			<?php if ( View::simple() ) : ?>
+				<?php
+				// 1.8.8, Simple view: three steps, all free and immediate, the rest under Advanced.
+				$prima = '';
+				foreach ( $targets as $t ) {
+					if ( (string) $t !== (string) $source ) {
+						$prima = (string) $t;
+						break;
+					}
+				}
+				$guarda = '' !== $prima ? \TranslateRocket\Plugin::instance()->router()->home_for_language( $prima ) : '';
+				?>
+				<h1 class="trr-page-title"><?php esc_html_e( 'Translate your site in three steps', 'translate-rocket' ); ?></h1>
+				<ol class="trr-steps3">
+					<li class="<?php echo empty( $targets ) ? 'is-now' : 'is-done'; ?>"><strong><?php esc_html_e( 'Choose the languages', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'Tick them below and save.', 'translate-rocket' ); ?></span></li>
+					<li class="<?php echo empty( $targets ) ? '' : 'is-now'; ?>"><strong><?php esc_html_e( 'Translate, for free', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'Press «Translate» next to a language: no key, no account.', 'translate-rocket' ); ?></span></li>
+					<li><strong><?php esc_html_e( 'Put it online', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'Flip its switch to Online when you like it.', 'translate-rocket' ); ?></span></li>
+				</ol>
+				<?php if ( '' !== $guarda ) : ?>
+					<p class="trr-steps3-look"><a class="button button-primary" href="<?php echo esc_url( $guarda ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Look at your translated site', 'translate-rocket' ); ?> ↗</a></p>
+				<?php endif; ?>
+			<?php else : ?>
+				<h1 class="trr-page-title"><?php esc_html_e( 'Languages &amp; general', 'translate-rocket' ); ?></h1>
+			<?php endif; ?>
 			<?php // 9/10/2026: the map of what is free (core and Labs) replaces the one-line Labs banner here. ?>
-			<?php \TranslateRocket\Admin\Overview::render(); ?>
+			<div class="trr-adv"><?php \TranslateRocket\Admin\Overview::render(); ?></div>
 
 
 			<?php if ( empty( $targets ) ) : ?>
@@ -6055,7 +6175,6 @@ JS;
 							);
 							?>
 						</h3>
-						<p class="description trr-into-td"><?php esc_html_e( 'A language you add starts offline: only you see it while you translate it. Flip its switch to green when it is ready.', 'translate-rocket' ); ?></p>
 					</div>
 
 					<?php
@@ -6067,6 +6186,9 @@ JS;
 					?>
 					<?php
 					self::lang_search_box();
+					?>
+						<p class="description trr-into-td trr-under-search"><?php esc_html_e( 'A language you add starts offline: only you see it while you translate it. Flip its switch to green when it is ready.', 'translate-rocket' ); ?></p>
+					<?php
 					// 14/10/2026 (visual check: 80 languages always open made the page 3,900 px, 7,400 on a phone): with
 					// languages chosen, only those show; typing in the search box shows every match; one button opens all.
 					$trr_chiusa = ! empty( array_diff( (array) $targets, array( $source ) ) );
@@ -6195,7 +6317,7 @@ JS;
 					<?php
 					$customs = ( isset( $settings['custom_languages'] ) && is_array( $settings['custom_languages'] ) ) ? $settings['custom_languages'] : array();
 					?>
-					<div class="trr-custom-langs">
+					<div class="trr-custom-langs trr-adv">
 						<h3><?php esc_html_e( 'Custom language', 'translate-rocket' ); ?> <?php $this->info( __( 'Not in the list? Add your own: a short code (used in the URL, e.g. /la/), a name, and a flag picked from the list. After saving it appears among the languages above — tick it to enable.', 'translate-rocket' ) ); ?></h3>
 						<?php if ( ! empty( $customs ) ) : ?>
 							<ul class="trr-custom-list">
@@ -6245,7 +6367,7 @@ JS;
 						?>
 					</div>
 
-					<table class="form-table" role="presentation">
+					<table class="form-table trr-adv" role="presentation">
 						<tr>
 							<th scope="row"><?php esc_html_e( 'Who sees the translations', 'translate-rocket' ); ?> <?php $this->info( __( 'Preview mode: keep the translated site visible to administrators only, e.g. to review an import from another plugin on the real pages before going live. Visitors keep seeing the default language (language URLs redirect, the switcher is hidden and no hreflang/sitemap signals are sent). Switch back to "Everyone" to publish instantly.', 'translate-rocket' ) ); ?></th>
 							<td>
@@ -6257,6 +6379,7 @@ JS;
 									<input type="radio" name="serve_mode" value="admins" <?php checked( 'admins' === ( $settings['serve_mode'] ?? 'everyone' ) ); ?> />
 									<?php esc_html_e( 'Administrators only — preview mode, visitors keep seeing the default language', 'translate-rocket' ); ?>
 								</label>
+								<?php $this->consigliato( __( 'Everyone', 'translate-rocket' ) ); ?>
 							</td>
 						</tr>
 						<tr id="trr-set-seo">
@@ -6266,6 +6389,7 @@ JS;
 									<input type="checkbox" name="translate_meta" value="1" <?php checked( ! empty( $settings['translate_meta'] ) ); ?> />
 									<?php esc_html_e( 'Translate SEO title and meta description tags', 'translate-rocket' ); ?>
 								</label>
+								<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
 							</td>
 						</tr>
 						<tr>
@@ -6275,6 +6399,7 @@ JS;
 									<input type="checkbox" name="translate_interface" value="1" <?php checked( ! empty( $settings['translate_interface'] ) ); ?> />
 									<?php esc_html_e( 'Use WordPress\' own translations for the interface', 'translate-rocket' ); ?>
 								</label>
+								<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
 							</td>
 						</tr>
 						<tr>
@@ -6284,6 +6409,7 @@ JS;
 									<input type="checkbox" name="auto_redirect" value="1" <?php checked( ! empty( $settings['auto_redirect'] ) ); ?> />
 									<?php esc_html_e( 'Redirect new visitors to their browser language', 'translate-rocket' ); ?>
 								</label>
+								<?php $this->consigliato( __( 'off (better for search engines)', 'translate-rocket' ) ); ?>
 							</td>
 						</tr>
 						<tr>
@@ -6293,8 +6419,25 @@ JS;
 									<input type="checkbox" name="translated_search" value="1" <?php checked( ! isset( $settings['translated_search'] ) || ! empty( $settings['translated_search'] ) ); ?> />
 									<?php esc_html_e( 'The site search finds pages by their translated text', 'translate-rocket' ); ?>
 								</label>
+								<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
 							</td>
 						</tr>
+						<?php
+						// 1.8.8: only where iubenda is in use (or was set up here): one line per language.
+						$iub = \TranslateRocket\Integrations\ConsentBanners::policies();
+						if ( $iub || defined( 'IUB_CS_VERSION' ) || class_exists( 'iubenda_Cookie_Law_Solution' ) || is_plugin_active( 'iubenda-cookie-law-solution/iubenda_cookie_solution.php' ) ) :
+							$righe_iub = '';
+							foreach ( $iub as $l => $id ) {
+								$righe_iub .= $l . '=' . $id . "\n";
+							}
+							?>
+						<tr>
+							<th scope="row"><?php esc_html_e( 'iubenda policy per language', 'translate-rocket' ); ?> <?php $this->info( __( 'The iubenda cookie banner already speaks the language of each page: TranslateRocket tells it which one, and never translates its legal text. If you have a privacy policy in each language on iubenda, write its number here, one per line (for example en=12345678): on the English pages the banner and its links open the English policy. With the new iubenda multilingual snippet you need nothing here.', 'translate-rocket' ) ); ?></th>
+							<td>
+								<textarea name="iubenda_policies" rows="3" cols="30" class="code" placeholder="en=12345678&#10;de=23456789"><?php echo esc_textarea( $righe_iub ); ?></textarea>
+							</td>
+						</tr>
+						<?php endif; ?>
 						<tr>
 							<th scope="row"><?php esc_html_e( 'Visits per language', 'translate-rocket' ); ?> <?php $this->info( __( 'How many visits each language gets, its most read pages, and the languages your visitors\' browsers speak — so you see which language is worth adding next. Counted by a small signal the browser sends after the page has loaded (it works with page caches and CDNs too): no cookie, no IP address, nothing personal, so no consent banner is needed for it. Robots, search engines and administrators are not counted. The numbers appear on this screen, below.', 'translate-rocket' ) ); ?></th>
 							<td>
@@ -6302,11 +6445,12 @@ JS;
 									<input type="checkbox" name="stats" value="1" <?php checked( ! empty( $settings['stats'] ) ); ?> />
 									<?php esc_html_e( 'Count the visits of each language (no cookies)', 'translate-rocket' ); ?>
 								</label>
+								<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
 							</td>
 						</tr>
 						<tr>
-							<th scope="row"><?php esc_html_e( 'A different menu per language', 'translate-rocket' ); ?> <?php $this->info( __( 'Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead — other pages, other order, written in that language (it is not translated). Create it first in Appearance → Menus (or in the Site Editor for block themes), then choose it here. To hide only some items in some languages, use «Show in» on each item in Appearance → Menus.', 'translate-rocket' ) ); ?></th>
-							<td><?php \TranslateRocket\MenuPerLanguage::render_rows(); ?></td>
+							<th scope="row"><?php esc_html_e( 'A different menu per language', 'translate-rocket' ); ?> <?php $this->info( __( 'Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead: other pages, another order, written in that language (it is not translated). How: 1) in Appearance → Menus (block themes: in the Site Editor) create the menu and name it, for example «Menu DE»; 2) come back here and choose it next to that language; 3) save. Each column is one of the places your theme has for menus (header, footer…): choose, for that place, the menu to show in that language.', 'translate-rocket' ) ); ?></th>
+							<td><?php \TranslateRocket\MenuPerLanguage::render_rows(); ?><p class="description"><?php printf( /* translators: %s: link to Appearance → Menus. */ wp_kses( __( 'The menus are created and edited in %s. The columns are the places your theme has for menus; «The same, translated» keeps your usual menu, translated.', 'translate-rocket' ), array( 'a' => array( 'href' => array() ) ) ), '<a href="' . esc_url( admin_url( 'nav-menus.php' ) ) . '">' . esc_html__( 'Appearance → Menus', 'translate-rocket' ) . '</a>' ); ?></p></td>
 						</tr>
 						<tr>
 							<th scope="row"><?php esc_html_e( 'Page cache', 'translate-rocket' ); ?> <?php $this->info( __( 'Store the finished translated HTML of each page so repeat visits skip the on-the-fly translation — about 2× faster on repeat visits (e.g. ~0.55s → ~0.29s in our test). Only anonymous visitors are served from the cache, it skips dynamic pages (cart, checkout, account), and it clears automatically whenever you change a translation, edit a page, or update settings. On by default — turn it off only if you already use a page-cache plugin (e.g. WP Rocket), which already caches each language’s URL.', 'translate-rocket' ) ); ?></th>
@@ -6330,6 +6474,7 @@ JS;
 										?>
 									</p>
 								<?php endif; ?>
+								<?php $this->consigliato( \TranslateRocket\Conflicts::page_caches() ? __( 'off: another page cache is already active on this site', 'translate-rocket' ) : __( 'on', 'translate-rocket' ) ); ?>
 							</td>
 						</tr>
 						<tr>
@@ -6347,7 +6492,7 @@ JS;
 			</form>
 
 			<?php // 9/10/2026: «Progress» removed — the same numbers are in «Published, or still being translated?», live. ?>
-			<?php \TranslateRocket\Admin\StatsCard::render(); // 1.8.6: visits per language, when switched on ?>
+			<div class="trr-adv"><?php \TranslateRocket\Admin\StatsCard::render(); // 1.8.6: visits per language, when switched on ?></div>
 			<?php
 			// 1.8.6 (Federico: «rilevare i plugin che fanno lo stesso lavoro»): two JavaScript optimizers at once.
 			$trr_js = \TranslateRocket\Conflicts::js_optimizers();
@@ -6364,13 +6509,13 @@ JS;
 				</p></div>
 			<?php endif; ?>
 
-			<div class="trrocket-card">
+			<div class="trrocket-card trr-adv">
 				<h2>🚀 <?php esc_html_e( 'Need a hand?', 'translate-rocket' ); ?></h2>
 				<p><?php esc_html_e( 'Want a professional multilingual setup, reviewed translations or a custom feature? I can help — as a service.', 'translate-rocket' ); ?></p>
 				<a class="button" href="https://translaterocket.com/support/" target="_blank" rel="noopener"><?php esc_html_e( 'Get expert help', 'translate-rocket' ); ?></a>
 			</div>
 
-			<div class="trrocket-card trrocket-donate">
+			<div class="trrocket-card trrocket-donate trr-adv">
 				<h2>❤️ <?php esc_html_e( 'Support the project', 'translate-rocket' ); ?></h2>
 				<p><?php esc_html_e( 'TranslateRocket is 100% free. If it helps you, a small donation keeps it alive and updated.', 'translate-rocket' ); ?></p>
 				<a class="button button-primary" href="https://translaterocket.com/donate" target="_blank" rel="noopener"><?php esc_html_e( 'Make a donation', 'translate-rocket' ); ?></a>
@@ -6504,7 +6649,7 @@ JS;
 						/* translators: %d: number of strings translated. */
 						esc_html__( 'AI translated %d strings.', 'translate-rocket' ),
 						(int) $ai_notice['count']
-					) . '</p></div>';
+					) . ( ! empty( $ai_notice['kept'] ) ? ' ' . sprintf( /* translators: %d: sentences kept as they were. */ esc_html( _n( '%d sentence was kept as it was: a name, or text not in the site\'s language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page\'s «⋯» menu tries them with another engine.', '%d sentences were kept as they were: names, or text not in the site\'s language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page\'s «⋯» menu tries them with another engine.', (int) $ai_notice['kept'], 'translate-rocket' ) ), (int) $ai_notice['kept'] ) . ' <a href="' . esc_url( admin_url( 'admin.php?page=translate-rocket-memory&lang=' . rawurlencode( $lang ) . '&kept=1' ) ) . '">' . esc_html__( 'See them in Translation memory', 'translate-rocket' ) . '</a>' : '' ) . '</p></div>';
 			} else {
 				self::avviso_ai_fallita( (string) $ai_notice['error'] );
 			}
@@ -6705,8 +6850,17 @@ JS;
 						if ( isset( $note_labs[ $c['labsg'] ] ) ) {
 							$per_note[ $c['value'] ] = $note_labs[ $c['labsg'] ];
 						}
+						// 16/10/2026 (Federico): a gear beside each engine, to where it is set up.
+						$setup = '';
+						if ( '' !== (string) ( $c['labs'] ?? '' ) ) {
+							$setup = admin_url( 'admin.php?page=' . \TranslateRocket\Admin\LabsPromo::slug() );
+						} elseif ( '' !== (string) ( $c['provider'] ?? '' ) ) {
+							$setup = admin_url( 'admin.php?page=translate-rocket-ai#trr-prov-' . rawurlencode( (string) $c['provider'] ) );
+						} elseif ( '' === (string) $c['value'] ) {
+							$setup = admin_url( 'admin.php?page=translate-rocket-ai' );
+						}
 						printf(
-							'<option value="%1$s"%2$s%3$s data-tier="%5$s" data-quality="%6$s" data-qkey="%7$s" data-limit="%8$s" data-needs="%9$s" data-where="%10$s" data-goes="%11$s" data-why="%12$s" data-name="%13$s">%4$s</option>',
+							'<option value="%1$s"%2$s%3$s data-tier="%5$s" data-quality="%6$s" data-qkey="%7$s" data-limit="%8$s" data-needs="%9$s" data-where="%10$s" data-goes="%11$s" data-why="%12$s" data-name="%13$s" data-setup="%14$s">%4$s</option>',
 							esc_attr( $c['value'] ),
 							selected( $scelto, $c['value'], false ),
 							$c['ok'] ? '' : ' disabled',
@@ -6719,7 +6873,8 @@ JS;
 							esc_attr( (string) $c['where'] ),
 							esc_attr( (string) $c['goes'] ),
 							esc_attr( (string) $c['why'] ),
-							esc_attr( (string) $c['label'] )
+							esc_attr( (string) $c['label'] ),
+							esc_url( $setup )
 						);
 					}
 					if ( '' !== $aperto ) {
@@ -6758,6 +6913,7 @@ JS;
 					data-l-needs="<?php esc_attr_e( 'Needs', 'translate-rocket' ); ?>"
 					data-l-where="<?php esc_attr_e( 'Runs', 'translate-rocket' ); ?>"
 					data-l-goes="<?php esc_attr_e( 'Your text goes to', 'translate-rocket' ); ?>"
+					data-l-setup="<?php esc_attr_e( 'Set up this engine', 'translate-rocket' ); ?>"
 					data-t-free="<?php esc_attr_e( 'FREE', 'translate-rocket' ); ?>"
 					data-t-limit="<?php esc_attr_e( 'FREE · daily limit', 'translate-rocket' ); ?>"
 					data-t-paid="<?php esc_attr_e( 'Your paid key', 'translate-rocket' ); ?>"></span>
@@ -6794,6 +6950,9 @@ JS;
 				'busyPage' => __( 'Translating… %s done. Keep this page open.', 'translate-rocket' ),
 				/* translators: %s: the technical reason, e.g. HTTP 524. */
 				'lost'     => __( 'The connection to your site dropped (%s). What was translated is saved: press the button again to continue.', 'translate-rocket' ),
+				/* translators: 1: sentences translated, 2: sentences the engine did not translate. Keep %1$s and %2$s. */
+				'stuck'    => __( '%1$s translated. %2$s sentences were not translated by this engine: often they are not written in the site\'s language. You can translate them by hand or with another engine.', 'translate-rocket' ),
+				'stuckLink' => __( 'See them in Translation memory', 'translate-rocket' ),
 			);
 			wp_add_inline_script( 'trrocket-admin-info', 'window.TRRocketEngineAck=' . wp_json_encode( (object) $avvisi ) . ';window.TRRocketEngineNote=' . wp_json_encode( (object) $per_note ) . ';window.TRRocketStep=' . wp_json_encode( $trr_step ) . ';' . self::engine_js() );
 			?>
@@ -6833,7 +6992,7 @@ JS;
 		<div class="trr-ptoolbar">
 			<input type="search" id="trr-psearch" class="regular-text" autocomplete="off"
 				placeholder="<?php esc_attr_e( 'Search pages by name or slug… (spaces count as hyphens)', 'translate-rocket' ); ?>" />
-			<label class="trr-ptodo"><input type="checkbox" id="trr-ptodo" /> <?php esc_html_e( 'Only pages still to translate', 'translate-rocket' ); ?></label>
+			<label class="trr-ptodo"><input type="checkbox" id="trr-ptodo" autocomplete="off" /> <?php esc_html_e( 'Only pages still to translate', 'translate-rocket' ); ?> <span class="trr-ptodo-wait" aria-live="polite"><?php esc_html_e( 'Loading…', 'translate-rocket' ); ?></span></label>
 			<span class="description">
 				<?php
 				printf(
@@ -6856,6 +7015,10 @@ JS;
 		</form>
 		<form id="trr-forget-onepage" method="post" action="" style="display:none">
 			<?php wp_nonce_field( 'trrocket_forget_page', 'trrocket_forget_nonce' ); ?>
+			<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
+		</form>
+		<form id="trr-rekept-onepage" method="post" action="" style="display:none">
+			<?php wp_nonce_field( 'trrocket_rekept_page', 'trrocket_rekept_nonce' ); ?>
 			<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
 		</form>
 		<table class="widefat striped" id="trr-ptable" data-lang="<?php echo esc_attr( $lang ); ?>" data-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'trrocket_pages_rows' ) ); ?>" data-total="<?php echo (int) $count; ?>" data-block="<?php echo (int) self::PAGES_BLOCK; ?>">
@@ -6924,17 +7087,34 @@ JS;
 						<td data-label="<?php esc_attr_e( 'Missing', 'translate-rocket' ); ?>"><strong><?php echo (int) $missing; ?></strong></td>
 						<td class="trr-pcell"><?php echo wp_kses( $this->progress_bar( $translated, $total ) , \TranslateRocket\Kses::html_rules() ); ?></td>
 						<td class="trr-rowactions">
-							<a class="button button-small<?php echo $missing > 0 ? ' button-primary' : ''; ?>" href="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>
-							<?php if ( $riga_ok && $missing > 0 ) : ?>
+							<?php
+							// 16/10/2026 (Federico: «Translate / AI / ⋯ is confusing; Translate should use the method chosen above, the rest in the dots»):
+							// one «Translate» that goes with the engine chosen in «Translate with» (the per-page steps), the same on every row;
+							// at 100 % it becomes «Review». Opening the list, the visual editor, start over and hide are in «⋯».
+							$tenute_qui = (int) ( $per_motore[ (string) $page->url_hash ]['kept'] ?? 0 );
+							?>
+							<?php if ( $missing > 0 && $riga_ok ) : ?>
 								<?php // Il valore del pulsante e' il "loc" che finisce nel POST: un solo modulo per tutta la tabella invece di uno per riga. ?>
-								<button type="submit" form="trr-ai-onepage" class="button button-small" name="loc"
+								<button type="submit" form="trr-ai-onepage" class="button button-small button-primary" name="loc"
 									value="<?php echo esc_attr( $page->url_hash ); ?>"
-									title="<?php esc_attr_e( 'Translate only this page with AI', 'translate-rocket' ); ?>">&#10024; <?php esc_html_e( 'AI', 'translate-rocket' ); ?></button>
+									title="<?php esc_attr_e( 'Translate this page with the engine chosen above', 'translate-rocket' ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></button>
+							<?php elseif ( $missing > 0 ) : ?>
+								<a class="button button-small button-primary" href="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>" title="<?php esc_attr_e( 'No engine is ready: translate by hand or with your browser', 'translate-rocket' ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>
+							<?php else : ?>
+								<a class="button button-small" href="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>"><?php esc_html_e( 'Review', 'translate-rocket' ); ?></a>
 							<?php endif; ?>
-							<?php // 5/10/2026: «Start over» e «Hide» tolgono qualcosa: stanno dietro «⋯», non accanto a «Translate». ?>
 							<details class="trr-more">
 								<summary class="button button-small" title="<?php esc_attr_e( 'More actions', 'translate-rocket' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'translate-rocket' ); ?>">&#8943;</summary>
 								<div class="trr-more-menu">
+							<a class="button button-small" href="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>"><span class="dashicons dashicons-editor-ul" style="font-size:16px;width:16px;height:16px;vertical-align:text-bottom"></span> <?php esc_html_e( 'Open the sentences', 'translate-rocket' ); ?></a>
+							<?php if ( '[' !== substr( (string) $page->url, 0, 1 ) ) : ?>
+								<a class="button button-small" href="<?php echo esc_url( add_query_arg( 'trr-edit', '1', rtrim( (string) \TranslateRocket\Plugin::instance()->router()->home_for_language( $lang ), '/' ) . '/' . ltrim( (string) $page->url, '/' ) ) ); ?>" target="_blank" rel="noopener"><span class="dashicons dashicons-visibility" style="font-size:16px;width:16px;height:16px;vertical-align:text-bottom"></span> <?php esc_html_e( 'Visual editor', 'translate-rocket' ); ?></a>
+							<?php endif; ?>
+							<?php if ( $tenute_qui > 0 ) : ?>
+								<button type="submit" form="trr-rekept-onepage" class="button button-small" name="loc"
+									value="<?php echo esc_attr( $page->url_hash ); ?>"
+									title="<?php esc_attr_e( 'The sentences kept as they were go back to «missing», to try them with another engine or by hand', 'translate-rocket' ); ?>"><span class="dashicons dashicons-update" style="font-size:16px;width:16px;height:16px;vertical-align:text-bottom"></span> <?php printf( /* translators: %d: sentences kept as they were. */ esc_html__( 'Translate again the %d kept ones', 'translate-rocket' ), $tenute_qui ); ?></button>
+							<?php endif; ?>
 							<?php if ( $translated > 0 ) : ?>
 								<button type="submit" form="trr-reset-onepage" class="button button-small" name="loc"
 									value="<?php echo esc_attr( $page->url_hash ); ?>"
@@ -7077,6 +7257,9 @@ JS;
 		body.append( 'dir', stato.dir );
 		body.append( 'offset', daCapo ? '0' : String( stato.next ) );
 		if ( spin ) { spin.classList.add( 'is-active' ); }
+		// 16/10/2026 (Federico: «when I click it it is very slow, it should show a loading»): the table fades with a spinner, the box says it is working.
+		table.classList.add( 'trr-loading' );
+		if ( todo && todo.parentNode ) { todo.parentNode.classList.add( 'is-loading' ); }
 		fetch( table.getAttribute( 'data-ajax' ), { method: 'POST', credentials: 'same-origin', body: body } )
 			.then( function ( r ) { return r.json(); } )
 			.then( function ( j ) {
@@ -7089,12 +7272,20 @@ JS;
 				if ( more ) { more.parentNode.hidden = stato.next >= j.data.total; }
 			} )
 			.catch( function () {} )
-			.then( function () { if ( spin && mio === stato.seq ) { spin.classList.remove( 'is-active' ); } } );
+			.then( function () {
+				if ( mio !== stato.seq ) { return; }
+				if ( spin ) { spin.classList.remove( 'is-active' ); }
+				table.classList.remove( 'trr-loading' );
+				if ( todo && todo.parentNode ) { todo.parentNode.classList.remove( 'is-loading' ); }
+			} );
 	}
 	var attesa;
 	input.addEventListener( 'input', function () { clearTimeout( attesa ); attesa = setTimeout( function () { carica( true ); }, 300 ); } );
 	input.addEventListener( 'keydown', function ( e ) { if ( 'Enter' === e.key ) { e.preventDefault(); clearTimeout( attesa ); carica( true ); } } );
 	if ( todo ) { todo.addEventListener( 'change', function () { carica( true ); } ); }
+	// 16/10/2026 (Federico: «coming back from a page it stays ticked but with every page»): back from the cache, the
+	// list follows the box.
+	window.addEventListener( 'pageshow', function ( e ) { if ( e.persisted && todo && todo.checked ) { carica( true ); } } );
 	if ( more ) { more.addEventListener( 'click', function () { carica( false ); } ); }
 	document.addEventListener( 'click', function ( ev ) {
 		Array.prototype.forEach.call( table.querySelectorAll( 'details.trr-more[open]' ), function ( d ) {
@@ -7635,6 +7826,20 @@ JS;
 	 */
 	private function info( string $text ): void {
 		self::info_static( $text );
+	}
+
+	/**
+	 * «Recommended: …» under an option (1.8.8, Federico: «for every option, where it applies, write
+	 * recommended: manual, recommended 0, to make things simple»).
+	 *
+	 * @param string $value What to choose, in words.
+	 */
+	private function consigliato( string $value ): void {
+		echo '<p class="trr-consigliato">' . sprintf(
+			/* translators: %s: the value to choose, e.g. «Automatic» or «on». */
+			esc_html__( 'Recommended: %s', 'translate-rocket' ),
+			'<strong>' . esc_html( $value ) . '</strong>'
+		) . '</p>';
 	}
 
 	/**

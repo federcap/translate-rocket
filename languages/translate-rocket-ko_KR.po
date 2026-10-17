@@ -2825,7 +2825,7 @@ msgid "Code only (EN, IT…)"
 msgstr "코드만(EN, IT…)"
 
 msgid "House style"
-msgstr "하우스 스타일"
+msgstr "어조와 스타일"
 
 msgid "Extra instruction for the AI"
 msgstr "AI를 위한 추가 지시"
@@ -4724,7 +4724,7 @@ msgid "Proposed by %1$s, %2$s. Translations already done stay as they are; new o
 msgstr "%1$s이(가) %2$s에 제안함. 이미 완료된 번역은 그대로 유지되고, 새 번역은 이 스타일을 따릅니다."
 
 msgid "Proposed house style (you can edit it before using it):"
-msgstr "제안된 하우스 스타일(사용하기 전에 편집할 수 있습니다):"
+msgstr "제안된 어조와 스타일(사용하기 전에 수정할 수 있습니다):"
 
 msgid "Quality"
 msgstr "품질"
@@ -4760,7 +4760,7 @@ msgid "Volume"
 msgstr "분량"
 
 msgid "Your house style now:"
-msgstr "현재 하우스 스타일:"
+msgstr "현재 어조와 스타일:"
 
 msgid "a translated copy: read from its original"
 msgstr "번역된 사본: 원본에서 읽음"
@@ -4850,7 +4850,7 @@ msgid "The best model first; when 80% of the day's neurons are used, the volume 
 msgstr "가장 좋은 모델을 먼저 사용하고, 하루 뉴런의 80%를 쓰면 대용량 모델이 나머지 하루를 처리합니다."
 
 msgid "The new style is in use: it is in House style above, the names in Exclusions."
-msgstr "새 스타일이 사용 중입니다: 위의 하우스 스타일에 있고, 이름은 제외 항목에 있습니다."
+msgstr "새 스타일이 적용되었습니다. 위의 ‘어조와 스타일’에 있고, 이름은 제외 항목에 있습니다."
 
 msgid "TranslateRocket read your site by itself and prepared this proposal."
 msgstr "TranslateRocket이 사이트를 스스로 읽고 이 제안을 준비했습니다."
@@ -6606,3 +6606,432 @@ msgstr "아직 남음: %d."
 #: src/Admin/Admin.php
 msgid "Continue translating"
 msgstr "번역 계속하기"
+
+#: assets/js/search-block.js
+msgid "A search box that searches in the language of the page."
+msgstr "페이지의 언어로 검색하는 검색창입니다."
+
+#: assets/js/search-block.js
+msgid "As in the profile"
+msgstr "프로필과 동일"
+
+#: assets/js/search-block.js
+msgid "As in the settings"
+msgstr "설정과 동일"
+
+#: assets/js/search-block.js
+msgid "Look of the search box"
+msgstr "검색창 모양"
+
+#: assets/js/search-block.js
+msgid "No"
+msgstr "아니요"
+
+#: assets/js/search-block.js
+msgid "Profile (set up on the Search screen)"
+msgstr "프로필(검색 화면에서 설정)"
+
+#: assets/js/search-block.js
+msgid "The language of the page"
+msgstr "페이지의 언어"
+
+#: assets/js/search-block.js
+msgid "TranslateRocket search"
+msgstr "TranslateRocket 검색"
+
+#: assets/js/search-block.js
+msgid "Yes"
+msgstr "예"
+
+#: src/Admin/Admin.php
+msgid "0 with the free engines; with a paid key, a cap that fits your plan"
+msgstr "무료 엔진이면 0, 유료 키라면 요금제에 맞는 상한"
+
+#: src/Admin/Admin.php
+msgid "Appearance → Menus"
+msgstr "외모 → 메뉴"
+
+#: src/Admin/Admin.php
+msgid "Choose the languages"
+msgstr "언어 선택"
+
+#: src/Admin/Admin.php
+msgid "Everyone"
+msgstr "모두"
+
+#: src/Admin/Admin.php
+msgid "Flip its switch to Online when you like it."
+msgstr "마음에 들면 스위치를 «온라인»으로 켜세요."
+
+#: src/Admin/Admin.php
+msgid "Kept as it was"
+msgstr "원문 그대로 둠"
+
+#: src/Admin/Admin.php
+msgid "Look at your translated site"
+msgstr "번역된 사이트 보기"
+
+#: src/Admin/Admin.php
+msgid "No engine is ready: translate by hand or with your browser"
+msgstr "준비된 엔진이 없습니다. 직접 번역하거나 브라우저로 번역하세요"
+
+#: src/Admin/Admin.php
+msgid "Open the sentences"
+msgstr "문장 열기"
+
+#: src/Admin/Admin.php
+msgid "Press «Translate» next to a language: no key, no account."
+msgstr "언어 옆의 «번역»을 누르세요. 키도 계정도 필요 없습니다."
+
+#: src/Admin/Admin.php
+msgid "Put it online"
+msgstr "온라인에 올리기"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Recommended: %s"
+msgstr "권장: %s"
+
+#: src/Admin/Admin.php
+msgid "Review"
+msgstr "검토"
+
+#: src/Admin/Admin.php
+msgid "See them in Translation memory"
+msgstr "번역 메모리에서 보기"
+
+#: src/Admin/Admin.php
+msgid "Set up this engine"
+msgstr "이 엔진 설정"
+
+#: src/Admin/Admin.php
+msgid "Start"
+msgstr "시작"
+
+#: src/Admin/Admin.php
+msgid "The iubenda cookie banner already speaks the language of each page: TranslateRocket tells it which one, and never translates its legal text. If you have a privacy policy in each language on iubenda, write its number here, one per line (for example en=12345678): on the English pages the banner and its links open the English policy. With the new iubenda multilingual snippet you need nothing here."
+msgstr "iubenda 쿠키 배너는 이미 각 페이지의 언어로 말합니다. TranslateRocket이 어느 언어인지 알려 주고, 법적 문구는 절대 번역하지 않습니다. iubenda에 언어별 개인정보 처리방침이 있다면 그 번호를 한 줄에 하나씩 여기에 적으세요(예: en=12345678). 영어 페이지에서는 배너와 링크가 영어 방침을 엽니다. 새 iubenda 다국어 스니펫을 쓰면 여기에 아무것도 필요 없습니다."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The menus are created and edited in %s. The columns are the places your theme has for menus; «The same, translated» keeps your usual menu, translated."
+msgstr "메뉴는 %s에서 만들고 편집합니다. 열은 테마가 메뉴를 두는 자리이고, «같은 메뉴, 번역됨»은 평소 메뉴를 번역해서 그대로 씁니다."
+
+#: src/Admin/Admin.php
+msgid "The sentences kept as they were go back to «missing», to try them with another engine or by hand"
+msgstr "원문 그대로 둔 문장을 «누락»으로 되돌려 다른 엔진이나 수작업으로 다시 시도합니다"
+
+#: src/Admin/Admin.php
+msgid "Tick them below and save."
+msgstr "아래에서 체크하고 저장하세요."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translate again the %d kept ones"
+msgstr "그대로 둔 %d개 다시 번역"
+
+#: src/Admin/Admin.php
+msgid "Translate this page with the engine chosen above"
+msgstr "위에서 고른 엔진으로 이 페이지 번역"
+
+#: src/Admin/Admin.php
+msgid "Translate your site in three steps"
+msgstr "세 단계로 사이트 번역하기"
+
+#: src/Admin/Admin.php
+msgid "Translate, for free"
+msgstr "무료로 번역"
+
+#: src/Admin/Admin.php
+msgid "Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead: other pages, another order, written in that language (it is not translated). How: 1) in Appearance → Menus (block themes: in the Site Editor) create the menu and name it, for example «Menu DE»; 2) come back here and choose it next to that language; 3) save. Each column is one of the places your theme has for menus (header, footer…): choose, for that place, the menu to show in that language."
+msgstr "보통은 각 언어에 당신의 메뉴가 번역되어 보입니다. 여기서는 대신 언어마다 완전히 별개의 메뉴를 둘 수 있습니다. 다른 페이지, 다른 순서, 그 언어로 직접 쓴 메뉴(번역되지 않음). 방법: 1) 외모 → 메뉴(블록 테마는 사이트 편집기)에서 메뉴를 만들고 이름을 붙입니다(예: «Menu DE»). 2) 여기로 돌아와 그 언어 옆에서 고릅니다. 3) 저장합니다. 각 열은 테마가 메뉴를 두는 자리(헤더, 푸터…)이며, 그 자리에 그 언어로 보여 줄 메뉴를 고르세요."
+
+#: src/Admin/Admin.php
+msgid "iubenda policy per language"
+msgstr "언어별 iubenda 방침"
+
+#: src/Admin/Admin.php
+msgid "off (better for search engines)"
+msgstr "끔(검색 엔진에 유리)"
+
+#: src/Admin/Admin.php
+msgid "off: another page cache is already active on this site"
+msgstr "끔: 이 사이트에는 이미 다른 페이지 캐시가 켜져 있습니다"
+
+#: src/Admin/Admin.php
+msgid "on"
+msgstr "켬"
+
+#: src/Admin/Admin.php
+msgid "the day your plan renews; 0 if you use only free engines"
+msgstr "요금제가 갱신되는 날. 무료 엔진만 쓰면 0"
+
+#: src/Admin/Farewell.php
+#, php-format
+msgid "I agree to be contacted about this problem only. The e-mail is deleted after 6 months, and never used for anything else (%s)."
+msgstr "이 문제에 관해서만 연락받는 데 동의합니다. 이메일은 6개월 후 삭제되며 다른 용도로는 절대 쓰이지 않습니다(%s)."
+
+#: src/Admin/Farewell.php
+msgid "Keep it active and get help"
+msgstr "활성 상태로 두고 도움받기"
+
+#: src/Admin/Farewell.php
+msgid "Leave your e-mail and we will contact you to solve it (optional):"
+msgstr "이메일을 남겨 주시면 해결을 위해 연락드립니다(선택):"
+
+#: src/Admin/Farewell.php
+msgid "Try the Simple view: three steps"
+msgstr "간단 보기를 써 보세요: 세 단계"
+
+#: src/Admin/Farewell.php
+msgid "Wait a moment: we fix it for you, free, usually the same day."
+msgstr "잠깐만요: 무료로 고쳐 드립니다. 보통 당일에요."
+
+#: src/Admin/Farewell.php
+msgid "privacy policy"
+msgstr "개인정보 처리방침"
+
+#: src/Admin/SearchPage.php
+msgid "A search box that always searches in the language of the page. Make profiles (header, footer, phone menu…), each with its own look, its own options and a live preview."
+msgstr "항상 페이지의 언어로 검색하는 검색창. 프로필(헤더, 푸터, 휴대폰 메뉴…)을 만들고 각각 모양과 옵션, 실시간 미리보기를 가집니다."
+
+#: src/Admin/SearchPage.php
+msgid "Always in sight, under the box"
+msgstr "항상 보이게, 검색창 아래"
+
+#: src/Admin/SearchPage.php
+msgid "At the bottom of every page"
+msgstr "모든 페이지 하단"
+
+#: src/Admin/SearchPage.php
+msgid "At the end of the menu the language switcher uses (Appearance → Menus decides which)."
+msgstr "언어 전환기가 쓰는 메뉴 끝에(어느 메뉴인지는 외모 → 메뉴에서 정합니다)."
+
+#: src/Admin/SearchPage.php
+msgid "Behind a «Filters» button"
+msgstr "«필터» 버튼 뒤에"
+
+#: src/Admin/SearchPage.php
+msgid "Computer"
+msgstr "컴퓨터"
+
+#: src/Admin/SearchPage.php
+msgid "Computer and phone"
+msgstr "컴퓨터와 휴대폰"
+
+#: src/Admin/SearchPage.php
+msgid "Computer only"
+msgstr "컴퓨터만"
+
+#: src/Admin/SearchPage.php
+msgid "Each profile is one search box in one place. Only one profile can be in the header menu, one in the phone menu and one at the bottom: choosing a place takes it from the profile that had it."
+msgstr "각 프로필은 한 자리의 검색창 하나입니다. 헤더 메뉴, 휴대폰 메뉴, 하단에는 각각 프로필 하나만 둘 수 있습니다. 자리를 고르면 그 자리를 갖고 있던 프로필에서 가져옵니다."
+
+#: src/Admin/SearchPage.php
+msgid "Empty = «Search…» already in the language of each page. Your own text is translated like the rest of the site."
+msgstr "비워 두면 각 페이지의 언어로 «검색…»이 보입니다. 직접 쓴 문구는 사이트의 다른 부분처럼 번역됩니다."
+
+#: src/Admin/SearchPage.php
+msgid "Field"
+msgstr "입력란"
+
+#: src/Admin/SearchPage.php
+msgid "Filters for the visitor"
+msgstr "방문자용 필터"
+
+#: src/Admin/SearchPage.php
+msgid "In a menu, a magnifier takes the least room; at the bottom of the page, a field is clearer."
+msgstr "메뉴에서는 돋보기가 자리를 가장 적게 차지하고, 페이지 하단에서는 입력란이 더 분명합니다."
+
+#: src/Admin/SearchPage.php
+msgid "In my phone menu (burger)"
+msgstr "내 휴대폰 메뉴(햄버거) 안"
+
+#: src/Admin/SearchPage.php
+msgid "Languages & general"
+msgstr "언어 및 일반"
+
+#: src/Admin/SearchPage.php
+msgid "Look"
+msgstr "모양"
+
+#: src/Admin/SearchPage.php
+msgid "Look in"
+msgstr "검색 범위"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens a field"
+msgstr "누르면 입력란이 열리는 돋보기"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens the search over the page"
+msgstr "페이지 위로 검색을 여는 돋보기"
+
+#: src/Admin/SearchPage.php
+msgid "Make one profile «Computer only» (a field in the header) and another «Phone only» (a magnifier in the burger menu) to have the right box on each screen."
+msgstr "«컴퓨터만» 프로필(헤더에 입력란)과 «휴대폰만» 프로필(햄버거 메뉴에 돋보기)을 만들면 화면마다 알맞은 검색창을 가질 수 있습니다."
+
+#: src/Admin/SearchPage.php
+msgid "Paste the shortcode in a page, a widget or your builder, or add the block «TranslateRocket search»."
+msgstr "쇼트코드를 페이지, 위젯, 빌더에 붙여 넣거나 «TranslateRocket 검색» 블록을 추가하세요."
+
+#: src/Admin/SearchPage.php
+msgid "Phone only"
+msgstr "휴대폰만"
+
+#: src/Admin/SearchPage.php
+msgid "Profiles"
+msgstr "프로필"
+
+#: src/Admin/SearchPage.php
+msgid "Rounded field"
+msgstr "둥근 입력란"
+
+#: src/Admin/SearchPage.php
+msgid "Save this profile"
+msgstr "이 프로필 저장"
+
+#: src/Admin/SearchPage.php
+msgid "Saved. The preview below shows it as it is now."
+msgstr "저장했습니다. 아래 미리보기는 지금 상태를 보여 줍니다."
+
+#: src/Admin/SearchPage.php
+msgid "Search box"
+msgstr "검색창"
+
+#: src/Admin/SearchPage.php
+msgid "Search the translations of every language"
+msgstr "모든 언어의 번역에서 검색"
+
+#: src/Admin/SearchPage.php
+msgid "Search…"
+msgstr "검색…"
+
+#: src/Admin/SearchPage.php
+msgid "Show suggestions"
+msgstr "추천 표시"
+
+#: src/Admin/SearchPage.php
+msgid "Shown on"
+msgstr "표시 대상"
+
+#: src/Admin/SearchPage.php
+msgid "Small buttons the visitor can use: the kind of content (All · Posts · Pages · Products…) and «Every language». Always in sight under the box, or behind a «Filters» button."
+msgstr "방문자가 쓸 수 있는 작은 버튼: 콘텐츠 종류(전체 · 글 · 페이지 · 상품…)와 «모든 언어». 검색창 아래에 항상 보이거나 «필터» 버튼 뒤에 둡니다."
+
+#: src/Admin/SearchPage.php
+msgid "Suggestions while typing"
+msgstr "입력 중 추천"
+
+#: src/Admin/SearchPage.php
+msgid "Text in the empty field"
+msgstr "빈 입력란의 문구"
+
+#: src/Admin/SearchPage.php
+msgid "The box as your visitors see it, with the look and the options of this profile, at computer and phone width. It follows your changes as you make them; save to keep them."
+msgstr "이 프로필의 모양과 옵션으로, 방문자가 보는 그대로의 검색창을 컴퓨터 폭과 휴대폰 폭으로 보여 줍니다. 바꾸는 즉시 따라오며, 유지하려면 저장하세요."
+
+#: src/Admin/SearchPage.php
+msgid "What it searches"
+msgstr "검색 대상"
+
+#: src/Admin/SearchPage.php
+msgid "Which kinds of content the box searches. None ticked: everything the site search can find."
+msgstr "검색창이 검색하는 콘텐츠 종류. 아무것도 체크하지 않으면 사이트 검색이 찾을 수 있는 모든 것."
+
+#: src/Admin/SearchPage.php
+msgid "Width of the field"
+msgstr "입력란 너비"
+
+#: src/Admin/SearchPage.php
+msgid "by type"
+msgstr "종류별"
+
+#: src/Admin/SearchPage.php
+msgid "how many:"
+msgstr "개수:"
+
+#: src/Admin/SearchPage.php
+msgid "none in a menu; «always in sight» on a search page"
+msgstr "메뉴에서는 없음, 검색 페이지에서는 «항상 보이게»"
+
+#: src/Admin/SearchPage.php
+msgid "none ticked (everything)"
+msgstr "체크 없음(전체)"
+
+#: src/Admin/SearchPage.php
+msgid "off: the language of the page"
+msgstr "끔: 페이지의 언어"
+
+#: src/Admin/SearchPage.php
+msgid "on, 6"
+msgstr "켬, 6"
+
+#: src/Admin/SearchPage.php
+msgid "«Every language»"
+msgstr "«모든 언어»"
+
+#: src/Admin/SearchPage.php
+msgid "— the shortcode of this profile; the block «TranslateRocket search» has a profile choice too."
+msgstr "— 이 프로필의 쇼트코드. «TranslateRocket 검색» 블록에도 프로필 선택이 있습니다."
+
+#: src/Admin/View.php
+msgid "Simple"
+msgstr "간단"
+
+#: src/Frontend/SearchBox.php
+msgid "All"
+msgstr "전체"
+
+#: src/Frontend/SearchBox.php
+msgid "Every language"
+msgstr "모든 언어"
+
+#: src/Frontend/SearchBox.php
+msgid "Filters"
+msgstr "필터"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%d sentence was kept as it was: a name, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgid_plural "%d sentences were kept as they were: names, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgstr[0] "%d개의 문장을 원문 그대로 두었습니다. 이름이거나 사이트 언어가 아닌 텍스트라 엔진이 번역할 수 없는 것입니다. 페이지는 완료로 집계되며, 페이지의 «⋯» 메뉴에서 «그대로 둔 문장 다시 번역»으로 다른 엔진을 시도할 수 있습니다."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s translated. %2$s sentences were not translated by this engine: often they are not written in the site's language. You can translate them by hand or with another engine."
+msgstr "%1$s개 번역됨. %2$s개 문장은 이 엔진이 번역하지 않았습니다. 대개 사이트 언어로 쓰이지 않은 문장입니다. 직접 또는 다른 엔진으로 번역할 수 있습니다."
+
+#: src/Admin/SearchPage.php
+msgid "A row at the end of every page, before the theme's footer."
+msgstr "모든 페이지 끝, 테마 푸터 앞의 한 줄."
+
+#: src/Admin/SearchPage.php
+msgid "Empty = the theme's size. Examples: 14em, 240px, 100%."
+msgstr "비워 두면 테마의 크기. 예: 14em, 240px, 100%."
+
+#: src/Admin/SearchPage.php
+msgid "From the third letter the matching pages appear under the box, with their title in the page's language. Answers are kept ten minutes, so a busy site asks the database once per word."
+msgstr "세 번째 글자부터 일치하는 페이지가 검색창 아래에 페이지 언어의 제목으로 나타납니다. 결과는 10분간 보관되어, 바쁜 사이트도 단어당 한 번만 데이터베이스에 묻습니다."
+
+#: src/Admin/SearchPage.php
+msgid "Normally the box searches the translations of the page's language: on /de/ a visitor types in German and finds the German pages. «Every language» also looks in the other languages, for a site whose visitors mix them."
+msgstr "보통 검색창은 페이지 언어의 번역에서 검색합니다. /de/에서는 방문자가 독일어로 입력해 독일어 페이지를 찾습니다. «모든 언어»는 다른 언어도 함께 찾아, 방문자가 언어를 섞어 쓰는 사이트에 맞습니다."
+
+#: src/Admin/SearchPage.php
+msgid "Only in the theme's phone menu, the one behind the ☰ button."
+msgstr "테마의 휴대폰 메뉴, 즉 ☰ 버튼 뒤의 메뉴에만."
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "Which menu is the header menu, and which the phone menu, is decided in %s (the menu assigned to the theme's main place, and to its phone place when it has one)."
+msgstr "어느 메뉴가 헤더 메뉴이고 어느 것이 휴대폰 메뉴인지는 %s에서 정합니다(테마의 주 위치에 배정된 메뉴와, 휴대폰 위치가 있으면 그 위치의 메뉴)."
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "«Search in every language» is off on %s: the box would search only the site's own language."
+msgstr "«모든 언어에서 검색»이 %s에서 꺼져 있습니다. 검색창은 사이트 자체 언어에서만 검색하게 됩니다."
+
+#: src/Admin/Admin.php
+msgid "Only kept as they were"
+msgstr "그대로 둔 문장만"

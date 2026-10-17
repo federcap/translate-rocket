@@ -875,7 +875,27 @@ class Router {
 	 */
 	public function filter_canonical( $redirect_url ) {
 		// On secondary languages our prefix/slug routing owns the URL.
-		return $this->is_default( $this->current_language() ) ? $redirect_url : false;
+		$lang = $this->current_language();
+		if ( $this->is_default( $lang ) ) {
+			return $redirect_url;
+		}
+		// 16/10/2026 (competitors' code, ×4): with the canonical redirect off, /it/pagina and /it/pagina/ both
+		// answered 200. Only the trailing slash is put right here, on a plain GET without a query, with the
+		// language already in front (keep_language_on_redirect has nothing to add: no loop possible).
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( (string) $_SERVER['REQUEST_METHOD'] ) : 'GET'; // phpcs:ignore
+		if ( '' !== $this->query || ! in_array( $method, array( 'GET', 'HEAD' ), true ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || \TranslateRocket\Frontend\Preview::language_blocked() ) {
+			return false;
+		}
+		$path = (string) $this->clean_path;
+		if ( '' === $path || '/' === $path || false !== strpos( basename( $path ), '.' ) ) {
+			return false; // the language home, or a file
+		}
+		$wants_slash = '/' === substr( (string) get_option( 'permalink_structure' ), -1 );
+		$has_slash   = '/' === substr( $path, -1 );
+		if ( $wants_slash === $has_slash ) {
+			return false;
+		}
+		return $this->language_base( $lang ) . ( $wants_slash ? $path . '/' : rtrim( $path, '/' ) );
 	}
 
 	/**

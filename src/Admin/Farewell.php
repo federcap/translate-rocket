@@ -268,16 +268,32 @@ class Farewell {
 				<div class="trr-bye-chips" style="display:none"></div>
 				<p class="trr-bye-ask" style="display:none"><label for="trr-bye-text" id="trr-bye-asklabel"></label></p>
 				<textarea id="trr-bye-text" rows="3" style="display:none" class="large-text"></textarea>
-				<p class="trr-bye-mail" style="display:none">
-					<label for="trr-bye-email"><?php esc_html_e( 'Want an answer? Your e-mail (optional):', 'translate-rocket' ); ?></label>
+				<?php
+				// 16/10/2026 (Federico, after reading the deactivations: those with little experience or an
+				// incompatibility leave in silence, though we would fix it in hours): a real offer of help,
+				// big when the reason is a problem, and the e-mail to be contacted — with consent (GDPR).
+				?>
+				<div class="trr-bye-rescue" style="display:none">
+					<p class="trr-bye-rescue-t"><strong><?php esc_html_e( 'Wait a moment: we fix it for you, free, usually the same day.', 'translate-rocket' ); ?></strong></p>
+					<p class="trr-bye-rescue-actions">
+						<a class="button button-primary" id="trr-bye-help" href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-diagnostics#trr-ticket' ) ); ?>"><?php esc_html_e( 'Keep it active and get help', 'translate-rocket' ); ?></a>
+						<a class="button trr-bye-simple" id="trr-bye-simple" style="display:none" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=' . View::ACTION . '&to=simple&back=translate-rocket' ), View::ACTION ) ); ?>"><?php esc_html_e( 'Try the Simple view: three steps', 'translate-rocket' ); ?></a>
+					</p>
+				</div>
+				<div class="trr-bye-mail" style="display:none">
+					<label for="trr-bye-email"><?php esc_html_e( 'Leave your e-mail and we will contact you to solve it (optional):', 'translate-rocket' ); ?></label>
 					<input type="email" id="trr-bye-email" class="regular-text" autocomplete="email" maxlength="120">
-				</p>
-				<?php // 9/10/2026 (Federico: «scrivi supporto rapido, spieghiamo che il supporto è tempestivo»). ?>
-				<p class="trr-bye-help">
-					<strong><?php esc_html_e( 'Fast support, free.', 'translate-rocket' ); ?></strong>
-					<?php esc_html_e( 'If something does not work, the developer answers quickly, usually the same day, and fixes it in the next update.', 'translate-rocket' ); ?>
-					<a href="https://wordpress.org/support/plugin/translate-rocket/#new-topic-0" target="_blank" rel="noopener"><?php esc_html_e( 'Ask for help instead', 'translate-rocket' ); ?></a>
-				</p>
+					<label class="trr-bye-consent" style="display:none">
+						<input type="checkbox" id="trr-bye-consent">
+						<?php
+						printf(
+							/* translators: %s: link to the privacy policy. */
+							esc_html__( 'I agree to be contacted about this problem only. The e-mail is deleted after 6 months, and never used for anything else (%s).', 'translate-rocket' ),
+							'<a href="https://translaterocket.com/privacy-policy/" target="_blank" rel="noopener">' . esc_html__( 'privacy policy', 'translate-rocket' ) . '</a>'
+						);
+						?>
+					</label>
+				</div>
 				<p class="trr-bye-note">
 					<?php esc_html_e( '«Send and deactivate» sends your answer to the developer at translaterocket.com, anonymously. «Skip and deactivate» sends nothing.', 'translate-rocket' ); ?>
 				</p>
@@ -310,6 +326,11 @@ class Farewell {
 			.trr-bye-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #c3c4c7;border-radius:16px;padding:4px 10px;cursor:pointer;font-size:13px;line-height:1.4}
 			.trr-bye-chip input{margin:0}
 			.trr-bye-chip:has(input:checked){background:#f0f6fc;border-color:#2271b1}
+			.trr-bye-rescue{margin:14px 0 0;padding:12px 14px;background:#edfaef;border-left:4px solid #00a32a;border-radius:4px}
+			.trr-bye-rescue-t{margin:0 0 8px;font-size:14px}
+			.trr-bye-rescue-actions{margin:0;display:flex;flex-wrap:wrap;gap:8px}
+			.trr-bye-consent{display:block;margin-top:8px;font-size:12px;color:#50575e}
+			.trr-bye-consent input{margin:0 6px 0 0}
 			.trr-bye-mail{margin:10px 0 0}
 			.trr-bye-mail label{display:block;margin-bottom:4px}
 			.trr-bye-mail input{width:100%;max-width:100%}
@@ -331,6 +352,10 @@ class Farewell {
 				chipsBox = box.querySelector( '.trr-bye-chips' ),
 				mail = box.querySelector( '.trr-bye-mail' ),
 				email = document.getElementById( 'trr-bye-email' ),
+				consent = document.getElementById( 'trr-bye-consent' ),
+				consentBox = box.querySelector( '.trr-bye-consent' ),
+				rescue = box.querySelector( '.trr-bye-rescue' ),
+				simple = document.getElementById( 'trr-bye-simple' ),
 				go = '';
 
 			// Our row's Deactivate link, and only ours.
@@ -368,6 +393,26 @@ class Farewell {
 				} );
 				chipsBox.style.display = Object.keys( chips ).length ? 'flex' : 'none';
 				mail.style.display = q ? 'block' : 'none';
+				// a problem: the offer of help first («too complicated»: also the Simple view)
+				var problema = [ 'not-working', 'broke', 'complicated', 'quality' ].indexOf( e.target.value ) !== -1;
+				rescue.style.display = problema ? 'block' : 'none';
+				simple.style.display = 'complicated' === e.target.value ? '' : 'none';
+				gate();
+			} );
+
+			// The e-mail leaves only with the consent ticked (GDPR): without it «Send» waits.
+			function gate() {
+				var conMail = '' !== ( email.value || '' ).trim();
+				consentBox.style.display = conMail ? 'block' : 'none';
+				copy.disabled = ! box.querySelector( 'input[name="trr-bye-reason"]:checked' ) || ( conMail && ! consent.checked );
+			}
+			email.addEventListener( 'input', gate );
+			consent.addEventListener( 'change', gate );
+			// «Keep it active and get help»: the answer is kept on this site (nothing sent), the plugin stays on.
+			document.getElementById( 'trr-bye-help' ).addEventListener( 'click', function ( e ) {
+				e.preventDefault();
+				var to = this.href;
+				remember( function () { window.location.href = to; }, false );
 			} );
 
 			function remember( then, send ) {
@@ -379,7 +424,8 @@ class Farewell {
 				body.append( 'text', text.value || '' );
 				body.append( 'send', send ? '1' : '0' );
 				body.append( 'details', Array.prototype.map.call( chipsBox.querySelectorAll( 'input:checked' ), function ( c ) { return c.value; } ).join( ',' ) );
-				body.append( 'email', email.value || '' );
+				body.append( 'email', consent.checked ? ( email.value || '' ) : '' );
+				body.append( 'consent', consent.checked && '' !== ( email.value || '' ).trim() ? '1' : '0' );
 				// Once only: the answer and the 4-second safety net used to BOTH run it, so the
 				// deactivation page opened twice (6/10/2026, seen by collaudo-addio).
 				var fatto = false;
@@ -450,7 +496,9 @@ class Farewell {
 					$scelte[] = $d;
 				}
 			}
-			$mail   = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+			// 1.8.8: the e-mail only with the consent ticked (GDPR); without it, nothing personal leaves.
+			$consenso = isset( $_POST['consent'] ) && '1' === sanitize_key( wp_unslash( $_POST['consent'] ) );
+			$mail     = $consenso && isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
 			$ua     = isset( $_SERVER['HTTP_USER_AGENT'] ) ? (string) $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$ctx    = self::context();
 			$testa  = '[details: ' . ( $scelte ? implode( ', ', $scelte ) : '-' ) . ']'
@@ -488,6 +536,8 @@ class Farewell {
 								'context' => $ctx,
 								'details' => $scelte,
 								'email'   => is_email( $mail ) ? $mail : '',
+								// what the person agreed to, and when (kept with the answer, the e-mail deleted after 6 months)
+								'consent' => is_email( $mail ) ? array( 'at' => gmdate( 'c' ), 'text' => 'contact-about-this-problem-6-months', 'privacy' => 'https://translaterocket.com/privacy-policy/' ) : null,
 								'browser' => self::browser( $ua ),
 							)
 						),

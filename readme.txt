@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.7
+Stable tag: 1.8.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,19 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
 == Changelog ==
 
+= 1.8.8 =
+* New: Simple and Advanced view. Simple shows only what is free and immediate — choose the languages, press «Translate», put the language online — in three steps at the top of the plugin and three entries in the side menu; everything else is one click away under «Advanced». Nothing was removed.
+* New: «Search» screen. The search box that searches in the language of the page has its own screen, after Switcher, with profiles (header menu, phone menu, bottom of every page, shortcode or block), four looks (field, rounded field, magnifier that opens a field, magnifier that opens the search over the page), width, placeholder, computer/phone visibility, suggestions while typing, the kinds of content it searches, search in every language, and filters for the visitor (always in sight or behind a «Filters» button), with a live preview at computer and phone width.
+* New: sentences an engine cannot translate (a name, text not in the site's language) are kept as they were and the page counts as complete, instead of staying at 89% forever. The notice says how many, with a link to see them in Translation memory («Only kept as they were»); «Translate again the kept ones», in a page's «⋯» menu, tries them with another engine.
+* New: «Recommended: …» under every option where it applies, in all 15 languages of the plugin; quality bars and a gear (to its settings) next to every engine in «Translate with»; the engine's details are a tidy grid.
+* New: on deactivation, a box offers immediate free help (keep the plugin active and open a ticket), the Simple view, and an optional e-mail to be contacted about that problem only, with consent and deletion after six months.
+* Improved: the pages list shows «Translate» (with the engine chosen above), «Review» and a «⋯» menu (open the sentences, visual editor, translate again the kept ones, start over, hide) instead of a row of similar buttons; the list and the «Only the pages still to translate» box show that they are loading; «Next steps» leaves the side menu (its drawer stays on every screen in Advanced).
+* Improved: numbers, dates and euro follow the plugin's language, not WordPress'; the switcher presets light up at once and the preview shows it is redrawing; the menus-per-language explanation says where menus are made, with a link to Appearance → Menus; the texts of the editor blocks (Language switcher, TranslateRocket search) are in the plugin's language.
+* Compatibility: cookie banners of iubenda, Cookiebot and Usercentrics get the language of each page and their legal texts are never translated (iubenda: one policy per language); Aruba HiSpeed Cache and the host caches are cleared when a translation changes; Slider Revolution 7 slides and WoodMart elements are translated.
+* Compatibility, from a reading of what fourteen other multilingual plugins fix for their users: WooCommerce now lists TranslateRocket as compatible with high-performance order storage and the block checkout; the mini-cart no longer shows the previous language after a switch; where a form, a booking or a checkout sends the visitor next (AJAX answers) keeps the language; the e-mails of any plugin to the visitor (membership, booking, newsletter) go out in the language of the page, only when sent to the address the visitor typed; CookieYes and every theme or plugin that draws HTML from a template script are collected and translated; Ajax Search Lite and FiboSearch find the pages when the visitor types in their language; /it/page and /it/page/ no longer answer both (301 to the one your permalinks use); Google Site Kit no longer reports a changed home URL; WordPress' own sitemap lists the translated addresses.
+* Fix: the hourglass stayed on after a translation ended with a message; two switcher presets were both called «Soft» in Italian, German, Spanish and French; the free engines' counters showed English thousands separators.
+* 100+ new sentences translated in the 15 languages of the plugin.
+
 = 1.8.7 =
 * Faster on large sites (tested with 5,000 pages and 75,000 sentences): the counts of every language and of every page are kept until something really changes, instead of being counted again on every screen. The admin screens no longer slow down because of TranslateRocket (the next-steps panel could add 7 to 15 seconds to every page, the WordPress page list included); Translations opens in about 3 seconds instead of 15.
 * Faster search in the translated languages: the sentences are read once for all the words typed, with exactly the same results and order as before (about three times faster on a large site).
@@ -407,6 +420,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.8 =
+Simple/Advanced view, the Search screen with profiles and looks, sentences an engine cannot translate kept (pages reach 100%), cookie-banner and cache compatibility.
 
 = 1.8.7 =
 Faster admin screens and search on large sites; no more 504 from the bulk AI buttons in Translation memory and in the page editor.

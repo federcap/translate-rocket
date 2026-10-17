@@ -66,6 +66,21 @@ class AjaxContent {
 	const LINK_KEYS = array( 'url', 'link', 'permalink', 'href' );
 
 	/**
+	 * A key that holds a page address: the LINK_KEYS, or a name ending with them (1.8.8: Avada's live search
+	 * answers «post_url», other plugins «product_link», «item_permalink»). localize_link() leaves files,
+	 * /wp-… paths and other sites alone, so «ajax_url», «image_url» and the like come back as they were.
+	 *
+	 * @param string $key Key in an answer.
+	 */
+	public static function is_link_key( string $key ): bool {
+		$key = strtolower( $key );
+		// «nextPage» / «currentPage»: the address of the next page in WoodMart's «load more» answer.
+		// «redirect», «redirecturl», «returnurl», «redirectto»: where a form, a booking or a checkout sends the visitor next
+		// (Amelia, BookingPress, WPForms, gateways): a page of the site, in the page's language (16/10/2026, competitors' code).
+		return in_array( $key, self::LINK_KEYS, true ) || in_array( $key, array( 'nextpage', 'currentpage', 'redirect', 'redirecturl', 'returnurl', 'redirectto' ), true ) || (bool) preg_match( '/_(?:url|link|permalink|href)$/', $key );
+	}
+
+	/**
 	 * Hook into a front-end AJAX request.
 	 */
 	public function boot(): void {
@@ -85,6 +100,19 @@ class AjaxContent {
 		}
 		$router = Plugin::instance()->router();
 		$lang   = $router->request_language();
+		// 1.8.8 (WoodMart 8.5 code; a shop that left after «2 sentences in 10 minutes»): an administrator browsing in the
+		// site's language never had these answers read — mega menus, product tabs, «load more» — so they could never be
+		// translated. Read-only: the answer goes out exactly as it came, its sentences are filed (see collects()).
+		if ( ( '' === $lang || $router->is_default( $lang ) ) && ! \TranslateRocket\Coexistence::on() ) {
+			$altre = array_values( array_diff( $router->secondary_languages(), array( $router->default_language() ) ) );
+			if ( $altre ) {
+				$this->lang         = (string) $altre[0];
+				$this->collect_only = true;
+				$this->action       = '' !== $action ? $action : ( Router::is_ajax_endpoint() ? 'endpoint' : 'page' );
+				add_action( 'init', array( $this, 'start' ), PHP_INT_MAX );
+			}
+			return;
+		}
 		if ( '' === $lang || $router->is_default( $lang ) || ! in_array( $lang, $router->secondary_languages(), true ) || ! in_array( $lang, $router->public_languages(), true ) ) {
 			return;
 		}
@@ -113,7 +141,16 @@ class AjaxContent {
 	 * for the next month and prints the grid at wp_loaded, before the page engine starts; the
 	 * events came back in English on /it/ (4/10/2026).
 	 */
-	const PAGE_REQUEST_FLAGS = array( 'em_ajax' );
+	const PAGE_REQUEST_FLAGS = array(
+		'em_ajax',
+		// 1.8.8: Gravity Forms' classic AJAX submission posts to the page (in an iframe) and prints the
+		// form again — validation errors, confirmation — before the page engine starts.
+		'gform_ajax',
+		// 1.8.8 (WoodMart 8.5 code): its shop changes page with AJAX by default — filters and categories ask
+		// the page with «_pjax» (a fragment that starts with <title>), «load more» with «woo_ajax=1» (JSON).
+		'_pjax',
+		'woo_ajax',
+	);
 
 	/**
 	 * Whether the request carries one of PAGE_REQUEST_FLAGS (filter: trrocket_ajax_request_flags).
@@ -131,8 +168,33 @@ class AjaxContent {
 	 * Open the buffer whose callback translates the response.
 	 */
 	public function start(): void {
+		// Reading in the site's language is for administrators only (they are known from «init» on).
+		if ( $this->collect_only && ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 		ob_start( array( $this, 'translate' ) );
 	}
+
+	/**
+	 * Read-only: an administrator's request in the site's language, only to file its sentences (1.8.8).
+	 *
+	 * @var bool
+	 */
+	private $collect_only = false;
+
+	/**
+	 * POST actions whose answer is page content, read for an administrator (1.8.8). A POST can carry what a
+	 * visitor typed, so only these, by name: WoodMart's mega menus, product grids, tabs, recently viewed,
+	 * blog and portfolio «load more» (filter: trrocket_collect_ajax_post_actions).
+	 */
+	const POST_CONTENT_ACTIONS = array(
+		'woodmart_load_html_dropdowns',
+		'woodmart_get_products_shortcode',
+		'woodmart_get_products_tab_shortcode',
+		'woodmart_get_recently_viewed_products',
+		'woodmart_get_blog_shortcode',
+		'woodmart_get_portfolio_shortcode',
+	);
 
 	/**
 	 * @param string $out The whole response.
@@ -148,6 +210,9 @@ class AjaxContent {
 		}
 		$first   = $body[0];
 		$collect = $this->collects();
+		if ( $this->collect_only && ! $collect ) {
+			return $out;
+		}
 		if ( $collect ) {
 			Fragment::$seen = array();
 		}
@@ -170,7 +235,8 @@ class AjaxContent {
 			Fragment::$seen = null;
 			RestContent::remember( array_values( array_filter( $seen, array( __CLASS__, 'is_words' ) ) ), 'ajax:' . $this->action );
 		}
-		return $result;
+		// Read-only (administrator in the site's language): the answer leaves untouched.
+		return $this->collect_only ? $out : $result;
 	}
 
 	/**
@@ -183,7 +249,8 @@ class AjaxContent {
 	 */
 	private function collects(): bool {
 		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( (string) $_SERVER['REQUEST_METHOD'] ) : 'GET'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		if ( 'GET' !== $method || preg_match( self::PERSONAL_ACTION, $this->action ) ) {
+		$post_ok = 'POST' === $method && current_user_can( 'manage_options' ) && in_array( $this->action, (array) apply_filters( 'trrocket_collect_ajax_post_actions', self::POST_CONTENT_ACTIONS ), true );
+		if ( ( 'GET' !== $method && ! $post_ok ) || preg_match( self::PERSONAL_ACTION, $this->action ) ) {
 			return false;
 		}
 		if ( is_user_logged_in() && ! current_user_can( 'manage_options' ) ) {
@@ -257,7 +324,7 @@ class AjaxContent {
 		if ( preg_match( '~^(https?:)?//|^[/#?]~', trim( $node ) ) ) {
 			// A link to a page of the site, under a key that says so, takes the page's language (as in REST
 			// answers): FiboSearch's suggestions led from /it/ to the English product (5/10/2026).
-			if ( is_string( $key ) && in_array( strtolower( $key ), self::LINK_KEYS, true ) ) {
+			if ( is_string( $key ) && self::is_link_key( $key ) ) {
 				$raw = (string) get_option( 'home' );
 				$new = Engine::localize_link( $node, (string) wp_parse_url( $raw, PHP_URL_HOST ), rtrim( (string) wp_parse_url( $raw, PHP_URL_PATH ), '/' ), $this->lang, Plugin::instance()->router()->secondary_languages() );
 				if ( $new !== $node ) {

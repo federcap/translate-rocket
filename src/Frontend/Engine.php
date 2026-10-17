@@ -641,6 +641,13 @@ class Engine {
 	private $mf_tokens = array();
 
 	/**
+	 * Tokens of Slider Revolution 7 modules (1.8.8: SR7.JSON, see Integrations\SliderRevolution).
+	 *
+	 * @var array<string,bool>
+	 */
+	private $sr7_tokens = array();
+
+	/**
 	 * Elements whose body the HTML spec treats as raw text / RCDATA: the browser
 	 * reads their content as text, never as markup. libxml does not, and quietly
 	 * DROPS any "</name>" sequence it finds inside them — so a perfectly valid
@@ -666,6 +673,7 @@ class Engine {
 		$this->schema_tokens = array();
 		$this->extra_tokens  = array();
 		$this->mf_tokens     = array();
+		$this->sr7_tokens    = array();
 
 		// One random salt per request: a placeholder must never collide with text
 		// that legitimately appears on the page.
@@ -696,6 +704,10 @@ class Engine {
 					// A MetForm form, written as a JavaScript template (see MetFormTemplate).
 					$this->extra_tokens[]      = $token;
 					$this->mf_tokens[ $token ] = true;
+				} elseif ( 'script' === strtolower( $m[2] ) && \TranslateRocket\Integrations\SliderRevolution::is_block( $m[3] ) ) {
+					// Slider Revolution 7 draws its layers from this JSON, not from the HTML (1.8.8).
+					$this->extra_tokens[]       = $token;
+					$this->sr7_tokens[ $token ] = true;
 				} elseif ( 'script' === strtolower( $m[2] ) && preg_match( '#\bid\s*=\s*(["\']?)[\w-]+-js-(extra|before|after)\1#i', $m[1] ) ) {
 					// -js-extra: wp_localize_script(); -js-before/-js-after: wp_add_inline_script()
 					// (Elementor's «var elementorFrontendConfig = {…}» with its i18n lives there).
@@ -767,6 +779,63 @@ class Engine {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * The HTML inside <script type="text/template"> (and x-template, text/html, handlebars, jquery-tmpl), collected
+	 * and translated like any fragment. Real JavaScript is never touched (is_js_type()).
+	 *
+	 * @param string $html The finished page.
+	 */
+	private function template_scripts( string $html ): string {
+		if ( ( ! $this->is_secondary && ! $this->do_collect ) || false === stripos( $html, 'text/' ) ) {
+			return $html;
+		}
+		$router    = Plugin::instance()->router();
+		$secondary = $router->secondary_languages();
+		$lang      = $this->is_secondary ? (string) $this->current : (string) ( $secondary[0] ?? '' );
+		if ( '' === $lang ) {
+			return $html;
+		}
+		$seen = array();
+		$out  = preg_replace_callback(
+			'#(<script\b[^>]*\btype\s*=\s*["\']text/(?:template|x-template|html|x-handlebars-template|x-jquery-tmpl)["\'][^>]*>)(.*?)(</script\s*>)#is',
+			function ( $m ) use ( $lang, &$seen ) {
+				$body = (string) $m[2];
+				// Only plain HTML: a template with bindings ({{ }}, <# #>, <% %>, ${ }) belongs to its script
+				// (Vue, wp.template, Underscore) and is left as written — collaudo-tipo-script.
+				if ( '' === trim( $body ) || false === strpos( $body, '<' ) || preg_match( '/\{\{|<#|<%|\$\{/', $body ) ) {
+					return $m[0];
+				}
+				if ( $this->do_collect ) {
+					Fragment::$seen = array();
+				}
+				$new = Fragment::translate( $body, $lang );
+				if ( $this->do_collect ) {
+					$seen           = array_merge( $seen, (array) Fragment::$seen );
+					Fragment::$seen = null;
+				}
+				return $m[1] . ( $this->is_secondary ? $new : $body ) . $m[3];
+			},
+			$html
+		);
+		if ( ! is_string( $out ) ) {
+			return $html;
+		}
+		if ( $this->do_collect && $seen && $secondary ) {
+			$items = array();
+			foreach ( $seen as $s ) {
+				$s = trim( (string) $s );
+				if ( '' !== $s && mb_strlen( $s ) <= 2000 && preg_match( '/\p{L}/u', $s ) && ! \TranslateRocket\NoTranslate::text_excluded( $s ) ) {
+					$items[ $s ] = array( 'original' => $s, 'type' => 'text' );
+				}
+			}
+			if ( $items ) {
+				$pid = (int) get_queried_object_id();
+				Strings::remember_batch( array_values( $items ), $secondary, $pid > 0 ? $router->canonical_path( $pid ) : '[script templates]', $pid > 0 ? wp_strip_all_tags( get_the_title( $pid ) ) : '' );
+			}
+		}
+		return $out;
 	}
 
 	private function unmask_raw_text( string $html ): string {
@@ -1304,8 +1373,22 @@ class Engine {
 		$skip_el .= ' or ancestor-or-self::*' . $segni;
 		// Tooling that only administrators see (debug panels, page-builder helpers): not
 		// page content, so never collected — and never translated either.
+		// 16/10/2026 (WoodMart demo: 11,8 s to find the text, 92% of it here): only the prefixes that are in
+		// this page at all. 23 prefixes, three ancestor walks each, for every piece of text, cost seconds on a
+		// heavy theme; a prefix absent from the HTML can never match, so leaving it out changes nothing.
+		// NoTranslate::EXACT_CLASSES are whole class names: «elementor-hidden» as a prefix also caught
+		// «elementor-hidden-mobile/-tablet/-desktop», Elementor's per-device visibility, and those blocks
+		// were never translated.
 		foreach ( NoTranslate::tool_prefixes() as $prefix ) {
-			$p        = str_replace( "'", '', (string) $prefix );
+			$p = str_replace( "'", '', (string) $prefix );
+			if ( '' === $p || false === stripos( $html, $p ) ) {
+				continue;
+			}
+			if ( in_array( $p, NoTranslate::EXACT_CLASSES, true ) ) {
+				$skip    .= " or ancestor::*[contains(concat(' ',normalize-space(@class),' '),' {$p} ')]";
+				$skip_el .= " or ancestor-or-self::*[contains(concat(' ',normalize-space(@class),' '),' {$p} ')]";
+				continue;
+			}
 			$skip    .= " or ancestor::*[starts-with(@id,'{$p}')] or ancestor::*[contains(concat(' ',normalize-space(@class),' '),' {$p}')] or ancestor::*[starts-with(@class,'{$p}')]";
 			$skip_el .= " or ancestor-or-self::*[starts-with(@id,'{$p}')] or ancestor-or-self::*[contains(concat(' ',normalize-space(@class),' '),' {$p}')] or ancestor-or-self::*[starts-with(@class,'{$p}')]";
 		}
@@ -1393,6 +1476,10 @@ class Engine {
 		$extra_texts = array();
 		foreach ( $this->extra_tokens as $token ) {
 			if ( isset( $this->raw_blocks[ $token ] ) ) {
+				if ( isset( $this->sr7_tokens[ $token ] ) ) {
+					$extra_texts[ $token ] = \TranslateRocket\Integrations\SliderRevolution::strings( $this->raw_blocks[ $token ] );
+					continue;
+				}
 				$extra_texts[ $token ] = isset( $this->mf_tokens[ $token ] ) ? MetFormTemplate::strings( $this->raw_blocks[ $token ] ) : ScriptData::strings( $this->raw_blocks[ $token ] );
 			}
 		}
@@ -1909,7 +1996,11 @@ class Engine {
 				}
 			}
 			if ( $this->is_secondary && isset( $this->raw_blocks[ $token ] ) ) {
-				$translated = isset( $this->mf_tokens[ $token ] ) ? MetFormTemplate::translate( $this->raw_blocks[ $token ], $map ) : ScriptData::translate( $this->raw_blocks[ $token ], $map );
+				if ( isset( $this->sr7_tokens[ $token ] ) ) {
+					$translated = \TranslateRocket\Integrations\SliderRevolution::translate( $this->raw_blocks[ $token ], $map, (string) $this->current, (array) $this->secondary );
+				} else {
+					$translated = isset( $this->mf_tokens[ $token ] ) ? MetFormTemplate::translate( $this->raw_blocks[ $token ], $map ) : ScriptData::translate( $this->raw_blocks[ $token ], $map );
+				}
 				if ( null !== $translated ) {
 					$this->raw_blocks[ $token ] = $translated;
 					$changed                    = true;
@@ -1988,7 +2079,9 @@ class Engine {
 		}
 
 		if ( ! $changed ) {
-			return $html;
+			// A source page read by an administrator changes nothing — but its template scripts still have to be
+			// read (CookieYes' banner lives in one; it never reached the memory before 16/10/2026).
+			return $this->do_collect ? $this->template_scripts( $html ) : $html;
 		}
 
 		// Serialize from the root NODE, not the document: whole-document saveHTML()
@@ -2007,6 +2100,15 @@ class Engine {
 
 		// Scripts, styles and textareas go back exactly as the page authored them.
 		$out = $this->unmask_raw_text( $out );
+		// 16/10/2026 (competitors' code: CookieYes 3M sites, Cookie Law Info, many themes): a <script type="text/template">
+		// holds HTML the page draws later — the cookie banner, a modal. It travelled untouched with the scripts; it is
+		// a fragment of the page: collected on the source pages, translated on the others.
+		$out = $this->template_scripts( $out );
+
+		// 1.8.8: iubenda, Cookiebot and Usercentrics told the language of the page (their own legal texts).
+		if ( $this->is_secondary ) {
+			$out = \TranslateRocket\Integrations\ConsentBanners::adapt( $out, (string) $this->current );
+		}
 
 		// Store the finished translated page for the next anonymous visitor.
 		if ( $this->serve_cache && $this->is_secondary ) {

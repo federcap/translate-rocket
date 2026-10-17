@@ -219,6 +219,10 @@ class Cache {
 			}
 		}
 
+		// 1.8.8 (Aruba HiSpeed Cache 3.1.0, read from wordpress.org; a real deactivation on Aruba): its nginx cache
+		// is cleared by a request to the server's local purger, which only the plugin's own classes know.
+		\TranslateRocket\Integrations\ArubaHiSpeed::purge_all();
+
 		// 1.8.6 (cache research 14/10): the caches that were never cleared when a translation changed.
 		do_action( 'wphb_clear_page_cache' ); // Hummingbird.
 		if ( class_exists( '\FlyingPress\Purge' ) && method_exists( '\FlyingPress\Purge', 'purge_everything' ) ) {

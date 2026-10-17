@@ -5811,3 +5811,434 @@ msgstr "Nadal brakuje: %d."
 #: src/Admin/Admin.php
 msgid "Continue translating"
 msgstr "Kontynuuj tłumaczenie"
+
+#: assets/js/search-block.js
+msgid "A search box that searches in the language of the page."
+msgstr "Pole wyszukiwania, które szuka w języku strony."
+
+#: assets/js/search-block.js
+msgid "As in the profile"
+msgstr "Jak w profilu"
+
+#: assets/js/search-block.js
+msgid "As in the settings"
+msgstr "Jak w ustawieniach"
+
+#: assets/js/search-block.js
+msgid "Look of the search box"
+msgstr "Wygląd pola wyszukiwania"
+
+#: assets/js/search-block.js
+msgid "No"
+msgstr "Nie"
+
+#: assets/js/search-block.js
+msgid "Profile (set up on the Search screen)"
+msgstr "Profil (ustawiany na ekranie Szukaj)"
+
+#: assets/js/search-block.js
+msgid "The language of the page"
+msgstr "Język strony"
+
+#: assets/js/search-block.js
+msgid "TranslateRocket search"
+msgstr "Wyszukiwarka TranslateRocket"
+
+#: assets/js/search-block.js
+msgid "Yes"
+msgstr "Tak"
+
+#: src/Admin/Admin.php
+msgid "0 with the free engines; with a paid key, a cap that fits your plan"
+msgstr "0 przy darmowych silnikach; przy płatnym kluczu limit dopasowany do Twojego planu"
+
+#: src/Admin/Admin.php
+msgid "Appearance → Menus"
+msgstr "Wygląd → Menu"
+
+#: src/Admin/Admin.php
+msgid "Choose the languages"
+msgstr "Wybierz języki"
+
+#: src/Admin/Admin.php
+msgid "Everyone"
+msgstr "Wszyscy"
+
+#: src/Admin/Admin.php
+msgid "Flip its switch to Online when you like it."
+msgstr "Gdy Ci się spodoba, przełącz jego przełącznik na „Online”."
+
+#: src/Admin/Admin.php
+msgid "Kept as it was"
+msgstr "Pozostawiono bez zmian"
+
+#: src/Admin/Admin.php
+msgid "Look at your translated site"
+msgstr "Zobacz swoją przetłumaczoną witrynę"
+
+#: src/Admin/Admin.php
+msgid "No engine is ready: translate by hand or with your browser"
+msgstr "Żaden silnik nie jest gotowy: tłumacz ręcznie lub przeglądarką"
+
+#: src/Admin/Admin.php
+msgid "Open the sentences"
+msgstr "Otwórz zdania"
+
+#: src/Admin/Admin.php
+msgid "Press «Translate» next to a language: no key, no account."
+msgstr "Naciśnij „Przetłumacz” obok języka: bez klucza, bez konta."
+
+#: src/Admin/Admin.php
+msgid "Put it online"
+msgstr "Opublikuj"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Recommended: %s"
+msgstr "Zalecane: %s"
+
+#: src/Admin/Admin.php
+msgid "Review"
+msgstr "Sprawdź"
+
+#: src/Admin/Admin.php
+msgid "See them in Translation memory"
+msgstr "Zobacz je w Pamięci tłumaczeń"
+
+#: src/Admin/Admin.php
+msgid "Set up this engine"
+msgstr "Skonfiguruj ten silnik"
+
+#: src/Admin/Admin.php
+msgid "Start"
+msgstr "Start"
+
+#: src/Admin/Admin.php
+msgid "The iubenda cookie banner already speaks the language of each page: TranslateRocket tells it which one, and never translates its legal text. If you have a privacy policy in each language on iubenda, write its number here, one per line (for example en=12345678): on the English pages the banner and its links open the English policy. With the new iubenda multilingual snippet you need nothing here."
+msgstr "Baner cookie iubenda już mówi językiem każdej strony: TranslateRocket podpowiada mu który, i nigdy nie tłumaczy jego tekstu prawnego. Jeśli masz w iubenda politykę prywatności w każdym języku, wpisz tu jej numer, po jednym w wierszu (na przykład en=12345678): na stronach angielskich baner i jego linki otworzą politykę angielską. Z nowym wielojęzycznym fragmentem iubenda nie potrzebujesz tu niczego."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The menus are created and edited in %s. The columns are the places your theme has for menus; «The same, translated» keeps your usual menu, translated."
+msgstr "Menu tworzy się i edytuje w %s. Kolumny to miejsca, które Twój motyw ma na menu; „To samo, przetłumaczone” zachowuje Twoje zwykłe menu, przetłumaczone."
+
+#: src/Admin/Admin.php
+msgid "The sentences kept as they were go back to «missing», to try them with another engine or by hand"
+msgstr "Zdania pozostawione bez zmian wracają do „brakujących”, aby spróbować innym silnikiem lub ręcznie"
+
+#: src/Admin/Admin.php
+msgid "Tick them below and save."
+msgstr "Zaznacz je poniżej i zapisz."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translate again the %d kept ones"
+msgstr "Przetłumacz ponownie %d pozostawionych"
+
+#: src/Admin/Admin.php
+msgid "Translate this page with the engine chosen above"
+msgstr "Przetłumacz tę stronę silnikiem wybranym powyżej"
+
+#: src/Admin/Admin.php
+msgid "Translate your site in three steps"
+msgstr "Przetłumacz witrynę w trzech krokach"
+
+#: src/Admin/Admin.php
+msgid "Translate, for free"
+msgstr "Przetłumacz, za darmo"
+
+#: src/Admin/Admin.php
+msgid "Usually each language shows your menu, translated. Here a language can have a whole menu of its own instead: other pages, another order, written in that language (it is not translated). How: 1) in Appearance → Menus (block themes: in the Site Editor) create the menu and name it, for example «Menu DE»; 2) come back here and choose it next to that language; 3) save. Each column is one of the places your theme has for menus (header, footer…): choose, for that place, the menu to show in that language."
+msgstr "Zwykle każdy język pokazuje Twoje menu, przetłumaczone. Tutaj język może zamiast tego mieć całkiem własne menu: inne strony, inna kolejność, napisane w tym języku (nie jest tłumaczone). Jak: 1) w Wygląd → Menu (motywy blokowe: w Edytorze witryny) utwórz menu i nazwij je, na przykład „Menu DE”; 2) wróć tutaj i wybierz je obok tego języka; 3) zapisz. Każda kolumna to jedno z miejsc, które Twój motyw ma na menu (nagłówek, stopka…): wybierz dla tego miejsca menu pokazywane w tym języku."
+
+#: src/Admin/Admin.php
+msgid "iubenda policy per language"
+msgstr "Polityka iubenda dla każdego języka"
+
+#: src/Admin/Admin.php
+msgid "off (better for search engines)"
+msgstr "wyłączone (lepiej dla wyszukiwarek)"
+
+#: src/Admin/Admin.php
+msgid "off: another page cache is already active on this site"
+msgstr "wyłączone: w tej witrynie działa już inna pamięć podręczna stron"
+
+#: src/Admin/Admin.php
+msgid "on"
+msgstr "włączone"
+
+#: src/Admin/Admin.php
+msgid "the day your plan renews; 0 if you use only free engines"
+msgstr "dzień odnowienia Twojego planu; 0, jeśli używasz tylko darmowych silników"
+
+#: src/Admin/Farewell.php
+#, php-format
+msgid "I agree to be contacted about this problem only. The e-mail is deleted after 6 months, and never used for anything else (%s)."
+msgstr "Zgadzam się na kontakt wyłącznie w sprawie tego problemu. Adres e-mail jest usuwany po 6 miesiącach i nigdy nie jest używany do niczego innego (%s)."
+
+#: src/Admin/Farewell.php
+msgid "Keep it active and get help"
+msgstr "Zostaw włączoną i uzyskaj pomoc"
+
+#: src/Admin/Farewell.php
+msgid "Leave your e-mail and we will contact you to solve it (optional):"
+msgstr "Zostaw e-mail, a skontaktujemy się, aby to rozwiązać (opcjonalnie):"
+
+#: src/Admin/Farewell.php
+msgid "Try the Simple view: three steps"
+msgstr "Wypróbuj widok Prosty: trzy kroki"
+
+#: src/Admin/Farewell.php
+msgid "Wait a moment: we fix it for you, free, usually the same day."
+msgstr "Chwila: naprawimy to dla Ciebie, za darmo, zwykle tego samego dnia."
+
+#: src/Admin/Farewell.php
+msgid "privacy policy"
+msgstr "polityka prywatności"
+
+#: src/Admin/SearchPage.php
+msgid "A search box that always searches in the language of the page. Make profiles (header, footer, phone menu…), each with its own look, its own options and a live preview."
+msgstr "Pole wyszukiwania, które zawsze szuka w języku strony. Twórz profile (nagłówek, stopka, menu w telefonie…), każdy z własnym wyglądem, własnymi opcjami i podglądem na żywo."
+
+#: src/Admin/SearchPage.php
+msgid "Always in sight, under the box"
+msgstr "Zawsze widoczne, pod polem"
+
+#: src/Admin/SearchPage.php
+msgid "At the bottom of every page"
+msgstr "Na dole każdej strony"
+
+#: src/Admin/SearchPage.php
+msgid "At the end of the menu the language switcher uses (Appearance → Menus decides which)."
+msgstr "Na końcu menu, z którego korzysta przełącznik języka (o tym, które, decyduje Wygląd → Menu)."
+
+#: src/Admin/SearchPage.php
+msgid "Behind a «Filters» button"
+msgstr "Za przyciskiem „Filtry”"
+
+#: src/Admin/SearchPage.php
+msgid "Computer"
+msgstr "Komputer"
+
+#: src/Admin/SearchPage.php
+msgid "Computer and phone"
+msgstr "Komputer i telefon"
+
+#: src/Admin/SearchPage.php
+msgid "Computer only"
+msgstr "Tylko komputer"
+
+#: src/Admin/SearchPage.php
+msgid "Each profile is one search box in one place. Only one profile can be in the header menu, one in the phone menu and one at the bottom: choosing a place takes it from the profile that had it."
+msgstr "Każdy profil to jedno pole wyszukiwania w jednym miejscu. Tylko jeden profil może być w menu nagłówka, jeden w menu telefonu i jeden na dole: wybór miejsca zabiera je profilowi, który je miał."
+
+#: src/Admin/SearchPage.php
+msgid "Empty = «Search…» already in the language of each page. Your own text is translated like the rest of the site."
+msgstr "Puste = „Szukaj…” już w języku każdej strony. Twój własny tekst jest tłumaczony jak reszta witryny."
+
+#: src/Admin/SearchPage.php
+msgid "Field"
+msgstr "Pole"
+
+#: src/Admin/SearchPage.php
+msgid "Filters for the visitor"
+msgstr "Filtry dla odwiedzającego"
+
+#: src/Admin/SearchPage.php
+msgid "In a menu, a magnifier takes the least room; at the bottom of the page, a field is clearer."
+msgstr "W menu lupa zajmuje najmniej miejsca; na dole strony pole jest czytelniejsze."
+
+#: src/Admin/SearchPage.php
+msgid "In my phone menu (burger)"
+msgstr "W moim menu w telefonie (hamburger)"
+
+#: src/Admin/SearchPage.php
+msgid "Languages & general"
+msgstr "Języki i ogólne"
+
+#: src/Admin/SearchPage.php
+msgid "Look"
+msgstr "Wygląd"
+
+#: src/Admin/SearchPage.php
+msgid "Look in"
+msgstr "Szukaj w"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens a field"
+msgstr "Lupa otwierająca pole"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier that opens the search over the page"
+msgstr "Lupa otwierająca wyszukiwanie nad stroną"
+
+#: src/Admin/SearchPage.php
+msgid "Make one profile «Computer only» (a field in the header) and another «Phone only» (a magnifier in the burger menu) to have the right box on each screen."
+msgstr "Utwórz jeden profil „Tylko komputer” (pole w nagłówku) i drugi „Tylko telefon” (lupa w menu hamburger), aby na każdym ekranie mieć właściwe pole."
+
+#: src/Admin/SearchPage.php
+msgid "Paste the shortcode in a page, a widget or your builder, or add the block «TranslateRocket search»."
+msgstr "Wklej shortcode na stronie, w widżecie lub w swoim kreatorze, albo dodaj blok „Wyszukiwarka TranslateRocket”."
+
+#: src/Admin/SearchPage.php
+msgid "Phone only"
+msgstr "Tylko telefon"
+
+#: src/Admin/SearchPage.php
+msgid "Profiles"
+msgstr "Profile"
+
+#: src/Admin/SearchPage.php
+msgid "Rounded field"
+msgstr "Zaokrąglone pole"
+
+#: src/Admin/SearchPage.php
+msgid "Save this profile"
+msgstr "Zapisz ten profil"
+
+#: src/Admin/SearchPage.php
+msgid "Saved. The preview below shows it as it is now."
+msgstr "Zapisano. Podgląd poniżej pokazuje stan obecny."
+
+#: src/Admin/SearchPage.php
+msgid "Search box"
+msgstr "Pole wyszukiwania"
+
+#: src/Admin/SearchPage.php
+msgid "Search the translations of every language"
+msgstr "Szukaj w tłumaczeniach każdego języka"
+
+#: src/Admin/SearchPage.php
+msgid "Search…"
+msgstr "Szukaj…"
+
+#: src/Admin/SearchPage.php
+msgid "Show suggestions"
+msgstr "Pokaż podpowiedzi"
+
+#: src/Admin/SearchPage.php
+msgid "Shown on"
+msgstr "Widoczne na"
+
+#: src/Admin/SearchPage.php
+msgid "Small buttons the visitor can use: the kind of content (All · Posts · Pages · Products…) and «Every language». Always in sight under the box, or behind a «Filters» button."
+msgstr "Małe przyciski dla odwiedzającego: rodzaj treści (Wszystko · Wpisy · Strony · Produkty…) oraz „Każdy język”. Zawsze widoczne pod polem albo za przyciskiem „Filtry”."
+
+#: src/Admin/SearchPage.php
+msgid "Suggestions while typing"
+msgstr "Podpowiedzi podczas pisania"
+
+#: src/Admin/SearchPage.php
+msgid "Text in the empty field"
+msgstr "Tekst w pustym polu"
+
+#: src/Admin/SearchPage.php
+msgid "The box as your visitors see it, with the look and the options of this profile, at computer and phone width. It follows your changes as you make them; save to keep them."
+msgstr "Pole tak, jak widzą je odwiedzający, z wyglądem i opcjami tego profilu, w szerokości komputera i telefonu. Na bieżąco podąża za Twoimi zmianami; zapisz, aby je zachować."
+
+#: src/Admin/SearchPage.php
+msgid "What it searches"
+msgstr "Co przeszukuje"
+
+#: src/Admin/SearchPage.php
+msgid "Which kinds of content the box searches. None ticked: everything the site search can find."
+msgstr "Jakie rodzaje treści przeszukuje pole. Nic niezaznaczone: wszystko, co znajdzie wyszukiwarka witryny."
+
+#: src/Admin/SearchPage.php
+msgid "Width of the field"
+msgstr "Szerokość pola"
+
+#: src/Admin/SearchPage.php
+msgid "by type"
+msgstr "według rodzaju"
+
+#: src/Admin/SearchPage.php
+msgid "how many:"
+msgstr "ile:"
+
+#: src/Admin/SearchPage.php
+msgid "none in a menu; «always in sight» on a search page"
+msgstr "brak w menu; „zawsze widoczne” na stronie wyszukiwania"
+
+#: src/Admin/SearchPage.php
+msgid "none ticked (everything)"
+msgstr "nic niezaznaczone (wszystko)"
+
+#: src/Admin/SearchPage.php
+msgid "off: the language of the page"
+msgstr "wyłączone: język strony"
+
+#: src/Admin/SearchPage.php
+msgid "on, 6"
+msgstr "włączone, 6"
+
+#: src/Admin/SearchPage.php
+msgid "«Every language»"
+msgstr "„Każdy język”"
+
+#: src/Admin/SearchPage.php
+msgid "— the shortcode of this profile; the block «TranslateRocket search» has a profile choice too."
+msgstr "— shortcode tego profilu; blok „Wyszukiwarka TranslateRocket” też ma wybór profilu."
+
+#: src/Admin/View.php
+msgid "Simple"
+msgstr "Prosty"
+
+#: src/Frontend/SearchBox.php
+msgid "All"
+msgstr "Wszystko"
+
+#: src/Frontend/SearchBox.php
+msgid "Every language"
+msgstr "Każdy język"
+
+#: src/Frontend/SearchBox.php
+msgid "Filters"
+msgstr "Filtry"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%d sentence was kept as it was: a name, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgid_plural "%d sentences were kept as they were: names, or text not in the site's language, that the engine cannot translate. The page counts as complete; «Translate again the kept ones» in a page's «⋯» menu tries them with another engine."
+msgstr[0] "%d zdanie pozostawiono bez zmian: nazwa lub tekst nie w języku witryny, którego silnik nie może przetłumaczyć. Strona liczy się jako ukończona; „Przetłumacz ponownie pozostawione” w menu „⋯” strony próbuje innym silnikiem."
+msgstr[1] "%d zdania pozostawiono bez zmian: nazwy lub teksty nie w języku witryny, których silnik nie może przetłumaczyć. Strona liczy się jako ukończona; „Przetłumacz ponownie pozostawione” w menu „⋯” strony próbuje innym silnikiem."
+msgstr[2] "%d zdań pozostawiono bez zmian: nazwy lub teksty nie w języku witryny, których silnik nie może przetłumaczyć. Strona liczy się jako ukończona; „Przetłumacz ponownie pozostawione” w menu „⋯” strony próbuje innym silnikiem."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$s translated. %2$s sentences were not translated by this engine: often they are not written in the site's language. You can translate them by hand or with another engine."
+msgstr "Przetłumaczono %1$s. %2$s zdań nie zostało przetłumaczonych przez ten silnik: często nie są napisane w języku witryny. Możesz je przetłumaczyć ręcznie lub innym silnikiem."
+
+#: src/Admin/SearchPage.php
+msgid "A row at the end of every page, before the theme's footer."
+msgstr "Wiersz na końcu każdej strony, przed stopką motywu."
+
+#: src/Admin/SearchPage.php
+msgid "Empty = the theme's size. Examples: 14em, 240px, 100%."
+msgstr "Puste = rozmiar z motywu. Przykłady: 14em, 240px, 100%."
+
+#: src/Admin/SearchPage.php
+msgid "From the third letter the matching pages appear under the box, with their title in the page's language. Answers are kept ten minutes, so a busy site asks the database once per word."
+msgstr "Od trzeciej litery pod polem pojawiają się pasujące strony, z tytułem w języku strony. Odpowiedzi są przechowywane dziesięć minut, więc ruchliwa witryna pyta bazę danych raz na słowo."
+
+#: src/Admin/SearchPage.php
+msgid "Normally the box searches the translations of the page's language: on /de/ a visitor types in German and finds the German pages. «Every language» also looks in the other languages, for a site whose visitors mix them."
+msgstr "Zwykle pole szuka w tłumaczeniach języka strony: na /de/ odwiedzający pisze po niemiecku i znajduje niemieckie strony. „Każdy język” szuka też w pozostałych językach, dla witryny, której odwiedzający je mieszają."
+
+#: src/Admin/SearchPage.php
+msgid "Only in the theme's phone menu, the one behind the ☰ button."
+msgstr "Tylko w menu telefonu motywu, tym za przyciskiem ☰."
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "Which menu is the header menu, and which the phone menu, is decided in %s (the menu assigned to the theme's main place, and to its phone place when it has one)."
+msgstr "O tym, które menu jest menu nagłówka, a które menu telefonu, decyduje %s (menu przypisane do głównego miejsca motywu i do jego miejsca na telefon, jeśli je ma)."
+
+#: src/Admin/SearchPage.php
+#, php-format
+msgid "«Search in every language» is off on %s: the box would search only the site's own language."
+msgstr "„Szukaj w każdym języku” jest wyłączone na %s: pole szukałoby tylko w języku witryny."
+
+#: src/Admin/Admin.php
+msgid "Only kept as they were"
+msgstr "Tylko pozostawione bez zmian"

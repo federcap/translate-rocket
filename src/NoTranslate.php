@@ -20,6 +20,12 @@ defined( 'ABSPATH' ) || exit;
 class NoTranslate {
 
 	/**
+	 * Tool classes that are whole class names, not prefixes (16/10/2026): «elementor-hidden» is the editor's
+	 * hidden element; «elementor-hidden-mobile» & co. are the site's per-device visibility and must be translated.
+	 */
+	const EXACT_CLASSES = array( 'elementor-hidden' );
+
+	/**
 	 * Prefixes of ids and classes that belong to administrator tooling shown on the
 	 * front end — debug bars, page-builder helpers, comment/notes apps — never to the
 	 * page itself. Text inside them is neither collected nor translated.

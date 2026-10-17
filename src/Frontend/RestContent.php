@@ -180,7 +180,7 @@ class RestContent {
 		if ( ! is_string( $node ) || '' === trim( $node ) ) {
 			return $node;
 		}
-		if ( in_array( $key, self::LINK_KEYS, true ) ) {
+		if ( in_array( $key, self::LINK_KEYS, true ) || ( is_string( $key ) && preg_match( '/_(?:url|link|permalink)$/', $key ) && preg_match( '~^(https?:)?//|^/~', trim( $node ) ) ) ) {
 			static $home = null;
 			if ( null === $home ) {
 				$raw  = (string) get_option( 'home' );

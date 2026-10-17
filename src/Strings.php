@@ -514,9 +514,9 @@ class Strings {
 	 * @param bool   $only_missing Only rows without a translation yet.
 	 * @return array<int,object>
 	 */
-	public static function search( string $lang, string $term = '', int $limit = 300, bool $only_missing = false, int $offset = 0 ): array {
+	public static function search( string $lang, string $term = '', int $limit = 300, bool $only_missing = false, int $offset = 0, bool $only_kept = false ): array {
 		global $wpdb;
-		list( $sql, $args ) = self::search_sql( 'st.id AS string_id, st.original, st.type, st.context, tr.translation, tr.status', $lang, $term, $only_missing );
+		list( $sql, $args ) = self::search_sql( 'st.id AS string_id, st.original, st.type, st.context, tr.translation, tr.status', $lang, $term, $only_missing, $only_kept );
 		$sql   .= ' ORDER BY st.id ASC LIMIT %d OFFSET %d';
 		$args[] = $limit;
 		$args[] = max( 0, $offset );
@@ -527,9 +527,9 @@ class Strings {
 	 * How many strings search() would find with no limit: the Memory screen shows them 50 at a time (14/10/2026,
 	 * the visual check: 300 rows at once made a page of 20,000 pixels, and «300 strings» hid the real total).
 	 */
-	public static function search_count( string $lang, string $term = '', bool $only_missing = false ): int {
+	public static function search_count( string $lang, string $term = '', bool $only_missing = false, bool $only_kept = false ): int {
 		global $wpdb;
-		list( $sql, $args ) = self::search_sql( 'COUNT(*)', $lang, $term, $only_missing );
+		list( $sql, $args ) = self::search_sql( 'COUNT(*)', $lang, $term, $only_missing, $only_kept );
 		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $args ) ); // phpcs:ignore WordPress.DB
 	}
 
@@ -538,7 +538,7 @@ class Strings {
 	 *
 	 * @return array{0:string,1:array<int,mixed>}
 	 */
-	private static function search_sql( string $campi, string $lang, string $term, bool $only_missing ): array {
+	private static function search_sql( string $campi, string $lang, string $term, bool $only_missing, bool $only_kept = false ): array {
 		global $wpdb;
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
@@ -553,6 +553,10 @@ class Strings {
 		}
 		if ( $only_missing ) {
 			$where[] = "( tr.id IS NULL OR tr.status = 0 OR tr.translation IS NULL OR tr.translation = '' )";
+		}
+		if ( $only_kept ) {
+			// 1.8.8: the sentences an engine left as they were (a name, text in another language).
+			$where[] = "tr.provider = 'kept'";
 		}
 
 		$sql = "SELECT {$campi}
