@@ -397,6 +397,15 @@ class Switcher {
 			$out  .= $nav . '>a,' . $nav . '>button,' . $nav . '>.wp-block-navigation-item__content{background:none!important;border:0!important;border-radius:0!important;padding:0!important;text-decoration:none!important;}';
 			$out  .= $nav . '>.wp-block-navigation__submenu-icon{margin-left:0!important;background:none!important;}';
 		}
+		// 17/10/2026 (Twenty Twenty-Five on a phone): in the full-screen menu of the Navigation block
+		// WordPress makes every item and submenu transparent with a stronger !important rule, so the
+		// switcher's white text sat on the overlay's white — flags with no names. There the languages
+		// take the overlay's own colours, like the other links, without the button's box.
+		if ( '' !== $out ) {
+			$ov   = '.wp-block-navigation__responsive-container.is-menu-open';
+			$out .= $ov . ' .trrocket-lang-item>a,' . $ov . ' .trrocket-lang-item>button,' . $ov . ' .trrocket-lang-item .wp-block-navigation-item__content,' . $ov . ' .trrocket-lang-item .trrocket-menu-lang{color:inherit!important;background:none!important}';
+			$out .= $ov . ' li.trrocket-lang-current,' . $ov . ' .trrocket-lang-current>.wp-block-navigation__submenu-container{border:0!important;padding:0!important;background:none!important}';
+		}
 		return $out;
 	}
 

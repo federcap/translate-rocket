@@ -71,6 +71,12 @@ class Search {
 	 * The first build, in small batches in the background, until every published page is in.
 	 */
 	public static function schedule(): void {
+		// 1.8.9: the index now also knows pages by their title and excerpt before anyone opened them (products
+		// added later): built once more, in the same small background batches.
+		if ( '2' !== (string) get_option( 'trrocket_search_index_v' ) ) {
+			update_option( 'trrocket_search_index_v', '2', false );
+			delete_option( self::CURSOR );
+		}
 		if ( 'done' === get_option( self::CURSOR ) || wp_next_scheduled( self::CRON ) ) {
 			return;
 		}
@@ -184,6 +190,22 @@ class Search {
 					$wpdb->prepare(
 						"SELECT DISTINCT s.id, s.original FROM {$occ} o JOIN {$st} s ON s.id = o.string_id AND s.type = 'text' WHERE o.url_hash = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 						Strings::url_hash( $path )
+					)
+				)
+			); // phpcs:ignore WordPress.DB
+		}
+		// 17/10/2026 (found taking screenshots of the search box: «colazione» on /it/ did not find the product
+		// «Colazione in terrazza»): a page nobody has opened yet — a product added later, never scanned — has no
+		// sentences of its own in the index, while its title and excerpt are usually known from the lists and
+		// the shop. Those, matched exactly, make it findable in every language from the start.
+		$propri = array_filter( array( trim( (string) $post->post_title ), trim( wp_strip_all_tags( (string) $post->post_excerpt ) ) ), 'strlen' );
+		if ( $propri ) {
+			$righe = array_merge(
+				$righe,
+				(array) $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT id, original FROM {$st} WHERE type = 'text' AND original IN (" . implode( ',', array_fill( 0, count( $propri ), '%s' ) ) . ')', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						array_values( $propri )
 					)
 				)
 			); // phpcs:ignore WordPress.DB

@@ -311,9 +311,12 @@
 }
 
 /* Keep the primary Save button visible while scrolling long settings pages,
-   centred horizontally and vertically in its bar. */
+   centred horizontally and vertically in its bar.
+   17/10/2026 (Federico, on a screenshot: «the Save part looks badly laid out» — the bar floated over the
+   last options): it sits at the end of the form, and follows the scroll only once something was changed
+   and is waiting to be saved (admin-info.js marks the form). */
 .trrocket-wrap form .submit {
-	position: sticky;
+	position: static;
 	bottom: 0;
 	z-index: 30;
 	display: flex;
@@ -330,6 +333,12 @@
 
 .trrocket-wrap form .submit .button {
 	margin: 0;
+}
+
+.trrocket-wrap form.trr-dirty .submit {
+	position: sticky;
+	border-color: #c7c4f5;
+	box-shadow: 0 -3px 18px rgba( 79, 70, 229, 0.18 );
 }
 
 /* AI page: keep the active-provider dropdown next to its label. */
@@ -2511,6 +2520,16 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-sbp-frame{border:1px solid #dcdcde;border-radius:8px;background:#fff;padding:18px;min-height:90px;position:relative;overflow:visible}
 .trr-sbp-phone{max-width:390px}
 .trr-sbp-frame .trrocket-search--overlay .trrocket-search-panel{position:absolute;inset:0;padding:24px 12px}
+/* 17/10/2026: the overlay fills the preview frame, not the tiny box of the magnifier (it was 27px wide) */
+.trr-sbp-frame .trrocket-search--overlay{position:static}
+.trr-sbp-frame .trrocket-search--icon .trrocket-search-panel{position:absolute!important;top:100%!important;right:auto!important;left:0!important;margin-top:6px}
+.trr-sbp-frame .trrocket-search--icon{position:relative}
+.trr-sbp-frame .trrocket-search--icon .trrocket-search-panel{width:min(300px,calc(100vw - 120px))}
+.trr-sbp-frame .trrocket-search--icon .trrocket-search-form,.trr-sbp-frame .trrocket-search--icon .trrocket-search-row{width:100%}
+.trr-sbp-frame .trrocket-search--icon input[type=search]{flex:1 1 auto;min-width:0}
+.trr-sbp-frame:has(.trrocket-search--icon){min-height:120px}
+.trr-sbp-frame:has(.trrocket-search--overlay){min-height:150px}
+.trr-sbp-frame .trrocket-search--overlay .trrocket-search-close{font-size:1.6em;top:4px;right:8px}
 .trr-sb-style{display:inline-block;margin:0 16px 6px 0}
 
 /* 16/10/2026: preset clicked = lit at once; preview veiled with a wheel until the server draws it */

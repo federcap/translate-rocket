@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.8
+Stable tag: 1.8.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,6 +37,13 @@ You translate however you like:
 
 = Highlights =
 
+* 🔎 **Search in every language, free** — a search box that always searches in the language of the page: a visitor on `/it/` types in Italian and finds your pages, posts and WooCommerce products by their translated title and text, with suggestions as they type. Make one profile for the header, one for the footer and one for the phone menu, each with its own look and a live preview; add it as a block, with the `[translaterocket_search]` shortcode or as an item of your menu. The site's own search box, Ajax Search Lite and FiboSearch find translated text too.
+* 🟢 **Simple view: translate a site in three steps** — choose the languages, press «Translate», put each language online. Nothing to configure and no key: the free engines are already there. Everything else stays one click away under «Advanced», and nothing is ever removed.
+* 🧠 **Sentences an engine cannot translate are kept** — a brand name, an address or a line already in another language stays as it is and the page still counts as complete, with a «translate again» button if you want to try another engine.
+* 📊 **Visits per language, without cookies** — how many visits each language gets, its most read pages and the languages your visitors' browsers ask for, so you know which language to translate next.
+* 🍪 **Cookie banners in the visitor's language** — Complianz, CookieYes, iubenda, Cookiebot and Usercentrics show their banner in the language of the page, and their legal texts are never machine-translated.
+* 💳 **Checkout and e-mails in the customer's language** — the WooCommerce checkout (Stripe tested), the order e-mails and the e-mails of form plugins (WPForms, Contact Form 7, Fluent Forms, Ninja Forms, Gravity Forms) reach each visitor in the language they used. WooCommerce lists TranslateRocket as compatible with High-Performance Order Storage and with the Cart and Checkout blocks.
+* 🆓 **MyMemory, free** — one more free engine with no key: about 5,000 characters a day, about 50,000 with just an e-mail address.
 * 🔑 **No API key required — and not just "by hand".** Chrome and Edge translate the whole site automatically, on your own computer, for free. Or do it by hand in the visual editor, or free with Google Translate, and edit any translation later. There is no signup, no account and no key to create — AI providers are optional and only used if you add one yourself.
 * 🌍 **Unlimited languages** (36 built in), 100% free. Donations welcome, never required.
 * ⚡ **Built for huge sites**: past ~20,000 strings the engine switches by itself to indexed per-page lookups — flat memory and the same render time at 500 or 500,000 strings (load-tested), where map-loading translation plugins hit the PHP memory limit.
@@ -57,7 +64,7 @@ You translate however you like:
 
 = Languages =
 
-Translate your site into the languages your visitors actually speak: Spanish, French, German, Italian, Portuguese and Brazilian Portuguese, Dutch, Polish, Russian, Ukrainian, Turkish, Romanian, Greek, Arabic, Hindi, Indonesian, Vietnamese, Thai, Chinese, Japanese, Korean — 36 languages ship built in, and you can add unlimited custom ones (any language code works). The plugin's own admin interface is translated into nine languages besides English: Japanese, Spanish, German, French, Brazilian Portuguese, Italian, Dutch, Russian and Polish.
+Translate your site into the languages your visitors actually speak: Spanish, French, German, Italian, Portuguese and Brazilian Portuguese, Dutch, Polish, Russian, Ukrainian, Turkish, Romanian, Greek, Arabic, Hindi, Indonesian, Vietnamese, Thai, Chinese, Japanese, Korean — 36 languages ship built in, and you can add unlimited custom ones (any language code works). The plugin's own admin interface is translated into fifteen languages besides English: Arabic, Chinese, Dutch, French, German, Indonesian, Italian, Japanese, Korean, Persian, Polish, Brazilian Portuguese, Russian, Spanish and Turkish.
 
 = Works with =
 
@@ -66,7 +73,9 @@ TranslateRocket translates the page your site actually sends to the browser, so 
 * **Page builders:** Elementor and Elementor Pro (theme builder headers and footers included), the block editor. While a builder is editing a page - Elementor, Beaver Builder, Divi, Bricks, Oxygen, Breakdance, Brizy, WPBakery, Thrive Architect, the Customizer - TranslateRocket stays out of its way.
 * **Shops:** WooCommerce - product pages, cart, checkout and the order e-mails, in the customer's language.
 * **Forms:** Forminator, Contact Form 7, WPForms, Gravity Forms, SureForms, Formidable, Ninja Forms.
-* **Cookie and consent banners:** Complianz, CookieYes, GDPR Cookie Compliance, Cookie Notice - the banner text is collected, can be clicked in the visual editor and reaches visitors translated.
+* **Cookie and consent banners:** Complianz, CookieYes, GDPR Cookie Compliance, Cookie Notice - the banner text is collected, can be clicked in the visual editor and reaches visitors translated; iubenda, Cookiebot and Usercentrics are told the language of each page.
+* **Payments:** WooCommerce checkout with Stripe, in the visitor's language.
+* **Search:** WordPress search, Ajax Search Lite, FiboSearch.
 * **SEO:** Yoast SEO, Rank Math - translated titles, descriptions and social tags.
 * **Caching and optimisation:** Cache Enabler, Autoptimize, WP Fastest Cache.
 * **Side by side with, and importing from:** WPML, Polylang, TranslatePress, Weglot, Bogo and others.
@@ -101,11 +110,11 @@ This plugin can connect to third-party services, but only with your involvement:
 
 == Installation ==
 
-1. Upload the `translate-rocket` folder to `/wp-content/plugins/`, or install it from the Plugins screen.
-2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Go to **TranslateRocket → Settings** and pick your source language and the languages to translate into.
-4. Browse your site to detect content, then translate from **TranslateRocket → Translations** (by hand, copy & paste, or AI).
-5. Add the language switcher anywhere with the `[translaterocket_switcher]` shortcode, the block, or the widget.
+1. Install TranslateRocket from **Plugins → Add New** (search for "TranslateRocket") and activate it.
+2. Open **TranslateRocket**: the Simple view shows three steps. Tick the languages you want and save.
+3. Press **Translate** next to a language: Chrome or Edge translate it on your computer, free and with no key — or add a free AI account, or your own key, whenever you like.
+4. Flip the language's switch to **Online** when you are happy with it. Until then only you see it.
+5. Add the language switcher and the search box where you want them — block, shortcode or menu — from the **Switcher** and **Search** screens.
 
 First steps, filmed from installation to the first translated page:
 
@@ -169,6 +178,10 @@ Safer still: run TranslateRocket next to your current plugin, import, and switch
 
 https://www.youtube.com/watch?v=K5qmxn3_4po
 
+= Can visitors search my site in their own language? =
+
+Yes, for free. The search box of TranslateRocket always searches in the language of the page: on `/de/` a visitor types in German and finds your pages, posts and WooCommerce products by their translated title, excerpt and content, with suggestions while typing, and the results open on the German pages. You can let it look in every language at once, choose which content types it shows and add filters. The search box WordPress already has on your site, Ajax Search Lite and FiboSearch understand the translated words too.
+
 = What if a page shouldn't exist in another language? =
 
 Open the page and use the "Language visibility" box to redirect it, show a custom message, or return a 404 — per language.
@@ -200,12 +213,21 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 == Screenshots ==
 
 1. Your whole site in every language: each language on its own address (/it/, /de/, /fr/), ready for Google, with a language switcher for your visitors.
-2. Free AI translation with your own free account: a Groq key in two minutes, no card, in any browser — phones and Firefox too. Or bring your own OpenAI, Claude, Gemini or DeepL key.
-3. Click any sentence on your page to fix it: type it yourself, or ask the browser translator, Google Translate or your AI.
-4. Coming from another plugin? WPML, Polylang, TranslatePress and ten more have their own importer; the universal importer reads your pages as visitors see them, with a preview before you switch.
-5. Design the language switcher — dropdown or list, flags, colours — with a live preview.
+2. Free translation in three steps: choose your languages, press Translate, put them online. Your own browser (Chrome or Edge) translates for free, with no API key and no account; free AI accounts or your own keys are there when you want more.
+3. A free search box that speaks every language: visitors type in their own language and find your pages, posts and products, with suggestions as they type. Add it to your menu, as a block or with a shortcode.
+4. Click any sentence on your page to fix it: type it yourself, or ask the browser translator, Google Translate or your AI.
+5. Coming from another plugin? WPML, Polylang, TranslatePress and ten more have their own importer; the universal importer reads your pages as visitors see them, with a preview before you switch.
+6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.9 =
+* Fixed: on WordPress Playground (the «Live Preview» on wordpress.org) and on any site that runs on SQLite, a sentence corrected in the visual editor and the translations brought in by the importers were not saved: one database query was MySQL-only. It now works the same on MySQL, MariaDB and SQLite. The Live Preview also opens on a demo page already translated into Italian, Spanish, German and French.
+* Improved: the search box «in the header menu» now appears in block themes too (the Navigation block of Twenty Twenty-Five and the like), on the computer and inside the phone menu.
+* Fixed: in the full-screen phone menu of block themes the language names were white on white — only the flags could be seen. There they now take the colours of the theme, like the other links.
+* Improved: a product never opened in a language is found by its translated title and excerpt (the search index is rebuilt once); while suggestions are on their way a small wheel turns in the search button; «Filters» opens as a button.
+* Improved: the «Save changes» bar stays at the bottom of the form and floats only when there is something to save, instead of covering the languages; the preview of the icon search styles opens the panel inside the frame, on the phone too.
+* Fixed: a tag between two words of a title no longer glued them together in the suggestions.
 
 = 1.8.8 =
 * New: Simple and Advanced view. Simple shows only what is free and immediate — choose the languages, press «Translate», put the language online — in three steps at the top of the plugin and three entries in the side menu; everything else is one click away under «Advanced». Nothing was removed.
@@ -420,6 +442,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.9 =
+Editor and imports now save on SQLite and in the wordpress.org Live Preview; the search box in block-theme menus; language names readable in the phone menu; search and Save-bar fixes.
 
 = 1.8.8 =
 Simple/Advanced view, the Search screen with profiles and looks, sentences an engine cannot translate kept (pages reach 100%), cookie-banner and cache compatibility.

@@ -309,12 +309,16 @@ class SearchPage {
 					} else if ( ! apre && o ) {
 						b.appendChild( form ); o.remove(); p.remove();
 					}
+					// 17/10/2026 (screenshots for Federico): with a magnifier style the preview showed only the
+					// magnifier in an empty box — it now shows the box open, as a visitor sees it after the click.
+					if ( apre && p ) { p.hidden = false; if ( o ) { o.setAttribute( 'aria-expanded', 'true' ); } }
 					var i = b.querySelector( 'input[type=search]' );
 					if ( i ) { i.style.width = w; if ( ph ) { i.placeholder = ph; } }
 				} );
 			}
 			f.addEventListener( 'input', aggiorna );
 			f.addEventListener( 'change', aggiorna );
+			aggiorna();
 		}() );
 		</script>
 		<?php

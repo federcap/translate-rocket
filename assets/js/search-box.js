@@ -114,6 +114,7 @@
 			return;
 		}
 		if ( q.length < 3 ) {
+			box.classList.remove( 'trrocket-search--loading' );
 			hideList( box );
 			return;
 		}
@@ -152,6 +153,12 @@
 			return;
 		}
 		var sep = url.indexOf( '?' ) === -1 ? '?' : '&';
+		// 17/10/2026 (screenshots for Federico): on a slow host the answer takes a while and nothing showed
+		// that it was coming — a small wheel in the field while it travels.
+		box.classList.add( 'trrocket-search--loading' );
+		var fine = function () {
+			box.classList.remove( 'trrocket-search--loading' );
+		};
 		fetch( url + sep + 'q=' + encodeURIComponent( q ) + '&lang=' + encodeURIComponent( box.getAttribute( 'data-lang' ) || '' ) + '&types=' + encodeURIComponent( types ) + '&all=' + all + '&n=' + ( box.getAttribute( 'data-count' ) || '6' ), { credentials: 'same-origin' } )
 			.then( function ( r ) {
 				return r.ok ? r.json() : [];
@@ -159,10 +166,12 @@
 			.then( function ( items ) {
 				memoria[ key ] = items;
 				if ( input.value.trim() === q ) {
+					fine();
 					draw( items );
 				}
 			} )
 			.catch( function () {
+				fine();
 				hideList( box );
 			} );
 	}

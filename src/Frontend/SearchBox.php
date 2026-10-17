@@ -84,6 +84,7 @@ class SearchBox {
 		add_shortcode( 'TRANSLATEROCKET_SEARCH', array( $this, 'render' ) );
 		add_action( 'init', array( $this, 'register_block' ) );
 		add_filter( 'wp_nav_menu_objects', array( $this, 'menu_item' ), 21, 2 );
+		add_filter( 'render_block_core/navigation', array( $this, 'nav_block' ), 20, 2 );
 		add_action( 'wp_footer', array( $this, 'footer' ), 4 );
 		add_action( 'rest_api_init', array( $this, 'routes' ) );
 		add_action( 'pre_get_posts', array( $this, 'type_filter' ), 15 );
@@ -160,7 +161,8 @@ class SearchBox {
 		$titoli = array();
 		$righe  = array();
 		foreach ( $ids as $id ) {
-			$t = wp_strip_all_tags( html_entity_decode( (string) get_the_title( $id ), ENT_QUOTES, 'UTF-8' ) );
+			// A tag between two words is a space (translaterocket.com: «Labs<span>for teams» became «Labsfor teams»).
+			$t = trim( (string) preg_replace( '/\s+/u', ' ', wp_strip_all_tags( (string) preg_replace( '/<[^>]+>/', ' ', html_entity_decode( (string) get_the_title( $id ), ENT_QUOTES, 'UTF-8' ) ) ) ) );
 			if ( '' === $t ) {
 				continue;
 			}
@@ -381,6 +383,11 @@ class SearchBox {
 		$suggest = ( 'yes' === (string) $atts['autocomplete'] || '1' === (string) $atts['autocomplete'] ) && Search::enabled();
 		list( $parola, $gia ) = self::word( self::PAROLA, __( 'Search', 'translate-rocket' ) );
 		list( $chiudi )       = self::word( self::CHIUDI, __( 'Close', 'translate-rocket' ) );
+		// 17/10/2026: the preview in the dashboard speaks the plugin's language («Cerca…»), not the site's («Search…»).
+		if ( '' !== (string) $atts['preview'] ) {
+			$parola = __( 'Search', 'translate-rocket' );
+			$chiudi = __( 'Close', 'translate-rocket' );
+		}
 		$segnaposto = '' !== trim( (string) $atts['placeholder'] ) ? (string) $atts['placeholder'] : $parola . '…';
 		// Our own words are already in the page's language: the translation engine leaves them alone.
 		$no  = $gia && '' === trim( (string) $atts['placeholder'] ) ? ' translate="no"' : '';
@@ -496,7 +503,17 @@ class SearchBox {
 			. '.trrocket-search-chip input:checked+span{background:#1d2327;color:#fff;border-color:#1d2327}'
 			. '.trrocket-search-chip input:focus-visible+span{outline:2px solid currentColor;outline-offset:2px}'
 			. '.trrocket-search-filters--dropdown{position:relative}'
-			. '.trrocket-search-filters--dropdown summary{cursor:pointer;display:inline-block;padding:.25em .2em}'
+			// 17/10/2026 (screenshots for Federico): «Filters» looked like plain text, now it looks like what it is, a button
+			. '.trrocket-search-filters--dropdown summary{cursor:pointer;display:inline-flex;align-items:center;gap:.4em;padding:.25em .8em;border:1px solid rgba(127,127,127,.45);border-radius:999px;line-height:1.4;list-style:none;user-select:none}'
+			. '.trrocket-search-filters--dropdown summary::-webkit-details-marker{display:none}'
+			. '.trrocket-search-filters--dropdown summary::after{content:"";width:.4em;height:.4em;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);opacity:.7}'
+			. '.trrocket-search-filters--dropdown[open] summary{background:#1d2327;color:#fff;border-color:#1d2327}'
+			// while the suggestions are on their way: the magnifier of the button turns into a small wheel
+			. '.trrocket-search-go{position:relative}'
+			. '.trrocket-search--loading .trrocket-search-go>*{visibility:hidden}'
+			. '.trrocket-search--loading .trrocket-search-go::after{content:"";position:absolute;top:50%;left:50%;width:1em;height:1em;margin:-.5em 0 0 -.5em;border:2px solid rgba(127,127,127,.35);border-top-color:currentColor;border-radius:50%;animation:trrocket-search-spin .7s linear infinite;pointer-events:none}'
+			. '@keyframes trrocket-search-spin{to{transform:rotate(360deg)}}'
+			. '@media (prefers-reduced-motion:reduce){.trrocket-search--loading .trrocket-search-go::after{animation-duration:2s}}'
 			. '.trrocket-search-filters--dropdown .trrocket-search-filterbox{position:absolute;z-index:100001;top:100%;left:0;background:#fff;color:#1d2327;padding:8px;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.15);min-width:14em}'
 			. '[dir=rtl] .trrocket-search-filters--dropdown .trrocket-search-filterbox,[dir=rtl] .trrocket-search-suggest{left:auto;right:0}'
 			. '.trrocket-search--overlay .trrocket-search-filters{color:#fff}.trrocket-search--overlay .trrocket-search-chip input:checked+span{background:#fff;color:#1d2327;border-color:#fff}';
@@ -568,6 +585,38 @@ class SearchBox {
 			}
 		}
 		return $this->render( $atts );
+	}
+
+	/**
+	 * Block themes (17/10/2026: with Twenty Twenty-Five the «header menu» place showed nothing, because
+	 * wp_nav_menu_objects only runs for classic menus): the box becomes the last item of the first
+	 * Navigation block of the page — the header's — drawn inside the block like its own links, so it
+	 * also follows it into the phone overlay.
+	 *
+	 * @param mixed $html  Rendered Navigation block.
+	 * @param mixed $block Parsed block.
+	 * @return mixed
+	 */
+	public function nav_block( $html, $block ) {
+		static $done = false;
+		if ( $done || ! is_string( $html ) || '' === $html || is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || Preview::hidden() || \TranslateRocket\BuilderMode::active() ) {
+			return $html;
+		}
+		$scelto = '';
+		foreach ( self::profiles() as $pid => $p ) {
+			if ( 'menu' === $p['place'] ) {
+				$scelto = (string) $pid;
+				break;
+			}
+		}
+		$fine = strrpos( $html, '</ul>' );
+		if ( '' === $scelto || false === $fine || false === strpos( $html, 'wp-block-navigation__container' ) ) {
+			return $html;
+		}
+		$done  = true;
+		$box   = $this->render( array( 'id' => $scelto ) );
+		$voce  = '<li class="wp-block-navigation-item trrocket-search-nav">' . $box . '</li>';
+		return substr( $html, 0, $fine ) . $voce . substr( $html, $fine );
 	}
 
 	/**

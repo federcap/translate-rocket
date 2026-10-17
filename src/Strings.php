@@ -1434,26 +1434,7 @@ class Strings {
 		}
 
 		global $wpdb;
-		$strings = Database::strings_table();
-		$hash    = self::hash( $original, $type, $context );
-		$now     = current_time( 'mysql' );
-
-		$wpdb->query(
-			$wpdb->prepare(
-				"INSERT INTO {$strings} (string_hash, text_hash, original, context, type, first_seen, last_seen)
-				 VALUES (%s, %s, %s, %s, %s, %s, %s)
-				 ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), last_seen = VALUES(last_seen)",
-				$hash,
-				sha1( $original ),
-				$original,
-				(string) $context,
-				$type,
-				$now,
-				$now
-			)
-		); // phpcs:ignore WordPress.DB
-
-		$id = (int) $wpdb->insert_id;
+		$id = self::find_or_create( $original, $type, $context );
 		if ( ! $id ) {
 			return false;
 		}
@@ -1528,14 +1509,17 @@ class Strings {
 	}
 
 	/**
-	 * Save a translation by its source text (find-or-create the string), marked as
-	 * a human edit. Used by the front-end visual editor. Returns true on success.
+	 * The id of a string, created if it is not there yet. 17/10/2026: it was one
+	 * «INSERT … ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)», which SQLite (WordPress
+	 * Playground, the live preview on wordpress.org, and SQLite sites) refuses: the visual
+	 * editor and the importers saved nothing there. Now an ordinary upsert, then the id is
+	 * read back by its hash — the same on MySQL, MariaDB and SQLite.
+	 *
+	 * @param string      $original Source text.
+	 * @param string      $type     String type.
+	 * @param string|null $context  Context.
 	 */
-	public static function save_by_source( string $original, string $lang, string $translation, string $type = 'text', ?string $context = null ): bool {
-		$original = trim( $original );
-		if ( '' === $original ) {
-			return false;
-		}
+	private static function find_or_create( string $original, string $type, ?string $context ): int {
 		global $wpdb;
 		$strings = Database::strings_table();
 		$hash    = self::hash( $original, $type, $context );
@@ -1544,7 +1528,7 @@ class Strings {
 			$wpdb->prepare(
 				"INSERT INTO {$strings} (string_hash, text_hash, original, context, type, first_seen, last_seen)
 				 VALUES (%s, %s, %s, %s, %s, %s, %s)
-				 ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), last_seen = VALUES(last_seen)",
+				 ON DUPLICATE KEY UPDATE last_seen = VALUES(last_seen)",
 				$hash,
 				sha1( $original ),
 				$original,
@@ -1554,7 +1538,19 @@ class Strings {
 				$now
 			)
 		); // phpcs:ignore WordPress.DB
-		$id = (int) $wpdb->insert_id;
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$strings} WHERE string_hash = %s", $hash ) ); // phpcs:ignore WordPress.DB
+	}
+
+	/**
+	 * Save a translation by its source text (find-or-create the string), marked as
+	 * a human edit. Used by the front-end visual editor. Returns true on success.
+	 */
+	public static function save_by_source( string $original, string $lang, string $translation, string $type = 'text', ?string $context = null ): bool {
+		$original = trim( $original );
+		if ( '' === $original ) {
+			return false;
+		}
+		$id = self::find_or_create( $original, $type, $context );
 		if ( ! $id ) {
 			return false;
 		}

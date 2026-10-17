@@ -47,4 +47,15 @@
 		}
 	} );
 	window.addEventListener( 'resize', close );
+
+	/* 17/10/2026: the Save bar of a settings form follows the scroll only when something changed and waits
+	   to be saved (CSS: form.trr-dirty .submit). Saving or reloading starts clean again. */
+	function segna( e ) {
+		var f = e.target && e.target.form ? e.target.form : ( e.target && e.target.closest ? e.target.closest( 'form' ) : null );
+		if ( f && f.closest && f.closest( '.trrocket-wrap' ) && f.querySelector( '.submit' ) ) {
+			f.classList.add( 'trr-dirty' );
+		}
+	}
+	document.addEventListener( 'input', segna, true );
+	document.addEventListener( 'change', segna, true );
 }() );
