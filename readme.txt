@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.10
+Stable tag: 1.8.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.11 =
+* Fixed: sentences nobody but the administrator ever sees were counted as «still to translate», and a fully translated site showed 63%: the labels of the editor WordPress loads for a signed-in admin (quicktags, links, media), the descriptions of the REST routes read by the dashboard in the admin's language, and sentences of a page rewritten weeks ago. None of them is collected any more, and when a page is read again whatever was last seen on it more than two days ago leaves its count. Sites that already have such sentences: open the page again as an administrator and they go.
+* Fixed: addresses, paths, domains, bare tags and language codes («https://…», «/de/», «<head>», «en-GB») were collected as sentences and, as nothing can translate them, kept every language short of 100%. They are left out now, and the ones already collected go with the update (those somebody translated stay).
+* Faster Translations screen: up to 200 pages the list is drawn at once and the search box, «Only pages still to translate» and the column sort work in the browser, with no request to the server — on a shared host each one used to wait for WordPress to start. Larger sites keep the 50-rows-at-a-time list.
 
 = 1.8.10 =
 * Faster suggestions in the search box: while a visitor types, the answers now come from a light endpoint (suggest.php) that starts only a slice of WordPress — no plugins, no theme — instead of the REST route, which on a shared host took 2–7 seconds, nearly all of it WordPress starting up. Measured on the same site: 0.2 s instead of 3–4 s, with exactly the same results. If a host blocks direct access to plugin files, the box falls back to the REST route by itself. The index keeps the address, title and kind of each page in a small new table, built once in the background after the update; the kind of page («Product», «Page») follows the language of the page.
@@ -445,6 +450,12 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.11 =
+Only what visitors see counts: no more admin-only or stale sentences in the percentages.
+
+= 1.8.10 =
+Search suggestions answer in a fraction of the time (light endpoint, REST fallback).
 
 = 1.8.10 =
 Search suggestions answer in a fraction of the time (light endpoint, REST fallback).

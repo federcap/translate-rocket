@@ -708,10 +708,16 @@ class Engine {
 					// Slider Revolution 7 draws its layers from this JSON, not from the HTML (1.8.8).
 					$this->extra_tokens[]       = $token;
 					$this->sr7_tokens[ $token ] = true;
-				} elseif ( 'script' === strtolower( $m[2] ) && preg_match( '#\bid\s*=\s*(["\']?)[\w-]+-js-(extra|before|after)\1#i', $m[1] ) ) {
+				} elseif ( 'script' === strtolower( $m[2] ) && preg_match( '#\bid\s*=\s*(["\']?)([\w-]+)-js-(extra|before|after)\1#i', $m[1], $h ) ) {
 					// -js-extra: wp_localize_script(); -js-before/-js-after: wp_add_inline_script()
 					// (Elementor's «var elementorFrontendConfig = {…}» with its i18n lives there).
-					$this->extra_tokens[] = $token;
+					// 18/10/2026 (translaterocket.com, Federico: «63%… the translation is complete»): the editor WordPress
+					// loads for a signed-in administrator — quicktags, wplink, the media library — handed its 32 labels
+					// («Close all open tags») to every page the admin opened, and they counted as missing in every
+					// language. Scripts of the admin side are never what a visitor reads: left alone.
+					if ( ! preg_match( '#^(quicktags|wplink|editor|wp-editor|media-(views|editor|models|audiovideo|grid)|wp-admin|admin-bar|heartbeat|wp-auth-check|autosave|word-count|common|utils|thickbox|password-strength-meter|customize-[\w-]+|wp-color-picker|wp-pointer|wp-api-fetch|wp-api-request|wp-i18n|wp-hooks|wp-polyfill[\w-]*|wp-emoji[\w-]*|comment-reply)$#i', $h[2] ) ) {
+						$this->extra_tokens[] = $token;
+					}
 				} elseif ( 'script' === strtolower( $m[2] ) && strlen( $m[3] ) <= 300000
 					&& ! preg_match( '#\bsrc\s*=#i', $m[1] )
 					&& self::is_js_type( $m[1] )
@@ -870,6 +876,19 @@ class Engine {
 		}
 		// Misure e parole chiave del CSS: "16px", "1.4em", "100%", "inherit".
 		if ( preg_match( '/^[\d.,\s]+(px|em|rem|pt|ex|ch|vh|vw|vmin|vmax|fr|%)$/i', $text ) ) {
+			return true;
+		}
+		// 18/10/2026 (translaterocket.com, Federico: «the count must reach 100%, or whoever runs a bulk translation
+		// thinks the plugin does not work»): an address, a path, a domain, a bare tag, a language code are not
+		// sentences — no engine can translate them and they stayed «missing» for ever: «https://…», «/de/»,
+		// «translaterocket.com/it/», «<head>», «en-GB», «x-default».
+		if ( preg_match( '#^(https?://|//)[^\s]+$#i', $text ) || preg_match( '#^/[\w\-./]*$#', $text ) || preg_match( '#^[\w-]+(\.[\w-]+)+(/[^\s]*)?$#', $text ) ) {
+			return true;
+		}
+		// A language code only with its region («en-GB», «pt-br», «x-default») or as a three-letter ISO code: a bare
+		// two-letter one («it», «no», «de») is a word in too many languages to be sure.
+		if ( preg_match( '/^<\/?[a-z][\w-]*(\s[^<>]*)?\/?>$/i', $text ) || preg_match( '/^[a-z]{2,3}-[a-z]{2,4}$/i', $text ) || 'x-default' === strtolower( $text )
+			|| in_array( strtolower( $text ), array( 'eng', 'ita', 'deu', 'fra', 'spa', 'por', 'nld', 'rus', 'jpn', 'zho', 'kor', 'ara', 'pol', 'tur', 'ukr', 'ell', 'ron', 'ind', 'vie', 'tha', 'hin' ), true ) ) {
 			return true;
 		}
 		if ( in_array( strtolower( $text ), array( 'inherit', 'initial', 'unset', 'revert' ), true ) ) {
@@ -2066,7 +2085,7 @@ class Engine {
 			$qid    = ( function_exists( 'is_singular' ) && is_singular() ) ? (int) get_queried_object_id() : 0;
 			$url    = $qid > 0 ? $router->canonical_path( $qid ) : $router->current_clean_path();
 			$title  = function_exists( 'wp_get_document_title' ) ? wp_strip_all_tags( wp_get_document_title() ) : '';
-			Strings::remember_batch( $collected, $this->secondary, $url, $title );
+			Strings::remember_batch( $collected, $this->secondary, $url, $title, true );
 			// This page has just been read: it is no longer waiting for a scan.
 			if ( $qid > 0 ) {
 				\TranslateRocket\Rescan::forget( $qid );

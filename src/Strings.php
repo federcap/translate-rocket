@@ -53,7 +53,7 @@ class Strings {
 	 * @param string                                                         $url       Source page path.
 	 * @param string                                                         $title     Source page title.
 	 */
-	public static function remember_batch( array $items, array $secondary, string $url = '', string $title = '' ): void {
+	public static function remember_batch( array $items, array $secondary, string $url = '', string $title = '', bool $whole_page = false ): void {
 		global $wpdb;
 
 		// De-duplicate within this page by hash.
@@ -142,6 +142,13 @@ class Strings {
 				. implode( ',', $place )
 				. ' ON DUPLICATE KEY UPDATE last_seen = VALUES(last_seen), title = VALUES(title)';
 			$wpdb->query( $wpdb->prepare( $sql, $vals ) ); // phpcs:ignore WordPress.DB
+			// 18/10/2026 (translaterocket.com /download/: 705 sentences of changelogs rewritten weeks ago still counted
+			// as the page's, 180 of them «missing»): when the whole page has just been read, what was last seen on it
+			// more than two days ago is no longer on it. Two days, not now: the pieces a page loads afterwards (a
+			// slider, a map, a form) are filed under the same address and recorded again at most once a day.
+			if ( $whole_page ) {
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$occurrences} WHERE url_hash = %s AND last_seen < %s", $url_hash, gmdate( 'Y-m-d H:i:s', (int) current_time( 'timestamp' ) - 2 * DAY_IN_SECONDS ) ) ); // phpcs:ignore WordPress.DB -- last_seen is site time, like $now
+			}
 		}
 
 		/**

@@ -6988,6 +6988,11 @@ JS;
 			return;
 		}
 		$count = count( $pages );
+		// 18/10/2026 (Federico, translaterocket.com: «the search is slow here too»): each letter typed asked the server, and on a
+		// shared host every answer waits for WordPress and the other plugins to start (1,5–2,5 s). Up to PAGES_LOCAL pages
+		// every row is drawn at once and the box, the «still to translate» tick and the sort work in the browser, with no
+		// request at all; beyond that (2,000-page sites, 14/10/2026) the server keeps serving 50 rows at a time.
+		$locale = $count <= (int) apply_filters( 'trrocket_pages_local', self::PAGES_LOCAL );
 		?>
 		<div class="trr-ptoolbar">
 			<input type="search" id="trr-psearch" class="regular-text" autocomplete="off"
@@ -6998,7 +7003,7 @@ JS;
 				printf(
 					/* translators: 1: number of visible pages, 2: total pages. */
 					esc_html__( 'Showing %1$s of %2$s pages', 'translate-rocket' ),
-					'<strong id="trr-pcount">' . (int) min( $count, self::PAGES_BLOCK ) . '</strong>',
+					'<strong id="trr-pcount">' . (int) ( $locale ? $count : min( $count, self::PAGES_BLOCK ) ) . '</strong>',
 					'<strong id="trr-ptotal">' . (int) $count . '</strong>'
 				);
 				?>
@@ -7021,7 +7026,7 @@ JS;
 			<?php wp_nonce_field( 'trrocket_rekept_page', 'trrocket_rekept_nonce' ); ?>
 			<input type="hidden" name="lang" value="<?php echo esc_attr( $lang ); ?>" />
 		</form>
-		<table class="widefat striped" id="trr-ptable" data-lang="<?php echo esc_attr( $lang ); ?>" data-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'trrocket_pages_rows' ) ); ?>" data-total="<?php echo (int) $count; ?>" data-block="<?php echo (int) self::PAGES_BLOCK; ?>">
+		<table class="widefat striped" id="trr-ptable" data-lang="<?php echo esc_attr( $lang ); ?>" data-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'trrocket_pages_rows' ) ); ?>" data-total="<?php echo (int) $count; ?>" data-block="<?php echo (int) self::PAGES_BLOCK; ?>" data-local="<?php echo $locale ? '1' : '0'; ?>">
 			<thead>
 				<tr>
 					<th class="trr-sortable" data-key="title" data-type="text"><?php esc_html_e( 'Page', 'translate-rocket' ); ?><span class="trr-arrow"></span></th>
@@ -7036,13 +7041,13 @@ JS;
 				<?php
 				// 14/10/2026 (Federico: «2,051 pages make the screen very heavy»): the first block only; search, filter,
 				// sort and «Show more» ask the server for the next ones (ajax_pages_rows).
-				foreach ( array_slice( $pages, 0, self::PAGES_BLOCK ) as $page ) {
+				foreach ( ( $locale ? $pages : array_slice( $pages, 0, self::PAGES_BLOCK ) ) as $page ) {
 					echo $this->page_row( $page, $lang, $per_motore, $riga_ok ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with esc_* in page_row().
 				}
 				?>
 			</tbody>
 		</table>
-		<p class="trr-pmore-wrap"<?php echo $count > self::PAGES_BLOCK ? '' : ' hidden'; ?>><button type="button" class="button" id="trr-pmore"><?php echo esc_html( sprintf( /* translators: %d: how many more pages are shown. */ __( 'Show %d more', 'translate-rocket' ), self::PAGES_BLOCK ) ); ?></button> <span class="spinner" id="trr-pspin"></span></p>
+		<p class="trr-pmore-wrap"<?php echo ( ! $locale && $count > self::PAGES_BLOCK ) ? '' : ' hidden'; ?>><button type="button" class="button" id="trr-pmore"><?php echo esc_html( sprintf( /* translators: %d: how many more pages are shown. */ __( 'Show %d more', 'translate-rocket' ), self::PAGES_BLOCK ) ); ?></button> <span class="spinner" id="trr-pspin"></span></p>
 
 		<?php
 		wp_add_inline_script( 'trrocket-admin-info', self::pages_list_js() );
@@ -7051,6 +7056,9 @@ JS;
 
 	/** Pages drawn at a time on the Translations screen. */
 	const PAGES_BLOCK = 50;
+
+	/** Up to this many pages the whole list is drawn at once and searched in the browser (1.8.11). */
+	const PAGES_LOCAL = 200;
 
 	/**
 	 * One row of the pages table (also drawn for «Show more», search and sort, through ajax_pages_rows()).
@@ -7241,11 +7249,40 @@ JS;
 	var more    = document.getElementById( 'trr-pmore' );
 	var spin    = document.getElementById( 'trr-pspin' );
 	var block   = parseInt( table.getAttribute( 'data-block' ), 10 ) || 50;
+	var locale  = '1' === table.getAttribute( 'data-local' );
 	var stato   = { key: '', dir: 'asc', next: Math.min( block, parseInt( table.getAttribute( 'data-total' ), 10 ) || 0 ), seq: 0 };
+
+	// 18/10/2026 (Federico: «the search is slow here too»): with every row already on the page, the box, the tick and
+	// the sort act on the rows themselves — nothing is asked of the server, so nothing waits for WordPress to start.
+	// Same rules as pages_filtered(): spaces count as hyphens, name and address both searched.
+	var attributi = { title: 'data-title', strings: 'data-strings', translated: 'data-translated', missing: 'data-missing', pct: 'data-pct' };
+	function filtraQui() {
+		var q = input.value.trim().toLowerCase().replace( / /g, '-' );
+		var soloDaFare = todo && todo.checked;
+		var righe = Array.prototype.slice.call( tbody.rows );
+		var n = 0;
+		righe.forEach( function ( r ) {
+			var ok = ( ! soloDaFare || parseInt( r.getAttribute( 'data-missing' ), 10 ) > 0 )
+				&& ( ! q || ( r.getAttribute( 'data-search' ) || '' ).replace( / /g, '-' ).indexOf( q ) !== -1 );
+			r.hidden = ! ok;
+			if ( ok ) { n++; }
+		} );
+		if ( stato.key && attributi[ stato.key ] ) {
+			var attr = attributi[ stato.key ], num = 'title' !== stato.key;
+			righe.sort( function ( a, b ) {
+				var x = a.getAttribute( attr ) || '', y = b.getAttribute( attr ) || '';
+				var c = num ? ( parseFloat( x ) || 0 ) - ( parseFloat( y ) || 0 ) : x.localeCompare( y );
+				return 'desc' === stato.dir ? -c : c;
+			} );
+			righe.forEach( function ( r ) { tbody.appendChild( r ); } );
+		}
+		if ( counter ) { counter.textContent = n; }
+	}
 
 	// 14/10/2026 (Federico: «with every page loaded the screen gets very heavy»): the server sends 50 rows at a
 	// time; the search box, «Only pages still to translate» and the column sort ask it again from the start.
 	function carica( daCapo ) {
+		if ( locale ) { filtraQui(); return; }
 		var mio = ++stato.seq;
 		var body = new URLSearchParams();
 		body.append( 'action', 'trrocket_pages_rows' );
@@ -7280,7 +7317,7 @@ JS;
 			} );
 	}
 	var attesa;
-	input.addEventListener( 'input', function () { clearTimeout( attesa ); attesa = setTimeout( function () { carica( true ); }, 300 ); } );
+	input.addEventListener( 'input', function () { clearTimeout( attesa ); if ( locale ) { carica( true ); return; } attesa = setTimeout( function () { carica( true ); }, 300 ); } );
 	input.addEventListener( 'keydown', function ( e ) { if ( 'Enter' === e.key ) { e.preventDefault(); clearTimeout( attesa ); carica( true ); } } );
 	if ( todo ) { todo.addEventListener( 'change', function () { carica( true ); } ); }
 	// 16/10/2026 (Federico: «coming back from a page it stays ticked but with every page»): back from the cache, the

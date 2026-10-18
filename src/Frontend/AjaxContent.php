@@ -256,6 +256,10 @@ class AjaxContent {
 		if ( is_user_logged_in() && ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
+		// 18/10/2026: an answer asked by a dashboard screen carries the dashboard's texts, not a page's.
+		if ( RestContent::from_admin() ) {
+			return false;
+		}
 		// Security audit 7/10/2026: a visitor's request only collects when it is a real admin-ajax
 		// action the site registers for guests (a map's markers) — never a page address dressed up
 		// with an «ajax» parameter (?em_ajax=1 on an invented search: its 404 text would be filed).

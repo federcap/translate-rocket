@@ -24,7 +24,7 @@ class Database {
 	/**
 	 * Schema version. Bump when the table structure changes.
 	 */
-	const DB_VERSION = '8'; // 6: the search index (14/10/2026); 7: visits per language (1.8.6); 8: the pages of the search index, for the light suggestions (1.8.10)
+	const DB_VERSION = '9'; // 6: the search index (14/10/2026); 7: visits per language (1.8.6); 8: the pages of the search index, for the light suggestions (1.8.10); 9: addresses, codes and tags collected as sentences removed (1.8.11)
 
 	/**
 	 * Source strings table name.
@@ -80,7 +80,43 @@ class Database {
 		self::backfill_text_hash();
 		self::remove_orphans();
 		self::remove_customer_details();
+		self::remove_untranslatable();
 		update_option( 'trrocket_db_version', self::DB_VERSION );
+	}
+
+	/**
+	 * Sentences that are not sentences (schema 9, 1.8.11): addresses, paths, domains, bare tags, language codes
+	 * collected before Engine::is_noise() learnt to leave them out. They can never be translated, so they kept
+	 * every language short of 100%. Only the ones nobody translated go; a row somebody did translate stays.
+	 */
+	public static function remove_untranslatable(): void {
+		global $wpdb;
+		$st  = self::strings_table();
+		$tr  = self::translations_table();
+		$occ = self::occurrences_table();
+		$ids = array();
+		$da  = 0;
+		do {
+			$righe = $wpdb->get_results( $wpdb->prepare( "SELECT id, original FROM {$st} WHERE id > %d AND type <> 'image' ORDER BY id ASC LIMIT 2000", $da ) ); // phpcs:ignore WordPress.DB
+			foreach ( (array) $righe as $r ) {
+				$da = (int) $r->id;
+				if ( \TranslateRocket\Frontend\Engine::is_noise( (string) $r->original ) ) {
+					$ids[] = (int) $r->id;
+				}
+			}
+		} while ( count( (array) $righe ) === 2000 );
+		foreach ( array_chunk( $ids, 500 ) as $parte ) {
+			$lista    = implode( ',', $parte );
+			$tradotte = $wpdb->get_col( "SELECT DISTINCT string_id FROM {$tr} WHERE string_id IN ({$lista}) AND status > 0 AND translation IS NOT NULL AND translation <> ''" ); // phpcs:ignore WordPress.DB
+			$via      = array_values( array_diff( $parte, array_map( 'intval', (array) $tradotte ) ) );
+			if ( empty( $via ) ) {
+				continue;
+			}
+			$lista = implode( ',', $via );
+			$wpdb->query( "DELETE FROM {$occ} WHERE string_id IN ({$lista})" ); // phpcs:ignore WordPress.DB
+			$wpdb->query( "DELETE FROM {$tr} WHERE string_id IN ({$lista})" ); // phpcs:ignore WordPress.DB
+			$wpdb->query( "DELETE FROM {$st} WHERE id IN ({$lista})" ); // phpcs:ignore WordPress.DB
+		}
 	}
 
 	/**

@@ -91,7 +91,12 @@ class RestContent {
 		// marker descriptions of WP Go Maps stayed in English for good (3/10/2026). Its texts are collected
 		// here. Never for other methods: a POST answer can carry what a visitor typed.
 		// Nor for answers about a person: a cart, an order, an account, a user — nor for a signed-in customer.
+		// 18/10/2026 (translaterocket.com: 1,977 «sentences» in Greek, Korean and German that no visitor ever saw —
+		// the descriptions of the REST routes, read by the dashboard while the admin's browser had those languages):
+		// nothing asked from wp-admin, nothing from the route index or a schema, is what a page shows.
 		$collect = 'GET' === $request->get_method()
+			&& '/' !== $route && '' !== $route
+			&& ! self::from_admin()
 			&& ! preg_match( '#/(users|cart|checkout|orders?|customers?|account|me|batch)(/|$)#i', $route )
 			&& ( ! is_user_logged_in() || current_user_can( 'manage_options' ) );
 		if ( $collect ) {
@@ -107,6 +112,15 @@ class RestContent {
 			$response->set_data( $data );
 		}
 		return $response;
+	}
+
+	/**
+	 * Was this answer asked by a dashboard screen (the block editor, a plugin's settings page), not by a
+	 * page of the site? Its texts are the dashboard's own, in the admin's language.
+	 */
+	public static function from_admin(): bool {
+		$ref = isset( $_SERVER['HTTP_REFERER'] ) ? (string) wp_unslash( $_SERVER['HTTP_REFERER'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		return '' !== $ref && false !== strpos( (string) wp_parse_url( $ref, PHP_URL_PATH ), '/wp-admin/' );
 	}
 
 	/**
