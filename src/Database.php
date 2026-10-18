@@ -24,7 +24,7 @@ class Database {
 	/**
 	 * Schema version. Bump when the table structure changes.
 	 */
-	const DB_VERSION = '7'; // 6: the search index (14/10/2026); 7: visits per language (1.8.6)
+	const DB_VERSION = '8'; // 6: the search index (14/10/2026); 7: visits per language (1.8.6); 8: the pages of the search index, for the light suggestions (1.8.10)
 
 	/**
 	 * Source strings table name.
@@ -59,7 +59,7 @@ class Database {
 	public static function missing_tables(): array {
 		global $wpdb;
 		$missing = array();
-		foreach ( array( self::strings_table(), self::translations_table(), self::occurrences_table(), \TranslateRocket\Frontend\Search::table(), \TranslateRocket\Stats::table() ) as $table ) {
+		foreach ( array( self::strings_table(), self::translations_table(), self::occurrences_table(), \TranslateRocket\Frontend\Search::table(), \TranslateRocket\Frontend\Search::posts_table(), \TranslateRocket\Stats::table() ) as $table ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- schema check, table name is internal.
 			$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
 			if ( $found !== $table ) {
@@ -291,6 +291,18 @@ class Database {
 			KEY string_id (string_id)
 		) {$charset};";
 
+		// The pages of the search index (8, 1.8.10): address, title and kind of every indexed page, so the light
+		// suggestions endpoint (suggest.php, loaded with SHORTINIT) can answer without WordPress's permalinks.
+		$posts     = \TranslateRocket\Frontend\Search::posts_table();
+		$sql_posts = "CREATE TABLE {$posts} (
+			post_id BIGINT UNSIGNED NOT NULL,
+			url TEXT NOT NULL,
+			title TEXT NOT NULL,
+			ptype VARCHAR(40) NOT NULL DEFAULT '',
+			label VARCHAR(100) NOT NULL DEFAULT '',
+			PRIMARY KEY  (post_id)
+		) {$charset};";
+
 		// Visits per language (7, 1.8.6): one row per day, language, page and browser language — no visitor data.
 		$stats     = \TranslateRocket\Stats::table();
 		$sql_stats = "CREATE TABLE {$stats} (
@@ -308,6 +320,7 @@ class Database {
 		dbDelta( $sql_translations );
 		dbDelta( $sql_occurrences );
 		dbDelta( $sql_search );
+		dbDelta( $sql_posts );
 		dbDelta( $sql_stats );
 
 		// If a table still isn't there, the plugin can't store anything — make that

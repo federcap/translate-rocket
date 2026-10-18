@@ -152,18 +152,30 @@
 			draw( memoria[ key ] );
 			return;
 		}
-		var sep = url.indexOf( '?' ) === -1 ? '?' : '&';
 		// 17/10/2026 (screenshots for Federico): on a slow host the answer takes a while and nothing showed
 		// that it was coming — a small wheel in the field while it travels.
 		box.classList.add( 'trrocket-search--loading' );
 		var fine = function () {
 			box.classList.remove( 'trrocket-search--loading' );
 		};
-		fetch( url + sep + 'q=' + encodeURIComponent( q ) + '&lang=' + encodeURIComponent( box.getAttribute( 'data-lang' ) || '' ) + '&types=' + encodeURIComponent( types ) + '&all=' + all + '&n=' + ( box.getAttribute( 'data-count' ) || '6' ), { credentials: 'same-origin' } )
-			.then( function ( r ) {
-				return r.ok ? r.json() : [];
-			} )
+		var dati = 'q=' + encodeURIComponent( q ) + '&lang=' + encodeURIComponent( box.getAttribute( 'data-lang' ) || '' ) + '&types=' + encodeURIComponent( types ) + '&all=' + all + '&n=' + ( box.getAttribute( 'data-count' ) || '6' );
+		// 1.8.10: the light endpoint (suggest.php) answers in a fraction of the time of the REST one, because it
+		// starts only a slice of WordPress. If a host blocks it, or it errs, the REST one takes over for the visit.
+		var leggero = box.getAttribute( 'data-light' );
+		var usaLeggero = leggero && ! window.trrNoLight;
+		var chiama = function ( u ) {
+			return fetch( u + ( u.indexOf( '?' ) === -1 ? '?' : '&' ) + dati, { credentials: 'same-origin' } ).then( function ( r ) {
+				if ( ! r.ok ) {
+					throw new Error( 'http ' + r.status );
+				}
+				return r.json();
+			} );
+		};
+		( usaLeggero ? chiama( leggero ).catch( function () { window.trrNoLight = true; return chiama( url ); } ) : chiama( url ) )
 			.then( function ( items ) {
+				if ( ! Array.isArray( items ) ) {
+					items = [];
+				}
 				memoria[ key ] = items;
 				if ( input.value.trim() === q ) {
 					fine();

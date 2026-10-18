@@ -49,6 +49,74 @@ class Search {
 	}
 
 	/**
+	 * The pages of the index: address, title and kind (1.8.10, for the light suggestions).
+	 */
+	public static function posts_table(): string {
+		global $wpdb;
+		return $wpdb->prefix . 'trrocket_search_posts';
+	}
+
+	/**
+	 * Option read by suggest.php, which runs without the rest of WordPress (SHORTINIT): the languages, their
+	 * addresses and the searchable kinds of page. Written when the settings change and when the index is built.
+	 */
+	const LIGHT = 'trrocket_search_light';
+
+	/**
+	 * Refresh what suggest.php needs to know (18/10/2026: the suggestions took 2–7 s on a shared host, all of it
+	 * WordPress and the other plugins starting up — the search itself took a tenth of a second).
+	 */
+	public static function light_snapshot(): void {
+		$router = Plugin::instance()->router();
+		if ( null === $router ) {
+			return;
+		}
+		$bases = array();
+		foreach ( $router->public_languages() as $l ) {
+			$bases[ $l ] = $router->language_base( $l );
+		}
+		// The kind of page («Product», «Page») in every language: the REST route gets it from the request's
+		// locale; suggest.php cannot, so each label is translated here through every loaded text domain.
+		$labels = array();
+		$tipi   = array();
+		foreach ( self::post_types() as $t ) {
+			$o          = get_post_type_object( $t );
+			$tipi[ $t ] = $o ? (string) $o->labels->singular_name : $t;
+		}
+		foreach ( $router->public_languages() as $l ) {
+			$locale = \TranslateRocket\Languages::locale( $l );
+			$cambia = '' !== $locale && $locale !== get_locale() && function_exists( 'switch_to_locale' ) && switch_to_locale( $locale );
+			foreach ( $tipi as $t => $label ) {
+				$tradotto = $label;
+				foreach ( array_merge( array( 'default' ), array_keys( (array) ( $GLOBALS['l10n'] ?? array() ) ) ) as $dominio ) {
+					$x = translate( $label, (string) $dominio ); // phpcs:ignore WordPress.WP.I18n -- the label's own domain is unknown
+					if ( $x !== $label ) {
+						$tradotto = (string) $x;
+						break;
+					}
+				}
+				$labels[ $t ][ $l ] = $tradotto;
+			}
+			if ( $cambia ) {
+				restore_previous_locale();
+			}
+		}
+		update_option(
+			self::LIGHT,
+			array(
+				'v'       => 2,
+				'enabled' => self::enabled() ? 1 : 0,
+				'home'    => rtrim( (string) get_option( 'home' ), '/' ),
+				'default' => (string) $router->default_language(),
+				'langs'   => $router->public_languages(),
+				'bases'   => $bases,
+				'labels'  => $labels,
+			),
+			false
+		);
+	}
+
+	/**
 	 * On unless switched off in the settings (or by the filter).
 	 */
 	public static function enabled(): bool {
@@ -63,6 +131,7 @@ class Search {
 		add_action( 'trashed_post', array( __CLASS__, 'forget' ) );
 		add_action( self::CRON, array( __CLASS__, 'build_batch' ) );
 		add_action( 'init', array( __CLASS__, 'schedule' ), 30 );
+		add_action( 'update_option_' . Settings::OPTION, array( __CLASS__, 'light_snapshot' ) );
 	}
 
 	/* ------------------------------------------------------------------ index */
@@ -73,9 +142,13 @@ class Search {
 	public static function schedule(): void {
 		// 1.8.9: the index now also knows pages by their title and excerpt before anyone opened them (products
 		// added later): built once more, in the same small background batches.
-		if ( '2' !== (string) get_option( 'trrocket_search_index_v' ) ) {
-			update_option( 'trrocket_search_index_v', '2', false );
+		// 1.8.10: built once more to fill the pages table (address, title, kind) the light suggestions read.
+		if ( '3' !== (string) get_option( 'trrocket_search_index_v' ) ) {
+			update_option( 'trrocket_search_index_v', '3', false );
 			delete_option( self::CURSOR );
+		}
+		if ( ! is_array( get_option( self::LIGHT ) ) ) {
+			self::light_snapshot();
 		}
 		if ( 'done' === get_option( self::CURSOR ) || wp_next_scheduled( self::CRON ) ) {
 			return;
@@ -106,6 +179,7 @@ class Search {
 		}
 		if ( count( (array) $ids ) < self::BATCH ) {
 			update_option( self::CURSOR, 'done', false );
+			self::light_snapshot();
 			return;
 		}
 		update_option( self::CURSOR, (int) end( $ids ), false );
@@ -154,6 +228,7 @@ class Search {
 	public static function forget( $id ): void {
 		global $wpdb;
 		$wpdb->delete( self::table(), array( 'post_id' => (int) $id ), array( '%d' ) ); // phpcs:ignore WordPress.DB
+		$wpdb->delete( self::posts_table(), array( 'post_id' => (int) $id ), array( '%d' ) ); // phpcs:ignore WordPress.DB
 	}
 
 	/**
@@ -179,6 +254,19 @@ class Search {
 		if ( ! $link ) {
 			return 0;
 		}
+		// The page itself, for suggest.php: it cannot ask WordPress for permalinks or post types.
+		$tipo = get_post_type_object( $post->post_type );
+		$wpdb->replace(
+			self::posts_table(),
+			array(
+				'post_id' => $id,
+				'url'     => (string) $link,
+				'title'   => (string) $post->post_title,
+				'ptype'   => (string) $post->post_type,
+				'label'   => $tipo ? (string) $tipo->labels->singular_name : (string) $post->post_type,
+			),
+			array( '%d', '%s', '%s', '%s', '%s' )
+		); // phpcs:ignore WordPress.DB
 		$paths = array_unique( array_filter( array( wp_make_link_relative( $link ), (int) get_option( 'page_on_front' ) === $id ? '/' : '' ) ) );
 		$occ   = Database::occurrences_table();
 		$st    = Database::strings_table();

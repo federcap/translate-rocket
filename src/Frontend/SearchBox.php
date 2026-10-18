@@ -429,7 +429,9 @@ class SearchBox {
 		}
 		$nascosti .= '<input type="hidden" name="' . ( $tutte ? 'trr_one' : 'trr_all' ) . '" value="1" class="trrocket-search-lang" disabled />';
 
-		$dati = $suggest ? ' data-suggest="' . esc_url( rest_url( 'translaterocket/v1/suggest' ) ) . '" data-lang="' . esc_attr( self::lang() ) . '" data-count="' . (int) $s['count'] . '" data-types="' . esc_attr( implode( ',', $tipi ) ) . '" data-all="' . ( $tutte ? '1' : '0' ) . '"' : '';
+		// 1.8.10: the light endpoint first (suggest.php, SHORTINIT: no plugins, no theme), the REST one if it fails.
+		$leggero = $suggest && is_array( get_option( Search::LIGHT ) ) && \TranslateRocket\Database::DB_VERSION === get_option( 'trrocket_db_version' ) && apply_filters( 'trrocket_search_light', true ) ? ' data-light="' . esc_url( TRROCKET_URL . 'suggest.php' ) . '"' : '';
+		$dati = $suggest ? $leggero . ' data-suggest="' . esc_url( rest_url( 'translaterocket/v1/suggest' ) ) . '" data-lang="' . esc_attr( self::lang() ) . '" data-count="' . (int) $s['count'] . '" data-types="' . esc_attr( implode( ',', $tipi ) ) . '" data-all="' . ( $tutte ? '1' : '0' ) . '"' : '';
 		$form = '<form role="search" method="get" class="trrocket-search-form" action="' . esc_url( $act ) . '">'
 			. '<div class="trrocket-search-row">'
 			. '<label class="trrocket-search-label" for="' . esc_attr( $id ) . '"' . $no . '>' . esc_html( $parola ) . '</label>'

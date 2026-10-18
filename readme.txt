@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.9
+Stable tag: 1.8.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.10 =
+* Faster suggestions in the search box: while a visitor types, the answers now come from a light endpoint (suggest.php) that starts only a slice of WordPress — no plugins, no theme — instead of the REST route, which on a shared host took 2–7 seconds, nearly all of it WordPress starting up. Measured on the same site: 0.2 s instead of 3–4 s, with exactly the same results. If a host blocks direct access to plugin files, the box falls back to the REST route by itself. The index keeps the address, title and kind of each page in a small new table, built once in the background after the update; the kind of page («Product», «Page») follows the language of the page.
 
 = 1.8.9 =
 * Fixed: on WordPress Playground (the «Live Preview» on wordpress.org) and on any site that runs on SQLite, a sentence corrected in the visual editor and the translations brought in by the importers were not saved: one database query was MySQL-only. It now works the same on MySQL, MariaDB and SQLite. The Live Preview also opens on a demo page already translated into Italian, Spanish, German and French.
@@ -442,6 +445,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.10 =
+Search suggestions answer in a fraction of the time (light endpoint, REST fallback).
 
 = 1.8.9 =
 Editor and imports now save on SQLite and in the wordpress.org Live Preview; the search box in block-theme menus; language names readable in the phone menu; search and Save-bar fixes.
