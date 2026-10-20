@@ -69,6 +69,7 @@ class Router {
 			add_filter( 'term_link', array( $this, 'filter_term_link' ), 20, 3 );
 			add_filter( 'request', array( $this, 'resolve_request' ) );
 			add_filter( 'redirect_canonical', array( $this, 'filter_canonical' ) );
+			add_action( 'template_redirect', array( $this, 'redirect_source_slug' ), 1 );
 
 			// While WP core parses the request it strips the home-URL path from the
 			// requested path with an UNANCHORED-to-segment regex (preg_replace
@@ -890,12 +891,113 @@ class Router {
 		if ( '' === $path || '/' === $path || false !== strpos( basename( $path ), '.' ) ) {
 			return false; // the language home, or a file
 		}
+		// 20/10/2026 (a user, with a button linking «/inizia-da-qui»: «an English visitor ends up on
+		// /en/inizia-da-qui»): a page with a translated slug answered on its source slug too, with a canonical
+		// pointing at the translated one and an hreflang at the source one. A plain visit to the source slug
+		// now moves, 301, to the translated address — the one the switcher, the sitemap and canonical give.
+		$tradotto = $this->source_slug_target();
+		if ( '' !== $tradotto ) {
+			return $tradotto;
+		}
 		$wants_slash = '/' === substr( (string) get_option( 'permalink_structure' ), -1 );
 		$has_slash   = '/' === substr( $path, -1 );
 		if ( $wants_slash === $has_slash ) {
 			return false;
 		}
 		return $this->language_base( $lang ) . ( $wants_slash ? $path . '/' : rtrim( $path, '/' ) );
+	}
+
+	/**
+	 * Post id of each path translated_link_path() looked up in this request.
+	 *
+	 * @var array<string,int>
+	 */
+	private $link_ids = array();
+
+	/**
+	 * Where a page reached through its source slug in a secondary language belongs (its translated
+	 * address), or '' when it is already there. Only for a plain GET without a query, outside previews.
+	 */
+	public function source_slug_target(): string {
+		$lang = $this->current_language();
+		if ( $this->is_default( $lang ) || '' !== $this->query || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || \TranslateRocket\Frontend\Preview::language_blocked() ) {
+			return '';
+		}
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( (string) $_SERVER['REQUEST_METHOD'] ) : 'GET'; // phpcs:ignore
+		$qid    = ( function_exists( 'is_singular' ) && is_singular() ) ? (int) get_queried_object_id() : 0;
+		$path   = (string) $this->clean_path;
+		if ( $qid <= 0 || ! in_array( $method, array( 'GET', 'HEAD' ), true ) || '' === $path || '/' === $path ) {
+			return '';
+		}
+		$tradotto = $this->translated_link_path( $path, $lang );
+		// Only when the address visited IS the source slug of the page being shown. When a translated slug of
+		// another page equals it (page A translated to «prezzi», page B whose own slug is «prezzi»), the request was
+		// resolved to that other page and must stay where it is (20/10/2026, found reading WPML 5.0.2's fix).
+		$solo = (string) preg_replace( '/[?#].*$/', '', $path );
+		if ( $tradotto === $path || (int) ( $this->link_ids[ $solo ] ?? 0 ) !== $qid ) {
+			return '';
+		}
+		$wants_slash = '/' === substr( (string) get_option( 'permalink_structure' ), -1 );
+		$tradotto    = $wants_slash ? rtrim( $tradotto, '/' ) . '/' : rtrim( $tradotto, '/' );
+		return $this->language_base( $lang ) . $tradotto;
+	}
+
+	/**
+	 * The redirect itself (template_redirect): WordPress calls redirect_canonical's filter only when it
+	 * wants to move the page anyway, so a source-slug address that is already «canonical» for it needs its own.
+	 */
+	public function redirect_source_slug(): void {
+		if ( is_admin() || is_preview() || ( function_exists( 'is_customize_preview' ) && is_customize_preview() ) ) {
+			return;
+		}
+		$dove = $this->source_slug_target();
+		if ( '' !== $dove ) {
+			wp_safe_redirect( $dove, 301, 'TranslateRocket' );
+			exit;
+		}
+	}
+
+	/**
+	 * A path of this site (no language prefix) with the target post's own slug swapped for its translated slug in
+	 * a language — «/inizia-da-qui/» becomes «/start-here/» in English — or unchanged when the path is not a
+	 * post or page, or the page has no translated slug there. Used for the links inside translated pages and
+	 * for the redirect of a source-slug address. Kept per request: a page can link the same page many times.
+	 *
+	 * @param string $path Path, starting with «/», with no language prefix (query and fragment allowed).
+	 * @param string $lang Language.
+	 */
+	public function translated_link_path( string $path, string $lang ): string {
+		static $fatti = array();
+		if ( $this->is_default( $lang ) || '' === $path || '/' === $path ) {
+			return $path;
+		}
+		$solo  = (string) preg_replace( '/[?#].*$/', '', $path );
+		$resto = (string) substr( $path, strlen( $solo ) );
+		$k     = $lang . '|' . $solo;
+		if ( ! isset( $fatti[ $k ] ) ) {
+			$fatti[ $k ] = $solo;
+			$id          = 0;
+			remove_filter( 'home_url', array( $this, 'filter_home_url' ), 10 );
+			if ( function_exists( 'url_to_postid' ) ) {
+				$id = (int) url_to_postid( rtrim( (string) get_option( 'home' ), '/' ) . $solo );
+			}
+			add_filter( 'home_url', array( $this, 'filter_home_url' ), 10, 2 );
+			$this->link_ids[ $solo ] = $id;
+			if ( $id > 0 ) {
+				// Sanitized again on the way out (it ends up in an href and a Location header), and only for a published
+				// page: a link to a draft, a private or a trashed page keeps the address it was written with.
+				$slug = sanitize_title( Slugs::get( $id, $lang ) );
+				$post = get_post( $id );
+				if ( '' !== $slug && $post && 'publish' === $post->post_status && '' !== (string) $post->post_name && $slug !== $post->post_name ) {
+					$ago = '/' . $post->post_name . '/';
+					$pos = strrpos( $solo . ( '/' === substr( $solo, -1 ) ? '' : '/' ), $ago );
+					if ( false !== $pos ) {
+						$fatti[ $k ] = substr( $solo, 0, $pos ) . '/' . $slug . substr( $solo, $pos + strlen( $ago ) - 1 );
+					}
+				}
+			}
+		}
+		return $fatti[ $k ] . $resto;
 	}
 
 	/**

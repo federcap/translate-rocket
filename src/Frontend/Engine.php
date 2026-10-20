@@ -887,7 +887,9 @@ class Engine {
 		}
 		// A language code only with its region («en-GB», «pt-br», «x-default») or as a three-letter ISO code: a bare
 		// two-letter one («it», «no», «de») is a word in too many languages to be sure.
-		if ( preg_match( '/^<\/?[a-z][\w-]*(\s[^<>]*)?\/?>$/i', $text ) || preg_match( '/^[a-z]{2,3}-[a-z]{2,4}$/i', $text ) || 'x-default' === strtolower( $text )
+		// 20/10/2026: also a code example made only of tags («<link rel="alternate" hreflang="en" … /> <link …/>»):
+		// nothing in it is a word to translate, and no engine may change it.
+		if ( preg_match( '/^(\s*<\/?[a-z][\w-]*(\s[^<>]*)?\/?>)+\s*$/i', $text ) || preg_match( '/^[a-z]{2,3}-[a-z]{2,4}$/i', $text ) || 'x-default' === strtolower( $text )
 			|| in_array( strtolower( $text ), array( 'eng', 'ita', 'deu', 'fra', 'spa', 'por', 'nld', 'rus', 'jpn', 'zho', 'kor', 'ara', 'pol', 'tur', 'ukr', 'ell', 'ron', 'ind', 'vie', 'tha', 'hin' ), true ) ) {
 			return true;
 		}
@@ -1256,6 +1258,12 @@ class Engine {
 		// A language on a domain of its own (mywebsite.de): no /de/ prefix. A root-relative link is
 		// already right (the browser resolves it on that domain); an absolute one moves to the domain.
 		$router = Plugin::instance()->router();
+		// 20/10/2026: the target page's translated slug, not only the language prefix (/it/albergo-aurora/, not
+		// /it/aurora/): the link lands where the switcher, canonical and hreflang point. Only the path is
+		// looked at; the query and the fragment stay as written.
+		if ( null !== $router ) {
+			$rest = $router->translated_link_path( $rest, $current );
+		}
 		if ( null !== $router && $router->has_own_domain( $current ) ) {
 			return isset( $parts['host'] ) ? $router->language_base( $current ) . $rest . $suffix : $href;
 		}

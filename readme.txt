@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.11
+Stable tag: 1.8.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,7 +43,7 @@ You translate however you like:
 * 📊 **Visits per language, without cookies** — how many visits each language gets, its most read pages and the languages your visitors' browsers ask for, so you know which language to translate next.
 * 🍪 **Cookie banners in the visitor's language** — Complianz, CookieYes, iubenda, Cookiebot and Usercentrics show their banner in the language of the page, and their legal texts are never machine-translated.
 * 💳 **Checkout and e-mails in the customer's language** — the WooCommerce checkout (Stripe tested), the order e-mails and the e-mails of form plugins (WPForms, Contact Form 7, Fluent Forms, Ninja Forms, Gravity Forms) reach each visitor in the language they used. WooCommerce lists TranslateRocket as compatible with High-Performance Order Storage and with the Cart and Checkout blocks.
-* 🆓 **MyMemory, free** — one more free engine with no key: about 5,000 characters a day, about 50,000 with just an e-mail address.
+* 🆓 **Free AI on your own free account** — Groq, Cloudflare Workers AI or OpenRouter’s free models, with a two-minute guide to the key and no card; and, with the free Labs add-on, MyMemory with no key at all (about 5,000 characters a day, about 50,000 with an e-mail address).
 * 🔑 **No API key required — and not just "by hand".** Chrome and Edge translate the whole site automatically, on your own computer, for free. Or do it by hand in the visual editor, or free with Google Translate, and edit any translation later. There is no signup, no account and no key to create — AI providers are optional and only used if you add one yourself.
 * 🌍 **Unlimited languages** (36 built in), 100% free. Donations welcome, never required.
 * ⚡ **Built for huge sites**: past ~20,000 strings the engine switches by itself to indexed per-page lookups — flat memory and the same render time at 500 or 500,000 strings (load-tested), where map-loading translation plugins hit the PHP memory limit.
@@ -220,6 +220,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.12 =
+* Fixed: links inside translated pages now use the translated slug of the page they point to — a button to «/start-here/» leads an Italian visitor to «/it/inizia-da-qui/», not «/it/start-here/». The source-slug address, if someone still reaches it, moves there with a 301, so canonical, hreflang, the switcher and the sitemap all name the same page. Thanks to Tommaso for reporting it.
+* Fixed: in the Simple view, «Translate» next to a language only opened the Translations screen, and nothing seemed to happen. It now starts the translation with the engine in the menu.
+* Fixed: the percentages count only sentences that are on a page of the site. Sentences of pages rewritten or deleted, and pieces of pages read directly through the REST API by crawlers, kept a fully translated site below 100%. «Translate all missing» skips them too, so no engine time goes to text nobody sees.
+* Fixed: a code example made only of tags (an hreflang snippet in a tutorial) is not a sentence any more; ones already collected go with the update.
 
 = 1.8.11 =
 * Fixed: sentences nobody but the administrator ever sees were counted as «still to translate», and a fully translated site showed 63%: the labels of the editor WordPress loads for a signed-in admin (quicktags, links, media), the descriptions of the REST routes read by the dashboard in the admin's language, and sentences of a page rewritten weeks ago. None of them is collected any more, and when a page is read again whatever was last seen on it more than two days ago leaves its count. Sites that already have such sentences: open the page again as an administrator and they go.
@@ -450,6 +456,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.12 =
+Internal links follow translated slugs; «Translate» in the Simple view starts translating; percentages reach 100% when everything visible is translated.
 
 = 1.8.11 =
 Only what visitors see counts: no more admin-only or stale sentences in the percentages.

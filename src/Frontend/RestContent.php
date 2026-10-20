@@ -96,7 +96,7 @@ class RestContent {
 		// nothing asked from wp-admin, nothing from the route index or a schema, is what a page shows.
 		$collect = 'GET' === $request->get_method()
 			&& '/' !== $route && '' !== $route
-			&& ! self::from_admin()
+			&& self::from_site_page()
 			&& ! preg_match( '#/(users|cart|checkout|orders?|customers?|account|me|batch)(/|$)#i', $route )
 			&& ( ! is_user_logged_in() || current_user_can( 'manage_options' ) );
 		if ( $collect ) {
@@ -121,6 +121,20 @@ class RestContent {
 	public static function from_admin(): bool {
 		$ref = isset( $_SERVER['HTTP_REFERER'] ) ? (string) wp_unslash( $_SERVER['HTTP_REFERER'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		return '' !== $ref && false !== strpos( (string) wp_parse_url( $ref, PHP_URL_PATH ), '/wp-admin/' );
+	}
+
+	/**
+	 * Was this answer asked by a page of this site (its script loading a map, a slider, more posts)? 20/10/2026
+	 * (translaterocket.com, the day after it reached 99%): crawlers reading /it/wp-json/wp/v2/pages directly
+	 * filed whole pages, cut into pieces, as «content loaded by the page» — 43 new «missing» sentences in two days
+	 * that no visitor ever sees. A request with no page of this site behind it is not what a visitor reads.
+	 */
+	public static function from_site_page(): bool {
+		$ref = isset( $_SERVER['HTTP_REFERER'] ) ? (string) wp_unslash( $_SERVER['HTTP_REFERER'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		if ( '' === $ref || self::from_admin() ) {
+			return false;
+		}
+		return 0 === strcasecmp( (string) wp_parse_url( $ref, PHP_URL_HOST ), (string) wp_parse_url( (string) get_option( 'home' ), PHP_URL_HOST ) );
 	}
 
 	/**

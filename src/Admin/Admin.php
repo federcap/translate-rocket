@@ -3767,6 +3767,23 @@ JS;
 					if(go&&box&&box.offsetParent!==null&&!go.disabled&&!box.querySelector('#trr-browser-fallback:not([hidden])')){box.scrollIntoView({behavior:'smooth',block:'center'});go.click();}
 					else if(nob){nob.hidden=false;}
 				});
+				// 20/10/2026 (a user on Firefox with a Groq key left after 4 minutes: «It literally did nothing»): the Simple
+				// view says «press Translate next to a language», and that button only opened this screen — the translation
+				// itself needed a second button. Arriving from it (?trr_go=1) the translation starts by itself with the engine
+				// in the menu; when that engine first asks to accept its conditions, the box is shown and the user ticks it.
+				try{
+					var qs=new URLSearchParams(location.search);
+					if('1'===qs.get('trr_go')){
+						qs.delete('trr_go');history.replaceState(null,'',location.pathname+(qs.toString()?'?'+qs.toString():'')+location.hash);
+						var g0=document.getElementById('trr-engine-go');
+						if(g0&&!g0.disabled){
+							f.scrollIntoView({behavior:'smooth',block:'start'});
+							var cb=ack&&!ack.hidden?ack.querySelector('input'):null;
+							if(cb&&!cb.checked){cb.focus();}
+							else{setTimeout(function(){if(f.requestSubmit){f.requestSubmit(g0);}else{g0.click();}},400);}
+						}
+					}
+				}catch(e){}
 			})();
 JS;
 	}
@@ -6300,7 +6317,8 @@ JS;
 										<?php endif; ?>
 									</td>
 									<td class="trr-lang-state-go">
-										<a class="button button-small<?php echo $manca > 0 ? ' button-primary' : ''; ?>" href="<?php echo esc_url( $vai ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>
+										<?php // 20/10/2026: «Translate» translates — the Translations screen starts by itself (trr_go, see engine_js()). ?>
+										<a class="button button-small<?php echo $manca > 0 ? ' button-primary' : ''; ?>" href="<?php echo esc_url( $manca > 0 ? add_query_arg( 'trr_go', '1', $vai ) : $vai ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>
 									</td>
 									<td class="trr-lang-state-switch">
 										<span class="trr-state-pill trr-state-yes"><?php esc_html_e( 'online', 'translate-rocket' ); ?></span>

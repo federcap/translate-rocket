@@ -24,7 +24,8 @@ class Database {
 	/**
 	 * Schema version. Bump when the table structure changes.
 	 */
-	const DB_VERSION = '9'; // 6: the search index (14/10/2026); 7: visits per language (1.8.6); 8: the pages of the search index, for the light suggestions (1.8.10); 9: addresses, codes and tags collected as sentences removed (1.8.11)
+	const DB_VERSION = '10'; // 10: the clean-up of schema 9 once more, with code examples made only of tags (1.8.12)
+	// 6: the search index (14/10/2026); 7: visits per language (1.8.6); 8: the pages of the search index, for the light suggestions (1.8.10); 9: addresses, codes and tags collected as sentences removed (1.8.11)
 
 	/**
 	 * Source strings table name.

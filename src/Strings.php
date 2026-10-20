@@ -207,19 +207,24 @@ class Strings {
 		// address is not text to translate (it can be swapped per language, if wanted). Counted here,
 		// a site translated in full read «14 strings still to translate — 89%» for ever, next to a
 		// button saying «Everything is translated» (4/10/2026: the 14 were the logo and photos).
-		$strings  = Database::strings_table();
-		$detected = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$strings} WHERE type <> 'image'" ); // phpcs:ignore WordPress.DB
+		$strings     = Database::strings_table();
+		$occurrences = Database::occurrences_table();
+		// 18/10/2026 (translaterocket.com, Federico: «the count must reach 100%»): a sentence that is on no page
+		// any more — a changelog line rewritten, a paragraph deleted, text of a page taken off the list — kept its
+		// row and its translations, and 887 of them counted as the site's: 269 «missing» for ever. What counts
+		// is what is on the pages: a sentence with at least one page to its name. The rows stay (an old
+		// translation comes back the day the sentence does); they just do not count.
+		$detected = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$strings} s WHERE s.type <> 'image' AND EXISTS ( SELECT 1 FROM {$occurrences} o WHERE o.string_id = s.id )" ); // phpcs:ignore WordPress.DB
 
-		// Only translations whose string still exists: a translation left behind by a
+		// Only translations whose string still exists and is on a page: a translation left behind by a
 		// deleted string (a page reset, an old test) made «translated» bigger than
 		// «detected», and «missing» clamped to 0 — the guide said «Everything is
 		// translated» with a new phrase still waiting (30/09/2026).
-		// The list of sentences that are not images read once (same count as joining row by row, a third faster).
 		$translated = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$translations} tr
 				 WHERE tr.language = %s AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''
-				   AND tr.string_id IN ( SELECT /*+ SUBQUERY(MATERIALIZATION) */ s.id FROM {$strings} s WHERE s.type <> 'image' )",
+				   AND tr.string_id IN ( SELECT /*+ SUBQUERY(MATERIALIZATION) */ s.id FROM {$strings} s WHERE s.type <> 'image' AND EXISTS ( SELECT 1 FROM {$occurrences} o WHERE o.string_id = s.id ) )",
 				$lang
 			)
 		); // phpcs:ignore WordPress.DB
@@ -598,12 +603,16 @@ class Strings {
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
 
+		$occurrences  = Database::occurrences_table();
+
+		// Only sentences that are on a page (18/10/2026, see language_stats_now()).
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*)
 				 FROM {$strings} st
 				 LEFT JOIN {$translations} tr ON tr.string_id = st.id AND tr.language = %s
 				 WHERE st.type <> 'image'
+				   AND EXISTS ( SELECT 1 FROM {$occurrences} o WHERE o.string_id = st.id )
 				   AND ( tr.id IS NULL OR tr.status = 0 OR tr.translation IS NULL OR tr.translation = '' )",
 				$lang
 			)
@@ -631,12 +640,15 @@ class Strings {
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
 
+		$occurrences  = Database::occurrences_table();
+
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*)
 				 FROM {$strings} st
 				 INNER JOIN {$translations} tr ON tr.string_id = st.id AND tr.language = %s
 				 WHERE st.type <> 'image'
+				   AND EXISTS ( SELECT 1 FROM {$occurrences} o WHERE o.string_id = st.id )
 				   AND tr.status <> 0
 				   AND tr.translation IS NOT NULL
 				   AND tr.translation <> ''",
@@ -656,6 +668,7 @@ class Strings {
 		global $wpdb;
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
+		$occurrences  = Database::occurrences_table();
 
 		return $wpdb->get_results(
 			$wpdb->prepare(
@@ -666,7 +679,10 @@ class Strings {
 				 -- file, e mandarlo a un traduttore lo storpierebbe facendo
 				 -- sparire l'immagine dalla pagina. Si cambiano a mano, con il
 				 -- selettore nell'editor visuale.
+				 -- 18/10/2026: e restano fuori le frasi che non stanno su nessuna pagina (vedi language_stats_now):
+				 -- tradurle costerebbe e non si vedrebbero mai.
 				 WHERE st.type <> 'image'
+				   AND EXISTS ( SELECT 1 FROM {$occurrences} o WHERE o.string_id = st.id )
 				   AND ( tr.id IS NULL OR tr.status = 0 OR tr.translation IS NULL OR tr.translation = '' )
 				 ORDER BY st.id ASC
 				 LIMIT %d",
