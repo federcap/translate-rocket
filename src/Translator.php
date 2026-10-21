@@ -110,6 +110,63 @@ class Translator {
 	 * @return array{ok:bool,count:int,error:string,more:bool}
 	 */
 	public static function translate_missing( string $lang, string $url_hash = '', int $batch = 0, bool $migliora = false, string $solo = '', float $deadline = 0.0 ): array {
+		// 1.8.14 (ticket #22, a 2-core server: three PHP processes translating at once, load 9.6): one translation at a time
+		// on the site. «Translate all» in the browser, Labs in the background, a second tab: whoever finds it busy gets
+		// «busy» and comes back in a few seconds. A lock older than 150 s (a process killed) is taken over.
+		if ( ! self::lock() ) {
+			return array( 'ok' => true, 'count' => 0, 'error' => '', 'more' => true, 'busy' => true );
+		}
+		// The maps are flushed once at the end of the step, not after every sentence saved.
+		Strings::defer_start();
+		try {
+			return self::translate_missing_now( $lang, $url_hash, $batch, $migliora, $solo, $deadline );
+		} finally {
+			Strings::defer_end();
+			self::unlock();
+		}
+	}
+
+	/** @var int Nested translate_missing() calls in this request: the lock is taken by the first. */
+	private static $locks = 0;
+
+	/**
+	 * Take the site's translation lock (see translate_missing).
+	 */
+	private static function lock(): bool {
+		if ( self::$locks > 0 ) {
+			++self::$locks;
+			return true;
+		}
+		$now = time();
+		if ( ! add_option( 'trrocket_translating', $now, '', 'no' ) ) {
+			$preso = (int) get_option( 'trrocket_translating', 0 );
+			if ( $now - $preso < 150 ) {
+				return false;
+			}
+			update_option( 'trrocket_translating', $now, false );
+		}
+		self::$locks = 1;
+		return true;
+	}
+
+	/**
+	 * Give the lock back.
+	 */
+	private static function unlock(): void {
+		if ( self::$locks <= 0 ) {
+			return;
+		}
+		if ( --self::$locks === 0 ) {
+			delete_option( 'trrocket_translating' );
+		}
+	}
+
+	/**
+	 * translate_missing() itself, inside one deferred flush.
+	 *
+	 * @return array
+	 */
+	private static function translate_missing_now( string $lang, string $url_hash = '', int $batch = 0, bool $migliora = false, string $solo = '', float $deadline = 0.0 ): array {
 		// The whole configured fallback chain, in priority order. If the first
 		// provider runs out of credit (or its key is rejected) mid-job, the next
 		// one takes over — a big translation can span several accounts.

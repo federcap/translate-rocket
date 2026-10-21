@@ -7059,3 +7059,32 @@ msgstr "第一次来这里？"
 #: src/Admin/Admin.php
 msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
 msgstr "可选。给两个或更多提供商设定优先级，即可组成后备链：批量翻译和自动翻译先尝试优先级 1，当某个提供商额度用完或密钥被拒绝时，切换到优先级 2、3……保留为「—」的提供商也会帮忙：排在有编号的之后。"
+
+#: src/Admin/BrowserEngine.php
+msgid "Your browser has not started downloading its translator. You can keep waiting, or use a free Groq key: it works in any browser and takes 2 minutes."
+msgstr "您的浏览器尚未开始下载其翻译器。您可以继续等待，或使用免费的 Groq 密钥：它适用于任何浏览器，2 分钟即可获取。"
+
+#: src/Admin/BrowserEngine.php
+msgid "A free Groq key works in any browser and takes 2 minutes."
+msgstr "免费的 Groq 密钥适用于任何浏览器，2 分钟即可获取。"
+
+#: src/Admin/BrowserEngine.php
+msgid "Set up a free Groq key"
+msgstr "设置免费的 Groq 密钥"
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL refused again: your next engine carries on, and DeepL is tried again tomorrow. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL 再次拒绝：下一个引擎会继续工作，DeepL 将于明天重试。您的 DeepL 账户恢复正常后，请在 AI 页面点击「Test」。"
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL keeps refusing: it rests for a week while your next engine carries on. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL 仍在拒绝：它将暂停一周，期间由下一个引擎继续工作。您的 DeepL 账户恢复正常后，请在 AI 页面点击「Test」。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your server did not answer in time (%1$s). What was translated is saved; trying again in %2$s seconds…"
+msgstr "您的服务器未及时响应（%1$s）。已翻译的内容已保存；%2$s 秒后自动重试…"
+
+#: src/Admin/Admin.php
+msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
+msgstr "本站点正在进行另一项翻译（另一个标签页，或后台的 Labs）：正在等待其完成，之后本次翻译将继续。"

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.13
+Stable tag: 1.8.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,18 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.14 =
+* Faster and lighter «Translate all» on small servers: each step writes to the options table about 80% less (the maps were flushed after every sentence, with a scan of the whole table each time) and runs about half the database queries; the settings are read once per request. Thanks to Isis for the PHP slow log that pointed straight at it.
+* «Translate all» goes on by itself after a 502, 504 or Cloudflare 524 from your server, waiting a little longer each time, instead of asking you to press the button again.
+* One translation at a time on the site: a second tab, or Labs in the background, waits for the one running instead of loading the server with several PHP processes at once.
+* New WP-CLI command: wp translaterocket translate --lang=zh (or --all), with --engine, --batch and --pause. Translate the backlog in one low-priority process, away from your visitors.
+* DeepL that keeps refusing a key rests an hour, then a day, then a week, instead of being asked again every hour; «Test» on the AI screen tries it at once.
+* The daily character cap for paid AI and DeepL's rest are kept in the database: a cache purge (object cache, Breeze, WP Rocket, LiteSpeed) no longer resets them.
+* When Chrome's built-in translator does not start (its model stays at 0%, or it stops with an error), the Translations screen offers a free Groq key at once.
+* Block themes: a different Navigation menu per language now works with Twenty Twenty-Five as installed (WordPress showed the newest menu in every language), and the menu chosen for a language is left as written.
+* Fixed: automatic updates could be rolled back on slow hosts. Right after an update WordPress loads the home page once to check for errors, and that request ran the database upgrade of the new version; on a shared host it could pass the 50 seconds WordPress waits, and the update was undone. The upgrade now runs on the next request, one request at a time.
+* Fixed: the safety net that removes key-like strings from the diagnostics report did not match anything since August; keys you had configured were always removed.
 
 = 1.8.13 =
 * New: The SEO Framework. Its sitemap is a single list, so the translated pages were in no sitemap: now every translated address is inside it. Its og:locale was printed twice on translated pages; now once, and a repeated og:locale from any other SEO plugin is removed too.
@@ -464,6 +476,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.14 =
+Lighter and steadier «Translate all» on small servers (fewer database writes, retries after 502/504/524, one process at a time), new WP-CLI command, DeepL rest that survives cache purges.
 
 = 1.8.13 =
 The SEO Framework: translated pages in its sitemap, one og:locale. «Read more» links to feature pages, setup guide link, clearer engine box.

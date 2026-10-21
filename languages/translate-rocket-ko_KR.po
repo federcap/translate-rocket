@@ -7059,3 +7059,32 @@ msgstr "처음이신가요?"
 #: src/Admin/Admin.php
 msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
 msgstr "선택 사항입니다. 둘 이상의 제공자에게 우선순위를 주면 대체 체인이 됩니다. 일괄 번역과 자동 번역은 먼저 우선순위 1을 시도하고, 크레딧이 떨어지거나 키가 거부되면 2, 3…으로 넘어갑니다. «—»로 둔 제공자도 도움이 됩니다: 번호가 매겨진 제공자 다음에 사용됩니다."
+
+#: src/Admin/BrowserEngine.php
+msgid "Your browser has not started downloading its translator. You can keep waiting, or use a free Groq key: it works in any browser and takes 2 minutes."
+msgstr "브라우저가 번역기 다운로드를 시작하지 않았습니다. 계속 기다리거나 무료 Groq 키를 사용하세요. 어떤 브라우저에서도 작동하며 2분이면 됩니다."
+
+#: src/Admin/BrowserEngine.php
+msgid "A free Groq key works in any browser and takes 2 minutes."
+msgstr "무료 Groq 키는 어떤 브라우저에서도 작동하며 2분이면 됩니다."
+
+#: src/Admin/BrowserEngine.php
+msgid "Set up a free Groq key"
+msgstr "무료 Groq 키 설정"
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL refused again: your next engine carries on, and DeepL is tried again tomorrow. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL이 다시 거부했습니다. 다음 엔진이 계속 진행하고 DeepL은 내일 다시 시도됩니다. DeepL 계정이 정상화되면 AI 화면에서 «Test»를 누르세요."
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL keeps refusing: it rests for a week while your next engine carries on. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL이 계속 거부합니다. 다음 엔진이 진행하는 동안 DeepL은 일주일간 쉽니다. DeepL 계정이 정상화되면 AI 화면에서 «Test»를 누르세요."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your server did not answer in time (%1$s). What was translated is saved; trying again in %2$s seconds…"
+msgstr "서버가 제때 응답하지 않았습니다(%1$s). 번역된 내용은 저장되었습니다. %2$s초 후 다시 시도합니다…"
+
+#: src/Admin/Admin.php
+msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
+msgstr "이 사이트에서 다른 번역이 진행 중입니다(다른 탭 또는 백그라운드의 Labs). 끝날 때까지 기다린 뒤 이 번역이 계속됩니다."

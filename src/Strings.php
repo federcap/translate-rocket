@@ -780,6 +780,13 @@ class Strings {
 	private static $batch = 0;
 
 	/**
+	 * 1.8.14: maps flushed once at the end of a translation step, not after every sentence (no transaction: see defer_start).
+	 *
+	 * @var int
+	 */
+	private static $defer = 0;
+
+	/**
 	 * Languages touched during the current batch, flushed once at batch_end().
 	 *
 	 * @var array<string,bool>
@@ -823,6 +830,33 @@ class Strings {
 	 * Close a bulk write: commit, then empty once what each write used to empty.
 	 * Always call it (try/finally), or the writes stay uncommitted.
 	 */
+	/**
+	 * 1.8.14 (ticket #22, slow log of a 2-core server): every sentence saved by «Translate all» flushed the maps — an
+	 * update_option and a DELETE … LIKE '%_zh' that scans the whole options table — 126 times in one step, with MySQL at
+	 * 65% CPU. During a step the flush now waits for the end, once per language. No transaction (unlike batch_start):
+	 * a step waits on the engine for up to half a minute, and its rows must not stay locked meanwhile.
+	 */
+	public static function defer_start(): void {
+		++self::$defer;
+	}
+
+	/**
+	 * End of a step: the maps of the languages written meanwhile are flushed once.
+	 */
+	public static function defer_end(): void {
+		if ( self::$defer <= 0 || --self::$defer > 0 || self::$batch > 0 ) {
+			return;
+		}
+		$lingue            = array_keys( self::$batch_langs );
+		self::$batch_langs = array();
+		foreach ( $lingue as $lingua ) {
+			self::flush_maps( (string) $lingua );
+		}
+		if ( $lingue ) {
+			\TranslateRocket\Cache::flush_later();
+		}
+	}
+
 	public static function batch_end(): void {
 		global $wpdb;
 		if ( self::$batch <= 0 ) {
@@ -1267,8 +1301,8 @@ class Strings {
 			do_action( 'trrocket_translation_changed', $string_id, $lang, $prima, array( 'translation' => $translation, 'status' => $status, 'provider' => (string) $provider ) );
 		}
 
-		if ( self::$batch > 0 ) {
-			// Dentro un import: mappe e cache si svuotano una volta sola, a batch_end().
+		if ( self::$batch > 0 || self::$defer > 0 ) {
+			// Dentro un import (o un passo di traduzione, 1.8.14): mappe e cache si svuotano una volta sola, alla fine.
 			self::$batch_langs[ $lang ] = true;
 			unset( self::$lookup_cache[ $lang ], self::$map_cache[ $lang ] );
 			return true;

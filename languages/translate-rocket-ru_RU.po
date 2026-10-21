@@ -6266,3 +6266,32 @@ msgstr "Впервые здесь?"
 #: src/Admin/Admin.php
 msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
 msgstr "Необязательно. Задайте приоритет двум или более поставщикам, чтобы получить резервную цепочку: массовый и автоматический перевод сначала пробуют приоритет 1 и переходят к 2, 3…, когда у одного заканчивается кредит или его ключ отклонён. Поставщики, оставленные на «—», тоже помогают: они идут после пронумерованных."
+
+#: src/Admin/BrowserEngine.php
+msgid "Your browser has not started downloading its translator. You can keep waiting, or use a free Groq key: it works in any browser and takes 2 minutes."
+msgstr "Браузер ещё не начал загружать свой переводчик. Можно подождать или использовать бесплатный ключ Groq: он работает в любом браузере, а получить его можно за 2 минуты."
+
+#: src/Admin/BrowserEngine.php
+msgid "A free Groq key works in any browser and takes 2 minutes."
+msgstr "Бесплатный ключ Groq работает в любом браузере, а получить его можно за 2 минуты."
+
+#: src/Admin/BrowserEngine.php
+msgid "Set up a free Groq key"
+msgstr "Настроить бесплатный ключ Groq"
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL refused again: your next engine carries on, and DeepL is tried again tomorrow. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL снова отказал: работу продолжает следующий движок, а DeepL попробуем снова завтра. Нажмите «Test» на экране ИИ, когда ваш аккаунт DeepL будет в порядке."
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL keeps refusing: it rests for a week while your next engine carries on. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL продолжает отказывать: он отдыхает неделю, пока работает следующий движок. Нажмите «Test» на экране ИИ, когда ваш аккаунт DeepL будет в порядке."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your server did not answer in time (%1$s). What was translated is saved; trying again in %2$s seconds…"
+msgstr "Сервер не ответил вовремя (%1$s). Переведённое сохранено; повторная попытка через %2$s с…"
+
+#: src/Admin/Admin.php
+msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
+msgstr "На этом сайте уже идёт другой перевод (другая вкладка или Labs в фоне): ждём его окончания, затем этот продолжится."

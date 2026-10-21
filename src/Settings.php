@@ -178,8 +178,37 @@ class Settings {
 	 * @return array<string, mixed>
 	 */
 	public static function get(): array {
-		$opts = get_option( self::OPTION, array() );
-		return wp_parse_args( is_array( $opts ) ? $opts : array(), self::defaults() );
+		// 1.8.14 (ticket #22, slow log: Router → Languages → Settings::get → get_option → maybe_unserialize, dozens of
+		// times a request, 67 in one translation step): read and merged with the defaults once per request and per site,
+		// read again as soon as the option changes in any way.
+		static $hooked = false;
+		if ( ! $hooked ) {
+			$hooked = true;
+			foreach ( array( 'add_option_', 'update_option_', 'delete_option_' ) as $h ) {
+				add_action( $h . self::OPTION, array( __CLASS__, 'forget' ), 0 ); // before anyone reacting to the change reads it
+			}
+			add_action( 'switch_blog', array( __CLASS__, 'forget' ) );
+		}
+		$blog = function_exists( 'get_current_blog_id' ) ? (int) get_current_blog_id() : 0;
+		if ( ! isset( self::$memo[ $blog ] ) ) {
+			$opts               = get_option( self::OPTION, array() );
+			self::$memo[ $blog ] = wp_parse_args( is_array( $opts ) ? $opts : array(), self::defaults() );
+		}
+		return self::$memo[ $blog ];
+	}
+
+	/**
+	 * The settings read in this request, per site (see get()).
+	 *
+	 * @var array<int,array<string,mixed>>
+	 */
+	private static $memo = array();
+
+	/**
+	 * Forget what was read: the option changed, or another site of the network is now current.
+	 */
+	public static function forget(): void {
+		self::$memo = array();
 	}
 
 	/**

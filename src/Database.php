@@ -77,12 +77,33 @@ class Database {
 		if ( get_option( 'trrocket_db_version' ) === self::DB_VERSION ) {
 			return;
 		}
-		self::create_tables();
-		self::backfill_text_hash();
-		self::remove_orphans();
-		self::remove_customer_details();
-		self::remove_untranslatable();
-		update_option( 'trrocket_db_version', self::DB_VERSION );
+		// 1.8.14 (oasicana.it on Aruba: «the update of TranslateRocket from 1.8.11 to 1.8.13 failed», and «it happens
+		// often»): right after an automatic update WordPress loads the home page once to look for a fatal error, and
+		// rolls the update back if that request fails or takes over 50 seconds. That request was the first one of the new
+		// version, so it ran the whole schema upgrade — tables, then every sentence scanned — on a slow shared host. The
+		// check is left alone: the upgrade runs on the next request.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only read to recognise WordPress's own check.
+		if ( isset( $_REQUEST['wp_scrape_key'], $_REQUEST['wp_scrape_nonce'] ) ) {
+			return;
+		}
+		// One request at a time: on a visited site the first seconds after an update brought several requests, each
+		// running the same upgrade. A lock older than 5 minutes (a request killed) is taken over.
+		if ( ! add_option( 'trrocket_db_upgrading', time(), '', 'no' ) ) {
+			if ( time() - (int) get_option( 'trrocket_db_upgrading', 0 ) < 5 * MINUTE_IN_SECONDS ) {
+				return;
+			}
+			update_option( 'trrocket_db_upgrading', time(), false );
+		}
+		try {
+			self::create_tables();
+			self::backfill_text_hash();
+			self::remove_orphans();
+			self::remove_customer_details();
+			self::remove_untranslatable();
+			update_option( 'trrocket_db_version', self::DB_VERSION );
+		} finally {
+			delete_option( 'trrocket_db_upgrading' );
+		}
 	}
 
 	/**

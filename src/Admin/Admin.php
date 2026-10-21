@@ -3730,7 +3730,7 @@ JS;
 				function passi(pagina){
 					var go=document.getElementById('trr-engine-go'),box=document.getElementById('trr-step');
 					if(!box){box=document.createElement('div');box.id='trr-step';box.className='trr-step';box.setAttribute('role','status');box.innerHTML='<span class="trr-prog-bar"><span class="trr-prog-fill" style="width:0"></span></span> <span class="trr-step-txt"></span>';f.parentNode.insertBefore(box,f.nextSibling);}
-					var fill=box.querySelector('.trr-prog-fill'),txt=box.querySelector('.trr-step-txt'),fatte=0,giri=0,tenute=0;
+					var fill=box.querySelector('.trr-prog-fill'),txt=box.querySelector('.trr-step-txt'),fatte=0,giri=0,tenute=0,riprove=0;
 					box.hidden=false;box.classList.remove('is-error');if(go){go.disabled=true;}
 					function scrivi(left){txt.textContent=(left>=0?(T.busy||'').replace('%1$s',fatte).replace('%2$s',left):(T.busyPage||'').replace('%s',fatte));if(left>=0){fill.style.width=Math.max(3,Math.round(100*fatte/Math.max(1,fatte+left)))+'%';}}
 					function ferma(msg){box.classList.add('is-error');txt.textContent=msg;if(go){go.disabled=false;}
@@ -3745,14 +3745,14 @@ JS;
 							if(!r.ok){throw new Error('HTTP '+r.status);}return r.json();
 						}).then(function(j){
 							if(!j||!j.success){throw new Error((j&&j.data&&j.data.error)||'?');}
-							var x=j.data;fatte=x.total;tenute=x.kept||0;giri++;scrivi(x.left);
+							var x=j.data;riprove=0;fatte=x.total;tenute=x.kept||0;giri++;scrivi(x.left);if(x.wait&&giri<2000){txt.textContent=T.wait||txt.textContent;setTimeout(giro,x.wait*1000);return;}
 							if(x.error&&!x.count){ferma(x.error);return;}
 							if(x.more&&x.count>0&&giri<400){giro();return;}
 								// 16/10/2026: the engine left sentences behind (often not in the site's language): say so, with
 								// the way to them, instead of reloading as if all were done.
 								if(x.stuck){box.classList.add('is-warn');txt.textContent=(T.stuck||'').replace('%1$s',fatte).replace('%2$s',x.left)+' ';var lk=document.createElement('a');lk.href=x.stuck;lk.textContent=T.stuckLink||'';txt.appendChild(lk);if(go){go.disabled=false;}document.querySelectorAll('.trr-busy').forEach(function(b){b.hidden=true;});return;}
 							fill.style.width='100%';location.reload();
-						}).catch(function(err){ferma((T.lost||'').replace('%s',err&&err.message?err.message:'?'));});
+						}).catch(function(err){var m=err&&err.message?err.message:'?';if(riprove<5&&(/^HTTP 5\d\d/.test(m)||/fetch|network|Load failed/i.test(m))){riprove++;var s=10*riprove;txt.textContent=(T.retry||'').replace('%1$s',m).replace('%2$s',s);setTimeout(giro,s*1000);return;}ferma((T.lost||'').replace('%s',m));});
 					}
 					scrivi(-1);giro();
 				}
@@ -4064,6 +4064,7 @@ JS;
 				'total' => $totale,
 				'kept'  => $tenute,
 				'more'  => ! empty( $r['more'] ),
+				'wait'  => ! empty( $r['busy'] ) ? 8 : 0, // 1.8.14: another process is translating — come back in 8 s
 				'left'  => $resta,
 				'error' => '' !== (string) $r['error'] ? self::shown_error( (string) $r['error'] ) : '',
 				// Sentences the engine gave nothing back for (often not in the site's language): where to see them.
@@ -5506,9 +5507,9 @@ JS
 				$testo = str_replace( $k, '[key removed]', $testo );
 			}
 		}
-		$testo = (string) preg_replace( '/(sk|rk|xai|gsk)-[A-Za-z0-9_\-]{12,}/', '[key removed]', $testo );
-		$testo = (string) preg_replace( '/AIza[A-Za-z0-9_\-]{20,}/', '[key removed]', $testo );
-		$testo = (string) preg_replace( '/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:fx/i', '[key removed]', $testo );
+		$testo = (string) preg_replace( '/\b(sk|rk|xai|gsk)-[A-Za-z0-9_\-]{12,}/', '[key removed]', $testo );
+		$testo = (string) preg_replace( '/\bAIza[A-Za-z0-9_\-]{20,}/', '[key removed]', $testo );
+		$testo = (string) preg_replace( '/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:fx\b/i', '[key removed]', $testo );
 
 		return $testo;
 	}
@@ -6977,6 +6978,10 @@ JS;
 				'busyPage' => __( 'Translating… %s done. Keep this page open.', 'translate-rocket' ),
 				/* translators: %s: the technical reason, e.g. HTTP 524. */
 				'lost'     => __( 'The connection to your site dropped (%s). What was translated is saved: press the button again to continue.', 'translate-rocket' ),
+				// 1.8.14 (ticket #22): the step comes back by itself after a server error, and waits while another process translates.
+				/* translators: 1: the technical reason, e.g. HTTP 504; 2: seconds. Keep %1$s and %2$s. */
+				'retry'    => __( 'Your server did not answer in time (%1$s). What was translated is saved; trying again in %2$s seconds…', 'translate-rocket' ),
+				'wait'     => __( 'Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on.', 'translate-rocket' ),
 				/* translators: 1: sentences translated, 2: sentences the engine did not translate. Keep %1$s and %2$s. */
 				'stuck'    => __( '%1$s translated. %2$s sentences were not translated by this engine: often they are not written in the site\'s language. You can translate them by hand or with another engine.', 'translate-rocket' ),
 				'stuckLink' => __( 'See them in Translation memory', 'translate-rocket' ),

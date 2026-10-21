@@ -6240,3 +6240,32 @@ msgstr "Voor het eerst hier?"
 #: src/Admin/Admin.php
 msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
 msgstr "Optioneel. Geef twee of meer aanbieders een prioriteit om een terugvalketen te maken: bulk- en automatisch vertalen proberen eerst prioriteit 1 en gaan naar 2, 3… zodra er een geen tegoed meer heeft of de sleutel wordt geweigerd. Aanbieders op «—» helpen ook: ze komen na de genummerde."
+
+#: src/Admin/BrowserEngine.php
+msgid "Your browser has not started downloading its translator. You can keep waiting, or use a free Groq key: it works in any browser and takes 2 minutes."
+msgstr "Je browser is nog niet begonnen met het downloaden van zijn vertaler. Je kunt blijven wachten, of een gratis Groq-sleutel gebruiken: die werkt in elke browser en is in 2 minuten klaar."
+
+#: src/Admin/BrowserEngine.php
+msgid "A free Groq key works in any browser and takes 2 minutes."
+msgstr "Een gratis Groq-sleutel werkt in elke browser en is in 2 minuten klaar."
+
+#: src/Admin/BrowserEngine.php
+msgid "Set up a free Groq key"
+msgstr "Gratis Groq-sleutel instellen"
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL refused again: your next engine carries on, and DeepL is tried again tomorrow. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL weigerde opnieuw: je volgende engine gaat verder en DeepL wordt morgen opnieuw geprobeerd. Druk op «Test» in het AI-scherm zodra je DeepL-account in orde is."
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL keeps refusing: it rests for a week while your next engine carries on. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL blijft weigeren: het rust een week terwijl je volgende engine verdergaat. Druk op «Test» in het AI-scherm zodra je DeepL-account in orde is."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your server did not answer in time (%1$s). What was translated is saved; trying again in %2$s seconds…"
+msgstr "Je server antwoordde niet op tijd (%1$s). Wat vertaald is, is opgeslagen; nieuwe poging over %2$s seconden…"
+
+#: src/Admin/Admin.php
+msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
+msgstr "Er loopt al een andere vertaling op deze site (een ander tabblad, of Labs op de achtergrond): we wachten daarop, daarna gaat deze verder."

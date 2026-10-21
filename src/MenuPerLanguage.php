@@ -25,6 +25,9 @@ class MenuPerLanguage {
 		}
 		add_filter( 'theme_mod_nav_menu_locations', array( $this, 'locations' ) );
 		add_filter( 'render_block_data', array( $this, 'navigation_block' ), 10, 1 );
+		// 1.8.14: the Navigation menu chosen for a language is written in it, so the engine leaves it alone (translate="no"),
+		// as wp_nav_menu() menus already were. Before, only a class nobody read: its items were collected as text to translate.
+		add_filter( 'render_block_core/navigation', array( $this, 'navigation_as_written' ), 10, 2 );
 		add_filter( 'wp_nav_menu_args', array( $this, 'keep_as_written' ) );
 	}
 
@@ -72,20 +75,57 @@ class MenuPerLanguage {
 	 * @return array
 	 */
 	public function navigation_block( $block ) {
-		if ( ! is_array( $block ) || 'core/navigation' !== ( $block['blockName'] ?? '' ) || empty( $block['attrs']['ref'] ) ) {
+		if ( ! is_array( $block ) || 'core/navigation' !== ( $block['blockName'] ?? '' ) || Coexistence::on() ) {
 			return $block;
+		}
+		$ref = (int) ( $block['attrs']['ref'] ?? 0 );
+		if ( $ref <= 0 ) {
+			// 1.8.14 (banco, Twenty Twenty-Five as installed): a Navigation block with no «ref» shows the Navigation
+			// menu published most recently. As soon as the owner creates the German menu, WordPress shows it in EVERY
+			// language, and «A different menu per language» never applied. Same fallback as WordPress here; and when
+			// that newest menu is one chosen for a language, the block shows the menu it was chosen for instead.
+			if ( empty( self::map() ) || ! class_exists( '\WP_Navigation_Fallback' ) ) {
+				return $block;
+			}
+			$fb  = \WP_Navigation_Fallback::get_fallback();
+			$ref = $fb instanceof \WP_Post ? (int) $fb->ID : 0;
+			foreach ( self::map() as $key => $per ) {
+				if ( 0 === strpos( (string) $key, 'nav:' ) && is_array( $per ) && in_array( $ref, array_map( 'intval', $per ), true ) ) {
+					$ref                   = (int) substr( (string) $key, 4 );
+					$block['attrs']['ref'] = $ref;
+					break;
+				}
+			}
+			if ( $ref <= 0 ) {
+				return $block;
+			}
 		}
 		$lang = self::lang();
-		if ( '' === $lang || Coexistence::on() ) {
+		if ( '' === $lang ) {
 			return $block;
 		}
-		$per = self::map()[ 'nav:' . (int) $block['attrs']['ref'] ] ?? array();
+		$per = self::map()[ 'nav:' . $ref ] ?? array();
 		$id  = is_array( $per ) ? (int) ( $per[ $lang ] ?? 0 ) : 0;
 		if ( $id > 0 && 'wp_navigation' === get_post_type( $id ) && 'publish' === get_post_status( $id ) ) {
 			$block['attrs']['ref']       = $id;
 			$block['attrs']['className'] = trim( (string) ( $block['attrs']['className'] ?? '' ) . ' trrocket-menu-own' );
 		}
 		return $block;
+	}
+
+	/**
+	 * The Navigation block that now shows the menu chosen for this language: translate="no" on its <nav>.
+	 *
+	 * @param string $html  Rendered block.
+	 * @param array  $block Parsed block.
+	 * @return string
+	 */
+	public function navigation_as_written( $html, $block ) {
+		$cls = (string) ( $block['attrs']['className'] ?? '' );
+		if ( ! is_string( $html ) || false === strpos( ' ' . $cls . ' ', ' trrocket-menu-own ' ) ) {
+			return $html;
+		}
+		return (string) preg_replace( '/<nav\b(?![^>]*\btranslate=)/i', '<nav translate="no"', $html, 1 );
 	}
 
 	/**

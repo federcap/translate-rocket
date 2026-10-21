@@ -262,7 +262,14 @@ class BrowserEngine {
 					'needs'       => self::needs(),
 					'reload'      => __( 'Reload the page to see the new totals.', 'translate-rocket' ),
 					'refreshing'  => __( 'Updating the totals…', 'translate-rocket' ),
+					// 1.8.14: when the browser's translator does not start, the next free way.
+					'stuck'       => __( 'Your browser has not started downloading its translator. You can keep waiting, or use a free Groq key: it works in any browser and takes 2 minutes.', 'translate-rocket' ),
+					'failedTry'   => __( 'A free Groq key works in any browser and takes 2 minutes.', 'translate-rocket' ),
+					'tryGroq'     => __( 'Set up a free Groq key', 'translate-rocket' ),
 				),
+				'aiUrl'  => admin_url( 'admin.php?page=translate-rocket-ai' ),
+				// Whoever already has an AI engine set up has the alternative in the menu: no suggestion for them.
+				'hasAi'  => ! empty( \TranslateRocket\Providers\Registry::ordered() ),
 			)
 		);
 	}

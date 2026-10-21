@@ -27,8 +27,13 @@ class AiUsage {
 	 * Characters translated so far today.
 	 */
 	public static function used_today(): int {
-		return (int) get_transient( self::key() );
+		// 21/10/2026: an option, not a transient — a cache purge (object cache on Cloudways, SiteGround, Breeze, WP Rocket…)
+		// emptied the tally and the daily cap that protects a paid key started again from zero.
+		$v = get_option( self::TODAY_OPTION, array() );
+		return ( is_array( $v ) && ( $v['day'] ?? '' ) === gmdate( 'Ymd' ) ) ? (int) ( $v['chars'] ?? 0 ) : 0;
 	}
+
+	private const TODAY_OPTION = 'trrocket_ai_used_today';
 
 	/**
 	 * Whether today's budget is spent.
@@ -54,7 +59,7 @@ class AiUsage {
 		if ( $chars <= 0 ) {
 			return;
 		}
-		set_transient( self::key(), self::used_today() + $chars, 36 * HOUR_IN_SECONDS );
+		update_option( self::TODAY_OPTION, array( 'day' => gmdate( 'Ymd' ), 'chars' => self::used_today() + $chars ), false );
 
 		$u             = self::usage(); // rolls the cycle over first if it's a new month.
 		$u['chars']    = (int) $u['chars'] + $chars;
@@ -158,9 +163,5 @@ class AiUsage {
 			}
 		}
 		return false;
-	}
-
-	private static function key(): string {
-		return 'trrocket_ai_used_' . gmdate( 'Ymd' );
 	}
 }

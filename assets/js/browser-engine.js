@@ -31,6 +31,25 @@
 		status.textContent = text;
 	}
 
+	// 1.8.14 (21/10/2026): when the browser's translator does not start (the model download stays at 0%, or it stops
+	// with an error), the next free way is offered at once: a Groq key, which works in any browser. Seen on the test
+	// bench, where Chrome sometimes sits at «0%» and then gives up; a user there only saw a message that never moved.
+	var aiuto = null;
+	function offriGroq( testo ) {
+		if ( aiuto || C.hasAi || ! C.i18n.tryGroq || ! C.aiUrl ) {
+			return;
+		}
+		aiuto = document.createElement( 'p' );
+		aiuto.className = 'trr-browser-help';
+		aiuto.appendChild( document.createTextNode( testo + ' ' ) );
+		var a = document.createElement( 'a' );
+		a.href = C.aiUrl;
+		a.className = 'button button-secondary';
+		a.textContent = C.i18n.tryGroq;
+		aiuto.appendChild( a );
+		status.parentNode.insertBefore( aiuto, status.nextSibling );
+	}
+
 	function fmt( template, a, b ) {
 		return String( template ).replace( '%1$d', a ).replace( '%2$d', b ).replace( '%d', a );
 	}
@@ -113,6 +132,12 @@
 			return Promise.resolve( translator );
 		}
 		say( C.i18n.preparing );
+		var avanzato = false;
+		var attesa = setTimeout( function () {
+			if ( ! avanzato ) {
+				offriGroq( C.i18n.stuck || '' );
+			}
+		}, 45000 );
 		return Translator.create( {
 			sourceLanguage: C.source,
 			targetLanguage: C.target,
@@ -120,12 +145,19 @@
 				m.addEventListener( 'downloadprogress', function ( e ) {
 					// e.loaded runs 0..1. The browser deliberately blurs this.
 					var pct = Math.round( ( e.loaded || 0 ) * 100 );
+					if ( pct > 0 ) {
+						avanzato = true;
+					}
 					say( C.i18n.downloading + ' ' + pct + '%' );
 				} );
 			},
 		} ).then( function ( t ) {
+			clearTimeout( attesa );
 			translator = t;
 			return t;
+		}, function ( e ) {
+			clearTimeout( attesa );
+			throw e;
 		} );
 	}
 
@@ -281,7 +313,8 @@
 				setTimeout( function () { window.location.reload(); }, 1200 );
 			}
 		} ).catch( function ( e ) {
-			say( C.i18n.failed + ' ' + ( e && e.message ? e.message : '' ) + ' ' + ( C.i18n.needs || '' ) );
+			say( C.i18n.failed + ( e && e.message ? ' (' + e.message + ')' : '' ) + ' ' + ( C.i18n.needs || '' ) );
+			offriGroq( C.i18n.failedTry || '' );
 		} ).then( function () {
 			go.disabled = false;
 			stopBtn.style.display = 'none';

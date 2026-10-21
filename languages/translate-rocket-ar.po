@@ -7189,3 +7189,32 @@ msgstr "أول مرة هنا؟"
 #: src/Admin/Admin.php
 msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
 msgstr "اختياري. امنح مزوّدَين أو أكثر أولوية لبناء سلسلة احتياطية: الترجمة الجماعية والتلقائية تجرّب الأولوية 1 أولًا، ثم تنتقل إلى الأولوية 2 و3… كلما نفد رصيد أحدها أو رُفض مفتاحه. المزوّدون المتروكون على «—» يساعدون أيضًا: يأتون بعد المرقّمين."
+
+#: src/Admin/BrowserEngine.php
+msgid "Your browser has not started downloading its translator. You can keep waiting, or use a free Groq key: it works in any browser and takes 2 minutes."
+msgstr "لم يبدأ متصفحك تنزيل المترجم الخاص به. يمكنك الانتظار، أو استخدام مفتاح Groq مجاني: يعمل في أي متصفح ويستغرق دقيقتين."
+
+#: src/Admin/BrowserEngine.php
+msgid "A free Groq key works in any browser and takes 2 minutes."
+msgstr "مفتاح Groq المجاني يعمل في أي متصفح ويستغرق دقيقتين."
+
+#: src/Admin/BrowserEngine.php
+msgid "Set up a free Groq key"
+msgstr "إعداد مفتاح Groq مجاني"
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL refused again: your next engine carries on, and DeepL is tried again tomorrow. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "رفض DeepL مرة أخرى: يتابع المحرّك التالي العمل، وسيُجرَّب DeepL مجددًا غدًا. اضغط «Test» في شاشة الذكاء الاصطناعي عندما يصبح حسابك في DeepL سليمًا."
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL keeps refusing: it rests for a week while your next engine carries on. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "يواصل DeepL الرفض: يرتاح لمدة أسبوع بينما يتابع محرّكك التالي العمل. اضغط «Test» في شاشة الذكاء الاصطناعي عندما يصبح حسابك في DeepL سليمًا."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your server did not answer in time (%1$s). What was translated is saved; trying again in %2$s seconds…"
+msgstr "لم يستجب الخادم في الوقت المحدد (%1$s). ما تُرجم محفوظ؛ إعادة المحاولة خلال %2$s ثانية…"
+
+#: src/Admin/Admin.php
+msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
+msgstr "ترجمة أخرى تعمل على هذا الموقع (علامة تبويب أخرى، أو Labs في الخلفية): ننتظر انتهاءها ثم تتابع هذه."

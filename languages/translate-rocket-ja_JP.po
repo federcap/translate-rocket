@@ -6214,3 +6214,32 @@ msgstr "初めてですか？"
 #: src/Admin/Admin.php
 msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
 msgstr "任意。2 つ以上のプロバイダーに優先順位を付けると、予備のチェーンになります。一括翻訳と自動翻訳はまず優先順位 1 を試し、クレジットが尽きたりキーが拒否されたりすると 2、3… に切り替えます。「—」のままのプロバイダーも役に立ちます：番号付きのものの後に使われます。"
+
+#: src/Admin/BrowserEngine.php
+msgid "Your browser has not started downloading its translator. You can keep waiting, or use a free Groq key: it works in any browser and takes 2 minutes."
+msgstr "ブラウザーが翻訳機能のダウンロードを開始していません。このまま待つか、無料の Groq キーを使ってください。どのブラウザーでも動作し、2 分で用意できます。"
+
+#: src/Admin/BrowserEngine.php
+msgid "A free Groq key works in any browser and takes 2 minutes."
+msgstr "無料の Groq キーはどのブラウザーでも動作し、2 分で用意できます。"
+
+#: src/Admin/BrowserEngine.php
+msgid "Set up a free Groq key"
+msgstr "無料の Groq キーを設定"
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL refused again: your next engine carries on, and DeepL is tried again tomorrow. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL が再び拒否しました。次のエンジンが続行し、DeepL は明日もう一度試されます。DeepL アカウントが正常になったら、AI 画面で「Test」を押してください。"
+
+#: src/Providers/DeepLProvider.php
+msgid "DeepL keeps refusing: it rests for a week while your next engine carries on. Press «Test» on the AI screen once your DeepL account is in order."
+msgstr "DeepL が拒否し続けています。次のエンジンが続行する間、DeepL は 1 週間休止します。DeepL アカウントが正常になったら、AI 画面で「Test」を押してください。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Your server did not answer in time (%1$s). What was translated is saved; trying again in %2$s seconds…"
+msgstr "サーバーが時間内に応答しませんでした（%1$s）。翻訳済みの内容は保存されています。%2$s 秒後に再試行します…"
+
+#: src/Admin/Admin.php
+msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
+msgstr "このサイトで別の翻訳が実行中です（別のタブ、またはバックグラウンドの Labs）。終わるのを待ってから、こちらが続行します。"

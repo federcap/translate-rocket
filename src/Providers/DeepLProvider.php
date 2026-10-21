@@ -38,7 +38,7 @@ class DeepLProvider extends AbstractProvider {
 		// same key reported 0 of 1,000,000 used. Each batch asked again and waited for the same refusal: a long job
 		// of nothing. Once refused, DeepL rests for an hour and the work goes straight to the next engine.
 		// The «Test» button (quick) always asks DeepL itself: the owner may have just fixed the account.
-		$fermo = $this->quick ? '' : get_transient( self::blocked_key( $key ) );
+		$fermo = $this->quick ? '' : \TranslateRocket\Persistent::get( self::blocked_key( $key ) );
 		if ( is_string( $fermo ) && '' !== $fermo ) {
 			return TranslationResult::fail( $fermo );
 		}
@@ -153,8 +153,20 @@ class DeepLProvider extends AbstractProvider {
 				} else {
 					$msg = __( 'DeepL: the monthly character allowance is used up (quota exceeded). It resets at the start of your DeepL billing cycle.', 'translate-rocket' );
 				}
-				$msg .= ' ' . __( 'Meanwhile your next engine carries on, and DeepL is tried again in an hour.', 'translate-rocket' );
-				set_transient( self::blocked_key( $key ), $msg, HOUR_IN_SECONDS );
+				// 1.8.14 (21/10/2026, Federico: «DeepL ha raggiunto il limite, dovresti ignorarlo finché non si paga»): asked
+				// again every hour, DeepL refused every hour, all night, and filled the log. Each refusal in a row now rests it
+				// longer — an hour, a day, then a week — until a translation goes through or «Test» succeeds.
+				$volte  = (int) get_option( self::strikes_key( $key ), 0 );
+				$durata = array( HOUR_IN_SECONDS, DAY_IN_SECONDS, WEEK_IN_SECONDS )[ min( $volte, 2 ) ];
+				update_option( self::strikes_key( $key ), $volte + 1, false );
+				if ( 0 === $volte ) {
+					$msg .= ' ' . __( 'Meanwhile your next engine carries on, and DeepL is tried again in an hour.', 'translate-rocket' );
+				} elseif ( 1 === $volte ) {
+					$msg .= ' ' . __( 'DeepL refused again: your next engine carries on, and DeepL is tried again tomorrow. Press «Test» on the AI screen once your DeepL account is in order.', 'translate-rocket' );
+				} else {
+					$msg .= ' ' . __( 'DeepL keeps refusing: it rests for a week while your next engine carries on. Press «Test» on the AI screen once your DeepL account is in order.', 'translate-rocket' );
+				}
+				\TranslateRocket\Persistent::set( self::blocked_key( $key ), $msg, $durata );
 				return TranslationResult::fail( $msg );
 			}
 			return TranslationResult::fail( 'DeepL: ' . $result['error'] );
@@ -183,8 +195,18 @@ class DeepLProvider extends AbstractProvider {
 		if ( count( $out ) !== count( $texts ) ) {
 			return TranslationResult::fail( 'DeepL: item count mismatch.' );
 		}
-		delete_transient( self::blocked_key( $key ) );
+		\TranslateRocket\Persistent::delete( self::blocked_key( $key ) );
+		delete_option( self::strikes_key( $key ) );
 		return TranslationResult::ok( $out );
+	}
+
+	/**
+	 * How many refusals in a row this key has had (never the key itself): an hour, a day, then a week of rest.
+	 *
+	 * @param string $key DeepL key.
+	 */
+	public static function strikes_key( string $key ): string {
+		return 'trrocket_deepl_strikes_' . md5( $key );
 	}
 
 	/**
@@ -193,7 +215,7 @@ class DeepLProvider extends AbstractProvider {
 	 * @param string $key DeepL key.
 	 */
 	public static function blocked_key( string $key ): string {
-		return 'trrocket_deepl_blocked_' . md5( $key );
+		return 'deepl_blocked_' . md5( $key ); // in Persistent (21/10/2026: a transient did not survive a cache purge)
 	}
 
 	/**

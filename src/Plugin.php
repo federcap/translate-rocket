@@ -56,6 +56,7 @@ final class Plugin {
 	 * Boot the plugin.
 	 */
 	public function boot(): void {
+		Cli::register(); // 1.8.14 (ticket #22): wp translaterocket translate
 		// Translations are registered on 'init' in the main plugin file: the
 		// automatic loading WordPress does for wordpress.org plugins only reads
 		// the language-pack folder, never the catalogues we ship ourselves.
