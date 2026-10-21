@@ -3650,8 +3650,14 @@ JS;
 				function info(){
 					if(!I){return;}var o=s.options[s.selectedIndex];I.textContent='';
 					if(!o||!a(o,'tier')&&!a(o,'needs')){I.hidden=true;return;}
-					[['quality','quality'],['limit','limit'],['needs','needs'],['where','where'],['goes','goes']].forEach(function(k){
-						var v=a(o,k[1]);if(!v){return;}var r=el('span','trr-einfo-row');r.appendChild(el('b','',a(I,'l-'+k[0])));r.appendChild(document.createTextNode(v));I.appendChild(r);
+					// 21/10/2026 (Federico: «la formattazione la puoi rendere più leggibile, chiara e gradevole»): one tile per fact,
+					// an icon and a small label above, the value larger and dark; the quality with its four bars.
+					[['quality','quality','star-filled'],['limit','limit','clock'],['needs','needs','admin-network'],['where','where','desktop'],['goes','goes','migrate']].forEach(function(k){
+						var v=a(o,k[1]);if(!v){return;}var r=el('span','trr-einfo-row trr-einfo-'+k[0]);
+						var lab=el('span','trr-einfo-lab');lab.appendChild(el('span','dashicons dashicons-'+k[2]));lab.appendChild(document.createTextNode(a(I,'l-'+k[0])||''));r.appendChild(lab);
+						var val=el('span','trr-einfo-val');
+						if('quality'===k[0]){var lv={'fair':1,'good':2,'very-good':3,'excellent':4}[a(o,'qkey')]||0,bb=el('span','trr-qbars');bb.setAttribute('aria-hidden','true');for(var j=1;j<=4;j++){bb.appendChild(el('i',j<=lv?'on':''));}val.appendChild(bb);}
+						val.appendChild(document.createTextNode(v));r.appendChild(val);I.appendChild(r);
 					});
 					I.className='trr-engine-info trr-engine-info-'+(a(o,'tier')||'auto');I.hidden=!I.firstChild;
 				}
@@ -4730,7 +4736,7 @@ JS
 							</tr>
 							<?php endif; ?>
 							<tr>
-									<th scope="row"><?php esc_html_e( 'Fallback priority', 'translate-rocket' ); ?> <?php $this->info( __( 'Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Leave on “—” to keep a provider out of the chain.', 'translate-rocket' ) ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Fallback priority', 'translate-rocket' ); ?> <?php $this->info( __( 'Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones.', 'translate-rocket' ), self::doc( '/features/engine-order/' ) ); ?></th>
 									<td>
 										<?php $cur_prio = (int) ( $order_prio[ $pid ] ?? 0 ); ?>
 										<select name="providers[<?php echo esc_attr( $pid ); ?>][priority]">
@@ -4902,10 +4908,10 @@ JS
 							</tr>
 						</table>
 
-					<h3><?php esc_html_e( 'Usage &amp; limits', 'translate-rocket' ); ?> <?php $this->info( __( 'Protect your API spend: cap how many characters are sent to the AI each day, and keep crawlers from triggering paid translation.', 'translate-rocket' ) ); ?></h3>
+					<h3><?php esc_html_e( 'Usage &amp; limits', 'translate-rocket' ); ?> <?php $this->info( __( 'Protect your API spend: cap how many characters are sent to the AI each day, and keep crawlers from triggering paid translation.', 'translate-rocket' ), self::doc( '/features/bot-shield/' ) ); ?></h3>
 						<table class="form-table" role="presentation">
 							<tr>
-								<th scope="row"><label for="trr-ai-limit"><?php esc_html_e( 'Daily character limit', 'translate-rocket' ); ?></label> <?php $this->info( __( 'A safety cap on how many characters can be sent to the AI per day. When the cap is reached, AI translation stops until tomorrow (manual and copy-paste still work). 0 means no limit.', 'translate-rocket' ) ); ?></th>
+								<th scope="row"><label for="trr-ai-limit"><?php esc_html_e( 'Daily character limit', 'translate-rocket' ); ?></label> <?php $this->info( __( 'A safety cap on how many characters can be sent to the AI per day. When the cap is reached, AI translation stops until tomorrow (manual and copy-paste still work). 0 means no limit.', 'translate-rocket' ), self::doc( '/features/bot-shield/' ) ); ?></th>
 								<td>
 									<input type="number" min="0" step="1000" id="trr-ai-limit" name="ai_daily_limit" value="<?php echo (int) ( $settings['ai_daily_limit'] ?? 0 ); ?>" class="regular-text" />
 									<p class="description">
@@ -4982,14 +4988,16 @@ JS
 								</td>
 							</tr>
 							<tr>
-								<th scope="row"><?php esc_html_e( 'Crawlers', 'translate-rocket' ); ?> <?php $this->info( __( 'Search engines and other bots visit your pages constantly. With auto-translation on, those visits could trigger paid AI calls for pages no real visitor asked for. Turn this on to ignore known bots, so only real visitors (and you) ever trigger AI translation.', 'translate-rocket' ) ); ?></th>
+								<th scope="row"><?php esc_html_e( 'Crawlers', 'translate-rocket' ); ?> <?php $this->info( __( 'Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything.', 'translate-rocket' ), self::doc( '/features/bot-shield/' ) ); ?></th>
 								<td>
-									<label>
-										<input type="checkbox" name="ai_block_bots" value="1" <?php checked( ! empty( $settings['ai_block_bots'] ) ); ?> />
-										<?php esc_html_e( 'Don’t let bots / crawlers trigger AI translation', 'translate-rocket' ); ?>
-									</label>
-									<p class="description"><?php esc_html_e( 'Only matters with auto-translation enabled; recommended on.', 'translate-rocket' ); ?></p>
-									<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
+									<?php
+									// 21/10/2026: the checkbox was saved but read by nothing — a visit, from a person or a bot, never
+									// starts an AI translation (only an administrator's button, or Labs on its own schedule). A switch
+									// that does nothing is a promise we do not keep: now it says what is true. The setting is kept
+									// (hidden) so nothing changes for whoever reads it.
+									?>
+									<input type="hidden" name="ai_block_bots" value="1" />
+									<p style="margin:0"><span class="dashicons dashicons-yes" style="color:#00a32a" aria-hidden="true"></span> <?php esc_html_e( 'Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine.', 'translate-rocket' ); ?></p>
 								</td>
 							</tr>
 						</table>
@@ -5776,7 +5784,7 @@ JS;
 						<a class="button button-primary button-hero" href="<?php echo esc_url( $edit_url ); ?>"><?php esc_html_e( 'Translate my homepage now', 'translate-rocket' ); ?></a>
 						<a class="button button-hero" href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-strings' ) ); ?>"><?php esc_html_e( 'Open the translations list', 'translate-rocket' ); ?></a>
 					</div>
-					<p><a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket' ) ); ?>"><?php esc_html_e( 'Go to settings', 'translate-rocket' ); ?></a></p>
+					<p><a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket' ) ); ?>"><?php esc_html_e( 'Go to settings', 'translate-rocket' ); ?></a> · <a href="<?php echo esc_url( self::doc( '/getting-started/' ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Step-by-step setup guide ↗', 'translate-rocket' ); ?></a></p>
 				</div>
 			</div>
 			<?php
@@ -5795,7 +5803,7 @@ JS;
 			<form method="post" action="" class="trr-wiz">
 				<?php wp_nonce_field( 'trrocket_wizard', 'trrocket_wizard_nonce' ); ?>
 				<div class="trr-wiz-head">
-					<div class="trr-wiz-brand"><?php echo wp_kses( self::logo_svg(), \TranslateRocket\Kses::html_rules() ); ?><span><?php esc_html_e( 'TranslateRocket™ setup', 'translate-rocket' ); ?></span></div>
+					<div class="trr-wiz-brand"><?php echo wp_kses( self::logo_svg(), \TranslateRocket\Kses::html_rules() ); ?><span><?php esc_html_e( 'TranslateRocket™ setup', 'translate-rocket' ); ?></span><?php /* 21/10/2026: la guida passo passo del sito */ ?><a class="trr-wiz-guide" href="<?php echo esc_url( self::doc( '/getting-started/' ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Step-by-step setup guide ↗', 'translate-rocket' ); ?></a></div>
 					<ol class="trr-wiz-steps">
 						<li class="is-current" data-dot="1"><?php esc_html_e( 'Languages', 'translate-rocket' ); ?></li>
 						<li data-dot="2"><?php esc_html_e( 'Translation', 'translate-rocket' ); ?></li>
@@ -6087,6 +6095,7 @@ JS;
 				$guarda = '' !== $prima ? \TranslateRocket\Plugin::instance()->router()->home_for_language( $prima ) : '';
 				?>
 				<h1 class="trr-page-title"><?php esc_html_e( 'Translate your site in three steps', 'translate-rocket' ); ?></h1>
+				<p class="trr-guide-link"><?php esc_html_e( 'First time here?', 'translate-rocket' ); ?> <a href="<?php echo esc_url( self::doc( '/getting-started/' ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Step-by-step setup guide ↗', 'translate-rocket' ); ?></a></p>
 				<ol class="trr-steps3">
 					<li class="<?php echo empty( $targets ) ? 'is-now' : 'is-done'; ?>"><strong><?php esc_html_e( 'Choose the languages', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'Tick them below and save.', 'translate-rocket' ); ?></span></li>
 					<li class="<?php echo empty( $targets ) ? '' : 'is-now'; ?>"><strong><?php esc_html_e( 'Translate, for free', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'Press «Translate» next to a language: no key, no account.', 'translate-rocket' ); ?></span></li>
@@ -6431,7 +6440,7 @@ JS;
 							</td>
 						</tr>
 						<tr>
-							<th scope="row"><?php esc_html_e( 'Search in every language', 'translate-rocket' ); ?> <?php $this->info( __( 'Without this, the search box of a translated page finds nothing: WordPress searches the text in your site\'s own language. With it, a visitor on /it/ who types «colazione» finds your page about breakfast. Only the text you wrote for each page counts — its title, excerpt and content — never menus, buttons, footers or cookie banners, which are on every page. Every word must be on the page, the title weighs most, and the theme\'s own search box, Elementor\'s search widget and the Search block work as they are. The index builds by itself in the background and follows every change.', 'translate-rocket' ) ); ?></th>
+							<th scope="row"><?php esc_html_e( 'Search in every language', 'translate-rocket' ); ?> <?php $this->info( __( 'Without this, the search box of a translated page finds nothing: WordPress searches the text in your site\'s own language. With it, a visitor on /it/ who types «colazione» finds your page about breakfast. Only the text you wrote for each page counts — its title, excerpt and content — never menus, buttons, footers or cookie banners, which are on every page. Every word must be on the page, the title weighs most, and the theme\'s own search box, Elementor\'s search widget and the Search block work as they are. The index builds by itself in the background and follows every change.', 'translate-rocket' ), self::doc( '/features/search-every-language/' ) ); ?></th>
 							<td>
 								<label>
 									<input type="checkbox" name="translated_search" value="1" <?php checked( ! isset( $settings['translated_search'] ) || ! empty( $settings['translated_search'] ) ); ?> />
@@ -6848,7 +6857,7 @@ JS;
 				<input type="hidden" name="loc" value="" />
 				<input type="hidden" name="engine_main" value="1" />
 				<label for="trr-engine" class="trr-engine-label" id="trr-engine-label-txt"><?php esc_html_e( 'Translate with', 'translate-rocket' ); ?></label>
-				<?php $this->info( __( 'Automatic uses your AI providers in the order set on AI Translation: when one reaches its daily limit, the next one continues. Choose one engine to use only that one — also for the «AI» button of each page. The free engines of Labs need no key: each one is switched on the first time you use it, after you accept its conditions. «This browser» uses the translator built into Chrome or Edge on this computer. Greyed-out engines show what they still need.', 'translate-rocket' ) ); ?>
+				<?php $this->info( __( 'Automatic uses your AI providers in the order set on AI Translation: when one reaches its daily limit, the next one continues. Choose one engine to use only that one — also for the «AI» button of each page. The free engines of Labs need no key: each one is switched on the first time you use it, after you accept its conditions. «This browser» uses the translator built into Chrome or Edge on this computer. Greyed-out engines show what they still need.', 'translate-rocket' ), self::doc( '/features/engine-order/' ) ); ?>
 				<select name="engine" id="trr-engine" class="trr-engine trr-engine-native">
 					<?php
 					$aperto = '';
@@ -7879,8 +7888,22 @@ JS;
 	 * A small "i" info icon. Click to open a popover that stays open (handled by
 	 * assets/js/admin-info.js) — easier to read than a hover tooltip.
 	 */
-	private function info( string $text ): void {
-		self::info_static( $text );
+	private function info( string $text, string $more = '' ): void {
+		self::info_static( $text, $more );
+	}
+
+	/**
+	 * The page of translaterocket.com that explains a feature, in the language of this admin when the site has it
+	 * (21/10/2026, Federico: «nel tasto info c'è un more che ti porta alla pagina del sito con la descrizione»).
+	 *
+	 * @param string $path Path on translaterocket.com, such as «/features/engine-order/».
+	 */
+	public static function doc( string $path ): string {
+		$site = array( 'it', 'es', 'fr', 'de', 'pt', 'pt-br', 'nl', 'pl', 'ru', 'uk', 'tr', 'ro', 'id', 'el', 'ar', 'ja', 'ko', 'zh', 'hi', 'th', 'vi' );
+		$loc  = strtolower( str_replace( '_', '-', (string) get_user_locale() ) );
+		$lang = 'pt-br' === $loc ? 'pt-br' : substr( $loc, 0, 2 );
+		$pre  = in_array( $lang, $site, true ) ? '/' . $lang : '';
+		return 'https://translaterocket.com' . $pre . $path;
 	}
 
 	/**
@@ -7902,8 +7925,9 @@ JS;
 	 *
 	 * @param string $text What the popover says.
 	 */
-	public static function info_static( string $text ): void {
+	public static function info_static( string $text, string $more = '' ): void {
+		$link = '' === $more ? '' : '" data-more="' . esc_url( $more ) . '" data-more-label="' . esc_attr__( 'Read more on translaterocket.com ↗', 'translate-rocket' );
 		echo '<button type="button" class="trr-info" aria-label="' . esc_attr__( 'More info', 'translate-rocket' )
-			. '" data-info="' . esc_attr( $text ) . '"><span class="dashicons dashicons-info-outline"></span></button>';
+			. '" data-info="' . esc_attr( $text ) . $link . '"><span class="dashicons dashicons-info-outline"></span></button>';
 	}
 }

@@ -709,7 +709,10 @@ class Router {
 	 * Whether a major SEO plugin is active, so we don't duplicate its OG tags.
 	 */
 	private static function seo_plugin_active(): bool {
-		return defined( 'WPSEO_VERSION' ) || defined( 'SEOPRESS_VERSION' ) || defined( 'AIOSEO_VERSION' ) || class_exists( 'RankMath' ) || class_exists( 'RankMath\Helper' );
+		// 21/10/2026: The SEO Framework printed its og:locale and we added a second one (banco, collaudo-seo). The page
+		// engine now also drops repeated og:locale tags on translated pages, for SEO plugins not listed here.
+		return defined( 'WPSEO_VERSION' ) || defined( 'SEOPRESS_VERSION' ) || defined( 'AIOSEO_VERSION' ) || class_exists( 'RankMath' ) || class_exists( 'RankMath\Helper' )
+			|| defined( 'THE_SEO_FRAMEWORK_VERSION' );
 	}
 
 	/**

@@ -7061,3 +7061,27 @@ msgstr "«جستجو در همهٔ زبان‌ها» در %s خاموش است: 
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "فقط آنهایی که همان‌طور ماندند"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "همیشه محافظت‌شده: یک بازدید، چه از یک انسان چه از یک ربات، هرگز ترجمهٔ هوش مصنوعی را آغاز نمی‌کند. فقط دکمه‌های شما، یا Labs طبق برنامهٔ خودش، متن را به یک موتور می‌فرستند."
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "موتورهای جست‌وجو و ربات‌های دیگر مدام از صفحه‌های شما بازدید می‌کنند. بازدید آن‌ها هرگز ترجمهٔ هوش مصنوعی را آغاز نمی‌کند، پس هیچ هزینه‌ای برایتان ندارد."
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "بیشتر بخوانید در translaterocket.com ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "راهنمای گام‌به‌گام راه‌اندازی ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "اولین بار است که اینجایید؟"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "اختیاری. به دو یا چند ارائه‌دهنده اولویت بدهید تا زنجیرهٔ جایگزین ساخته شود: ترجمهٔ انبوه و خودکار ابتدا اولویت ۱ را امتحان می‌کنند و هرگاه اعتبار یکی تمام شود یا کلیدش رد شود، به اولویت ۲، ۳… می‌روند. ارائه‌دهندگانی که روی «—» مانده‌اند هم کمک می‌کنند: بعد از شماره‌دارها می‌آیند."

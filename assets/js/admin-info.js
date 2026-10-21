@@ -27,6 +27,18 @@
 			var pop = document.createElement( 'div' );
 			pop.className = 'trr-info-pop';
 			pop.textContent = btn.getAttribute( 'data-info' ) || '';
+			// 21/10/2026: «Read more» to the page of translaterocket.com that explains the feature.
+			var more = btn.getAttribute( 'data-more' );
+			if ( more && /^https:\/\/translaterocket\.com\//.test( more ) ) {
+				var a = document.createElement( 'a' );
+				a.href = more;
+				a.target = '_blank';
+				a.rel = 'noopener';
+				a.className = 'trr-info-more';
+				a.textContent = btn.getAttribute( 'data-more-label' ) || 'Read more ↗';
+				pop.appendChild( document.createElement( 'br' ) );
+				pop.appendChild( a );
+			}
 			pop._for = btn;
 			document.body.appendChild( pop );
 			var r    = btn.getBoundingClientRect();

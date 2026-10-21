@@ -7035,3 +7035,27 @@ msgstr "“在所有语言中搜索”在 %s 上已关闭：搜索框将只搜�
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "仅保持原样的"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "始终受保护：无论是人还是机器人，访问都不会启动 AI 翻译。只有您的按钮，或按自身计划运行的 Labs，才会把文本发送给引擎。"
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "搜索引擎和其他机器人随时都在访问您的页面。它们的访问不会启动 AI 翻译，因此不会让您花一分钱。"
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "在 translaterocket.com 上了解更多 ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "分步设置指南 ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "第一次来这里？"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "可选。给两个或更多提供商设定优先级，即可组成后备链：批量翻译和自动翻译先尝试优先级 1，当某个提供商额度用完或密钥被拒绝时，切换到优先级 2、3……保留为「—」的提供商也会帮忙：排在有编号的之后。"

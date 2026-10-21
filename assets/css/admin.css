@@ -851,6 +851,10 @@
 	border-radius: 8px;
 	box-shadow: 0 6px 24px rgba( 0, 0, 0, 0.25 );
 }
+/* 21/10/2026: the link to the feature's page on translaterocket.com */
+.trr-info-pop .trr-info-more { display: inline-block; margin-top: 8px; color: #a5b4fc; font-weight: 600; text-decoration: none; }
+.trr-info-pop .trr-info-more:hover,
+.trr-info-pop .trr-info-more:focus { color: #fff; text-decoration: underline; }
 
 .trr-eblockwrap h3,
 .trrocket-card h3 {
@@ -2114,6 +2118,9 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-ov-head { cursor: pointer; padding: 16px 20px; list-style: none; display: flex; flex-direction: column; gap: 2px; }
 .trr-ov-head::-webkit-details-marker { display: none; }
 .trr-ov-tit { font-size: 16px; font-weight: 600; color: #1d2327; }
+/* 21/10/2026 (Federico: «free ben visibile e con del verde») */
+.trr-ov-tit .trr-ov-free { display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; padding: 3px 12px 3px 8px; border-radius: 999px; background: #00a32a; color: #fff; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; vertical-align: 2px; box-shadow: 0 2px 6px rgba(0,163,42,.25); }
+.trr-ov-tit .trr-ov-free .dashicons { font-size: 18px; width: 18px; height: 18px; }
 .trr-ov-sub { color: #50575e; font-size: 13px; }
 .trr-ov-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid #e6e7f0; }
 .trr-ov-col { padding: 14px 20px 6px; }
@@ -2391,6 +2398,19 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-engine-info-limit{background:#fcf9e8;border-left-color:#dba617}
 .trr-engine-info-paid{background:#f0f6fc;border-left-color:#72aee6}
 .trr-einfo-row b{font-weight:600}
+/* 21/10/2026 (Federico: «più leggibile, chiara e gradevole»): a tile per fact on the tinted band — icon and small
+   label above, the value at reading size and dark; five across on a computer, two on a tablet, one on a phone. */
+.trr-engine-info{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;padding:12px;border-left-width:5px;border-radius:0 10px 10px 0;font-size:13px}
+.trr-einfo-row{display:flex;flex-direction:column;gap:5px;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:8px;padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.trr-einfo-lab{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:#646970}
+.trr-einfo-lab .dashicons{font-size:15px;width:15px;height:15px;color:#8c8f94}
+.trr-engine-info-free .trr-einfo-lab .dashicons{color:#00a32a}
+.trr-engine-info-limit .trr-einfo-lab .dashicons{color:#b26200}
+.trr-engine-info-paid .trr-einfo-lab .dashicons{color:#2271b1}
+.trr-einfo-val{display:flex;align-items:center;gap:7px;font-size:13.5px;line-height:1.45;font-weight:500;color:#1d2327}
+.trr-einfo-quality .trr-einfo-val{font-weight:700}
+.trr-einfo-quality .trr-qbars{color:#00a32a;height:13px}
+@media (max-width:600px){.trr-engine-info{grid-template-columns:1fr}}
 @media (max-width:782px){.trr-epick,.trr-epick-btn{width:100%}.trr-epick-list{width:100%;max-width:none}}
 
 /* 15/10/2026 (visual check on a phone, 390 px): the bar of each language had «as much room as needed», so the
@@ -2538,3 +2558,9 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 #trr-sw-preview { position: relative; }
 #trr-sw-preview.is-loading > * { opacity: .45; transition: opacity .15s; }
 #trr-sw-preview.is-loading::after { content: ""; position: absolute; top: 50%; left: 50%; width: 24px; height: 24px; margin: -12px 0 0 -12px; border: 3px solid #c3c4c7; border-top-color: #2271b1; border-radius: 50%; animation: trr-sw-spin .8s linear infinite; z-index: 3; }
+
+/* 21/10/2026: the step-by-step setup guide on translaterocket.com, from the wizard and the Start screen */
+.trr-wiz-brand .trr-wiz-guide { margin-left: auto; color: #fff; opacity: .9; font-size: 13px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.trr-wiz-brand .trr-wiz-guide:hover, .trr-wiz-brand .trr-wiz-guide:focus { opacity: 1; color: #fff; }
+.trr-guide-link { margin: -4px 0 14px; font-size: 14px; color: #50575e; }
+.trr-guide-link a { font-weight: 600; }

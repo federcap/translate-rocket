@@ -6216,3 +6216,27 @@ msgstr "«Zoeken in elke taal» staat uit op %s: het vak zou alleen in de eigen 
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "Alleen gelaten zoals ze waren"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "Altijd beschermd: een bezoek, van een mens of een bot, start nooit een AI-vertaling. Alleen jouw knoppen, of Labs volgens zijn eigen planning, sturen tekst naar een engine."
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "Zoekmachines en andere bots bezoeken je pagina's voortdurend. Hun bezoeken starten nooit een AI-vertaling, dus ze kosten je nooit iets."
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "Meer lezen op translaterocket.com ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "Stap-voor-stap installatiegids ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "Voor het eerst hier?"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "Optioneel. Geef twee of meer aanbieders een prioriteit om een terugvalketen te maken: bulk- en automatisch vertalen proberen eerst prioriteit 1 en gaan naar 2, 3… zodra er een geen tegoed meer heeft of de sleutel wordt geweigerd. Aanbieders op «—» helpen ook: ze komen na de genummerde."

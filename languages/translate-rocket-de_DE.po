@@ -6214,3 +6214,27 @@ msgstr "„In jeder Sprache suchen“ ist auf %s aus: Das Feld würde nur in der
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "Nur unverändert gelassene"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "Immer geschützt: Ein Besuch, ob von einem Menschen oder einem Bot, startet nie eine KI-Übersetzung. Nur Ihre Schaltflächen oder Labs nach eigenem Zeitplan senden Text an eine Engine."
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "Suchmaschinen und andere Bots besuchen Ihre Seiten ständig. Ihre Besuche starten nie eine KI-Übersetzung und kosten Sie daher nie etwas."
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "Mehr dazu auf translaterocket.com ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "Einrichtungsanleitung Schritt für Schritt ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "Zum ersten Mal hier?"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "Optional. Geben Sie zwei oder mehr Anbietern eine Priorität, um eine Ausweichkette zu bilden: Die Massen- und die automatische Übersetzung versuchen zuerst Priorität 1 und wechseln zu Priorität 2, 3 …, sobald einem das Guthaben ausgeht oder sein Schlüssel abgelehnt wird. Anbieter auf „—“ helfen trotzdem: Sie kommen nach den nummerierten."

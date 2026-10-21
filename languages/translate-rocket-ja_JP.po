@@ -6190,3 +6190,27 @@ msgstr "「すべての言語で検索」が %s でオフです。ボックス�
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "そのまま保持した文のみ"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "常に保護されています：人でもボットでも、訪問によって AI 翻訳が始まることはありません。エンジンにテキストを送るのは、あなたのボタンか、独自のスケジュールで動く Labs だけです。"
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "検索エンジンやその他のボットは常にページを訪れます。その訪問で AI 翻訳が始まることはないため、費用がかかることもありません。"
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "translaterocket.com で詳しく見る ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "ステップごとの設定ガイド ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "初めてですか？"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "任意。2 つ以上のプロバイダーに優先順位を付けると、予備のチェーンになります。一括翻訳と自動翻訳はまず優先順位 1 を試し、クレジットが尽きたりキーが拒否されたりすると 2、3… に切り替えます。「—」のままのプロバイダーも役に立ちます：番号付きのものの後に使われます。"

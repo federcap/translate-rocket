@@ -7035,3 +7035,27 @@ msgstr "«모든 언어에서 검색»이 %s에서 꺼져 있습니다. 검색�
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "그대로 둔 문장만"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "항상 보호됨: 사람이든 봇이든 방문으로 AI 번역이 시작되는 일은 없습니다. 엔진에 텍스트를 보내는 것은 사용자의 버튼이나 자체 일정에 따른 Labs뿐입니다."
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "검색 엔진과 다른 봇은 늘 페이지를 방문합니다. 그 방문으로 AI 번역이 시작되지 않으므로 비용이 들지 않습니다."
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "translaterocket.com에서 자세히 보기 ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "단계별 설정 가이드 ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "처음이신가요?"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "선택 사항입니다. 둘 이상의 제공자에게 우선순위를 주면 대체 체인이 됩니다. 일괄 번역과 자동 번역은 먼저 우선순위 1을 시도하고, 크레딧이 떨어지거나 키가 거부되면 2, 3…으로 넘어갑니다. «—»로 둔 제공자도 도움이 됩니다: 번호가 매겨진 제공자 다음에 사용됩니다."

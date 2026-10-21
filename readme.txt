@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.12
+Stable tag: 1.8.13
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,14 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.13 =
+* New: The SEO Framework. Its sitemap is a single list, so the translated pages were in no sitemap: now every translated address is inside it. Its og:locale was printed twice on translated pages; now once, and a repeated og:locale from any other SEO plugin is removed too.
+* New: «Read more» in the ⓘ buttons of engines, limits, bots and search opens the page that explains the feature on translaterocket.com, in your admin language when the site has it.
+* New: a «Step-by-step setup guide» link in the setup wizard and on the Start screen.
+* Improved: the box that describes the chosen engine on the Translations screen is easier to read — one tile per fact, the quality with its bars. «All free» in the overview is now a green label.
+* Fixed: the «Crawlers» checkbox on the AI screen was saved but did nothing, because a visit never starts an AI translation. The row now says so instead of offering a switch with no effect.
+* Fixed: the help of «Fallback priority» said that providers left on «—» stay out of the chain; they are used after the numbered ones, and the text now says so.
 
 = 1.8.12 =
 * Fixed: links inside translated pages now use the translated slug of the page they point to — a button to «/start-here/» leads an Italian visitor to «/it/inizia-da-qui/», not «/it/start-here/». The source-slug address, if someone still reaches it, moves there with a 301, so canonical, hreflang, the switcher and the sitemap all name the same page. Thanks to Tommaso for reporting it.
@@ -456,6 +464,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.13 =
+The SEO Framework: translated pages in its sitemap, one og:locale. «Read more» links to feature pages, setup guide link, clearer engine box.
 
 = 1.8.12 =
 Internal links follow translated slugs; «Translate» in the Simple view starts translating; percentages reach 100% when everything visible is translated.

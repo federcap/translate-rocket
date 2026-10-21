@@ -6214,3 +6214,27 @@ msgstr "«Pesquisar em todos os idiomas» está desligado em %s: a caixa pesquis
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "Só as mantidas como estavam"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "Sempre protegido: uma visita, de uma pessoa ou de um bot, nunca inicia uma tradução com IA. Só os seus botões, ou o Labs no seu próprio horário, enviam texto para um motor."
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "Os motores de busca e outros bots visitam as suas páginas o tempo todo. As visitas deles nunca iniciam uma tradução com IA, por isso nunca lhe custam nada."
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "Saiba mais em translaterocket.com ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "Guia de configuração passo a passo ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "Primeira vez aqui?"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "Opcional. Dê prioridade a dois ou mais fornecedores para criar uma cadeia de recurso: a tradução em massa e a automática tentam primeiro a prioridade 1 e passam para a 2, 3… sempre que um fica sem crédito ou tem a chave recusada. Os fornecedores deixados em «—» também ajudam: vêm depois dos numerados."

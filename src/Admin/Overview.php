@@ -193,7 +193,14 @@ class Overview {
 		?>
 		<details class="trrocket-card trr-ov" open>
 			<summary class="trr-ov-head">
-				<span class="trr-ov-tit"><?php esc_html_e( 'Everything you can do — all free', 'translate-rocket' ); ?></span>
+				<?php
+				// 21/10/2026 (Federico: «free ben visibile e con del verde»): the part after the dash («all free», «tutto
+				// gratis», «全部免费») becomes a green label. Same translated sentence, so no language loses its text.
+				$tit   = __( 'Everything you can do — all free', 'translate-rocket' );
+				$pezzi = preg_split( '/\s*—+\s*/u', $tit );
+				$gratis = ( is_array( $pezzi ) && count( $pezzi ) > 1 ) ? (string) array_pop( $pezzi ) : '';
+				?>
+				<span class="trr-ov-tit"><?php echo esc_html( '' !== $gratis ? implode( ' — ', $pezzi ) : $tit ); ?><?php if ( '' !== $gratis ) : ?> <span class="trr-ov-free"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php echo esc_html( $gratis ); ?></span><?php endif; ?></span>
 				<span class="trr-ov-sub"><?php esc_html_e( 'No paid plan, no word limit. Green is working on your site; click a line to set it up.', 'translate-rocket' ); ?></span>
 			</summary>
 			<div class="trr-ov-cols">

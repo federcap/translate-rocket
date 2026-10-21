@@ -1603,6 +1603,15 @@ class Engine {
 						$changed = true;
 					}
 				}
+				// 21/10/2026: one og:locale only. An SEO plugin we do not recognise prints its own and we add ours:
+				// Facebook reads the first, validators flag the repeat. The first one stays.
+				$tutti = iterator_to_array( $xpath->query( '//head/meta[@property="og:locale"]' ) );
+				foreach ( array_slice( $tutti, 1 ) as $doppio ) {
+					if ( $doppio instanceof \DOMElement && $doppio->parentNode ) {
+						$doppio->parentNode->removeChild( $doppio );
+						$changed = true;
+					}
+				}
 			}
 			$dom->documentElement->setAttribute( 'lang', $this->current );
 			if ( \TranslateRocket\Languages::is_rtl( $this->current ) ) {

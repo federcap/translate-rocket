@@ -42,6 +42,49 @@ class Sitemap {
 		// WordPress' own wp-sitemap.xml (sites without an SEO plugin): the translated addresses too (16/10/2026).
 		add_filter( 'wp_sitemaps_posts_url_list', array( $this, 'core_url_list' ), 20, 2 );
 		add_filter( 'wpseo_sitemap_index', array( $this, 'index_entry' ) );
+		// 21/10/2026 (The SEO Framework, banco): its /sitemap.xml is one list, not an index, so our sitemap had no way in
+		// and the translated pages were in no sitemap Google is given. Its own filter takes extra addresses.
+		add_filter( 'the_seo_framework_sitemap_additional_urls', array( $this, 'tsf_urls' ), 10, 2 );
+	}
+
+	/**
+	 * The translated addresses for The SEO Framework's sitemap: the same pages and languages as our own sitemap.
+	 *
+	 * @param array $custom_urls Extra URLs so far, keyed by URL.
+	 * @param array $args        Sitemap arguments (unused).
+	 * @return array
+	 */
+	public function tsf_urls( $custom_urls, $args = array() ) {
+		unset( $args );
+		if ( ! is_array( $custom_urls ) || Preview::hidden() || \TranslateRocket\Coexistence::on() ) {
+			return $custom_urls;
+		}
+		$router = Plugin::instance()->router();
+		$source = $router->default_language();
+		$langs  = array_values( array_diff( (array) $router->public_languages(), array( $source ) ) );
+		if ( empty( $langs ) ) {
+			return $custom_urls;
+		}
+		$home  = rtrim( (string) home_url( '/' ), '/' );
+		$pagine = array( array( 0, $home . '/', '' ) );
+		$front = (int) get_option( 'page_on_front' );
+		foreach ( get_posts( array( 'post_type' => $this->post_types(), 'post_status' => 'publish', 'posts_per_page' => self::MAX, 'fields' => 'ids', 'orderby' => 'modified', 'order' => 'DESC', 'no_found_rows' => true ) ) as $id ) {
+			$id  = (int) $id;
+			$url = (string) get_permalink( $id );
+			if ( $id === $front || '' === $url || false !== strpos( $url, '?' ) || NoTranslate::path_excluded( (string) wp_parse_url( $url, PHP_URL_PATH ) ) ) {
+				continue;
+			}
+			$pagine[] = array( $id, $url, (string) get_post_field( 'post_modified_gmt', $id ) );
+		}
+		foreach ( $pagine as $p ) {
+			foreach ( $langs as $lang ) {
+				if ( $p[0] > 0 && '' !== (string) ( \TranslateRocket\Exclusions::get( $p[0], (string) $lang )['mode'] ?? '' ) ) {
+					continue;
+				}
+				$custom_urls[ $this->lang_url( $p[0], $p[1], (string) $lang, $source, $home ) ] = array( 'lastmod' => $p[2] );
+			}
+		}
+		return $custom_urls;
 	}
 
 	/**

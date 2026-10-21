@@ -6242,3 +6242,27 @@ msgstr "«Искать на всех языках» выключено на %s: 
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "Только оставленные как были"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "Всегда под защитой: визит человека или бота никогда не запускает перевод с помощью ИИ. Текст отправляют движку только ваши кнопки или Labs по своему расписанию."
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "Поисковые системы и другие боты постоянно посещают ваши страницы. Их визиты никогда не запускают перевод с помощью ИИ, поэтому ничего вам не стоят."
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "Подробнее на translaterocket.com ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "Пошаговое руководство по настройке ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "Впервые здесь?"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "Необязательно. Задайте приоритет двум или более поставщикам, чтобы получить резервную цепочку: массовый и автоматический перевод сначала пробуют приоритет 1 и переходят к 2, 3…, когда у одного заканчивается кредит или его ключ отклонён. Поставщики, оставленные на «—», тоже помогают: они идут после пронумерованных."

@@ -7165,3 +7165,27 @@ msgstr "«البحث في كل اللغات» معطّل في %s: سيبحث ا�
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "فقط التي بقيت كما هي"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "محمي دائمًا: الزيارة، من شخص أو من روبوت، لا تبدأ أبدًا ترجمة بالذكاء الاصطناعي. أزرارك وحدها، أو Labs وفق جدوله، ترسل النص إلى محرّك."
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "تزور محركات البحث والروبوتات الأخرى صفحاتك طوال الوقت. زياراتها لا تبدأ أبدًا ترجمة بالذكاء الاصطناعي، لذا لا تكلّفك شيئًا."
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "اقرأ المزيد على translaterocket.com ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "دليل الإعداد خطوة بخطوة ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "أول مرة هنا؟"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "اختياري. امنح مزوّدَين أو أكثر أولوية لبناء سلسلة احتياطية: الترجمة الجماعية والتلقائية تجرّب الأولوية 1 أولًا، ثم تنتقل إلى الأولوية 2 و3… كلما نفد رصيد أحدها أو رُفض مفتاحه. المزوّدون المتروكون على «—» يساعدون أيضًا: يأتون بعد المرقّمين."

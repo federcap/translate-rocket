@@ -7061,3 +7061,27 @@ msgstr "«Her dilde ara» %s üzerinde kapalı: kutu yalnızca sitenin kendi dil
 #: src/Admin/Admin.php
 msgid "Only kept as they were"
 msgstr "Yalnızca olduğu gibi bırakılanlar"
+
+#: src/Admin/Admin.php
+msgid "Always protected: a visit, from a person or a bot, never starts an AI translation. Only your buttons, or Labs on its own schedule, send text to an engine."
+msgstr "Her zaman korunur: bir ziyaret, ister insandan ister bottan gelsin, asla yapay zekâ çevirisi başlatmaz. Metni bir motora yalnızca sizin düğmeleriniz ya da kendi takvimiyle Labs gönderir."
+
+#: src/Admin/Admin.php
+msgid "Search engines and other bots visit your pages all the time. Their visits never start an AI translation, so they never cost you anything."
+msgstr "Arama motorları ve diğer botlar sayfalarınızı sürekli ziyaret eder. Ziyaretleri asla yapay zekâ çevirisi başlatmaz, bu yüzden size hiçbir maliyeti olmaz."
+
+#: src/Admin/Admin.php
+msgid "Read more on translaterocket.com ↗"
+msgstr "translaterocket.com'da daha fazlası ↗"
+
+#: src/Admin/Admin.php
+msgid "Step-by-step setup guide ↗"
+msgstr "Adım adım kurulum kılavuzu ↗"
+
+#: src/Admin/Admin.php
+msgid "First time here?"
+msgstr "İlk kez mi buradasınız?"
+
+#: src/Admin/Admin.php
+msgid "Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones."
+msgstr "İsteğe bağlı. Bir yedek zincir kurmak için iki veya daha fazla sağlayıcıya öncelik verin: toplu ve otomatik çeviri önce öncelik 1'i dener, birinin kredisi bittiğinde ya da anahtarı reddedildiğinde 2, 3… önceliğe geçer. «—» üzerinde bırakılan sağlayıcılar da yardımcı olur: numaralıların ardından gelirler."
