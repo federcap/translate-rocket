@@ -7093,3 +7093,37 @@ msgstr "本站点正在进行另一项翻译（另一个标签页，或后台的
 #, php-format
 msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
 msgstr "翻译正在等待：所有引擎都在休息。%s 之后会自动继续。"
+
+#: src/Admin/Admin.php
+msgid "Use this engine"
+msgstr "使用此引擎"
+
+#: src/Admin/Admin.php
+msgid "Off: this engine is never used, not even as a fallback, and your key stays saved for later (for example when the account has no credit left)."
+msgstr "关闭：此引擎不会被使用，即使作为备用也不会，您的密钥仍会保存以备后用（例如账户余额用完时）。"
+
+#: src/Admin/Admin.php
+msgid "Use it"
+msgstr "使用它"
+
+#: src/Admin/Admin.php
+msgid "recommended"
+msgstr "推荐"
+
+#: src/Admin/Admin.php
+msgid "Pick a suggested model or type your own. Empty field = the recommended one."
+msgstr "选择一个建议的模型，或输入其他模型。留空 = 使用推荐的模型。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "This model exists, but its free provider is not answering right now. Choose another model, for example %s, or try again later."
+msgstr "此模型存在，但其免费提供方目前没有响应。请选择其他模型，例如 %s，或稍后再试。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose the recommended one, %s."
+msgstr "注意：译文中含有其他文字系统的字母。此模型不擅长这种语言：请选择推荐的模型 %s。"
+
+#: src/Admin/Admin.php
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
+msgstr "注意：译文中含有其他文字系统的字母。此模型不擅长这种语言：请选择其他模型。"

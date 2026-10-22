@@ -90,11 +90,18 @@
 					ph.value       = '';
 					ph.textContent = CFG.i18n.pick;
 					sel.appendChild( ph );
-					r.data.models.forEach( function ( m ) {
+					// 22/10/2026: the recommended model first, marked, and chosen when the field is empty.
+					var rec    = sel.getAttribute( 'data-recommended' ) || '';
+					var models = r.data.models.slice();
+					if ( rec && models.indexOf( rec ) > 0 ) {
+						models.splice( models.indexOf( rec ), 1 );
+						models.unshift( rec );
+					}
+					models.forEach( function ( m ) {
 						var o = document.createElement( 'option' );
 						o.value       = m;
-						o.textContent = m;
-						if ( m === modelEl.value ) {
+						o.textContent = m === rec ? m + ' — ' + ( CFG.i18n.rec || 'recommended' ) + ' ★' : m;
+						if ( m === modelEl.value || ( ! modelEl.value && m === rec ) ) {
 							o.selected = true;
 						}
 						sel.appendChild( o );
@@ -138,6 +145,19 @@
 				}
 			} )
 			.catch( function () { btn.disabled = false; out.textContent = CFG.i18n.none; } );
+	} );
+
+	// «Use it» next to the recommended model fills the field.
+	document.addEventListener( 'click', function ( e ) {
+		var t = e.target;
+		if ( t && t.classList && t.classList.contains( 'trr-use-model' ) ) {
+			var modelEl = field( t.getAttribute( 'data-provider' ), 'model' );
+			if ( modelEl ) {
+				modelEl.value = t.getAttribute( 'data-model' );
+				modelEl.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+				modelEl.focus();
+			}
+		}
 	} );
 
 	// Picking from the dropdown fills the model text field.

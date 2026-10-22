@@ -183,6 +183,9 @@ class DynamicContent {
 				'title' => $title,
 				'tools' => array_values( \TranslateRocket\NoTranslate::tool_prefixes() ),
 				'exact' => \TranslateRocket\NoTranslate::EXACT_CLASSES,
+				// 22/10/2026 (translaterocket.com: the text of SupportCandy tickets, loaded by JavaScript for the
+				// administrator, ended up among the strings): the «Exclude selectors» count here too.
+				'sel'   => array_values( array_unique( array_merge( \TranslateRocket\NoTranslate::selectors(), \TranslateRocket\NoTranslate::factory_selectors() ) ) ),
 			)
 		);
 		wp_enqueue_script( $handle );

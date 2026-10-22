@@ -42,6 +42,13 @@ class Router {
 	private $query = '';
 
 	/**
+	 * A renamed term reached through one of its old translated slugs: array( term_id, taxonomy ), or null.
+	 *
+	 * @var array|null
+	 */
+	private $old_term = null;
+
+	/**
 	 * Hook into WordPress.
 	 */
 	public function boot(): void {
@@ -953,6 +960,13 @@ class Router {
 		if ( is_admin() || is_preview() || ( function_exists( 'is_customize_preview' ) && is_customize_preview() ) ) {
 			return;
 		}
+		if ( $this->old_term ) {
+			$link = get_term_link( (int) $this->old_term[0], (string) $this->old_term[1] );
+			if ( is_string( $link ) && '' !== $link ) {
+				wp_safe_redirect( '' !== $this->query ? $link . ( false === strpos( $link, '?' ) ? '?' : '&' ) . $this->query : $link, 301, 'TranslateRocket' );
+				exit;
+			}
+		}
 		$dove = $this->source_slug_target();
 		if ( '' !== $dove ) {
 			wp_safe_redirect( $dove, 301, 'TranslateRocket' );
@@ -1016,10 +1030,19 @@ class Router {
 
 		// Term archives: map a translated category/tag slug back to the real one (the
 		// source slug still resolves on its own, so no URL ever 404s).
-		foreach ( array(
+		// 22/10/2026 (piflarnakupuje.top, «WooCommerce … only 404 error and archives not showing»): filter_term_link
+		// translates the slug of EVERY taxonomy, but only category and post_tag came back here, so each translated
+		// product category (/en/k/102/3d-printers/), product tag or custom taxonomy archive answered 404.
+		$tassonomie = array(
 			'category_name' => 'category',
 			'tag'           => 'post_tag',
-		) as $qv => $tax ) {
+		);
+		foreach ( get_taxonomies( array( 'public' => true ), 'objects' ) as $tx ) {
+			if ( ! empty( $tx->query_var ) && ! isset( $tassonomie[ $tx->query_var ] ) && ! in_array( $tx->name, $tassonomie, true ) ) {
+				$tassonomie[ (string) $tx->query_var ] = (string) $tx->name;
+			}
+		}
+		foreach ( $tassonomie as $qv => $tax ) {
 			if ( empty( $query_vars[ $qv ] ) ) {
 				continue;
 			}
@@ -1029,6 +1052,12 @@ class Router {
 			$real = TermSlugs::resolve( $last, $this->current_language(), $tax );
 			if ( '' !== $real && $real !== $last ) {
 				$query_vars[ $qv ] = ( false !== $cut ) ? substr( $val, 0, $cut + 1 ) . $real : $real;
+			} elseif ( '' === $real && ! term_exists( $last, $tax ) ) {
+				// 22/10/2026: a slug the term had before it was renamed → 301 to today's address (template_redirect).
+				$vecchio = TermSlugs::resolve_old( $last, $this->current_language(), $tax );
+				if ( $vecchio ) {
+					$this->old_term = array( $vecchio, $tax );
+				}
 			}
 		}
 

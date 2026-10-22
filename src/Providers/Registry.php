@@ -97,7 +97,7 @@ class Registry {
 	 */
 	public static function active(): ?ProviderInterface {
 		$id = (string) ( Settings::get()['active_provider'] ?? '' );
-		if ( '' === $id ) {
+		if ( '' === $id || self::switched_off( $id ) ) {
 			return null;
 		}
 		$provider = self::get( $id );
@@ -133,18 +133,30 @@ class Registry {
 		$seen    = array();
 		foreach ( $queue as $id ) {
 			$id = (string) $id;
-			if ( isset( $by_id[ $id ] ) && empty( $seen[ $id ] ) && $by_id[ $id ]->is_configured() ) {
+			if ( isset( $by_id[ $id ] ) && empty( $seen[ $id ] ) && $by_id[ $id ]->is_configured() && ! self::switched_off( $id ) ) {
 				$ordered[]   = $by_id[ $id ];
 				$seen[ $id ] = true;
 			}
 		}
 		// Any remaining configured providers become fallbacks in their natural order.
 		foreach ( self::all() as $provider ) {
-			if ( empty( $seen[ $provider->id() ] ) && $provider->is_configured() ) {
+			if ( empty( $seen[ $provider->id() ] ) && $provider->is_configured() && ! self::switched_off( $provider->id() ) ) {
 				$ordered[]                 = $provider;
 				$seen[ $provider->id() ]   = true;
 			}
 		}
 		return $ordered;
+	}
+
+	/**
+	 * 22/10/2026 (Federico: «DeepL disabilitalo visto che non ho crediti… c'è il pulsante disabilita mantenendo le
+	 * credenziali?»): a provider with a saved key was always used, at least as a fallback; the only way to stop it was to
+	 * delete the key. «Use this engine» off: never asked, the key stays for when the account is in order again.
+	 *
+	 * @param string $id Provider id.
+	 */
+	public static function switched_off( string $id ): bool {
+		$p = Settings::get()['providers'][ $id ] ?? array();
+		return is_array( $p ) && ! empty( $p['off'] );
 	}
 }

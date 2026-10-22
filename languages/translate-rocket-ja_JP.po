@@ -6248,3 +6248,37 @@ msgstr "このサイトで別の翻訳が実行中です（別のタブ、また
 #, php-format
 msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
 msgstr "翻訳は待機中です。すべてのエンジンが休止中です。%s 以降に自動で再開します。"
+
+#: src/Admin/Admin.php
+msgid "Use this engine"
+msgstr "このエンジンを使う"
+
+#: src/Admin/Admin.php
+msgid "Off: this engine is never used, not even as a fallback, and your key stays saved for later (for example when the account has no credit left)."
+msgstr "オフ：このエンジンは予備としても一切使われず、キーは後のために保存されたままです（アカウントのクレジットが尽きたときなど）。"
+
+#: src/Admin/Admin.php
+msgid "Use it"
+msgstr "これを使う"
+
+#: src/Admin/Admin.php
+msgid "recommended"
+msgstr "おすすめ"
+
+#: src/Admin/Admin.php
+msgid "Pick a suggested model or type your own. Empty field = the recommended one."
+msgstr "候補のモデルを選ぶか、別のモデル名を入力してください。空欄 = おすすめのモデル。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "This model exists, but its free provider is not answering right now. Choose another model, for example %s, or try again later."
+msgstr "このモデルは存在しますが、無料の提供元が今は応答していません。別のモデル（例：%s）を選ぶか、後でもう一度お試しください。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose the recommended one, %s."
+msgstr "注意：翻訳に別の文字体系の文字が含まれています。このモデルはこの言語に向いていません。おすすめのモデル（%s）を選んでください。"
+
+#: src/Admin/Admin.php
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
+msgstr "注意：翻訳に別の文字体系の文字が含まれています。このモデルはこの言語に向いていません。別のモデルを選んでください。"

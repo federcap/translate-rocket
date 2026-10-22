@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.15
+Stable tag: 1.8.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,16 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.16 =
+* Fixed: on WooCommerce shops, translated product category and product tag addresses answered 404 (for example /de/product-category/drucker/). The links used the translated name, but the address was not recognised when a visitor opened it. Custom category bases, subcategories and any public taxonomy are covered. Thanks to the shop owner who sent the details.
+* New: when a category or tag is renamed, or its translation is corrected, its translated address follows, and the old address sends visitors and search engines to the new one with a 301. Slugs imported from other plugins are left as they are.
+* New: every AI engine card shows the recommended model, with a «Use it» button; in the model lists the recommended one comes first and is marked. Groq and OpenRouter lists updated after a translation test of their free models.
+* New: «Use this engine» on every engine card. Switch an engine off and it is never used, not even as a fallback, while its key stays saved (for example when the account has no credit left).
+* Improved: «Test this text» lets you choose the language to translate into, refreshes the «free requests today» counter at once, and warns when the result mixes in letters of another alphabet, a sign that the model does not suit that language.
+* Improved: search across all languages runs one database query instead of one per language: on sites with many languages each suggestion is several times faster.
+* Fixed: text added by JavaScript inside an area listed in «Exclude selectors» was still collected when an administrator viewed the page (for example a help-desk plugin showing tickets). It is now skipped, like the rest of the area.
+* Fixed: OpenRouter's «no endpoints found» on a free model now says that the model's free provider is not answering, instead of «the model does not exist».
 
 = 1.8.15 =
 * Faster pages for your visitors while translations run in the background: Labs, WP-Cron and WP-CLI now clear the site's caches (page cache, Breeze, LiteSpeed, Varnish, object cache) at most once every ten minutes, instead of after every page. The last change is still shown within ten minutes; what you edit by hand is shown at once, as before.
@@ -481,6 +491,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.16 =
+WooCommerce: translated product category and tag addresses no longer answer 404. Recommended model on every AI engine card, «Use this engine» switch, faster search in all languages.
 
 = 1.8.15 =
 Faster pages while Labs or WP-Cron translate in the background (caches cleared at most every ten minutes), no more false «AI translation failed» lines for resting engines.

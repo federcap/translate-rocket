@@ -6473,3 +6473,37 @@ msgstr "Un'altra traduzione è in corso su questo sito (un'altra scheda, o Labs 
 #, php-format
 msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
 msgstr "La traduzione è in attesa: tutti i motori sono a riposo. Riprende da sola dopo le %s."
+
+#: src/Admin/Admin.php
+msgid "Use this engine"
+msgstr "Usa questo motore"
+
+#: src/Admin/Admin.php
+msgid "Off: this engine is never used, not even as a fallback, and your key stays saved for later (for example when the account has no credit left)."
+msgstr "Spento: questo motore non viene mai usato, nemmeno come riserva, e la tua chiave resta salvata per dopo (per esempio quando l'account non ha più credito)."
+
+#: src/Admin/Admin.php
+msgid "Use it"
+msgstr "Usa questo"
+
+#: src/Admin/Admin.php
+msgid "recommended"
+msgstr "consigliato"
+
+#: src/Admin/Admin.php
+msgid "Pick a suggested model or type your own. Empty field = the recommended one."
+msgstr "Scegli un modello suggerito o scrivine un altro. Campo vuoto = quello consigliato."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "This model exists, but its free provider is not answering right now. Choose another model, for example %s, or try again later."
+msgstr "Questo modello esiste, ma il suo fornitore gratuito ora non risponde. Scegli un altro modello, per esempio %s, o riprova più tardi."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose the recommended one, %s."
+msgstr "Attenzione: la traduzione contiene lettere di un altro alfabeto. Questo modello non gestisce bene questa lingua: scegli quello consigliato, %s."
+
+#: src/Admin/Admin.php
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
+msgstr "Attenzione: la traduzione contiene lettere di un altro alfabeto. Questo modello non gestisce bene questa lingua: scegline un altro."

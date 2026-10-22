@@ -7093,3 +7093,37 @@ msgstr "이 사이트에서 다른 번역이 진행 중입니다(다른 탭 또�
 #, php-format
 msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
 msgstr "번역이 대기 중입니다. 모든 엔진이 쉬고 있습니다. %s 이후 자동으로 계속됩니다."
+
+#: src/Admin/Admin.php
+msgid "Use this engine"
+msgstr "이 엔진 사용"
+
+#: src/Admin/Admin.php
+msgid "Off: this engine is never used, not even as a fallback, and your key stays saved for later (for example when the account has no credit left)."
+msgstr "끔: 이 엔진은 예비로도 전혀 사용되지 않으며, 키는 나중을 위해 저장된 채로 남습니다(예: 계정 크레딧이 소진되었을 때)."
+
+#: src/Admin/Admin.php
+msgid "Use it"
+msgstr "사용하기"
+
+#: src/Admin/Admin.php
+msgid "recommended"
+msgstr "추천"
+
+#: src/Admin/Admin.php
+msgid "Pick a suggested model or type your own. Empty field = the recommended one."
+msgstr "추천 모델을 고르거나 직접 입력하세요. 비워 두면 = 추천 모델."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "This model exists, but its free provider is not answering right now. Choose another model, for example %s, or try again later."
+msgstr "이 모델은 존재하지만 무료 제공처가 지금 응답하지 않습니다. 다른 모델(예: %s)을 고르거나 나중에 다시 시도하세요."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose the recommended one, %s."
+msgstr "주의: 번역에 다른 문자 체계의 글자가 섞여 있습니다. 이 모델은 이 언어를 잘 다루지 못합니다. 추천 모델 %s을(를) 선택하세요."
+
+#: src/Admin/Admin.php
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
+msgstr "주의: 번역에 다른 문자 체계의 글자가 섞여 있습니다. 이 모델은 이 언어를 잘 다루지 못합니다. 다른 모델을 선택하세요."

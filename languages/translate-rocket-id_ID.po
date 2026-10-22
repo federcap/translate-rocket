@@ -7093,3 +7093,37 @@ msgstr "Ada terjemahan lain yang sedang berjalan di situs ini (tab lain, atau La
 #, php-format
 msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
 msgstr "Terjemahan sedang menunggu: semua mesin sedang beristirahat. Akan berlanjut sendiri setelah %s."
+
+#: src/Admin/Admin.php
+msgid "Use this engine"
+msgstr "Gunakan mesin ini"
+
+#: src/Admin/Admin.php
+msgid "Off: this engine is never used, not even as a fallback, and your key stays saved for later (for example when the account has no credit left)."
+msgstr "Mati: mesin ini tidak pernah dipakai, bahkan sebagai cadangan, dan kunci Anda tetap tersimpan untuk nanti (misalnya saat saldo akun habis)."
+
+#: src/Admin/Admin.php
+msgid "Use it"
+msgstr "Gunakan"
+
+#: src/Admin/Admin.php
+msgid "recommended"
+msgstr "disarankan"
+
+#: src/Admin/Admin.php
+msgid "Pick a suggested model or type your own. Empty field = the recommended one."
+msgstr "Pilih model yang disarankan atau ketik model lain. Kolom kosong = model yang disarankan."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "This model exists, but its free provider is not answering right now. Choose another model, for example %s, or try again later."
+msgstr "Model ini ada, tetapi penyedia gratisnya sedang tidak menjawab. Pilih model lain, misalnya %s, atau coba lagi nanti."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose the recommended one, %s."
+msgstr "Perhatian: terjemahan berisi huruf dari alfabet lain. Model ini tidak menangani bahasa ini dengan baik: pilih model yang disarankan, %s."
+
+#: src/Admin/Admin.php
+msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
+msgstr "Perhatian: terjemahan berisi huruf dari alfabet lain. Model ini tidak menangani bahasa ini dengan baik: pilih model lain."

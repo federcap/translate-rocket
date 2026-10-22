@@ -30,6 +30,10 @@
 	var TOOLS      = ( cfg.tools || [] ).map( function ( p ) { return String( p ).toLowerCase(); } );
 	// Whole class names, not prefixes (16/10/2026): «elementor-hidden-mobile» is the site's per-device visibility.
 	var EXACT      = ( cfg.exact || [] ).map( function ( p ) { return String( p ).toLowerCase(); } );
+	// 22/10/2026: the site's «Exclude selectors» (a selector the browser does not understand is left out, not fatal).
+	var SEL        = ( cfg.sel || [] ).filter( function ( s ) {
+		try { document.createDocumentFragment().querySelector( s ); return true; } catch ( e ) { return false; }
+	} ).join( ',' );
 
 	function isTool( el ) {
 		var id  = ( el.id || '' ).toLowerCase();
@@ -94,6 +98,9 @@
 				return true;
 			}
 			if ( el.isContentEditable ) {
+				return true;
+			}
+			if ( SEL && el.matches && el.tagName !== 'HTML' && el.tagName !== 'BODY' && el.matches( SEL ) ) {
 				return true;
 			}
 			el = el.parentNode;

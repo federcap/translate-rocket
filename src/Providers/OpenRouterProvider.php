@@ -15,7 +15,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class OpenRouterProvider extends OpenAiCompatProvider {
 
-	const FREE_MODELS = array( 'nvidia/nemotron-3-super-120b-a12b:free', 'google/gemma-4-31b-it:free', 'meta-llama/llama-3.3-70b-instruct:free' );
+	// 22/10/2026 (prova con 12 frasi in it/de/ja): minimax flash risponde in 6-24 s e traduce bene; nemotron ultra è il
+	// migliore ma lento (20-60 s); nemotron super dava 404 dal fornitore, llama 3.3 :free non c'è più.
+	const FREE_MODELS = array( 'minimax/minimax-m3.1-flash:free', 'nvidia/nemotron-3-ultra-550b-a55b:free', 'google/gemma-4-31b-it:free' );
 
 	public function id(): string {
 		return 'openrouter';

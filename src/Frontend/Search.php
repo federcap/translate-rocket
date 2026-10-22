@@ -393,7 +393,11 @@ class Search {
 	 *
 	 * @return int[] Post IDs.
 	 */
-	public static function find( string $terms, string $lang, int $limit = 300 ): array {
+	public static function find( string $terms, $lang, int $limit = 300 ): array {
+		$lingue = array_values( array_filter( array_map( 'strval', (array) $lang ) ) );
+		if ( empty( $lingue ) ) {
+			return array();
+		}
 		global $wpdb;
 		$parole = array();
 		foreach ( preg_split( '/[\s,;.!?¿¡:"()]+/u', mb_strtolower( trim( $terms ) ) ) as $p ) {
@@ -446,7 +450,7 @@ class Search {
 			JOIN (
 				SELECT id, " . implode( ', ', $per_id ) . ", MAX(fr) AS fr FROM (
 					SELECT t.string_id AS id, " . implode( ', ', $colonne_t ) . "
-					FROM {$tr} t WHERE t.language = %s AND t.status > 0 AND ( " . implode( ' OR ', $dove_t ) . " )
+					FROM {$tr} t WHERE t.language IN ( " . implode( ', ', array_fill( 0, count( $lingue ), '%s' ) ) . " ) AND t.status > 0 AND ( " . implode( ' OR ', $dove_t ) . " )
 					UNION ALL
 					SELECT s.id, " . implode( ', ', $colonne_s ) . "
 					FROM {$st} s WHERE ( " . implode( ' OR ', $dove_s ) . " )
@@ -454,7 +458,7 @@ class Search {
 			) m ON m.id = i.string_id
 			GROUP BY i.post_id
 			HAVING " . implode( ' AND ', $tutte );
-		$valori = array_merge( $args_t, '' !== $frase ? array( $frase ) : array(), array( $lang ), $args_t, $args_s, $args_s );
+		$valori = array_merge( $args_t, '' !== $frase ? array( $frase ) : array(), $lingue, $args_t, $args_s, $args_s );
 		$righe  = $wpdb->get_results( $wpdb->prepare( $sql, $valori ) ); // phpcs:ignore WordPress.DB
 		$punti  = array();
 		foreach ( (array) $righe as $r ) {
@@ -488,10 +492,9 @@ class Search {
 	 * @return int[]
 	 */
 	public static function ids_for( string $terms, array $langs, $types, int $limit ): array {
-		$nostri = array();
-		foreach ( $langs as $l ) {
-			$nostri = array_merge( $nostri, self::find( $terms, (string) $l, $limit ) );
-		}
+		// 22/10/2026 (translaterocket.com, «search in every language» with 21 languages: one query per language,
+		// 0,2 s each, 5-12 s for every suggestion while typing): every language in one query.
+		$nostri = $langs ? self::find( $terms, array_map( 'strval', $langs ), $limit ) : array();
 		self::$inner = true;
 		$nativi      = get_posts(
 			array(

@@ -661,6 +661,7 @@ class Admin {
 						/* translators: %d: number of AI models found. */
 						'found'   => __( '%d models available — pick one from the list.', 'translate-rocket' ),
 						'pick'    => __( '— pick a model —', 'translate-rocket' ),
+						'rec'     => __( 'recommended', 'translate-rocket' ),
 						'chars'   => __( 'characters used', 'translate-rocket' ),
 						'details' => __( 'Technical details', 'translate-rocket' ),
 						/* translators: %s: the technical reason, e.g. HTTP 524. */
@@ -913,6 +914,11 @@ class Admin {
 		if ( '' === $target ) {
 			$target = ( 'en' === $source ) ? 'it' : 'en';
 		}
+		// 22/10/2026: the language chosen next to the test button, when it is one of the site's.
+		$scelta = isset( $_POST['target'] ) ? sanitize_key( wp_unslash( $_POST['target'] ) ) : '';
+		if ( '' !== $scelta && $scelta !== $source && ( in_array( $scelta, array_map( 'strval', (array) Settings::get()['target_languages'] ), true ) || \TranslateRocket\Languages::exists( $scelta ) ) ) {
+			$target = $scelta;
+		}
 		// 9/10/2026 (Federico: «ci vorrebbe un testo test api»): a short text of your choice, so you
 		// see the quality too, not only that the key works. Never more than 200 characters.
 		$prova = isset( $_POST['text'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['text'] ) ) ) : '';
@@ -922,6 +928,13 @@ class Admin {
 		}
 		$res   = $provider->translate( array( $prova ), $source, $target );
 		$prove = (array) get_option( 'trrocket_provider_tests', array() );
+		$avviso = ( $res->success && ! empty( $res->translations ) ) ? self::wrong_alphabet( $prova, (string) $res->translations[0], $target, $id ) : '';
+		if ( $res->success && ! empty( $res->translations ) && '' !== $avviso ) {
+			// a translation in the wrong alphabet is not a passed test: no green tick
+			unset( $prove[ $id ] );
+			update_option( 'trrocket_provider_tests', $prove, false );
+			wp_send_json_success( array( 'source' => $prova, 'sample' => (string) $res->translations[0], 'target' => $target, 'usage' => self::usage_line( $id ), 'warn' => $avviso ) );
+		}
 		if ( $res->success && ! empty( $res->translations ) ) {
 			// «dove è testata rimane uno spunto verde»: remembered with a fingerprint of key and
 			// model, so the tick disappears by itself when either changes.
@@ -937,6 +950,7 @@ class Admin {
 					'sample' => (string) $res->translations[0],
 					'target' => $target,
 					'when'   => wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
+					'usage'  => self::usage_line( $id ),
 				)
 			);
 		}
@@ -952,8 +966,68 @@ class Admin {
 			array(
 				'error'  => '' !== $res->error ? self::shown_error( $res->error ) : __( 'The provider did not return a translation.', 'translate-rocket' ),
 				'detail' => (string) $res->error,
+				'usage'  => self::usage_line( $id ),
 			)
 		);
+	}
+
+	/**
+	 * 22/10/2026 (Federico: «ho fatto il test però sopra non mi ha aggiornato le parole tradotte, come se fosse ancora
+	 * azzerato»): the «x of 1,000 free requests today» line is drawn with the page; the test sends it back fresh.
+	 *
+	 * @param string $id Provider id.
+	 */
+	private static function usage_line( string $id ): string {
+		$p = \TranslateRocket\Providers\Registry::get( $id );
+		return ( $p && in_array( $id, array( 'groq', 'openrouter', 'cloudflare' ), true ) ) ? \TranslateRocket\Providers\FreeUsage::line( $id ) : '';
+	}
+
+	/**
+	 * 22/10/2026 (Federico tested Groq with «allam-2-7b», a small Arabic model: «Benvenuto su موقعنا الإلكتروني: prenota la
+	 * tua الإقامة oggi» came back with a green tick): a translation into a Latin-alphabet language that brings in
+	 * letters of another alphabet, absent from the text sent, is a model that does not fit. '' when all is well.
+	 *
+	 * @param string $source Text sent.
+	 * @param string $out    Translation.
+	 * @param string $target Target language code.
+	 * @param string $id     Provider id.
+	 */
+	public static function wrong_alphabet( string $source, string $out, string $target, string $id ): string {
+		$latine = array( 'af', 'az', 'bs', 'ca', 'cs', 'cy', 'da', 'de', 'en', 'es', 'et', 'eu', 'fi', 'fil', 'fr', 'ga', 'gl', 'hr', 'hu', 'id', 'is', 'it', 'lt', 'lv', 'ms', 'mt', 'nl', 'no', 'nb', 'pl', 'pt', 'ro', 'sk', 'sl', 'sq', 'sv', 'sw', 'tl', 'tr', 'uz', 'vi' );
+		$base   = strtolower( (string) preg_replace( '/[-_].*$/', '', $target ) );
+		if ( ! in_array( $base, $latine, true ) ) {
+			return '';
+		}
+		$altri = '/[\p{Arabic}\p{Hebrew}\p{Cyrillic}\p{Greek}\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}\p{Thai}\p{Devanagari}\p{Bengali}\p{Tamil}\p{Georgian}\p{Armenian}]/u';
+		if ( ! preg_match_all( $altri, $out, $m ) ) {
+			return '';
+		}
+		foreach ( $m[0] as $ch ) {
+			if ( false === mb_strpos( $source, $ch ) ) {
+				$def = self::recommended_model( $id );
+				return '' !== $def
+					/* translators: %s: the recommended AI model. */
+					? sprintf( __( 'Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose the recommended one, %s.', 'translate-rocket' ), $def )
+					: __( 'Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one.', 'translate-rocket' );
+			}
+		}
+		return '';
+	}
+
+	/**
+	 * The recommended model of a provider, '' when it has none.
+	 *
+	 * @param string $id Provider id.
+	 */
+	private static function recommended_model( string $id ): string {
+		$tutti = array(
+			'groq'       => 'openai/gpt-oss-120b',
+			'openrouter' => \TranslateRocket\Providers\OpenRouterProvider::FREE_MODELS[0],
+			'openai'     => 'gpt-4o-mini',
+			'gemini'     => 'gemini-flash-lite-latest',
+			'anthropic'  => 'claude-haiku-4-5',
+		);
+		return $tutti[ $id ] ?? '';
 	}
 
 	/**
@@ -1056,6 +1130,15 @@ class Admin {
 				return $con( $chiave );
 			}
 			return $con( __( 'The provider refused the request. The key may not have access to this model, or the account needs attention: check it on the provider\'s site.', 'translate-rocket' ) );
+		}
+		// 22/10/2026 (Federico, OpenRouter «Test this key» on a :free model → «does not exist»): the model exists, but
+		// none of the free providers behind it is answering right now. Another free model works.
+		if ( $codice >= 400 && $codice < 500 && $cerca( '/no endpoints found|provider returned error|no allowed providers|no available provider/i' ) ) {
+			return $con( sprintf(
+				/* translators: %s: the recommended free model. */
+				__( 'This model exists, but its free provider is not answering right now. Choose another model, for example %s, or try again later.', 'translate-rocket' ),
+				\TranslateRocket\Providers\OpenRouterProvider::FREE_MODELS[0]
+			) );
 		}
 		if ( 404 === $codice || ( $codice >= 400 && $codice < 500 && $cerca( '/model[_ ]?not[_ ]?found|does not exist|no such model|unknown model|invalid model|model.{0,40}(not found|deprecated|decommissioned|not supported)/i' ) ) ) {
 			return $con( $modello );
@@ -3412,7 +3495,8 @@ JS;
 				'model'  => true,
 				'free'   => true,
 				'help'   => __( 'Free with your own Groq key: about 1,000 requests a day (twenty sentences each) with gpt-oss-120b, which translates very well.', 'translate-rocket' ),
-				'models' => array( 'openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'llama-3.3-70b-versatile' ),
+				'models' => array( 'openai/gpt-oss-120b', 'openai/gpt-oss-20b' ),
+				'recommended' => 'openai/gpt-oss-120b',
 				'signup' => 'https://console.groq.com/keys',
 				'guide'  => array(
 					/* translators: %s: link to the Groq console */
@@ -3427,6 +3511,7 @@ JS;
 				'free'   => true,
 				'help'   => __( 'Its free models (names ending in «:free») cost nothing: about 50 requests a day, often busy. Good as the last provider of your chain.', 'translate-rocket' ),
 				'models' => \TranslateRocket\Providers\OpenRouterProvider::FREE_MODELS,
+				'recommended' => \TranslateRocket\Providers\OpenRouterProvider::FREE_MODELS[0],
 				'signup' => 'https://openrouter.ai/settings/keys',
 				'guide'  => array(
 					/* translators: %s: link to OpenRouter */
@@ -3446,6 +3531,7 @@ JS;
 				'model'  => true,
 				'help'   => __( 'Pay-as-you-go (needs a few dollars of credit). gpt-4o-mini is cheap and good.', 'translate-rocket' ),
 				'models' => array( 'gpt-4o-mini', 'gpt-4o', 'gpt-4.1-mini', 'gpt-4.1' ),
+				'recommended' => 'gpt-4o-mini',
 				'signup' => 'https://platform.openai.com/api-keys',
 			),
 			'google'    => array(
@@ -3459,6 +3545,7 @@ JS;
 				'model'  => true,
 				'help'   => __( 'Has a free tier — create a key in Google AI Studio at no cost.', 'translate-rocket' ),
 				'models' => array( 'gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-2.5-flash-lite' ),
+				'recommended' => 'gemini-flash-lite-latest',
 				'signup' => 'https://aistudio.google.com/apikey',
 			),
 			'anthropic' => array(
@@ -3466,6 +3553,7 @@ JS;
 				'model'  => true,
 				'help'   => __( 'Pay-as-you-go on the Anthropic API (separate from a Claude.ai subscription).', 'translate-rocket' ),
 				'models' => array( 'claude-haiku-4-5', 'claude-sonnet-4-6', 'claude-opus-4-8' ),
+				'recommended' => 'claude-haiku-4-5',
 				'signup' => 'https://console.anthropic.com/settings/keys',
 			),
 		);
@@ -3535,6 +3623,14 @@ JS;
 		foreach ( $ids as $pid ) {
 			if ( empty( $settings['providers'][ $pid ] ) || ! is_array( $settings['providers'][ $pid ] ) ) {
 				$settings['providers'][ $pid ] = array();
+			}
+			// 22/10/2026: «Use this engine» (only when the card was on the form, so other forms do not switch engines off).
+			if ( ! empty( $posted[ $pid ]['use_shown'] ) ) {
+				if ( empty( $posted[ $pid ]['use'] ) ) {
+					$settings['providers'][ $pid ]['off'] = 1;
+				} else {
+					unset( $settings['providers'][ $pid ]['off'] );
+				}
 			}
 			if ( ! empty( self::provider_defs()[ $pid ]['nokey'] ) ) {
 				continue; // A provider without a key (added by another plugin) has none to save.
@@ -4689,7 +4785,7 @@ JS
 										<?php endif; ?>
 									<?php endforeach; ?>
 									<?php if ( ! empty( $def['free'] ) ) : ?>
-										<p class="description" style="margin-top:8px">&#128202; <?php echo esc_html( \TranslateRocket\Providers\FreeUsage::line( $pid ) ); ?></p>
+										<p class="description trr-ai-usage" data-provider="<?php echo esc_attr( $pid ); ?>" style="margin-top:8px">&#128202; <?php echo esc_html( \TranslateRocket\Providers\FreeUsage::line( $pid ) ); ?></p>
 									<?php endif; ?>
 									<?php
 									// DeepL exposes its character quota: show a live meter under the key.
@@ -4737,6 +4833,14 @@ JS
 							</tr>
 							<?php endif; ?>
 							<tr>
+									<th scope="row"><?php esc_html_e( 'Use this engine', 'translate-rocket' ); ?></th>
+									<td>
+										<input type="hidden" name="providers[<?php echo esc_attr( $pid ); ?>][use_shown]" value="1" />
+										<label><input type="checkbox" name="providers[<?php echo esc_attr( $pid ); ?>][use]" value="1" <?php checked( empty( $settings['providers'][ $pid ]['off'] ) ); ?> /> <?php esc_html_e( 'On', 'translate-rocket' ); ?></label>
+										<p class="description"><?php esc_html_e( 'Off: this engine is never used, not even as a fallback, and your key stays saved for later (for example when the account has no credit left).', 'translate-rocket' ); ?></p>
+									</td>
+								</tr>
+							<tr>
 									<th scope="row"><?php esc_html_e( 'Fallback priority', 'translate-rocket' ); ?> <?php $this->info( __( 'Optional. Give two or more providers a priority to build a fallback chain: bulk and automatic translation try priority 1 first, and switch to priority 2, 3… whenever one runs out of credit or its key is refused. Providers left on “—” still help: they come after the numbered ones.', 'translate-rocket' ), self::doc( '/features/engine-order/' ) ); ?></th>
 									<td>
 										<?php $cur_prio = (int) ( $order_prio[ $pid ] ?? 0 ); ?>
@@ -4756,17 +4860,34 @@ JS
 										<input type="text" class="regular-text" list="trrocket-models-<?php echo esc_attr( $pid ); ?>"
 											name="providers[<?php echo esc_attr( $pid ); ?>][model]"
 											value="<?php echo esc_attr( (string) ( $providers[ $pid ]['model'] ?? '' ) ); ?>" />
+										<?php
+										// 22/10/2026 (Federico: «per chi non ne capisce è difficile, nella lista dei modelli metti quale
+										// consigli di selezionare»): the recommended model first, marked, with a button that fills it in.
+										$rec_model = (string) ( $def['recommended'] ?? '' );
+										?>
+										<?php if ( '' !== $rec_model ) : ?>
+											<p class="trr-consigliato trr-model-rec">
+												<?php
+												printf(
+													/* translators: %s: the recommended AI model, e.g. openai/gpt-oss-120b. */
+													esc_html__( 'Recommended: %s', 'translate-rocket' ),
+													'<strong><code>' . esc_html( $rec_model ) . '</code></strong>'
+												);
+												?>
+												<button type="button" class="button button-small trr-use-model" data-provider="<?php echo esc_attr( $pid ); ?>" data-model="<?php echo esc_attr( $rec_model ); ?>"><?php esc_html_e( 'Use it', 'translate-rocket' ); ?></button>
+											</p>
+										<?php endif; ?>
 										<?php if ( ! empty( $def['models'] ) ) : ?>
 											<datalist id="trrocket-models-<?php echo esc_attr( $pid ); ?>">
-												<?php foreach ( $def['models'] as $suggested ) : ?>
-													<option value="<?php echo esc_attr( $suggested ); ?>"></option>
+												<?php foreach ( array_values( array_unique( array_merge( '' !== $rec_model ? array( $rec_model ) : array(), (array) $def['models'] ) ) ) as $suggested ) : ?>
+													<option value="<?php echo esc_attr( $suggested ); ?>"<?php echo $suggested === $rec_model ? ' label="' . esc_attr__( 'recommended', 'translate-rocket' ) . '"' : ''; ?>></option>
 												<?php endforeach; ?>
 											</datalist>
-											<p class="description"><?php esc_html_e( 'Pick a suggested model or type your own.', 'translate-rocket' ); ?></p>
+											<p class="description"><?php esc_html_e( 'Pick a suggested model or type your own. Empty field = the recommended one.', 'translate-rocket' ); ?></p>
 										<?php endif; ?>
 										<p style="margin-top:6px">
 											<button type="button" class="button trr-load-models" data-provider="<?php echo esc_attr( $pid ); ?>">&#8635; <?php esc_html_e( 'Load available models', 'translate-rocket' ); ?></button>
-											<select class="trr-models-select" data-provider="<?php echo esc_attr( $pid ); ?>" style="display:none;margin-left:6px;max-width:280px"></select>
+											<select class="trr-models-select" data-provider="<?php echo esc_attr( $pid ); ?>" data-recommended="<?php echo esc_attr( $rec_model ); ?>" style="display:none;margin-left:6px;max-width:280px"></select>
 										</p>
 										<p class="trr-models-msg" data-provider="<?php echo esc_attr( $pid ); ?>" role="status" aria-live="polite" hidden></p>
 										<p class="description"><?php esc_html_e( 'Queries this provider with your key and lists the exact models it can use right now.', 'translate-rocket' ); ?></p>
@@ -4777,6 +4898,18 @@ JS
 							<?php // 9/10/2026 (Federico: «per ogni AI un test, senza consumare crediti o pochissimi»): one word, with the saved key. ?>
 							<p class="trr-ai-pfoot trr-ai-try-row">
 								<input type="text" class="regular-text trr-ai-try-text" maxlength="200" value="<?php echo esc_attr( self::test_sentence( (string) Settings::get()['source_language'] ) ); ?>" aria-label="<?php esc_attr_e( 'Test text', 'translate-rocket' ); ?>">
+								<?php
+								// 22/10/2026 (Federico: «non capisco da quale lingua a quale lingua lo traduce, si dovrebbe selezionare»).
+								$try_src = (string) Settings::get()['source_language'];
+								$try_tgt = array_values( array_diff( array_map( 'strval', (array) Settings::get()['target_languages'] ), array( $try_src ) ) );
+								?>
+								<span class="trr-ai-try-lang"><?php echo esc_html( \TranslateRocket\Languages::label( $try_src ) ); ?> &rarr;
+									<select class="trr-ai-try-target" aria-label="<?php esc_attr_e( 'Translate into', 'translate-rocket' ); ?>">
+										<?php foreach ( ( $try_tgt ? $try_tgt : array( 'en' === $try_src ? 'it' : 'en' ) ) as $tl ) : ?>
+											<option value="<?php echo esc_attr( $tl ); ?>"><?php echo esc_html( \TranslateRocket\Languages::label( $tl ) ); ?></option>
+										<?php endforeach; ?>
+									</select>
+								</span>
 								<button type="button" class="button button-small trr-ai-try" data-provider="<?php echo esc_attr( $pid ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'trrocket_models' ) ); ?>">&#9654; <?php esc_html_e( 'Test this text', 'translate-rocket' ); ?></button>
 								<span class="trr-ai-try-out" role="status" aria-live="polite"></span>
 								<span class="description trr-ai-try-tip"><?php esc_html_e( 'Uses the saved key and translates only this short text: it costs almost nothing. Save first if you just pasted the key. When it works, the provider gets a green «Tested» tick.', 'translate-rocket' ); ?></span>
@@ -4798,13 +4931,19 @@ JS
 							btn.disabled = true;
 							out.className = 'trr-ai-try-out is-pending';
 							out.textContent = <?php echo wp_json_encode( __( 'Testing…', 'translate-rocket' ) ); ?>;
-							var body = 'action=trrocket_test_provider&_wpnonce=' + encodeURIComponent( btn.getAttribute( 'data-nonce' ) ) + '&provider=' + encodeURIComponent( btn.getAttribute( 'data-provider' ) ) + '&text=' + encodeURIComponent( ( btn.parentNode.querySelector( '.trr-ai-try-text' ) || {} ).value || '' );
+							var body = 'action=trrocket_test_provider&_wpnonce=' + encodeURIComponent( btn.getAttribute( 'data-nonce' ) ) + '&provider=' + encodeURIComponent( btn.getAttribute( 'data-provider' ) ) + '&text=' + encodeURIComponent( ( btn.parentNode.querySelector( '.trr-ai-try-text' ) || {} ).value || '' ) + '&target=' + encodeURIComponent( ( btn.parentNode.querySelector( '.trr-ai-try-target' ) || {} ).value || '' );
 							var spunta = btn.closest( '.trr-ai-provider' ) ? btn.closest( '.trr-ai-provider' ).querySelector( '.trr-ai-tested' ) : null;
 							fetch( ajaxurl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body } )
 								.then( function ( r ) { if ( ! r.ok ) { throw new Error( 'HTTP ' + r.status ); } return r.json(); } )
 								.then( function ( res ) {
 									btn.disabled = false;
-									if ( res && res.success && res.data && res.data.sample ) {
+									var uso = document.querySelector( '.trr-ai-usage[data-provider="' + btn.getAttribute( 'data-provider' ) + '"]' );
+									if ( uso && res && res.data && res.data.usage ) { uso.textContent = '📊 ' + res.data.usage; }
+									if ( res && res.success && res.data && res.data.sample && res.data.warn ) {
+										out.className = 'trr-ai-try-out is-fail';
+										if ( spunta ) { spunta.hidden = true; }
+										out.textContent = '⚠ «' + ( res.data.source || 'Hello' ) + '» → «' + res.data.sample + '» (' + ( res.data.target || '' ) + ') — ' + res.data.warn;
+									} else if ( res && res.success && res.data && res.data.sample ) {
 										out.className = 'trr-ai-try-out is-ok';
 										if ( spunta ) { spunta.hidden = false; spunta.title = res.data.when || ''; }
 										out.textContent = '✓ «' + ( res.data.source || 'Hello' ) + '» → «' + res.data.sample + '» (' + ( res.data.target || '' ) + ')';
