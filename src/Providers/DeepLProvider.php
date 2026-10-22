@@ -40,7 +40,7 @@ class DeepLProvider extends AbstractProvider {
 		// The «Test» button (quick) always asks DeepL itself: the owner may have just fixed the account.
 		$fermo = $this->quick ? '' : \TranslateRocket\Persistent::get( self::blocked_key( $key ) );
 		if ( is_string( $fermo ) && '' !== $fermo ) {
-			return TranslationResult::fail( $fermo );
+			return TranslationResult::rest( $fermo, \TranslateRocket\Persistent::until( self::blocked_key( $key ) ) );
 		}
 
 		$host   = ( ':fx' === substr( $key, -3 ) ) ? 'https://api-free.deepl.com' : 'https://api.deepl.com';
@@ -167,7 +167,7 @@ class DeepLProvider extends AbstractProvider {
 					$msg .= ' ' . __( 'DeepL keeps refusing: it rests for a week while your next engine carries on. Press «Test» on the AI screen once your DeepL account is in order.', 'translate-rocket' );
 				}
 				\TranslateRocket\Persistent::set( self::blocked_key( $key ), $msg, $durata );
-				return TranslationResult::fail( $msg );
+				return TranslationResult::rest( $msg, time() + $durata );
 			}
 			return TranslationResult::fail( 'DeepL: ' . $result['error'] );
 		}

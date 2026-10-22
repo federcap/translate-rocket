@@ -7088,3 +7088,8 @@ msgstr "서버가 제때 응답하지 않았습니다(%1$s). 번역된 내용은
 #: src/Admin/Admin.php
 msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
 msgstr "이 사이트에서 다른 번역이 진행 중입니다(다른 탭 또는 백그라운드의 Labs). 끝날 때까지 기다린 뒤 이 번역이 계속됩니다."
+
+#: src/Translator.php
+#, php-format
+msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
+msgstr "번역이 대기 중입니다. 모든 엔진이 쉬고 있습니다. %s 이후 자동으로 계속됩니다."

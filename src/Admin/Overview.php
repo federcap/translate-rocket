@@ -65,6 +65,7 @@ class Overview {
 				'ok'   => ! empty( $targets ),
 				'ico'  => 'translation',
 				'tit'  => __( 'Unlimited languages and pages', 'translate-rocket' ),
+				'doc'  => '/features/',
 				'info' => __( 'Add as many languages as you like and translate every page, post, menu, product and form. No word limit, no page limit, nothing to pay. A new language can stay offline, visible only to you, until you are happy with it.', 'translate-rocket' ),
 				/* translators: %d: number of languages */
 				'stat' => ! empty( $targets ) ? sprintf( __( 'Languages added: %d', 'translate-rocket' ), count( $targets ) ) : __( 'Add your first language below', 'translate-rocket' ),
@@ -74,6 +75,7 @@ class Overview {
 				'ok'   => '' !== $chiave,
 				'ico'  => 'lightbulb',
 				'tit'  => __( 'One-click AI translation with a free key', 'translate-rocket' ),
+				'doc'  => '/features/free-ai-accounts/',
 				'info' => __( 'Paste a free key from Groq, Cloudflare or OpenRouter (or a paid one: DeepL, OpenAI, Google, Anthropic) on AI Translation, then press «Translate all missing». When one provider reaches its daily limit, the next in your order takes over. On Translations you can also pick a single engine.', 'translate-rocket' ),
 				/* translators: %s: name of the AI provider */
 				'stat' => '' !== $chiave ? sprintf( __( 'On, with %s', 'translate-rocket' ), ucfirst( $chiave ) ) : __( 'Get a free Groq key: 2 minutes, no card', 'translate-rocket' ),
@@ -83,6 +85,7 @@ class Overview {
 				'ok'   => true,
 				'ico'  => 'admin-site-alt3',
 				'tit'  => __( 'Translate in your browser, with no key', 'translate-rocket' ),
+				'doc'  => '/browser-translator/',
 				'info' => __( 'Chrome and Edge on a computer have a translator built in: TranslateRocket uses it on the Translations screen, with no key and nothing sent to an AI company. The first time, the browser downloads its language model. On phones, use a free AI key or the copy-and-paste tool instead.', 'translate-rocket' ),
 				'stat' => __( 'Ready in Chrome and Edge on a computer', 'translate-rocket' ),
 				'url'  => $page( 'translate-rocket-strings' ),
@@ -108,6 +111,7 @@ class Overview {
 				'ok'   => true,
 				'ico'  => 'search',
 				'tit'  => __( 'SEO: translated addresses, hreflang, sitemap', 'translate-rocket' ),
+				'doc'  => '/features/translated-links/',
 				'info' => __( 'Each language has its own addresses (/de/, /fr/…) and you can translate the page addresses too. Hreflang tags tell Google which page is in which language, and the translated pages go into your sitemap. Search engines get real HTML in every language.', 'translate-rocket' ),
 				'stat' => __( 'On by itself', 'translate-rocket' ),
 				'url'  => $page( 'translate-rocket' ) . '#trr-set-seo',
@@ -128,6 +132,7 @@ class Overview {
 				'ico' => 'unlock',
 				'dove' => '#trrlabs-order',
 				'tit' => __( 'Translate with no key at all, from your server', 'translate-rocket' ),
+				'doc' => '/labs/no-key-server-engines/',
 				'info' => __( 'Labs adds free engines that need no key and no account — Microsoft Edge Translator, MyMemory, Yandex — called by your server. Some are unofficial endpoints: you read and accept their conditions before they are switched on.', 'translate-rocket' ),
 			),
 			array(
@@ -135,6 +140,7 @@ class Overview {
 				'ico' => 'update',
 				'dove' => '#trrlabs-auto',
 				'tit' => __( 'The whole site by itself, and every new page as you publish', 'translate-rocket' ),
+				'doc' => '/labs/whole-site/',
 				'info' => __( 'Labs reads every page of your site and translates it in the background, a little at a time, then translates each new or updated page when you publish it. You follow the progress on the Automatic translation screen.', 'translate-rocket' ),
 			),
 			array(
@@ -142,6 +148,7 @@ class Overview {
 				'ico' => 'networking',
 				'dove' => '#trrlabs-chain',
 				'tit' => __( 'More free AI engines, one after the other when one runs out', 'translate-rocket' ),
+				'doc' => '/features/engine-order/',
 				'info' => __( 'Set up several free AI providers (Groq, OpenRouter, Cloudflare) and Labs chains them: when one reaches its daily limit, the next continues, so even a large site keeps moving.', 'translate-rocket' ),
 			),
 			array(
@@ -149,6 +156,7 @@ class Overview {
 				'ico' => 'smartphone',
 				'dove' => '#trrlabs-dove',
 				'tit' => __( 'Works from any browser, phones too', 'translate-rocket' ),
+				'doc' => '/labs/translation-station/',
 				'info' => __( 'The work runs on your server, not in the open browser tab: it goes on while you use a phone, a tablet or any browser, and when nobody is in wp-admin at all.', 'translate-rocket' ),
 			),
 			array(
@@ -156,6 +164,7 @@ class Overview {
 				'ico' => 'admin-site',
 				'dove' => 'page:translate-rocket-labs-domains',
 				'tit' => __( 'A domain of its own for each language', 'translate-rocket' ),
+				'doc' => '/labs/domain-per-language/',
 				'info' => __( 'Give a language its own domain (for example yoursite.de for German) instead of a folder like /de/. Labs checks that the domain and its certificate point to your site, and sends the old addresses to the new ones.', 'translate-rocket' ),
 			),
 			// 10/10/2026 (Federico: «la traduzione remota è una funzione di Labs che possono usare tutti; nella
@@ -165,6 +174,7 @@ class Overview {
 				'ico' => 'groups',
 				'dove' => '#trrlabs-guests',
 				'tit' => __( 'Remote collaboration: invite a translator or a reviewer with a secret link — no WordPress account, you approve their work', 'translate-rocket' ),
+				'doc' => '/labs/collaborators/',
 				'info' => __( 'Create a secret link for a translator, a colleague or a client: they translate or review your pages in the visual editor, without a WordPress account or your password. Their changes wait for your approval (unless you trust the link), and the link can expire or be revoked with one click.', 'translate-rocket' ),
 			),
 			array(
@@ -172,6 +182,7 @@ class Overview {
 				'ico' => 'visibility',
 				'dove' => '#trrlabs-review',
 				'tit' => __( 'A free AI rereads the machine translations, flags the doubtful ones and polishes them over time', 'translate-rocket' ),
+				'doc' => '/labs/second-opinion/',
 				'info' => __( 'A second free AI reads what the machine translated, marks the sentences that look wrong for you to check and, within a daily limit you choose, rewrites them more naturally.', 'translate-rocket' ),
 			),
 			array(
@@ -179,6 +190,7 @@ class Overview {
 				'ico' => 'backup',
 				'dove' => 'page:translate-rocket-history',
 				'tit' => __( 'History of every change: who changed a translation, and the way back', 'translate-rocket' ),
+				'doc' => '/labs/history-undo/',
 				'info' => __( 'Every change to a translation is kept: who made it (a person, a collaborator, the AI, an import), when, and what it said before. Any earlier version can be put back with one click.', 'translate-rocket' ),
 			),
 			array(
@@ -186,6 +198,7 @@ class Overview {
 				'ico' => 'email-alt',
 				'dove' => '#trrlabs-auto',
 				'tit' => __( 'A weekly e-mail: what was translated and what is still waiting', 'translate-rocket' ),
+				'doc' => '/labs/weekly-report/',
 				'info' => __( 'Once a week an e-mail tells you what was translated on your site and what is still waiting, so you know where things stand without opening wp-admin.', 'translate-rocket' ),
 			),
 		);
@@ -212,7 +225,7 @@ class Overview {
 							<li class="<?php echo $r['ok'] ? 'is-on' : 'is-todo'; ?>">
 								<span class="trr-ov-ico dashicons dashicons-<?php echo esc_attr( $r['ico'] ); ?>" aria-hidden="true"></span>
 								<span class="trr-ov-txt">
-									<strong><?php echo esc_html( $r['tit'] ); ?> <?php self::info( (string) $r['info'] ); ?></strong>
+									<strong><?php echo esc_html( $r['tit'] ); ?> <?php self::info( (string) $r['info'], (string) ( $r['doc'] ?? '' ) ); ?></strong>
 									<a class="trr-ov-go" href="<?php echo esc_url( $r['url'] ); ?>"><?php echo esc_html( $r['stat'] ); ?> <span aria-hidden="true">→</span></a>
 								</span>
 								<span class="trr-ov-dot" aria-hidden="true"><?php echo $r['ok'] ? '✓' : '!'; ?></span>
@@ -233,7 +246,7 @@ class Overview {
 							<li class="<?php echo esc_attr( $stato ); ?>">
 								<span class="trr-ov-ico dashicons dashicons-<?php echo esc_attr( $r['ico'] ); ?>" aria-hidden="true"></span>
 								<span class="trr-ov-txt">
-									<strong><?php echo esc_html( $r['tit'] ); ?> <?php self::info( (string) $r['info'] ); ?></strong>
+									<strong><?php echo esc_html( $r['tit'] ); ?> <?php self::info( (string) $r['info'], (string) ( $r['doc'] ?? '' ) ); ?></strong>
 									<a class="trr-ov-go" href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( $labs ? ( $r['on'] ? __( 'On — open its settings', 'translate-rocket' ) : __( 'Off — turn it on in Labs', 'translate-rocket' ) ) : __( 'Comes with Labs, the free add-on — see what it does', 'translate-rocket' ) ); ?> <span aria-hidden="true">→</span></a>
 								</span>
 								<span class="trr-ov-dot" aria-hidden="true"><?php echo 'is-on' === $stato ? '✓' : ( 'is-locked' === $stato ? '+' : '○' ); ?></span>
@@ -264,8 +277,8 @@ class Overview {
 	 *
 	 * @param string $text Detail shown on click.
 	 */
-	private static function info( string $text ): void {
-		echo '<button type="button" class="trr-info" aria-label="' . esc_attr__( 'More info', 'translate-rocket' )
-			. '" data-info="' . esc_attr( $text ) . '"><span class="dashicons dashicons-info-outline"></span></button>';
+	private static function info( string $text, string $doc = '' ): void {
+		// 21/10/2026 (Federico: «info ovunque con il link al sito web per ogni cosa»): the page of the site that explains it.
+		Admin::info_static( $text, '' === $doc ? '' : Admin::doc( $doc ) );
 	}
 }

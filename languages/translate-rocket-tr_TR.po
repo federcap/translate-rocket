@@ -7114,3 +7114,8 @@ msgstr "Sunucunuz zamanında yanıt vermedi (%1$s). Çevrilenler kaydedildi; %2$
 #: src/Admin/Admin.php
 msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
 msgstr "Bu sitede başka bir çeviri çalışıyor (başka bir sekme ya da arka planda Labs): onun bitmesi bekleniyor, ardından bu devam edecek."
+
+#: src/Translator.php
+#, php-format
+msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
+msgstr "Çeviri bekliyor: tüm motorlar dinleniyor. %s sonrasında kendiliğinden devam eder."

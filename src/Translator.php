@@ -130,6 +130,20 @@ class Translator {
 	private static $locks = 0;
 
 	/**
+	 * What each resting engine said, for the one log line (provider id => message).
+	 *
+	 * @var array<string,string>
+	 */
+	private static $resting_why = array();
+
+	/**
+	 * A real failure (not a rest) happened in this run: an engine that broke, then went resting, is still a failure.
+	 *
+	 * @var bool
+	 */
+	private static $broke = false;
+
+	/**
 	 * Take the site's translation lock (see translate_missing).
 	 */
 	private static function lock(): bool {
@@ -238,6 +252,8 @@ class Translator {
 		$kept   = 0; // sentences the engine answered nothing for, kept as they were (16/10/2026)
 		$error  = '';
 		$dead   = array(); // provider id => permanent-error message (out of credit / bad key).
+		$resting = array(); // provider id => unix time it comes back (it did not try: a pause, an hourly share used up).
+		self::$broke = false; // a real failure in this run (not a rest): then it is logged as a failure, as before.
 
 		// Free pass first: the same text may already be translated under another
 		// type/context (attribute vs text node vs interface string) or on another
@@ -257,7 +273,7 @@ class Translator {
 				break;
 			}
 
-			$hit = self::first_ok( $providers, $dead, $texts, $source, $lang, $error );
+			$hit = self::first_ok( $providers, $dead, $texts, $source, $lang, $error, $resting );
 			if ( null !== $hit ) {
 				$vuote = array();
 				foreach ( $hit['translations'] as $i => $translation ) {
@@ -283,7 +299,7 @@ class Translator {
 					if ( $deadline > 0 && microtime( true ) >= $deadline ) {
 						break;
 					}
-					$one = self::first_ok( $providers, $dead, array( $text ), $source, $lang, $error );
+					$one = self::first_ok( $providers, $dead, array( $text ), $source, $lang, $error, $resting );
 					$uno = ( null !== $one && isset( $one['translations'][0] ) ) ? trim( (string) $one['translations'][0] ) : '';
 					if ( '' !== $uno && self::parts_kept( $text, $uno ) ) {
 						self::save_group( $pending[ $text ], $lang, $uno, $one['provider'], $text, $count );
@@ -303,20 +319,36 @@ class Translator {
 			// merge an item). Retry one string at a time across the chain, so a
 			// single bad response never loses the batch.
 			foreach ( $texts as $text ) {
-				$one = self::first_ok( $providers, $dead, array( $text ), $source, $lang, $error );
+				$one = self::first_ok( $providers, $dead, array( $text ), $source, $lang, $error, $resting );
 				if ( null !== $one && isset( $one['translations'][0] ) && '' !== trim( (string) $one['translations'][0] ) ) {
 					self::save_group( $pending[ $text ], $lang, (string) $one['translations'][0], $one['provider'], $text, $count );
 					AiUsage::add( mb_strlen( $text ) );
 				}
 			}
 
-			// Every provider is out of credit / rejected: stop, nothing left to try.
-			if ( count( $dead ) >= count( $providers ) ) {
+			// Every provider is out of credit / rejected / resting: stop, nothing left to try.
+			if ( count( $dead ) + count( array_diff_key( $resting, $dead ) ) >= count( $providers ) ) {
 				break;
 			}
 		}
 
-		if ( '' !== $error && 0 === $count ) {
+		// 21/10/2026 (translaterocket.com, sentinel): every engine resting is a wait, not a failure. One line in the
+		// log for each pause (not one «failed» per language and per step: 60 a day on a site with nothing broken).
+		$tutti_fermi = ! empty( $resting ) && ! self::$broke && count( $dead ) + count( array_diff_key( $resting, $dead ) ) >= count( $providers );
+		$riprende    = $tutti_fermi ? (int) min( $resting ) : 0;
+		if ( '' !== $error && 0 === $count && $tutti_fermi ) {
+			// At most one line an hour: Labs asks the engines one at a time (own keys, then Edge…), each with its own
+			// «back at», and a line for each would fill the log again (seen on the bench: 7 lines in a minute).
+			if ( (int) get_option( 'trrocket_rest_logged' ) < time() - HOUR_IN_SECONDS ) {
+				update_option( 'trrocket_rest_logged', time(), false );
+				Logger::info(
+					'ai',
+					/* translators: %s: time. */
+					sprintf( __( 'Translation is waiting: every engine is resting. It goes on by itself after %s.', 'translate-rocket' ), wp_date( 'j M H:i', $riprende ) ),
+					implode( ' · ', array_unique( array_map( 'strval', array_intersect_key( self::$resting_why, $resting ) ) ) )
+				);
+			}
+		} elseif ( '' !== $error && 0 === $count ) {
 			Logger::error(
 				'ai',
 				/* translators: %s: language code. */
@@ -330,6 +362,8 @@ class Translator {
 			'count' => $count,
 			'kept'  => $kept,
 			'error' => $error,
+			// Unix time the first engine comes back when every engine is resting; 0 otherwise.
+			'resting_until' => $riprende,
 			// Something is left: the step stopped at its deadline, or the 1000 read were all there was room for.
 			'more'  => $count > 0 && count( $dead ) < count( $providers ) && ( $fermato || count( $rows ) >= 1000 ),
 		);
@@ -347,9 +381,9 @@ class Translator {
 	 * @param string               $error     Last error message (by ref).
 	 * @return array{translations:string[],provider:string}|null
 	 */
-	private static function first_ok( array $providers, array &$dead, array $texts, string $source, string $target, string &$error ): ?array {
+	private static function first_ok( array $providers, array &$dead, array $texts, string $source, string $target, string &$error, array &$resting = array() ): ?array {
 		foreach ( $providers as $provider ) {
-			if ( isset( $dead[ $provider->id() ] ) ) {
+			if ( isset( $dead[ $provider->id() ] ) || isset( $resting[ $provider->id() ] ) ) {
 				continue;
 			}
 			$result = $provider->translate( $texts, $source, $target );
@@ -360,7 +394,17 @@ class Translator {
 					'provider'     => $provider->id(),
 				);
 			}
-			$error = $result->error;
+			// Resting: not asked again in this run (it said when it comes back), and not an error of its own.
+			if ( ! empty( $result->resting ) ) {
+				$resting[ $provider->id() ]      = (int) $result->resting;
+				self::$resting_why[ $provider->id() ] = $result->error;
+				if ( '' === $error ) {
+					$error = $result->error;
+				}
+				continue;
+			}
+			self::$broke = true;
+			$error       = $result->error;
 			if ( self::is_permanent( $result->error ) ) {
 				$dead[ $provider->id() ] = $result->error;
 				// Surface the outage in wp-admin: a quota that runs out mid-run is

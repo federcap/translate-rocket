@@ -6269,3 +6269,8 @@ msgstr "Je server antwoordde niet op tijd (%1$s). Wat vertaald is, is opgeslagen
 #: src/Admin/Admin.php
 msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
 msgstr "Er loopt al een andere vertaling op deze site (een ander tabblad, of Labs op de achtergrond): we wachten daarop, daarna gaat deze verder."
+
+#: src/Translator.php
+#, php-format
+msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
+msgstr "De vertaling wacht: alle diensten pauzeren. Na %s gaat het vanzelf verder."

@@ -6267,3 +6267,8 @@ msgstr "Votre serveur n'a pas répondu à temps (%1$s). Ce qui a été traduit e
 #: src/Admin/Admin.php
 msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
 msgstr "Une autre traduction est en cours sur ce site (un autre onglet, ou Labs en arrière-plan) : on l'attend, puis celle-ci continue."
+
+#: src/Translator.php
+#, php-format
+msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
+msgstr "La traduction attend : tous les moteurs sont en pause. Elle reprend d'elle-même après %s."

@@ -853,7 +853,11 @@ class Strings {
 			self::flush_maps( (string) $lingua );
 		}
 		if ( $lingue ) {
-			\TranslateRocket\Cache::flush_later();
+			if ( \TranslateRocket\Cache::in_background() ) {
+				\TranslateRocket\Cache::flush_background(); // 21/10/2026: at most every ten minutes (see Cache)
+			} else {
+				\TranslateRocket\Cache::flush_later();
+			}
 		}
 	}
 

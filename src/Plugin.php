@@ -163,6 +163,8 @@ final class Plugin {
 		( new \TranslateRocket\Integrations\WoodMart() )->boot(); // 1.8.8: mega menus cached per language
 		// The CDN purge (NitroPack, Cloudflare), a minute after the last change.
 		add_action( Cache::REMOTE_EVENT, array( 'TranslateRocket\\Cache', 'purge_remote' ) );
+		// The flush booked by background work (Labs, WP-CLI), at most every ten minutes.
+		add_action( Cache::QUIET_EVENT, array( 'TranslateRocket\\Cache', 'flush_quiet_now' ) );
 
 		// Schema upgrades must run before any code path that writes strings — the
 		// front-end collection pass included (an admin can browse the site before

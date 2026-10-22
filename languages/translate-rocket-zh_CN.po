@@ -7088,3 +7088,8 @@ msgstr "您的服务器未及时响应（%1$s）。已翻译的内容已保存�
 #: src/Admin/Admin.php
 msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
 msgstr "本站点正在进行另一项翻译（另一个标签页，或后台的 Labs）：正在等待其完成，之后本次翻译将继续。"
+
+#: src/Translator.php
+#, php-format
+msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
+msgstr "翻译正在等待：所有引擎都在休息。%s 之后会自动继续。"

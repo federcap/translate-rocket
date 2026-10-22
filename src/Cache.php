@@ -22,6 +22,10 @@ class Cache {
 	private const PREFIX     = 'trrocket_pc_';
 	/** Cron event of the CDN purge (see purge_remote_later()). */
 	public const REMOTE_EVENT = 'trrocket_purge_remote';
+	/** Cron event of the flush booked by background work (see flush_background()). */
+	public const QUIET_EVENT = 'trrocket_flush_quiet';
+	/** Option: when background work last emptied the caches. */
+	private const QUIET_LAST = 'trrocket_flush_quiet_last';
 	private const TTL        = 21600; // 6 hours.
 
 	/**
@@ -151,6 +155,43 @@ class Cache {
 		}
 		self::$da_svuotare = false;
 		self::flush();
+	}
+
+	/**
+	 * 21/10/2026 (translaterocket.com, a server with one CPU: the home page was a cache MISS three times in a minute,
+	 * visitors waited 4-7 s): background work — Labs translating the whole site, the hourly rounds, WP-CLI — emptied
+	 * EVERY cache (ours, Breeze, Varnish, the object cache) after each page, every two minutes for hours. Background
+	 * work now empties them at most once every ten minutes, and books the last flush so its last translation still
+	 * shows within ten minutes. What the owner does by hand keeps flushing at once.
+	 *
+	 * @param int $gap Seconds between two flushes.
+	 */
+	public static function flush_background( int $gap = 600 ): void {
+		$gap  = (int) apply_filters( 'trrocket_background_flush_gap', $gap );
+		$last = (int) get_option( self::QUIET_LAST, 0 );
+		if ( $gap <= 0 || time() - $last >= $gap ) {
+			self::flush_quiet_now();
+			return;
+		}
+		if ( ! wp_next_scheduled( self::QUIET_EVENT ) ) {
+			wp_schedule_single_event( $last + $gap, self::QUIET_EVENT );
+		}
+	}
+
+	/**
+	 * The booked background flush (cron event QUIET_EVENT), or one due now.
+	 */
+	public static function flush_quiet_now(): void {
+		update_option( self::QUIET_LAST, time(), false );
+		wp_clear_scheduled_hook( self::QUIET_EVENT );
+		self::flush();
+	}
+
+	/**
+	 * Is this request background work (WP-Cron, WP-CLI)?
+	 */
+	public static function in_background(): bool {
+		return ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) || ( defined( 'WP_CLI' ) && WP_CLI );
 	}
 
 	public static function flush(): void {

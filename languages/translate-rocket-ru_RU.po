@@ -6295,3 +6295,8 @@ msgstr "Сервер не ответил вовремя (%1$s). Переведё
 #: src/Admin/Admin.php
 msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
 msgstr "На этом сайте уже идёт другой перевод (другая вкладка или Labs в фоне): ждём его окончания, затем этот продолжится."
+
+#: src/Translator.php
+#, php-format
+msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
+msgstr "Перевод ожидает: все движки на паузе. Он продолжится сам после %s."

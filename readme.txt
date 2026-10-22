@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.14
+Stable tag: 1.8.15
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.15 =
+* Faster pages for your visitors while translations run in the background: Labs, WP-Cron and WP-CLI now clear the site's caches (page cache, Breeze, LiteSpeed, Varnish, object cache) at most once every ten minutes, instead of after every page. The last change is still shown within ten minutes; what you edit by hand is shown at once, as before.
+* An engine that is only resting (DeepL paused after refusals, a free engine that has used its share for the hour) is no longer logged as «AI translation failed» for every language and step: one «Translation is waiting» line, with the time it goes on. Real failures are still logged as before.
+* The «i» buttons of the overview link to the page of translaterocket.com that explains each feature, in your language when the site has it.
 
 = 1.8.14 =
 * Faster and lighter «Translate all» on small servers: each step writes to the options table about 80% less (the maps were flushed after every sentence, with a scan of the whole table each time) and runs about half the database queries; the settings are read once per request. Thanks to Isis for the PHP slow log that pointed straight at it.
@@ -476,6 +481,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.15 =
+Faster pages while Labs or WP-Cron translate in the background (caches cleared at most every ten minutes), no more false «AI translation failed» lines for resting engines.
 
 = 1.8.14 =
 Lighter and steadier «Translate all» on small servers (fewer database writes, retries after 502/504/524, one process at a time), new WP-CLI command, DeepL rest that survives cache purges.

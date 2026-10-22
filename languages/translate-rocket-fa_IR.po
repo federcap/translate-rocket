@@ -7114,3 +7114,8 @@ msgstr "سرور شما به‌موقع پاسخ نداد (%1$s). آنچه تر�
 #: src/Admin/Admin.php
 msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
 msgstr "ترجمهٔ دیگری روی این سایت در حال اجراست (برگهٔ دیگر، یا Labs در پس‌زمینه): منتظر آن می‌مانیم و سپس این یکی ادامه می‌یابد."
+
+#: src/Translator.php
+#, php-format
+msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
+msgstr "ترجمه در انتظار است: همهٔ موتورها در حال استراحت‌اند. پس از %s خودبه‌خود ادامه می‌یابد."

@@ -7218,3 +7218,8 @@ msgstr "لم يستجب الخادم في الوقت المحدد (%1$s). ما �
 #: src/Admin/Admin.php
 msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
 msgstr "ترجمة أخرى تعمل على هذا الموقع (علامة تبويب أخرى، أو Labs في الخلفية): ننتظر انتهاءها ثم تتابع هذه."
+
+#: src/Translator.php
+#, php-format
+msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
+msgstr "الترجمة في انتظار: جميع المحركات في استراحة. ستتابع تلقائيًا بعد %s."

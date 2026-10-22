@@ -6243,3 +6243,8 @@ msgstr "サーバーが時間内に応答しませんでした（%1$s）。翻�
 #: src/Admin/Admin.php
 msgid "Another translation is running on this site (another tab, or Labs in the background): waiting for it, then this one goes on."
 msgstr "このサイトで別の翻訳が実行中です（別のタブ、またはバックグラウンドの Labs）。終わるのを待ってから、こちらが続行します。"
+
+#: src/Translator.php
+#, php-format
+msgid "Translation is waiting: every engine is resting. It goes on by itself after %s."
+msgstr "翻訳は待機中です。すべてのエンジンが休止中です。%s 以降に自動で再開します。"
