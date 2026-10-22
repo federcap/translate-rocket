@@ -781,8 +781,7 @@ class Router {
 	 * @param string $taxonomy Taxonomy name.
 	 */
 	public function filter_term_link( $url, $term, $taxonomy ) {
-		unset( $taxonomy );
-		if ( $this->is_default( $this->current_language() ) || ! is_object( $term ) || empty( $term->slug ) ) {
+		if ( $this->is_default( $this->current_language() ) || ! is_object( $term ) || empty( $term->slug ) || ! TermSlugs::enabled( (string) $taxonomy ) ) {
 			return $url;
 		}
 		$tslug = TermSlugs::ensure( (int) $term->term_id, (string) $term->name, $this->current_language() );
@@ -849,7 +848,7 @@ class Router {
 		// translated slug for a secondary one. The current path's last segment is
 		// whichever slug the request used, so we rebuild it to the target.
 		$target = (string) $term->slug;
-		if ( ! $this->is_default( $lang ) ) {
+		if ( ! $this->is_default( $lang ) && TermSlugs::enabled( (string) $term->taxonomy ) ) {
 			$t = TermSlugs::ensure( (int) $term->term_id, (string) $term->name, $lang );
 			if ( '' !== $t ) {
 				$target = $t;
@@ -1052,6 +1051,13 @@ class Router {
 			$real = TermSlugs::resolve( $last, $this->current_language(), $tax );
 			if ( '' !== $real && $real !== $last ) {
 				$query_vars[ $qv ] = ( false !== $cut ) ? substr( $val, 0, $cut + 1 ) . $real : $real;
+				if ( ! TermSlugs::enabled( $tax ) ) {
+					// translated addresses switched off: the one already indexed moves to the plain address
+					$t = get_term_by( 'slug', $real, $tax );
+					if ( $t instanceof \WP_Term ) {
+						$this->old_term = array( (int) $t->term_id, $tax );
+					}
+				}
 			} elseif ( '' === $real && ! term_exists( $last, $tax ) ) {
 				// 22/10/2026: a slug the term had before it was renamed → 301 to today's address (template_redirect).
 				$vecchio = TermSlugs::resolve_old( $last, $this->current_language(), $tax );

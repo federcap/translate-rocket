@@ -7257,3 +7257,15 @@ msgstr "انتبه: تحتوي الترجمة على حروف من أبجدية 
 #: src/Admin/Admin.php
 msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
 msgstr "انتبه: تحتوي الترجمة على حروف من أبجدية أخرى. هذا النموذج لا يتعامل جيدًا مع هذه اللغة: اختر نموذجًا آخر."
+
+#: src/Admin/Admin.php
+msgid "Category and tag addresses"
+msgstr "عناوين التصنيفات والوسوم"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of categories and tags"
+msgstr "ترجمة عناوين التصنيفات والوسوم"
+
+#: src/Admin/Admin.php
+msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
+msgstr "عند التفعيل: يستخدم عنوان التصنيف أو الوسم اسمه المترجم في كل لغة، مثل /de/product-category/drucker/. عند الإيقاف: تحتفظ كل لغة بالـ slug الخاص بك، مثل /de/product-category/printers/ — وهذا مفيد إذا كانت محركات البحث تعرف هذه العناوين بالفعل. العناوين المترجمة التي زيرت من قبل تظل تعمل: عند الإيقاف تنتقل إلى العنوان العادي بتحويل 301."

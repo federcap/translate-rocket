@@ -7127,3 +7127,15 @@ msgstr "注意：译文中含有其他文字系统的字母。此模型不擅长
 #: src/Admin/Admin.php
 msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
 msgstr "注意：译文中含有其他文字系统的字母。此模型不擅长这种语言：请选择其他模型。"
+
+#: src/Admin/Admin.php
+msgid "Category and tag addresses"
+msgstr "分类和标签的地址"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of categories and tags"
+msgstr "翻译分类和标签的地址"
+
+#: src/Admin/Admin.php
+msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
+msgstr "开启：分类或标签的地址在每种语言中使用其翻译后的名称，例如 /de/product-category/drucker/。关闭：每种语言都保留您自己的 slug，例如 /de/product-category/printers/——适合搜索引擎已经收录这些地址的情况。已被访问过的翻译地址仍然有效：关闭此选项后，它们会以 301 跳转到普通地址。"

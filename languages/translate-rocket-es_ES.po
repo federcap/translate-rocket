@@ -6306,3 +6306,15 @@ msgstr "Atención: la traducción contiene letras de otro alfabeto. Este modelo 
 #: src/Admin/Admin.php
 msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
 msgstr "Atención: la traducción contiene letras de otro alfabeto. Este modelo no maneja bien este idioma: elige otro."
+
+#: src/Admin/Admin.php
+msgid "Category and tag addresses"
+msgstr "Direcciones de categorías y etiquetas"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of categories and tags"
+msgstr "Traducir las direcciones de categorías y etiquetas"
+
+#: src/Admin/Admin.php
+msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
+msgstr "Activado: la dirección de una categoría o etiqueta usa su nombre traducido en cada idioma, por ejemplo /de/product-category/drucker/. Desactivado: cada idioma conserva tu propio slug, por ejemplo /de/product-category/printers/ — útil si los buscadores ya conocen esas direcciones. Las direcciones traducidas ya visitadas siguen funcionando: con esta opción desactivada pasan a la dirección simple con una 301."

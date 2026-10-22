@@ -7153,3 +7153,15 @@ msgstr "توجه: ترجمه حروفی از الفبای دیگری دارد. �
 #: src/Admin/Admin.php
 msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
 msgstr "توجه: ترجمه حروفی از الفبای دیگری دارد. این مدل با این زبان خوب کار نمی‌کند: مدل دیگری انتخاب کنید."
+
+#: src/Admin/Admin.php
+msgid "Category and tag addresses"
+msgstr "نشانی دسته‌ها و برچسب‌ها"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of categories and tags"
+msgstr "ترجمهٔ نشانی دسته‌ها و برچسب‌ها"
+
+#: src/Admin/Admin.php
+msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
+msgstr "روشن: نشانی هر دسته یا برچسب در هر زبان از نام ترجمه‌شدهٔ آن استفاده می‌کند، مثلاً /de/product-category/drucker/. خاموش: هر زبان نامک خود شما را نگه می‌دارد، مثلاً /de/product-category/printers/ — مفید وقتی موتورهای جست‌وجو این نشانی‌ها را از قبل می‌شناسند. نشانی‌های ترجمه‌شده‌ای که قبلاً بازدید شده‌اند کار می‌کنند: با خاموش بودن این گزینه با یک 301 به نشانی ساده منتقل می‌شوند."

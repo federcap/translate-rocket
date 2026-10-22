@@ -102,6 +102,26 @@ class TermSlugs {
 	}
 
 	/**
+	 * Whether the addresses of this taxonomy's terms are translated (22/10/2026, piflarnakupuje.top: «it would be nice
+	 * the slugs for archives would be like this or I lose all links» — a shop that wants /en/k/1022/1032/ in every
+	 * language). Off: links, hreflang and the switcher keep the term's own slug; a translated slug already known
+	 * still answers, with a 301 to the plain address.
+	 *
+	 * @param string $taxonomy Taxonomy.
+	 */
+	public static function enabled( string $taxonomy ): bool {
+		$s  = Settings::get();
+		$on = ! array_key_exists( 'translate_term_slugs', $s ) || ! empty( $s['translate_term_slugs'] );
+		/**
+		 * Whether TranslateRocket translates the slugs of a taxonomy's terms in the addresses.
+		 *
+		 * @param bool   $on       The site setting.
+		 * @param string $taxonomy Taxonomy name, e.g. product_cat.
+		 */
+		return (bool) apply_filters( 'trrocket_translate_term_slugs', $on, $taxonomy );
+	}
+
+	/**
 	 * Keep a slug the term no longer uses, so its address still leads somewhere.
 	 *
 	 * @param int    $term_id Term.

@@ -6334,3 +6334,15 @@ msgstr "Внимание: в переводе есть буквы другого
 #: src/Admin/Admin.php
 msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
 msgstr "Внимание: в переводе есть буквы другого алфавита. Эта модель плохо справляется с этим языком: выберите другую."
+
+#: src/Admin/Admin.php
+msgid "Category and tag addresses"
+msgstr "Адреса категорий и меток"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of categories and tags"
+msgstr "Переводить адреса категорий и меток"
+
+#: src/Admin/Admin.php
+msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
+msgstr "Вкл.: адрес категории или метки использует её переведённое название на каждом языке, например /de/product-category/drucker/. Выкл.: каждый язык сохраняет ваш собственный слаг, например /de/product-category/printers/ — полезно, если поисковики уже знают эти адреса. Уже посещённые переведённые адреса продолжают работать: при выключенной опции они перенаправляются на обычный адрес с кодом 301."

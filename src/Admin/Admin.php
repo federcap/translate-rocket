@@ -1266,6 +1266,7 @@ class Admin {
 
 		$settings['serve_mode']          = ( isset( $_POST['serve_mode'] ) && 'admins' === sanitize_text_field( wp_unslash( $_POST['serve_mode'] ) ) ) ? 'admins' : 'everyone';
 		$settings['translate_meta']      = ! empty( $_POST['translate_meta'] );
+		$settings['translate_term_slugs'] = ! empty( $_POST['translate_term_slugs'] );
 		$settings['translate_interface'] = ! empty( $_POST['translate_interface'] );
 		$settings['auto_redirect']       = ! empty( $_POST['auto_redirect'] );
 		$settings['translated_search']   = ! empty( $_POST['translated_search'] );
@@ -6555,6 +6556,16 @@ JS;
 								<label>
 									<input type="checkbox" name="translate_meta" value="1" <?php checked( ! empty( $settings['translate_meta'] ) ); ?> />
 									<?php esc_html_e( 'Translate SEO title and meta description tags', 'translate-rocket' ); ?>
+								</label>
+								<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
+							</td>
+						</tr>
+						<tr id="trr-set-term-slugs">
+							<th scope="row"><?php esc_html_e( 'Category and tag addresses', 'translate-rocket' ); ?> <?php $this->info( __( 'On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301.', 'translate-rocket' ) ); ?></th>
+							<td>
+								<label>
+									<input type="checkbox" name="translate_term_slugs" value="1" <?php checked( ! isset( $settings['translate_term_slugs'] ) || ! empty( $settings['translate_term_slugs'] ) ); ?> />
+									<?php esc_html_e( 'Translate the addresses of categories and tags', 'translate-rocket' ); ?>
 								</label>
 								<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
 							</td>

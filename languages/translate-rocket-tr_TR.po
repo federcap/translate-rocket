@@ -7153,3 +7153,15 @@ msgstr "Dikkat: çeviride başka bir alfabenin harfleri var. Bu model bu dilde i
 #: src/Admin/Admin.php
 msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
 msgstr "Dikkat: çeviride başka bir alfabenin harfleri var. Bu model bu dilde iyi çalışmıyor: başka bir model seçin."
+
+#: src/Admin/Admin.php
+msgid "Category and tag addresses"
+msgstr "Kategori ve etiket adresleri"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of categories and tags"
+msgstr "Kategori ve etiket adreslerini çevir"
+
+#: src/Admin/Admin.php
+msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
+msgstr "Açık: bir kategori ya da etiketin adresi her dilde çevrilmiş adını kullanır, örneğin /de/product-category/drucker/. Kapalı: her dil sizin slug'ınızı korur, örneğin /de/product-category/printers/ — arama motorları bu adresleri zaten biliyorsa kullanışlıdır. Daha önce ziyaret edilmiş çevrilmiş adresler çalışmaya devam eder: bu seçenek kapalıyken 301 ile düz adrese yönlendirilir."

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.16
+Stable tag: 1.8.17
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.17 =
+* New: «Translate the addresses of categories and tags» (Settings, next to SEO meta). On, as before, each language uses the translated name: /de/product-category/drucker/. Off, every language keeps your own slug: /de/product-category/printers/ — the links, the hreflang tags and the language switcher all follow, and translated addresses that search engines already know move to the plain address with a 301. For shops whose category addresses are already indexed. Developers can choose per taxonomy with the trrocket_translate_term_slugs filter.
 
 = 1.8.16 =
 * Fixed: on WooCommerce shops, translated product category and product tag addresses answered 404 (for example /de/product-category/drucker/). The links used the translated name, but the address was not recognised when a visitor opened it. Custom category bases, subcategories and any public taxonomy are covered. Thanks to the shop owner who sent the details.
@@ -491,6 +494,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.17 =
+New option to keep your own category and tag slugs in every language, with 301 redirects from the translated addresses already indexed.
 
 = 1.8.16 =
 WooCommerce: translated product category and tag addresses no longer answer 404. Recommended model on every AI engine card, «Use this engine» switch, faster search in all languages.

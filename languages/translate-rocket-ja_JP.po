@@ -6282,3 +6282,15 @@ msgstr "注意：翻訳に別の文字体系の文字が含まれています。
 #: src/Admin/Admin.php
 msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
 msgstr "注意：翻訳に別の文字体系の文字が含まれています。このモデルはこの言語に向いていません。別のモデルを選んでください。"
+
+#: src/Admin/Admin.php
+msgid "Category and tag addresses"
+msgstr "カテゴリーとタグのアドレス"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of categories and tags"
+msgstr "カテゴリーとタグのアドレスを翻訳する"
+
+#: src/Admin/Admin.php
+msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
+msgstr "オン：カテゴリーやタグのアドレスに各言語の翻訳名を使います（例：/de/product-category/drucker/）。オフ：どの言語でも元のスラッグを使います（例：/de/product-category/printers/）。検索エンジンがすでにそのアドレスを知っている場合に便利です。すでに訪問された翻訳アドレスも引き続き使えます。オフの場合は 301 で通常のアドレスへ転送されます。"

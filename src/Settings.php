@@ -89,6 +89,7 @@ class Settings {
 			),
 			'serve_mode'               => 'everyone',
 			'translate_meta'           => true,
+			'translate_term_slugs'     => true,
 			'translate_interface'      => true,
 			'translate_slugs'          => false,
 			'auto_redirect'            => false,

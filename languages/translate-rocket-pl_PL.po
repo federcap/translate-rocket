@@ -6334,3 +6334,15 @@ msgstr "Uwaga: tłumaczenie zawiera litery innego alfabetu. Ten model słabo rad
 #: src/Admin/Admin.php
 msgid "Careful: the translation contains letters of another alphabet. This model does not handle this language well: choose another one."
 msgstr "Uwaga: tłumaczenie zawiera litery innego alfabetu. Ten model słabo radzi sobie z tym językiem: wybierz inny."
+
+#: src/Admin/Admin.php
+msgid "Category and tag addresses"
+msgstr "Adresy kategorii i tagów"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of categories and tags"
+msgstr "Tłumacz adresy kategorii i tagów"
+
+#: src/Admin/Admin.php
+msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
+msgstr "Włączone: adres kategorii lub tagu używa w każdym języku przetłumaczonej nazwy, np. /de/product-category/drucker/. Wyłączone: każdy język zachowuje Twój własny slug, np. /de/product-category/printers/ — przydatne, gdy wyszukiwarki znają już te adresy. Odwiedzone już przetłumaczone adresy nadal działają: przy wyłączonej opcji przekierowują 301 na zwykły adres."
