@@ -6457,3 +6457,16 @@ msgstr "Готово: теперь посетители видят %s с пер�
 #: src/Frontend/VisualEditor.php
 msgid "Fix it on the AI translation screen"
 msgstr "Исправить на экране перевода с ИИ"
+
+#: src/Admin/Admin.php
+msgid "Working through your translations…"
+msgstr "Обработка ваших переводов…"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d%% — %2$d sentences so far. Keep this page open: it goes on by itself."
+msgstr "%1$d%% — пока %2$d предложений. Не закрывайте эту страницу: работа продолжится сама."
+
+#: src/Admin/Admin.php
+msgid "Continue"
+msgstr "Продолжить"

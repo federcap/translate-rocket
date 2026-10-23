@@ -7250,3 +7250,16 @@ msgstr "완료: 이제 방문자에게 언어 전환기와 함께 %s이(가) 표
 #: src/Frontend/VisualEditor.php
 msgid "Fix it on the AI translation screen"
 msgstr "AI 번역 화면에서 수정"
+
+#: src/Admin/Admin.php
+msgid "Working through your translations…"
+msgstr "번역을 처리하는 중…"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d%% — %2$d sentences so far. Keep this page open: it goes on by itself."
+msgstr "%1$d%% — 지금까지 %2$d개 문장. 이 페이지를 열어 두세요: 자동으로 계속됩니다."
+
+#: src/Admin/Admin.php
+msgid "Continue"
+msgstr "계속"

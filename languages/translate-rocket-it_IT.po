@@ -6630,3 +6630,16 @@ msgstr "Fatto: ora i visitatori vedono %s, con il selettore delle lingue."
 #: src/Frontend/VisualEditor.php
 msgid "Fix it on the AI translation screen"
 msgstr "Sistemalo nella schermata della traduzione AI"
+
+#: src/Admin/Admin.php
+msgid "Working through your translations…"
+msgstr "Sto lavorando sulle tue traduzioni…"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d%% — %2$d sentences so far. Keep this page open: it goes on by itself."
+msgstr "%1$d%% — finora %2$d frasi. Tieni aperta questa pagina: va avanti da sola."
+
+#: src/Admin/Admin.php
+msgid "Continue"
+msgstr "Continua"

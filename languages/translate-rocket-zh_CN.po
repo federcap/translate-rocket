@@ -7250,3 +7250,16 @@ msgstr "完成：访客现在可以看到%s，并带有语言切换器。"
 #: src/Frontend/VisualEditor.php
 msgid "Fix it on the AI translation screen"
 msgstr "在 AI 翻译页面中修正"
+
+#: src/Admin/Admin.php
+msgid "Working through your translations…"
+msgstr "正在处理你的翻译…"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d%% — %2$d sentences so far. Keep this page open: it goes on by itself."
+msgstr "%1$d%% — 目前 %2$d 句。请保持此页面打开：它会自动继续。"
+
+#: src/Admin/Admin.php
+msgid "Continue"
+msgstr "继续"

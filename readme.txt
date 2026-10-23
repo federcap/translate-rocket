@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.20
+Stable tag: 1.8.20.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.20.1 =
+* Fixed: «Translate again the sentences that contain them» ended in «Request Timeout» on large sites (many languages, a long glossary). The sentences are now read once, a block at a time, and the work goes in steps of a few seconds, with a progress page that carries on by itself; «Undo» works the same way. On a test site with 60,000 sentences, 14 languages and 150 glossary terms, finding them went from 180 seconds in one request to under 7. Thanks to the shop owner who reported it.
 
 = 1.8.20 =
 * Improved: when an AI engine refuses a request, the visual editor now says why in plain words and stops — a key that is wrong or out of credit, the daily limit reached — with a link to fix it, instead of leaving the page half translated with a row of warnings. A busy service (429, 5xx, timeouts) is tried again by itself up to three times.
@@ -515,6 +518,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.20.1 =
+«Translate again the sentences that contain them» no longer times out on large sites: it works in short steps with a progress page.
 
 = 1.8.20 =
 AI engine errors explained and handled, Groq key checked in the setup wizard, «Show it to visitors» after the first translation, category and tag pages included in the site scan.

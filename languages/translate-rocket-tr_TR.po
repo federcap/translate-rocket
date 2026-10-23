@@ -7276,3 +7276,16 @@ msgstr "Tamam: ziyaretçiler artık %s dilini dil seçiciyle görüyor."
 #: src/Frontend/VisualEditor.php
 msgid "Fix it on the AI translation screen"
 msgstr "Yapay zekâ çevirisi ekranında düzelt"
+
+#: src/Admin/Admin.php
+msgid "Working through your translations…"
+msgstr "Çevirileriniz işleniyor…"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d%% — %2$d sentences so far. Keep this page open: it goes on by itself."
+msgstr "%1$d%% — şimdiye kadar %2$d cümle. Bu sayfayı açık tutun: kendiliğinden devam eder."
+
+#: src/Admin/Admin.php
+msgid "Continue"
+msgstr "Devam et"

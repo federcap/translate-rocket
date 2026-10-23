@@ -7250,3 +7250,16 @@ msgstr "Selesai: pengunjung kini melihat %s, dengan pemilih bahasa."
 #: src/Frontend/VisualEditor.php
 msgid "Fix it on the AI translation screen"
 msgstr "Perbaiki di layar terjemahan AI"
+
+#: src/Admin/Admin.php
+msgid "Working through your translations…"
+msgstr "Sedang memproses terjemahan Anda…"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d%% — %2$d sentences so far. Keep this page open: it goes on by itself."
+msgstr "%1$d%% — sejauh ini %2$d kalimat. Biarkan halaman ini terbuka: prosesnya berlanjut sendiri."
+
+#: src/Admin/Admin.php
+msgid "Continue"
+msgstr "Lanjutkan"

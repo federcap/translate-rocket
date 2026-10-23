@@ -5347,18 +5347,52 @@ JS
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+		// 23/10/2026 (piflarnakupuje.top, 14 languages, ~10,000 pages: «Request Timeout»): the work goes in steps of a few
+		// seconds; between them a light page shows how far it got and goes on by itself.
 		if ( isset( $_GET['trrocket_terms_undo'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked right below.
 			$b = sanitize_key( wp_unslash( $_GET['trrocket_terms_undo'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			check_admin_referer( 'trrocket_terms_undo_' . $b );
-			$n = \TranslateRocket\TermRetranslate::undo( $b );
-			wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'terms_undone' => (string) $n ), admin_url( 'admin.php' ) ) );
+			$r = \TranslateRocket\TermRetranslate::undo_step( $b );
+			if ( ! $r['done'] ) {
+				self::terms_progress( wp_nonce_url( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'trrocket_terms_undo' => $b ), admin_url( 'admin.php' ) ), 'trrocket_terms_undo_' . $b ), $r['percent'], $r['restored'] );
+			}
+			wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'terms_undone' => (string) $r['restored'] ), admin_url( 'admin.php' ) ) );
 			exit;
 		}
-		if ( ! isset( $_POST['trrocket_terms_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['trrocket_terms_nonce'] ) ), 'trrocket_retranslate_terms' ) ) {
+		$go = isset( $_POST['trrocket_terms_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['trrocket_terms_nonce'] ) ), 'trrocket_retranslate_terms' );
+		if ( $go ) {
+			\TranslateRocket\TermRetranslate::start();
+		} elseif ( ! ( isset( $_GET['trrocket_terms_step'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['trrocket_terms_step'] ) ), 'trrocket_terms_step' ) ) ) {
 			return;
 		}
-		$r = \TranslateRocket\TermRetranslate::run();
+		$r = \TranslateRocket\TermRetranslate::step();
+		if ( ! $r['done'] ) {
+			self::terms_progress( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'trrocket_terms_step' => wp_create_nonce( 'trrocket_terms_step' ) ), admin_url( 'admin.php' ) ), $r['percent'], $r['sentences'] );
+		}
 		wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'terms_reset' => (string) $r['sentences'], 'terms_langs' => (string) $r['languages'], 'terms_batch' => $r['batch'] ), admin_url( 'admin.php' ) ) );
+		exit;
+	}
+
+	/**
+	 * Between two steps of «Translate again»: a light page with the progress, which goes on by itself.
+	 *
+	 * @param string $next    Address of the next step.
+	 * @param int    $percent How far.
+	 * @param int    $count   Sentences so far.
+	 */
+	private static function terms_progress( string $next, int $percent, int $count ): void {
+		nocache_headers();
+		header( 'Content-Type: text/html; charset=utf-8' );
+		$url = esc_url( $next );
+		echo '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta http-equiv="refresh" content="1;url=' . $url . '"><title>TranslateRocket</title>'
+			. '<style>body{font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f0f0f1;color:#1d2327;display:flex;align-items:center;justify-content:center;min-height:90vh;margin:0}'
+			. '.b{background:#fff;padding:28px 32px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);max-width:440px;width:90%}.t{height:10px;background:#dcdcde;border-radius:5px;overflow:hidden;margin:14px 0}.t i{display:block;height:100%;background:#2271b1}</style></head><body><div class="b">'
+			. '<strong>' . esc_html__( 'Working through your translations…', 'translate-rocket' ) . '</strong>'
+			. '<div class="t"><i style="width:' . (int) $percent . '%"></i></div>'
+			/* translators: 1: percent done, 2: number of sentences. */
+			. '<p>' . esc_html( sprintf( __( '%1$d%% — %2$d sentences so far. Keep this page open: it goes on by itself.', 'translate-rocket' ), $percent, $count ) ) . '</p>'
+			. '<p><a href="' . $url . '">' . esc_html__( 'Continue', 'translate-rocket' ) . '</a></p>'
+			. '</div><script>setTimeout(function(){location.replace(' . wp_json_encode( $next ) . ');},300);</script></body></html>';
 		exit;
 	}
 

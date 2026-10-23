@@ -7276,3 +7276,16 @@ msgstr "انجام شد: بازدیدکنندگان اکنون %s را با ان
 #: src/Frontend/VisualEditor.php
 msgid "Fix it on the AI translation screen"
 msgstr "آن را در صفحهٔ ترجمه با هوش مصنوعی اصلاح کنید"
+
+#: src/Admin/Admin.php
+msgid "Working through your translations…"
+msgstr "در حال بررسی ترجمه‌های شما…"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d%% — %2$d sentences so far. Keep this page open: it goes on by itself."
+msgstr "%1$d%% — تا اینجا %2$d جمله. این صفحه را باز نگه دارید: خودش ادامه می‌دهد."
+
+#: src/Admin/Admin.php
+msgid "Continue"
+msgstr "ادامه"
