@@ -7289,3 +7289,16 @@ msgstr "%1$d%% — تا اینجا %2$d جمله. این صفحه را باز ن
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "ادامه"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "همچنین در این منوها:"
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "منوی «%s»، هر جا که نمایش داده شود"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "برای سایتی که یک منو برای رایانه و منوی دیگری برای تبلت و تلفن دارد: آن یکی را هم علامت بزنید."

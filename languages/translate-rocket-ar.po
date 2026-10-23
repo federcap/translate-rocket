@@ -7393,3 +7393,16 @@ msgstr "%1$d%% — %2$d جملة حتى الآن. أبقِ هذه الصفحة �
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "متابعة"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "أيضًا في هذه القوائم:"
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "القائمة «%s»، أينما ظهرت"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "لموقع فيه قائمة للحاسوب وأخرى مختلفة للأجهزة اللوحية والهواتف: حدّد الأخرى أيضًا."

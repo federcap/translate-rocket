@@ -1071,6 +1071,39 @@ class Switcher {
 	 *
 	 * @param object $args wp_nav_menu() arguments.
 	 */
+	public static function is_also_menu( $args ): bool {
+		$also = array_map( 'strval', (array) ( self::menu_settings()['menu_also'] ?? array() ) );
+		if ( ! $also || ! is_object( $args ) ) {
+			return false;
+		}
+		$loc = isset( $args->theme_location ) ? (string) $args->theme_location : '';
+		if ( '' !== $loc && in_array( $loc, $also, true ) ) {
+			return true;
+		}
+		$menu = null;
+		if ( ! empty( $args->menu ) ) {
+			$menu = wp_get_nav_menu_object( $args->menu );
+		} elseif ( '' !== $loc ) {
+			$assigned = get_nav_menu_locations();
+			$menu     = ! empty( $assigned[ $loc ] ) ? wp_get_nav_menu_object( (int) $assigned[ $loc ] ) : null;
+		}
+		return $menu && in_array( 'menu:' . (int) $menu->term_id, $also, true );
+	}
+
+	/**
+	 * The menus «Also in these menus» can offer: the theme's places with a menu, then every menu of the site by name.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function also_choices(): array {
+		$out = self::menu_locations();
+		foreach ( wp_get_nav_menus() as $m ) {
+			/* translators: %s: name of a menu of the site. */
+			$out[ 'menu:' . (int) $m->term_id ] = sprintf( __( 'The menu «%s», wherever it is shown', 'translate-rocket' ), $m->name );
+		}
+		return $out;
+	}
+
 	public static function is_wanted_menu( $args ): bool { // public: the search box (1.8.8) goes in the same menu
 		$loc = self::wanted_location();
 		if ( '' === $loc || ! is_object( $args ) ) {
@@ -1079,6 +1112,12 @@ class Switcher {
 		// 1.8.8 (WoodMart 8.5 code, header-elements/main-menu.php): the header builder's «Main menu» calls the
 		// menu picked in the builder by ID, not by location. Its class says it is the main one.
 		if ( isset( $args->menu_class ) && preg_match( '/\bwd-nav-(?:main|fs)\b/', (string) $args->menu_class ) ) {
+			return true;
+		}
+		// 23/10/2026 (piflarnakupuje.top, Blocksy: «one menu for desktop and a different one for tablet and mobile… it sets
+		// the menu only for one menu»): the other menus ticked under «Also in these menus», by place or by the menu itself
+		// (Blocksy's phone panel, Elementor's Nav Menu and many headers name the menu, not the place).
+		if ( self::is_also_menu( $args ) ) {
 			return true;
 		}
 		if ( isset( $args->theme_location ) && '' !== (string) $args->theme_location ) {

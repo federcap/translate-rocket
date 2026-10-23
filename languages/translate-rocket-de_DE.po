@@ -6442,3 +6442,16 @@ msgstr "%1$d%% — bisher %2$d Sätze. Lassen Sie diese Seite offen: Es geht von
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "Weiter"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "Auch in diesen Menüs:"
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "Das Menü «%s», wo immer es angezeigt wird"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "Für eine Website mit einem Menü am Computer und einem anderen auf Tablets und Handys: Haken Sie auch das andere an."

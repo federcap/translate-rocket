@@ -7287,3 +7287,16 @@ msgstr ""
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr ""
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr ""

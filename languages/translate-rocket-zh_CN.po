@@ -7263,3 +7263,16 @@ msgstr "%1$d%% — 目前 %2$d 句。请保持此页面打开：它会自动继�
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "继续"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "同时显示在这些菜单中："
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "菜单「%s」，无论显示在哪里"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "如果网站在电脑上用一个菜单、在平板和手机上用另一个菜单：请把另一个也勾选上。"

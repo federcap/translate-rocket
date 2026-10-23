@@ -6418,3 +6418,16 @@ msgstr "%1$d%% — これまでに %2$d 文。このページを開いたまま�
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "続ける"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "次のメニューにも表示:"
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "メニュー「%s」(表示されるすべての場所)"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "パソコン用とタブレット・スマートフォン用で別のメニューを使うサイトでは、もう一方にもチェックを入れてください。"

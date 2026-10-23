@@ -7289,3 +7289,16 @@ msgstr "%1$d%% — şimdiye kadar %2$d cümle. Bu sayfayı açık tutun: kendili
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "Devam et"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "Şu menülerde de:"
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "«%s» menüsü, gösterildiği her yerde"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "Bilgisayarda bir menü, tablet ve telefonda farklı bir menü olan bir site için: diğerini de işaretleyin."

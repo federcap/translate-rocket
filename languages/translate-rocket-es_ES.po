@@ -6442,3 +6442,16 @@ msgstr "%1$d%% — %2$d frases hasta ahora. Deja esta página abierta: sigue sol
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "Continuar"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "También en estos menús:"
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "El menú «%s», dondequiera que se muestre"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "Para un sitio con un menú en el ordenador y otro distinto en tabletas y móviles: marca también el otro."

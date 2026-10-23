@@ -2406,6 +2406,10 @@ class Admin {
 		$sw['footer_cols']   = isset( $_POST['sw_footer_cols'] ) ? max( 0, min( 6, (int) $_POST['sw_footer_cols'] ) ) : 0;
 		$sw['floating']      = ( ! in_array( $placement, array( 'manual', 'menu', 'spot', 'footer' ), true ) );
 		$sw['menu_phone']    = ! isset( $_POST['sw_menu_phone_shown'] ) || ! empty( $_POST['sw_menu_phone'] );
+		if ( isset( $_POST['sw_menu_also_shown'] ) ) {
+			$trr_ok          = \TranslateRocket\Frontend\Switcher::also_choices();
+			$sw['menu_also'] = array_values( array_filter( array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sw_menu_also'] ?? array() ) ), static function ( $v ) use ( $trr_ok ) { return isset( $trr_ok[ $v ] ); } ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- each value checked against the real menus.
+		}
 		$menu_loc            = isset( $_POST['sw_menu_location'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_menu_location'] ) ) : 'auto';
 		$sw['menu_location'] = ( 'auto' === $menu_loc || isset( \TranslateRocket\Frontend\Switcher::menu_locations()[ $menu_loc ] ) || preg_match( '/^nav:\d+$/', $menu_loc ) ) ? $menu_loc : 'auto';
 		$sw['float_pos']     = in_array( $placement, array( 'bottom-right', 'bottom-left', 'top-right', 'top-left', 'custom' ), true ) ? $placement : 'bottom-right';
@@ -2741,6 +2745,16 @@ class Admin {
 										printf( esc_html__( 'Also in the phone menu of your theme (%s)', 'translate-rocket' ), esc_html( implode( ', ', $trr_tel_nomi ) ) );
 										?>
 									</label> <span class="description"><?php esc_html_e( 'Untick it if that place holds another menu (categories, for example) and the languages appear twice.', 'translate-rocket' ); ?></span></p>
+								<?php endif; ?>
+								<?php $trr_also = ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) ? array() : \TranslateRocket\Frontend\Switcher::also_choices(); ?>
+								<?php if ( count( $trr_also ) > 1 ) : // 23/10/2026: a menu for the computer and another one for tablet and phone. ?>
+									<input type="hidden" name="sw_menu_also_shown" value="1" />
+									<p class="trr-sw-also"><span><?php esc_html_e( 'Also in these menus:', 'translate-rocket' ); ?></span><br>
+										<?php foreach ( $trr_also as $trr_k => $trr_l ) : ?>
+											<label style="display:inline-block;margin:2px 14px 2px 0"><input type="checkbox" name="sw_menu_also[]" value="<?php echo esc_attr( $trr_k ); ?>" <?php checked( in_array( $trr_k, array_map( 'strval', (array) $g( 'menu_also', array() ) ), true ) ); ?> /> <?php echo esc_html( $trr_l ); ?></label>
+										<?php endforeach; ?>
+										<br><span class="description"><?php esc_html_e( 'For a site with one menu on the computer and a different one on tablets and phones: tick the other one too.', 'translate-rocket' ); ?></span>
+									</p>
 								<?php endif; ?>
 								<p class="description"><?php esc_html_e( 'The languages become an item of that menu, drawn by your theme like its other items — in the phone menu too, at the top or at the bottom as chosen. With «Dropdown» the other languages open under the current one. On a page without that menu the switcher floats in the corner, so it is never missing.', 'translate-rocket' ); ?></p>
 							<?php else : ?>

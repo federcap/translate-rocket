@@ -6444,3 +6444,16 @@ msgstr "%1$d%% — tot nu toe %2$d zinnen. Laat deze pagina open: hij gaat vanze
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "Doorgaan"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "Ook in deze menu's:"
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "Het menu «%s», waar het ook verschijnt"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "Voor een site met één menu op de computer en een ander op tablets en telefoons: vink ook het andere aan."

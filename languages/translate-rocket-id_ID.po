@@ -7263,3 +7263,16 @@ msgstr "%1$d%% — sejauh ini %2$d kalimat. Biarkan halaman ini terbuka: prosesn
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "Lanjutkan"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "Juga di menu-menu ini:"
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "Menu «%s», di mana pun ditampilkan"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "Untuk situs dengan satu menu di komputer dan menu lain di tablet dan ponsel: centang juga yang lain."

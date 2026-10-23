@@ -7263,3 +7263,16 @@ msgstr "%1$d%% — 지금까지 %2$d개 문장. 이 페이지를 열어 두세�
 #: src/Admin/Admin.php
 msgid "Continue"
 msgstr "계속"
+
+#: src/Admin/Admin.php
+msgid "Also in these menus:"
+msgstr "다음 메뉴에도 표시:"
+
+#: src/Frontend/Switcher.php
+#, php-format
+msgid "The menu «%s», wherever it is shown"
+msgstr "메뉴 «%s» (표시되는 모든 곳)"
+
+#: src/Admin/Admin.php
+msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
+msgstr "컴퓨터용 메뉴와 태블릿·휴대폰용 메뉴가 다른 사이트라면 다른 메뉴에도 체크하세요."
