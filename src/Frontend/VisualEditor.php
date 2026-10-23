@@ -833,7 +833,13 @@ class VisualEditor {
 		}
 		$src  = isset( $_POST['src'] ) ? InlineText::sanitize( (string) wp_unslash( $_POST['src'] ) ) : '';
 		$lang = isset( $_POST['lang'] ) ? sanitize_text_field( wp_unslash( $_POST['lang'] ) ) : '';
-		if ( '' === $src || '' === $lang ) {
+		// 23/10/2026 (first run of a new user: one request to translate and one to save for every sentence — a home page
+		// of 47 sentences took minutes): «srcs» carries up to 25 sentences, translated in one call to the engine.
+		$srcs = isset( $_POST['srcs'] ) ? json_decode( (string) wp_unslash( $_POST['srcs'] ), true ) : null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- decoded and sanitized one by one below.
+		if ( is_array( $srcs ) ) {
+			$srcs = array_values( array_slice( array_map( static function ( $s ) { return InlineText::sanitize( (string) $s ); }, $srcs ), 0, 25 ) );
+		}
+		if ( ( '' === $src && empty( $srcs ) ) || '' === $lang ) {
 			wp_send_json_error( 'invalid' );
 		}
 		$provider = Registry::active();
@@ -841,6 +847,17 @@ class VisualEditor {
 			wp_send_json_error( __( 'No AI provider configured.', 'translate-rocket' ) );
 		}
 		$source = (string) ( Settings::get()['source_language'] ?? 'en' );
+		if ( ! empty( $srcs ) ) {
+			$res = $provider->translate( $srcs, $source, $lang );
+			if ( $res->success && is_array( $res->translations ) ) {
+				$out = array();
+				foreach ( $srcs as $k => $unused ) {
+					$out[] = isset( $res->translations[ $k ] ) ? (string) $res->translations[ $k ] : '';
+				}
+				wp_send_json_success( array( 'translations' => $out ) );
+			}
+			wp_send_json_error( $res->error ? $res->error : __( 'Translation failed.', 'translate-rocket' ) );
+		}
 		$res    = $provider->translate( array( $src ), $source, $lang );
 		if ( $res->success && isset( $res->translations[0] ) && '' !== trim( (string) $res->translations[0] ) ) {
 			wp_send_json_success( array( 'translation' => (string) $res->translations[0] ) );

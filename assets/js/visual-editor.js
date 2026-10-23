@@ -2267,7 +2267,9 @@
 				} );
 			}
 		}
-		function setProg( d, total ) { progBox.hidden = false; var p = total ? Math.round( d / total * 100 ) : 100; progFill.style.width = p + '%'; progTxt.textContent = d + ' / ' + total; }
+		// 23/10/2026: the page counter in the bar (0% · 0/41) moves with the translation, not only at the end — a new user
+		// saw the page turn Italian next to a «0%» that looked broken.
+		function setProg( d, total ) { progBox.hidden = false; var p = total ? Math.round( d / total * 100 ) : 100; progFill.style.width = p + '%'; progTxt.textContent = d + ' / ' + total; try { updateProgress(); } catch ( e ) {} }
 		function finish( ok, fail ) { progBox.hidden = true; msg.textContent = ( VE.i18n.bulkDone || '%d translated' ).replace( '%d', String( ok ) ) + ( fail ? ( ' · ' + fail + ' ⚠' ) : '' ); try { updateProgress(); } catch ( e ) {} }
 
 		var running = false;
@@ -2278,6 +2280,57 @@
 			if ( ! list.length ) { msg.textContent = VE.i18n.bulkNothing || ''; return; }
 			running = true; msg.textContent = VE.i18n.bulkRun || ''; setProg( 0, list.length );
 			var i = 0, ok = 0, fail = 0;
+			// 23/10/2026: with the AI, ten sentences per request and one save for the plain ones (before: two requests for
+			// every sentence, minutes for a home page). A group the server cannot take goes on one by one, as before.
+			if ( 'trrocket_ve_ai' === action ) {
+				( function gruppo() {
+					if ( i >= list.length ) { running = false; finish( ok, fail ); return; }
+					var chunk = list.slice( i, i + 10 );
+					i += chunk.length;
+					api( action, { srcs: JSON.stringify( chunk.map( function ( u ) { return unitSource( u, m ); } ) ) }, function ( res ) {
+						var tr = ( res && res.success && res.data && res.data.translations ) ? res.data.translations : null;
+						if ( ! tr ) {
+							// one by one, like before
+							var resto = chunk.slice();
+							( function uno() {
+								if ( ! resto.length ) { setProg( i, list.length ); gruppo(); return; }
+								var u = resto.shift();
+								api( action, { src: unitSource( u, m ) }, function ( r1 ) {
+									if ( r1 && r1.success && r1.data && r1.data.translation ) {
+										applyUnit( u, r1.data.translation, m, function ( good ) { good ? ok++ : fail++; uno(); } );
+									} else { fail++; uno(); }
+								} );
+							}() );
+							return;
+						}
+						var items = [], semplici = [], altri = [];
+						chunk.forEach( function ( u, k ) {
+							var t = tr[ k ];
+							if ( ! t ) { fail++; return; }
+							if ( 'block' !== u.type && 'attr' !== u.type ) {
+								items.push( { src: decode( u.el.getAttribute( 'data-trr-src' ) ), translation: trimEdge( t ) } );
+								semplici.push( [ u, t ] );
+							} else { altri.push( [ u, t ] ); }
+						} );
+						var dopo = function () {
+							( function prossimo() {
+								if ( ! altri.length ) { setProg( i, list.length ); gruppo(); return; }
+								var o = altri.shift();
+								applyUnit( o[ 0 ], o[ 1 ], m, function ( good ) { good ? ok++ : fail++; prossimo(); } );
+							}() );
+						};
+						if ( ! items.length ) { dopo(); return; }
+						api( 'trrocket_ve_save_block', { items: JSON.stringify( items ) }, function ( r2 ) {
+							if ( r2 && r2.success ) {
+								semplici.forEach( function ( x ) { applyFrag( x[ 0 ].el, trimEdge( x[ 1 ] ) ); ok++; } );
+							} else { fail += semplici.length; }
+							setProg( i, list.length );
+							dopo();
+						} );
+					} );
+				}() );
+				return;
+			}
 			( function step() {
 				if ( i >= list.length ) { running = false; finish( ok, fail ); return; }
 				var u = list[ i++ ];
@@ -2383,6 +2436,29 @@
 		if ( aiBtn ) { aiBtn.addEventListener( 'click', function () { auto( 'trrocket_ve_ai' ); } ); }
 		var gtBtn = panel.querySelector( '.trrocket-ve-bulk-gt' );
 		if ( gtBtn ) { gtBtn.addEventListener( 'click', function () { auto( 'trrocket_ve_gt' ); } ); }
+
+		// 23/10/2026 (who switched the plugin off wrote «I couldn't make it work»: Groq key set in the wizard, nothing
+		// translated after 4 and 23 minutes). «Translate my homepage now» opened this page still in the source language,
+		// and the translation hid behind two buttons: «Translate page», then «Auto-translate with AI». Arriving from the
+		// wizard, it now starts by itself with the engine just chosen; the mark leaves the address, so a reload does not
+		// start it again.
+		if ( /[?&]trr-first=1(&|$)/.test( window.location.search ) ) {
+			try {
+				window.history.replaceState( null, '', window.location.href.replace( /([?&])trr-first=1(&|$)/, function ( m, a, b ) { return b ? a : ''; } ).replace( /[?&]$/, '' ) );
+			} catch ( e ) {}
+			var primoGiri = 0;
+			var primoAvvio = function () {
+				var br = panel.querySelector( '.trrocket-ve-bulk-br' );
+				var go = ( aiBtn && ! aiBtn.hidden ) ? aiBtn : ( ( gtBtn && ! gtBtn.hidden ) ? gtBtn : ( ( br && ! br.hidden ) ? br : null ) );
+				if ( ! go && primoGiri++ < 12 ) { // the browser's own translator is found a moment later
+					setTimeout( primoAvvio, 500 );
+					return;
+				}
+				if ( panel.hidden ) { btn.click(); }
+				if ( go ) { go.click(); }
+			};
+			setTimeout( primoAvvio, 600 );
+		}
 
 		// --- il traduttore del browser -------------------------------------
 		// Stessa passeggiata di auto(), ma la traduzione la fa il dispositivo:

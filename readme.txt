@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.18
+Stable tag: 1.8.19
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.19 =
+* Improved: right after the setup wizard, «Translate my homepage now» translates your homepage by itself with the engine you just chose — you watch it turn into your language. Before, the page opened still in the original language and the translation was behind two buttons, so some of you thought nothing worked.
+* Faster: «Auto-translate everything with AI» in the visual editor sends ten sentences per request and saves them together, instead of two requests for every sentence. A homepage takes seconds instead of minutes.
+* Fixed: the page counter in the editor bar now moves while the page is being translated, instead of staying at 0% until the end.
 
 = 1.8.18 =
 * New: cache warm-up. Each time TranslateRocket clears the caches, a minute later the home and the most visited pages of every language are visited again in the background, a few at a time, so the next visitor finds them ready instead of waiting for the page to be built. The pages come from the visit statistics, or from your menu. It runs only with a page cache (ours, WP Rocket, LiteSpeed, Breeze…), waits when the server is busy, and can be switched off in Settings.
@@ -500,6 +505,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.19 =
+Your homepage translates by itself right after the setup wizard, and AI translation in the visual editor is several times faster.
 
 = 1.8.18 =
 Cache warm-up after every flush, Complianz consent kept across languages, LiteSpeed REST cache fix, page-builder box links in the visitor's language.

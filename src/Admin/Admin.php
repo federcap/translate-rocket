@@ -5913,6 +5913,8 @@ JS;
 			} else {
 				$edit_url = add_query_arg( \TranslateRocket\Frontend\VisualEditor::PARAM, '1', $router->home_for_language( $first ) );
 			}
+			// 23/10/2026: from here the translation starts by itself on that page (visual-editor.js, «trr-first»).
+			$edit_url = add_query_arg( 'trr-first', '1', $edit_url );
 			?>
 			<div class="wrap trrocket-wrap trrocket-wizard">
 				<div class="trr-wiz-card trr-wiz-done">
