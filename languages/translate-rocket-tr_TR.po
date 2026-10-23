@@ -7165,3 +7165,29 @@ msgstr "Kategori ve etiket adreslerini çevir"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "Açık: bir kategori ya da etiketin adresi her dilde çevrilmiş adını kullanır, örneğin /de/product-category/drucker/. Kapalı: her dil sizin slug'ınızı korur, örneğin /de/product-category/printers/ — arama motorları bu adresleri zaten biliyorsa kullanışlıdır. Daha önce ziyaret edilmiş çevrilmiş adresler çalışmaya devam eder: bu seçenek kapalıyken 301 ile düz adrese yönlendirilir."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "Önbellek ısıtma"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "Önbellekler temizlendikten sonra en çok ziyaret edilen sayfaları yeniden ziyaret et"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "TranslateRocket önbellekleri her temizlediğinde (bir çeviri kaydedildiğinde, içe aktarma yapıldığında, ayarlar değiştiğinde) her sayfanın ilk ziyaretçisi sayfa yeniden oluşturulurken bekler. Bu seçenek açıkken bir dakika sonra her dilin ana sayfası ve en çok ziyaret edilen sayfaları arka planda tek tek yeniden ziyaret edilir; böylece sonraki ziyaretçi onları hazır bulur. Sayfalar ziyaret istatistiklerinden, istatistikler kapalıysa menünüzden alınır. Yalnızca etkin bir sayfa önbelleği varken çalışır (bizimki ya da WP Rocket, LiteSpeed veya Breeze gibi bir eklenti)."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "Bu sitede etkin bir sayfa önbelleği yok, bu yüzden ısıtılacak bir şey yok."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "Şu an ısıtılıyor: %2$d sayfadan %1$d tanesi."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "Son ısıtma: %1$s, %2$d sayfa hazır (%3$d tanesinde hata)."

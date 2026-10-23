@@ -6294,3 +6294,29 @@ msgstr "カテゴリーとタグのアドレスを翻訳する"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "オン：カテゴリーやタグのアドレスに各言語の翻訳名を使います（例：/de/product-category/drucker/）。オフ：どの言語でも元のスラッグを使います（例：/de/product-category/printers/）。検索エンジンがすでにそのアドレスを知っている場合に便利です。すでに訪問された翻訳アドレスも引き続き使えます。オフの場合は 301 で通常のアドレスへ転送されます。"
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "キャッシュのウォームアップ"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "キャッシュを消去した後、よく見られるページをもう一度読み込む"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "TranslateRocket がキャッシュを消去するたび（翻訳の保存、インポート、設定の変更）、各ページの最初の訪問者はページが作り直されるのを待つことになります。オンにすると、1 分後に各言語のトップページとよく見られるページをバックグラウンドで 1 つずつ読み込み直し、次の訪問者には準備済みのページが表示されます。対象ページは訪問統計から、統計がオフの場合はメニューから選ばれます。ページキャッシュ（当プラグインのもの、または WP Rocket、LiteSpeed、Breeze などのプラグイン）が有効な場合にのみ動作します。"
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "このサイトではページキャッシュが有効になっていないため、ウォームアップするものはありません。"
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "ウォームアップ中：%2$d ページ中 %1$d ページ。"
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "前回のウォームアップ：%1$s、%2$d ページ準備済み（エラー %3$d 件）。"

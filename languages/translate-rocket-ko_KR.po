@@ -7139,3 +7139,29 @@ msgstr "카테고리와 태그 주소 번역"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "켜짐: 카테고리나 태그 주소에 각 언어로 번역된 이름을 사용합니다(예: /de/product-category/drucker/). 꺼짐: 모든 언어에서 원래 슬러그를 유지합니다(예: /de/product-category/printers/). 검색 엔진이 이미 그 주소를 알고 있을 때 유용합니다. 이미 방문된 번역 주소도 계속 작동하며, 꺼져 있으면 301로 일반 주소로 이동합니다."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "캐시 예열"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "캐시를 비운 뒤 가장 많이 본 페이지를 다시 방문"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "TranslateRocket이 캐시를 비울 때마다(번역 저장, 가져오기, 설정 변경) 각 페이지의 첫 방문자는 페이지가 다시 만들어질 때까지 기다리게 됩니다. 이 옵션을 켜면 1분 뒤 각 언어의 홈과 가장 많이 본 페이지를 백그라운드에서 하나씩 다시 방문해, 다음 방문자는 준비된 페이지를 보게 됩니다. 페이지는 방문 통계에서, 통계가 꺼져 있으면 메뉴에서 가져옵니다. 페이지 캐시(저희 캐시 또는 WP Rocket, LiteSpeed, Breeze 같은 플러그인)가 켜져 있을 때만 작동합니다."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "이 사이트에는 활성화된 페이지 캐시가 없어 예열할 것이 없습니다."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "예열 중: %2$d개 페이지 중 %1$d개."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "마지막 예열: %1$s, %2$d개 페이지 준비됨(오류 %3$d개)."

@@ -6346,3 +6346,29 @@ msgstr "Tłumacz adresy kategorii i tagów"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "Włączone: adres kategorii lub tagu używa w każdym języku przetłumaczonej nazwy, np. /de/product-category/drucker/. Wyłączone: każdy język zachowuje Twój własny slug, np. /de/product-category/printers/ — przydatne, gdy wyszukiwarki znają już te adresy. Odwiedzone już przetłumaczone adresy nadal działają: przy wyłączonej opcji przekierowują 301 na zwykły adres."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "Rozgrzewanie pamięci podręcznej"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "Odwiedź ponownie najczęściej oglądane strony po wyczyszczeniu pamięci podręcznej"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "Za każdym razem, gdy TranslateRocket czyści pamięć podręczną (zapisane tłumaczenie, import, zmiana ustawień), pierwszy odwiedzający każdą stronę czeka, aż zostanie ona zbudowana od nowa. Gdy ta opcja jest włączona, minutę później strona główna i najczęściej odwiedzane strony w każdym języku są ponownie odwiedzane w tle, jedna po drugiej, więc kolejny odwiedzający zastaje je gotowe. Strony pochodzą ze statystyk odwiedzin albo z Twojego menu, gdy statystyki są wyłączone. Działa tylko przy aktywnej pamięci podręcznej stron (naszej lub wtyczki takiej jak WP Rocket, LiteSpeed czy Breeze)."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "Na tej witrynie nie działa żadna pamięć podręczna stron, więc nie ma czego rozgrzewać."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "Trwa rozgrzewanie: %1$d z %2$d stron."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "Ostatnie rozgrzewanie: %1$s, gotowe strony: %2$d (z błędem: %3$d)."

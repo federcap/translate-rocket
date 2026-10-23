@@ -64,6 +64,14 @@ class RestContent {
 		}
 		$router = Plugin::instance()->router();
 		$lang   = $router->request_language();
+		// 22/10/2026 (compatibility pass: LiteSpeed Cache caches REST answers by default, «cache-rest» on): the answer a
+		// page of the site asks for depends on that page's language (the Referer), the cache key only on the address —
+		// the first language to ask was served to every other. Answers asked by a page of a multilingual site are
+		// therefore kept out of page caches; calls from elsewhere (apps, other sites) are cached as before.
+		if ( 'GET' === $request->get_method() && self::from_site_page() && $router->secondary_languages() && ! \TranslateRocket\Coexistence::on() ) {
+			do_action( 'litespeed_control_set_nocache', 'TranslateRocket: the answer depends on the language of the page that asked' );
+			$response->header( 'X-LiteSpeed-Cache-Control', 'no-cache' );
+		}
 		if ( '' === $lang || $router->is_default( $lang ) || ! in_array( $lang, $router->secondary_languages(), true ) || ! in_array( $lang, $router->public_languages(), true ) ) {
 			return $response;
 		}

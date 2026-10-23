@@ -7139,3 +7139,29 @@ msgstr "翻译分类和标签的地址"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "开启：分类或标签的地址在每种语言中使用其翻译后的名称，例如 /de/product-category/drucker/。关闭：每种语言都保留您自己的 slug，例如 /de/product-category/printers/——适合搜索引擎已经收录这些地址的情况。已被访问过的翻译地址仍然有效：关闭此选项后，它们会以 301 跳转到普通地址。"
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "缓存预热"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "清除缓存后重新访问访问量最高的页面"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "每当 TranslateRocket 清除缓存时（保存翻译、导入、更改设置），每个页面的第一位访客都要等待页面重新生成。开启此选项后，一分钟后会在后台逐个重新访问每种语言的首页和访问量最高的页面，让下一位访客直接看到准备好的页面。这些页面来自访问统计，统计关闭时则来自您的菜单。仅在启用了页面缓存（我们的缓存，或 WP Rocket、LiteSpeed、Breeze 等插件）时有效。"
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "此站点没有启用页面缓存，因此无需预热。"
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "正在预热：%2$d 个页面中的第 %1$d 个。"
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "上次预热：%1$s，%2$d 个页面已就绪（%3$d 个出错）。"

@@ -1274,6 +1274,7 @@ class Admin {
 		$settings['stats']               = ! empty( $_POST['stats'] );
 		$settings['menus_per_language']  = \TranslateRocket\MenuPerLanguage::clean( isset( $_POST['menus_per_language'] ) ? wp_unslash( $_POST['menus_per_language'] ) : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- checked value by value in clean().
 		$settings['cache_pages']         = ! empty( $_POST['cache_pages'] );
+		$settings['cache_warmup']        = ! empty( $_POST['cache_warmup'] );
 		$settings['show_poweredby']      = ! empty( $_POST['show_poweredby'] );
 
 		Settings::update( $settings );
@@ -6653,6 +6654,24 @@ JS;
 									</p>
 								<?php endif; ?>
 								<?php $this->consigliato( \TranslateRocket\Conflicts::page_caches() ? __( 'off: another page cache is already active on this site', 'translate-rocket' ) : __( 'on', 'translate-rocket' ) ); ?>
+							</td>
+						</tr>
+						<tr id="trr-set-warmup">
+							<th scope="row"><?php esc_html_e( 'Cache warm-up', 'translate-rocket' ); ?> <?php $this->info( __( 'Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze).', 'translate-rocket' ) ); ?></th>
+							<td>
+								<label>
+									<input type="checkbox" name="cache_warmup" value="1" <?php checked( ! isset( $settings['cache_warmup'] ) || ! empty( $settings['cache_warmup'] ) ); ?> />
+									<?php esc_html_e( 'Visit the most visited pages again after the caches are cleared', 'translate-rocket' ); ?>
+								</label>
+								<?php
+								$trr_warm = \TranslateRocket\CacheWarmup::status_line();
+								if ( '' !== $trr_warm ) :
+									?>
+									<p class="description"><?php echo esc_html( $trr_warm ); ?></p>
+								<?php elseif ( ! \TranslateRocket\CacheWarmup::has_page_cache() ) : ?>
+									<p class="description"><?php esc_html_e( 'No page cache is active on this site, so there is nothing to warm up.', 'translate-rocket' ); ?></p>
+								<?php endif; ?>
+								<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
 							</td>
 						</tr>
 						<tr>

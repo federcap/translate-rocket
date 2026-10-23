@@ -28,6 +28,29 @@ defined( 'ABSPATH' ) || exit;
 class ConsentBanners {
 
 	/**
+	 * Hooks for the banners that read the site address themselves (1.8.18).
+	 */
+	public static function boot(): void {
+		add_filter( 'cmplz_cookie_path', array( __CLASS__, 'complianz_cookie_path' ), 5 );
+	}
+
+	/**
+	 * 22/10/2026 (compatibility pass: Complianz 7.5.6, 1M sites): Complianz builds its cookie path from home_url(),
+	 * which carries our language prefix on translated pages — consent was stored for /it/ only, and the banner came
+	 * back at every change of language. It already uses «/» for Polylang, WPML and TranslatePress; for us it gets the
+	 * site's own path (a sub-folder install keeps its folder). Priority 5: the owner's own filter still has the last word.
+	 *
+	 * @param mixed $path Path Complianz computed.
+	 */
+	public static function complianz_cookie_path( $path ) {
+		if ( '/' === $path ) {
+			return $path;
+		}
+		$home = (string) wp_parse_url( (string) get_option( 'home' ), PHP_URL_PATH );
+		return '' === trim( $home, '/' ) ? '/' : trailingslashit( '/' . trim( $home, '/' ) );
+	}
+
+	/**
 	 * Our codes that iubenda writes differently.
 	 */
 	const IUBENDA = array( 'pt-br' => 'pt-BR', 'zh' => 'zh-CN', 'zh-tw' => 'zh-TW', 'es-mx' => 'es', 'fr-ca' => 'fr', 'de-ch' => 'de', 'no' => 'nb' );

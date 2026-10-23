@@ -7269,3 +7269,29 @@ msgstr "ترجمة عناوين التصنيفات والوسوم"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "عند التفعيل: يستخدم عنوان التصنيف أو الوسم اسمه المترجم في كل لغة، مثل /de/product-category/drucker/. عند الإيقاف: تحتفظ كل لغة بالـ slug الخاص بك، مثل /de/product-category/printers/ — وهذا مفيد إذا كانت محركات البحث تعرف هذه العناوين بالفعل. العناوين المترجمة التي زيرت من قبل تظل تعمل: عند الإيقاف تنتقل إلى العنوان العادي بتحويل 301."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "تسخين ذاكرة التخزين المؤقت"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "زيارة الصفحات الأكثر زيارة من جديد بعد مسح ذاكرة التخزين المؤقت"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "في كل مرة يمسح فيها TranslateRocket ذاكرة التخزين المؤقت (حفظ ترجمة، استيراد، تغيير في الإعدادات) ينتظر أول زائر لكل صفحة حتى يُعاد بناؤها. عند تفعيل هذا الخيار، تُزار الصفحة الرئيسية والصفحات الأكثر زيارة في كل لغة من جديد بعد دقيقة في الخلفية، واحدة تلو الأخرى، فيجدها الزائر التالي جاهزة. تأتي الصفحات من إحصاءات الزيارات، أو من قائمتك عندما تكون الإحصاءات متوقفة. يعمل فقط عندما تكون ذاكرة تخزين مؤقت للصفحات مفعّلة (ذاكرتنا، أو إضافة مثل WP Rocket أو LiteSpeed أو Breeze)."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "لا توجد ذاكرة تخزين مؤقت للصفحات مفعّلة على هذا الموقع، لذا لا يوجد ما يُسخَّن."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "جارٍ التسخين الآن: %1$d من %2$d صفحة."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "آخر تسخين: %1$s، %2$d صفحة جاهزة (%3$d بها خطأ)."

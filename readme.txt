@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.17
+Stable tag: 1.8.18
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.18 =
+* New: cache warm-up. Each time TranslateRocket clears the caches, a minute later the home and the most visited pages of every language are visited again in the background, a few at a time, so the next visitor finds them ready instead of waiting for the page to be built. The pages come from the visit statistics, or from your menu. It runs only with a page cache (ours, WP Rocket, LiteSpeed, Breeze…), waits when the server is busy, and can be switched off in Settings.
+* Fixed: with Complianz, consent given on a translated page was stored for that language only (/it/), so the cookie banner came back at every change of language. Consent now covers the whole site, as with the other multilingual plugins Complianz knows.
+* Fixed: with LiteSpeed Cache, REST answers loaded by a page (maps, sliders, «load more») could be cached in one language and served to all of them. Answers asked by a page of the site now stay out of the page cache; calls from apps and other servers are cached as before.
+* Fixed: «link on the whole box» of page builders now leads to the page in the visitor's language: Essential Addons' Wrapper Link, Premium Addons' element link, Divi Supreme's lightbox, clickable columns and Divi 4's module, row and section links. Developers can add more attributes with the trrocket_url_attributes filter.
 
 = 1.8.17 =
 * New: «Translate the addresses of categories and tags» (Settings, next to SEO meta). On, as before, each language uses the translated name: /de/product-category/drucker/. Off, every language keeps your own slug: /de/product-category/printers/ — the links, the hreflang tags and the language switcher all follow, and translated addresses that search engines already know move to the plain address with a 301. For shops whose category addresses are already indexed. Developers can choose per taxonomy with the trrocket_translate_term_slugs filter.
@@ -494,6 +500,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.18 =
+Cache warm-up after every flush, Complianz consent kept across languages, LiteSpeed REST cache fix, page-builder box links in the visitor's language.
 
 = 1.8.17 =
 New option to keep your own category and tag slugs in every language, with 301 redirects from the translated addresses already indexed.

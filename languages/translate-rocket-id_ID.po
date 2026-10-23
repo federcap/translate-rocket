@@ -7139,3 +7139,29 @@ msgstr "Terjemahkan alamat kategori dan tag"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "Aktif: alamat kategori atau tag memakai nama terjemahannya di setiap bahasa, misalnya /de/product-category/drucker/. Nonaktif: setiap bahasa memakai slug Anda sendiri, misalnya /de/product-category/printers/ — berguna jika mesin pencari sudah mengenal alamat tersebut. Alamat terjemahan yang sudah pernah dikunjungi tetap berfungsi: saat opsi ini nonaktif, alamat itu dialihkan ke alamat biasa dengan 301."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "Pemanasan cache"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "Kunjungi lagi halaman yang paling sering dikunjungi setelah cache dibersihkan"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "Setiap kali TranslateRocket membersihkan cache (terjemahan disimpan, impor, perubahan pengaturan), pengunjung pertama setiap halaman menunggu selagi halaman dibuat ulang. Dengan opsi ini aktif, semenit kemudian beranda dan halaman yang paling sering dikunjungi di setiap bahasa dikunjungi lagi di latar belakang, satu per satu, sehingga pengunjung berikutnya mendapatinya sudah siap. Halaman diambil dari statistik kunjungan, atau dari menu Anda jika statistik dimatikan. Hanya berfungsi jika ada cache halaman yang aktif (milik kami, atau plugin seperti WP Rocket, LiteSpeed, atau Breeze)."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "Tidak ada cache halaman yang aktif di situs ini, jadi tidak ada yang perlu dipanaskan."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "Sedang memanaskan: %1$d dari %2$d halaman."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "Pemanasan terakhir: %1$s, %2$d halaman siap (%3$d dengan galat)."

@@ -6346,3 +6346,29 @@ msgstr "Переводить адреса категорий и меток"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "Вкл.: адрес категории или метки использует её переведённое название на каждом языке, например /de/product-category/drucker/. Выкл.: каждый язык сохраняет ваш собственный слаг, например /de/product-category/printers/ — полезно, если поисковики уже знают эти адреса. Уже посещённые переведённые адреса продолжают работать: при выключенной опции они перенаправляются на обычный адрес с кодом 301."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "Прогрев кэша"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "Снова открывать самые посещаемые страницы после очистки кэша"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "Каждый раз, когда TranslateRocket очищает кэш (сохранён перевод, выполнен импорт, изменены настройки), первый посетитель каждой страницы ждёт, пока она соберётся заново. Если опция включена, через минуту главная и самые посещаемые страницы каждого языка снова открываются в фоне, по одной, и следующий посетитель получает их уже готовыми. Страницы берутся из статистики посещений или из вашего меню, если статистика выключена. Работает, только когда включён кэш страниц (наш или плагина вроде WP Rocket, LiteSpeed или Breeze)."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "На этом сайте не включён кэш страниц, поэтому прогревать нечего."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "Идёт прогрев: %1$d из %2$d страниц."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "Последний прогрев: %1$s, готово страниц: %2$d (с ошибкой: %3$d)."

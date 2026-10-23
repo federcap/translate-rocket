@@ -1192,6 +1192,74 @@ class Engine {
 	 * @param string $home_path Path prefix of home_url() ('' unless WP lives in a sub-directory).
 	 * @return string Localized (or original) href.
 	 */
+	/**
+	 * An attribute value that is an address, or JSON holding addresses under «url», «link» or «href»: the addresses
+	 * of this site get the language (22/10/2026, builders' «link on the whole box»).
+	 *
+	 * @param string $val       Attribute value.
+	 * @param string $home_host Site host.
+	 * @param string $home_path Site path.
+	 */
+	/**
+	 * The «url» values of Divi's et_link_options_data script, localized (22/10/2026).
+	 *
+	 * @param string $out Finished page.
+	 */
+	private function localize_divi_links( string $out ): string {
+		$raw_home  = (string) get_option( 'home' );
+		$home_host = (string) wp_parse_url( $raw_home, PHP_URL_HOST );
+		$home_path = rtrim( (string) wp_parse_url( $raw_home, PHP_URL_PATH ), '/' );
+		return (string) preg_replace_callback(
+			'/(et_link_options_data\s*=\s*)(\[[^;]*?\])\s*;/',
+			function ( $s ) use ( $home_host, $home_path ) {
+				$json = (string) preg_replace_callback(
+					'/("url"\s*:\s*)"((?:[^"\\\\]|\\\\.)*)"/',
+					function ( $m ) use ( $home_host, $home_path ) {
+						$u = json_decode( '"' . $m[2] . '"' );
+						if ( ! is_string( $u ) ) {
+							return $m[0];
+						}
+						$l = $this->localize_href( $u, $home_host, $home_path );
+						return $l === $u ? $m[0] : $m[1] . wp_json_encode( $l );
+					},
+					$s[2]
+				);
+				return $s[1] . $json . ';';
+			},
+			$out
+		);
+	}
+
+	private function localize_in_value( string $val, string $home_host, string $home_path ): string {
+		$t = ltrim( $val );
+		if ( '' === $t ) {
+			return $val;
+		}
+		if ( '{' !== $t[0] && '[' !== $t[0] ) {
+			return $this->localize_href( $val, $home_host, $home_path );
+		}
+		$data = json_decode( $val, true );
+		if ( ! is_array( $data ) ) {
+			return $val;
+		}
+		$changed = false;
+		$walk    = function ( &$node ) use ( &$walk, &$changed, $home_host, $home_path ) {
+			foreach ( $node as $k => &$v ) {
+				if ( is_array( $v ) ) {
+					$walk( $v );
+				} elseif ( is_string( $v ) && in_array( (string) $k, array( 'url', 'link', 'href' ), true ) ) {
+					$n = $this->localize_href( $v, $home_host, $home_path );
+					if ( $n !== $v ) {
+						$v       = $n;
+						$changed = true;
+					}
+				}
+			}
+		};
+		$walk( $data );
+		return $changed ? (string) wp_json_encode( $data, JSON_UNESCAPED_UNICODE ) : $val;
+	}
+
 	private function localize_href( string $href, string $home_host, string $home_path ): string {
 		return self::localize_link( $href, $home_host, $home_path, $this->current, $this->secondary );
 	}
@@ -2092,6 +2160,33 @@ class Engine {
 					$changed = true;
 				}
 			}
+			// 22/10/2026 (compatibility pass, wpLingua's URL attributes): «link on the whole box» of page builders lives in
+			// data-* attributes, as an address or as JSON — Essential Addons' wrapper link (1M sites), Premium Addons'
+			// element link, Divi Supreme's lightbox, clickable columns — and Divi 4 writes the links of modules, rows and
+			// sections in an inline script (et_link_options_data). On /it/ they led to the page in the source language.
+			/**
+			 * Attributes that hold a link of the page (an address, or JSON with «url»/«link»/«href» keys).
+			 *
+			 * @param string[] $attrs Attribute names.
+			 */
+			$url_attrs = (array) apply_filters( 'trrocket_url_attributes', array( 'data-mfp-src', 'data-premium-element-link', 'data-eael-wrapper-link', 'data-column-clickable', 'data-href' ) );
+			foreach ( $url_attrs as $attr ) {
+				$attr = preg_replace( '/[^a-z0-9_-]/i', '', (string) $attr );
+				if ( '' === $attr ) {
+					continue;
+				}
+				foreach ( iterator_to_array( $xpath->query( '//*[@' . $attr . '][not(ancestor-or-self::*[@id=\'wpadminbar\'] or ancestor-or-self::*[contains(@class,\'trrocket\')] or ancestor-or-self::*[@translate=\'no\'][not(self::html or self::body)])]' ) ) as $el ) {
+					if ( ! $el instanceof \DOMElement ) {
+						continue;
+					}
+					$val = (string) $el->getAttribute( $attr );
+					$new = $this->localize_in_value( $val, $home_host, $home_path );
+					if ( $new !== $val ) {
+						$el->setAttribute( $attr, $new );
+						$changed = true;
+					}
+				}
+			}
 		}
 
 		// Persist everything found on this page in one batch — but never record
@@ -2140,6 +2235,11 @@ class Engine {
 		// holds HTML the page draws later — the cookie banner, a modal. It travelled untouched with the scripts; it is
 		// a fragment of the page: collected on the source pages, translated on the others.
 		$out = $this->template_scripts( $out );
+		// 22/10/2026: Divi 4 writes the links of modules, rows and sections in an inline script; scripts go back into the
+		// page after the DOM pass, so their addresses get the language here, on the finished page.
+		if ( $this->is_secondary && false !== strpos( $out, 'et_link_options_data' ) ) {
+			$out = $this->localize_divi_links( $out );
+		}
 
 		// 1.8.8: iubenda, Cookiebot and Usercentrics told the language of the page (their own legal texts).
 		if ( $this->is_secondary ) {

@@ -6318,3 +6318,29 @@ msgstr "Adressen von Kategorien und Schlagwörtern übersetzen"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "An: Die Adresse einer Kategorie oder eines Schlagworts verwendet in jeder Sprache den übersetzten Namen, zum Beispiel /de/product-category/drucker/. Aus: Jede Sprache behält Ihren eigenen Slug, zum Beispiel /de/product-category/printers/ — nützlich, wenn Suchmaschinen diese Adressen schon kennen. Bereits besuchte übersetzte Adressen funktionieren weiter: Ist die Option aus, leiten sie mit einer 301 auf die einfache Adresse weiter."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "Cache-Vorwärmen"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "Die meistbesuchten Seiten nach dem Leeren der Caches erneut aufrufen"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "Jedes Mal, wenn TranslateRocket die Caches leert (eine gespeicherte Übersetzung, ein Import, eine geänderte Einstellung), wartet der erste Besucher jeder Seite, bis sie neu aufgebaut ist. Ist dies an, werden eine Minute später die Startseite und die meistbesuchten Seiten jeder Sprache im Hintergrund erneut aufgerufen, eine nach der anderen, damit der nächste Besucher sie fertig vorfindet. Die Seiten stammen aus der Besuchsstatistik oder aus Ihrem Menü, wenn die Statistik aus ist. Funktioniert nur mit einem aktiven Seiten-Cache (unserem oder einem Plugin wie WP Rocket, LiteSpeed oder Breeze)."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "Auf dieser Website ist kein Seiten-Cache aktiv, es gibt also nichts vorzuwärmen."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "Wird gerade vorgewärmt: %1$d von %2$d Seiten."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "Letztes Vorwärmen: %1$s, %2$d Seiten bereit (%3$d mit Fehler)."

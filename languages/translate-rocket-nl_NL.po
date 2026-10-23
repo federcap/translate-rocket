@@ -6320,3 +6320,29 @@ msgstr "De adressen van categorieën en tags vertalen"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "Aan: het adres van een categorie of tag gebruikt in elke taal de vertaalde naam, bijvoorbeeld /de/product-category/drucker/. Uit: elke taal houdt je eigen slug, bijvoorbeeld /de/product-category/printers/ — handig als zoekmachines die adressen al kennen. Vertaalde adressen die al bezocht zijn blijven werken: als dit uit staat, sturen ze met een 301 door naar het gewone adres."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "Cache voorverwarmen"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "De meest bezochte pagina's opnieuw bezoeken nadat de caches zijn geleegd"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "Elke keer dat TranslateRocket de caches leegt (een opgeslagen vertaling, een import, een gewijzigde instelling), wacht de eerste bezoeker van elke pagina tot die opnieuw is opgebouwd. Met deze optie aan worden een minuut later de homepage en de meest bezochte pagina's van elke taal op de achtergrond opnieuw bezocht, één voor één, zodat de volgende bezoeker ze klaar vindt. De pagina's komen uit de bezoekstatistieken, of uit je menu als de statistieken uit staan. Werkt alleen als er een paginacache actief is (de onze, of een plugin zoals WP Rocket, LiteSpeed of Breeze)."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "Er is geen paginacache actief op deze site, dus er valt niets voor te verwarmen."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "Bezig met voorverwarmen: %1$d van %2$d pagina's."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "Laatste voorverwarming: %1$s, %2$d pagina's klaar (%3$d met een fout)."

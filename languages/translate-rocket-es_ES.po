@@ -6318,3 +6318,29 @@ msgstr "Traducir las direcciones de categorías y etiquetas"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "Activado: la dirección de una categoría o etiqueta usa su nombre traducido en cada idioma, por ejemplo /de/product-category/drucker/. Desactivado: cada idioma conserva tu propio slug, por ejemplo /de/product-category/printers/ — útil si los buscadores ya conocen esas direcciones. Las direcciones traducidas ya visitadas siguen funcionando: con esta opción desactivada pasan a la dirección simple con una 301."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "Precarga de la caché"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "Volver a visitar las páginas más visitadas después de vaciar la caché"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "Cada vez que TranslateRocket vacía la caché (una traducción guardada, una importación, un cambio de ajustes), el primer visitante de cada página espera mientras se vuelve a generar. Con esta opción activada, un minuto después la página de inicio y las páginas más visitadas de cada idioma se vuelven a visitar en segundo plano, una a una, para que el siguiente visitante las encuentre listas. Las páginas salen de las estadísticas de visitas, o de tu menú si las estadísticas están desactivadas. Solo funciona si hay una caché de páginas activa (la nuestra o un plugin como WP Rocket, LiteSpeed o Breeze)."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "No hay ninguna caché de páginas activa en este sitio, así que no hay nada que precargar."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "Precargando ahora: %1$d de %2$d páginas."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "Última precarga: %1$s, %2$d páginas listas (%3$d con error)."

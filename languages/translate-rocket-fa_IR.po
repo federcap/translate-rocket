@@ -7165,3 +7165,29 @@ msgstr "ترجمهٔ نشانی دسته‌ها و برچسب‌ها"
 #: src/Admin/Admin.php
 msgid "On: the address of a category or tag uses its translated name in each language, for example /de/product-category/drucker/. Off: every language keeps your own slug, for example /de/product-category/printers/ — useful if search engines already know those addresses. Translated addresses already visited keep working: with this off they move to the plain address with a 301."
 msgstr "روشن: نشانی هر دسته یا برچسب در هر زبان از نام ترجمه‌شدهٔ آن استفاده می‌کند، مثلاً /de/product-category/drucker/. خاموش: هر زبان نامک خود شما را نگه می‌دارد، مثلاً /de/product-category/printers/ — مفید وقتی موتورهای جست‌وجو این نشانی‌ها را از قبل می‌شناسند. نشانی‌های ترجمه‌شده‌ای که قبلاً بازدید شده‌اند کار می‌کنند: با خاموش بودن این گزینه با یک 301 به نشانی ساده منتقل می‌شوند."
+
+#: src/Admin/Admin.php
+msgid "Cache warm-up"
+msgstr "گرم کردن کش"
+
+#: src/Admin/Admin.php
+msgid "Visit the most visited pages again after the caches are cleared"
+msgstr "پس از پاک شدن کش، پربازدیدترین صفحه‌ها دوباره بازدید شوند"
+
+#: src/Admin/Admin.php
+msgid "Each time TranslateRocket clears the caches (a translation saved, an import, a change of settings), the first visitor of every page waits while the page is built again. With this on, a minute later the home and the most visited pages of every language are visited again in the background, one at a time, so the next visitor finds them ready. The pages come from the visit statistics, or from your menu when the statistics are off. It works only when a page cache is active (ours, or a plugin such as WP Rocket, LiteSpeed or Breeze)."
+msgstr "هر بار که TranslateRocket کش را پاک می‌کند (ذخیرهٔ یک ترجمه، درون‌ریزی، تغییر تنظیمات)، نخستین بازدیدکنندهٔ هر صفحه تا ساخته شدن دوبارهٔ آن منتظر می‌ماند. با روشن بودن این گزینه، یک دقیقه بعد صفحهٔ اصلی و پربازدیدترین صفحه‌های هر زبان در پس‌زمینه یکی‌یکی دوباره بازدید می‌شوند تا بازدیدکنندهٔ بعدی آن‌ها را آماده ببیند. صفحه‌ها از آمار بازدید می‌آیند، یا وقتی آمار خاموش است از منوی شما. فقط وقتی کار می‌کند که یک کش صفحه فعال باشد (کش ما یا افزونه‌ای مانند WP Rocket، LiteSpeed یا Breeze)."
+
+#: src/Admin/Admin.php
+msgid "No page cache is active on this site, so there is nothing to warm up."
+msgstr "هیچ کش صفحه‌ای در این سایت فعال نیست، پس چیزی برای گرم کردن وجود ندارد."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Warming up now: %1$d of %2$d pages."
+msgstr "در حال گرم کردن: %1$d از %2$d صفحه."
+
+#: src/CacheWarmup.php
+#, php-format
+msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
+msgstr "آخرین گرم کردن: %1$s، %2$d صفحه آماده (%3$d با خطا)."

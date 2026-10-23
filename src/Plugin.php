@@ -131,6 +131,7 @@ final class Plugin {
 		\TranslateRocket\Rescan::boot();
 		// Visits per language (1.8.6): the receiver answers visitors' browsers, so it is booted outside the admin branch.
 		( new \TranslateRocket\Stats() )->register();
+		( new \TranslateRocket\CacheWarmup() )->register(); // 1.8.18: pages ready again a minute after a flush
 		// The site search in every language (14/10/2026): its index follows saves made over REST too, like Rescan.
 		if ( ! $coexist ) {
 			( new \TranslateRocket\Frontend\Search() )->register();
@@ -161,6 +162,7 @@ final class Plugin {
 		( new \TranslateRocket\Integrations\WpRocket() )->boot();
 		( new \TranslateRocket\Integrations\ArubaHiSpeed() )->boot(); // 1.8.8: translated pages out of Aruba's cache too
 		( new \TranslateRocket\Integrations\WoodMart() )->boot(); // 1.8.8: mega menus cached per language
+		\TranslateRocket\Integrations\ConsentBanners::boot(); // 1.8.18: Complianz consent on the whole site, not per language
 		// The CDN purge (NitroPack, Cloudflare), a minute after the last change.
 		add_action( Cache::REMOTE_EVENT, array( 'TranslateRocket\\Cache', 'purge_remote' ) );
 		// The flush booked by background work (Labs, WP-CLI), at most every ten minutes.
