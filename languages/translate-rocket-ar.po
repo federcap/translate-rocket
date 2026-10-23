@@ -7295,3 +7295,88 @@ msgstr "جارٍ التسخين الآن: %1$d من %2$d صفحة."
 #, php-format
 msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
 msgstr "آخر تسخين: %1$s، %2$d صفحة جاهزة (%3$d بها خطأ)."
+
+#: src/Admin/Admin.php
+msgid "Apply them to the sentences already translated"
+msgstr "تطبيقها على الجمل المترجمة سابقًا"
+
+#: src/Admin/Admin.php
+msgid "New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it."
+msgstr "تُستخدم الأسماء ومصطلحات المسرد الجديدة للجمل التي تُترجم من الآن فصاعدًا. تحتفظ الجمل المترجمة سابقًا بترجمتها، ولا يغيّرها فحص الصفحات من جديد. يبحث هذا، في كل لغة، عن الجمل المترجمة التي تُرجم فيها اسم أو لا يستخدم فيها مصطلح من المسرد ترجمته الثابتة فقط، ويعيدها إلى «مفقودة» — ثم تترجمها «ترجمة كل المفقود» (أو Labs) من جديد بالقواعد الجديدة. احفظ القوائم أولًا. يمكن التراجع برابط واحد."
+
+#: src/Admin/Admin.php
+msgid "Only the sentences that disagree with the names and the glossary above are translated again — not whole pages."
+msgstr "تُترجم من جديد فقط الجمل التي تخالف الأسماء والمسرد أعلاه — لا الصفحات كاملة."
+
+#: src/Admin/Admin.php
+msgid "Translate again the sentences that contain them"
+msgstr "ترجمة الجمل التي تحتويها من جديد"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it."
+msgstr "عادت %1$d جملة في %2$d لغة إلى «مفقودة»: ترجمها بـ«ترجمة كل المفقود» في شاشة الترجمات، أو اترك Labs يتولى ذلك."
+
+#: src/Admin/Admin.php
+msgid "Open Translations"
+msgstr "فتح الترجمات"
+
+#: src/Admin/Admin.php
+msgid "Every translated sentence already respects your names and glossary: nothing to translate again."
+msgstr "كل جملة مترجمة تحترم أسماءك ومسردك بالفعل: لا شيء يحتاج إلى إعادة ترجمة."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Undone: %d translations are back as they were."
+msgstr "تم التراجع: عادت %d ترجمة كما كانت."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Also in the phone menu of your theme (%s)"
+msgstr "أيضًا في قائمة الهاتف في القالب (%s)"
+
+#: src/Admin/Admin.php
+msgid "Untick it if that place holds another menu (categories, for example) and the languages appear twice."
+msgstr "ألغِ التحديد إذا كان ذلك المكان يحتوي على قائمة أخرى (الفئات مثلًا) وظهرت اللغات مرتين."
+
+#: src/Admin/Admin.php
+msgid "Almost there: the Groq key does not work"
+msgstr "اقتربنا: مفتاح Groq لا يعمل"
+
+#: src/Admin/Admin.php
+msgid "Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text»."
+msgstr "تم حفظ لغاتك. انسخ المفتاح من جديد من console.groq.com/keys (يبدأ بـ gsk_)، والصقه في بطاقة Groq واضغط «اختبر هذا النص»."
+
+#: src/Admin/Admin.php
+msgid "Fix the Groq key"
+msgstr "إصلاح مفتاح Groq"
+
+#: src/Admin/Admin.php
+msgid "Open console.groq.com/keys ↗"
+msgstr "افتح console.groq.com/keys ↗"
+
+#: src/Admin/Admin.php
+msgid "Or translate in this browser, without a key"
+msgstr "أو ترجم في هذا المتصفح، دون مفتاح"
+
+#: src/Frontend/VisualEditor.php
+msgid "The translation service is busy — trying again in a few seconds…"
+msgstr "خدمة الترجمة مشغولة — سنحاول من جديد بعد ثوانٍ…"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Only you can see %s for now: the language is offline while you translate."
+msgstr "أنت وحدك ترى %s الآن: اللغة غير متصلة أثناء الترجمة."
+
+#: src/Frontend/VisualEditor.php
+msgid "Show it to visitors"
+msgstr "اعرضها للزوار"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Done: visitors now see %s, with the language switcher."
+msgstr "تم: يرى الزوار الآن %s، مع مبدّل اللغات."
+
+#: src/Frontend/VisualEditor.php
+msgid "Fix it on the AI translation screen"
+msgstr "أصلحها في شاشة الترجمة بالذكاء الاصطناعي"

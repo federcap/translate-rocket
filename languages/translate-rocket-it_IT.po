@@ -6545,3 +6545,88 @@ msgstr "Riscaldamento in corso: %1$d pagine su %2$d."
 #, php-format
 msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
 msgstr "Ultimo riscaldamento: %1$s, %2$d pagine pronte (%3$d con un errore)."
+
+#: src/Admin/Admin.php
+msgid "Apply them to the sentences already translated"
+msgstr "Applicali alle frasi già tradotte"
+
+#: src/Admin/Admin.php
+msgid "New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it."
+msgstr "I nuovi nomi e termini del glossario valgono per le frasi tradotte da ora in poi. Le frasi già tradotte tengono la loro traduzione, e una nuova scansione delle pagine non le cambia. Questo cerca, in ogni lingua, solo le frasi tradotte in cui un nome è stato tradotto o un termine del glossario non usa la sua traduzione fissa, e le rimette «da tradurre» — poi «Traduci tutte le mancanti» (o Labs) le ritraduce con le regole nuove. Salva prima gli elenchi. Un link annulla tutto."
+
+#: src/Admin/Admin.php
+msgid "Only the sentences that disagree with the names and the glossary above are translated again — not whole pages."
+msgstr "Vengono ritradotte solo le frasi che non rispettano i nomi e il glossario qui sopra — non le pagine intere."
+
+#: src/Admin/Admin.php
+msgid "Translate again the sentences that contain them"
+msgstr "Ritraduci le frasi che li contengono"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it."
+msgstr "%1$d frasi in %2$d lingue sono di nuovo «da tradurre»: traducile con «Traduci tutte le mancanti» nella schermata Traduzioni, o lascia fare a Labs."
+
+#: src/Admin/Admin.php
+msgid "Open Translations"
+msgstr "Apri Traduzioni"
+
+#: src/Admin/Admin.php
+msgid "Every translated sentence already respects your names and glossary: nothing to translate again."
+msgstr "Tutte le frasi tradotte rispettano già i tuoi nomi e il glossario: niente da ritradurre."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Undone: %d translations are back as they were."
+msgstr "Annullato: %d traduzioni sono tornate com'erano."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Also in the phone menu of your theme (%s)"
+msgstr "Anche nel menu per telefono del tema (%s)"
+
+#: src/Admin/Admin.php
+msgid "Untick it if that place holds another menu (categories, for example) and the languages appear twice."
+msgstr "Togli la spunta se in quella posizione c'è un altro menu (le categorie, per esempio) e le lingue compaiono due volte."
+
+#: src/Admin/Admin.php
+msgid "Almost there: the Groq key does not work"
+msgstr "Quasi fatto: la chiave Groq non funziona"
+
+#: src/Admin/Admin.php
+msgid "Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text»."
+msgstr "Le tue lingue sono salvate. Copia di nuovo la chiave da console.groq.com/keys (comincia con gsk_), incollala nella scheda Groq e premi «Prova questo testo»."
+
+#: src/Admin/Admin.php
+msgid "Fix the Groq key"
+msgstr "Correggi la chiave Groq"
+
+#: src/Admin/Admin.php
+msgid "Open console.groq.com/keys ↗"
+msgstr "Apri console.groq.com/keys ↗"
+
+#: src/Admin/Admin.php
+msgid "Or translate in this browser, without a key"
+msgstr "Oppure traduci in questo browser, senza chiave"
+
+#: src/Frontend/VisualEditor.php
+msgid "The translation service is busy — trying again in a few seconds…"
+msgstr "Il servizio di traduzione è occupato — riprovo tra qualche secondo…"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Only you can see %s for now: the language is offline while you translate."
+msgstr "Per ora %s lo vedi solo tu: la lingua è offline mentre traduci."
+
+#: src/Frontend/VisualEditor.php
+msgid "Show it to visitors"
+msgstr "Mostralo ai visitatori"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Done: visitors now see %s, with the language switcher."
+msgstr "Fatto: ora i visitatori vedono %s, con il selettore delle lingue."
+
+#: src/Frontend/VisualEditor.php
+msgid "Fix it on the AI translation screen"
+msgstr "Sistemalo nella schermata della traduzione AI"

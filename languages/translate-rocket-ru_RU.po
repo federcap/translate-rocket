@@ -6372,3 +6372,88 @@ msgstr "Идёт прогрев: %1$d из %2$d страниц."
 #, php-format
 msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
 msgstr "Последний прогрев: %1$s, готово страниц: %2$d (с ошибкой: %3$d)."
+
+#: src/Admin/Admin.php
+msgid "Apply them to the sentences already translated"
+msgstr "Применить к уже переведённым предложениям"
+
+#: src/Admin/Admin.php
+msgid "New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it."
+msgstr "Новые названия и термины глоссария применяются к предложениям, которые переводятся с этого момента. Уже переведённые предложения сохраняют свой перевод, и повторное сканирование страниц их не меняет. Эта функция находит в каждом языке только те переведённые предложения, где название было переведено или термин глоссария не использует свой фиксированный перевод, и возвращает их в «непереведённые» — затем «Перевести все непереведённые» (или Labs) переводит их заново по новым правилам. Сначала сохраните списки. Одна ссылка всё отменяет."
+
+#: src/Admin/Admin.php
+msgid "Only the sentences that disagree with the names and the glossary above are translated again — not whole pages."
+msgstr "Заново переводятся только предложения, которые не соответствуют названиям и глоссарию выше, — а не целые страницы."
+
+#: src/Admin/Admin.php
+msgid "Translate again the sentences that contain them"
+msgstr "Перевести заново предложения, где они есть"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it."
+msgstr "%1$d предложений на %2$d языках снова «непереведённые»: переведите их кнопкой «Перевести все непереведённые» на экране «Переводы» или поручите это Labs."
+
+#: src/Admin/Admin.php
+msgid "Open Translations"
+msgstr "Открыть «Переводы»"
+
+#: src/Admin/Admin.php
+msgid "Every translated sentence already respects your names and glossary: nothing to translate again."
+msgstr "Все переведённые предложения уже соответствуют вашим названиям и глоссарию: переводить заново нечего."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Undone: %d translations are back as they were."
+msgstr "Отменено: %d переводов снова как были."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Also in the phone menu of your theme (%s)"
+msgstr "Также в мобильном меню темы (%s)"
+
+#: src/Admin/Admin.php
+msgid "Untick it if that place holds another menu (categories, for example) and the languages appear twice."
+msgstr "Снимите галочку, если в этом месте другое меню (например, категории) и языки показываются дважды."
+
+#: src/Admin/Admin.php
+msgid "Almost there: the Groq key does not work"
+msgstr "Почти готово: ключ Groq не работает"
+
+#: src/Admin/Admin.php
+msgid "Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text»."
+msgstr "Языки сохранены. Скопируйте ключ ещё раз на console.groq.com/keys (он начинается с gsk_), вставьте его в карточку Groq и нажмите «Проверить этот текст»."
+
+#: src/Admin/Admin.php
+msgid "Fix the Groq key"
+msgstr "Исправить ключ Groq"
+
+#: src/Admin/Admin.php
+msgid "Open console.groq.com/keys ↗"
+msgstr "Открыть console.groq.com/keys ↗"
+
+#: src/Admin/Admin.php
+msgid "Or translate in this browser, without a key"
+msgstr "Или переводите в этом браузере, без ключа"
+
+#: src/Frontend/VisualEditor.php
+msgid "The translation service is busy — trying again in a few seconds…"
+msgstr "Сервис перевода занят — повторим через несколько секунд…"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Only you can see %s for now: the language is offline while you translate."
+msgstr "Пока %s видите только вы: язык отключён, пока вы переводите."
+
+#: src/Frontend/VisualEditor.php
+msgid "Show it to visitors"
+msgstr "Показать посетителям"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Done: visitors now see %s, with the language switcher."
+msgstr "Готово: теперь посетители видят %s с переключателем языков."
+
+#: src/Frontend/VisualEditor.php
+msgid "Fix it on the AI translation screen"
+msgstr "Исправить на экране перевода с ИИ"

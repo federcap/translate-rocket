@@ -47,6 +47,7 @@ class VisualEditor {
 		add_action( 'wp_ajax_trrocket_ve_save', array( $this, 'ajax_save' ) );
 		add_action( 'wp_ajax_trrocket_ve_save_block', array( $this, 'ajax_save_block' ) );
 		add_action( 'wp_ajax_trrocket_ve_ai', array( $this, 'ajax_ai' ) );
+		add_action( 'wp_ajax_trrocket_ve_online', array( $this, 'ajax_online' ) );
 		add_action( 'wp_ajax_trrocket_ve_gt', array( $this, 'ajax_gt' ) );
 		add_action( 'wp_ajax_trrocket_ve_visibility', array( $this, 'ajax_visibility' ) );
 		add_action( 'wp_ajax_trrocket_ve_seo', array( $this, 'ajax_seo' ) );
@@ -201,6 +202,10 @@ class VisualEditor {
 				'ajax'     => admin_url( 'admin-ajax.php' ),
 				'nonce'    => wp_create_nonce( self::NONCE ),
 				'lang'     => $lang,
+				// 23/10/2026: a new language starts offline (only the admin sees it); after the first page is translated
+				// the editor offers to show it to visitors — before, the owner looked at the site and saw no translation.
+				'offline'  => in_array( $lang, (array) ( Settings::get()['offline_languages'] ?? array() ), true ),
+				'langName' => \TranslateRocket\Languages::label( $lang ),
 				'label'    => Languages::label( $lang ),
 				'editable' => ! $router->is_default( $lang ), // source language can't be translated into itself.
 				'srclang'  => (string) ( Settings::get()['source_language'] ?? 'en' ),
@@ -241,6 +246,14 @@ class VisualEditor {
 					'bulkNothing'   => __( 'Everything on this page is already translated.', 'translate-rocket' ),
 					/* translators: %d: number of strings just translated. */
 					'bulkDone'      => __( '%d translated', 'translate-rocket' ),
+					'bulkBusy'      => __( 'The translation service is busy — trying again in a few seconds…', 'translate-rocket' ),
+					/* translators: %s: language name. */
+					'onlineAsk'     => __( 'Only you can see %s for now: the language is offline while you translate.', 'translate-rocket' ),
+					'onlineBtn'     => __( 'Show it to visitors', 'translate-rocket' ),
+					/* translators: %s: language name. */
+					'onlineDone'    => __( 'Done: visitors now see %s, with the language switcher.', 'translate-rocket' ),
+					'bulkFix'       => __( 'Fix it on the AI translation screen', 'translate-rocket' ),
+					'aiUrl'         => admin_url( 'admin.php?page=translate-rocket-ai' ),
 					'bulkCountWarn' => __( '⚠ The number of lines does not match the source — check the result.', 'translate-rocket' ),
 					'bulkCopied'    => __( 'Copied!', 'translate-rocket' ),
 					'bulkBtn'        => __( 'Translate page', 'translate-rocket' ),
@@ -856,13 +869,52 @@ class VisualEditor {
 				}
 				wp_send_json_success( array( 'translations' => $out ) );
 			}
-			wp_send_json_error( $res->error ? $res->error : __( 'Translation failed.', 'translate-rocket' ) );
+			wp_send_json_error( self::ai_error( (string) $res->error ) );
 		}
 		$res    = $provider->translate( array( $src ), $source, $lang );
 		if ( $res->success && isset( $res->translations[0] ) && '' !== trim( (string) $res->translations[0] ) ) {
 			wp_send_json_success( array( 'translation' => (string) $res->translations[0] ) );
 		}
-		wp_send_json_error( $res->error ? $res->error : __( 'Translation failed.', 'translate-rocket' ) );
+		wp_send_json_error( self::ai_error( (string) $res->error ) );
+	}
+
+	/**
+	 * Put the language of the editor online (visitors, switcher, sitemap), from the editor's own button.
+	 */
+	public function ajax_online(): void {
+		check_ajax_referer( self::NONCE, 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'forbidden', 403 );
+		}
+		$lang = isset( $_POST['lang'] ) ? sanitize_key( wp_unslash( $_POST['lang'] ) ) : '';
+		$s    = Settings::get();
+		if ( '' === $lang || ! in_array( $lang, (array) ( $s['target_languages'] ?? array() ), true ) ) {
+			wp_send_json_error( 'invalid' );
+		}
+		$s['offline_languages'] = array_values( array_diff( (array) ( $s['offline_languages'] ?? array() ), array( $lang ) ) );
+		Settings::update( $s );
+		\TranslateRocket\Cache::flush();
+		wp_send_json_success();
+	}
+
+	/**
+	 * 23/10/2026 (a new user with a mistyped Groq key saw «0 translated · 10 ⚠» and nothing else): the engine's error in
+	 * plain words, and what the editor should do — stop (the key, the credit, the day's limit will not fix themselves)
+	 * or try the same group again in a few seconds (too many requests this minute, a slow or busy service).
+	 *
+	 * @param string $raw Error from the provider.
+	 * @return array{message:string,detail:string,fatal:bool,retry:bool}
+	 */
+	public static function ai_error( string $raw ): array {
+		$raw   = '' !== trim( $raw ) ? $raw : 'Translation failed.';
+		$fatal = (bool) preg_match( '/HTTP 40[123]\b|invalid[_ ]?api[_ ]?key|incorrect api key|api key not valid|insufficient_quota|credit|billing|per day|\bTPD\b|\bRPD\b|daily (limit|quota)/i', $raw );
+		$retry = ! $fatal && (bool) preg_match( '/HTTP (408|425|429|5\d\d)\b|curl error (6|7|28|35|52|56)|timed? ?out|temporarily|overloaded|busy/i', $raw );
+		return array(
+			'message' => \TranslateRocket\Admin\Admin::shown_error( $raw ),
+			'detail'  => $raw,
+			'fatal'   => $fatal,
+			'retry'   => $retry,
+		);
 	}
 
 	/**

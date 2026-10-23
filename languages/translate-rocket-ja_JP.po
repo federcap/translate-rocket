@@ -6320,3 +6320,88 @@ msgstr "ウォームアップ中：%2$d ページ中 %1$d ページ。"
 #, php-format
 msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
 msgstr "前回のウォームアップ：%1$s、%2$d ページ準備済み（エラー %3$d 件）。"
+
+#: src/Admin/Admin.php
+msgid "Apply them to the sentences already translated"
+msgstr "翻訳済みの文に適用する"
+
+#: src/Admin/Admin.php
+msgid "New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it."
+msgstr "新しい名前と用語集の用語は、これから翻訳する文に使われます。翻訳済みの文は今の翻訳のままで、ページを再スキャンしても変わりません。この機能は、各言語で、名前が翻訳されてしまった文や、用語集の用語が決められた訳になっていない文だけを探して「未翻訳」に戻します。そのあと「未翻訳をすべて翻訳」（または Labs）が新しいルールで翻訳し直します。先にリストを保存してください。リンク 1 つで元に戻せます。"
+
+#: src/Admin/Admin.php
+msgid "Only the sentences that disagree with the names and the glossary above are translated again — not whole pages."
+msgstr "上の名前と用語集に合わない文だけを翻訳し直します。ページ全体ではありません。"
+
+#: src/Admin/Admin.php
+msgid "Translate again the sentences that contain them"
+msgstr "それらを含む文を翻訳し直す"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it."
+msgstr "%2$d 言語の %1$d 文が「未翻訳」に戻りました。翻訳画面の「未翻訳をすべて翻訳」で翻訳するか、Labs に任せてください。"
+
+#: src/Admin/Admin.php
+msgid "Open Translations"
+msgstr "翻訳を開く"
+
+#: src/Admin/Admin.php
+msgid "Every translated sentence already respects your names and glossary: nothing to translate again."
+msgstr "翻訳済みの文はすべて名前と用語集に合っています。翻訳し直すものはありません。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Undone: %d translations are back as they were."
+msgstr "元に戻しました：%d 件の翻訳が元どおりです。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Also in the phone menu of your theme (%s)"
+msgstr "テーマのスマートフォン用メニューにも表示 (%s)"
+
+#: src/Admin/Admin.php
+msgid "Untick it if that place holds another menu (categories, for example) and the languages appear twice."
+msgstr "その場所に別のメニュー（カテゴリーなど）があり、言語が 2 回表示される場合はチェックを外してください。"
+
+#: src/Admin/Admin.php
+msgid "Almost there: the Groq key does not work"
+msgstr "あと少し：Groq のキーが使えません"
+
+#: src/Admin/Admin.php
+msgid "Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text»."
+msgstr "言語は保存されました。console.groq.com/keys からキーをもう一度コピーし（gsk_ で始まります）、Groq のカードに貼り付けて「このテキストで試す」を押してください。"
+
+#: src/Admin/Admin.php
+msgid "Fix the Groq key"
+msgstr "Groq のキーを直す"
+
+#: src/Admin/Admin.php
+msgid "Open console.groq.com/keys ↗"
+msgstr "console.groq.com/keys を開く ↗"
+
+#: src/Admin/Admin.php
+msgid "Or translate in this browser, without a key"
+msgstr "またはキーなしでこのブラウザで翻訳"
+
+#: src/Frontend/VisualEditor.php
+msgid "The translation service is busy — trying again in a few seconds…"
+msgstr "翻訳サービスが混み合っています。数秒後にもう一度試します…"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Only you can see %s for now: the language is offline while you translate."
+msgstr "今のところ %s はあなただけに表示されます。翻訳中はこの言語はオフラインです。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Show it to visitors"
+msgstr "訪問者に表示する"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Done: visitors now see %s, with the language switcher."
+msgstr "完了：訪問者に %s が言語スイッチャー付きで表示されるようになりました。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Fix it on the AI translation screen"
+msgstr "AI 翻訳の画面で直す"

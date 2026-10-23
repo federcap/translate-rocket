@@ -48,6 +48,13 @@ class Switcher {
 	/** The phone menu of the theme got the languages on this page. */
 	private $in_mobile_done = false;
 
+	/**
+	 * How many times the languages went into a menu on this page (desktop header, phone panel…).
+	 *
+	 * @var int
+	 */
+	private $in_menu_times = 0;
+
 	public function boot(): void {
 		add_shortcode( 'translaterocket_switcher', array( $this, 'render' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
@@ -807,7 +814,10 @@ class Switcher {
 		// The header menu got the languages, but the theme draws another menu on phones and that
 		// one did not (its location is empty: the theme lists the pages there). On phones only, float.
 		$solo_telefono = ! empty( $s['in_menu'] ) && $this->in_menu_done && ! $this->in_mobile_done
-			&& ! ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) && array() !== self::mobile_locations();
+			&& ! ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) && array() !== self::mobile_locations()
+			// phone menu left out by the owner: the phone still has the languages if the chosen menu was drawn twice
+			// (header + phone panel, as Blocksy does when the panel shows that menu); once only, they float on phones.
+			&& ( self::in_phone_menu() || $this->in_menu_times < 2 );
 		if ( empty( $s['floating'] ) && ! $ripiego && ! $solo_telefono ) {
 			return;
 		}
@@ -1048,6 +1058,14 @@ class Switcher {
 	}
 
 	/**
+	 * 23/10/2026 (piflarnakupuje.top, Blocksy: the «mobile» location held the category menu, shown on the computer too,
+	 * and got a second switcher): the theme's phone menu gets the languages unless the owner says no.
+	 */
+	public static function in_phone_menu(): bool {
+		return ! array_key_exists( 'menu_phone', self::menu_settings() ) || ! empty( self::menu_settings()['menu_phone'] );
+	}
+
+	/**
 	 * Does this wp_nav_menu() call draw the chosen menu? By location, or by the menu itself
 	 * (Elementor's Nav Menu widget and many headers name the menu, not the location).
 	 *
@@ -1064,7 +1082,7 @@ class Switcher {
 			return true;
 		}
 		if ( isset( $args->theme_location ) && '' !== (string) $args->theme_location ) {
-			return (string) $args->theme_location === $loc || in_array( (string) $args->theme_location, self::mobile_locations(), true );
+			return (string) $args->theme_location === $loc || ( self::in_phone_menu() && in_array( (string) $args->theme_location, self::mobile_locations(), true ) );
 		}
 		$assigned = get_nav_menu_locations();
 		$want_id  = (int) ( $assigned[ $loc ] ?? 0 );
@@ -1174,6 +1192,7 @@ class Switcher {
 		}
 		$items = array_merge( array_slice( $items, 0, $cut ), $nuove, array_slice( $items, $cut ) );
 		$this->in_menu_done = true;
+		++$this->in_menu_times;
 		if ( isset( $args->theme_location ) && in_array( (string) $args->theme_location, self::mobile_locations(), true ) ) {
 			$this->in_mobile_done = true;
 		}

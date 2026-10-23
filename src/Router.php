@@ -61,6 +61,10 @@ class Router {
 		}
 		$this->detect_and_strip();
 		add_filter( 'home_url', array( $this, 'filter_home_url' ), 10, 2 );
+		// 23/10/2026 (Apache test server: the whole site in 500, «10 internal redirects»): the rules WordPress writes
+		// in .htaccess are built from home_url(), which on a translated page carries /it/ — «RewriteBase /it/» and
+		// «RewriteRule . /it/index.php» broke every address. They are always built from the address without language.
+		add_filter( 'mod_rewrite_rules', array( $this, 'rewrite_rules_without_language' ), PHP_INT_MAX );
 		// 7/10/2026 (Redirection: a visitor on /it/old-page/ was sent to /new-page/ in English): a redirect
 		// to one of our own pages keeps the language of the address it started from.
 		// Priority 0: Redirection hooks the same filter at 1 and, on nginx + php-cgi, sends the Location
@@ -224,6 +228,31 @@ class Router {
 		$host = (string) wp_parse_url( $home, PHP_URL_HOST );
 		$path = rtrim( (string) wp_parse_url( $home, PHP_URL_PATH ), '/' );
 		return \TranslateRocket\Frontend\Engine::localize_link( $location, $host, $path, $lang, $this->secondary_languages() );
+	}
+
+	/**
+	 * The .htaccess rules, built again with the home address of the site when this request is in another language.
+	 *
+	 * @param mixed $rules Rules built by WP_Rewrite::mod_rewrite_rules().
+	 * @return mixed
+	 */
+	public function rewrite_rules_without_language( $rules ) {
+		static $inside = false;
+		global $wp_rewrite;
+		if ( $inside || ! is_string( $rules ) || ! ( $wp_rewrite instanceof \WP_Rewrite ) ) {
+			return $rules;
+		}
+		if ( untrailingslashit( home_url() ) === untrailingslashit( (string) get_option( 'home' ) ) ) {
+			return $rules;
+		}
+		$inside = true;
+		$had    = remove_filter( 'home_url', array( $this, 'filter_home_url' ), 10 );
+		$clean  = $wp_rewrite->mod_rewrite_rules();
+		if ( $had ) {
+			add_filter( 'home_url', array( $this, 'filter_home_url' ), 10, 2 );
+		}
+		$inside = false;
+		return is_string( $clean ) && '' !== $clean ? $clean : $rules;
 	}
 
 	public function current_language(): string {

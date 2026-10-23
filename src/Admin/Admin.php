@@ -45,6 +45,7 @@ class Admin {
 		add_action( 'admin_init', array( $this, 'maybe_import_tmx' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_switcher' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_exclusions' ) );
+		add_action( 'admin_init', array( $this, 'maybe_retranslate_terms' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_memory' ) );
 		add_action( 'admin_post_trrocket_auto_updates', array( NextSteps::class, 'auto_updates' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
@@ -719,12 +720,52 @@ class Admin {
 	 * How many published items the scan visits (the home page not counted).
 	 */
 	private static function scannable_total(): int {
+		return self::scannable_posts_total() + count( self::scannable_archives() );
+	}
+
+	/**
+	 * Published items of the public post types.
+	 */
+	private static function scannable_posts_total(): int {
 		$n = 0;
 		foreach ( self::scannable_types() as $t ) {
 			$c  = wp_count_posts( $t );
 			$n += (int) ( $c->publish ?? 0 );
 		}
 		return $n;
+	}
+
+	/**
+	 * 23/10/2026 (piflarnakupuje.top: the SEO titles of the product categories stayed in Slovenian in every language —
+	 * a category page that no administrator ever opens is never read): the archives too — each post type's archive
+	 * (/shop/, /products/) and every category, tag, product category or other public term that holds something.
+	 *
+	 * @return string[]
+	 */
+	private static function scannable_archives(): array {
+		static $out = null;
+		if ( null !== $out ) {
+			return $out;
+		}
+		$out = array();
+		foreach ( self::scannable_types() as $t ) {
+			$a = get_post_type_archive_link( $t );
+			if ( is_string( $a ) && '' !== $a ) {
+				$out[] = $a;
+			}
+		}
+		$taxes = array_values( array_diff( get_taxonomies( array( 'public' => true ) ), array( 'post_format' ) ) );
+		if ( $taxes ) {
+			$terms = get_terms( array( 'taxonomy' => $taxes, 'hide_empty' => true, 'number' => 5000 ) );
+			foreach ( is_array( $terms ) ? $terms : array() as $term ) {
+				$l = get_term_link( $term );
+				if ( is_string( $l ) && '' !== $l ) {
+					$out[] = $l;
+				}
+			}
+		}
+		$out = array_values( array_unique( $out ) );
+		return $out;
 	}
 
 	/**
@@ -738,6 +779,11 @@ class Admin {
 	 * @return string[]
 	 */
 	private static function scannable_urls( int $offset ): array {
+		// after the posts, the archives (categories, tags, shop…), block by block like the rest
+		$posts = self::scannable_posts_total();
+		if ( $offset >= $posts ) {
+			return array_slice( self::scannable_archives(), $offset - $posts, self::SCAN_BLOCK );
+		}
 		$urls = array();
 		$ids  = get_posts(
 			array(
@@ -2359,6 +2405,7 @@ class Admin {
 		$sw['footer_align']  = ( isset( $_POST['sw_footer_align'] ) && in_array( $_POST['sw_footer_align'], array( 'left', 'right' ), true ) ) ? sanitize_key( $_POST['sw_footer_align'] ) : 'center';
 		$sw['footer_cols']   = isset( $_POST['sw_footer_cols'] ) ? max( 0, min( 6, (int) $_POST['sw_footer_cols'] ) ) : 0;
 		$sw['floating']      = ( ! in_array( $placement, array( 'manual', 'menu', 'spot', 'footer' ), true ) );
+		$sw['menu_phone']    = ! isset( $_POST['sw_menu_phone_shown'] ) || ! empty( $_POST['sw_menu_phone'] );
 		$menu_loc            = isset( $_POST['sw_menu_location'] ) ? sanitize_text_field( wp_unslash( $_POST['sw_menu_location'] ) ) : 'auto';
 		$sw['menu_location'] = ( 'auto' === $menu_loc || isset( \TranslateRocket\Frontend\Switcher::menu_locations()[ $menu_loc ] ) || preg_match( '/^nav:\d+$/', $menu_loc ) ) ? $menu_loc : 'auto';
 		$sw['float_pos']     = in_array( $placement, array( 'bottom-right', 'bottom-left', 'top-right', 'top-left', 'custom' ), true ) ? $placement : 'bottom-right';
@@ -2685,6 +2732,16 @@ class Admin {
 										</select>
 									<?php endif; ?>
 								</p>
+								<?php $trr_tel = \TranslateRocket\Frontend\Switcher::mobile_locations(); ?>
+								<?php if ( $trr_tel && ! ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) ) : // 23/10/2026: Blocksy «mobile» location with another menu in it. ?>
+									<?php $trr_tel_nomi = array_intersect_key( get_registered_nav_menus(), array_flip( $trr_tel ) ); ?>
+									<p><input type="hidden" name="sw_menu_phone_shown" value="1" /><label><input type="checkbox" name="sw_menu_phone" value="1" <?php checked( false !== $g( 'menu_phone', true ) ); ?> />
+										<?php
+										/* translators: %s: the theme's phone menu location(s), e.g. «Mobile Menu». */
+										printf( esc_html__( 'Also in the phone menu of your theme (%s)', 'translate-rocket' ), esc_html( implode( ', ', $trr_tel_nomi ) ) );
+										?>
+									</label> <span class="description"><?php esc_html_e( 'Untick it if that place holds another menu (categories, for example) and the languages appear twice.', 'translate-rocket' ); ?></span></p>
+								<?php endif; ?>
 								<p class="description"><?php esc_html_e( 'The languages become an item of that menu, drawn by your theme like its other items — in the phone menu too, at the top or at the bottom as chosen. With «Dropdown» the other languages open under the current one. On a page without that menu the switcher floats in the corner, so it is never missing.', 'translate-rocket' ); ?></p>
 							<?php else : ?>
 								<p class="description trr-sw-nomenu"><?php esc_html_e( 'Your theme shows no menu yet. Create one in Appearance → Menus (or in the Site Editor) and put it in the header; until then the switcher floats in the corner.', 'translate-rocket' ); ?></p>
@@ -5284,6 +5341,28 @@ JS
 	}
 
 	/**
+	 * 1.8.20: «Translate again the sentences that contain them» (Words & phrases, Glossary), and its undo.
+	 */
+	public function maybe_retranslate_terms(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		if ( isset( $_GET['trrocket_terms_undo'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked right below.
+			$b = sanitize_key( wp_unslash( $_GET['trrocket_terms_undo'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			check_admin_referer( 'trrocket_terms_undo_' . $b );
+			$n = \TranslateRocket\TermRetranslate::undo( $b );
+			wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'terms_undone' => (string) $n ), admin_url( 'admin.php' ) ) );
+			exit;
+		}
+		if ( ! isset( $_POST['trrocket_terms_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['trrocket_terms_nonce'] ) ), 'trrocket_retranslate_terms' ) ) {
+			return;
+		}
+		$r = \TranslateRocket\TermRetranslate::run();
+		wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'terms_reset' => (string) $r['sentences'], 'terms_langs' => (string) $r['languages'], 'terms_batch' => $r['batch'] ), admin_url( 'admin.php' ) ) );
+		exit;
+	}
+
+	/**
 	 * Render the Exclusions page.
 	 */
 	public function render_exclusions_page(): void {
@@ -5298,6 +5377,40 @@ JS
 			<?php if ( isset( $_GET['saved'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
 				<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Exclusions saved.', 'translate-rocket' ); ?></p></div>
 			<?php endif; ?>
+			<?php
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended -- display only.
+			if ( isset( $_GET['terms_reset'] ) ) :
+				$trr_n = (int) $_GET['terms_reset'];
+				$trr_b = isset( $_GET['terms_batch'] ) ? sanitize_key( wp_unslash( $_GET['terms_batch'] ) ) : '';
+				?>
+				<div class="notice notice-success is-dismissible"><p>
+					<?php
+					if ( $trr_n > 0 ) {
+						printf(
+							/* translators: 1: number of sentences, 2: number of languages. */
+							esc_html__( '%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it.', 'translate-rocket' ),
+							(int) $trr_n,
+							isset( $_GET['terms_langs'] ) ? (int) $_GET['terms_langs'] : 0
+						);
+						echo ' <a href="' . esc_url( admin_url( 'admin.php?page=translate-rocket-strings' ) ) . '">' . esc_html__( 'Open Translations', 'translate-rocket' ) . '</a>';
+						if ( '' !== $trr_b ) {
+							echo ' · <a href="' . esc_url( wp_nonce_url( add_query_arg( 'trrocket_terms_undo', $trr_b, admin_url( 'admin.php?page=translate-rocket-exclusions' ) ), 'trrocket_terms_undo_' . $trr_b ) ) . '">' . esc_html__( 'Undo', 'translate-rocket' ) . '</a>';
+						}
+					} else {
+						esc_html_e( 'Every translated sentence already respects your names and glossary: nothing to translate again.', 'translate-rocket' );
+					}
+					?>
+				</p></div>
+			<?php endif; ?>
+			<?php if ( isset( $_GET['terms_undone'] ) ) : ?>
+				<div class="notice notice-success is-dismissible"><p>
+					<?php
+					/* translators: %d: translations put back. */
+					printf( esc_html__( 'Undone: %d translations are back as they were.', 'translate-rocket' ), (int) $_GET['terms_undone'] );
+					?>
+				</p></div>
+			<?php endif; ?>
+			<?php // phpcs:enable ?>
 			<p class="trrocket-tagline"><?php esc_html_e( 'Keep parts of your site in the original language. One entry per line.', 'translate-rocket' ); ?></p>
 
 			<form method="post" action="">
@@ -5343,6 +5456,12 @@ JS
 				</div>
 
 				<?php submit_button( __( 'Save exclusions', 'translate-rocket' ) ); ?>
+			</form>
+			<form method="post" action="" class="trrocket-card" id="trr-terms-again">
+				<?php wp_nonce_field( 'trrocket_retranslate_terms', 'trrocket_terms_nonce' ); ?>
+				<h2><?php esc_html_e( 'Apply them to the sentences already translated', 'translate-rocket' ); ?> <?php $this->info( __( 'New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it.', 'translate-rocket' ) ); ?></h2>
+				<p class="description"><?php esc_html_e( 'Only the sentences that disagree with the names and the glossary above are translated again — not whole pages.', 'translate-rocket' ); ?></p>
+				<?php submit_button( __( 'Translate again the sentences that contain them', 'translate-rocket' ), 'secondary', 'submit', false ); ?>
 			</form>
 		</div>
 		<?php
@@ -5880,6 +5999,26 @@ JS;
 
 		Settings::update( $settings );
 		update_option( 'trrocket_wizard_done', 1 );
+		// 23/10/2026 (who left: «I couldn't make it work», Groq key set, nothing translated): the key is tried now, with
+		// one word, so a key Groq refuses is said here — not discovered later as an empty page.
+		delete_option( 'trrocket_wizard_keycheck' );
+		if ( 'free' === ( isset( $_POST['trr_method'] ) ? sanitize_key( $_POST['trr_method'] ) : '' ) && '' !== (string) ( $settings['providers']['groq']['api_key'] ?? '' ) ) {
+			$wp = \TranslateRocket\Providers\Registry::build( 'groq', (array) $settings['providers']['groq'] );
+			if ( $wp && method_exists( $wp, 'quick' ) ) {
+				$wp->quick();
+			}
+			$wt = '';
+			foreach ( (array) $settings['target_languages'] as $t ) {
+				if ( (string) $t !== (string) ( $settings['source_language'] ?? '' ) ) {
+					$wt = (string) $t;
+					break;
+				}
+			}
+			$wr = $wp ? $wp->translate( array( 'Hello' ), (string) ( $settings['source_language'] ?? 'en' ), '' !== $wt ? $wt : 'it' ) : null;
+			if ( $wr && ! $wr->success ) {
+				update_option( 'trrocket_wizard_keycheck', \TranslateRocket\Frontend\VisualEditor::ai_error( (string) $wr->error ), false );
+			}
+		}
 		\TranslateRocket\Cache::flush();
 		wp_safe_redirect( add_query_arg( 'done', '1', admin_url( 'admin.php?page=translate-rocket-wizard' ) ) );
 		exit;
@@ -5915,6 +6054,28 @@ JS;
 			}
 			// 23/10/2026: from here the translation starts by itself on that page (visual-editor.js, «trr-first»).
 			$edit_url = add_query_arg( 'trr-first', '1', $edit_url );
+			?>
+			<?php
+			$trr_kc = get_option( 'trrocket_wizard_keycheck' );
+			// only a key Groq refuses: a day's limit or a busy service is not the key's fault
+			if ( is_array( $trr_kc ) && preg_match( '/HTTP 40[13]\b|invalid[_ ]?api[_ ]?key|incorrect api key/i', (string) ( $trr_kc['detail'] ?? '' ) ) ) :
+				?>
+				<div class="wrap trrocket-wrap trrocket-wizard">
+					<div class="trr-wiz-card trr-wiz-done">
+						<div class="trr-wiz-check" style="background:#b32d2e">!</div>
+						<h1><?php esc_html_e( 'Almost there: the Groq key does not work', 'translate-rocket' ); ?></h1>
+						<p class="trr-wiz-lead"><?php echo esc_html( (string) $trr_kc['message'] ); ?></p>
+						<p><?php esc_html_e( 'Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text».', 'translate-rocket' ); ?></p>
+						<div class="trr-wiz-actions">
+							<a class="button button-primary button-hero" href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-ai#trr-prov-groq' ) ); ?>"><?php esc_html_e( 'Fix the Groq key', 'translate-rocket' ); ?></a>
+							<a class="button button-hero" href="https://console.groq.com/keys" target="_blank" rel="noopener"><?php esc_html_e( 'Open console.groq.com/keys ↗', 'translate-rocket' ); ?></a>
+						</div>
+						<p><a href="<?php echo esc_url( $edit_url ); ?>"><?php esc_html_e( 'Or translate in this browser, without a key', 'translate-rocket' ); ?></a></p>
+					</div>
+				</div>
+				<?php
+				return;
+			endif;
 			?>
 			<div class="wrap trrocket-wrap trrocket-wizard">
 				<div class="trr-wiz-card trr-wiz-done">

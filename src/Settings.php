@@ -127,6 +127,7 @@ class Settings {
 				'in_menu'       => false,      // in the theme's menu (6/10/2026)
 				'menu_location' => 'auto',
 				'menu_pos'      => 'end',      // start | end | after (menu_after) of the menu (desktop and phone)
+				'menu_phone'    => true,       // 23/10/2026: also in the theme's phone menu location(s)
 				'menu_after'    => '',         // label of the top-level item the languages follow
 				'footer_row'    => false,      // a row of languages at the bottom of every page
 				'in_spot'       => false,      // in a spot chosen on the page (picker)

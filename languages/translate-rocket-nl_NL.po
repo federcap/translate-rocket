@@ -6346,3 +6346,88 @@ msgstr "Bezig met voorverwarmen: %1$d van %2$d pagina's."
 #, php-format
 msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
 msgstr "Laatste voorverwarming: %1$s, %2$d pagina's klaar (%3$d met een fout)."
+
+#: src/Admin/Admin.php
+msgid "Apply them to the sentences already translated"
+msgstr "Toepassen op zinnen die al vertaald zijn"
+
+#: src/Admin/Admin.php
+msgid "New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it."
+msgstr "Nieuwe namen en glossariumtermen gelden voor de zinnen die vanaf nu vertaald worden. Al vertaalde zinnen houden hun vertaling, en de pagina's opnieuw scannen verandert ze niet. Dit zoekt in elke taal alleen de vertaalde zinnen waarin een naam vertaald is of een glossariumterm niet zijn vaste vertaling gebruikt, en zet ze terug op «ontbreekt» — daarna vertaalt «Alles wat ontbreekt vertalen» (of Labs) ze opnieuw met de nieuwe regels. Sla eerst de lijsten op. Eén link maakt het ongedaan."
+
+#: src/Admin/Admin.php
+msgid "Only the sentences that disagree with the names and the glossary above are translated again — not whole pages."
+msgstr "Alleen de zinnen die niet kloppen met de namen en het glossarium hierboven worden opnieuw vertaald — geen hele pagina's."
+
+#: src/Admin/Admin.php
+msgid "Translate again the sentences that contain them"
+msgstr "De zinnen die ze bevatten opnieuw vertalen"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it."
+msgstr "%1$d zinnen in %2$d talen staan weer op «ontbreekt»: vertaal ze met «Alles wat ontbreekt vertalen» op het scherm Vertalingen, of laat Labs het doen."
+
+#: src/Admin/Admin.php
+msgid "Open Translations"
+msgstr "Vertalingen openen"
+
+#: src/Admin/Admin.php
+msgid "Every translated sentence already respects your names and glossary: nothing to translate again."
+msgstr "Alle vertaalde zinnen kloppen al met je namen en glossarium: niets om opnieuw te vertalen."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Undone: %d translations are back as they were."
+msgstr "Ongedaan gemaakt: %d vertalingen zijn weer zoals ze waren."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Also in the phone menu of your theme (%s)"
+msgstr "Ook in het telefoonmenu van je thema (%s)"
+
+#: src/Admin/Admin.php
+msgid "Untick it if that place holds another menu (categories, for example) and the languages appear twice."
+msgstr "Vink het uit als daar een ander menu staat (bijvoorbeeld categorieën) en de talen twee keer verschijnen."
+
+#: src/Admin/Admin.php
+msgid "Almost there: the Groq key does not work"
+msgstr "Bijna klaar: de Groq-sleutel werkt niet"
+
+#: src/Admin/Admin.php
+msgid "Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text»."
+msgstr "Je talen zijn opgeslagen. Kopieer de sleutel opnieuw van console.groq.com/keys (hij begint met gsk_), plak hem in de Groq-kaart en klik op «Deze tekst testen»."
+
+#: src/Admin/Admin.php
+msgid "Fix the Groq key"
+msgstr "Groq-sleutel herstellen"
+
+#: src/Admin/Admin.php
+msgid "Open console.groq.com/keys ↗"
+msgstr "console.groq.com/keys openen ↗"
+
+#: src/Admin/Admin.php
+msgid "Or translate in this browser, without a key"
+msgstr "Of vertaal in deze browser, zonder sleutel"
+
+#: src/Frontend/VisualEditor.php
+msgid "The translation service is busy — trying again in a few seconds…"
+msgstr "De vertaaldienst is druk — over een paar seconden opnieuw…"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Only you can see %s for now: the language is offline while you translate."
+msgstr "Voorlopig zie alleen jij %s: de taal staat offline zolang je vertaalt."
+
+#: src/Frontend/VisualEditor.php
+msgid "Show it to visitors"
+msgstr "Toon het aan bezoekers"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Done: visitors now see %s, with the language switcher."
+msgstr "Klaar: bezoekers zien nu %s, met de taalkiezer."
+
+#: src/Frontend/VisualEditor.php
+msgid "Fix it on the AI translation screen"
+msgstr "Herstel het op het scherm AI-vertaling"

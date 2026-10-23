@@ -7165,3 +7165,88 @@ msgstr "Sedang memanaskan: %1$d dari %2$d halaman."
 #, php-format
 msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
 msgstr "Pemanasan terakhir: %1$s, %2$d halaman siap (%3$d dengan galat)."
+
+#: src/Admin/Admin.php
+msgid "Apply them to the sentences already translated"
+msgstr "Terapkan pada kalimat yang sudah diterjemahkan"
+
+#: src/Admin/Admin.php
+msgid "New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it."
+msgstr "Nama dan istilah glosarium baru dipakai untuk kalimat yang diterjemahkan mulai sekarang. Kalimat yang sudah diterjemahkan tetap dengan terjemahannya, dan memindai ulang halaman tidak mengubahnya. Fitur ini mencari, di setiap bahasa, hanya kalimat terjemahan yang namanya ikut diterjemahkan atau istilah glosariumnya tidak memakai terjemahan tetap, lalu mengembalikannya ke «belum diterjemahkan» — kemudian «Terjemahkan semua yang belum» (atau Labs) menerjemahkannya lagi dengan aturan baru. Simpan daftarnya dulu. Satu tautan membatalkannya."
+
+#: src/Admin/Admin.php
+msgid "Only the sentences that disagree with the names and the glossary above are translated again — not whole pages."
+msgstr "Hanya kalimat yang tidak sesuai dengan nama dan glosarium di atas yang diterjemahkan ulang — bukan seluruh halaman."
+
+#: src/Admin/Admin.php
+msgid "Translate again the sentences that contain them"
+msgstr "Terjemahkan ulang kalimat yang memuatnya"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it."
+msgstr "%1$d kalimat dalam %2$d bahasa kembali «belum diterjemahkan»: terjemahkan dengan «Terjemahkan semua yang belum» di layar Terjemahan, atau biarkan Labs mengerjakannya."
+
+#: src/Admin/Admin.php
+msgid "Open Translations"
+msgstr "Buka Terjemahan"
+
+#: src/Admin/Admin.php
+msgid "Every translated sentence already respects your names and glossary: nothing to translate again."
+msgstr "Semua kalimat terjemahan sudah sesuai dengan nama dan glosarium Anda: tidak ada yang perlu diterjemahkan ulang."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Undone: %d translations are back as they were."
+msgstr "Dibatalkan: %d terjemahan kembali seperti semula."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Also in the phone menu of your theme (%s)"
+msgstr "Juga di menu ponsel tema Anda (%s)"
+
+#: src/Admin/Admin.php
+msgid "Untick it if that place holds another menu (categories, for example) and the languages appear twice."
+msgstr "Hapus centangnya jika tempat itu berisi menu lain (misalnya kategori) dan bahasa muncul dua kali."
+
+#: src/Admin/Admin.php
+msgid "Almost there: the Groq key does not work"
+msgstr "Hampir selesai: kunci Groq tidak berfungsi"
+
+#: src/Admin/Admin.php
+msgid "Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text»."
+msgstr "Bahasa Anda sudah disimpan. Salin lagi kuncinya dari console.groq.com/keys (diawali gsk_), tempel di kartu Groq lalu tekan «Uji teks ini»."
+
+#: src/Admin/Admin.php
+msgid "Fix the Groq key"
+msgstr "Perbaiki kunci Groq"
+
+#: src/Admin/Admin.php
+msgid "Open console.groq.com/keys ↗"
+msgstr "Buka console.groq.com/keys ↗"
+
+#: src/Admin/Admin.php
+msgid "Or translate in this browser, without a key"
+msgstr "Atau terjemahkan di browser ini, tanpa kunci"
+
+#: src/Frontend/VisualEditor.php
+msgid "The translation service is busy — trying again in a few seconds…"
+msgstr "Layanan terjemahan sedang sibuk — mencoba lagi dalam beberapa detik…"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Only you can see %s for now: the language is offline while you translate."
+msgstr "Untuk saat ini hanya Anda yang melihat %s: bahasa ini offline selama Anda menerjemahkan."
+
+#: src/Frontend/VisualEditor.php
+msgid "Show it to visitors"
+msgstr "Tampilkan ke pengunjung"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Done: visitors now see %s, with the language switcher."
+msgstr "Selesai: pengunjung kini melihat %s, dengan pemilih bahasa."
+
+#: src/Frontend/VisualEditor.php
+msgid "Fix it on the AI translation screen"
+msgstr "Perbaiki di layar terjemahan AI"

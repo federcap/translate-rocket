@@ -89,7 +89,7 @@ abstract class LlmProvider extends AbstractProvider {
 			$this->lang_name( $source ),
 			$this->lang_name( $target ),
 			self::guidance_block(),
-			KeepTerms::prompt_line( KeepTerms::in( $texts ) ),
+			KeepTerms::prompt_line( KeepTerms::in( $texts ) ) . \TranslateRocket\TermRetranslate::prompt_line( \TranslateRocket\TermRetranslate::glossary_in( $texts, $target ) ),
 			self::parts_line( $texts ),
 			$payload
 		);

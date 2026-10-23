@@ -7191,3 +7191,88 @@ msgstr "Şu an ısıtılıyor: %2$d sayfadan %1$d tanesi."
 #, php-format
 msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
 msgstr "Son ısıtma: %1$s, %2$d sayfa hazır (%3$d tanesinde hata)."
+
+#: src/Admin/Admin.php
+msgid "Apply them to the sentences already translated"
+msgstr "Zaten çevrilmiş cümlelere uygula"
+
+#: src/Admin/Admin.php
+msgid "New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it."
+msgstr "Yeni adlar ve sözlük terimleri bundan sonra çevrilecek cümlelerde kullanılır. Zaten çevrilmiş cümleler çevirilerini korur ve sayfaları yeniden taramak onları değiştirmez. Bu, her dilde yalnızca bir adın çevrildiği ya da bir sözlük teriminin sabit çevirisini kullanmadığı çevrilmiş cümleleri bulur ve onları «eksik» durumuna geri alır — ardından «Tüm eksikleri çevir» (veya Labs) onları yeni kurallarla yeniden çevirir. Önce listeleri kaydedin. Tek bir bağlantı geri alır."
+
+#: src/Admin/Admin.php
+msgid "Only the sentences that disagree with the names and the glossary above are translated again — not whole pages."
+msgstr "Yalnızca yukarıdaki adlara ve sözlüğe uymayan cümleler yeniden çevrilir — sayfaların tamamı değil."
+
+#: src/Admin/Admin.php
+msgid "Translate again the sentences that contain them"
+msgstr "Bunları içeren cümleleri yeniden çevir"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it."
+msgstr "%2$d dilde %1$d cümle yeniden «eksik» oldu: Çeviriler ekranında «Tüm eksikleri çevir» ile çevirin ya da Labs'e bırakın."
+
+#: src/Admin/Admin.php
+msgid "Open Translations"
+msgstr "Çevirileri aç"
+
+#: src/Admin/Admin.php
+msgid "Every translated sentence already respects your names and glossary: nothing to translate again."
+msgstr "Tüm çevrilmiş cümleler adlarınıza ve sözlüğünüze zaten uyuyor: yeniden çevrilecek bir şey yok."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Undone: %d translations are back as they were."
+msgstr "Geri alındı: %d çeviri eski haline döndü."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Also in the phone menu of your theme (%s)"
+msgstr "Temanızın telefon menüsünde de (%s)"
+
+#: src/Admin/Admin.php
+msgid "Untick it if that place holds another menu (categories, for example) and the languages appear twice."
+msgstr "O konumda başka bir menü varsa (örneğin kategoriler) ve diller iki kez görünüyorsa işareti kaldırın."
+
+#: src/Admin/Admin.php
+msgid "Almost there: the Groq key does not work"
+msgstr "Neredeyse bitti: Groq anahtarı çalışmıyor"
+
+#: src/Admin/Admin.php
+msgid "Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text»."
+msgstr "Dilleriniz kaydedildi. Anahtarı console.groq.com/keys adresinden yeniden kopyalayın (gsk_ ile başlar), Groq kartına yapıştırın ve «Bu metni dene» düğmesine basın."
+
+#: src/Admin/Admin.php
+msgid "Fix the Groq key"
+msgstr "Groq anahtarını düzelt"
+
+#: src/Admin/Admin.php
+msgid "Open console.groq.com/keys ↗"
+msgstr "console.groq.com/keys adresini aç ↗"
+
+#: src/Admin/Admin.php
+msgid "Or translate in this browser, without a key"
+msgstr "Ya da anahtar olmadan bu tarayıcıda çevirin"
+
+#: src/Frontend/VisualEditor.php
+msgid "The translation service is busy — trying again in a few seconds…"
+msgstr "Çeviri hizmeti meşgul — birkaç saniye içinde yeniden denenecek…"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Only you can see %s for now: the language is offline while you translate."
+msgstr "Şimdilik %s dilini yalnızca siz görüyorsunuz: çeviri sırasında dil çevrimdışı."
+
+#: src/Frontend/VisualEditor.php
+msgid "Show it to visitors"
+msgstr "Ziyaretçilere göster"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Done: visitors now see %s, with the language switcher."
+msgstr "Tamam: ziyaretçiler artık %s dilini dil seçiciyle görüyor."
+
+#: src/Frontend/VisualEditor.php
+msgid "Fix it on the AI translation screen"
+msgstr "Yapay zekâ çevirisi ekranında düzelt"

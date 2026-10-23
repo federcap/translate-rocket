@@ -7165,3 +7165,88 @@ msgstr "正在预热：%2$d 个页面中的第 %1$d 个。"
 #, php-format
 msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
 msgstr "上次预热：%1$s，%2$d 个页面已就绪（%3$d 个出错）。"
+
+#: src/Admin/Admin.php
+msgid "Apply them to the sentences already translated"
+msgstr "应用到已翻译的句子"
+
+#: src/Admin/Admin.php
+msgid "New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it."
+msgstr "新的名称和术语表词条会用于从现在起翻译的句子。已翻译的句子保留原有译文，重新扫描页面也不会改变它们。此功能会在每种语言中只找出名称被翻译了、或术语表词条没有使用固定译法的已翻译句子，并把它们恢复为「缺失」——然后「翻译所有缺失内容」（或 Labs）会按新规则重新翻译。请先保存列表。一个链接即可撤销。"
+
+#: src/Admin/Admin.php
+msgid "Only the sentences that disagree with the names and the glossary above are translated again — not whole pages."
+msgstr "只重新翻译与上方名称和术语表不一致的句子——而不是整个页面。"
+
+#: src/Admin/Admin.php
+msgid "Translate again the sentences that contain them"
+msgstr "重新翻译包含它们的句子"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it."
+msgstr "%2$d 种语言中的 %1$d 个句子已恢复为「缺失」：请在「翻译」页面用「翻译所有缺失内容」翻译，或交给 Labs。"
+
+#: src/Admin/Admin.php
+msgid "Open Translations"
+msgstr "打开翻译"
+
+#: src/Admin/Admin.php
+msgid "Every translated sentence already respects your names and glossary: nothing to translate again."
+msgstr "所有已翻译的句子都已符合您的名称和术语表：无需重新翻译。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Undone: %d translations are back as they were."
+msgstr "已撤销：%d 条翻译已恢复原样。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Also in the phone menu of your theme (%s)"
+msgstr "同时显示在主题的手机菜单中（%s）"
+
+#: src/Admin/Admin.php
+msgid "Untick it if that place holds another menu (categories, for example) and the languages appear twice."
+msgstr "如果该位置放的是另一个菜单（例如分类）并且语言出现了两次，请取消勾选。"
+
+#: src/Admin/Admin.php
+msgid "Almost there: the Groq key does not work"
+msgstr "快好了：Groq 密钥无法使用"
+
+#: src/Admin/Admin.php
+msgid "Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text»."
+msgstr "你的语言已保存。请从 console.groq.com/keys 重新复制密钥（以 gsk_ 开头），粘贴到 Groq 卡片中，然后点击「测试这段文字」。"
+
+#: src/Admin/Admin.php
+msgid "Fix the Groq key"
+msgstr "修正 Groq 密钥"
+
+#: src/Admin/Admin.php
+msgid "Open console.groq.com/keys ↗"
+msgstr "打开 console.groq.com/keys ↗"
+
+#: src/Admin/Admin.php
+msgid "Or translate in this browser, without a key"
+msgstr "或者在此浏览器中翻译，无需密钥"
+
+#: src/Frontend/VisualEditor.php
+msgid "The translation service is busy — trying again in a few seconds…"
+msgstr "翻译服务繁忙——几秒后重试…"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Only you can see %s for now: the language is offline while you translate."
+msgstr "目前只有你能看到%s：翻译期间该语言处于离线状态。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Show it to visitors"
+msgstr "向访客显示"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Done: visitors now see %s, with the language switcher."
+msgstr "完成：访客现在可以看到%s，并带有语言切换器。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Fix it on the AI translation screen"
+msgstr "在 AI 翻译页面中修正"

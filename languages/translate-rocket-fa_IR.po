@@ -7191,3 +7191,88 @@ msgstr "در حال گرم کردن: %1$d از %2$d صفحه."
 #, php-format
 msgid "Last warm-up: %1$s, %2$d pages ready (%3$d with an error)."
 msgstr "آخرین گرم کردن: %1$s، %2$d صفحه آماده (%3$d با خطا)."
+
+#: src/Admin/Admin.php
+msgid "Apply them to the sentences already translated"
+msgstr "اعمال آن‌ها روی جمله‌های ترجمه‌شده"
+
+#: src/Admin/Admin.php
+msgid "New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it."
+msgstr "نام‌ها و اصطلاحات واژه‌نامهٔ جدید برای جمله‌هایی به کار می‌روند که از این پس ترجمه می‌شوند. جمله‌های ترجمه‌شده ترجمهٔ خود را نگه می‌دارند و پویش دوبارهٔ صفحه‌ها آن‌ها را تغییر نمی‌دهد. این گزینه در هر زبان فقط جمله‌های ترجمه‌شده‌ای را پیدا می‌کند که در آن‌ها یک نام ترجمه شده یا یک اصطلاح واژه‌نامه ترجمهٔ ثابتش را ندارد، و آن‌ها را به «ترجمه‌نشده» برمی‌گرداند — سپس «ترجمهٔ همهٔ موارد ترجمه‌نشده» (یا Labs) آن‌ها را با قواعد جدید دوباره ترجمه می‌کند. اول فهرست‌ها را ذخیره کنید. با یک پیوند می‌توان آن را برگرداند."
+
+#: src/Admin/Admin.php
+msgid "Only the sentences that disagree with the names and the glossary above are translated again — not whole pages."
+msgstr "فقط جمله‌هایی که با نام‌ها و واژه‌نامهٔ بالا جور نیستند دوباره ترجمه می‌شوند — نه کل صفحه‌ها."
+
+#: src/Admin/Admin.php
+msgid "Translate again the sentences that contain them"
+msgstr "ترجمهٔ دوبارهٔ جمله‌هایی که آن‌ها را دارند"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "%1$d sentences in %2$d languages are back to «missing»: translate them with «Translate all missing» on the Translations screen, or let Labs do it."
+msgstr "%1$d جمله در %2$d زبان به «ترجمه‌نشده» برگشتند: آن‌ها را با «ترجمهٔ همهٔ موارد ترجمه‌نشده» در صفحهٔ ترجمه‌ها ترجمه کنید، یا بگذارید Labs انجامش دهد."
+
+#: src/Admin/Admin.php
+msgid "Open Translations"
+msgstr "باز کردن ترجمه‌ها"
+
+#: src/Admin/Admin.php
+msgid "Every translated sentence already respects your names and glossary: nothing to translate again."
+msgstr "همهٔ جمله‌های ترجمه‌شده از قبل نام‌ها و واژه‌نامهٔ شما را رعایت می‌کنند: چیزی برای ترجمهٔ دوباره نیست."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Undone: %d translations are back as they were."
+msgstr "برگردانده شد: %d ترجمه مثل قبل شدند."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Also in the phone menu of your theme (%s)"
+msgstr "همچنین در منوی تلفن قالب شما (%s)"
+
+#: src/Admin/Admin.php
+msgid "Untick it if that place holds another menu (categories, for example) and the languages appear twice."
+msgstr "اگر در آن جا منوی دیگری هست (مثلاً دسته‌ها) و زبان‌ها دو بار نمایش داده می‌شوند، تیک آن را بردارید."
+
+#: src/Admin/Admin.php
+msgid "Almost there: the Groq key does not work"
+msgstr "تقریباً تمام است: کلید Groq کار نمی‌کند"
+
+#: src/Admin/Admin.php
+msgid "Your languages are saved. Copy the key again from console.groq.com/keys (it starts with gsk_), paste it in the Groq card and press «Test this text»."
+msgstr "زبان‌های شما ذخیره شد. کلید را دوباره از console.groq.com/keys کپی کنید (با gsk_ شروع می‌شود)، آن را در کارت Groq بچسبانید و «آزمایش این متن» را بزنید."
+
+#: src/Admin/Admin.php
+msgid "Fix the Groq key"
+msgstr "اصلاح کلید Groq"
+
+#: src/Admin/Admin.php
+msgid "Open console.groq.com/keys ↗"
+msgstr "باز کردن console.groq.com/keys ↗"
+
+#: src/Admin/Admin.php
+msgid "Or translate in this browser, without a key"
+msgstr "یا در همین مرورگر ترجمه کنید، بدون کلید"
+
+#: src/Frontend/VisualEditor.php
+msgid "The translation service is busy — trying again in a few seconds…"
+msgstr "سرویس ترجمه مشغول است — چند ثانیهٔ دیگر دوباره امتحان می‌کنیم…"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Only you can see %s for now: the language is offline while you translate."
+msgstr "فعلاً فقط شما %s را می‌بینید: زبان در حین ترجمه آفلاین است."
+
+#: src/Frontend/VisualEditor.php
+msgid "Show it to visitors"
+msgstr "به بازدیدکنندگان نشان بده"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Done: visitors now see %s, with the language switcher."
+msgstr "انجام شد: بازدیدکنندگان اکنون %s را با انتخابگر زبان می‌بینند."
+
+#: src/Frontend/VisualEditor.php
+msgid "Fix it on the AI translation screen"
+msgstr "آن را در صفحهٔ ترجمه با هوش مصنوعی اصلاح کنید"

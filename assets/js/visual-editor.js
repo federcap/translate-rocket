@@ -2270,7 +2270,26 @@
 		// 23/10/2026: the page counter in the bar (0% · 0/41) moves with the translation, not only at the end — a new user
 		// saw the page turn Italian next to a «0%» that looked broken.
 		function setProg( d, total ) { progBox.hidden = false; var p = total ? Math.round( d / total * 100 ) : 100; progFill.style.width = p + '%'; progTxt.textContent = d + ' / ' + total; try { updateProgress(); } catch ( e ) {} }
-		function finish( ok, fail ) { progBox.hidden = true; msg.textContent = ( VE.i18n.bulkDone || '%d translated' ).replace( '%d', String( ok ) ) + ( fail ? ( ' · ' + fail + ' ⚠' ) : '' ); try { updateProgress(); } catch ( e ) {} }
+		function finish( ok, fail ) {
+			progBox.hidden = true; msg.textContent = ( VE.i18n.bulkDone || '%d translated' ).replace( '%d', String( ok ) ) + ( fail ? ( ' · ' + fail + ' ⚠' ) : '' ); try { updateProgress(); } catch ( e ) {}
+			// 23/10/2026: the page is translated but the language is still offline — say so, and offer the switch
+			if ( ok > 0 && VE.offline && ! panel.querySelector( '.trrocket-ve-online' ) ) {
+				var box = document.createElement( 'div' ); box.className = 'trrocket-ve-online';
+				box.style.cssText = 'margin-top:10px;padding:10px 12px;border-radius:8px;background:#fff8e5;border:1px solid #f0c33c;font-size:13px';
+				var t = document.createElement( 'span' ); t.textContent = String( VE.i18n.onlineAsk || '' ).replace( '%s', VE.langName || VE.lang ) + ' ';
+				var b = document.createElement( 'button' ); b.type = 'button'; b.className = 'trrocket-ve-online-btn'; b.textContent = VE.i18n.onlineBtn || 'Show it to visitors';
+				b.style.cssText = 'margin-left:4px;padding:6px 12px;border:0;border-radius:6px;background:#00a32a;color:#fff;font-weight:600;cursor:pointer';
+				b.addEventListener( 'click', function () {
+					b.disabled = true;
+					api( 'trrocket_ve_online', {}, function ( r ) {
+						if ( r && r.success ) { VE.offline = false; box.style.background = '#edfaef'; box.style.borderColor = '#00a32a'; box.textContent = '✓ ' + String( VE.i18n.onlineDone || '' ).replace( '%s', VE.langName || VE.lang ); }
+						else { b.disabled = false; }
+					} );
+				} );
+				box.appendChild( t ); box.appendChild( b );
+				msg.parentNode.parentNode.insertBefore( box, msg.parentNode.nextSibling );
+			}
+		}
 
 		var running = false;
 		function auto( action ) {
@@ -2289,6 +2308,27 @@
 					i += chunk.length;
 					api( action, { srcs: JSON.stringify( chunk.map( function ( u ) { return unitSource( u, m ); } ) ) }, function ( res ) {
 						var tr = ( res && res.success && res.data && res.data.translations ) ? res.data.translations : null;
+						var d  = ( res && ! res.success && res.data && 'object' === typeof res.data ) ? res.data : null;
+						// 23/10/2026: the engine's error in plain words — stop when it will not fix itself, retry when it is busy
+						if ( ! tr && d && d.fatal ) {
+							running = false; progBox.hidden = true;
+							msg.innerHTML = '';
+							var em = document.createElement( 'strong' ); em.style.color = '#b32d2e'; em.textContent = '⚠ ' + ( d.message || '' ); msg.appendChild( em );
+							if ( VE.i18n.aiUrl ) { var fx = document.createElement( 'a' ); fx.href = VE.i18n.aiUrl; fx.textContent = ' ' + ( VE.i18n.bulkFix || '' ) + ' →'; fx.style.marginLeft = '6px'; msg.appendChild( fx ); }
+							return;
+						}
+						if ( ! tr && d && d.retry && ( gruppo.prove = ( gruppo.prove || 0 ) + 1 ) <= 3 ) {
+							i -= chunk.length;
+							msg.textContent = VE.i18n.bulkBusy || '';
+							setTimeout( gruppo, 3000 * gruppo.prove );
+							return;
+						}
+						if ( ! tr && d && d.retry ) {
+							running = false; progBox.hidden = true;
+							msg.innerHTML = ''; var eb = document.createElement( 'strong' ); eb.style.color = '#b32d2e'; eb.textContent = '⚠ ' + ( d.message || '' ); msg.appendChild( eb );
+							return;
+						}
+						if ( tr ) { gruppo.prove = 0; }
 						if ( ! tr ) {
 							// one by one, like before
 							var resto = chunk.slice();
@@ -2297,8 +2337,23 @@
 								var u = resto.shift();
 								api( action, { src: unitSource( u, m ) }, function ( r1 ) {
 									if ( r1 && r1.success && r1.data && r1.data.translation ) {
+										gruppo.di_fila = 0;
 										applyUnit( u, r1.data.translation, m, function ( good ) { good ? ok++ : fail++; uno(); } );
-									} else { fail++; uno(); }
+									} else {
+										fail++;
+										// 23/10/2026: three sentences in a row that the engine cannot give back — stop and say why
+										gruppo.di_fila = ( gruppo.di_fila || 0 ) + 1;
+										var d1 = ( r1 && r1.data && 'object' === typeof r1.data ) ? r1.data : null;
+										if ( gruppo.di_fila >= 3 || ( d1 && d1.fatal ) ) {
+											running = false; progBox.hidden = true;
+											msg.innerHTML = ''; var e1 = document.createElement( 'strong' ); e1.style.color = '#b32d2e';
+											e1.textContent = '⚠ ' + ( ( d1 && d1.message ) || ( VE.i18n.bulkDone || '%d translated' ).replace( '%d', String( ok ) ) );
+											msg.appendChild( e1 );
+											if ( VE.i18n.aiUrl ) { var f1 = document.createElement( 'a' ); f1.href = VE.i18n.aiUrl; f1.textContent = ' ' + ( VE.i18n.bulkFix || '' ) + ' →'; f1.style.marginLeft = '6px'; msg.appendChild( f1 ); }
+											return;
+										}
+										uno();
+									}
 								} );
 							}() );
 							return;

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.19
+Stable tag: 1.8.20
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,16 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.20 =
+* Improved: when an AI engine refuses a request, the visual editor now says why in plain words and stops — a key that is wrong or out of credit, the daily limit reached — with a link to fix it, instead of leaving the page half translated with a row of warnings. A busy service (429, 5xx, timeouts) is tried again by itself up to three times.
+* Improved: the setup wizard tries your Groq key with one word as you finish. If Groq refuses it, the last screen says so at once, with the link to copy it again — or the way to translate in your browser without a key — instead of «You're all set».
+* New: at the end of the first translation, if the language is still visible only to you, the editor offers «Show it to visitors» — one click and visitors see it, with the language switcher.
+* New: «Translate again the sentences that contain them» on the Exclusions screen. After adding names or glossary terms, only the translated sentences that do not respect them go back to «missing», in every language, and are translated again with the new rules. One link undoes it. The glossary is now also passed to AI engines with each request.
+* Fixed: the site scan now visits category, tag and shop archive pages too, so their texts — SEO titles and descriptions included — are collected and translated even if nobody has opened them yet. Thanks to the shop owner who reported it.
+* New: «Also in the phone menu of your theme» on the Switcher screen. Themes like Blocksy have a «mobile» menu place; when it holds another menu (categories, for example), untick it and the languages stop appearing twice. Phones without the main menu still get the floating switcher.
+* Fixed: on Apache servers, if the site's rewrite rules were saved while a translated page was being served (by WP-CLI or by a plugin that refreshes them during a visit), .htaccess could get «RewriteBase /it/» and every page answered with an error. The rules are now always written with the site's own address.
+* Fixed: Cloudflare Workers AI with an e-mail or a wrong value in the «Account ID» field: the right account is now found from the token and saved, instead of failing every request.
 
 = 1.8.19 =
 * Improved: right after the setup wizard, «Translate my homepage now» translates your homepage by itself with the engine you just chose — you watch it turn into your language. Before, the page opened still in the original language and the translation was behind two buttons, so some of you thought nothing worked.
@@ -505,6 +515,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.20 =
+AI engine errors explained and handled, Groq key checked in the setup wizard, «Show it to visitors» after the first translation, category and tag pages included in the site scan.
 
 = 1.8.19 =
 Your homepage translates by itself right after the setup wizard, and AI translation in the visual editor is several times faster.

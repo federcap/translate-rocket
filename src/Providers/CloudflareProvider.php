@@ -32,7 +32,40 @@ class CloudflareProvider extends FreeAiProvider {
 	}
 
 	private function account(): string {
-		return (string) preg_replace( '/[^A-Za-z0-9]/', '', (string) ( $this->config['account'] ?? '' ) );
+		$a = trim( (string) ( $this->config['account'] ?? '' ) );
+		if ( self::valid_account( $a ) ) {
+			return strtolower( $a );
+		}
+		// 23/10/2026 (translaterocket.com: the Account ID field held the owner's e-mail, cleaned to letters, and every
+		// request answered «Could not route… 404» — 28 failures a day): a value that is not an account ID is never sent.
+		// The account is asked to Cloudflare from the token, at most once a day; without it the engine counts as not
+		// configured and the next one in the order takes over, instead of failing on every sentence.
+		return self::repair_account( $this->api_key() );
+	}
+
+	/**
+	 * The account of a token, asked to Cloudflare at most once a day, and saved when found.
+	 *
+	 * @param string $token API token.
+	 */
+	public static function repair_account( string $token ): string {
+		$token = trim( $token );
+		if ( '' === $token ) {
+			return '';
+		}
+		$k = 'trrocket_cf_account_fix';
+		$c = get_option( $k, array() );
+		if ( is_array( $c ) && ( $c['h'] ?? '' ) === md5( $token ) && time() - (int) ( $c['t'] ?? 0 ) < DAY_IN_SECONDS ) {
+			return (string) ( $c['a'] ?? '' );
+		}
+		$a = self::find_account( $token );
+		update_option( $k, array( 'h' => md5( $token ), 't' => time(), 'a' => $a ), false );
+		if ( '' !== $a ) {
+			$s = \TranslateRocket\Settings::get();
+			$s['providers']['cloudflare']['account'] = $a;
+			\TranslateRocket\Settings::update( $s );
+		}
+		return $a;
 	}
 
 	public function is_configured(): bool {
