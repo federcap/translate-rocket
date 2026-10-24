@@ -7300,3 +7300,201 @@ msgstr ""
 #: src/Admin/Admin.php
 msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
 msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Page addresses"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: the addresses stay as they are; those already made keep working."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of pages and posts"
+msgstr ""
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translated addresses made so far: %d. New translations get theirs within the hour."
+msgstr ""
+
+#: src/Admin/NavMenuSwitcher.php
+msgid "Put the languages anywhere in this menu: add the item, then drag it where you want it — at the top level or inside a submenu. On the site it becomes your languages, in the style chosen on the Switcher screen."
+msgstr ""
+
+#: src/ExternalAi.php
+#, php-format
+msgid "The attached CSV file has the texts of my website in %1$s. Translate the «source» column into %2$s and write each translation in the «%3$s» column, on the same row."
+msgstr ""
+
+#: src/ExternalAi.php
+#, php-format
+msgid "The attached CSV file has the texts of my website in %1$s with their translation into %2$s in the «%3$s» column. Check every translation and correct it where it is wrong, unnatural or missing; leave it as it is when it is right."
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "Rules:"
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "Do not change the «id», «source» and «page» columns, and keep every row, in the same order."
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "Keep tags and placeholders exactly as they are: <1>…</1>, <2/>, {{name}}, and anything that starts with a percent sign or an ampersand."
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "Do not translate brand names, product codes, addresses and e-mail addresses."
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "Translate for a website: natural, short where the original is short, with the same tone."
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "Answer with the whole CSV file only (comma separated, UTF-8), nothing before or after it. If it is too long for one answer, give it to me as a file to download."
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "The file could not be read."
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "This is not a file exported from here: the «id» and «translation» columns are missing. Give the AI the file as it was downloaded, and ask it to keep the columns."
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "The language of the file is not one of the site's languages: choose it in the list."
+msgstr ""
+
+#: src/ExternalAi.php
+msgid "The file could not be saved for the import."
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Chat AI, through a file"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Choose the file the AI gave back, or paste its answer."
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Translate with ChatGPT, Gemini, Claude…"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Use the chat AI you already have, with no API key: download a file of sentences, give it to the AI with the instructions below, and import the file it gives back. Only the missing sentences, to complete a language, or all of them, to have a language checked. Every row is checked on import; one link undoes the whole import."
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "1. Download the sentences"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Only the missing sentences (to complete)"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "All the sentences (to have them checked)"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Sentences per file"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Show the files"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Nothing is missing in this language."
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "No sentences yet: scan the site first (Translations screen)."
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in %3$d files:"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "File %d"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Or everything in one file (for AIs that work on large files)"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "2. Give each file to the AI with these instructions"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Copied ✓"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Copy the instructions"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "3. Import what the AI gives back"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "…or paste here the answer of the AI (the whole CSV)"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "From the file"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Fill only the missing sentences"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Also replace the translations already there (after a check)"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Import the translations"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "Imported: %1$d translations in %2$s."
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "already translated, left as they were"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "left untranslated by the AI"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "tags or placeholders changed by the AI"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "rows moved or source changed by the AI"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "ids not found on this site"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "empty"
+msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+msgid "Skipped:"
+msgstr ""

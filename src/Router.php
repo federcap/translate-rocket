@@ -779,25 +779,38 @@ class Router {
 		if ( $post_id <= 0 || $this->is_default( $this->current_language() ) ) {
 			return $url;
 		}
-		$translated = Slugs::get( $post_id, $this->current_language() );
-		if ( '' === $translated ) {
-			return $url;
-		}
-		$post = get_post( $post_id );
-		if ( ! $post || '' === (string) $post->post_name ) {
-			return $url;
-		}
+		return $this->swap_hierarchy( $url, $post_id, $this->current_language() );
+	}
 
-		$needle = '/' . $post->post_name . '/';
-		$pos    = strrpos( $url, $needle );
-		if ( false !== $pos ) {
-			return substr( $url, 0, $pos ) . '/' . $translated . '/' . substr( $url, $pos + strlen( $needle ) );
+	/**
+	 * 24/10/2026 (1.8.21, page addresses from translated titles): the post's own segment AND those of its parent pages,
+	 * each with its translated slug when it has one — /it/chi-siamo/conosci-la-squadra/, not /it/about-us/conosci-la-squadra/.
+	 * Only published posts, and only a slug different from the post's own.
+	 *
+	 * @param string $url     URL or path (no query).
+	 * @param int    $post_id Post.
+	 * @param string $lang    Language.
+	 */
+	public function swap_hierarchy( string $url, int $post_id, string $lang ): string { // public: the sitemap (1.8.21)
+		$chain = array( $post_id );
+		if ( is_post_type_hierarchical( (string) get_post_type( $post_id ) ) ) {
+			$chain = array_merge( $chain, array_map( 'intval', get_post_ancestors( $post_id ) ) );
 		}
-		$tail = '/' . $post->post_name;
-		if ( strlen( $url ) >= strlen( $tail ) && substr( $url, -strlen( $tail ) ) === $tail ) {
-			return substr( $url, 0, -strlen( $tail ) ) . '/' . $translated;
+		$slash = '/' === substr( $url, -1 );
+		$work  = $slash ? $url : $url . '/';
+		foreach ( $chain as $pid ) {
+			$post = get_post( $pid );
+			$tr   = sanitize_title( Slugs::get( $pid, $lang ) );
+			if ( ! $post || 'publish' !== $post->post_status || '' === (string) $post->post_name || '' === $tr || $tr === $post->post_name ) {
+				continue;
+			}
+			$needle = '/' . $post->post_name . '/';
+			$pos    = strrpos( $work, $needle );
+			if ( false !== $pos ) {
+				$work = substr( $work, 0, $pos ) . '/' . $tr . '/' . substr( $work, $pos + strlen( $needle ) );
+			}
 		}
-		return $url;
+		return $slash ? $work : substr( $work, 0, -1 );
 	}
 
 	/**
@@ -1031,15 +1044,7 @@ class Router {
 			if ( $id > 0 ) {
 				// Sanitized again on the way out (it ends up in an href and a Location header), and only for a published
 				// page: a link to a draft, a private or a trashed page keeps the address it was written with.
-				$slug = sanitize_title( Slugs::get( $id, $lang ) );
-				$post = get_post( $id );
-				if ( '' !== $slug && $post && 'publish' === $post->post_status && '' !== (string) $post->post_name && $slug !== $post->post_name ) {
-					$ago = '/' . $post->post_name . '/';
-					$pos = strrpos( $solo . ( '/' === substr( $solo, -1 ) ? '' : '/' ), $ago );
-					if ( false !== $pos ) {
-						$fatti[ $k ] = substr( $solo, 0, $pos ) . '/' . $slug . substr( $solo, $pos + strlen( $ago ) - 1 );
-					}
-				}
+				$fatti[ $k ] = $this->swap_hierarchy( $solo, $id, $lang );
 			}
 		}
 		return $fatti[ $k ] . $resto;
@@ -1101,6 +1106,10 @@ class Router {
 			$slug = basename( (string) $query_vars['pagename'] );
 		} elseif ( ! empty( $query_vars['name'] ) ) {
 			$slug = (string) $query_vars['name'];
+		} elseif ( ! empty( $query_vars['attachment'] ) ) {
+			// 24/10/2026: /it/chi-siamo/conosci-la-squadra/ — a child page with translated slugs is no page path WordPress
+			// knows, so its rules read it as an attachment of «chi-siamo». Only when that slug is a translated one.
+			$slug = (string) $query_vars['attachment'];
 		}
 		if ( '' === $slug ) {
 			return $query_vars;
@@ -1110,6 +1119,7 @@ class Router {
 		if ( ! $id ) {
 			return $query_vars;
 		}
+		unset( $query_vars['attachment'] );
 		$post = get_post( $id );
 		if ( ! $post ) {
 			return $query_vars;

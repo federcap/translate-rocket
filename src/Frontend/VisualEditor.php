@@ -62,6 +62,8 @@ class VisualEditor {
 		if ( ! self::is_editing() ) {
 			return;
 		}
+		// 1.8.21 (Alexey): the real original of the theme and shop labels WordPress translates, for «Restore original».
+		Gettext::hook_originals();
 		add_action( 'wp_enqueue_scripts', function () { $this->in_user_locale( array( $this, 'assets' ) ); } );
 		add_action( 'wp_footer', function () { $this->in_user_locale( array( $this, 'toolbar' ) ); } );
 	}

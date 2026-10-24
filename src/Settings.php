@@ -172,7 +172,9 @@ class Settings {
 	public static function install_defaults(): void {
 		$existing = get_option( self::OPTION, null );
 		if ( ! is_array( $existing ) ) {
-			add_option( self::OPTION, self::defaults() );
+			// 1.8.21: a new site starts with translated page addresses (/it/chi-siamo/); a site updating keeps what it
+			// had — changing every address of an indexed site is the owner's choice, in Settings.
+			add_option( self::OPTION, array_merge( self::defaults(), array( 'translate_slugs' => true ) ) );
 		}
 	}
 

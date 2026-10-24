@@ -876,7 +876,10 @@
 			'<button type="button" class="trrocket-ve-ai"></button>' +
 			'</div>' +
 			'<div class="trrocket-ve-msgrow"><span class="trrocket-ve-msg"></span></div>';
-		pop.querySelector( '.trrocket-ve-src' ).textContent = src;
+		// 1.8.21: a theme or shop label WordPress translated shows its real original («Add to cart»), the one «Restore
+		// original» brings back; saving still goes to the text as it reaches the page.
+		var veroOrig = el.getAttribute( 'data-trr-orig' );
+		pop.querySelector( '.trrocket-ve-src' ).textContent = veroOrig ? decode( veroOrig ) : src;
 		pop.querySelector( '.trrocket-ve-count' ).textContent = ( idx >= 0 ? ( idx + 1 ) : '?' ) + ' / ' + items.length;
 		var ta = pop.querySelector( '.trrocket-ve-tr' );
 		// Una frase intera (con un link o del grassetto dentro) ha dei segnaposto: sulla
@@ -1694,7 +1697,10 @@
 			if ( pop ) {
 				var rta = pop.querySelector( '.trrocket-ve-tr' );
 				var rsrc = pop.querySelector( '.trrocket-ve-src' );
-				if ( rta && rsrc ) { rta.value = rsrc.textContent; rta.focus(); }
+				// 1.8.21: a theme or shop label WordPress had already translated carries its real original
+				// (data-trr-orig): «Restore original» brings back «Add to cart», not «In den Warenkorb».
+				var vero = activeEl && activeEl.getAttribute && activeEl.getAttribute( 'data-trr-orig' );
+				if ( rta && rsrc ) { rta.value = vero ? decode( vero ) : rsrc.textContent; rta.focus(); }
 			}
 			return;
 		}

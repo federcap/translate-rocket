@@ -55,6 +55,13 @@ class Switcher {
 	 */
 	private $in_menu_times = 0;
 
+	/**
+	 * A menu of the page had the «Language switcher» item of Appearance → Menus (1.8.21): no floating switcher then.
+	 *
+	 * @var bool
+	 */
+	private $placeholder_done = false;
+
 	public function boot(): void {
 		add_shortcode( 'translaterocket_switcher', array( $this, 'render' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
@@ -804,7 +811,7 @@ class Switcher {
 	 * Floating switcher in a fixed corner (enabled from settings).
 	 */
 	public function floating(): void {
-		if ( Preview::hidden() || \TranslateRocket\BuilderMode::active() ) {
+		if ( Preview::hidden() || \TranslateRocket\BuilderMode::active() || $this->placeholder_done ) {
 			return;
 		}
 		$s = self::settings();
@@ -1141,17 +1148,37 @@ class Switcher {
 	 * @return array<int,mixed>
 	 */
 	public function menu_items( $items, $args ) {
-		if ( ! is_array( $items ) || ! self::in_menu() || is_admin() || Preview::hidden() || \TranslateRocket\BuilderMode::active() || ! self::is_wanted_menu( $args ) ) {
+		if ( ! is_array( $items ) ) {
 			return $items;
 		}
-		$s             = self::menu_settings();
+		// 1.8.21: «Language switcher» put in this menu from Appearance → Menus — the languages go exactly there, in any
+		// menu, and only there (no automatic copy in the same menu).
+		$segnaposto = null;
+		foreach ( $items as $k => $it ) {
+			if ( is_object( $it ) && isset( $it->url ) && \TranslateRocket\Admin\NavMenuSwitcher::PLACEHOLDER === (string) $it->url ) {
+				$segnaposto = $k;
+				break;
+			}
+		}
+		if ( null !== $segnaposto && ( is_admin() || Preview::hidden() || \TranslateRocket\BuilderMode::active() ) ) {
+			unset( $items[ $segnaposto ] ); // never a dead «#» link
+			return $items;
+		}
+		if ( null === $segnaposto && ( ! self::in_menu() || is_admin() || Preview::hidden() || \TranslateRocket\BuilderMode::active() || ! self::is_wanted_menu( $args ) ) ) {
+			return $items;
+		}
+		$s             = null !== $segnaposto ? array_merge( self::settings(), self::in_menu() ? self::menu_settings() : array() ) : self::menu_settings();
 		$this->divider = (string) ( $s['divider'] ?? 'none' );
 		$show          = (string) ( $s['show'] ?? 'both' );
 		$dropdown      = 'dropdown' === ( $s['type'] ?? '' );
 		$entries       = $this->entries( array( 'type' => $dropdown ? 'dropdown' : 'inline', 'current' => $s['current'] ?? 'show' ), ! empty( $s['english_names'] ) );
 		if ( count( $entries ) < ( $dropdown ? 2 : 1 ) ) {
+			if ( null !== $segnaposto ) {
+				unset( $items[ $segnaposto ] );
+			}
 			return $items;
 		}
+		$root  = null !== $segnaposto ? (int) ( $items[ $segnaposto ]->menu_item_parent ?? 0 ) : 0; // inside a submenu, if it was put there
 		$order = 0;
 		foreach ( $items as $it ) {
 			$order = max( $order, (int) ( $it->menu_order ?? 0 ) );
@@ -1201,7 +1228,7 @@ class Switcher {
 				}
 			}
 			$current = $current ?? $entries[0];
-			$parent  = $make( $current, 0, array( 'menu-item-has-children', 'trrocket-lang-current' ) );
+			$parent  = $make( $current, $root, array( 'menu-item-has-children', 'trrocket-lang-current' ) );
 			$nuove[] = $parent;
 			foreach ( $entries as $e ) {
 				if ( $e['code'] !== $current['code'] ) {
@@ -1210,11 +1237,26 @@ class Switcher {
 			}
 		} else {
 			foreach ( $entries as $e ) {
-				$nuove[] = $make( $e, 0, $e['current'] ? array( 'trrocket-lang-current' ) : array() );
+				$nuove[] = $make( $e, $root, $e['current'] ? array( 'trrocket-lang-current' ) : array() );
 			}
 		}
 		// The walkers draw the items in the order of this array: first or last in the menu (and in the
 		// phone menu, which is the same menu or the theme's own one).
+		if ( null !== $segnaposto ) {
+			$items = array_values( $items );
+			$at    = 0;
+			foreach ( $items as $k => $it ) {
+				if ( is_object( $it ) && isset( $it->url ) && \TranslateRocket\Admin\NavMenuSwitcher::PLACEHOLDER === (string) $it->url ) {
+					$at = $k;
+					break;
+				}
+			}
+			$items                   = array_merge( array_slice( $items, 0, $at ), $nuove, array_slice( $items, $at + 1 ) );
+			$this->in_menu_done      = true;
+			$this->placeholder_done  = true;
+			++$this->in_menu_times;
+			return $items;
+		}
 		$items = array_values( $items );
 		$pos   = (string) ( $s['menu_pos'] ?? 'end' );
 		$cut   = 'start' === $pos ? 0 : count( $items );

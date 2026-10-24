@@ -6455,3 +6455,201 @@ msgstr "Das Menü «%s», wo immer es angezeigt wird"
 #: src/Admin/Admin.php
 msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
 msgstr "Für eine Website mit einem Menü am Computer und einem anderen auf Tablets und Handys: Haken Sie auch das andere an."
+
+#: src/Admin/Admin.php
+msgid "Page addresses"
+msgstr "Seitenadressen"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: the addresses stay as they are; those already made keep working."
+msgstr "An: Jede Seite, jeder Beitrag und jedes Produkt erhält in jeder Sprache die Adresse aus dem übersetzten Titel, zum Beispiel /it/chi-siamo/ statt /it/about-us/. Besucher und Suchmaschinen, die die ursprüngliche Adresse öffnen, werden zur neuen weitergeleitet (301). Eine im Editor eingegebene Adresse wird nie geändert, und eine einmal erstellte Adresse bleibt gleich, auch wenn Sie die Übersetzung später ändern. Aus: Die Adressen bleiben, wie sie sind; bereits erstellte funktionieren weiter."
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of pages and posts"
+msgstr "Adressen von Seiten und Beiträgen übersetzen"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translated addresses made so far: %d. New translations get theirs within the hour."
+msgstr "Bisher erstellte übersetzte Adressen: %d. Neue Übersetzungen erhalten ihre innerhalb einer Stunde."
+
+#: src/Admin/NavMenuSwitcher.php
+msgid "Put the languages anywhere in this menu: add the item, then drag it where you want it — at the top level or inside a submenu. On the site it becomes your languages, in the style chosen on the Switcher screen."
+msgstr "Platzieren Sie die Sprachen an beliebiger Stelle in diesem Menü: Element hinzufügen und dorthin ziehen, wo Sie es möchten — oben oder in einem Untermenü. Auf der Website wird es zu Ihren Sprachen, im Stil, der auf der Seite «Umschalter» gewählt ist."
+
+#: src/ExternalAi.php
+#, php-format
+msgid "The attached CSV file has the texts of my website in %1$s. Translate the «source» column into %2$s and write each translation in the «%3$s» column, on the same row."
+msgstr "Die angehängte CSV-Datei enthält die Texte meiner Website auf %1$s. Übersetze die Spalte «source» ins %2$s und schreibe jede Übersetzung in die Spalte «%3$s», in dieselbe Zeile."
+
+#: src/ExternalAi.php
+#, php-format
+msgid "The attached CSV file has the texts of my website in %1$s with their translation into %2$s in the «%3$s» column. Check every translation and correct it where it is wrong, unnatural or missing; leave it as it is when it is right."
+msgstr "Die angehängte CSV-Datei enthält die Texte meiner Website auf %1$s mit ihrer Übersetzung ins %2$s in der Spalte «%3$s». Prüfe jede Übersetzung und korrigiere sie, wo sie falsch, unnatürlich oder unvollständig ist; lass sie, wie sie ist, wenn sie stimmt."
+
+#: src/ExternalAi.php
+msgid "Rules:"
+msgstr "Regeln:"
+
+#: src/ExternalAi.php
+msgid "Do not change the «id», «source» and «page» columns, and keep every row, in the same order."
+msgstr "Ändere die Spalten «id», «source» und «page» nicht und behalte jede Zeile in derselben Reihenfolge."
+
+#: src/ExternalAi.php
+msgid "Keep tags and placeholders exactly as they are: <1>…</1>, <2/>, {{name}}, and anything that starts with a percent sign or an ampersand."
+msgstr "Behalte Tags und Platzhalter genau so bei: <1>…</1>, <2/>, {{name}} und alles, was mit einem Prozentzeichen oder einem &-Zeichen beginnt."
+
+#: src/ExternalAi.php
+msgid "Do not translate brand names, product codes, addresses and e-mail addresses."
+msgstr "Übersetze keine Markennamen, Produktcodes, Adressen und E-Mail-Adressen."
+
+#: src/ExternalAi.php
+msgid "Translate for a website: natural, short where the original is short, with the same tone."
+msgstr "Übersetze für eine Website: natürlich, kurz, wo das Original kurz ist, im gleichen Ton."
+
+#: src/ExternalAi.php
+msgid "Answer with the whole CSV file only (comma separated, UTF-8), nothing before or after it. If it is too long for one answer, give it to me as a file to download."
+msgstr "Antworte nur mit der ganzen CSV-Datei (kommagetrennt, UTF-8), nichts davor oder danach. Ist sie für eine Antwort zu lang, gib sie mir als Datei zum Herunterladen."
+
+#: src/ExternalAi.php
+msgid "The file could not be read."
+msgstr "Die Datei konnte nicht gelesen werden."
+
+#: src/ExternalAi.php
+msgid "This is not a file exported from here: the «id» and «translation» columns are missing. Give the AI the file as it was downloaded, and ask it to keep the columns."
+msgstr "Das ist keine hier exportierte Datei: Die Spalten «id» und «translation» fehlen. Gib der KI die Datei so, wie sie heruntergeladen wurde, und bitte sie, die Spalten zu behalten."
+
+#: src/ExternalAi.php
+msgid "The language of the file is not one of the site's languages: choose it in the list."
+msgstr "Die Sprache der Datei gehört nicht zu den Sprachen der Website: Wähle sie in der Liste aus."
+
+#: src/ExternalAi.php
+msgid "The file could not be saved for the import."
+msgstr "Die Datei konnte für den Import nicht gespeichert werden."
+
+#: src/Admin/Admin.php
+msgid "Chat AI, through a file"
+msgstr "Chat-KI, über eine Datei"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Choose the file the AI gave back, or paste its answer."
+msgstr "Wähle die Datei, die die KI zurückgegeben hat, oder füge ihre Antwort ein."
+
+#: src/Admin/ExternalAiPage.php
+msgid "Translate with ChatGPT, Gemini, Claude…"
+msgstr "Mit ChatGPT, Gemini, Claude … übersetzen"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Use the chat AI you already have, with no API key: download a file of sentences, give it to the AI with the instructions below, and import the file it gives back. Only the missing sentences, to complete a language, or all of them, to have a language checked. Every row is checked on import; one link undoes the whole import."
+msgstr "Nutze die Chat-KI, die du schon hast, ohne API-Schlüssel: Lade eine Datei mit Sätzen herunter, gib sie der KI mit den Anweisungen unten und importiere die Datei, die sie zurückgibt. Nur die fehlenden Sätze, um eine Sprache zu vervollständigen, oder alle, um eine Sprache prüfen zu lassen. Jede Zeile wird beim Import geprüft; ein Link macht den ganzen Import rückgängig."
+
+#: src/Admin/ExternalAiPage.php
+msgid "1. Download the sentences"
+msgstr "1. Sätze herunterladen"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Only the missing sentences (to complete)"
+msgstr "Nur die fehlenden Sätze (zum Vervollständigen)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "All the sentences (to have them checked)"
+msgstr "Alle Sätze (zum Prüfen lassen)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Sentences per file"
+msgstr "Sätze pro Datei"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Show the files"
+msgstr "Dateien anzeigen"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Nothing is missing in this language."
+msgstr "In dieser Sprache fehlt nichts."
+
+#: src/Admin/ExternalAiPage.php
+msgid "No sentences yet: scan the site first (Translations screen)."
+msgstr "Noch keine Sätze: Scanne zuerst die Website (Seite «Übersetzungen»)."
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in %3$d files:"
+msgstr "%1$d Sätze auf %2$s, in %3$d Dateien:"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "File %d"
+msgstr "Datei %d"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Or everything in one file (for AIs that work on large files)"
+msgstr "Oder alles in einer Datei (für KIs, die große Dateien verarbeiten)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "2. Give each file to the AI with these instructions"
+msgstr "2. Gib jede Datei mit diesen Anweisungen der KI"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Copied ✓"
+msgstr "Kopiert ✓"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Copy the instructions"
+msgstr "Anweisungen kopieren"
+
+#: src/Admin/ExternalAiPage.php
+msgid "3. Import what the AI gives back"
+msgstr "3. Importiere, was die KI zurückgibt"
+
+#: src/Admin/ExternalAiPage.php
+msgid "…or paste here the answer of the AI (the whole CSV)"
+msgstr "…oder füge hier die Antwort der KI ein (die ganze CSV)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "From the file"
+msgstr "Aus der Datei"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Fill only the missing sentences"
+msgstr "Nur die fehlenden Sätze füllen"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Also replace the translations already there (after a check)"
+msgstr "Auch die vorhandenen Übersetzungen ersetzen (nach einer Prüfung)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Import the translations"
+msgstr "Übersetzungen importieren"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "Imported: %1$d translations in %2$s."
+msgstr "Importiert: %1$d Übersetzungen auf %2$s."
+
+#: src/Admin/ExternalAiPage.php
+msgid "already translated, left as they were"
+msgstr "bereits übersetzt, unverändert gelassen"
+
+#: src/Admin/ExternalAiPage.php
+msgid "left untranslated by the AI"
+msgstr "von der KI unübersetzt gelassen"
+
+#: src/Admin/ExternalAiPage.php
+msgid "tags or placeholders changed by the AI"
+msgstr "Tags oder Platzhalter von der KI verändert"
+
+#: src/Admin/ExternalAiPage.php
+msgid "rows moved or source changed by the AI"
+msgstr "Zeilen verschoben oder Ausgangstext von der KI geändert"
+
+#: src/Admin/ExternalAiPage.php
+msgid "ids not found on this site"
+msgstr "IDs auf dieser Website nicht gefunden"
+
+#: src/Admin/ExternalAiPage.php
+msgid "empty"
+msgstr "leer"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Skipped:"
+msgstr "Übersprungen:"

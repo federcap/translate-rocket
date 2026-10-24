@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.20.3
+Stable tag: 1.8.21
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,14 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.21 =
+* New: translate your site with the chat AI you already have — ChatGPT, Gemini, Claude… — with no API key (Import screen). Download the sentences of a language in files small enough for a chat (only the missing ones, to complete it, or all of them, to have it checked), give each file to the AI with the ready-made instructions, and import the file it gives back, or paste its answer. Every row is checked on import (tags, placeholders, rows moved, sentences left untranslated, code added) and the report says what was skipped and why; one link undoes the whole import. Works in steps on large sites.
+* New: translated page addresses. Settings → «Translate the addresses of pages and posts»: each page, post and product gets in every language the address made from its translated title (/it/chi-siamo/), the links of the site follow, and the original address answers with a 301. Addresses typed by hand are never changed, and an address never changes once made. On for new sites; sites updating keep their addresses until they switch it on.
+* New: «Language switcher» in Appearance → Menus. Add it to any menu, anywhere — top level or inside a submenu, in several menus at once — and it becomes your languages, in the style of the Switcher screen. Thanks to the shop owner who suggested it.
+* Fixed: in the visual editor, «Restore original» on a theme or shop label (like «Add to cart») put back the label as WordPress had already translated it, so nothing changed for visitors. The editor now shows and restores the real original.
+* Fixed: child pages with a translated address (typed by hand or made from the title) answered 404; the whole address is now translated, parent pages included, in the links and in the sitemap.
+* Improved: «Translate again» and its «Undo» work in shorter steps (about five seconds).
 
 = 1.8.20.3 =
 * Fixed: on large sites, «Undo» after «Translate again the sentences that contain them» stopped after its first step, leaving part of the translations aside (they were kept, and a second click put them back). It now goes to the end by itself. Each step is also shorter (about five seconds).
@@ -524,6 +532,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.21 =
+Translate with ChatGPT, Gemini or Claude through a file, translated page addresses, the language switcher in Appearance → Menus, «Restore original» for theme and shop labels.
 
 = 1.8.20.3 =
 «Undo» of «Translate again» goes to the end on large sites.

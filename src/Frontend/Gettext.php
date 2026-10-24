@@ -76,6 +76,16 @@ class Gettext {
 	private $collected = array();
 
 	/**
+	 * 24/10/2026 (Alexey: «Restore Original» in the visual editor, saved, «nothing changed»): with the interface in the
+	 * visitor's language, a theme or shop label reaches the page already translated by WordPress («In den Warenkorb»),
+	 * and the editor took that for the original. Here: text as WordPress translated it => its real original
+	 * («Add to cart»), for this request, so the editor's «Restore original» brings back the real one.
+	 *
+	 * @var array<string,string>
+	 */
+	public static $originals = array();
+
+	/**
 	 * Whether the document <head> is done (global styles generated). We only
 	 * collect after this, to skip theme.json editor metadata (colour, font-size
 	 * and spacing labels) that is translated while building the head.
@@ -145,7 +155,46 @@ class Gettext {
 	 * @param string $domain      Text domain.
 	 */
 	public function filter( $translation, $text, $domain ): string {
+		self::remember( (string) $translation, (string) $text, (string) $domain );
 		return $this->handle( (string) $translation, (string) $domain );
+	}
+
+	/**
+	 * Remember the real original of a label WordPress translated (see $originals).
+	 */
+	/**
+	 * 24/10/2026: the visual editor of a translated page (?trr-edit): note the real original of every label WordPress
+	 * translates. Independent of this class's own layer (not booted): only remembers, changes nothing.
+	 */
+	public static function hook_originals(): void {
+		add_filter(
+			'gettext',
+			static function ( $translation, $text, $domain ) {
+				self::remember( (string) $translation, (string) $text, (string) $domain );
+				return $translation;
+			},
+			PHP_INT_MAX,
+			3
+		);
+		add_filter(
+			'gettext_with_context',
+			static function ( $translation, $text, $context, $domain ) {
+				self::remember( (string) $translation, (string) $text, (string) $domain );
+				return $translation;
+			},
+			PHP_INT_MAX,
+			4
+		);
+	}
+
+	private static function remember( string $translation, string $text, string $domain ): void {
+		if ( 'translate-rocket' === $domain || 'default' === $domain || '' === $domain || $translation === $text || count( self::$originals ) > 3000 ) {
+			return;
+		}
+		$k = trim( $translation );
+		if ( '' !== $k && '' !== trim( $text ) && ! isset( self::$originals[ $k ] ) ) {
+			self::$originals[ $k ] = trim( $text );
+		}
 	}
 
 	/**
@@ -157,6 +206,7 @@ class Gettext {
 	 * @param string $domain      Text domain.
 	 */
 	public function filter_ctx( $translation, $text, $context, $domain ): string {
+		self::remember( (string) $translation, (string) $text, (string) $domain );
 		return $this->handle( (string) $translation, (string) $domain );
 	}
 

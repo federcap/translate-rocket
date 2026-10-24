@@ -132,6 +132,11 @@ final class Plugin {
 		// Visits per language (1.8.6): the receiver answers visitors' browsers, so it is booted outside the admin branch.
 		( new \TranslateRocket\Stats() )->register();
 		( new \TranslateRocket\CacheWarmup() )->register(); // 1.8.18: pages ready again a minute after a flush
+		( new \TranslateRocket\AutoSlugs() )->register(); // 1.8.21: page addresses from their translated titles
+		if ( is_admin() ) {
+			( new \TranslateRocket\Admin\NavMenuSwitcher() )->register(); // 1.8.21: «Language switcher» in Appearance → Menus
+			( new \TranslateRocket\Admin\ExternalAiPage() )->register(); // 1.8.21: translate with ChatGPT, Gemini, Claude… through a file
+		}
 		// The site search in every language (14/10/2026): its index follows saves made over REST too, like Rescan.
 		if ( ! $coexist ) {
 			( new \TranslateRocket\Frontend\Search() )->register();

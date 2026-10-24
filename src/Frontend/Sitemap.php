@@ -292,16 +292,9 @@ class Sitemap {
 		}
 		$path = '/' . ltrim( $path, '/' );
 
-		// Swap the post's own slug for its translated one, if any.
+		// The post's own slug and those of its parent pages, each translated if it has one (1.8.21: child pages).
 		if ( $post_id > 0 ) {
-			$tslug = Slugs::get( $post_id, $lang );
-			if ( '' !== $tslug ) {
-				$trimmed = rtrim( $path, '/' );
-				$pos     = strrpos( $trimmed, '/' );
-				if ( false !== $pos ) {
-					$path = substr( $trimmed, 0, $pos + 1 ) . $tslug . '/';
-				}
-			}
+			$path = \TranslateRocket\Plugin::instance()->router()->swap_hierarchy( $path, $post_id, $lang );
 		}
 		return \TranslateRocket\Plugin::instance()->router()->language_base( $lang ) . $path; // home/xx or the language's own domain
 	}

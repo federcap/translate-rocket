@@ -7276,3 +7276,201 @@ msgstr "菜单「%s」，无论显示在哪里"
 #: src/Admin/Admin.php
 msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
 msgstr "如果网站在电脑上用一个菜单、在平板和手机上用另一个菜单：请把另一个也勾选上。"
+
+#: src/Admin/Admin.php
+msgid "Page addresses"
+msgstr "页面地址"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: the addresses stay as they are; those already made keep working."
+msgstr "开启：每个页面、文章和商品在每种语言中都会获得由其翻译标题生成的地址，例如 /it/chi-siamo/ 而不是 /it/about-us/。打开原地址的访客和搜索引擎会被转到新地址（301）。你在编辑器中手动填写的地址永远不会被更改；地址一旦生成，即使之后修改翻译也保持不变。关闭：地址保持原样；已生成的地址继续有效。"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of pages and posts"
+msgstr "翻译页面和文章的地址"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translated addresses made so far: %d. New translations get theirs within the hour."
+msgstr "目前已生成的翻译地址：%d 个。新的翻译会在一小时内获得地址。"
+
+#: src/Admin/NavMenuSwitcher.php
+msgid "Put the languages anywhere in this menu: add the item, then drag it where you want it — at the top level or inside a submenu. On the site it becomes your languages, in the style chosen on the Switcher screen."
+msgstr "把语言放在此菜单中的任意位置：添加该项目，然后拖到你想要的位置——顶层或子菜单中。在网站上它会显示为你的语言，样式与切换器页面中选择的一致。"
+
+#: src/ExternalAi.php
+#, php-format
+msgid "The attached CSV file has the texts of my website in %1$s. Translate the «source» column into %2$s and write each translation in the «%3$s» column, on the same row."
+msgstr "附件中的 CSV 文件包含我网站的%1$s文本。请把「source」列翻译成%2$s，并把每条译文写在同一行的「%3$s」列中。"
+
+#: src/ExternalAi.php
+#, php-format
+msgid "The attached CSV file has the texts of my website in %1$s with their translation into %2$s in the «%3$s» column. Check every translation and correct it where it is wrong, unnatural or missing; leave it as it is when it is right."
+msgstr "附件中的 CSV 文件包含我网站的%1$s文本，以及「%3$s」列中的%2$s译文。请检查每条译文，错误、不自然或缺失的地方请修正；正确的保持不变。"
+
+#: src/ExternalAi.php
+msgid "Rules:"
+msgstr "规则："
+
+#: src/ExternalAi.php
+msgid "Do not change the «id», «source» and «page» columns, and keep every row, in the same order."
+msgstr "不要改动「id」「source」「page」列，保留每一行并保持原顺序。"
+
+#: src/ExternalAi.php
+msgid "Keep tags and placeholders exactly as they are: <1>…</1>, <2/>, {{name}}, and anything that starts with a percent sign or an ampersand."
+msgstr "标签和占位符请原样保留：<1>…</1>、<2/>、{{name}}，以及所有以百分号或 & 开头的内容。"
+
+#: src/ExternalAi.php
+msgid "Do not translate brand names, product codes, addresses and e-mail addresses."
+msgstr "不要翻译品牌名、产品编号、地址和电子邮件地址。"
+
+#: src/ExternalAi.php
+msgid "Translate for a website: natural, short where the original is short, with the same tone."
+msgstr "按网站的要求翻译：自然流畅，原文简短处保持简短，语气一致。"
+
+#: src/ExternalAi.php
+msgid "Answer with the whole CSV file only (comma separated, UTF-8), nothing before or after it. If it is too long for one answer, give it to me as a file to download."
+msgstr "只回复完整的 CSV 文件（逗号分隔，UTF-8），前后不要有任何内容。如果一次回答放不下，请以可下载的文件提供给我。"
+
+#: src/ExternalAi.php
+msgid "The file could not be read."
+msgstr "无法读取该文件。"
+
+#: src/ExternalAi.php
+msgid "This is not a file exported from here: the «id» and «translation» columns are missing. Give the AI the file as it was downloaded, and ask it to keep the columns."
+msgstr "这不是从这里导出的文件：缺少「id」和「translation」列。请把下载时的原始文件交给 AI，并要求它保留这些列。"
+
+#: src/ExternalAi.php
+msgid "The language of the file is not one of the site's languages: choose it in the list."
+msgstr "文件的语言不是网站的语言之一：请在列表中选择。"
+
+#: src/ExternalAi.php
+msgid "The file could not be saved for the import."
+msgstr "无法保存文件以进行导入。"
+
+#: src/Admin/Admin.php
+msgid "Chat AI, through a file"
+msgstr "聊天 AI（通过文件）"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Choose the file the AI gave back, or paste its answer."
+msgstr "选择 AI 返回的文件，或粘贴它的回答。"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Translate with ChatGPT, Gemini, Claude…"
+msgstr "使用 ChatGPT、Gemini、Claude 等翻译"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Use the chat AI you already have, with no API key: download a file of sentences, give it to the AI with the instructions below, and import the file it gives back. Only the missing sentences, to complete a language, or all of them, to have a language checked. Every row is checked on import; one link undoes the whole import."
+msgstr "使用你已有的聊天 AI，无需 API 密钥：下载句子文件，连同下面的说明交给 AI，再导入它返回的文件。要补全某种语言就只导出缺失的句子，要检查就导出全部句子。导入时逐行检查；一个链接即可撤销整个导入。"
+
+#: src/Admin/ExternalAiPage.php
+msgid "1. Download the sentences"
+msgstr "1. 下载句子"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Only the missing sentences (to complete)"
+msgstr "仅缺失的句子（用于补全）"
+
+#: src/Admin/ExternalAiPage.php
+msgid "All the sentences (to have them checked)"
+msgstr "全部句子（用于检查）"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Sentences per file"
+msgstr "每个文件的句子数"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Show the files"
+msgstr "显示文件"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Nothing is missing in this language."
+msgstr "该语言没有缺失的内容。"
+
+#: src/Admin/ExternalAiPage.php
+msgid "No sentences yet: scan the site first (Translations screen)."
+msgstr "还没有句子：请先扫描网站（翻译页面）。"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in %3$d files:"
+msgstr "%2$s中有 %1$d 个句子，分为 %3$d 个文件："
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "File %d"
+msgstr "文件 %d"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Or everything in one file (for AIs that work on large files)"
+msgstr "或全部放在一个文件中（适用于能处理大文件的 AI）"
+
+#: src/Admin/ExternalAiPage.php
+msgid "2. Give each file to the AI with these instructions"
+msgstr "2. 把每个文件连同这些说明交给 AI"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Copied ✓"
+msgstr "已复制 ✓"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Copy the instructions"
+msgstr "复制说明"
+
+#: src/Admin/ExternalAiPage.php
+msgid "3. Import what the AI gives back"
+msgstr "3. 导入 AI 返回的内容"
+
+#: src/Admin/ExternalAiPage.php
+msgid "…or paste here the answer of the AI (the whole CSV)"
+msgstr "…或在此粘贴 AI 的回答（完整 CSV）"
+
+#: src/Admin/ExternalAiPage.php
+msgid "From the file"
+msgstr "从文件读取"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Fill only the missing sentences"
+msgstr "只填补缺失的句子"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Also replace the translations already there (after a check)"
+msgstr "也替换已有的译文（检查之后）"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Import the translations"
+msgstr "导入译文"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "Imported: %1$d translations in %2$s."
+msgstr "已导入：%2$s的 %1$d 条译文。"
+
+#: src/Admin/ExternalAiPage.php
+msgid "already translated, left as they were"
+msgstr "已翻译，保持原样"
+
+#: src/Admin/ExternalAiPage.php
+msgid "left untranslated by the AI"
+msgstr "AI 未翻译"
+
+#: src/Admin/ExternalAiPage.php
+msgid "tags or placeholders changed by the AI"
+msgstr "AI 更改了标签或占位符"
+
+#: src/Admin/ExternalAiPage.php
+msgid "rows moved or source changed by the AI"
+msgstr "AI 移动了行或更改了原文"
+
+#: src/Admin/ExternalAiPage.php
+msgid "ids not found on this site"
+msgstr "本网站中不存在的 id"
+
+#: src/Admin/ExternalAiPage.php
+msgid "empty"
+msgstr "为空"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Skipped:"
+msgstr "已跳过："

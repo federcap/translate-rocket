@@ -6431,3 +6431,201 @@ msgstr "メニュー「%s」(表示されるすべての場所)"
 #: src/Admin/Admin.php
 msgid "For a site with one menu on the computer and a different one on tablets and phones: tick the other one too."
 msgstr "パソコン用とタブレット・スマートフォン用で別のメニューを使うサイトでは、もう一方にもチェックを入れてください。"
+
+#: src/Admin/Admin.php
+msgid "Page addresses"
+msgstr "ページのアドレス"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: the addresses stay as they are; those already made keep working."
+msgstr "オン: 各ページ・投稿・商品に、翻訳されたタイトルから作ったアドレスが言語ごとに付きます。例: /it/about-us/ ではなく /it/chi-siamo/。元のアドレスを開いた訪問者や検索エンジンは新しいアドレスへ転送されます (301)。エディターで入力したアドレスは変更されません。一度作られたアドレスは、あとで翻訳を編集しても変わりません。オフ: アドレスはそのままです。作成済みのアドレスは引き続き使えます。"
+
+#: src/Admin/Admin.php
+msgid "Translate the addresses of pages and posts"
+msgstr "ページと投稿のアドレスを翻訳する"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translated addresses made so far: %d. New translations get theirs within the hour."
+msgstr "これまでに作成された翻訳アドレス: %d。新しい翻訳には1時間以内にアドレスが付きます。"
+
+#: src/Admin/NavMenuSwitcher.php
+msgid "Put the languages anywhere in this menu: add the item, then drag it where you want it — at the top level or inside a submenu. On the site it becomes your languages, in the style chosen on the Switcher screen."
+msgstr "このメニューのどこにでも言語を置けます。項目を追加し、好きな場所(最上位またはサブメニューの中)へドラッグしてください。サイトでは、スイッチャー画面で選んだスタイルの言語一覧になります。"
+
+#: src/ExternalAi.php
+#, php-format
+msgid "The attached CSV file has the texts of my website in %1$s. Translate the «source» column into %2$s and write each translation in the «%3$s» column, on the same row."
+msgstr "添付の CSV ファイルには、私のウェブサイトの %1$s のテキストが入っています。「source」列を %2$s に翻訳し、各訳を同じ行の「%3$s」列に書いてください。"
+
+#: src/ExternalAi.php
+#, php-format
+msgid "The attached CSV file has the texts of my website in %1$s with their translation into %2$s in the «%3$s» column. Check every translation and correct it where it is wrong, unnatural or missing; leave it as it is when it is right."
+msgstr "添付の CSV ファイルには、私のサイトの %1$s のテキストと、その %2$s 訳が「%3$s」列に入っています。各訳を確認し、間違い・不自然・欠けている箇所は直してください。正しいものはそのままにしてください。"
+
+#: src/ExternalAi.php
+msgid "Rules:"
+msgstr "ルール:"
+
+#: src/ExternalAi.php
+msgid "Do not change the «id», «source» and «page» columns, and keep every row, in the same order."
+msgstr "「id」「source」「page」列は変更せず、すべての行を同じ順番のまま残してください。"
+
+#: src/ExternalAi.php
+msgid "Keep tags and placeholders exactly as they are: <1>…</1>, <2/>, {{name}}, and anything that starts with a percent sign or an ampersand."
+msgstr "タグとプレースホルダーはそのまま残してください: <1>…</1>、<2/>、{{name}}、そしてパーセント記号や & で始まるものすべて。"
+
+#: src/ExternalAi.php
+msgid "Do not translate brand names, product codes, addresses and e-mail addresses."
+msgstr "ブランド名、商品コード、住所、メールアドレスは翻訳しないでください。"
+
+#: src/ExternalAi.php
+msgid "Translate for a website: natural, short where the original is short, with the same tone."
+msgstr "ウェブサイト向けに訳してください。自然に、原文が短いところは短く、同じトーンで。"
+
+#: src/ExternalAi.php
+msgid "Answer with the whole CSV file only (comma separated, UTF-8), nothing before or after it. If it is too long for one answer, give it to me as a file to download."
+msgstr "回答は CSV ファイル全体だけにしてください(カンマ区切り、UTF-8)。前後に何も書かないでください。1 回の回答に収まらない場合は、ダウンロードできるファイルとして渡してください。"
+
+#: src/ExternalAi.php
+msgid "The file could not be read."
+msgstr "ファイルを読み込めませんでした。"
+
+#: src/ExternalAi.php
+msgid "This is not a file exported from here: the «id» and «translation» columns are missing. Give the AI the file as it was downloaded, and ask it to keep the columns."
+msgstr "これはここから書き出したファイルではありません。「id」と「translation」列がありません。ダウンロードしたままのファイルを AI に渡し、列を残すよう頼んでください。"
+
+#: src/ExternalAi.php
+msgid "The language of the file is not one of the site's languages: choose it in the list."
+msgstr "ファイルの言語はサイトの言語ではありません。一覧から選んでください。"
+
+#: src/ExternalAi.php
+msgid "The file could not be saved for the import."
+msgstr "インポート用にファイルを保存できませんでした。"
+
+#: src/Admin/Admin.php
+msgid "Chat AI, through a file"
+msgstr "チャット AI(ファイル経由)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Choose the file the AI gave back, or paste its answer."
+msgstr "AI から返ってきたファイルを選ぶか、回答を貼り付けてください。"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Translate with ChatGPT, Gemini, Claude…"
+msgstr "ChatGPT、Gemini、Claude などで翻訳"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Use the chat AI you already have, with no API key: download a file of sentences, give it to the AI with the instructions below, and import the file it gives back. Only the missing sentences, to complete a language, or all of them, to have a language checked. Every row is checked on import; one link undoes the whole import."
+msgstr "API キーなしで、お持ちのチャット AI を使えます。文のファイルをダウンロードし、下の指示と一緒に AI に渡し、返ってきたファイルをインポートします。言語を仕上げるなら未翻訳の文だけ、見直すならすべての文を。インポート時に各行を確認し、リンク 1 つでインポート全体を元に戻せます。"
+
+#: src/Admin/ExternalAiPage.php
+msgid "1. Download the sentences"
+msgstr "1. 文をダウンロード"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Only the missing sentences (to complete)"
+msgstr "未翻訳の文だけ(仕上げ用)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "All the sentences (to have them checked)"
+msgstr "すべての文(見直し用)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Sentences per file"
+msgstr "ファイルあたりの文数"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Show the files"
+msgstr "ファイルを表示"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Nothing is missing in this language."
+msgstr "この言語で足りないものはありません。"
+
+#: src/Admin/ExternalAiPage.php
+msgid "No sentences yet: scan the site first (Translations screen)."
+msgstr "まだ文がありません。先にサイトをスキャンしてください(翻訳画面)。"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in %3$d files:"
+msgstr "%2$s の文 %1$d 件、%3$d ファイル:"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "File %d"
+msgstr "ファイル %d"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Or everything in one file (for AIs that work on large files)"
+msgstr "またはすべてを 1 ファイルで(大きなファイルを扱える AI 向け)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "2. Give each file to the AI with these instructions"
+msgstr "2. 各ファイルをこの指示と一緒に AI に渡す"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Copied ✓"
+msgstr "コピーしました ✓"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Copy the instructions"
+msgstr "指示をコピー"
+
+#: src/Admin/ExternalAiPage.php
+msgid "3. Import what the AI gives back"
+msgstr "3. AI から返ってきたものをインポート"
+
+#: src/Admin/ExternalAiPage.php
+msgid "…or paste here the answer of the AI (the whole CSV)"
+msgstr "…または AI の回答をここに貼り付け(CSV 全体)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "From the file"
+msgstr "ファイルから"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Fill only the missing sentences"
+msgstr "未翻訳の文だけ埋める"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Also replace the translations already there (after a check)"
+msgstr "既存の訳も置き換える(見直しの後)"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Import the translations"
+msgstr "翻訳をインポート"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "Imported: %1$d translations in %2$s."
+msgstr "インポート完了: %2$s の訳 %1$d 件。"
+
+#: src/Admin/ExternalAiPage.php
+msgid "already translated, left as they were"
+msgstr "翻訳済みのためそのまま"
+
+#: src/Admin/ExternalAiPage.php
+msgid "left untranslated by the AI"
+msgstr "AI が翻訳しなかった"
+
+#: src/Admin/ExternalAiPage.php
+msgid "tags or placeholders changed by the AI"
+msgstr "AI がタグやプレースホルダーを変更"
+
+#: src/Admin/ExternalAiPage.php
+msgid "rows moved or source changed by the AI"
+msgstr "AI が行を移動したか原文を変更"
+
+#: src/Admin/ExternalAiPage.php
+msgid "ids not found on this site"
+msgstr "このサイトにない ID"
+
+#: src/Admin/ExternalAiPage.php
+msgid "empty"
+msgstr "空"
+
+#: src/Admin/ExternalAiPage.php
+msgid "Skipped:"
+msgstr "スキップ:"

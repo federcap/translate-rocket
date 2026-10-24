@@ -1735,6 +1735,9 @@ class Engine {
 				$add = ( isset( $map[ $src ] ) || null !== $composto ) ? 'trrocket-ed' : 'trrocket-ed trrocket-ed-untr';
 				$unit['el']->setAttribute( 'class', '' === $cls ? $add : $cls . ' ' . $add );
 				$unit['el']->setAttribute( 'data-trr-src', rawurlencode( $src ) );
+				if ( isset( Gettext::$originals[ trim( wp_strip_all_tags( $src ) ) ] ) ) { // a label WordPress translated (1.8.21)
+					$unit['el']->setAttribute( 'data-trr-orig', rawurlencode( Gettext::$originals[ trim( wp_strip_all_tags( $src ) ) ] ) );
+				}
 				// La frase intera ha dei segnaposto: nel riquadro dell'editor non si puo'
 				// mettere il testo come si vede sulla pagina, perche' li' i segnaposto non
 				// ci sono e chi corregge a mano si vedrebbe rifiutare il salvataggio senza
@@ -1794,6 +1797,10 @@ class Engine {
 				// editor can mark them as "to translate".
 				$span->setAttribute( 'class', isset( $map[ $text ] ) ? 'trrocket-ed' : 'trrocket-ed trrocket-ed-untr' );
 				$span->setAttribute( 'data-trr-src', rawurlencode( $text ) );
+				// a theme or shop label WordPress translated: its real original, for «Restore original» (1.8.21)
+				if ( isset( Gettext::$originals[ trim( $text ) ] ) ) {
+					$span->setAttribute( 'data-trr-orig', rawurlencode( Gettext::$originals[ trim( $text ) ] ) );
+				}
 				$span->appendChild( $dom->createTextNode( (string) $node->nodeValue ) );
 				$node->parentNode->replaceChild( $span, $node );
 				$changed = true;

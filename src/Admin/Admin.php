@@ -1313,6 +1313,7 @@ class Admin {
 		$settings['serve_mode']          = ( isset( $_POST['serve_mode'] ) && 'admins' === sanitize_text_field( wp_unslash( $_POST['serve_mode'] ) ) ) ? 'admins' : 'everyone';
 		$settings['translate_meta']      = ! empty( $_POST['translate_meta'] );
 		$settings['translate_term_slugs'] = ! empty( $_POST['translate_term_slugs'] );
+		$settings['translate_slugs']      = ! empty( $_POST['translate_slugs'] );
 		$settings['translate_interface'] = ! empty( $_POST['translate_interface'] );
 		$settings['auto_redirect']       = ! empty( $_POST['auto_redirect'] );
 		$settings['translated_search']   = ! empty( $_POST['translated_search'] );
@@ -2073,6 +2074,7 @@ class Admin {
 		?>
 		<div class="wrap trrocket-wrap">
 			<?php self::header( 'translate-rocket-import' ); ?>
+			<?php \TranslateRocket\Admin\ExternalAiPage::render(); // 1.8.21: translate with the chat AI you already have ?>
 			<h1 class="trr-page-title"><?php esc_html_e( 'Import translations', 'translate-rocket' ); ?><?php $this->info( __( 'Already used another translation plugin? Bring its translations into TranslateRocket so you don’t start over.', 'translate-rocket' ) ); ?></h1>
 
 			<?php if ( isset( $_GET['import_error'] ) && 'source_mismatch' === $_GET['import_error'] ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
@@ -4276,6 +4278,7 @@ JS;
 			'reuse'             => __( 'Reused', 'translate-rocket' ),
 			'kept'              => __( 'Kept as it was', 'translate-rocket' ), // a name, or text in another language, the engine could not translate (16/10/2026)
 			'pieces'            => __( 'Put together from translated parts', 'translate-rocket' ),
+			'external'          => __( 'Chat AI, through a file', 'translate-rocket' ), // 1.8.21: ChatGPT, Gemini, Claude… (ExternalAi)
 			'glossary'          => __( 'Glossary', 'translate-rocket' ),
 			'unknown'           => __( 'Not recorded', 'translate-rocket' ),
 			'mymemory'          => 'MyMemory (Labs)',
@@ -5396,7 +5399,7 @@ JS
 	 * @param int    $percent How far.
 	 * @param int    $count   Sentences so far.
 	 */
-	private static function terms_progress( string $next, int $percent, int $count ): void {
+	public static function terms_progress( string $next, int $percent, int $count ): void { // public: also the import of ExternalAiPage (1.8.21)
 		nocache_headers();
 		header( 'Content-Type: text/html; charset=utf-8' );
 		$url = esc_url( $next );
@@ -6772,6 +6775,23 @@ JS;
 									<?php esc_html_e( 'Translate SEO title and meta description tags', 'translate-rocket' ); ?>
 								</label>
 								<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
+							</td>
+						</tr>
+						<tr id="trr-set-page-slugs">
+							<th scope="row"><?php esc_html_e( 'Page addresses', 'translate-rocket' ); ?> <?php $this->info( __( 'On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: the addresses stay as they are; those already made keep working.', 'translate-rocket' ) ); ?></th>
+							<td>
+								<label>
+									<input type="checkbox" name="translate_slugs" value="1" <?php checked( ! empty( $settings['translate_slugs'] ) ); ?> />
+									<?php esc_html_e( 'Translate the addresses of pages and posts', 'translate-rocket' ); ?>
+								</label>
+								<?php
+								if ( ! empty( $settings['translate_slugs'] ) ) {
+									global $wpdb;
+									$trr_fatti = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key LIKE '\_trrocket\_slug\_auto\_%'" ); // phpcs:ignore WordPress.DB
+									/* translators: %d: number of addresses made so far. */
+									echo '<p class="description">' . esc_html( sprintf( __( 'Translated addresses made so far: %d. New translations get theirs within the hour.', 'translate-rocket' ), $trr_fatti ) ) . '</p>';
+								}
+								?>
 							</td>
 						</tr>
 						<tr id="trr-set-term-slugs">
