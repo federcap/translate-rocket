@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.21
+Stable tag: 1.8.21.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.21.1 =
+* Improved: translated page addresses come first from the menu label of the page (short: «How it works» → /it/come-funziona/), then from its title only when the title is short (six words at most). A page whose title is a whole slogan keeps its original address instead of getting a very long one.
+* Fixed: punctuation of every script is left out of translated addresses (Japanese and Chinese «、» and «。», Spanish «¿», «!»…).
+* Fixed: accented letters follow the address's own language (German «Über» → «ueber», «Datenschutzerklärung» → «datenschutzerklaerung»), and a menu label or title left the same in a language (a brand, a name) makes no address.
+* Fixed: switching «Translate the addresses of pages and posts» off now stops the work already running in the background at once.
 
 = 1.8.21 =
 * New: translate your site with the chat AI you already have — ChatGPT, Gemini, Claude… — with no API key (Import screen). Download the sentences of a language in files small enough for a chat (only the missing ones, to complete it, or all of them, to have it checked), give each file to the AI with the ready-made instructions, and import the file it gives back, or paste its answer. Every row is checked on import (tags, placeholders, rows moved, sentences left untranslated, code added) and the report says what was skipped and why; one link undoes the whole import. Works in steps on large sites.
@@ -532,6 +538,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.21.1 =
+Shorter translated page addresses (from the menu label), no punctuation in them, and switching the option off stops at once.
 
 = 1.8.21 =
 Translate with ChatGPT, Gemini or Claude through a file, translated page addresses, the language switcher in Appearance → Menus, «Restore original» for theme and shop labels.

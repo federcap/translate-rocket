@@ -31,6 +31,43 @@ class AutoSlugs {
 		return ! empty( Settings::get()['translate_slugs'] );
 	}
 
+	/**
+	 * 24/10/2026 (translaterocket.com: switched off while a WP-Cron pass was running, the pass went on and made 235
+	 * addresses after the undo): the option read again from the database, not from this request's copy — another
+	 * request may have switched it off meanwhile.
+	 */
+	private static function still_on(): bool {
+		global $wpdb;
+		$raw = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", Settings::OPTION ) ); // phpcs:ignore WordPress.DB
+		$val = maybe_unserialize( (string) $raw );
+		return is_array( $val ) && ! empty( $val['translate_slugs'] );
+	}
+
+	/**
+	 * The words a page is called by in the menus (custom label of a menu item that opens it): usually short — «How it
+	 * works» — while a page title can be a whole slogan.
+	 *
+	 * @return array<int,string> post id => label
+	 */
+	private static function menu_labels(): array {
+		static $out = null;
+		if ( null !== $out ) {
+			return $out;
+		}
+		$out = array();
+		foreach ( wp_get_nav_menus() as $m ) {
+			foreach ( (array) wp_get_nav_menu_items( $m->term_id ) as $it ) {
+				if ( is_object( $it ) && 'post_type' === ( $it->type ?? '' ) && (int) $it->object_id > 0 ) {
+					$label = trim( html_entity_decode( wp_strip_all_tags( (string) $it->title ), ENT_QUOTES, 'UTF-8' ) );
+					if ( '' !== $label && ! isset( $out[ (int) $it->object_id ] ) ) {
+						$out[ (int) $it->object_id ] = $label;
+					}
+				}
+			}
+		}
+		return $out;
+	}
+
 	public function register(): void {
 		add_action( self::HOOK, array( __CLASS__, 'run' ) );
 		add_action( 'update_option_' . Settings::OPTION, array( __CLASS__, 'settings_changed' ), 20, 2 );
@@ -67,7 +104,7 @@ class AutoSlugs {
 			return;
 		}
 		$r = self::step( 8.0 );
-		if ( ! $r['done'] ) {
+		if ( ! $r['done'] && self::still_on() ) {
 			wp_schedule_single_event( time() + 30, self::HOOK );
 		}
 	}
@@ -110,27 +147,45 @@ class AutoSlugs {
 				delete_option( self::CURSOR );
 				break;
 			}
+			if ( ! self::still_on() ) {
+				break; // switched off meanwhile (another request): stop here
+			}
 			update_meta_cache( 'post', array_map( 'intval', wp_list_pluck( $rows, 'ID' ) ) ); // one query for the addresses already there
 			$titles = array();
+			$labels = self::menu_labels();
+			$words  = array();
 			foreach ( $rows as $r ) {
 				$t = trim( html_entity_decode( wp_strip_all_tags( (string) $r->post_title ), ENT_QUOTES, 'UTF-8' ) );
 				if ( '' !== $t ) {
 					$titles[ (int) $r->ID ] = $t;
+					$words[]                = $t;
+				}
+				if ( isset( $labels[ (int) $r->ID ] ) ) {
+					$words[] = $labels[ (int) $r->ID ];
 				}
 			}
 			foreach ( $langs as $lang ) {
-				$map = $titles ? Strings::translate_texts( array_values( $titles ), $lang ) : array();
+				$map = $words ? Strings::translate_texts( array_values( array_unique( $words ) ), $lang ) : array();
 				foreach ( $rows as $r ) {
 					$id = (int) $r->ID;
 					++$read;
 					if ( $id === $front || '' === (string) $r->post_name || ! isset( $titles[ $id ] ) || '' !== Slugs::get( $id, $lang ) ) {
 						continue; // the home has no slug in its address; a typed or already made address stays
 					}
-					$tr = trim( (string) ( $map[ $titles[ $id ] ] ?? '' ) );
-					if ( '' === $tr ) {
-						continue; // title not translated yet: next pass
+					// the menu label first (short), then the title — each only if translated and short enough
+					$slug = '';
+					$GLOBALS['trrocket_slug_locale'] = Languages::locale( $lang );
+					foreach ( array( $labels[ $id ] ?? '', $titles[ $id ] ) as $words_src ) {
+						$tr = '' !== $words_src ? trim( (string) ( $map[ $words_src ] ?? '' ) ) : '';
+						// 24/10/2026 (translaterocket.com, prova generale): «vs TranslatePress» stays the same in every
+						// language — a name, not a translation: no address from it (it only lost «translaterocket-»)
+						if ( '' !== $tr && 0 !== strcasecmp( $tr, $words_src ) ) {
+							$slug = self::slug_for( $tr, $id, $lang, (string) $r->post_name );
+							if ( '' !== $slug ) {
+								break;
+							}
+						}
 					}
-					$slug = self::slug_for( $tr, $id, $lang, (string) $r->post_name );
 					if ( '' !== $slug ) {
 						Slugs::set( $id, $lang, $slug );
 						update_post_meta( $id, self::AUTO . $lang, 1 );
@@ -157,8 +212,22 @@ class AutoSlugs {
 	 */
 	public static function slug_for( string $title, int $post_id, string $lang, string $original ): string {
 		global $wpdb;
+		// 24/10/2026 (translaterocket.com): «すべての機能が、無料。» kept «、» and «。» in the address — punctuation and
+		// symbols of every script out (the hyphen stays: it separates words).
+		$title = (string) preg_replace( '/[^\p{L}\p{N}\p{M}\s\-]+/u', ' ', $title );
+		// 24/10/2026 (prova generale): the letters of the address's own language — German «Über» → «ueber», Danish
+		// «å» → «aa» — not those of the site (WordPress knows them, if told the language: remove_accents' locale).
+		$loc = (string) ( $GLOBALS['trrocket_slug_locale'] ?? '' );
+		if ( '' !== $loc ) {
+			$title = remove_accents( $title, $loc );
+		}
 		$base = sanitize_title( $title );
-		if ( '' === $base || $base === $original || strlen( $base ) > 190 ) {
+		// 24/10/2026: a page title can be a slogan («From English-only to multilingual in an afternoon») — an address of
+		// six words at most, else none: the original address stays, and one can be typed in the editor.
+		$parole = preg_split( '/[\s\-]+/u', trim( $title ), -1, PREG_SPLIT_NO_EMPTY );
+		$cjk    = (bool) preg_match( '/[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}\p{Thai}]/u', $title );
+		$lungo  = $cjk ? mb_strlen( (string) preg_replace( '/\s+/u', '', $title ) ) > 14 : count( (array) $parole ) > 6;
+		if ( '' === $base || $base === $original || strlen( $base ) > 190 || $lungo ) {
 			return '';
 		}
 		$slug = $base;
