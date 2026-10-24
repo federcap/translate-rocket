@@ -28,7 +28,7 @@ class TermRetranslate {
 	const PART = 'trrocket_terms_undo_';
 
 	/** Sentences read from the table per query. */
-	const CHUNK = 4000;
+	const CHUNK = 2500;
 
 	/**
 	 * 23/10/2026 (piflarnakupuje.top, 14 languages, ~10,000 pages, a full glossary: «Request Timeout»): the first
@@ -189,7 +189,7 @@ class TermRetranslate {
 	 * @param float $budget Seconds.
 	 * @return array{done:bool,batch:string,percent:int,sentences:int,languages:int}
 	 */
-	public static function step( float $budget = 8.0 ): array {
+	public static function step( float $budget = 5.0 ): array {
 		global $wpdb;
 		$job = get_option( self::JOB );
 		if ( ! is_array( $job ) || empty( $job['batch'] ) ) {
@@ -269,7 +269,7 @@ class TermRetranslate {
 	 * @param float  $budget Seconds.
 	 * @return array{done:bool,restored:int,percent:int}
 	 */
-	public static function undo_step( string $batch, float $budget = 8.0 ): array {
+	public static function undo_step( string $batch, float $budget = 5.0 ): array {
 		global $wpdb;
 		$all = (array) get_option( self::BATCHES, array() );
 		if ( ! isset( $all[ $batch ] ) ) {

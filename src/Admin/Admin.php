@@ -5368,7 +5368,9 @@ JS
 			check_admin_referer( 'trrocket_terms_undo_' . $b );
 			$r = \TranslateRocket\TermRetranslate::undo_step( $b );
 			if ( ! $r['done'] ) {
-				self::terms_progress( wp_nonce_url( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'trrocket_terms_undo' => $b ), admin_url( 'admin.php' ) ), 'trrocket_terms_undo_' . $b ), $r['percent'], $r['restored'] );
+				// 24/10/2026: not wp_nonce_url() — it returns the address escaped for HTML («&amp;»): used as the next address,
+				// the step lost «trrocket_terms_undo» and Undo stopped after the first step (12,754 of 42,000 left on the bench).
+				self::terms_progress( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'trrocket_terms_undo' => $b, '_wpnonce' => wp_create_nonce( 'trrocket_terms_undo_' . $b ) ), admin_url( 'admin.php' ) ), $r['percent'], $r['restored'] );
 			}
 			wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-exclusions', 'terms_undone' => (string) $r['restored'] ), admin_url( 'admin.php' ) ) );
 			exit;

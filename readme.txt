@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.20.2
+Stable tag: 1.8.20.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.20.3 =
+* Fixed: on large sites, «Undo» after «Translate again the sentences that contain them» stopped after its first step, leaving part of the translations aside (they were kept, and a second click put them back). It now goes to the end by itself. Each step is also shorter (about five seconds).
 
 = 1.8.20.2 =
 * New: «Also in these menus» on the Switcher screen. Sites with one menu on the computer and a different one on tablets and phones can now have the languages in both: tick the other menu — a place of your theme, or any menu by name, which also covers the phone panel of Blocksy, Elementor's Nav Menu and other headers that call the menu itself. Before, the languages went into one menu only. Thanks to the shop owner who asked.
@@ -521,6 +524,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.20.3 =
+«Undo» of «Translate again» goes to the end on large sites.
 
 = 1.8.20.2 =
 The language switcher can go in more than one menu: one for the computer, another for tablets and phones.
