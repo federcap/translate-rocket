@@ -3916,7 +3916,7 @@ JS;
 							if(!r.ok){throw new Error('HTTP '+r.status);}return r.json();
 						}).then(function(j){
 							if(!j||!j.success){throw new Error((j&&j.data&&j.data.error)||'?');}
-							var x=j.data;riprove=0;fatte=x.total;tenute=x.kept||0;giri++;scrivi(x.left);if(x.wait&&giri<2000){txt.textContent=T.wait||txt.textContent;setTimeout(giro,x.wait*1000);return;}
+							var x=j.data;riprove=0;fatte=x.total;tenute=x.kept||0;giri++;scrivi(x.left);if(x.wait&&giri<2000){txt.textContent=x.waitmsg||T.wait||txt.textContent;setTimeout(giro,x.wait*1000);return;}
 							if(x.error&&!x.count){ferma(x.error);return;}
 							if(x.more&&x.count>0&&giri<400){giro();return;}
 								// 16/10/2026: the engine left sentences behind (often not in the site's language): say so, with
@@ -4229,13 +4229,20 @@ JS;
 			),
 			300
 		);
+		// 25/10/2026 (sito di prova su Cloudways, Groq gratuito: «Translate all 698 missing» fermo a 58 % senza una parola):
+		// Groq's free tier allows 8,000 tokens a minute and answered «try again in 1.1 s»; the engine was set to rest and
+		// the step ended as if the work were done. A short rest is waited out here, with a sentence that says so.
+		$pausa = ! empty( $r['resting_until'] ) ? (int) $r['resting_until'] - time() : 0;
+		$pausa = ( $pausa > 0 && $pausa <= 180 && 0 !== $resta ) ? max( 3, $pausa + 1 ) : 0;
 		wp_send_json_success(
 			array(
 				'count' => (int) $r['count'],
 				'total' => $totale,
 				'kept'  => $tenute,
-				'more'  => ! empty( $r['more'] ),
-				'wait'  => ! empty( $r['busy'] ) ? 8 : 0, // 1.8.14: another process is translating — come back in 8 s
+				'more'  => ! empty( $r['more'] ) || $pausa > 0,
+				/* translators: %d: seconds. */
+				'waitmsg' => $pausa > 0 ? sprintf( __( 'The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open.', 'translate-rocket' ), $pausa ) : '',
+				'wait'  => $pausa > 0 ? $pausa : ( ! empty( $r['busy'] ) ? 8 : 0 ), // 1.8.14: another process is translating — come back in 8 s
 				'left'  => $resta,
 				'error' => '' !== (string) $r['error'] ? self::shown_error( (string) $r['error'] ) : '',
 				// Sentences the engine gave nothing back for (often not in the site's language): where to see them.
@@ -6036,8 +6043,12 @@ JS;
 		// Free AI with the owner's own free account (Groq): the recommended way in, works in any browser.
 		if ( 'free' === ( isset( $_POST['trr_method'] ) ? sanitize_key( $_POST['trr_method'] ) : '' ) ) {
 			$gsk = isset( $_POST['wiz_free_key'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['wiz_free_key'] ) ) ) : '';
-			if ( '' !== $gsk ) {
-				$settings['providers']['groq']            = array_merge( (array) ( $settings['providers']['groq'] ?? array() ), array( 'api_key' => $gsk ) );
+			// 25/10/2026: also with the field left empty when a Groq key is already saved (wizard opened again): «Free AI»
+			// chosen means Groq is the engine, not «no engine» (the editor then fell back to the browser's translator).
+			if ( '' !== $gsk || '' !== (string) ( $settings['providers']['groq']['api_key'] ?? '' ) ) {
+				if ( '' !== $gsk ) {
+					$settings['providers']['groq'] = array_merge( (array) ( $settings['providers']['groq'] ?? array() ), array( 'api_key' => $gsk ) );
+				}
 				$settings['active_provider']              = 'groq';
 				$settings['provider_order']               = array_values( array_unique( array_merge( array( 'groq' ), (array) ( $settings['provider_order'] ?? array() ) ) ) );
 			}
@@ -7326,6 +7337,9 @@ JS;
 							esc_html__( 'Translate all %d missing', 'translate-rocket' ),
 							(int) $miss_lingua
 						);
+					} elseif ( 0 === (int) $detected_total ) {
+						// 25/10/2026 (sito di prova su Cloudways): with nothing found yet, «Everything is translated» was false.
+						esc_html_e( 'Nothing found yet: scan the site first', 'translate-rocket' );
 					} else {
 						esc_html_e( 'Everything is translated', 'translate-rocket' );
 					}

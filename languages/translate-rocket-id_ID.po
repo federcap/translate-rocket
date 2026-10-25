@@ -7474,3 +7474,21 @@ msgstr "kosong"
 #: src/Admin/ExternalAiPage.php
 msgid "Skipped:"
 msgstr "Dilewati:"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in one file:"
+msgstr "%1$d kalimat dalam %2$s, dalam satu file:"
+
+#: src/Admin/Admin.php
+msgid "Nothing found yet: scan the site first"
+msgstr "Belum ada yang ditemukan: pindai situs terlebih dahulu"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "Mesin gratis meminta jeda singkat (batas per menitnya): terjemahan berlanjut sendiri dalam %d detik. Biarkan halaman ini tetap terbuka."
+
+#: translate-rocket.php
+msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
+msgstr "Terjemahan multibahasa gratis untuk WordPress, tanpa kunci API. Terjemahkan seluruh situs Anda — halaman, menu, WooCommerce, judul SEO, dan alamat — dengan AI gratis, penerjemah bawaan browser Anda, atau kunci Anda untuk DeepL, OpenAI, Gemini, atau Claude."

@@ -304,7 +304,10 @@ class Translator {
 					if ( '' !== $uno && self::parts_kept( $text, $uno ) ) {
 						self::save_group( $pending[ $text ], $lang, $uno, $one['provider'], $text, $count );
 						AiUsage::add( mb_strlen( $text ) );
-					} elseif ( null !== $one ) {
+					} elseif ( null !== $one && '' === $uno ) {
+						// 24/10/2026: only when the engine really gave nothing back. A translation that lost the marks
+						// of its links stays pending (parts_kept: «tried again next time»): kept, it was an English
+						// sentence counted as translated for ever (≈100 on translaterocket.com, zh/ko/ja/hi).
 						foreach ( $pending[ $text ] as $id ) {
 							if ( Strings::save_translation( (int) $id, $lang, $text, 1, 'kept' ) ) {
 								++$kept;
@@ -432,8 +435,15 @@ class Translator {
 		// A plain HTTP 429 can be a passing rate limit (already retried in the
 		// provider), so it's NOT listed here — only quota/billing/auth errors,
 		// which won't fix themselves during this run, retire a provider.
-		$needles = array( 'insufficient_quota', 'quota', 'billing', 'credit', 'exceeded', 'payment', 'unauthorized', 'invalid_api_key', 'invalid api key', 'forbidden', 'http 401', 'http 403' );
 		$haystack = strtolower( $error );
+		// 25/10/2026 (sito di prova su Cloudways, Groq gratuito vero: «Translate all» fermo a metà, Groq escluso per il
+		// resto del lavoro): Groq's per-minute limit reads «Rate limit reached … Please try again in 1.1s. Need more tokens?
+		// Upgrade to Dev Tier today at …/settings/billing» with code «rate_limit_exceeded» — «billing» and «exceeded» made
+		// a one-second pause look like an empty wallet. A rate limit passes by itself; only a spent quota retires an engine.
+		if ( false === strpos( $haystack, 'insufficient_quota' ) && preg_match( '/rate[ _-]?limit|try again in|too many requests/', $haystack ) ) {
+			return false;
+		}
+		$needles = array( 'insufficient_quota', 'quota', 'billing', 'credit', 'exceeded', 'payment', 'unauthorized', 'invalid_api_key', 'invalid api key', 'forbidden', 'http 401', 'http 403' );
 		foreach ( $needles as $needle ) {
 			if ( false !== strpos( $haystack, $needle ) ) {
 				return true;

@@ -523,6 +523,47 @@
 	// them is still "one text" to translate, with the tags shown as [1] markers).
 	var INLINE = { STRONG: 1, B: 1, EM: 1, I: 1, U: 1, S: 1, MARK: 1, CODE: 1, SUB: 1, SUP: 1, SMALL: 1, A: 1, SPAN: 1, Q: 1, ABBR: 1, CITE: 1, BDI: 1, BDO: 1, TIME: 1, INS: 1, DEL: 1, WBR: 1 };
 
+	// 25/10/2026: rebuild a sentence with <1>…</1> marks into the element, reusing its own inline elements (links, bold) —
+	// numbered as InlineText::index() does on the server: inline children in order, depth first, not inside an empty one.
+	var VOID_PARTI = { BR: 1, IMG: 1 };
+	function partiVuota( n ) {
+		if ( VOID_PARTI[ n.tagName ] || 'TIME' === n.tagName ) { return true; }
+		if ( 'A' === n.tagName && /(^|\s)(more-link|wp-block-latest-posts__read-more|read-more|readmore|wp-block-post-excerpt__more-link)(\s|$)/i.test( n.className || '' ) ) { return true; }
+		return '' === ( n.textContent || '' ).trim();
+	}
+	function numeraParti( el, mappa ) {
+		Array.prototype.forEach.call( el.childNodes, function ( c ) {
+			if ( 1 !== c.nodeType || ! ( INLINE[ c.tagName ] || VOID_PARTI[ c.tagName ] || 'BIG' === c.tagName || 'DATA' === c.tagName || 'DFN' === c.tagName || 'KBD' === c.tagName || 'SAMP' === c.tagName || 'VAR' === c.tagName ) ) { return; }
+			mappa.push( c );
+			if ( ! partiVuota( c ) ) { numeraParti( c, mappa ); }
+		} );
+	}
+	function rimontaParti( el, v ) {
+		var orig = [];
+		numeraParti( el, orig );
+		var tok = v.split( /(<\/?\d+\/?>)/ );
+		var visti = {};
+		var radice = document.createDocumentFragment();
+		var pila = [ radice ];
+		for ( var i = 0; i < tok.length; i++ ) {
+			var t = tok[ i ];
+			if ( '' === t ) { continue; }
+			var m = t.match( /^<(\/?)(\d+)(\/?)>$/ );
+			if ( ! m ) { pila[ pila.length - 1 ].appendChild( document.createTextNode( t ) ); continue; }
+			var n = parseInt( m[ 2 ], 10 ), o = orig[ n - 1 ];
+			if ( ! o ) { return false; }
+			if ( m[ 3 ] ) { pila[ pila.length - 1 ].appendChild( o.cloneNode( true ) ); visti[ n ] = 2; continue; }
+			if ( m[ 1 ] ) { if ( pila.length < 2 || pila[ pila.length - 1 ].__n !== n ) { return false; } pila.pop(); visti[ n ] = 2; continue; }
+			var copia = partiVuota( o ) ? o.cloneNode( true ) : o.cloneNode( false );
+			copia.__n = n; pila[ pila.length - 1 ].appendChild( copia ); pila.push( copia ); visti[ n ] = 1;
+		}
+		if ( 1 !== pila.length || Object.keys( visti ).length !== orig.length ) { return false; }
+		for ( var k in visti ) { if ( 2 !== visti[ k ] ) { return false; } }
+		while ( el.firstChild ) { el.removeChild( el.firstChild ); }
+		el.appendChild( radice );
+		return true;
+	}
+
 	// The nearest text-bearing block an editable fragment belongs to.
 	function textBlockOf( span ) {
 		return span.closest ? span.closest( 'p,li,h1,h2,h3,h4,h5,h6,figcaption,blockquote,dd,dt,td,th,caption' ) : null;
@@ -2248,6 +2289,15 @@
 		}
 		function applyFrag( span, v ) {
 			if ( '' === v ) { span.textContent = decode( span.getAttribute( 'data-trr-src' ) ); span.classList.add( 'trrocket-ed-untr' ); return; }
+			// 25/10/2026 (sito di prova su Cloudways, prima traduzione della home: «Leggi <1>la nostra storia</1> o guarda
+			// <2>le camere</2>» scritto così sulla pagina): una frase con link o grassetto dentro ha i segni <1>…</1>; i link
+			// veri si rimettono al loro posto (stessa numerazione di InlineText.php), o almeno si toglie ogni segno.
+			if ( span.getAttribute( 'data-trr-parts' ) ) {
+				span.setAttribute( 'data-trr-cur', encodeURIComponent( v ) );
+				if ( ! rimontaParti( span, v ) ) { span.textContent = v.replace( /<\/?\d+\/?>/g, '' ); }
+				span.classList.remove( 'trrocket-ed-untr' );
+				return;
+			}
 			var o = span.textContent, lead = ( o.match( /^\s*/ ) || [ '' ] )[ 0 ], trail = ( o.match( /\s*$/ ) || [ '' ] )[ 0 ];
 			span.textContent = lead + v + trail; span.classList.remove( 'trrocket-ed-untr' );
 		}

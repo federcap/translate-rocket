@@ -7498,3 +7498,21 @@ msgstr ""
 #: src/Admin/ExternalAiPage.php
 msgid "Skipped:"
 msgstr ""
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in one file:"
+msgstr ""
+
+#: src/Admin/Admin.php
+msgid "Nothing found yet: scan the site first"
+msgstr ""
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr ""
+
+#: translate-rocket.php
+msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
+msgstr ""

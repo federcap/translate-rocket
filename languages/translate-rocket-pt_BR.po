@@ -6653,3 +6653,21 @@ msgstr "vazias"
 #: src/Admin/ExternalAiPage.php
 msgid "Skipped:"
 msgstr "Ignoradas:"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in one file:"
+msgstr "%1$d frases em %2$s, em um único arquivo:"
+
+#: src/Admin/Admin.php
+msgid "Nothing found yet: scan the site first"
+msgstr "Nada encontrado ainda: primeiro analise o site"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "O mecanismo gratuito pediu uma pausa curta (seu limite por minuto): a tradução continua sozinha em %d segundos. Mantenha esta página aberta."
+
+#: translate-rocket.php
+msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
+msgstr "Tradução multilíngue gratuita para WordPress, sem chave de API. Traduza o site inteiro — páginas, menus, WooCommerce, títulos de SEO e endereços — com uma IA gratuita, o tradutor do seu próprio navegador ou suas chaves do DeepL, OpenAI, Gemini ou Claude."

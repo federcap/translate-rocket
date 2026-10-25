@@ -99,7 +99,8 @@ class GuestScan {
 			return;
 		}
 		set_transient( $key, 1, DAY_IN_SECONDS );
-		$url = add_query_arg( self::PARAM, self::token( $path ), home_url( $path ) );
+		// The source-language address: home_url() carries /it/ when this runs on a translated page (25/10/2026).
+		$url = add_query_arg( self::PARAM, self::token( $path ), rtrim( (string) get_option( 'home' ), '/' ) . '/' . ltrim( $path, '/' ) );
 		wp_remote_get(
 			$url,
 			array(

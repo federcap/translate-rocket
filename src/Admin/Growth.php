@@ -271,7 +271,9 @@ class Growth {
 		$schermata = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$sul_wizard = ( $schermata && false !== strpos( (string) $schermata->id, 'translate-rocket-wizard' ) );
 
-		if ( ! $sul_wizard && ! get_option( self::WELCOME_DONE ) && $age < ( self::WELCOME_MAX_DAYS * DAY_IN_SECONDS ) ) {
+		// 25/10/2026 (sito di prova su Cloudways): after the wizard the languages are picked and the first page translated —
+		// «Start with … pick your languages» on the next screen read as if nothing had been done.
+		if ( ! $sul_wizard && ! get_option( 'trrocket_wizard_done' ) && ! get_option( self::WELCOME_DONE ) && $age < ( self::WELCOME_MAX_DAYS * DAY_IN_SECONDS ) ) {
 			// Finche' la procedura guidata non e' stata completata, e' li' che
 			// conviene mandare la gente: fa le stesse scelte, ma accompagnate.
 			$primo_passo = get_option( 'trrocket_wizard_done' )

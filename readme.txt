@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.21.1
+Stable tag: 1.8.22
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,18 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.22 =
+* Fixed: a child page whose parent has a translated address but which has none of its own in a language (/ja/特長/block-theme-menus/) answered 404, and so did its old address after the redirect. It opens now.
+* Fixed: on a page that does not exist, the language switcher led to the same missing address in every other language; it now leads to each language's home page, so visitors and search engines no longer walk from one 404 to the next.
+* Fixed: with a Groq (or other) key saved but no engine marked as active, «Translate page» in the visual editor tried the browser's own translator — absent in Firefox, Safari and on phones — and reported «could not be translated». The first ready engine is used, as «Translate all» already did. The setup wizard also makes Groq the engine when «Free AI» is chosen with a key already saved.
+* Fixed: right after «Translate page», a sentence with a link or bold words showed its marks («<1>our story</1>») in the editor until the page was reloaded. The links and bold words are put back at once.
+* Fixed: after the setup wizard, the Translations screen said «0 strings detected» and «Everything is translated» although the home page had just been translated. When you open a translated page, the site now reads the original page once in the background so its sentences are counted; with nothing found yet the button says «scan the site first».
+* Fixed: «Translate all» with Groq's free plan could stop halfway without a word when Groq asked for a pause of a second or two (its limit per minute), because Groq's message about its per-minute limit mentions «billing» and was taken for an empty account. A rate limit is never taken for a spent quota any more; the pause the provider asks for is waited out, and the screen says the translation goes on by itself.
+* Fixed: the background cache warm-up kept asking the site for its own pages even when the server could not answer itself (every request waiting 15 seconds), keeping PHP busy on small hosts. After the first time-out it now waits 30 minutes.
+* Fixed: a sentence the engine translated but whose link marks it lost was kept in the original language and counted as translated. It now stays to be translated, and is tried again.
+* Fixed: links your theme writes with the language already in them (/it/support/) now get the page's translated address too, instead of going through a redirect on every click.
+* Improved: the welcome notice no longer asks you to pick your languages after you have finished the setup wizard; the plugin's description in the Plugins list says that no API key is needed.
 
 = 1.8.21.1 =
 * Improved: translated page addresses come first from the menu label of the page (short: «How it works» → /it/come-funziona/), then from its title only when the title is short (six words at most). A page whose title is a whole slogan keeps its original address instead of getting a very long one.
@@ -538,6 +550,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.22 =
+Child pages under a translated parent no longer answer 404, «Translate page» works with a saved key in every browser, correct counts after the setup wizard, and «Translate all» no longer stops at Groq's per-minute pause.
 
 = 1.8.21.1 =
 Shorter translated page addresses (from the menu label), no punctuation in them, and switching the option off stops at once.

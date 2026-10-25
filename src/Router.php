@@ -386,6 +386,12 @@ class Router {
 		$base   = $this->language_base( $lang ); // home, home/xx, or the language's own domain
 		$prefix = '';
 		$path   = '' === $this->clean_path ? '/' : $this->clean_path;
+		// 25/10/2026 (translaterocket.com logs: AhrefsBot walking /id/οδηγοί/…, /pl/інструкції/… — 404s in 23 languages): on a
+		// page that does not exist, «the same address in another language» does not exist either. The switcher of a 404
+		// leads to each language's home, so neither people nor crawlers walk from one 404 to the next.
+		if ( function_exists( 'is_404' ) && did_action( 'wp' ) && is_404() ) {
+			return $base . '/';
+		}
 		// On a page reached through a translated slug (/it/albergo-aurora/) the request path
 		// carries THAT language's slug: every other language needs its own, or hreflang and the
 		// switcher point at addresses that don't exist (/albergo-aurora/, /es/albergo-aurora/).
@@ -1117,6 +1123,29 @@ class Router {
 
 		$id = Slugs::resolve( $slug, $this->current_language() );
 		if ( ! $id ) {
+			// 25/10/2026 (translaterocket.com, /ja/特長/block-theme-menus/ → 404): the page itself has no translated slug
+			// in this language but a parent does, so the address mixes a translated parent and an original child.
+			// Each segment goes back to its real slug; the address is used only if that page exists.
+			// WordPress reads such an address as an attachment of the parent and passes only the last segment: the whole
+			// path comes from the request then.
+			$percorso = ! empty( $query_vars['pagename'] ) ? (string) $query_vars['pagename'] : ( ! empty( $query_vars['attachment'] ) && isset( $GLOBALS['wp'] ) && is_object( $GLOBALS['wp'] ) ? (string) $GLOBALS['wp']->request : '' );
+			$percorso = trim( (string) preg_replace( '#^' . preg_quote( $this->current_language(), '#' ) . '/#', '', trim( $percorso, '/' ) . '/' ), '/' );
+			if ( '' !== $percorso && false !== strpos( $percorso, '/' ) ) {
+				$segs  = explode( '/', $percorso );
+				$veri  = array();
+				$cambi = false;
+				foreach ( $segs as $seg ) {
+					$pid  = Slugs::resolve( $seg, $this->current_language() );
+					$p    = $pid ? get_post( $pid ) : null;
+					$nome = ( $p && '' !== (string) $p->post_name ) ? (string) $p->post_name : $seg;
+					$cambi = $cambi || $nome !== $seg;
+					$veri[] = $nome;
+				}
+				if ( $cambi && get_page_by_path( implode( '/', $veri ) ) ) {
+					$query_vars['pagename'] = implode( '/', $veri );
+					unset( $query_vars['attachment'] );
+				}
+			}
 			return $query_vars;
 		}
 		unset( $query_vars['attachment'] );

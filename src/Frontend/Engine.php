@@ -1317,6 +1317,21 @@ class Engine {
 		// (e.g. switcher links) — including via a nulled-prefix exact match.
 		foreach ( array_merge( array( $current ), $secondary ) as $code ) {
 			if ( $rest === '/' . $code || 0 === strpos( $rest, '/' . $code . '/' ) ) {
+				// 25/10/2026 (translaterocket.com navigated as a visitor: the theme writes home_url( '/support/' ), which
+				// is already /it/support/ here, and every click went through a 301 to /it/assistenza/): a link in the
+				// CURRENT language still gets the page's translated address. Other languages (the switcher) stay as they are.
+				if ( $code === $current && strlen( $rest ) > strlen( '/' . $code . '/' ) ) {
+					$router = Plugin::instance()->router();
+					if ( null !== $router ) {
+						$dentro = (string) substr( $rest, strlen( '/' . $code ) );
+						$nuovo  = $router->translated_link_path( $dentro, $current );
+						if ( $nuovo !== $dentro ) {
+							$suffix = ( isset( $parts['query'] ) ? '?' . $parts['query'] : '' ) . ( isset( $parts['fragment'] ) ? '#' . $parts['fragment'] : '' );
+							$path2  = $home_path . '/' . $code . $nuovo;
+							return isset( $parts['host'] ) ? ( isset( $parts['scheme'] ) ? $parts['scheme'] . '://' : '//' ) . $parts['host'] . ( isset( $parts['port'] ) ? ':' . $parts['port'] : '' ) . $path2 . $suffix : $path2 . $suffix;
+						}
+					}
+				}
 				return $href;
 			}
 		}
@@ -2213,6 +2228,20 @@ class Engine {
 			// logged-in administrator is never shown.
 			if ( ! $this->is_secondary ) {
 				GuestScan::schedule( $router->current_clean_path() );
+			}
+		} elseif ( $this->is_secondary && ! $this->do_collect && function_exists( 'current_user_can' ) && current_user_can( 'manage_options' ) && ! ( function_exists( 'is_404' ) && is_404() ) ) {
+			// 25/10/2026 (sito di prova su Cloudways: procedura guidata → «Translate my homepage now» → /it/, poi Traduzioni:
+			// «0 strings out of 0 detected», «Everything is translated»): on a translated page nothing is collected (its
+			// interface is already in that language), and a new site's owner may never open the source page. The site
+			// reads the source page itself, as a guest, in the background — once a day at most per page, and only for a
+			// page the plugin knows nothing about yet (an extra page render costs a PHP worker on a small host).
+			global $wpdb;
+			$rt   = Plugin::instance()->router();
+			$qid  = ( function_exists( 'is_singular' ) && is_singular() ) ? (int) get_queried_object_id() : 0;
+			$cp   = $qid > 0 ? $rt->canonical_path( $qid ) : $rt->current_clean_path(); // the address the sentences are filed under
+			$nota = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT 1 FROM ' . \TranslateRocket\Database::occurrences_table() . ' WHERE url_hash = %s LIMIT 1', Strings::url_hash( $cp ) ) ); // phpcs:ignore WordPress.DB
+			if ( ! $nota ) {
+				GuestScan::schedule( $cp );
 			}
 		}
 

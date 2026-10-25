@@ -7474,3 +7474,21 @@ msgstr "为空"
 #: src/Admin/ExternalAiPage.php
 msgid "Skipped:"
 msgstr "已跳过："
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in one file:"
+msgstr "%2$s 句子 %1$d 条，一个文件："
+
+#: src/Admin/Admin.php
+msgid "Nothing found yet: scan the site first"
+msgstr "尚未找到任何内容：请先扫描网站"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "免费引擎要求短暂暂停（每分钟上限）：翻译将在 %d 秒后自动继续。请保持此页面打开。"
+
+#: translate-rocket.php
+msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
+msgstr "免费的 WordPress 多语言翻译，无需 API 密钥。使用免费 AI、浏览器自带的翻译功能，或您的 DeepL、OpenAI、Gemini、Claude 密钥，翻译整个网站——页面、菜单、WooCommerce、SEO 标题和网址。"

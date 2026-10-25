@@ -114,6 +114,7 @@ class ExternalAiPage {
 			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 			?>
 			<h3><?php esc_html_e( '1. Download the sentences', 'translate-rocket' ); ?></h3>
+			<style>.trr-ext-pick label,.trr-ext-import label{display:block;margin:6px 0}.trr-ext-pick select,.trr-ext-import select{margin-left:6px}</style>
 			<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>#trr-external-ai" class="trr-ext-pick">
 				<input type="hidden" name="page" value="translate-rocket-import" />
 				<label><?php esc_html_e( 'Language', 'translate-rocket' ); ?>
@@ -143,8 +144,13 @@ class ExternalAiPage {
 			if ( 0 === $tot ) {
 				echo '<p class="description">' . esc_html( 'missing' === $what ? __( 'Nothing is missing in this language.', 'translate-rocket' ) : __( 'No sentences yet: scan the site first (Translations screen).', 'translate-rocket' ) ) . '</p>';
 			} else {
-				/* translators: 1: number of sentences, 2: language, 3: number of files. */
-				echo '<p class="trr-ext-count">' . esc_html( sprintf( __( '%1$d sentences in %2$s, in %3$d files:', 'translate-rocket' ), $tot, Languages::label( $lang ), $parts ) ) . '</p><p class="trr-ext-files">';
+				echo '<p class="trr-ext-count">' . esc_html(
+					1 === $parts
+						/* translators: 1: number of sentences, 2: language. */
+						? sprintf( __( '%1$d sentences in %2$s, in one file:', 'translate-rocket' ), $tot, Languages::label( $lang ) )
+						/* translators: 1: number of sentences, 2: language, 3: number of files. */
+						: sprintf( __( '%1$d sentences in %2$s, in %3$d files:', 'translate-rocket' ), $tot, Languages::label( $lang ), $parts )
+				) . '</p><p class="trr-ext-files">';
 				for ( $i = 0; $i < min( $parts, 200 ); $i++ ) {
 					/* translators: %d: file number. */
 					echo '<a class="button" href="' . esc_url( $dl( $i, $size ) ) . '">&#11015; ' . esc_html( sprintf( __( 'File %d', 'translate-rocket' ), $i + 1 ) ) . '</a> ';

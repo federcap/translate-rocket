@@ -97,11 +97,17 @@ class Registry {
 	 */
 	public static function active(): ?ProviderInterface {
 		$id = (string) ( Settings::get()['active_provider'] ?? '' );
-		if ( '' === $id || self::switched_off( $id ) ) {
-			return null;
+		if ( '' !== $id && ! self::switched_off( $id ) ) {
+			$provider = self::get( $id );
+			if ( $provider && $provider->is_configured() ) {
+				return $provider;
+			}
 		}
-		$provider = self::get( $id );
-		return ( $provider && $provider->is_configured() ) ? $provider : null;
+		// 25/10/2026 (sito di prova su Cloudways, Groq vero: «0 translated · 16 could not be translated»): a Groq key saved
+		// but no engine marked active, so the editor fell back to the browser's translator — missing in Firefox, Safari,
+		// on phones — while «Translate all» used the key. The first configured engine of the chain, as «Translate all» does.
+		$chain = self::ordered();
+		return $chain ? $chain[0] : null;
 	}
 
 	/**

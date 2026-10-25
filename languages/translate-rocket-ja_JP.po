@@ -6629,3 +6629,21 @@ msgstr "空"
 #: src/Admin/ExternalAiPage.php
 msgid "Skipped:"
 msgstr "スキップ:"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in one file:"
+msgstr "%2$s の文 %1$d 件、1 つのファイルで:"
+
+#: src/Admin/Admin.php
+msgid "Nothing found yet: scan the site first"
+msgstr "まだ何も見つかっていません: まずサイトをスキャンしてください"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "無料エンジンが短い休止を求めました（1 分あたりの上限）。翻訳は %d 秒後に自動で再開します。このページは開いたままにしてください。"
+
+#: translate-rocket.php
+msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
+msgstr "WordPress 向けの無料多言語翻訳。API キーは不要です。サイト全体 — ページ、メニュー、WooCommerce、SEO タイトル、URL — を、無料の AI、ブラウザー内蔵の翻訳機能、または DeepL・OpenAI・Gemini・Claude のキーで翻訳できます。"

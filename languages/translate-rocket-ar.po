@@ -7604,3 +7604,21 @@ msgstr "فارغة"
 #: src/Admin/ExternalAiPage.php
 msgid "Skipped:"
 msgstr "تم تخطيها:"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in one file:"
+msgstr "%1$d جملة باللغة %2$s، في ملف واحد:"
+
+#: src/Admin/Admin.php
+msgid "Nothing found yet: scan the site first"
+msgstr "لم يُعثر على شيء بعد: افحص الموقع أولًا"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "طلب المحرك المجاني توقفًا قصيرًا (حدّه في الدقيقة): ستستأنف الترجمة تلقائيًا بعد %d ثانية. أبقِ هذه الصفحة مفتوحة."
+
+#: translate-rocket.php
+msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
+msgstr "ترجمة متعددة اللغات مجانية لووردبريس، بلا حاجة إلى مفتاح API. ترجم موقعك كله — الصفحات والقوائم وWooCommerce وعناوين SEO والروابط — باستخدام ذكاء اصطناعي مجاني، أو مترجم متصفحك نفسه، أو مفاتيحك لـ DeepL أو OpenAI أو Gemini أو Claude."

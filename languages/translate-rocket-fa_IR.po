@@ -7500,3 +7500,21 @@ msgstr "خالی"
 #: src/Admin/ExternalAiPage.php
 msgid "Skipped:"
 msgstr "رد شد:"
+
+#: src/Admin/ExternalAiPage.php
+#, php-format
+msgid "%1$d sentences in %2$s, in one file:"
+msgstr "%1$d جمله به %2$s، در یک فایل:"
+
+#: src/Admin/Admin.php
+msgid "Nothing found yet: scan the site first"
+msgstr "هنوز چیزی پیدا نشده: اول سایت را اسکن کنید"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "موتور رایگان یک مکث کوتاه خواست (محدودیت دقیقه‌ای‌اش): ترجمه تا %d ثانیهٔ دیگر خودش ادامه می‌یابد. این صفحه را باز نگه دارید."
+
+#: translate-rocket.php
+msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
+msgstr "ترجمهٔ چندزبانهٔ رایگان برای وردپرس، بدون نیاز به کلید API. کل سایت خود را ترجمه کنید — صفحه‌ها، منوها، WooCommerce، عنوان‌های سئو و نشانی‌ها — با یک هوش مصنوعی رایگان، مترجم خود مرورگرتان، یا کلیدهایتان برای DeepL، OpenAI، Gemini یا Claude."

@@ -190,7 +190,19 @@ abstract class AbstractProvider implements ProviderInterface {
 			if ( ! $transient || $i === $attempts ) {
 				break;
 			}
-			sleep( $i ); // Linear backoff: 1s, then 2s.
+			// 25/10/2026 (Groq free tier, 8,000 tokens a minute: «Please try again in 1.1325s»): when the provider says how
+			// long, and it is a few seconds, wait that long — 1 s then 2 s often fell short and the whole run stopped.
+			$attesa = $i;
+			if ( 429 === $code ) {
+				$dopo = isset( $response ) && ! is_wp_error( $response ) ? (string) wp_remote_retrieve_header( $response, 'retry-after' ) : '';
+				if ( is_numeric( $dopo ) ) {
+					$attesa = (float) $dopo;
+				} elseif ( preg_match( '/try again in\s+(?:(\d+)m)?\s*(\d+(?:\.\d+)?)(ms|s)\b/i', $raw, $mm ) ) {
+					$attesa = (float) $mm[2] / ( 'ms' === strtolower( $mm[3] ) ? 1000 : 1 ) + 60 * (int) $mm[1];
+				}
+				$attesa = ( $attesa > 0 && $attesa <= 12 ) ? $attesa + 0.3 : $i;
+			}
+			usleep( (int) ( $attesa * 1000000 ) ); // Linear backoff (1 s, then 2 s), or what the provider asked for.
 		}
 
 		if ( '' !== $err ) {

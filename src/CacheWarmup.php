@@ -213,7 +213,19 @@ class CacheWarmup {
 				)
 			);
 			$last['done'] = (int) ( $last['done'] ?? 0 ) + 1;
-			if ( is_wp_error( $r ) || 200 !== (int) wp_remote_retrieve_response_code( $r ) ) {
+			if ( is_wp_error( $r ) ) {
+				// 25/10/2026 (bench and small hosts: «cURL error 28 … 15000 ms» on every visit, editor pages at 24 s): the site
+				// cannot call itself right now — every PHP worker busy, or loopback blocked. Insisting kept the workers
+				// taken; the rest of the round waits 30 minutes instead.
+				$last['errors'] = (int) ( $last['errors'] ?? 0 ) + 1;
+				$last['paused'] = time();
+				update_option( self::QUEUE, $queue, false );
+				update_option( self::LAST, $last, false );
+				wp_clear_scheduled_hook( self::EVENT );
+				wp_schedule_single_event( time() + 30 * MINUTE_IN_SECONDS, self::EVENT );
+				return;
+			}
+			if ( 200 !== (int) wp_remote_retrieve_response_code( $r ) ) {
 				$last['errors'] = (int) ( $last['errors'] ?? 0 ) + 1;
 			} elseif ( microtime( true ) - $t0 > 3 ) {
 				$last['slow'] = (int) ( $last['slow'] ?? 0 ) + 1;
