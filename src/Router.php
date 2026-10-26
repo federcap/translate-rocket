@@ -858,6 +858,30 @@ class Router {
 		if ( ! ( $post instanceof \WP_Post ) || '' === (string) $post->post_name ) {
 			return $path;
 		}
+		// 26/10/2026 (SEO audit of translaterocket.com: /de/nachrichten/x/ announced /ja/nachrichten/x/ — a 404 — and
+		// /nachrichten/x/ for English): only the post's own slug was swapped, the PARENT pages' slugs stayed in the
+		// language of the request. Now the path goes back to the original slugs of the whole chain, then each one is
+		// translated for the target language — the same way the sitemap builds its alternates (swap_hierarchy).
+		if ( is_post_type_hierarchical( (string) $post->post_type ) && get_post_ancestors( $post_id ) ) {
+			$work = '/' === substr( $path, -1 ) ? $path : $path . '/';
+			if ( ! $this->is_default( $this->current_language() ) ) {
+				foreach ( array_merge( array( $post_id ), array_map( 'intval', get_post_ancestors( $post_id ) ) ) as $pid ) {
+					$p   = get_post( $pid );
+					$cur = sanitize_title( Slugs::get( $pid, $this->current_language() ) );
+					if ( ! $p || '' === $cur || '' === (string) $p->post_name || $cur === $p->post_name ) {
+						continue;
+					}
+					$pos = strrpos( $work, '/' . $cur . '/' );
+					if ( false !== $pos ) {
+						$work = substr( $work, 0, $pos ) . '/' . $p->post_name . '/' . substr( $work, $pos + strlen( $cur ) + 2 );
+					}
+				}
+			}
+			if ( ! $this->is_default( $lang ) ) {
+				$work = $this->swap_hierarchy( $work, $post_id, $lang );
+			}
+			return '/' === substr( $path, -1 ) ? $work : substr( $work, 0, -1 );
+		}
 		$real   = (string) $post->post_name;
 		$target = $real;
 		if ( ! $this->is_default( $lang ) ) {

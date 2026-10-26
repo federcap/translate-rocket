@@ -1414,6 +1414,15 @@ class Switcher {
 		if ( false !== strpos( (string) ( $block['attrs']['className'] ?? '' ), 'trrocket-lang-current' ) && 'click' === ( self::menu_settings()['dd_trigger'] ?? '' ) ) {
 			$html = self::nav_on_click( $html );
 		}
+		// 26/10/2026 (sito di prova su Aruba, Twenty Twenty-Five: in /it/ la voce «English» del menu era diventata «Inglese»):
+		// the language names of the Navigation block are never translated — as the classic menu's (translate="no").
+		if ( class_exists( '\WP_HTML_Tag_Processor' ) && false !== strpos( $html, 'wp-block-navigation-item__label' ) ) {
+			$p = new \WP_HTML_Tag_Processor( $html );
+			while ( $p->next_tag( array( 'class_name' => 'wp-block-navigation-item__label' ) ) ) {
+				$p->set_attribute( 'translate', 'no' );
+			}
+			$html = $p->get_updated_html();
+		}
 		if ( false === strpos( $html, self::FLAG_MARK_OPEN ) ) {
 			return $html;
 		}

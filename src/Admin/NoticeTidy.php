@@ -88,7 +88,7 @@ class NoticeTidy {
 		}
 		$doc  = new \DOMDocument();
 		$prev = libxml_use_internal_errors( true );
-		$doc->loadHTML( '<?xml encoding="utf-8" ?><div id="trr-avvisi-radice">' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+		\TranslateRocket\Frontend\Utf8Html::load( $doc, '<div id="trr-avvisi-radice">' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $prev );
 		$root = $doc->getElementById( 'trr-avvisi-radice' );

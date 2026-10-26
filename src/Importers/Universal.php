@@ -137,7 +137,7 @@ final class Universal {
 	private static function dom( string $html ): ?\DOMXPath {
 		$d = new \DOMDocument();
 		$v = libxml_use_internal_errors( true );
-		$ok = $d->loadHTML( '<?xml encoding="utf-8" ?>' . $html, LIBXML_NONET | LIBXML_COMPACT );
+		$ok = \TranslateRocket\Frontend\Utf8Html::load( $d, $html, LIBXML_NONET | LIBXML_COMPACT );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $v );
 		return $ok ? new \DOMXPath( $d ) : null;

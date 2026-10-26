@@ -7492,3 +7492,17 @@ msgstr "免费引擎要求短暂暂停（每分钟上限）：翻译将在 %d �
 #: translate-rocket.php
 msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
 msgstr "免费的 WordPress 多语言翻译，无需 API 密钥。使用免费 AI、浏览器自带的翻译功能，或您的 DeepL、OpenAI、Gemini、Claude 密钥，翻译整个网站——页面、菜单、WooCommerce、SEO 标题和网址。"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Paused: %1$d of %2$d pages read."
+msgstr "已暂停：已读取 %2$d 个页面中的 %1$d 个。"
+
+#: src/Admin/AutoPage.php
+msgid "Resume it in Labs"
+msgstr "在 Labs 中继续"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Importing… %d translations so far. Keep this page open: it goes on by itself."
+msgstr "正在导入… 目前已有 %d 条翻译。请保持此页面打开：会自动继续。"

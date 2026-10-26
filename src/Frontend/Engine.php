@@ -889,7 +889,11 @@ class Engine {
 		// two-letter one («it», «no», «de») is a word in too many languages to be sure.
 		// 20/10/2026: also a code example made only of tags («<link rel="alternate" hreflang="en" … /> <link …/>»):
 		// nothing in it is a word to translate, and no engine may change it.
-		if ( preg_match( '/^(\s*<\/?[a-z][\w-]*(\s[^<>]*)?\/?>)+\s*$/i', $text ) || preg_match( '/^[a-z]{2,3}-[a-z]{2,4}$/i', $text ) || 'x-default' === strtolower( $text )
+		// 26/10/2026 (Divi, «Graphic · Digital · On-line»: «On-line» stayed in English): «2-3 letters - 2-4 letters» also
+		// matched words — «On-line», «re-use», «pre-sale». A language code is a known language + a region or a script.
+		if ( preg_match( '/^(\s*<\/?[a-z][\w-]*(\s[^<>]*)?\/?>)+\s*$/i', $text )
+			|| ( preg_match( '/^([a-z]{2,3})-([a-z]{2}|hans|hant|latn|cyrl|arab)$/i', $text, $lc ) && ( \TranslateRocket\Languages::exists( strtolower( $lc[1] ) ) || \TranslateRocket\Languages::exists( strtolower( $text ) ) ) )
+			|| 'x-default' === strtolower( $text )
 			|| in_array( strtolower( $text ), array( 'eng', 'ita', 'deu', 'fra', 'spa', 'por', 'nld', 'rus', 'jpn', 'zho', 'kor', 'ara', 'pol', 'tur', 'ukr', 'ell', 'ron', 'ind', 'vie', 'tha', 'hin' ), true ) ) {
 			return true;
 		}
@@ -1411,7 +1415,7 @@ class Engine {
 		}
 		$probe = new \DOMDocument();
 		$prev  = libxml_use_internal_errors( true );
-		$probe->loadHTML( '<?xml encoding="utf-8" ?><html><body' . $m[1] . '></body></html>', LIBXML_NOWARNING | LIBXML_NOERROR );
+		\TranslateRocket\Frontend\Utf8Html::load( $probe, '<html><body' . $m[1] . '></body></html>', LIBXML_NOWARNING | LIBXML_NOERROR );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $prev );
 		$orig = $probe->getElementsByTagName( 'body' )->item( 0 );
@@ -1451,7 +1455,7 @@ class Engine {
 
 		$previous = libxml_use_internal_errors( true );
 		$dom      = new \DOMDocument();
-		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $masked, LIBXML_NOWARNING | LIBXML_NOERROR );
+		\TranslateRocket\Frontend\Utf8Html::load( $dom, $masked, LIBXML_NOWARNING | LIBXML_NOERROR ); // 26/10/2026: UTF-8 on every libxml (Arabic read as «Ø / Ù»)
 		libxml_clear_errors();
 		libxml_use_internal_errors( $previous );
 

@@ -571,9 +571,13 @@
 
 	// Visible editable fragments inside a block, in document order.
 	function blockFrags( block ) {
+		// 25/10/2026 (Twenty Twenty-Five, the default theme, on Aruba: «30 translated · 5 ⚠», «About us» and «Rooms» left in
+		// English in the menu): a menu item with sub-pages is an <li> holding its own submenu <ul>, so «About us» and the
+		// hidden «Our team» became ONE sentence «[1]About us[2]» that never matched. A text belongs to the block that is
+		// its own nearest one, not to a list nested inside it.
 		return Array.prototype.filter.call(
 			block.querySelectorAll( '.trrocket-ed' ),
-			function ( e ) { return e.offsetParent !== null; }
+			function ( e ) { return e.offsetParent !== null && textBlockOf( e ) === block; }
 		);
 	}
 

@@ -179,11 +179,14 @@ class AutoPage {
 	public static function job_days( array $labs ): int {
 		$fatte  = (int) ( $labs['done'] ?? 0 );
 		$totale = (int) ( $labs['total'] ?? 0 );
-		$da     = (int) ( $labs['started'] ?? 0 );
-		if ( empty( $labs['running'] ) || $fatte < 3 || $da <= 0 || $totale <= $fatte ) {
+		// 26/10/2026 (globaltoolszone.com, 4.074 pages: «the whole site in about 3667 days» a minute after «Resume»): the
+		// pace counts from the last start or resume (Labs 0.9.9 says when), not from the first start with the pause in it.
+		$da     = (int) ( $labs['resumed'] ?? 0 ) ?: (int) ( $labs['started'] ?? 0 );
+		$fatte0 = (int) ( $labs['done_at_resume'] ?? 0 );
+		if ( empty( $labs['running'] ) || ! empty( $labs['paused'] ) || $fatte - $fatte0 < 3 || $da <= 0 || $totale <= $fatte ) {
 			return 0;
 		}
-		$al_giorno = $fatte / max( 1, ( time() - $da ) ) * DAY_IN_SECONDS;
+		$al_giorno = ( $fatte - $fatte0 ) / max( 1, ( time() - $da ) ) * DAY_IN_SECONDS;
 		return (int) max( 1, ceil( ( $totale - $fatte ) / max( 1, $al_giorno ) ) );
 	}
 
@@ -206,6 +209,7 @@ class AutoPage {
 				'nonce' => wp_create_nonce( 'trrocket_auto_tick' ), // a page left open for a day keeps updating
 				'job'   => $labs ? array(
 					'running' => ! empty( $labs['running'] ),
+					'paused'  => ! empty( $labs['paused'] ),
 					'done'    => (int) ( $labs['done'] ?? 0 ),
 					'total'   => (int) ( $labs['total'] ?? 0 ),
 					'last'    => ! empty( $labs['last_run'] ) ? human_time_diff( (int) $labs['last_run'] ) : '',
@@ -294,6 +298,9 @@ class AutoPage {
 				'site1' => __( 'the whole site in less than a day', 'translate-rocket' ),
 				'last'  => __( 'last step %s ago', 'translate-rocket' ),
 				'busy'  => __( 'Being translated now', 'translate-rocket' ),
+				'paused' => __( 'Paused: %1$d of %2$d pages read.', 'translate-rocket' ),
+				'resume' => __( 'Resume it in Labs', 'translate-rocket' ),
+				'labs'  => admin_url( 'admin.php?page=translate-rocket-labs#trrlabs-auto' ),
 			)
 		);
 		return '(function(){var C=' . $cfg . ';function f(n,a,b){return String(n).replace("%1$d",a).replace("%2$d",b).replace("%d",a).replace("%s",a);}'
@@ -304,7 +311,7 @@ class AutoPage {
 			. 'var n=row.querySelector(".trr-auto-n");if(n){n.textContent=d.translated+" / "+d.detected;}'
 			. 'var eta=row.querySelector(".trr-auto-eta");if(eta){eta.textContent=d.days?(d.days<=1?C.day1:f(C.days,d.days)):"";}'
 			. 'row.classList.toggle("is-busy",!!d.busy);var h=row.querySelector(".trr-busy");if(h){h.hidden=!d.busy;h.title=C.busy;}'
-			. '});});var j=r.job,el=document.getElementById("trr-auto-job");if(el&&j&&j.total>0){el.textContent=f(C.pages,j.done,j.total)+(j.days?" · "+(j.days<=1?C.site1:f(C.site,j.days)):"")+(j.last?" · "+f(C.last,j.last):"");}}'
+			. '});});var j=r.job,el=document.getElementById("trr-auto-job");if(el&&j&&j.total>0){if(j.paused){el.textContent=f(C.paused,j.done,j.total)+" ";var a=document.createElement("a");a.href=C.labs;a.textContent=C.resume+" →";el.appendChild(a);el.classList.add("is-paused");}else{el.classList.remove("is-paused");el.textContent=f(C.pages,j.done,j.total)+(j.days?" · "+(j.days<=1?C.site1:f(C.site,j.days)):"")+(j.last?" · "+f(C.last,j.last):"");}}}'
 			// One request at a time; after two failed ones in a row (logged out, server down) the hourglasses
 			// go off instead of standing still, frozen from when the page was opened.
 			. 'var busy=0,fails=0;function stale(){if(++fails>=2){document.querySelectorAll("[data-trr-live]").forEach(function(row){row.classList.remove("is-busy");var h=row.querySelector(".trr-busy");if(h){h.hidden=true;}});}}'
@@ -359,7 +366,15 @@ class AutoPage {
 								<span class="description"><?php esc_html_e( 'Every page, post and product, a few at a time, on your server — and every new page as you publish it. You do not need to keep anything open; while this page is open it goes faster.', 'translate-rocket' ); ?></span>
 							</span>
 						</label>
-						<p class="trr-auto-job" id="trr-auto-job" data-trr-live="job"><?php echo ( $stato && (int) ( $stato['total'] ?? 0 ) > 0 ) ? esc_html( sprintf( /* translators: 1: pages done, 2: pages in all */ __( 'Pages read: %1$d of %2$d', 'translate-rocket' ), (int) ( $stato['done'] ?? 0 ), (int) ( $stato['total'] ?? 0 ) ) ) : ''; ?></p>
+						<p class="trr-auto-job<?php echo ( $stato && ! empty( $stato['paused'] ) ) ? ' is-paused' : ''; ?>" id="trr-auto-job" data-trr-live="job"><?php
+						if ( $stato && (int) ( $stato['total'] ?? 0 ) > 0 && ! empty( $stato['paused'] ) ) {
+							// 26/10/2026 (globaltoolszone.com: paused for 6 days in Labs, while this page showed the switch on and
+							// «Pages read: 0 of 4074», so the owner believed it was working): a pause is said here, with the way out.
+							echo esc_html( sprintf( /* translators: 1: pages done, 2: pages in all */ __( 'Paused: %1$d of %2$d pages read.', 'translate-rocket' ), (int) ( $stato['done'] ?? 0 ), (int) ( $stato['total'] ?? 0 ) ) ) . ' <a href="' . esc_url( admin_url( 'admin.php?page=translate-rocket-labs#trrlabs-auto' ) ) . '">' . esc_html__( 'Resume it in Labs', 'translate-rocket' ) . ' &rarr;</a>';
+						} elseif ( $stato && (int) ( $stato['total'] ?? 0 ) > 0 ) {
+							echo esc_html( sprintf( /* translators: 1: pages done, 2: pages in all */ __( 'Pages read: %1$d of %2$d', 'translate-rocket' ), (int) ( $stato['done'] ?? 0 ), (int) ( $stato['total'] ?? 0 ) ) );
+						}
+						?></p>
 					<?php elseif ( $labs_in ) : ?>
 						<p class="trr-auto-old"><strong><?php esc_html_e( 'Update TranslateRocket Labs to 0.9 or later', 'translate-rocket' ); ?></strong> — <?php esc_html_e( 'then its engines and automatic translation are switched on here. Until then they stay on the Labs page.', 'translate-rocket' ); ?> <a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>"><?php esc_html_e( 'Plugins', 'translate-rocket' ); ?></a></p>
 					<?php else : ?>

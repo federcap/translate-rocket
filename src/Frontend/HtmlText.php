@@ -193,7 +193,7 @@ class HtmlText {
 
 		$prev = libxml_use_internal_errors( true );
 		$dom  = new \DOMDocument();
-		$ok   = $dom->loadHTML( '<?xml encoding="utf-8" ?><div id="trr-frag">' . $masked . '</div>', LIBXML_NOWARNING | LIBXML_NOERROR | LIBXML_HTML_NODEFDTD );
+		$ok   = \TranslateRocket\Frontend\Utf8Html::load( $dom, '<div id="trr-frag">' . $masked . '</div>', LIBXML_NOWARNING | LIBXML_NOERROR | LIBXML_HTML_NODEFDTD );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $prev );
 		if ( ! $ok ) {

@@ -789,7 +789,7 @@ class WooCommerce {
 
 		$prev = libxml_use_internal_errors( true );
 		$dom  = new \DOMDocument();
-		$ok   = $dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html, LIBXML_NOWARNING | LIBXML_NOERROR );
+		$ok   = \TranslateRocket\Frontend\Utf8Html::load( $dom, $html, LIBXML_NOWARNING | LIBXML_NOERROR );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $prev );
 		if ( ! $ok ) {
@@ -909,8 +909,8 @@ class WooCommerce {
 
 		$prev = libxml_use_internal_errors( true );
 		$dom  = new \DOMDocument();
-		$load = '<?xml encoding="utf-8" ?>' . ( $is_doc ? $html : '<div id="trr-frag">' . $html . '</div>' );
-		$ok   = $dom->loadHTML( $load, LIBXML_NOWARNING | LIBXML_NOERROR );
+		$load = ( $is_doc ? $html : '<div id="trr-frag">' . $html . '</div>' );
+		$ok   = \TranslateRocket\Frontend\Utf8Html::load( $dom, $load, LIBXML_NOWARNING | LIBXML_NOERROR );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $prev );
 		if ( ! $ok ) {

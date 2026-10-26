@@ -480,7 +480,7 @@ class Comune {
 		}
 		$doc  = new \DOMDocument();
 		$prec = libxml_use_internal_errors( true );
-		$ok   = $doc->loadHTML( '<?xml encoding="UTF-8"?><div>' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+		$ok   = \TranslateRocket\Frontend\Utf8Html::load( $doc, '<div>' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $prec );
 		if ( ! $ok ) {

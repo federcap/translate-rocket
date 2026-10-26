@@ -7518,3 +7518,17 @@ msgstr "Ücretsiz motor kısa bir ara istedi (dakika başına sınırı): çevir
 #: translate-rocket.php
 msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
 msgstr "WordPress için ücretsiz çok dilli çeviri, API anahtarı gerekmez. Sitenizin tamamını — sayfalar, menüler, WooCommerce, SEO başlıkları ve adresler — ücretsiz bir yapay zekâ, tarayıcınızın kendi çevirmeni ya da DeepL, OpenAI, Gemini veya Claude anahtarlarınızla çevirin."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Paused: %1$d of %2$d pages read."
+msgstr "Duraklatıldı: %2$d sayfadan %1$d tanesi okundu."
+
+#: src/Admin/AutoPage.php
+msgid "Resume it in Labs"
+msgstr "Labs'te sürdür"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Importing… %d translations so far. Keep this page open: it goes on by itself."
+msgstr "İçe aktarılıyor… şu ana kadar %d çeviri. Bu sayfayı açık tutun: kendiliğinden devam eder."

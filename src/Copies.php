@@ -304,8 +304,8 @@ class Copies {
 
 		$dom = new \DOMDocument();
 		libxml_use_internal_errors( true );
-		$ok = $dom->loadHTML(
-			'<?xml encoding="utf-8"?><div id="trr-bake">' . $html . '</div>',
+		$ok = \TranslateRocket\Frontend\Utf8Html::load(
+			$dom, '<div id="trr-bake">' . $html . '</div>',
 			LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
 		);
 		libxml_clear_errors();

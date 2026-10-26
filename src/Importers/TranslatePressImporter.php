@@ -25,6 +25,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class TranslatePressImporter implements ImporterInterface {
 
+	/** Where a stepped import got to (language index, last dictionary row, translations so far). */
+	const CURSOR = 'trrocket_tp_import_cursor';
+
 	public function id(): string {
 		return 'translatepress';
 	}
@@ -140,11 +143,22 @@ class TranslatePressImporter implements ImporterInterface {
 		}
 
 		$our_default = Plugin::instance()->router()->default_language();
-		$count       = 0;
+		// 26/10/2026 (5.001 rows: 125 s in one request; many hosts cut a request at 30-60 s, so a big TranslatePress
+		// site stopped half-way with a 504): the import goes in steps of about 20 seconds. Where it got to is kept
+		// (language, last row) and the import page starts the next step by itself until everything is in.
+		$cur     = get_option( self::CURSOR );
+		$cur     = is_array( $cur ) ? $cur : array( 'lang' => 0, 'id' => 0, 'count' => 0 );
+		$count   = (int) $cur['count'];
+		$fino    = microtime( true ) + (float) apply_filters( 'trrocket_import_step_seconds', 20 );
+		$n_lang  = -1;
 
 		foreach ( (array) ( $s['translation-languages'] ?? array() ) as $target ) {
 			if ( $target === $s['default-language'] ) {
 				continue;
+			}
+			++$n_lang;
+			if ( $n_lang < (int) $cur['lang'] ) {
+				continue; // done in an earlier step
 			}
 			$lang = $this->map_lang( $target );
 			if ( ! Languages::exists( $lang ) || $lang === $our_default ) {
@@ -154,8 +168,22 @@ class TranslatePressImporter implements ImporterInterface {
 			// 1) Page-content dictionary.
 			$table = $this->dictionary_table( $s['default-language'], $target );
 			if ( $this->table_exists( $table ) ) {
-				$rows = $wpdb->get_results( "SELECT original, translated, status FROM `{$table}` WHERE " . $this->real_rows( $table ) ); // phpcs:ignore WordPress.DB
+				// 26/10/2026: the whole dictionary in one query filled the memory on big sites (tens of thousands of rows
+				// per language): it is read in blocks of 2.000 rows, in id order.
+				$dove   = $this->real_rows( $table );
+				$ultimo = $n_lang === (int) $cur['lang'] ? (int) $cur['id'] : 0;
+				do {
+				$rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, original, translated, status FROM `{$table}` WHERE {$dove} AND id > %d ORDER BY id LIMIT 2000", $ultimo ) ); // phpcs:ignore WordPress.DB
 				foreach ( $rows as $row ) {
+					if ( microtime( true ) >= $fino ) {
+						update_option( self::CURSOR, array( 'lang' => $n_lang, 'id' => $ultimo, 'count' => $count ), false );
+						return array(
+							'count' => $count,
+							'error' => '',
+							'more'  => true,
+						);
+					}
+					$ultimo = (int) $row->id;
 					if ( self::only_address( (string) $row->original ) ) {
 						continue;
 					}
@@ -182,6 +210,7 @@ class TranslatePressImporter implements ImporterInterface {
 						++$count;
 					}
 				}
+				} while ( 2000 === count( $rows ) );
 			}
 
 			// Note: the gettext (theme/plugin interface) table is deliberately skipped.
@@ -192,6 +221,7 @@ class TranslatePressImporter implements ImporterInterface {
 
 		// 3) Translated post slugs (one shared table for all target languages).
 		$count += $this->import_slugs( $our_default );
+		delete_option( self::CURSOR );
 
 		return array(
 			'count' => $count,

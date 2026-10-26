@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.22
+Stable tag: 1.8.23
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,16 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.23 =
+* Fixed: on servers with a newer libxml (the HTML reader PHP uses), pages in non-Latin scripts — Arabic, Russian, Greek, Chinese… — could come out garbled («Ø / Ù») in the translated pages and in the visual editor, because libxml ignored the UTF-8 hint it was given. Pages are now read in a way that does not depend on that hint, on every version.
+* Fixed: on child pages, the hreflang tags and the language switcher now use the translated address of every parent in the chain, as the sitemap already did, instead of a mix of translated and original ones.
+* Fixed: hyphenated words such as «Wi-Fi», «On-line», «on-site» or «pre-sale» were taken for language codes and left untranslated.
+* Fixed: in block-theme menus, a menu item with sub-pages was read as one sentence with its sub-menu hidden inside, and could stay in English; the language names in the switcher are no longer translated («English» stays «English»), as in classic menus.
+* Fixed: a long sentence that an engine sends back unchanged is no longer saved as translated: the next engine is tried, or it stays to be translated.
+* Fixed: «Translate all» stopped when a step answered with an HTML page instead of data (for example while the server's object cache was restarting). It now waits and tries again by itself.
+* Improved: the TranslatePress importer works in steps of 20 seconds that continue by themselves, so large sites (tens of thousands of translations) import on hosts that cut requests at 30–60 seconds.
+* Improved: the «Automatic» page says «Paused» when the reading of the site is paused, with a link to resume it in Labs, and estimates the days left from when it was resumed.
 
 = 1.8.22 =
 * Fixed: a child page whose parent has a translated address but which has none of its own in a language (/ja/特長/block-theme-menus/) answered 404, and so did its old address after the redirect. It opens now.
@@ -550,6 +560,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.23 =
+Non-Latin sites (Arabic, Russian, Chinese…) no longer come out garbled on newer servers, correct hreflang on child pages, «Wi-Fi» and similar words translated, and large TranslatePress imports in steps.
 
 = 1.8.22 =
 Child pages under a translated parent no longer answer 404, «Translate page» works with a saved key in every browser, correct counts after the setup wizard, and «Translate all» no longer stops at Groq's per-minute pause.

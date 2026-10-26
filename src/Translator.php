@@ -283,7 +283,9 @@ class Translator {
 						// prima di decidere: altrimenti si butterebbe via una traduzione buona.
 						$translation = \TranslateRocket\Frontend\InlineText::normalize( $texts[ $i ], $translation );
 					}
-					if ( isset( $texts[ $i ] ) && '' !== trim( $translation ) && self::parts_kept( $texts[ $i ], $translation ) ) {
+					if ( isset( $texts[ $i ] ) && self::is_echo( $texts[ $i ], $translation, $source, $lang ) ) {
+						$vuote[] = $texts[ $i ]; // the engine sent the sentence back unchanged: asked again on its own, then the others
+					} elseif ( isset( $texts[ $i ] ) && '' !== trim( $translation ) && self::parts_kept( $texts[ $i ], $translation ) ) {
 						self::save_group( $pending[ $texts[ $i ] ], $lang, $translation, $hit['provider'], $texts[ $i ], $count );
 					} elseif ( isset( $texts[ $i ] ) ) {
 						$vuote[] = $texts[ $i ];
@@ -301,7 +303,27 @@ class Translator {
 					}
 					$one = self::first_ok( $providers, $dead, array( $text ), $source, $lang, $error, $resting );
 					$uno = ( null !== $one && isset( $one['translations'][0] ) ) ? trim( (string) $one['translations'][0] ) : '';
-					if ( '' !== $uno && self::parts_kept( $text, $uno ) ) {
+					if ( '' !== $uno && self::is_echo( $text, $uno, $source, $lang ) ) {
+						// 26/10/2026 (translaterocket.com: Groq gave back English notes unchanged and they were saved as Japanese):
+						// the other engines of the chain, one by one; if none changes it, the sentence stays to be translated —
+						// never an English sentence counted as translated.
+						$altro = null;
+						foreach ( $providers as $pv ) {
+							if ( $pv->id() === $one['provider'] || isset( $dead[ $pv->id() ] ) || isset( $resting[ $pv->id() ] ) ) {
+								continue;
+							}
+							$r2 = $pv->translate( array( $text ), $source, $lang );
+							$t2 = ( $r2->success && isset( $r2->translations[0] ) ) ? trim( (string) $r2->translations[0] ) : '';
+							if ( '' !== $t2 && ! self::is_echo( $text, $t2, $source, $lang ) && self::parts_kept( $text, $t2 ) ) {
+								$altro = array( $t2, $pv->id() );
+								break;
+							}
+						}
+						if ( $altro ) {
+							self::save_group( $pending[ $text ], $lang, $altro[0], $altro[1], $text, $count );
+							AiUsage::add( mb_strlen( $text ) );
+						}
+					} elseif ( '' !== $uno && self::parts_kept( $text, $uno ) ) {
 						self::save_group( $pending[ $text ], $lang, $uno, $one['provider'], $text, $count );
 						AiUsage::add( mb_strlen( $text ) );
 					} elseif ( null !== $one && '' === $uno ) {
@@ -625,6 +647,26 @@ class Translator {
 	 * @param string $original    The text that was sent.
 	 * @param string $translation What came back.
 	 */
+	/**
+	 * 26/10/2026: a long sentence (a real sentence, not a name or a brand) that came back exactly as it was sent, into
+	 * another language: the engine did not translate it. Short texts identical in both languages stay valid.
+	 *
+	 * @param string $original    Text sent.
+	 * @param string $translation Text received.
+	 * @param string $source      Source language.
+	 * @param string $target      Target language.
+	 */
+	private static function is_echo( string $original, string $translation, string $source, string $target ): bool {
+		if ( '' === trim( $translation ) || strtok( $source, '-' ) === strtok( $target, '-' ) ) {
+			return false;
+		}
+		if ( trim( $original ) !== trim( $translation ) ) {
+			return false;
+		}
+		$parole = preg_split( '/\s+/u', trim( (string) preg_replace( '#</?\d+/?>#', ' ', $original ) ) );
+		return mb_strlen( $original ) > 40 && count( array_filter( $parole, static fn( $w ) => preg_match( '/\p{L}{2,}/u', $w ) ) ) >= 5;
+	}
+
 	private static function parts_kept( string $original, string $translation ): bool {
 		if ( ! \TranslateRocket\Frontend\InlineText::has_parts( $original ) ) {
 			return true;

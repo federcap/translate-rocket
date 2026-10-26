@@ -1652,10 +1652,19 @@ class Admin {
 			if ( function_exists( 'set_time_limit' ) ) {
 				@set_time_limit( 300 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, Squiz.PHP.DiscouragedFunctions.Discouraged -- disabled on some hosts; failing silently is fine.
 			}
+			// 26/10/2026: a stepped import (TranslatePress) starts again from the beginning only when the button is pressed;
+			// the next steps, sent by the page itself, go on from where the last one stopped.
+			if ( empty( $_POST['trr_continue'] ) ) {
+				delete_option( \TranslateRocket\Importers\TranslatePressImporter::CURSOR );
+			}
 			Strings::batch_start();
 			$result = $importer->import();
 			Strings::batch_end();
 			$count  = (int) ( $result['count'] ?? 0 );
+			if ( ! empty( $result['more'] ) ) {
+				wp_safe_redirect( add_query_arg( array( 'page' => 'translate-rocket-import', 'import_more' => $id, 'imported_so' => $count ), admin_url( 'admin.php' ) ) );
+				exit;
+			}
 			// Un importatore puo' rifiutarsi con un motivo (per esempio: il vecchio
 			// plugin dice che il sito e' scritto in un'altra lingua). Prima la bacheca
 			// mostrava solo «0 importate», e l'utente non sapeva perche'.
@@ -2081,6 +2090,22 @@ class Admin {
 				<div class="notice notice-error">
 					<p><strong><?php esc_html_e( 'Nothing was imported, on purpose.', 'translate-rocket' ); ?></strong>
 					<?php esc_html_e( 'The plugin you are coming from says your site is written in a different language from the one set in TranslateRocket. Importing now would pair every sentence with the wrong side. Set the source language in TranslateRocket to the language your pages are written in, then import again.', 'translate-rocket' ); ?></p>
+				</div>
+			<?php elseif ( isset( $_GET['import_more'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
+				<div class="notice notice-info">
+					<p><strong>
+						<?php
+						/* translators: %d: number of translations imported so far. */
+						printf( esc_html__( 'Importing… %d translations so far. Keep this page open: it goes on by itself.', 'translate-rocket' ), (int) $_GET['imported_so'] ); // phpcs:ignore WordPress.Security.NonceVerification
+						?>
+					</strong></p>
+					<form method="post" action="" id="trr-import-continue">
+						<?php wp_nonce_field( 'trrocket_import_ext', 'trrocket_import_ext_nonce' ); ?>
+						<input type="hidden" name="importer" value="<?php echo esc_attr( sanitize_key( wp_unslash( $_GET['import_more'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification ?>" />
+						<input type="hidden" name="trr_continue" value="1" />
+						<button type="submit" class="button"><?php esc_html_e( 'Continue', 'translate-rocket' ); ?></button>
+					</form>
+					<script>setTimeout(function(){var f=document.getElementById('trr-import-continue');if(f){f.submit();}},800);</script>
 				</div>
 			<?php elseif ( isset( $_GET['imported_n'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
 				<div class="notice notice-success is-dismissible">
@@ -3923,7 +3948,7 @@ JS;
 								// the way to them, instead of reloading as if all were done.
 								if(x.stuck){box.classList.add('is-warn');txt.textContent=(T.stuck||'').replace('%1$s',fatte).replace('%2$s',x.left)+' ';var lk=document.createElement('a');lk.href=x.stuck;lk.textContent=T.stuckLink||'';txt.appendChild(lk);if(go){go.disabled=false;}document.querySelectorAll('.trr-busy').forEach(function(b){b.hidden=true;});return;}
 							fill.style.width='100%';location.reload();
-						}).catch(function(err){var m=err&&err.message?err.message:'?';if(riprove<5&&(/^HTTP 5\d\d/.test(m)||/fetch|network|Load failed/i.test(m))){riprove++;var s=10*riprove;txt.textContent=(T.retry||'').replace('%1$s',m).replace('%2$s',s);setTimeout(giro,s*1000);return;}ferma((T.lost||'').replace('%s',m));});
+						}).catch(function(err){var m=err&&err.message?err.message:'?';if(riprove<5&&(/^HTTP 5\d\d/.test(m)||/fetch|network|Load failed|JSON|Unexpected token|Unexpected end/i.test(m))){riprove++;var s=10*riprove;txt.textContent=(T.retry||'').replace('%1$s',m).replace('%2$s',s);setTimeout(giro,s*1000);return;}ferma((T.lost||'').replace('%s',m));});
 					}
 					scrivi(-1);giro();
 				}

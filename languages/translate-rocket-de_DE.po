@@ -6671,3 +6671,17 @@ msgstr "Die kostenlose Engine hat um eine kurze Pause gebeten (ihr Limit pro Min
 #: translate-rocket.php
 msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
 msgstr "Kostenlose mehrsprachige Übersetzung für WordPress, kein API-Schlüssel nötig. Übersetze deine ganze Website — Seiten, Menüs, WooCommerce, SEO-Titel und Adressen — mit einer kostenlosen KI, dem Übersetzer deines Browsers oder deinen Schlüsseln für DeepL, OpenAI, Gemini oder Claude."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Paused: %1$d of %2$d pages read."
+msgstr "Pausiert: %1$d von %2$d Seiten gelesen."
+
+#: src/Admin/AutoPage.php
+msgid "Resume it in Labs"
+msgstr "In Labs fortsetzen"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Importing… %d translations so far. Keep this page open: it goes on by itself."
+msgstr "Import läuft… bisher %d Übersetzungen. Lass diese Seite offen: es geht von selbst weiter."

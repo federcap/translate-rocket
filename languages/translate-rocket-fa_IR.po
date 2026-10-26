@@ -7518,3 +7518,17 @@ msgstr "موتور رایگان یک مکث کوتاه خواست (محدودی�
 #: translate-rocket.php
 msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
 msgstr "ترجمهٔ چندزبانهٔ رایگان برای وردپرس، بدون نیاز به کلید API. کل سایت خود را ترجمه کنید — صفحه‌ها، منوها، WooCommerce، عنوان‌های سئو و نشانی‌ها — با یک هوش مصنوعی رایگان، مترجم خود مرورگرتان، یا کلیدهایتان برای DeepL، OpenAI، Gemini یا Claude."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Paused: %1$d of %2$d pages read."
+msgstr "متوقف: %1$d از %2$d صفحه خوانده شد."
+
+#: src/Admin/AutoPage.php
+msgid "Resume it in Labs"
+msgstr "ادامه در Labs"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Importing… %d translations so far. Keep this page open: it goes on by itself."
+msgstr "در حال وارد کردن… تا کنون %d ترجمه. این صفحه را باز نگه دارید: خودش ادامه می‌دهد."

@@ -6647,3 +6647,17 @@ msgstr "無料エンジンが短い休止を求めました（1 分あたりの�
 #: translate-rocket.php
 msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
 msgstr "WordPress 向けの無料多言語翻訳。API キーは不要です。サイト全体 — ページ、メニュー、WooCommerce、SEO タイトル、URL — を、無料の AI、ブラウザー内蔵の翻訳機能、または DeepL・OpenAI・Gemini・Claude のキーで翻訳できます。"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Paused: %1$d of %2$d pages read."
+msgstr "一時停止中：%2$d ページ中 %1$d ページを読み込み済み。"
+
+#: src/Admin/AutoPage.php
+msgid "Resume it in Labs"
+msgstr "Labs で再開する"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Importing… %d translations so far. Keep this page open: it goes on by itself."
+msgstr "インポート中… これまでに %d 件の翻訳。このページを開いたままにしてください：自動で続きます。"

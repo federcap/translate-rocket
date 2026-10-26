@@ -6699,3 +6699,17 @@ msgstr "Бесплатный движок попросил короткую па
 #: translate-rocket.php
 msgid "Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude."
 msgstr "Бесплатный многоязычный перевод для WordPress, без API-ключа. Переведите весь сайт — страницы, меню, WooCommerce, SEO-заголовки и адреса — с помощью бесплатного ИИ, встроенного переводчика браузера или своих ключей DeepL, OpenAI, Gemini или Claude."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Paused: %1$d of %2$d pages read."
+msgstr "Приостановлено: прочитано %1$d из %2$d страниц."
+
+#: src/Admin/AutoPage.php
+msgid "Resume it in Labs"
+msgstr "Возобновить в Labs"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Importing… %d translations so far. Keep this page open: it goes on by itself."
+msgstr "Импорт… пока %d переводов. Не закрывайте эту страницу: всё продолжится само."
