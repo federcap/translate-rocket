@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.26
+Stable tag: 1.8.27
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.27 =
+* Fixed: on a big site (hundreds of thousands of translations) the check that decides whether the progress numbers must be counted again was itself a scan of the translations table, run up to 26 times on every admin screen. It is now one index-only query per screen.
+* Improved: TranslateRocket Labs 0.9.12 no longer counts the sentences still to translate in every language on every wp-admin screen: only when a browser engine (Chrome's translator, Google unofficial) may work there, and keeping the last count for a while on a site that is translating.
 
 = 1.8.26 =
 * Fixed: with Themify's page cache on (Themify Ultra and the other Themify themes, Themify Builder), the first language a page was shown in was served to every visitor afterwards: a Polish site showed its Polish home page on /de/ and /en/, and the language seemed to change at random from one page to the next. Themify now keeps one copy per language, and its cache is emptied together with TranslateRocket's.
@@ -584,6 +588,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.27 =
+Big sites: far fewer database scans on every admin screen. Pair with Labs 0.9.12.
 
 = 1.8.26 =
 Themify themes with page cache on: translated pages were served in the wrong language. Fixed.

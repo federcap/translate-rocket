@@ -328,10 +328,18 @@ class Strings {
 		// pages read, translations added or deleted in this language. Read at every call, never kept: the AI step
 		// translates and then asks how many are left, in the same request. Indexed counts: milliseconds.
 		$gen    = get_option( 'trrocket_map_gen', array() );
-		$st     = Database::strings_table();
-		$tr     = Database::translations_table();
-		$oc     = Database::occurrences_table();
-		$n      = $wpdb->get_row( $wpdb->prepare( "SELECT (SELECT COUNT(*) FROM {$st}) AS s, (SELECT MAX(id) FROM {$st}) AS ms, (SELECT MAX(id) FROM {$oc}) AS mo, (SELECT COUNT(*) FROM {$tr} WHERE language = %s) AS t", $lang ), ARRAY_N ); // phpcs:ignore WordPress.DB
+		// 1.8.27 (28/10/2026, globaltoolszone, 780.000 translations: «one from strings… is giving headaches»): this signature
+		// ran at EVERY call — 2 counts × 13 languages = 26 times per screen — and its COUNT(*) on the translations table
+		// of one language was itself a scan of 780.000 rows. Now: once per request, and only the highest ids (index-only,
+		// a millisecond): sentences added, pages read, translations added. What is saved or deleted in a language bumps
+		// its map generation (flush_maps), which is the other half of the signature.
+		static $n = null;
+		if ( null === $n ) {
+			$st = Database::strings_table();
+			$tr = Database::translations_table();
+			$oc = Database::occurrences_table();
+			$n  = $wpdb->get_row( "SELECT /* trr-firma */ (SELECT COUNT(*) FROM {$st}) AS s, (SELECT MAX(id) FROM {$st}) AS ms, (SELECT MAX(id) FROM {$oc}) AS mo, (SELECT MAX(id) FROM {$tr}) AS mt", ARRAY_N ); // phpcs:ignore WordPress.DB
+		}
 		$firma = md5( $lang . '|' . ( is_array( $gen ) ? (int) ( $gen[ $lang ] ?? 1 ) : 1 ) . '|' . implode( '|', (array) $n ) );
 		$nome  = 'trrocket_cn' . $what . '_' . $lang; // one place per count and language, the signature inside
 		if ( isset( $fatti[ $nome ] ) && $firma === $fatti[ $nome ]['firma'] ) {
@@ -642,8 +650,10 @@ class Strings {
 	 *
 	 * @param string $lang Language code.
 	 */
-	public static function untranslated_count( string $lang ): int {
-		return (int) self::conto( 'uc', $lang, static function () use ( $lang ) { return self::untranslated_count_now( $lang ); } );
+	public static function untranslated_count( string $lang, bool $calm = false ): int {
+		// $calm (1.8.27): a screen that only needs to know whether there is work (Labs' browser worker) keeps the last
+		// count for a while on a big site while it translates, like the progress numbers (see conto()).
+		return (int) self::conto( 'uc', $lang, static function () use ( $lang ) { return self::untranslated_count_now( $lang ); }, $calm );
 	}
 
 	/**
