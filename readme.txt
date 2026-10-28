@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.27
+Stable tag: 1.8.28
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.28 =
+* Improved: on the «Automatic» page an engine you tick but that cannot work yet says so right under its name — conditions not accepted, «where it runs» set to the server only, or paused by the service — with a link to the one thing to do. Ticking an unofficial engine opens its conditions and lights up the box to tick, instead of saving an engine that then comes back grey.
+* Improved: without Labs, the locked engines explain in one line how to switch them on (get Labs, come back, tick them).
+* New: with Labs 0.9.13, under Advanced you choose how hard the background translation works on your server: Light (1 page every 2 minutes), Normal (3 pages a minute) or Fast (6 pages every 30 seconds).
 
 = 1.8.27 =
 * Fixed: on a big site (hundreds of thousands of translations) the check that decides whether the progress numbers must be counted again was itself a scan of the translations table, run up to 26 times on every admin screen. It is now one index-only query per screen.
@@ -588,6 +593,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.28 =
+Clearer engines on the Automatic page (why one is not working, what to do) and a Light / Normal / Fast server-load setting with Labs 0.9.13.
 
 = 1.8.27 =
 Big sites: far fewer database scans on every admin screen. Pair with Labs 0.9.12.

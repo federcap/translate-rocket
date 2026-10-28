@@ -391,6 +391,7 @@ class AutoPage {
 				'engines'   => $motori,
 				'ack'       => ! empty( $_POST['unofficial_ack'] ),
 				'run_where' => in_array( $dove, array( 'server', 'browser', 'both' ), true ) ? $dove : '',
+				'pace'      => isset( $_POST['pace'] ) ? sanitize_key( wp_unslash( $_POST['pace'] ) ) : '', // 1.8.28: light | normal | fast (Labs 0.9.13)
 			)
 		);
 		self::check_online();
@@ -598,9 +599,21 @@ class AutoPage {
 								<li class="<?php echo ! empty( $r['on'] ) ? 'is-on' : 'is-off'; ?>" data-trr-eng="<?php echo esc_attr( (string) $r['id'] ); ?>">
 									<span class="trr-ov-dot" aria-hidden="true"><?php echo (int) ++$trr_pos; ?></span>
 									<label class="trr-auto-chain-txt">
-										<input type="checkbox" name="engine[<?php echo esc_attr( (string) $r['id'] ); ?>]" value="1" <?php checked( ! empty( $r['on'] ) ); ?>>
+										<input type="checkbox" name="engine[<?php echo esc_attr( (string) $r['id'] ); ?>]" value="1" <?php checked( ! empty( $r['on'] ) ); ?> data-trr-ack="<?php echo ( ! empty( $r['warning'] ) && empty( $r['acked'] ) ) ? '1' : '0'; ?>">
 										<strong><?php echo esc_html( (string) $r['label'] ); ?></strong> <span class="trr-busy" hidden>⏳</span>
 										<span class="description"><?php echo esc_html( (string) ( $r['note'] ?? '' ) ); ?></span>
+									<?php
+									// 1.8.28 (28/10/2026, Federico: «some engines are grey and you cannot switch them on: say why and link
+									// the two things»): an engine ticked but not working says so right here, with the one thing to do.
+									// Labs 0.9.13 sends «why»; an older Labs only tells whether the conditions were accepted.
+									$trr_why = (string) ( $r['why'] ?? '' );
+									if ( '' === $trr_why && ! empty( $r['on'] ) && ! empty( $r['warning'] ) && empty( $r['acked'] ) ) {
+										$trr_why = __( 'Not working yet: tick «I accept the conditions» below — then it starts.', 'translate-rocket' );
+									}
+									?>
+									<?php if ( '' !== $trr_why ) : ?>
+										<span class="trr-auto-why">⚠️ <?php echo esc_html( $trr_why ); ?> <a href="#trr-auto-ack" class="trr-auto-why-go"><?php esc_html_e( 'Take me there', 'translate-rocket' ); ?></a></span>
+									<?php endif; ?>
 									</label>
 								</li>
 							<?php endif; ?>
@@ -609,6 +622,7 @@ class AutoPage {
 							<?php foreach ( array( __( 'Microsoft Edge Translator — from your server', 'translate-rocket' ), __( 'MyMemory — from your server, daily limit', 'translate-rocket' ), __( 'The translator built into Chrome and Edge — in your browser', 'translate-rocket' ) ) as $l ) : ?>
 								<li class="is-locked"><span class="trr-ov-dot" aria-hidden="true">🔒</span> <span class="trr-auto-chain-txt"><?php echo esc_html( $l ); ?> <span class="trr-ov-tag trr-ov-free"><?php esc_html_e( 'Labs', 'translate-rocket' ); ?></span></span></li>
 							<?php endforeach; ?>
+							<li class="is-locked trr-auto-how"><span class="trr-ov-dot" aria-hidden="true">→</span> <span class="trr-auto-chain-txt"><?php esc_html_e( 'To switch these on: 1. get Labs (free, one minute) — 2. come back to this page — 3. tick them and accept their conditions.', 'translate-rocket' ); ?> <a href="<?php echo esc_url( LabsPromo::site_url( 'auto' ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Get Labs — free', 'translate-rocket' ); ?> ↗</a></span></li>
 						<?php endif; ?>
 					</ol>
 					<p>
@@ -616,7 +630,7 @@ class AutoPage {
 						<?php if ( null !== $rows ) : ?> · <a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-labs' ) ); ?>"><?php esc_html_e( 'Change the order', 'translate-rocket' ); ?></a><?php endif; ?>
 					</p>
 					<?php if ( null !== $rows ) : ?>
-						<label class="trr-auto-check">
+						<label class="trr-auto-check" id="trr-auto-ack">
 							<input type="checkbox" name="unofficial_ack" value="1" <?php checked( (bool) array_filter( array_column( $rows, 'acked' ) ) ); ?>>
 							<?php esc_html_e( 'I accept the conditions of the unofficial engines I switch on', 'translate-rocket' ); ?>
 						</label>
@@ -640,6 +654,13 @@ class AutoPage {
 						<?php foreach ( array( 'server' => __( 'On my server, by itself (recommended)', 'translate-rocket' ), 'browser' => __( 'In my browser, while wp-admin is open', 'translate-rocket' ), 'both' => __( 'Both', 'translate-rocket' ) ) as $v => $l ) : ?>
 							<label class="trr-auto-radio"><input type="radio" name="run_where" value="<?php echo esc_attr( $v ); ?>" <?php checked( $dove, $v ); ?>> <?php echo esc_html( $l ); ?></label>
 						<?php endforeach; ?>
+						<?php if ( isset( $stato['pace'] ) ) : // Labs 0.9.13+ (28/10/2026, a 4.000-page site: «depending on user and cpu») ?>
+							<p><?php esc_html_e( 'How hard it works on your server', 'translate-rocket' ); ?></p>
+							<?php $trr_pace = (string) $stato['pace']; ?>
+							<?php foreach ( array( 'light' => __( 'Light — 1 page every 2 minutes (shared hosting, a busy shop)', 'translate-rocket' ), 'normal' => __( 'Normal — 3 pages a minute (recommended)', 'translate-rocket' ), 'fast' => __( 'Fast — 6 pages every 30 seconds (a server with CPU to spare)', 'translate-rocket' ) ) as $v => $l ) : ?>
+								<label class="trr-auto-radio"><input type="radio" name="pace" value="<?php echo esc_attr( $v ); ?>" <?php checked( $trr_pace, $v ); ?>> <?php echo esc_html( $l ); ?></label>
+							<?php endforeach; ?>
+						<?php endif; ?>
 						<p><a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-labs' ) ); ?>"><?php esc_html_e( 'Engine order, external collaborators, domains per language, second opinion, weekly report', 'translate-rocket' ); ?></a></p>
 					</details>
 				<?php endif; ?>
@@ -657,9 +678,19 @@ class AutoPage {
 				if ( ! f ) { return; }
 				f.addEventListener( 'change', function ( e ) {
 					var n = ( e.target && e.target.name ) || '';
-					if ( ! /^(engine\[|auto_on$|auto_online$|unofficial_ack$|run_where$)/.test( n ) ) { return; }
+					if ( ! /^(engine\[|auto_on$|auto_online$|unofficial_ack$|run_where$|pace$)/.test( n ) ) { return; }
 					var li = e.target.closest( 'li' );
 					if ( li ) { li.className = e.target.checked ? 'is-on' : 'is-off'; }
+					// 1.8.28: an unofficial engine ticked before its conditions were accepted would be saved and come back
+					// «not working». Instead the page opens the conditions, lights up the box to tick, and saves when it is ticked.
+					var ack = f.querySelector( 'input[name="unofficial_ack"]' );
+					if ( /^engine\[/.test( n ) && e.target.checked && e.target.getAttribute( 'data-trr-ack' ) === '1' && ack && ! ack.checked ) {
+						var det = f.querySelector( '.trr-auto-terms' );
+						if ( det ) { det.open = true; }
+						var box = document.getElementById( 'trr-auto-ack' );
+						if ( box ) { box.classList.add( 'trr-auto-ack-now' ); box.scrollIntoView( { behavior: 'smooth', block: 'center' } ); }
+						return;
+					}
 					f.style.opacity = '0.6';
 					f.style.pointerEvents = 'none';
 					var b = f.querySelector( '.trr-auto-save [type=submit]' );
