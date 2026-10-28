@@ -49,6 +49,21 @@ class Router {
 	private $old_term = null;
 
 	/**
+	 * The request address as the visitor sent it, language prefix included (1.8.26: Themify's page cache keys its
+	 * files on $_SERVER['REQUEST_URI'] and needs the one with the language, see Integrations\Themify).
+	 *
+	 * @var string
+	 */
+	private $original_uri = '/';
+
+	/**
+	 * The address as the visitor sent it (/de/, /de/team/…), before the language was stripped for WordPress.
+	 */
+	public function original_request_uri(): string {
+		return $this->original_uri;
+	}
+
+	/**
 	 * Hook into WordPress.
 	 */
 	public function boot(): void {
@@ -462,6 +477,7 @@ class Router {
 		}
 
 		$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/'; // phpcs:ignore
+		$this->original_uri = (string) $request_uri;
 		$request_path = wp_parse_url( $request_uri, PHP_URL_PATH );
 		$request_path = is_string( $request_path ) ? $request_path : '/';
 

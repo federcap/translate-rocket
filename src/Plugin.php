@@ -169,6 +169,7 @@ final class Plugin {
 		( new \TranslateRocket\Integrations\WoodMart() )->boot(); // 1.8.8: mega menus cached per language
 		\TranslateRocket\Integrations\OEmbed::boot(); // 1.8.24: oEmbed of translated addresses
 		\TranslateRocket\Integrations\Brizy::boot(); // 1.8.24: Brizy photos and links on translated pages
+		\TranslateRocket\Integrations\Themify::boot(); // 1.8.26: Themify's page cache, one file per language
 		\TranslateRocket\Integrations\ConsentBanners::boot(); // 1.8.18: Complianz consent on the whole site, not per language
 		// The CDN purge (NitroPack, Cloudflare), a minute after the last change.
 		add_action( Cache::REMOTE_EVENT, array( 'TranslateRocket\\Cache', 'purge_remote' ) );

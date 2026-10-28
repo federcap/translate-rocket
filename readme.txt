@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.25
+Stable tag: 1.8.26
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.26 =
+* Fixed: with Themify's page cache on (Themify Ultra and the other Themify themes, Themify Builder), the first language a page was shown in was served to every visitor afterwards: a Polish site showed its Polish home page on /de/ and /en/, and the language seemed to change at random from one page to the next. Themify now keeps one copy per language, and its cache is emptied together with TranslateRocket's.
 
 = 1.8.25 =
 * Fixed: on a big site translating in the background with every language still offline, the site's whole page cache (LiteSpeed, WP Rocket, Breeze…) was emptied every ten minutes and rebuilt, for pages no visitor could see yet: CPU at 65% with spikes on a 4.000-page site in 13 languages. While every language is offline, the background work now leaves the site's caches alone; they are emptied the moment a language goes online.
@@ -581,6 +584,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.26 =
+Themify themes with page cache on: translated pages were served in the wrong language. Fixed.
 
 = 1.8.25 =
 Big sites translating in the background with languages offline: no more page-cache purge every ten minutes (CPU). Pair with Labs 0.9.11.
