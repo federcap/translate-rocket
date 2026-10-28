@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.23
+Stable tag: 1.8.24
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,23 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.24 =
+* Fixed: «Translate all» could stop with a couple of sentences left and no word about them, when its time ran out while asking the engine again for single sentences. It now goes on until they are done.
+* Fixed: a long name the engine rightly gives back unchanged (a region such as «Aisén del General Carlos Ibañez del Campo» in WooCommerce's list) stayed «to translate» for ever. It is now saved as it is.
+* New: the «Automatic» page shows what is being translated right now — the engine, the page and the language — with an hourglass on that engine. It is rebuilt every 30 seconds and disappears by itself when the work stops, even if a step is cut short.
+* New: «Pause» and «Resume» on the «Automatic» page, «Just finished» with the last pages completed (each opens in its translated language), and «Every engine is resting until…» when the free engines are taking a break.
+* Improved: the pages line is always there: how many pages the site has, and once started how many are read and how many are left.
+* Improved: ticking an engine on the «Automatic» page saves it at once, with no «Save» button to look for at the bottom.
+* New: in the visual editor, the image window lists the texts of the image (alt text, title) with what visitors read now; a tap translates them.
+* Fixed: with another translation plugin active (GTranslate, Weglot…), the visual editor said «visitors now see» your language although visitors still see the other plugin. It now says so, with a link to Plugins.
+* Fixed: in the visual editor, clicking a link or button of the page before the editor had finished loading followed the link and left the page.
+* Fixed: the image window of the visual editor could not be closed with ✕ or Esc, and on phones its address box ran past the edge.
+* Fixed: WooCommerce products with more than 30 variations: the description, stock line and image texts of the chosen variation came back in the original language.
+* Fixed: oEmbed of translated pages: a translated address pasted into another WordPress site (or read through the discovery link) answered «not found». It is now recognised, with the title in its language; languages still offline stay private.
+* Fixed: Brizy and Brizy Pro: on translated pages the photos disappeared and links pointed to «/it//page/», because Brizy builds them from the site address. Photos and links now work in every language and in the preview.
+* Fixed: addresses of files built by other plugins (images, styles, scripts under wp-content) no longer get the language in them, which made them «not found» on translated pages.
+* Improved: big sites while they translate: the «Automatic» page and the admin screens no longer count every language again each time a sentence is saved — on a site of 60,000 sentences and 14 languages, from about 10 seconds of database work every 30 seconds to under half a second. The numbers may be a minute or two behind while the work runs.
 
 = 1.8.23 =
 * Fixed: on servers with a newer libxml (the HTML reader PHP uses), pages in non-Latin scripts — Arabic, Russian, Greek, Chinese… — could come out garbled («Ø / Ù») in the translated pages and in the visual editor, because libxml ignored the UTF-8 hint it was given. Pages are now read in a way that does not depend on that hint, on every version.
@@ -560,6 +577,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.24 =
+See what is being translated right now (engine, page), pause and resume from the «Automatic» page, image alt and title in the visual editor, WooCommerce variations, oEmbed of translated pages, Brizy photos, and much lighter counting on big sites.
 
 = 1.8.23 =
 Non-Latin sites (Arabic, Russian, Chinese…) no longer come out garbled on newer servers, correct hreflang on child pages, «Wi-Fi» and similar words translated, and large TranslatePress imports in steps.

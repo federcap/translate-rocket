@@ -36,6 +36,9 @@ if ( is_array( $trrocket_settings ) && ! empty( $trrocket_settings['delete_data_
 		$wpdb->esc_like( '_transient_timeout_trrocket_' ) . '%'
 	) );
 
+	// Counts kept per language (1.8.24): trrocket_cn*.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( 'trrocket_cn' ) . '%' ) );
+
 	// Per-term meta: translated term slugs.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE %s", $wpdb->esc_like( '_trrocket_' ) . '%' ) );
 	// phpcs:enable WordPress.DB.DirectDatabaseQuery

@@ -2183,6 +2183,16 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-auto-switch strong { display: block; font-size: 15px; }
 .trr-auto-switch .description, .trr-auto-check .description { display: block; }
 .trr-auto-job { margin: 0; color: #50575e; }
+/* 1.8.24: what is being translated right now (engine, page), rebuilt at every tick */
+.trr-auto-now { margin: 6px 0 0; padding: 0; list-style: none; color: #1d2327; }
+.trr-auto-now li { margin: 2px 0; }
+/* 1.8.24: pause, engines resting, pages just finished */
+.trr-auto-rest { margin: 6px 0 0; color: #996800; }
+.trr-auto-ctl { margin: 8px 0 0; }
+.trr-auto-recent { margin: 8px 0 0; }
+.trr-auto-recent ul { margin: 4px 0 0 18px; list-style: disc; }
+.trr-auto-recent li { margin: 1px 0; }
+.trr-auto-chain .trr-busy, [data-trr-eng] .trr-busy { margin-left: 4px; }
 .trr-auto-check { display: block; }
 .trr-auto-locked p { margin: 6px 0; }
 .trr-auto-livebadge { font-size: 11px; font-weight: 600; color: #b32d2e; border: 1px solid #f0b8b8; border-radius: 10px; padding: 1px 8px; vertical-align: middle; }

@@ -3,11 +3,13 @@
 	'use strict';
 	var VE = window.trrocketVE;
 	if ( ! VE ) {
+		window.trrocketVeReady = true; // 1.8.24: no editor here, the page's links work
 		return;
 	}
 	// Source language: nothing to translate (the toolbar shows a "pick a language"
 	// message instead), so the editor stays inert.
 	if ( ! VE.editable ) {
+		window.trrocketVeReady = true; // 1.8.24: no editor here, the page's links work
 		return;
 	}
 
@@ -1578,7 +1580,33 @@
 				'<button type="button" class="trrocket-ve-imgreset"></button>' +
 				'<button type="button" class="trrocket-ve-imgsave"></button>' +
 			'</div>' +
+			'<div class="trrocket-ve-imgattrs"></div>' +
 			'<div class="trrocket-ve-msg"></div>';
+
+		// 1.8.24 (Federico: «under the image I expected its translatable texts — alt, title…»): one line per text of
+		// the image, with what visitors of this language read now; a tap opens it in the usual text editor.
+		var suoi = ( el.getAttribute( 'data-trr-attrs' ) || '' ).split( ',' ).filter( Boolean );
+		var zona = popImg.querySelector( '.trrocket-ve-imgattrs' );
+		suoi.forEach( function ( a ) {
+			var b = document.createElement( 'button' );
+			b.type = 'button';
+			b.className = 'trrocket-ve-imgattr';
+			b.setAttribute( 'data-attr', a );
+			var et = document.createElement( 'strong' );
+			et.textContent = attrLabel( a );
+			var val = document.createElement( 'span' );
+			val.textContent = el.getAttribute( a ) || decode( el.getAttribute( 'data-trr-a-' + attrKey( a ) ) ) || '—';
+			b.appendChild( et );
+			b.appendChild( val );
+			b.addEventListener( 'click', function ( ev ) {
+				ev.preventDefault();
+				ev.stopPropagation();
+				chiudiImg();
+				commit( function () { openAttrPop( el, a ); } );
+			} );
+			zona.appendChild( b );
+		} );
+		zona.hidden = ! suoi.length;
 
 		popImg.querySelector( '.trrocket-ve-imgtit' ).textContent  = VE.i18n.imgTit || '';
 		popImg.querySelector( '.trrocket-ve-imgtxt' ).textContent  = VE.i18n.imgTxt || '';
@@ -1721,6 +1749,11 @@
 		if ( e.target.closest && e.target.closest( '.trrocket-ve-close' ) ) {
 			e.preventDefault();
 			e.stopPropagation();
+			// 1.8.24: the ✕ of the image window closes the image window (this listener runs first and stops the click).
+			if ( e.target.closest( '.trrocket-ve-imgpop' ) ) {
+				chiudiImg();
+				return;
+			}
 			commit( closePop );
 			return;
 		}
@@ -1838,6 +1871,7 @@
 
 	document.addEventListener( 'keydown', function ( e ) {
 		if ( 'Escape' === e.key ) {
+			if ( popImg ) { chiudiImg(); return; } // 1.8.24: Esc closes the image window too
 			commit( closePop );
 		}
 	} );
@@ -2333,6 +2367,17 @@
 		function finish( ok, fail ) {
 			progBox.hidden = true; msg.textContent = ( VE.i18n.bulkDone || '%d translated' ).replace( '%d', String( ok ) ) + ( fail ? ( ' · ' + fail + ' ⚠' ) : '' ); try { updateProgress(); } catch ( e ) {}
 			// 23/10/2026: the page is translated but the language is still offline — say so, and offer the switch
+			// 1.8.24: with another translation plugin active, visitors see that one: say so, and where to switch it off.
+			if ( ok > 0 && VE.coexist && ! panel.querySelector( '.trrocket-ve-online' ) ) {
+				var cbox = document.createElement( 'div' ); cbox.className = 'trrocket-ve-online trrocket-ve-coexist';
+				cbox.style.cssText = 'margin-top:10px;padding:10px 12px;border-radius:8px;background:#fff8e5;border:1px solid #f0c33c;font-size:13px';
+				var ct = document.createElement( 'span' ); ct.textContent = String( VE.i18n.coexistTxt || '' ).replace( '%s', VE.coexist ) + ' ';
+				var cl = document.createElement( 'a' ); cl.href = VE.pluginsUrl || '#'; cl.className = 'trrocket-ve-coexist-btn'; cl.textContent = VE.i18n.coexistBtn || 'Plugins';
+				cl.style.cssText = 'display:inline-block;margin-left:4px;padding:6px 12px;border-radius:6px;background:#2271b1;color:#fff;font-weight:600;text-decoration:none';
+				cbox.appendChild( ct ); cbox.appendChild( cl );
+				msg.parentNode.parentNode.insertBefore( cbox, msg.parentNode.nextSibling );
+				return;
+			}
 			if ( ok > 0 && VE.offline && ! panel.querySelector( '.trrocket-ve-online' ) ) {
 				var box = document.createElement( 'div' ); box.className = 'trrocket-ve-online';
 				box.style.cssText = 'margin-top:10px;padding:10px 12px;border-radius:8px;background:#fff8e5;border:1px solid #f0c33c;font-size:13px';
@@ -2831,4 +2876,5 @@
 	}() );
 
 	updateProgress();
+	window.trrocketVeReady = true; // 1.8.24: the page's clicks are the editor's from now on (see VisualEditor::hold_clicks)
 }() );

@@ -8,6 +8,7 @@
 namespace TranslateRocket\Admin;
 
 use TranslateRocket\Database;
+use TranslateRocket\Languages;
 use TranslateRocket\Settings;
 use TranslateRocket\Strings;
 
@@ -214,9 +215,108 @@ class AutoPage {
 					'total'   => (int) ( $labs['total'] ?? 0 ),
 					'last'    => ! empty( $labs['last_run'] ) ? human_time_diff( (int) $labs['last_run'] ) : '',
 					'days'    => self::job_days( $labs ),
+					'ended'   => ! empty( $labs['total'] ) && (int) ( $labs['done'] ?? 0 ) >= (int) $labs['total'],
 				) : null,
+				'now'   => self::now_lines( $labs ),
+				'recent' => self::recent_lines( $labs ),
+				'rest'  => self::rest_line( $labs ),
 			)
 		);
+	}
+
+	/**
+	 * 1.8.24: the pages just finished by Labs 0.9.10+ (complete in every language), with a link to the first
+	 * translated language, so the owner sees the result and not only the work.
+	 *
+	 * @param array<string,mixed>|null $labs Labs status.
+	 * @return array<int,array<string,string>>
+	 */
+	public static function recent_lines( ?array $labs ): array {
+		$out    = array();
+		$router = \TranslateRocket\Plugin::instance()->router();
+		$lingue = $router->secondary_languages();
+		$lingua = (string) ( reset( $lingue ) ?: '' );
+		$casa   = home_url( '/' );
+		foreach ( ( is_array( $labs ) ? (array) ( $labs['recent'] ?? array() ) : array() ) as $r ) {
+			$post = get_post( (int) ( $r['post'] ?? 0 ) );
+			if ( ! $post || 'publish' !== $post->post_status ) {
+				continue;
+			}
+			$link = (string) get_permalink( $post );
+			if ( '' !== $lingua && 0 === strpos( $link, $casa ) ) {
+				$link = $router->home_for_language( $lingua ) . substr( $link, strlen( $casa ) );
+			}
+			$titolo = wp_strip_all_tags( (string) get_the_title( $post ) );
+			$out[]  = array(
+				'title' => '' !== $titolo ? $titolo : '#' . $post->ID,
+				'url'   => esc_url_raw( $link ),
+				/* translators: %s: time, e.g. «5 mins» */
+				'ago'   => sprintf( __( '%s ago', 'translate-rocket' ), human_time_diff( (int) ( $r['t'] ?? time() ) ) ),
+			);
+		}
+		return $out;
+	}
+
+	/**
+	 * 1.8.24: «every engine is resting until 14:30» (Labs 0.9.10+), or nothing.
+	 *
+	 * @param array<string,mixed>|null $labs Labs status.
+	 */
+	public static function rest_line( ?array $labs ): string {
+		$fino = is_array( $labs ) ? (int) ( $labs['resting'] ?? 0 ) : 0;
+		if ( $fino <= time() ) {
+			return '';
+		}
+		/* translators: %s: time of day */
+		return sprintf( __( 'Every engine is resting until %s: the work goes on by itself.', 'translate-rocket' ), wp_date( get_option( 'time_format' ) ?: 'H:i', $fino ) );
+	}
+
+	/**
+	 * 1.8.24 (27/10/2026, Federico: «always show the total and the pages left»): the published pages, posts and
+	 * products a visitor can open — the ones Labs reads — counted without loading them.
+	 */
+	public static function site_pages(): int {
+		$n = 0;
+		foreach ( array_diff( get_post_types( array( 'public' => true ) ), array( 'attachment' ) ) as $tipo ) {
+			$c  = wp_count_posts( $tipo );
+			$n += (int) ( $c->publish ?? 0 );
+		}
+		return $n;
+	}
+
+	/**
+	 * 1.8.24 (26/10/2026, Federico: «which engine is it using, which page is it translating, the hourglass on the work in
+	 * progress — that then goes away»): what is being translated right now, as Labs 0.9.10+ marks it (server engines
+	 * with their page, Google in the browser) plus the translator built into Chrome, which saves through this plugin.
+	 * Only fresh marks (90 seconds): a step cut short never leaves an hourglass behind.
+	 *
+	 * @param array<string,mixed>|null $labs Labs status.
+	 * @return array<int,array<string,string>>
+	 */
+	public static function now_lines( ?array $labs ): array {
+		$righe = array();
+		$voci  = is_array( $labs ) && is_array( $labs['now'] ?? null ) ? $labs['now'] : array();
+		$mio   = get_option( BrowserEngine::NOW );
+		if ( is_array( $mio ) && time() - (int) ( $mio['t'] ?? 0 ) <= 90 ) {
+			$voci[] = array( 'where' => 'browser', 'engine' => 'chrome', 'label' => __( 'The translator built into Chrome and Edge', 'translate-rocket' ), 'lang' => (string) ( $mio['lang'] ?? '' ), 'title' => '' );
+		}
+		foreach ( $voci as $v ) {
+			if ( ! is_array( $v ) || '' === (string) ( $v['engine'] ?? '' ) ) {
+				continue;
+			}
+			$lingua = '' !== (string) ( $v['lang'] ?? '' ) ? Languages::label( (string) $v['lang'] ) : '';
+			$titolo = (string) ( $v['title'] ?? '' );
+			$motore = (string) ( $v['label'] ?? $v['engine'] );
+			if ( '' !== $titolo ) {
+				/* translators: 1: engine name, 2: page title, 3: language name */
+				$testo = sprintf( __( '%1$s is translating «%2$s» into %3$s', 'translate-rocket' ), $motore, $titolo, $lingua );
+			} else {
+				/* translators: 1: engine name, 2: language name */
+				$testo = sprintf( __( '%1$s is translating into %2$s, in your browser', 'translate-rocket' ), $motore, $lingua );
+			}
+			$righe[] = array( 'engine' => sanitize_key( (string) $v['engine'] ), 'text' => $testo );
+		}
+		return $righe;
 	}
 
 	/**
@@ -256,6 +356,18 @@ class AutoPage {
 		if ( ! current_user_can( 'manage_options' ) || ! check_admin_referer( 'trrocket_auto_save' ) ) {
 			wp_die( esc_html__( 'Not allowed.', 'translate-rocket' ) );
 		}
+		// 1.8.24: «Pause» / «Resume» — only that, the rest of the form is left as it is.
+		$pausa = isset( $_POST['trr_pausa'] ) ? sanitize_key( wp_unslash( $_POST['trr_pausa'] ) ) : '';
+		if ( in_array( $pausa, array( 'pause', 'resume' ), true ) ) {
+			/**
+			 * Pause (true) or resume (false) the whole-site work, for Labs.
+			 *
+			 * @param bool $pause True to pause.
+			 */
+			do_action( 'trrocket_auto_pause', 'pause' === $pausa );
+			wp_safe_redirect( add_query_arg( array( 'page' => self::SLUG, 'saved' => 1 ), admin_url( 'admin.php' ) ) );
+			exit;
+		}
 		$s                = Settings::get();
 		$s['auto_online'] = ! empty( $_POST['auto_online'] ) ? 1 : 0;
 		Settings::update( $s );
@@ -294,12 +406,16 @@ class AutoPage {
 				'days'  => __( 'about %d days left at today’s pace', 'translate-rocket' ),
 				'day1'  => __( 'less than a day left at today’s pace', 'translate-rocket' ),
 				'pages' => __( 'Pages read: %1$d of %2$d', 'translate-rocket' ),
+				/* translators: %d: pages */
+				'left'  => __( '%d still to read', 'translate-rocket' ),
 				'site'  => __( 'the whole site in about %d days', 'translate-rocket' ),
 				'site1' => __( 'the whole site in less than a day', 'translate-rocket' ),
 				'last'  => __( 'last step %s ago', 'translate-rocket' ),
 				'busy'  => __( 'Being translated now', 'translate-rocket' ),
 				'paused' => __( 'Paused: %1$d of %2$d pages read.', 'translate-rocket' ),
 				'resume' => __( 'Resume it in Labs', 'translate-rocket' ),
+				'bPause' => __( 'Pause', 'translate-rocket' ),
+				'bResume' => __( 'Resume', 'translate-rocket' ),
 				'labs'  => admin_url( 'admin.php?page=translate-rocket-labs#trrlabs-auto' ),
 			)
 		);
@@ -311,10 +427,18 @@ class AutoPage {
 			. 'var n=row.querySelector(".trr-auto-n");if(n){n.textContent=d.translated+" / "+d.detected;}'
 			. 'var eta=row.querySelector(".trr-auto-eta");if(eta){eta.textContent=d.days?(d.days<=1?C.day1:f(C.days,d.days)):"";}'
 			. 'row.classList.toggle("is-busy",!!d.busy);var h=row.querySelector(".trr-busy");if(h){h.hidden=!d.busy;h.title=C.busy;}'
-			. '});});var j=r.job,el=document.getElementById("trr-auto-job");if(el&&j&&j.total>0){if(j.paused){el.textContent=f(C.paused,j.done,j.total)+" ";var a=document.createElement("a");a.href=C.labs;a.textContent=C.resume+" →";el.appendChild(a);el.classList.add("is-paused");}else{el.classList.remove("is-paused");el.textContent=f(C.pages,j.done,j.total)+(j.days?" · "+(j.days<=1?C.site1:f(C.site,j.days)):"")+(j.last?" · "+f(C.last,j.last):"");}}}'
+			. '});});var j=r.job,el=document.getElementById("trr-auto-job");if(el&&j&&j.total>0){if(j.paused){el.textContent=f(C.paused,j.done,j.total)+" ";var a=document.createElement("a");a.href=C.labs;a.textContent=C.resume+" →";el.appendChild(a);el.classList.add("is-paused");}else{el.classList.remove("is-paused");el.textContent=f(C.pages,j.done,j.total)+(j.total>j.done?" · "+f(C.left,j.total-j.done):"")+(j.days?" · "+(j.days<=1?C.site1:f(C.site,j.days)):"")+(j.last?" · "+f(C.last,j.last):"");}}now(r.now||[]);extra(r);}'
 			// One request at a time; after two failed ones in a row (logged out, server down) the hourglasses
 			// go off instead of standing still, frozen from when the page was opened.
-			. 'var busy=0,fails=0;function stale(){if(++fails>=2){document.querySelectorAll("[data-trr-live]").forEach(function(row){row.classList.remove("is-busy");var h=row.querySelector(".trr-busy");if(h){h.hidden=true;}});}}'
+			// 1.8.24: «now» = what is being translated right now (engine, page): one line each with its hourglass, and the
+			// hourglass on that engine's row. Rebuilt from scratch at every tick, so nothing can stay behind.
+			. 'function now(N){var u=document.getElementById("trr-auto-now");if(u){u.textContent="";N.forEach(function(x){var li=document.createElement("li");li.textContent="⏳ "+x.text;u.appendChild(li);});u.hidden=!N.length;}'
+			. 'var on={};N.forEach(function(x){on[x.engine]=1;});document.querySelectorAll("[data-trr-eng]").forEach(function(li){var h=li.querySelector(".trr-busy");if(h){h.hidden=!on[li.getAttribute("data-trr-eng")];}});}'
+			// 1.8.24: «Pause»/«Resume» (only while there is work), «every engine is resting until…», «Just finished».
+			. 'function extra(r){var j=r.job,b=document.getElementById("trr-auto-pausa");if(b){var lav=!!(j&&j.total>0&&!j.ended);b.hidden=!lav;b.value=j&&j.paused?"resume":"pause";b.textContent=j&&j.paused?C.bResume:C.bPause;}'
+			. 'var p=document.getElementById("trr-auto-rest");if(p){p.textContent=r.rest?"⏸ "+r.rest:"";p.hidden=!r.rest;}'
+			. 'var d=document.getElementById("trr-auto-recent");if(d){var u=d.querySelector("ul");u.textContent="";(r.recent||[]).forEach(function(x){var li=document.createElement("li"),a=document.createElement("a");a.href=x.url;a.target="_blank";a.rel="noopener";a.textContent=x.title;li.appendChild(a);li.appendChild(document.createTextNode(" · "+x.ago));u.appendChild(li);});d.hidden=!(r.recent&&r.recent.length);}}'
+			. 'var busy=0,fails=0;function stale(){if(++fails>=2){now([]);extra({});document.querySelectorAll("[data-trr-live]").forEach(function(row){row.classList.remove("is-busy");var h=row.querySelector(".trr-busy");if(h){h.hidden=true;}});}}'
 			. 'function tick(){if(busy){return;}busy=1;var b=new URLSearchParams();b.append("action","trrocket_auto_tick");b.append("nonce",C.nonce);'
 			. 'fetch(C.ajax,{method:"POST",credentials:"same-origin",body:b}).then(function(x){return x.json();}).then(function(x){if(x&&x.success&&x.data){fails=0;if(x.data.nonce){C.nonce=x.data.nonce;}paint(x.data);}else{stale();}}).catch(stale).then(function(){busy=0;});}'
 			. 'if(document.querySelector("[data-trr-live]")){tick();setInterval(function(){if(!document.hidden){tick();}},30000);}})();';
@@ -372,7 +496,14 @@ class AutoPage {
 							// «Pages read: 0 of 4074», so the owner believed it was working): a pause is said here, with the way out.
 							echo esc_html( sprintf( /* translators: 1: pages done, 2: pages in all */ __( 'Paused: %1$d of %2$d pages read.', 'translate-rocket' ), (int) ( $stato['done'] ?? 0 ), (int) ( $stato['total'] ?? 0 ) ) ) . ' <a href="' . esc_url( admin_url( 'admin.php?page=translate-rocket-labs#trrlabs-auto' ) ) . '">' . esc_html__( 'Resume it in Labs', 'translate-rocket' ) . ' &rarr;</a>';
 						} elseif ( $stato && (int) ( $stato['total'] ?? 0 ) > 0 ) {
-							echo esc_html( sprintf( /* translators: 1: pages done, 2: pages in all */ __( 'Pages read: %1$d of %2$d', 'translate-rocket' ), (int) ( $stato['done'] ?? 0 ), (int) ( $stato['total'] ?? 0 ) ) );
+							$fatte = (int) ( $stato['done'] ?? 0 );
+							$tutte = (int) ( $stato['total'] ?? 0 );
+							echo esc_html( sprintf( /* translators: 1: pages done, 2: pages in all */ __( 'Pages read: %1$d of %2$d', 'translate-rocket' ), $fatte, $tutte ) );
+							if ( $tutte > $fatte ) {
+								echo ' · ' . esc_html( sprintf( /* translators: %d: pages */ __( '%d still to read', 'translate-rocket' ), $tutte - $fatte ) );
+							}
+						} else {
+							echo esc_html( sprintf( /* translators: %d: pages */ __( 'Your site has %d pages to translate.', 'translate-rocket' ), self::site_pages() ) );
 						}
 						?></p>
 					<?php elseif ( $labs_in ) : ?>
@@ -384,6 +515,11 @@ class AutoPage {
 							<?php esc_html_e( 'Without it: translate what is missing with your AI key, one language at a time, from', 'translate-rocket' ); ?> <a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-ai' ) ); ?>"><?php esc_html_e( 'AI Translation', 'translate-rocket' ); ?></a>.</p>
 						</div>
 					<?php endif; ?>
+					<ul class="trr-auto-now" id="trr-auto-now" aria-live="polite" hidden></ul>
+					<p class="trr-auto-rest" id="trr-auto-rest" hidden></p>
+					<?php $trr_lav = $stato && (int) ( $stato['total'] ?? 0 ) > (int) ( $stato['done'] ?? 0 ); ?>
+					<p class="trr-auto-ctl"><button type="submit" class="button" id="trr-auto-pausa" name="trr_pausa" value="<?php echo ( $stato && ! empty( $stato['paused'] ) ) ? 'resume' : 'pause'; ?>" <?php echo $trr_lav ? '' : 'hidden'; ?>><?php echo ( $stato && ! empty( $stato['paused'] ) ) ? esc_html__( 'Resume', 'translate-rocket' ) : esc_html__( 'Pause', 'translate-rocket' ); ?></button></p>
+					<div class="trr-auto-recent" id="trr-auto-recent" hidden><strong><?php esc_html_e( 'Just finished', 'translate-rocket' ); ?></strong><ul></ul></div>
 					<label class="trr-auto-check">
 						<input type="checkbox" name="auto_online" value="1" <?php checked( ! empty( $s['auto_online'] ) ); ?>>
 						<?php esc_html_e( 'Put each language online by itself when it is fully translated', 'translate-rocket' ); ?>
@@ -438,10 +574,10 @@ class AutoPage {
 						<?php $trr_pos = 0; ?>
 						<?php foreach ( $trr_chain as $e ) : ?>
 							<?php if ( 'keys' === $e ) : ?>
-								<li class="<?php echo $ordine ? 'is-on' : 'is-todo'; ?>">
+								<li class="<?php echo $ordine ? 'is-on' : 'is-todo'; ?>" data-trr-eng="keys">
 									<span class="trr-ov-dot" aria-hidden="true"><?php echo (int) ++$trr_pos; ?></span>
 									<span class="trr-auto-chain-txt">
-										<strong><?php esc_html_e( 'Your AI keys', 'translate-rocket' ); ?></strong> <span class="description"><?php esc_html_e( 'On your server', 'translate-rocket' ); ?></span><br>
+										<strong><?php esc_html_e( 'Your AI keys', 'translate-rocket' ); ?></strong> <span class="trr-busy" hidden>⏳</span> <span class="description"><?php esc_html_e( 'On your server', 'translate-rocket' ); ?></span><br>
 										<?php if ( ! $ordine ) : ?>
 											<a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-ai' ) ); ?>"><?php esc_html_e( 'Get a free Groq key: 2 minutes, no card', 'translate-rocket' ); ?></a>
 										<?php endif; ?>
@@ -456,11 +592,11 @@ class AutoPage {
 								</li>
 							<?php elseif ( isset( $trr_righe[ (string) $e ] ) ) : ?>
 								<?php $r = $trr_righe[ (string) $e ]; ?>
-								<li class="<?php echo ! empty( $r['on'] ) ? 'is-on' : 'is-off'; ?>">
+								<li class="<?php echo ! empty( $r['on'] ) ? 'is-on' : 'is-off'; ?>" data-trr-eng="<?php echo esc_attr( (string) $r['id'] ); ?>">
 									<span class="trr-ov-dot" aria-hidden="true"><?php echo (int) ++$trr_pos; ?></span>
 									<label class="trr-auto-chain-txt">
 										<input type="checkbox" name="engine[<?php echo esc_attr( (string) $r['id'] ); ?>]" value="1" <?php checked( ! empty( $r['on'] ) ); ?>>
-										<strong><?php echo esc_html( (string) $r['label'] ); ?></strong>
+										<strong><?php echo esc_html( (string) $r['label'] ); ?></strong> <span class="trr-busy" hidden>⏳</span>
 										<span class="description"><?php echo esc_html( (string) ( $r['note'] ?? '' ) ); ?></span>
 									</label>
 								</li>
@@ -507,6 +643,28 @@ class AutoPage {
 
 				<p class="trr-auto-save"><?php submit_button( __( 'Save', 'translate-rocket' ), 'primary', 'submit', false ); ?></p>
 			</form>
+			<script>
+			// 26/10/2026 (Federico su globaltoolszone.com: «voglio abilitare Yandex e mi dà disabilitato»): la spunta di un
+			// motore restava grigia finché non si trovava «Save» in fondo alla pagina. Ora ogni scelta di questa pagina
+			// (motori, interruttore, «online da sola», condizioni, dove lavorare) si salva appena la si cambia.
+			( function () {
+				// The page has two forms posting to admin-post.php (the plugin language at the top is the first): this one.
+				var a = document.querySelector( '.trr-auto input[name="action"][value="trrocket_auto_save"]' );
+				var f = a && a.form;
+				if ( ! f ) { return; }
+				f.addEventListener( 'change', function ( e ) {
+					var n = ( e.target && e.target.name ) || '';
+					if ( ! /^(engine\[|auto_on$|auto_online$|unofficial_ack$|run_where$)/.test( n ) ) { return; }
+					var li = e.target.closest( 'li' );
+					if ( li ) { li.className = e.target.checked ? 'is-on' : 'is-off'; }
+					f.style.opacity = '0.6';
+					f.style.pointerEvents = 'none';
+					var b = f.querySelector( '.trr-auto-save [type=submit]' );
+					if ( b ) { b.value = '…'; }
+					HTMLFormElement.prototype.submit.call( f );
+				} );
+			} )();
+			</script>
 			<?php // 9/10/2026 (Federico: «una richiesta per fare io la traduzione su richiesta: avremmo siti reali»). ?>
 			<div class="trrocket-card trr-auto-setup">
 				<h2><?php esc_html_e( 'Prefer that we do it for you?', 'translate-rocket' ); ?></h2>

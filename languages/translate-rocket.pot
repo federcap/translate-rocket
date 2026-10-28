@@ -7530,3 +7530,54 @@ msgstr ""
 #, php-format
 msgid "Importing… %d translations so far. Keep this page open: it goes on by itself."
 msgstr ""
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%1$s is translating «%2$s» into %3$s"
+msgstr ""
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%1$s is translating into %2$s, in your browser"
+msgstr ""
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%d still to read"
+msgstr ""
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Your site has %d pages to translate."
+msgstr ""
+
+#: src/Admin/AutoPage.php
+msgid "Pause"
+msgstr ""
+
+#: src/Admin/AutoPage.php
+msgid "Resume"
+msgstr ""
+
+#: src/Admin/AutoPage.php
+msgid "Just finished"
+msgstr ""
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%s ago"
+msgstr ""
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every engine is resting until %s: the work goes on by itself."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Your translation is saved, but visitors still see %s: it is active, and while it is TranslateRocket only shows you a preview. Deactivate it to show your translations to visitors."
+msgstr ""
+
+#: src/Frontend/VisualEditor.php
+msgid "Open Plugins"
+msgstr ""

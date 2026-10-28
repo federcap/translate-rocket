@@ -7506,3 +7506,54 @@ msgstr "在 Labs 中继续"
 #, php-format
 msgid "Importing… %d translations so far. Keep this page open: it goes on by itself."
 msgstr "正在导入… 目前已有 %d 条翻译。请保持此页面打开：会自动继续。"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%1$s is translating «%2$s» into %3$s"
+msgstr "%1$s 正在将「%2$s」翻译成%3$s"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%1$s is translating into %2$s, in your browser"
+msgstr "%1$s 正在你的浏览器中翻译成%2$s"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%d still to read"
+msgstr "还剩 %d 个"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Your site has %d pages to translate."
+msgstr "你的网站有 %d 个页面需要翻译。"
+
+#: src/Admin/AutoPage.php
+msgid "Pause"
+msgstr "暂停"
+
+#: src/Admin/AutoPage.php
+msgid "Resume"
+msgstr "继续"
+
+#: src/Admin/AutoPage.php
+msgid "Just finished"
+msgstr "刚刚完成"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%s ago"
+msgstr "%s前"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every engine is resting until %s: the work goes on by itself."
+msgstr "所有引擎休息到 %s：之后会自动继续。"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Your translation is saved, but visitors still see %s: it is active, and while it is TranslateRocket only shows you a preview. Deactivate it to show your translations to visitors."
+msgstr "你的翻译已保存，但访客仍然看到 %s：它已启用，在它启用期间 TranslateRocket 只向你显示预览。停用它即可向访客显示你的翻译。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Open Plugins"
+msgstr "打开插件"

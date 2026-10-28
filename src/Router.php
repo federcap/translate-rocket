@@ -646,6 +646,13 @@ class Router {
 		$rest = substr( $url, strlen( $base ) ); // e.g. '/about/' or ''.
 		$rest = '/' . ltrim( (string) $rest, '/' );
 
+		// 27/10/2026 (Brizy: every photo of a translated page at /it//wp-content/… — a 404; the same in Beaver Builder
+		// add-ons, WP Fastest Cache's minified CSS, Everest Forms, ShortPixel, which build file addresses with
+		// home_url()): a file is the same file in every language. TranslatePress (url_is_file) and Polylang do the same.
+		if ( preg_match( '#^/+(wp-content|wp-includes|wp-admin)(/|$)#i', $rest ) ) {
+			return $url;
+		}
+
 		if ( $this->has_own_domain( $lang ) ) {
 			return $this->language_base( $lang ) . $rest;
 		}

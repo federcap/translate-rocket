@@ -163,6 +163,38 @@ class WooCommerce {
 		add_filter( 'wc_add_to_cart_message_html', array( $this, 'add_to_cart_message' ), 20, 2 );
 		// The quantity box's label for screen readers: «Blue mug quantità».
 		add_filter( 'woocommerce_quantity_input_args', array( $this, 'quantity_args' ), 20 );
+		// 1.8.24: the variation the shopper picks, asked to the server when a product has more variations than
+		// woocommerce_ajax_variation_threshold (30). The page's own JSON is translated with the page.
+		if ( isset( $_GET['wc-ajax'] ) && 'get_variation' === sanitize_key( wp_unslash( $_GET['wc-ajax'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			add_filter( 'woocommerce_available_variation', array( $this, 'variation' ), 20 );
+		}
+	}
+
+	/**
+	 * 27/10/2026 (found in Linguise's WooCommerce code while comparing, then reproduced: collaudo-woo-varianti): the
+	 * texts of one variation — description, stock line, the image's alt, title and caption — in the page's language.
+	 * Its attributes («Blue») stay as they are: WooCommerce matches the choice on them.
+	 *
+	 * @param mixed $data Variation data for the add-to-cart form.
+	 * @return mixed
+	 */
+	public function variation( $data ) {
+		if ( ! is_array( $data ) || '' === $this->lang ) {
+			return $data;
+		}
+		foreach ( array( 'variation_description', 'availability_html' ) as $k ) {
+			if ( isset( $data[ $k ] ) && is_string( $data[ $k ] ) && '' !== trim( $data[ $k ] ) ) {
+				$data[ $k ] = $this->translate_html( $data[ $k ], $this->lang );
+			}
+		}
+		if ( isset( $data['image'] ) && is_array( $data['image'] ) ) {
+			foreach ( array( 'alt', 'title', 'caption' ) as $k ) {
+				if ( isset( $data['image'][ $k ] ) && is_string( $data['image'][ $k ] ) && '' !== trim( $data['image'][ $k ] ) ) {
+					$data['image'][ $k ] = Fragment::text( $data['image'][ $k ], $this->lang );
+				}
+			}
+		}
+		return $data;
 	}
 
 	/**

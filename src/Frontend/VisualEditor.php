@@ -66,6 +66,16 @@ class VisualEditor {
 		Gettext::hook_originals();
 		add_action( 'wp_enqueue_scripts', function () { $this->in_user_locale( array( $this, 'assets' ) ); } );
 		add_action( 'wp_footer', function () { $this->in_user_locale( array( $this, 'toolbar' ) ); } );
+		// 1.8.24: until the editor is ready, a click on a link or button of the page must not leave it (on a slow page the
+		// owner clicked «Book now» to translate it and landed on the booking page). The editor takes over when ready.
+		add_action( 'wp_head', array( __CLASS__, 'hold_clicks' ), 1 );
+	}
+
+	/**
+	 * Hold link and button clicks until visual-editor.js says it is ready (window.trrocketVeReady).
+	 */
+	public static function hold_clicks(): void {
+		echo "<script>document.addEventListener('click',function(e){if(window.trrocketVeReady){return;}var a=e.target&&e.target.closest&&e.target.closest('a[href],button,input[type=submit]');if(a){e.preventDefault();e.stopPropagation();}},true);window.addEventListener('load',function(){setTimeout(function(){window.trrocketVeReady=true;},8000);});</script>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed script
 	}
 
 	/**
@@ -208,6 +218,9 @@ class VisualEditor {
 				// the editor offers to show it to visitors — before, the owner looked at the site and saw no translation.
 				'offline'  => in_array( $lang, (array) ( Settings::get()['offline_languages'] ?? array() ), true ),
 				'langName' => \TranslateRocket\Languages::label( $lang ),
+				// 1.8.24: another translation plugin is active (side-by-side mode): visitors see that one, not ours.
+				'coexist'  => \TranslateRocket\Coexistence::on() ? \TranslateRocket\Coexistence::active_names() : '',
+				'pluginsUrl' => admin_url( 'plugins.php' ),
 				'label'    => Languages::label( $lang ),
 				'editable' => ! $router->is_default( $lang ), // source language can't be translated into itself.
 				'srclang'  => (string) ( Settings::get()['source_language'] ?? 'en' ),
@@ -252,6 +265,9 @@ class VisualEditor {
 					/* translators: %s: language name. */
 					'onlineAsk'     => __( 'Only you can see %s for now: the language is offline while you translate.', 'translate-rocket' ),
 					'onlineBtn'     => __( 'Show it to visitors', 'translate-rocket' ),
+					/* translators: %s: name of the other translation plugin, e.g. GTranslate */
+					'coexistTxt'    => __( 'Your translation is saved, but visitors still see %s: it is active, and while it is TranslateRocket only shows you a preview. Deactivate it to show your translations to visitors.', 'translate-rocket' ),
+					'coexistBtn'    => __( 'Open Plugins', 'translate-rocket' ),
 					/* translators: %s: language name. */
 					'onlineDone'    => __( 'Done: visitors now see %s, with the language switcher.', 'translate-rocket' ),
 					'bulkFix'       => __( 'Fix it on the AI translation screen', 'translate-rocket' ),

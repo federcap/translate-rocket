@@ -1242,6 +1242,8 @@ body {
 }
 .trrocket-ve-imgurl {
 	width: 100%;
+	box-sizing: border-box; /* 1.8.24: on phones it ran past the window's right edge */
+	max-width: 100%;
 	margin-bottom: 10px;
 	padding: 7px 9px;
 	border: 1px solid #dcdcde;
@@ -1430,3 +1432,11 @@ body {
 #trrocket-ve-bulkpanel .trrocket-ve-bulk-br[disabled] { opacity: 0.6; cursor: progress; }
 #trrocket-ve-bulkpanel .trrocket-ve-lampo { animation: trrocketLampo 1.6s ease; border-radius: 6px; }
 @keyframes trrocketLampo { 0%, 30% { background: #fff3b0; } 100% { background: transparent; } }
+
+/* 1.8.24: the texts of the image (alt, title…), one tappable line each, under the image window's buttons */
+.trrocket-ve-imgattrs { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.trrocket-ve-imgattrs[hidden] { display: none; }
+.trrocket-ve-imgattr { display: flex; gap: 8px; align-items: baseline; width: 100%; text-align: left; padding: 8px 10px; border: 1px solid #dcdcde; border-radius: 8px; background: #f6f7f7; color: #1d2327; font: inherit; font-size: 13px; cursor: pointer; }
+.trrocket-ve-imgattr:hover, .trrocket-ve-imgattr:focus { border-color: #4f46e5; background: #fff; }
+.trrocket-ve-imgattr strong { flex: 0 0 auto; }
+.trrocket-ve-imgattr span { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; color: #50575e; }

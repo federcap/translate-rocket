@@ -299,6 +299,9 @@ class Translator {
 				// Only after an engine that answered: a failed batch keeps everything pending.
 				foreach ( $vuote as $text ) {
 					if ( $deadline > 0 && microtime( true ) >= $deadline ) {
+						// 27/10/2026 (real tour on Cloudways: «Translate all» ended with 2 sentences left and no word):
+						// the step ran out of time here, so there is more to do — the next step picks them up.
+						$fermato = true;
 						break;
 					}
 					$one = self::first_ok( $providers, $dead, array( $text ), $source, $lang, $error, $resting );
@@ -664,7 +667,21 @@ class Translator {
 			return false;
 		}
 		$parole = preg_split( '/\s+/u', trim( (string) preg_replace( '#</?\d+/?>#', ' ', $original ) ) );
-		return mb_strlen( $original ) > 40 && count( array_filter( $parole, static fn( $w ) => preg_match( '/\p{L}{2,}/u', $w ) ) ) >= 5;
+		$parole = array_filter( $parole, static fn( $w ) => preg_match( '/\p{L}{2,}/u', $w ) );
+		if ( mb_strlen( $original ) <= 40 || count( $parole ) < 5 ) {
+			return false;
+		}
+		// 27/10/2026 (real tour on Cloudways: «Aisén del General Carlos Ibañez del Campo», a region in WooCommerce's
+		// list, stayed «to translate» for ever): a name, most of its words with a capital letter, is the same in
+		// every language — the engine sending it back unchanged is right, and it is saved as it is. A name: every word
+		// starts with a capital letter, apart from short joining words (del, de, of, von…). «Picnic basket for two –
+		// Olive Grove Guest House» is not one: «basket» is a word to translate.
+		foreach ( $parole as $w ) {
+			if ( ! preg_match( '/^\P{L}*\p{Lu}/u', $w ) && mb_strlen( (string) preg_replace( '/\P{L}+/u', '', $w ) ) > 3 ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static function parts_kept( string $original, string $translation ): bool {

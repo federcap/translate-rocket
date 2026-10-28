@@ -167,6 +167,8 @@ final class Plugin {
 		( new \TranslateRocket\Integrations\WpRocket() )->boot();
 		( new \TranslateRocket\Integrations\ArubaHiSpeed() )->boot(); // 1.8.8: translated pages out of Aruba's cache too
 		( new \TranslateRocket\Integrations\WoodMart() )->boot(); // 1.8.8: mega menus cached per language
+		\TranslateRocket\Integrations\OEmbed::boot(); // 1.8.24: oEmbed of translated addresses
+		\TranslateRocket\Integrations\Brizy::boot(); // 1.8.24: Brizy photos and links on translated pages
 		\TranslateRocket\Integrations\ConsentBanners::boot(); // 1.8.18: Complianz consent on the whole site, not per language
 		// The CDN purge (NitroPack, Cloudflare), a minute after the last change.
 		add_action( Cache::REMOTE_EVENT, array( 'TranslateRocket\\Cache', 'purge_remote' ) );

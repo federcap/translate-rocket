@@ -6685,3 +6685,54 @@ msgstr "Reanudar en Labs"
 #, php-format
 msgid "Importing… %d translations so far. Keep this page open: it goes on by itself."
 msgstr "Importando… %d traducciones hasta ahora. Mantén esta página abierta: continúa sola."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%1$s is translating «%2$s» into %3$s"
+msgstr "%1$s está traduciendo «%2$s» al %3$s"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%1$s is translating into %2$s, in your browser"
+msgstr "%1$s está traduciendo al %2$s, en tu navegador"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%d still to read"
+msgstr "%d por leer"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Your site has %d pages to translate."
+msgstr "Tu sitio tiene %d páginas para traducir."
+
+#: src/Admin/AutoPage.php
+msgid "Pause"
+msgstr "Pausar"
+
+#: src/Admin/AutoPage.php
+msgid "Resume"
+msgstr "Reanudar"
+
+#: src/Admin/AutoPage.php
+msgid "Just finished"
+msgstr "Recién terminadas"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "%s ago"
+msgstr "hace %s"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every engine is resting until %s: the work goes on by itself."
+msgstr "Todos los motores descansan hasta las %s: el trabajo sigue solo."
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Your translation is saved, but visitors still see %s: it is active, and while it is TranslateRocket only shows you a preview. Deactivate it to show your translations to visitors."
+msgstr "Tu traducción se ha guardado, pero los visitantes siguen viendo %s: está activo y, mientras lo esté, TranslateRocket solo te muestra una vista previa. Desactívalo para mostrar tus traducciones a los visitantes."
+
+#: src/Frontend/VisualEditor.php
+msgid "Open Plugins"
+msgstr "Abrir Plugins"

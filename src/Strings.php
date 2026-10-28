@@ -181,13 +181,43 @@ class Strings {
 		// 16/10/2026 (big-site probe): the «next steps» drawer asks this for every language on every admin screen, the
 		// WordPress page list included — 7 to 15 s a screen on a site of 5.000 pages. Counted again only when something
 		// changed (see conto()).
+		// 27/10/2026 (globaltoolszone.com, 4.074 pages, 13 languages, Query Monitor: «these calls are eating my cpu»):
+		// while the site translates, every saved sentence changes the signature, and the Automatic screen asks every
+		// language each 30 s — 26 heavy counts each time. These numbers are for reading: on a big site they may be a
+		// little behind (see conto(), $calm), the «what is left» of a translation step is not (untranslated_count()).
 		return self::conto(
 			'ls',
 			$lang,
 			static function () use ( $lang ) {
 				return self::language_stats_now( $lang );
-			}
+			},
+			true
 		);
+	}
+
+	/**
+	 * Sentences on the site's pages (images left out): the same for every language, so counted once — not once per
+	 * language (27/10/2026: 13 times the same 0,1–0,8 s count on every refresh of the Automatic screen).
+	 */
+	public static function detected_count(): int {
+		global $wpdb;
+		static $memo = null;
+		if ( null !== $memo ) {
+			return $memo; // one request: translating does not change it, collecting pages happens elsewhere
+		}
+		$st = Database::strings_table();
+		$oc = Database::occurrences_table();
+		// What changes it: sentences added or deleted, pages read or forgotten. Indexed counts: milliseconds.
+		$n     = $wpdb->get_row( "SELECT (SELECT COUNT(*) FROM {$st}) AS s, (SELECT MAX(id) FROM {$st}) AS ms, (SELECT COUNT(*) FROM {$oc}) AS o, (SELECT MAX(id) FROM {$oc}) AS mo", ARRAY_N ); // phpcs:ignore WordPress.DB
+		$firma = md5( implode( '|', (array) $n ) );
+		$k     = get_option( 'trrocket_cn_detected' );
+		if ( is_array( $k ) && isset( $k['firma'], $k['v'] ) && $firma === $k['firma'] ) {
+			$memo = (int) $k['v'];
+			return $memo;
+		}
+		$memo = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$st} s WHERE s.type <> 'image' AND EXISTS ( SELECT 1 FROM {$oc} o WHERE o.string_id = s.id )" ); // phpcs:ignore WordPress.DB
+		update_option( 'trrocket_cn_detected', array( 'firma' => $firma, 'v' => $memo ), false );
+		return $memo;
 	}
 
 	/**
@@ -214,7 +244,7 @@ class Strings {
 		// row and its translations, and 887 of them counted as the site's: 269 «missing» for ever. What counts
 		// is what is on the pages: a sentence with at least one page to its name. The rows stay (an old
 		// translation comes back the day the sentence does); they just do not count.
-		$detected = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$strings} s WHERE s.type <> 'image' AND EXISTS ( SELECT 1 FROM {$occurrences} o WHERE o.string_id = s.id )" ); // phpcs:ignore WordPress.DB
+		$detected = self::detected_count();
 
 		// Only translations whose string still exists and is on a page: a translation left behind by a
 		// deleted string (a page reset, an old test) made «translated» bigger than
@@ -287,29 +317,50 @@ class Strings {
 	 * @param string   $what  Which count (part of the name it is kept under).
 	 * @param string   $lang  Language.
 	 * @param callable $conta Counts it now.
+	 * @param bool     $calm  A count for reading only: on a big site, where counting is slow, it may be up to a few
+	 *                        minutes behind while the site translates.
 	 * @return mixed
 	 */
-	private static function conto( string $what, string $lang, callable $conta ) {
+	private static function conto( string $what, string $lang, callable $conta, bool $calm = false ) {
 		global $wpdb;
 		static $fatti = array();
 		// What changes when a count can change: a translation saved (map generation), sentences added or deleted,
-		// translations added or deleted in this language. Read at every call, never kept: the AI step translates and
-		// then asks how many are left, in the same request. Three indexed counts: milliseconds.
+		// pages read, translations added or deleted in this language. Read at every call, never kept: the AI step
+		// translates and then asks how many are left, in the same request. Indexed counts: milliseconds.
 		$gen    = get_option( 'trrocket_map_gen', array() );
 		$st     = Database::strings_table();
 		$tr     = Database::translations_table();
-		$n      = $wpdb->get_row( $wpdb->prepare( "SELECT (SELECT COUNT(*) FROM {$st}) AS s, (SELECT MAX(id) FROM {$st}) AS ms, (SELECT COUNT(*) FROM {$tr} WHERE language = %s) AS t", $lang ), ARRAY_N ); // phpcs:ignore WordPress.DB
+		$oc     = Database::occurrences_table();
+		$n      = $wpdb->get_row( $wpdb->prepare( "SELECT (SELECT COUNT(*) FROM {$st}) AS s, (SELECT MAX(id) FROM {$st}) AS ms, (SELECT MAX(id) FROM {$oc}) AS mo, (SELECT COUNT(*) FROM {$tr} WHERE language = %s) AS t", $lang ), ARRAY_N ); // phpcs:ignore WordPress.DB
 		$firma = md5( $lang . '|' . ( is_array( $gen ) ? (int) ( $gen[ $lang ] ?? 1 ) : 1 ) . '|' . implode( '|', (array) $n ) );
 		$nome  = 'trrocket_cn' . $what . '_' . $lang; // one place per count and language, the signature inside
 		if ( isset( $fatti[ $nome ] ) && $firma === $fatti[ $nome ]['firma'] ) {
 			return $fatti[ $nome ]['v'];
 		}
-		$tenuto = get_transient( $nome );
-		if ( ! is_array( $tenuto ) || ! isset( $tenuto['firma'] ) || $firma !== $tenuto['firma'] ) {
-			$tenuto = array( 'firma' => $firma, 'v' => $conta() );
-			set_transient( $nome, $tenuto, 10 * MINUTE_IN_SECONDS );
+		// 27/10/2026: kept in an option, not a transient — with an object cache (LiteSpeed, Redis) emptied by every
+		// purge, the transient was gone at every look and each screen counted everything again.
+		$tenuto = get_option( $nome );
+		$fresco = is_array( $tenuto ) && isset( $tenuto['firma'], $tenuto['v'] );
+		if ( $fresco && $firma !== $tenuto['firma'] ) {
+			// Something changed. On a big site, while it translates, that is every second: a count that takes
+			// 0,5 s for each of 13 languages, done again at every look, is what ate the CPU. There the last count
+			// stays good for a while, longer the more it costs (0,5 s → 2,5 min, 10 min at most). A small site
+			// (a count under 0,1 s) always counts again.
+			$costo  = (float) ( $tenuto['secs'] ?? 0 );
+			$fresco = $calm && $costo >= 0.1 && ( time() - (int) ( $tenuto['at'] ?? 0 ) ) < min( 600, (int) ceil( $costo * 300 ) );
 		}
-		$fatti[ $nome ] = $tenuto;
+		if ( ! $fresco ) {
+			$t0     = microtime( true );
+			$v      = $conta();
+			$tenuto = array(
+				'firma' => $firma,
+				'v'     => $v,
+				'secs'  => round( microtime( true ) - $t0, 3 ),
+				'at'    => time(),
+			);
+			update_option( $nome, $tenuto, false );
+		}
+		$fatti[ $nome ] = array( 'firma' => $firma, 'v' => $tenuto['v'] );
 		return $tenuto['v'];
 	}
 

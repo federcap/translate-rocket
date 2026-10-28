@@ -38,6 +38,12 @@ class BrowserEngine {
 	const BATCH = 60;
 
 	/**
+	 * 1.8.24: the translator built into Chrome saved something just now (engine, language, when): the «Automatic»
+	 * page shows it live, for 90 seconds.
+	 */
+	const NOW = 'trrocket_now_browser';
+
+	/**
 	 * Wire up the two endpoints the browser talks to.
 	 */
 	public function register(): void {
@@ -113,6 +119,9 @@ class BrowserEngine {
 		}
 
 		$res = Translator::store_browser( $lang, $clean );
+		if ( ! empty( $res['saved'] ) ) {
+			update_option( self::NOW, array( 'lang' => $lang, 't' => time() ), false );
+		}
 		\TranslateRocket\Cache::flush();
 
 		wp_send_json_success(
