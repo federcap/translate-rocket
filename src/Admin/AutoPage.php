@@ -346,6 +346,9 @@ class AutoPage {
 		}
 		$s['offline_languages'] = array_values( array_diff( $offline, $acceso ) );
 		Settings::update( $s );
+		// 1.8.25: a language just went online: the site's page caches (switcher, hreflang, the new pages) are emptied now,
+		// since the background work no longer touches them while every language is offline.
+		\TranslateRocket\Cache::flush();
 		\TranslateRocket\Logger::info( 'auto', sprintf( /* translators: %s: language codes */ __( 'Put online by itself, fully translated: %s', 'translate-rocket' ), implode( ', ', $acceso ) ), '' );
 	}
 

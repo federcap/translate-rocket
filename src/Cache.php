@@ -184,7 +184,20 @@ class Cache {
 	public static function flush_quiet_now(): void {
 		update_option( self::QUIET_LAST, time(), false );
 		wp_clear_scheduled_hook( self::QUIET_EVENT );
-		self::flush();
+		// 1.8.25 (28/10/2026, globaltoolszone: 4.000 pages, 13 languages all OFFLINE while Labs translated them, «65% CPU
+		// with spikes» even after 1.8.24): every ten minutes this emptied the site's whole page cache (LiteSpeed, WP Rocket…)
+		// and the warm-up rebuilt 4.000 pages — for languages no visitor can see. While every language is offline, the
+		// background work only retires OUR copies (the owner's preview stays fresh); the site's caches are left alone.
+		self::flush( ! self::every_language_offline() );
+	}
+
+	/**
+	 * No translated page is visible to visitors: every secondary language is offline (or there is none).
+	 */
+	public static function every_language_offline(): bool {
+		$router = Plugin::instance()->router();
+		$lingue = $router->secondary_languages();
+		return empty( $lingue ) || ! array_diff( $lingue, $router->offline_languages() );
 	}
 
 	/**
@@ -194,7 +207,11 @@ class Cache {
 		return ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) || ( defined( 'WP_CLI' ) && WP_CLI );
 	}
 
-	public static function flush(): void {
+	/**
+	 * @param bool $anche_esterne Also empty the site's own page caches (cache plugins, host cache, CDN). False only for
+	 *                            background work while every language is offline: nothing a visitor sees has changed.
+	 */
+	public static function flush( bool $anche_esterne = true ): void {
 		// Se cambia il contenuto, puo' essere cambiato anche cosa resta da fare.
 		if ( class_exists( '\\TranslateRocket\\Admin\\NextSteps' ) ) {
 			\TranslateRocket\Admin\NextSteps::forget();
@@ -208,7 +225,9 @@ class Cache {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $like, $tout ) ); // phpcs:ignore WordPress.DB
 		}
 
-		self::purge_external();
+		if ( $anche_esterne ) {
+			self::purge_external();
+		}
 	}
 
 	/**

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.24
+Stable tag: 1.8.25
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.25 =
+* Fixed: on a big site translating in the background with every language still offline, the site's whole page cache (LiteSpeed, WP Rocket, Breeze…) was emptied every ten minutes and rebuilt, for pages no visitor could see yet: CPU at 65% with spikes on a 4.000-page site in 13 languages. While every language is offline, the background work now leaves the site's caches alone; they are emptied the moment a language goes online.
+* Improved: TranslateRocket Labs 0.9.11 no longer clears a language's maps on every page when nothing was translated into it (17 writes per page saved).
 
 = 1.8.24 =
 * Fixed: «Translate all» could stop with a couple of sentences left and no word about them, when its time ran out while asking the engine again for single sentences. It now goes on until they are done.
@@ -577,6 +581,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.25 =
+Big sites translating in the background with languages offline: no more page-cache purge every ten minutes (CPU). Pair with Labs 0.9.11.
 
 = 1.8.24 =
 See what is being translated right now (engine, page), pause and resume from the «Automatic» page, image alt and title in the visual editor, WooCommerce variations, oEmbed of translated pages, Brizy photos, and much lighter counting on big sites.
