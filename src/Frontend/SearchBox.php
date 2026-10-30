@@ -28,6 +28,85 @@ class SearchBox {
 	const STYLES = array( 'field', 'pill', 'icon', 'overlay' );
 
 	/**
+	 * 1.8.30 (29/10/2026, Federico: «styles like the switcher's, ready-made colours and the live view»): the colours a
+	 * profile can set, each a CSS variable of the box. Empty = the theme's look, as before.
+	 */
+	const COLORS = array(
+		'c_text'     => '--trrs-text',
+		'c_bg'       => '--trrs-bg',
+		'c_border'   => '--trrs-border',
+		'c_btn_bg'   => '--trrs-btn-bg',
+		'c_btn_text' => '--trrs-btn-text',
+		'c_icon'     => '--trrs-icon',
+	);
+
+	/**
+	 * Ready-made looks: [text, background, border, button background, button text, magnifier, corners].
+	 *
+	 * @return array<string,array{label:string,c:array<string,string>,radius:string}>
+	 */
+	public static function presets(): array {
+		$p = static function ( string $label, string $t, string $b, string $bo, string $bb, string $bt, string $i, string $r ): array {
+			return array( 'label' => $label, 'c' => array( 'c_text' => $t, 'c_bg' => $b, 'c_border' => $bo, 'c_btn_bg' => $bb, 'c_btn_text' => $bt, 'c_icon' => $i ), 'radius' => $r );
+		};
+		return array(
+			'theme'    => $p( __( 'Theme', 'translate-rocket' ), '', '', '', '', '', '', '' ),
+			'light'    => $p( __( 'Light', 'translate-rocket' ), '#1d2327', '#ffffff', '#c3c4c7', '#f0f0f1', '#1d2327', '', '4' ),
+			'dark'     => $p( __( 'Dark', 'translate-rocket' ), '#f5f5f7', '#1f2128', '#3a3d46', '#3a3d46', '#ffffff', '', '6' ),
+			'ocean'    => $p( __( 'Ocean', 'translate-rocket' ), '#0b2540', '#f2f8ff', '#8db8e8', '#1e6fd9', '#ffffff', '#1e6fd9', '8' ),
+			'violet'   => $p( __( 'Violet', 'translate-rocket' ), '#2a1748', '#faf7ff', '#c9b6f2', '#7b3fe4', '#ffffff', '#7b3fe4', '10' ),
+			'sunset'   => $p( __( 'Sunset', 'translate-rocket' ), '#3b1d0f', '#fff8f1', '#f2b48a', '#ef6c33', '#ffffff', '#ef6c33', '8' ),
+			'forest'   => $p( __( 'Forest', 'translate-rocket' ), '#12301f', '#f3faf5', '#9bc9ab', '#2e7d4f', '#ffffff', '#2e7d4f', '6' ),
+			'gold'     => $p( __( 'Gold', 'translate-rocket' ), '#f4e7c1', '#141414', '#c9a227', '#c9a227', '#141414', '#c9a227', '6' ),
+			'midnight' => $p( __( 'Midnight', 'translate-rocket' ), '#cbd5e1', '#0f172a', '#1e293b', '#38bdf8', '#0f172a', '#38bdf8', '10' ),
+			'outline'  => $p( __( 'Outline', 'translate-rocket' ), '#111111', '#ffffff', '#111111', '#111111', '#ffffff', '', '0' ),
+			'soft'     => $p( __( 'Soft', 'translate-rocket' ), '#475569', '#f8fafc', '#e2e8f0', '#e2e8f0', '#1e293b', '', '999' ),
+			'candy'    => $p( __( 'Candy', 'translate-rocket' ), '#9d174d', '#fdf2f8', '#fbcfe8', '#db2777', '#ffffff', '#db2777', '999' ),
+		);
+	}
+
+	/**
+	 * The colours of a profile as CSS variables for the box's style attribute ('' when it follows the theme).
+	 *
+	 * @param array<string,mixed> $s Settings of the profile.
+	 */
+	public static function style_vars( array $s ): string {
+		$out = '';
+		foreach ( self::COLORS as $k => $var ) {
+			if ( ! empty( $s[ $k ] ) ) {
+				$out .= $var . ':' . $s[ $k ] . ';';
+			}
+		}
+		if ( isset( $s['radius'] ) && '' !== (string) $s['radius'] ) {
+			$out .= '--trrs-radius:' . (int) $s['radius'] . 'px;';
+		}
+		return $out;
+	}
+
+	/**
+	 * A colour as stored: #rrggbb, «transparent» or ''.
+	 *
+	 * @param mixed $v Value from the form.
+	 */
+	private static function clean_color( $v ): string {
+		$v = strtolower( trim( (string) $v ) );
+		if ( 'transparent' === $v ) {
+			return $v;
+		}
+		return (string) sanitize_hex_color( $v );
+	}
+
+	/**
+	 * Corners: '' (the theme's) or 0-999 px.
+	 *
+	 * @param mixed $v Value from the form.
+	 */
+	private static function clean_radius( $v ): string {
+		$v = trim( (string) $v );
+		return '' === $v || ! is_numeric( $v ) ? '' : (string) max( 0, min( 999, (int) $v ) );
+	}
+
+	/**
 	 * Fake menu item ID (far from real ones, next to the switcher's).
 	 */
 	const MENU_ID = 990000;
@@ -156,7 +235,7 @@ class SearchBox {
 		set_transient( $lim, $fat + 1, MINUTE_IN_SECONDS );
 
 		$lingue = $tutte ? Search::search_languages() : ( $router->is_default( $lang ) ? array() : array( $lang ) );
-		$ids    = Search::ids_for( $q, $lingue, $tipi ? $tipi : 'any', $n );
+		$ids    = Search::ids_for( $q, $lingue, $tipi ? $tipi : 'any', $n, $router->is_default( $lang ) );
 		$home   = (string) get_option( 'home' );
 		$titoli = array();
 		$righe  = array();
@@ -208,14 +287,20 @@ class SearchBox {
 		$filters = (string) ( $s['filters'] ?? 'none' );
 		$place   = (string) ( $s['place'] ?? ( ! empty( $s['menu'] ) ? 'menu' : 'none' ) );
 		$vis     = (string) ( $s['visibility'] ?? 'both' );
-		return array(
+		$colori  = array();
+		foreach ( array_keys( self::COLORS ) as $k ) {
+			$colori[ $k ] = self::clean_color( $s[ $k ] ?? '' );
+		}
+		return $colori + array(
+			'radius'           => self::clean_radius( $s['radius'] ?? '' ),
+			'preset'           => sanitize_key( (string) ( $s['preset'] ?? '' ) ),
 			'place'            => in_array( $place, self::PLACES, true ) ? $place : 'none',
 			'menu'             => 'menu' === $place,
 			'style'            => in_array( $style, self::STYLES, true ) ? $style : 'icon',
 			'width'            => self::clean_width( (string) ( $s['width'] ?? '' ) ),
 			'placeholder'      => sanitize_text_field( (string) ( $s['placeholder'] ?? '' ) ),
 			'visibility'       => in_array( $vis, self::VISIBILITY, true ) ? $vis : 'both',
-			'autocomplete'     => ! isset( $s['autocomplete'] ) || ! empty( $s['autocomplete'] ),
+			'autocomplete'     => ! empty( $s['autocomplete'] ), // 29/10/2026: off unless the owner turns it on
 			'count'            => max( 3, min( 12, (int) ( $s['count'] ?? 6 ) ) ),
 			'types'            => self::clean_types( $s['types'] ?? array() ),
 			'all_languages'    => ! empty( $s['all_languages'] ),
@@ -304,7 +389,13 @@ class SearchBox {
 		$filters = isset( $in['filters'] ) ? sanitize_key( (string) $in['filters'] ) : 'none';
 		$place   = isset( $in['place'] ) ? sanitize_key( (string) $in['place'] ) : ( ! empty( $in['menu'] ) ? 'menu' : 'none' );
 		$vis     = isset( $in['visibility'] ) ? sanitize_key( (string) $in['visibility'] ) : 'both';
-		return array(
+		$colori  = array();
+		foreach ( array_keys( self::COLORS ) as $k ) {
+			$colori[ $k ] = self::clean_color( $in[ $k ] ?? '' );
+		}
+		return $colori + array(
+			'radius'           => self::clean_radius( $in['radius'] ?? '' ),
+			'preset'           => sanitize_key( (string) ( $in['preset'] ?? '' ) ),
 			'place'            => in_array( $place, self::PLACES, true ) ? $place : 'none',
 			'style'            => in_array( $style, self::STYLES, true ) ? $style : 'icon',
 			'width'            => self::clean_width( isset( $in['width'] ) ? (string) $in['width'] : '' ),
@@ -443,7 +534,8 @@ class SearchBox {
 			. $filtri_html . $nascosti
 			. '</form>';
 
-		$html = '<div class="trrocket-search trrocket-search--' . esc_attr( $style ) . ( 'both' !== $vis && '' === (string) $atts['preview'] ? ' trrocket-search--vis-' . esc_attr( $vis ) : '' ) . '" data-style="' . esc_attr( $style ) . '" data-profile="' . esc_attr( $pid ) . '"' . $dati . '>';
+		$vars = self::style_vars( $s );
+		$html = '<div class="trrocket-search trrocket-search--' . esc_attr( $style ) . ( 'both' !== $vis && '' === (string) $atts['preview'] ? ' trrocket-search--vis-' . esc_attr( $vis ) : '' ) . '" data-style="' . esc_attr( $style ) . '" data-profile="' . esc_attr( $pid ) . '"' . ( '' !== $vars ? ' style="' . esc_attr( $vars ) . '"' : '' ) . $dati . '>';
 		if ( 'icon' === $style || 'overlay' === $style ) {
 			$html .= '<button type="button" class="trrocket-search-open" aria-expanded="false" aria-label="' . esc_attr( $parola ) . '"' . $no . '>' . $ico . '</button>';
 			$html .= '<div class="trrocket-search-panel" hidden>' . $form
@@ -468,13 +560,13 @@ class SearchBox {
 		$css = '.trrocket-search{position:relative;display:inline-flex;align-items:center;max-width:100%;font:inherit}'
 			. '.trrocket-search-label{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}'
 			. '.trrocket-search-form{display:flex;align-items:center;margin:0;max-width:100%}'
-			. '.trrocket-search input[type=search]{font:inherit;color:inherit;min-width:0;width:14em;max-width:100%;margin:0;padding:.45em .7em;border:1px solid currentColor;border-color:rgba(127,127,127,.45);border-radius:4px 0 0 4px;background:#fff;color:#1d2327;box-sizing:border-box;-webkit-appearance:none;appearance:none}'
+			. '.trrocket-search input[type=search]{font:inherit;color:inherit;min-width:0;width:14em;max-width:100%;margin:0;padding:.45em .7em;border:1px solid currentColor;border-color:var(--trrs-border,rgba(127,127,127,.45));border-radius:var(--trrs-radius,4px) 0 0 var(--trrs-radius,4px);background:var(--trrs-bg,#fff);color:var(--trrs-text,#1d2327);box-sizing:border-box;-webkit-appearance:none;appearance:none}'
 			. '.trrocket-search-go,.trrocket-search-open,.trrocket-search-close{display:inline-flex;align-items:center;justify-content:center;font:inherit;line-height:1;cursor:pointer;margin:0}'
-			. '.trrocket-search-go{padding:.45em .7em;border:1px solid rgba(127,127,127,.45);border-left:0;border-radius:0 4px 4px 0;background:#f0f0f1;color:#1d2327;align-self:stretch}'
+			. '.trrocket-search-go{padding:.45em .7em;border:1px solid var(--trrs-border,rgba(127,127,127,.45));border-left:0;border-radius:0 var(--trrs-radius,4px) var(--trrs-radius,4px) 0;background:var(--trrs-btn-bg,#f0f0f1);color:var(--trrs-btn-text,#1d2327);align-self:stretch}.trrocket-search input[type=search]::placeholder{color:var(--trrs-text,#1d2327);opacity:.6}'
 			. '.trrocket-search--pill input[type=search]{border-radius:999px 0 0 999px;padding-left:1em}'
 			. '.trrocket-search--pill .trrocket-search-go{border-radius:0 999px 999px 0;padding-right:1em}'
-			. '.trrocket-search-open{background:none;border:0;padding:.35em;color:inherit}'
-			. '.trrocket-search--icon .trrocket-search-panel{position:absolute;top:100%;right:0;z-index:99999;margin-top:6px;background:#fff;padding:6px;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.18)}'
+			. '.trrocket-search-open{background:none;border:0;padding:.35em;color:var(--trrs-icon,inherit)}'
+			. '.trrocket-search--icon .trrocket-search-panel{position:absolute;top:100%;right:0;z-index:99999;margin-top:6px;background:var(--trrs-bg,#fff);padding:6px;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.18)}'
 			. '[dir=rtl] .trrocket-search--icon .trrocket-search-panel{right:auto;left:0}'
 			. '.trrocket-search--overlay .trrocket-search-panel{position:fixed;inset:0;z-index:999999;background:rgba(15,15,20,.88);display:flex;align-items:flex-start;justify-content:center;padding:18vh 16px 16px}'
 			. '.trrocket-search--overlay .trrocket-search-panel[hidden],.trrocket-search--icon .trrocket-search-panel[hidden]{display:none}'
@@ -491,32 +583,32 @@ class SearchBox {
 			// 1.8.8: the form holds a row (field + button), the suggestions and the filters
 			. '.trrocket-search-form{flex-direction:column;align-items:stretch;position:relative}'
 			. '.trrocket-search-row{display:flex;align-items:stretch;max-width:100%}'
-			. '.trrocket-search-suggest{position:absolute;top:100%;left:0;right:0;z-index:100000;margin:4px 0 0;padding:4px 0;list-style:none;background:#fff;color:#1d2327;border:1px solid rgba(127,127,127,.3);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.15);max-height:60vh;overflow:auto;min-width:16em}'
+			. '.trrocket-search-suggest{position:absolute;top:100%;left:0;right:0;z-index:100000;margin:4px 0 0;padding:4px 0;list-style:none;background:var(--trrs-bg,#fff);color:var(--trrs-text,#1d2327);border:1px solid var(--trrs-border,rgba(127,127,127,.3));border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.15);max-height:60vh;overflow:auto;min-width:16em}'
 			. '.trrocket-search-suggest[hidden]{display:none}'
 			. '.trrocket-search-suggest li{margin:0;padding:0}'
 			. '.trrocket-search-suggest a{display:flex;justify-content:space-between;gap:12px;padding:.5em .8em;color:inherit;text-decoration:none;line-height:1.3}'
-			. '.trrocket-search-suggest li.is-active a,.trrocket-search-suggest a:hover{background:#f0f0f1}'
+			. '.trrocket-search-suggest li.is-active a,.trrocket-search-suggest a:hover{background:var(--trrs-btn-bg,#f0f0f1);color:var(--trrs-btn-text,inherit)}'
 			. '.trrocket-search-kind{font-size:.8em;opacity:.65;white-space:nowrap}'
 			. '.trrocket-search-filters{margin-top:6px;font-size:.9em}'
 			. '.trrocket-search-filters--chips,.trrocket-search-filterbox{display:flex;flex-wrap:wrap;gap:6px}'
 			. '.trrocket-search-chip{display:inline-flex;align-items:center;cursor:pointer;margin:0}'
 			. '.trrocket-search-chip input{position:absolute;opacity:0;width:1px;height:1px}'
 			. '.trrocket-search-chip span{display:inline-block;padding:.25em .75em;border:1px solid rgba(127,127,127,.45);border-radius:999px;line-height:1.4}'
-			. '.trrocket-search-chip input:checked+span{background:#1d2327;color:#fff;border-color:#1d2327}'
+			. '.trrocket-search-chip input:checked+span{background:var(--trrs-btn-bg,#1d2327);color:var(--trrs-btn-text,#fff);border-color:var(--trrs-btn-bg,#1d2327)}'
 			. '.trrocket-search-chip input:focus-visible+span{outline:2px solid currentColor;outline-offset:2px}'
 			. '.trrocket-search-filters--dropdown{position:relative}'
 			// 17/10/2026 (screenshots for Federico): «Filters» looked like plain text, now it looks like what it is, a button
 			. '.trrocket-search-filters--dropdown summary{cursor:pointer;display:inline-flex;align-items:center;gap:.4em;padding:.25em .8em;border:1px solid rgba(127,127,127,.45);border-radius:999px;line-height:1.4;list-style:none;user-select:none}'
 			. '.trrocket-search-filters--dropdown summary::-webkit-details-marker{display:none}'
 			. '.trrocket-search-filters--dropdown summary::after{content:"";width:.4em;height:.4em;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);opacity:.7}'
-			. '.trrocket-search-filters--dropdown[open] summary{background:#1d2327;color:#fff;border-color:#1d2327}'
+			. '.trrocket-search-filters--dropdown[open] summary{background:var(--trrs-btn-bg,#1d2327);color:var(--trrs-btn-text,#fff);border-color:var(--trrs-btn-bg,#1d2327)}'
 			// while the suggestions are on their way: the magnifier of the button turns into a small wheel
 			. '.trrocket-search-go{position:relative}'
 			. '.trrocket-search--loading .trrocket-search-go>*{visibility:hidden}'
 			. '.trrocket-search--loading .trrocket-search-go::after{content:"";position:absolute;top:50%;left:50%;width:1em;height:1em;margin:-.5em 0 0 -.5em;border:2px solid rgba(127,127,127,.35);border-top-color:currentColor;border-radius:50%;animation:trrocket-search-spin .7s linear infinite;pointer-events:none}'
 			. '@keyframes trrocket-search-spin{to{transform:rotate(360deg)}}'
 			. '@media (prefers-reduced-motion:reduce){.trrocket-search--loading .trrocket-search-go::after{animation-duration:2s}}'
-			. '.trrocket-search-filters--dropdown .trrocket-search-filterbox{position:absolute;z-index:100001;top:100%;left:0;background:#fff;color:#1d2327;padding:8px;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.15);min-width:14em}'
+			. '.trrocket-search-filters--dropdown .trrocket-search-filterbox{position:absolute;z-index:100001;top:100%;left:0;background:var(--trrs-bg,#fff);color:var(--trrs-text,#1d2327);padding:8px;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.15);min-width:14em}'
 			. '[dir=rtl] .trrocket-search-filters--dropdown .trrocket-search-filterbox,[dir=rtl] .trrocket-search-suggest{left:auto;right:0}'
 			. '.trrocket-search--overlay .trrocket-search-filters{color:#fff}.trrocket-search--overlay .trrocket-search-chip input:checked+span{background:#fff;color:#1d2327;border-color:#fff}';
 		// The behaviour (open/close, suggestions, filters) from its file, once per page, in the footer.

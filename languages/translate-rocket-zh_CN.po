@@ -2260,8 +2260,8 @@ msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
 msgstr "发现了 bug 或有想法？告诉我——它决定接下来做什么。"
 
 #: src/Admin/Growth.php:213
-msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
-msgstr "如果 TranslateRocket 帮到了您，WordPress.org 上的一条评价意义重大。"
+msgid "If TranslateRocket helps you, a review on Trustpilot means a lot."
+msgstr "如果 TranslateRocket 帮到了您，Trustpilot 上的一条评价意义重大。"
 
 #: src/Admin/Growth.php:214
 msgid "Write a review"
@@ -7557,3 +7557,156 @@ msgstr "你的翻译已保存，但访客仍然看到 %s：它已启用，在它
 #: src/Frontend/VisualEditor.php
 msgid "Open Plugins"
 msgstr "打开插件"
+
+#: src/Admin/AutoPage.php
+msgid "less than a day at today’s pace"
+msgstr "按今天的速度不到一天"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "about %d days at today’s pace"
+msgstr "按今天的速度约 %d 天"
+
+#: src/Admin/AutoPage.php
+msgid "The translator built into Chrome and Edge"
+msgstr "Chrome 和 Edge 内置的翻译器"
+
+#: src/Admin/AutoPage.php
+msgid "Not working yet: tick «I accept the conditions» below — then it starts."
+msgstr "尚未生效：勾选下方的「我接受条款」——随后即开始。"
+
+#: src/Admin/AutoPage.php
+msgid "Take me there"
+msgstr "带我过去"
+
+#: src/Admin/AutoPage.php
+msgid "To switch these on: 1. get Labs (free, one minute) — 2. come back to this page — 3. tick them and accept their conditions."
+msgstr "开启方法：1. 获取 Labs（免费，一分钟）— 2. 回到此页面 — 3. 勾选并接受其条款。"
+
+#: src/Admin/AutoPage.php
+msgid "How hard it works on your server"
+msgstr "在服务器上的工作强度"
+
+#: src/Admin/AutoPage.php
+msgid "Light — 1 page every 2 minutes (shared hosting, a busy shop)"
+msgstr "轻度 — 每 2 分钟 1 页（共享主机、繁忙的商店）"
+
+#: src/Admin/AutoPage.php
+msgid "Normal — 3 pages a minute (recommended)"
+msgstr "正常 — 每分钟 3 页（推荐）"
+
+#: src/Admin/AutoPage.php
+msgid "Fast — 6 pages every 30 seconds (a server with CPU to spare)"
+msgstr "快速 — 每 30 秒 6 页（CPU 充裕的服务器）"
+
+#: src/Admin/LabsPromo.php
+msgid "A search box that searches in the language of the page, with suggestions while typing"
+msgstr "按页面语言搜索的搜索框，输入时给出建议"
+
+#: src/Admin/LabsPromo.php
+msgid "Language switcher and search box with ready-made styles and a live preview"
+msgstr "带现成样式和实时预览的语言切换器与搜索框"
+
+#: src/Admin/LabsPromo.php
+msgid "Images, alt texts and link titles of their own for each language"
+msgstr "每种语言各自的图片、替代文字和链接标题"
+
+#: src/Admin/LabsPromo.php
+msgid "A domain for each language (mysite.de instead of mysite.com/de/)"
+msgstr "每种语言一个域名（用 mysite.de 代替 mysite.com/de/）"
+
+#: src/Admin/LabsPromo.php
+msgid "Quality that grows: a little of the free engines' work polished with AI every day"
+msgstr "质量持续提升：每天用 AI 润色一部分免费引擎的译文"
+
+#: src/Admin/LabsPromo.php
+msgid "Remote help from support, without giving your password"
+msgstr "支持团队远程协助，无需提供密码"
+
+#: src/Admin/SearchPage.php
+msgid "Pick a ready-made look, then change any colour if you like: the preview above follows every change. «Theme» leaves the colours to your theme. Save to keep them."
+msgstr "选择一个现成的外观，然后按需修改任意颜色：上方预览会跟随每次更改。「主题」将颜色交给您的主题。保存后生效。"
+
+#: src/Admin/SearchPage.php
+msgid "Text"
+msgstr "文字"
+
+#: src/Admin/SearchPage.php
+msgid "Field background"
+msgstr "输入框背景"
+
+#: src/Admin/SearchPage.php
+msgid "Button background"
+msgstr "按钮背景"
+
+#: src/Admin/SearchPage.php
+msgid "Button magnifier"
+msgstr "按钮放大镜"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier in the menu"
+msgstr "菜单中的放大镜"
+
+#: src/Admin/SearchPage.php
+msgid "theme"
+msgstr "主题"
+
+#: src/Admin/SearchPage.php
+msgid "Corners (px)"
+msgstr "圆角 (px)"
+
+#: src/Admin/SearchPage.php
+msgid "An empty colour follows your theme. «transparent» is accepted too."
+msgstr "留空的颜色跟随主题。也可以填写「transparent」。"
+
+#: src/Frontend/SearchBox.php
+msgid "Theme"
+msgstr "主题"
+
+#: src/Frontend/SearchBox.php
+msgid "Violet"
+msgstr "紫罗兰"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties in this language"
+msgstr "此语言的属性"
+
+#: src/Frontend/VisualEditor.php
+msgid "Read by search engines and screen readers. The original has none: what you write here is shown only in this language."
+msgstr "由搜索引擎和屏幕阅读器读取。原文没有这些属性：您在此填写的内容只在此语言中显示。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Save properties"
+msgstr "保存属性"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties saved"
+msgstr "属性已保存"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties (title, ARIA label)"
+msgstr "属性（标题、ARIA 标签）"
+
+#: src/Frontend/VisualEditor.php
+msgid "What the picture shows, in a few words"
+msgstr "用几个词描述图片内容"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown when the mouse rests on it"
+msgstr "鼠标停留时显示"
+
+#: src/Frontend/VisualEditor.php
+msgid "What it does, for screen readers"
+msgstr "它的作用（供屏幕阅读器读取）"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every sentence is translated in your %d language."
+msgid_plural "Every sentence is translated in all %d languages."
+msgstr[0] "所有句子都已翻译成 %d 种语言。"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Sentences left: %1$s in %2$d language"
+msgid_plural "Sentences left: %1$s in %2$d languages"
+msgstr[0] "剩余句子：%2$d 种语言共 %1$s 句"

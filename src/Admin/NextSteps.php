@@ -132,16 +132,24 @@ class NextSteps {
 		// dello stesso pannello che si contraddicono. Con l'impronta non serve sperare
 		// che qualcuno si ricordi di svuotare la cache.
 		$firma = md5( (string) wp_json_encode( Settings::get() ) );
-		$c     = get_transient( self::CACHE );
-		if ( is_array( $c ) && isset( $c['firma'], $c['passi'] ) && $firma === $c['firma'] ) {
-			return (array) $c['passi'];
+		// 1.8.29 (28/10/2026, globaltoolszone: «next steps function and all the counters in wp admin are cpu killers… my
+		// server shut down»): this was a transient. LiteSpeed/Redis «purge all» empties the object cache, so every admin
+		// screen found nothing and rebuilt the list (13 languages of counts) — and every saved translation emptied it
+		// again (forget). Now an option that never disappears, good for five minutes; a saved translation only marks it
+		// «to redo», and the list is rebuilt at most once every two minutes, by the first screen that needs it.
+		$c = get_option( self::CACHE );
+		if ( is_array( $c ) && isset( $c['firma'], $c['passi'], $c['at'] ) && $firma === $c['firma'] ) {
+			$eta = time() - (int) $c['at'];
+			if ( $eta < ( empty( $c['dirty'] ) ? 5 * MINUTE_IN_SECONDS : 2 * MINUTE_IN_SECONDS ) ) {
+				return (array) $c['passi'];
+			}
 		}
 		try {
 			$passi = self::steps();
 		} catch ( \Throwable $e ) {
 			$passi = array();
 		}
-		set_transient( self::CACHE, array( 'firma' => $firma, 'passi' => $passi ), 5 * MINUTE_IN_SECONDS );
+		update_option( self::CACHE, array( 'firma' => $firma, 'passi' => $passi, 'at' => time() ), false );
 		return $passi;
 	}
 
@@ -225,9 +233,10 @@ class NextSteps {
 	 * single admin page, and it must never be the reason wp-admin feels slow.
 	 */
 	public static function pending(): int {
-		$n = get_transient( self::PENDING );
-		if ( false !== $n ) {
-			return (int) $n;
+		// 1.8.29: no transient of its own any more — counted from the list, which is kept in an option (see steps_cached).
+		static $memo = null;
+		if ( null !== $memo ) {
+			return $memo;
 		}
 		$n = 0;
 		try {
@@ -239,8 +248,8 @@ class NextSteps {
 		} catch ( \Throwable $e ) {
 			$n = 0;   // nel dubbio nessun numero: meglio niente che un numero sbagliato.
 		}
-		set_transient( self::PENDING, $n, 5 * MINUTE_IN_SECONDS );
-		return (int) $n;
+		$memo = (int) $n;
+		return $memo;
 	}
 
 	/**
@@ -255,8 +264,16 @@ class NextSteps {
 			return;
 		}
 		$fatto = true;
-		delete_transient( self::PENDING );
-		delete_transient( self::CACHE );
+		delete_transient( self::PENDING ); // up to 1.8.28
+		// 1.8.29: the list is not thrown away, it is marked «to redo» (a big site saves a translation every second:
+		// throwing it away meant rebuilding it on every screen). One write per request, and none if already marked.
+		$c = get_option( self::CACHE );
+		if ( is_array( $c ) && isset( $c['passi'] ) && empty( $c['dirty'] ) ) {
+			$c['dirty'] = 1;
+			update_option( self::CACHE, $c, false );
+		} elseif ( ! is_array( $c ) ) {
+			delete_transient( self::CACHE ); // up to 1.8.28
+		}
 	}
 
 	/**

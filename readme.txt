@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.28
+Stable tag: 1.8.30
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,20 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.30 =
+* New: images, links and buttons get their own alt text, title and ARIA label in each language, even when the original has none. In the visual editor the image window shows the fields, a link or a button has «Properties» in its text window, and an icon with no text opens its own small window. They are kept apart from the sentences: never counted as «to translate», never rewritten by an engine.
+* New: the search box has colours like the language switcher — 12 ready-made looks (Light, Dark, Ocean, Violet…) plus six colours and the corners of your own, with the preview following every change. Without a choice the theme decides, as before.
+* Changed: suggestions while typing in the search box are off for new boxes; switch them on in TranslateRocket → Search.
+* Fixed: with «search in every language», a visitor reading the site's own language got the pages found in the other translations first, and the pages with the words in their title could be missing from the suggestions (WordPress's own search was also ordered by date). The site's language comes first, by relevance.
+* Improved: the Labs page lists everything the free plugin includes and what Labs adds, search box and per-language properties included.
+* Changed: «Write a review» now leads to Trustpilot.
+* Automatic translation: under the pages read, the number that matters — «Sentences left: 12,345 in 13 languages · about 4 days at today's pace». A page is read once but translated in every language, so «Pages read: 2867 of 4074» never meant 70% done. The pace costs no scan: one small option, reset once a day.
+* Fixed: since 1.8.27 the counters (translated, to translate, per language) could stay behind after a page was taken off the list, after new sentences on a new page, or after translations were deleted outside the plugin (phpMyAdmin, another plugin). They are counted again as soon as the plugin changes something, and are never older than 10 minutes (an hour on a big site, where counting is slow).
+* Faster: a translated page with many links (a menu listing every page, a long list of posts) looked up each linked page's translated address one by one — 15,000 database queries and 14 seconds for a page linking 5,000 pages, against 4 for the original. Now all the links are resolved at once: about 200 queries.
+
+= 1.8.29 =
+* Fixed: on a big site with a page cache that also empties the object cache on every purge (LiteSpeed, Redis), the «next steps» box and the counters were rebuilt on every wp-admin screen, and again after every saved translation: CPU gone on a 4.000-page site in 13 languages. The list is now kept in an option that survives purges, good for five minutes, and a saved translation only marks it to be redone — at most once every two minutes.
 
 = 1.8.28 =
 * Improved: on the «Automatic» page an engine you tick but that cannot work yet says so right under its name — conditions not accepted, «where it runs» set to the server only, or paused by the service — with a link to the one thing to do. Ticking an unofficial engine opens its conditions and lights up the box to tick, instead of saving an engine that then comes back grey.
@@ -593,6 +607,12 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.30 =
+Alt text, titles and ARIA labels per language for images, links and buttons; search box colours with a live preview; search results in the site's language first; sentences and days left on the Automatic page.
+
+= 1.8.29 =
+Big sites with LiteSpeed/Redis: the «next steps» box no longer rebuilds on every admin screen (CPU).
 
 = 1.8.28 =
 Clearer engines on the Automatic page (why one is not working, what to do) and a Light / Normal / Fast server-load setting with Labs 0.9.13.

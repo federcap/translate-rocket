@@ -55,6 +55,7 @@ class Strings {
 	 */
 	public static function remember_batch( array $items, array $secondary, string $url = '', string $title = '', bool $whole_page = false ): void {
 		global $wpdb;
+		self::forget_counts();
 
 		// De-duplicate within this page by hash.
 		$by_hash = array();
@@ -323,7 +324,7 @@ class Strings {
 	 */
 	private static function conto( string $what, string $lang, callable $conta, bool $calm = false ) {
 		global $wpdb;
-		static $fatti = array();
+		$fatti = &self::$fatti_conti;
 		// What changes when a count can change: a translation saved (map generation), sentences added or deleted,
 		// pages read, translations added or deleted in this language. Read at every call, never kept: the AI step
 		// translates and then asks how many are left, in the same request. Indexed counts: milliseconds.
@@ -333,14 +334,15 @@ class Strings {
 		// of one language was itself a scan of 780.000 rows. Now: once per request, and only the highest ids (index-only,
 		// a millisecond): sentences added, pages read, translations added. What is saved or deleted in a language bumps
 		// its map generation (flush_maps), which is the other half of the signature.
-		static $n = null;
-		if ( null === $n ) {
-			$st = Database::strings_table();
-			$tr = Database::translations_table();
-			$oc = Database::occurrences_table();
-			$n  = $wpdb->get_row( "SELECT /* trr-firma */ (SELECT COUNT(*) FROM {$st}) AS s, (SELECT MAX(id) FROM {$st}) AS ms, (SELECT MAX(id) FROM {$oc}) AS mo, (SELECT MAX(id) FROM {$tr}) AS mt", ARRAY_N ); // phpcs:ignore WordPress.DB
+		// 1.8.30: read again after the plugin itself adds, deletes or forgets something in the same request (see
+		// forget_counts()), and «a page taken off the list» is part of it too.
+		if ( null === self::$firma_db ) {
+			$st             = Database::strings_table();
+			$tr             = Database::translations_table();
+			$oc             = Database::occurrences_table();
+			self::$firma_db = $wpdb->get_row( "SELECT /* trr-firma */ (SELECT COUNT(*) FROM {$st}) AS s, (SELECT MAX(id) FROM {$st}) AS ms, (SELECT MAX(id) FROM {$oc}) AS mo, (SELECT MAX(id) FROM {$tr}) AS mt", ARRAY_N ); // phpcs:ignore WordPress.DB
 		}
-		$firma = md5( $lang . '|' . ( is_array( $gen ) ? (int) ( $gen[ $lang ] ?? 1 ) : 1 ) . '|' . implode( '|', (array) $n ) );
+		$firma = md5( $lang . '|' . ( is_array( $gen ) ? (int) ( $gen[ $lang ] ?? 1 ) : 1 ) . '|' . (int) get_option( 'trrocket_pages_gen', 0 ) . '|' . implode( '|', (array) self::$firma_db ) );
 		$nome  = 'trrocket_cn' . $what . '_' . $lang; // one place per count and language, the signature inside
 		if ( isset( $fatti[ $nome ] ) && $firma === $fatti[ $nome ]['firma'] ) {
 			return $fatti[ $nome ]['v'];
@@ -349,6 +351,13 @@ class Strings {
 		// purge, the transient was gone at every look and each screen counted everything again.
 		$tenuto = get_option( $nome );
 		$fresco = is_array( $tenuto ) && isset( $tenuto['firma'], $tenuto['v'] );
+		// 1.8.30: what changes outside the plugin (phpMyAdmin, another plugin) moves no signature: a count is never
+		// older than 10 minutes — an hour where counting is slow (a big site: Matjaž, 29/10/2026, «wp-admin and its
+		// counting still causing trouble… slow queries that add up»), so a screen never pays for it every 10 minutes.
+		$vecchio = (float) ( $tenuto['secs'] ?? 0 ) >= 0.1 ? 3600 : 600;
+		if ( $fresco && $firma === $tenuto['firma'] && ( time() - (int) ( $tenuto['at'] ?? 0 ) ) >= $vecchio ) {
+			$fresco = false;
+		}
 		if ( $fresco && $firma !== $tenuto['firma'] ) {
 			// Something changed. On a big site, while it translates, that is every second: a count that takes
 			// 0,5 s for each of 13 languages, done again at every look, is what ate the CPU. There the last count
@@ -819,6 +828,28 @@ class Strings {
 	private static $is_huge = null;
 
 	/**
+	 * The counts' signature read from the tables, once per request (1.8.27); null = read it again.
+	 *
+	 * @var array|null
+	 */
+	private static $firma_db = null;
+
+	/**
+	 * The counts already given in this request, by option name.
+	 *
+	 * @var array
+	 */
+	private static $fatti_conti = array();
+
+	/**
+	 * The plugin has just changed sentences, pages or translations: the next count reads the signature again.
+	 */
+	public static function forget_counts(): void {
+		self::$firma_db    = null;
+		self::$fatti_conti = array();
+	}
+
+	/**
 	 * Per-request lookup cache: lang => [ text => translation|null ].
 	 * Null marks "asked, no translation" so repeat lookups skip the query too.
 	 *
@@ -1231,6 +1262,7 @@ class Strings {
 	 */
 	public static function flush_maps( string $lang ): void {
 		global $wpdb;
+		self::forget_counts();
 		delete_transient( 'trrocket_map_' . $lang );
 		// Il numero di generazione: e' quello che invalida davvero le mappe per
 		// pagina quando i transient NON stanno nel database (Redis, Memcached).
@@ -1437,6 +1469,7 @@ class Strings {
 	 */
 	public static function forget_page( string $url_hash ): void {
 		global $wpdb;
+		self::forget_counts();
 		$occurrences = Database::occurrences_table();
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$occurrences} WHERE url_hash = %s", $url_hash ) ); // phpcs:ignore WordPress.DB
 		update_option( 'trrocket_pages_gen', (int) get_option( 'trrocket_pages_gen', 0 ) + 1, false ); // the page lists count again
@@ -1477,6 +1510,7 @@ class Strings {
 	 */
 	public static function delete_stale( int $days = 30 ): int {
 		global $wpdb;
+		self::forget_counts();
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
 		$occurrences  = Database::occurrences_table();

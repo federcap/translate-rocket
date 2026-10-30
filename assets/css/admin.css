@@ -2183,6 +2183,8 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-auto-switch strong { display: block; font-size: 15px; }
 .trr-auto-switch .description, .trr-auto-check .description { display: block; }
 .trr-auto-job { margin: 0; color: #50575e; }
+/* 1.8.30: sentences still missing across every language, with the days left */
+.trr-auto-tot { margin: 4px 0 0; font-weight: 600; color: #1d2327; }
 /* 1.8.24: what is being translated right now (engine, page), rebuilt at every tick */
 .trr-auto-now { margin: 6px 0 0; padding: 0; list-style: none; color: #1d2327; }
 .trr-auto-now li { margin: 2px 0; }
@@ -2580,3 +2582,8 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-auto-why-go { margin-left: 6px; font-weight: 600; }
 .trr-auto-ack-now { outline: 3px solid #f59e0b; outline-offset: 4px; border-radius: 6px; background: #fffbeb; }
 .trr-auto-chain li.trr-auto-how { border-bottom: 0; opacity: 1; }
+
+/* 1.8.30: search box colours */
+.trr-sb-presets { margin-bottom: 10px; }
+.trr-sb-colors td { padding: 3px 10px 3px 0; vertical-align: middle; }
+.trr-sb-colors input[type=color] { width: 34px; height: 28px; padding: 0 2px; vertical-align: middle; cursor: pointer; }

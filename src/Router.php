@@ -1019,6 +1019,151 @@ class Router {
 	private $link_ids = array();
 
 	/**
+	 * Translated path of each «lang|path» looked up in this request (translated_link_path(), prime_links()).
+	 *
+	 * @var array<string,string>
+	 */
+	private $link_cache = array();
+
+	/**
+	 * Every page linked from a page, resolved at once (1.8.30, 29/10/2026: a translated page of a 5.000-page site
+	 * whose menu lists every page took 14 s against 4 s for the original — 15.000 queries, two or three for each link:
+	 * url_to_postid(), then get_post_meta() loading ALL the meta of the linked page, Elementor's included). Here: one
+	 * query for the pages whose names appear in the links, one for their translated slugs. A path that is not exactly a
+	 * published page (a post, a product, an archive, a paged list) is left to translated_link_path() as before.
+	 *
+	 * @param string[] $hrefs     Links as written in the page.
+	 * @param string   $lang      Language of the page.
+	 * @param string   $home_host Host of the raw home URL.
+	 * @param string   $home_path Path prefix of the raw home URL ('' at the root).
+	 */
+	public function prime_links( array $hrefs, string $lang, string $home_host, string $home_path ): void {
+		global $wpdb;
+		if ( $this->is_default( $lang ) || ! function_exists( 'get_option' ) ) {
+			return;
+		}
+		$paths = array();
+		$nomi  = array();
+		foreach ( $hrefs as $href ) {
+			$href = (string) $href;
+			if ( '' === $href || '#' === $href[0] || '?' === $href[0] || 0 === strpos( $href, '//' ) ) {
+				continue;
+			}
+			if ( '/' !== $href[0] ) {
+				if ( ! preg_match( '#^https?://#i', $href ) || 0 !== strcasecmp( (string) wp_parse_url( $href, PHP_URL_HOST ), $home_host ) ) {
+					continue;
+				}
+			}
+			$p = (string) wp_parse_url( $href, PHP_URL_PATH );
+			if ( '' !== $home_path && 0 === strpos( $p, $home_path ) ) {
+				$p = (string) substr( $p, strlen( $home_path ) );
+			}
+			if ( 0 === strpos( $p, '/' . $lang . '/' ) ) {
+				$p = (string) substr( $p, strlen( '/' . $lang ) );
+			}
+			if ( '' === $p || '/' === $p || '/' !== $p[0] || 0 === strpos( $p, '/wp-' ) || preg_match( '/\.[a-z0-9]{2,5}$/i', $p ) || isset( $this->link_cache[ $lang . '|' . $p ] ) ) {
+				continue;
+			}
+			$seg = array_values( array_filter( explode( '/', strtolower( $p ) ), 'strlen' ) );
+			if ( empty( $seg ) || count( $seg ) > 6 ) {
+				continue;
+			}
+			$paths[ $p ] = $seg;
+			foreach ( $seg as $s ) {
+				$nomi[ $s ] = true;
+			}
+		}
+		if ( count( $paths ) < 5 ) {
+			return; // a few links: one by one is as fast
+		}
+		// The pages with those names (and their parents, whose names are in the same paths).
+		$righe = array();
+		// Many names: every published page at once (three small columns, the type/status index) costs less than
+		// blocks of «post_name IN (…)» — 0,25 s each for 500 names on a 5.000-page site.
+		$blocchi = count( $nomi ) > 300 ? array() : array_chunk( array_keys( $nomi ), 500 );
+		if ( empty( $blocchi ) ) {
+			foreach ( (array) $wpdb->get_results( "SELECT ID, post_name, post_parent FROM {$wpdb->posts} WHERE post_type = 'page' AND post_status = 'publish'" ) as $r ) { // phpcs:ignore WordPress.DB
+				if ( isset( $nomi[ strtolower( (string) $r->post_name ) ] ) ) {
+					$righe[ (int) $r->ID ] = $r;
+				}
+			}
+		}
+		foreach ( $blocchi as $blocco ) {
+			$segnaposto = implode( ',', array_fill( 0, count( $blocco ), '%s' ) );
+			foreach ( (array) $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_name, post_parent FROM {$wpdb->posts} WHERE post_type = 'page' AND post_status = 'publish' AND post_name IN ({$segnaposto})", $blocco ) ) as $r ) { // phpcs:ignore WordPress.DB
+				$righe[ (int) $r->ID ] = $r;
+			}
+		}
+		if ( empty( $righe ) ) {
+			return;
+		}
+		$per_nome = array();
+		foreach ( $righe as $r ) {
+			$per_nome[ strtolower( (string) $r->post_name ) ][] = $r;
+		}
+		// Each path → the page whose own name and ancestors' names are exactly its segments, from the top.
+		$trovati = array();
+		foreach ( $paths as $p => $seg ) {
+			$ultimo = end( $seg );
+			$scelto = 0;
+			foreach ( $per_nome[ $ultimo ] ?? array() as $r ) {
+				$catena = array( (int) $r->ID );
+				$su     = (int) $r->post_parent;
+				$ok     = true;
+				for ( $i = count( $seg ) - 2; $i >= 0; $i-- ) {
+					if ( ! isset( $righe[ $su ] ) || strtolower( (string) $righe[ $su ]->post_name ) !== $seg[ $i ] ) {
+						$ok = false;
+						break;
+					}
+					$catena[] = $su;
+					$su       = (int) $righe[ $su ]->post_parent;
+				}
+				if ( $ok && 0 === $su ) {
+					$scelto = (int) $r->ID;
+					break;
+				}
+			}
+			if ( $scelto > 0 ) {
+				$trovati[ $p ] = $catena;
+			}
+		}
+		if ( empty( $trovati ) ) {
+			return;
+		}
+		// Their translated slugs in this language, in one query (not get_post_meta(): it loads every meta of each page).
+		$ids = array();
+		foreach ( $trovati as $catena ) {
+			foreach ( $catena as $id ) {
+				$ids[ $id ] = true;
+			}
+		}
+		$slug = array();
+		foreach ( array_chunk( array_keys( $ids ), 500 ) as $blocco ) {
+			$segnaposto = implode( ',', array_fill( 0, count( $blocco ), '%d' ) );
+			foreach ( (array) $wpdb->get_results( $wpdb->prepare( "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s AND post_id IN ({$segnaposto})", array_merge( array( Slugs::META_PREFIX . $lang ), $blocco ) ) ) as $r ) { // phpcs:ignore WordPress.DB
+				$slug[ (int) $r->post_id ] = sanitize_title( (string) $r->meta_value );
+			}
+		}
+		// The same swap as swap_hierarchy(): each published page of the chain with a translated slug of its own.
+		foreach ( $trovati as $p => $catena ) {
+			$seg    = array_values( array_filter( explode( '/', $p ), 'strlen' ) ); // as written (case kept)
+			$n      = count( $seg );
+			$nuovi  = $seg;
+			$cambio = false;
+			foreach ( $catena as $pos => $id ) {
+				$t = $slug[ $id ] ?? '';
+				if ( '' !== $t && $t !== strtolower( (string) $righe[ $id ]->post_name ) ) {
+					$nuovi[ $n - 1 - $pos ] = $t;
+					$cambio                 = true;
+				}
+			}
+			$fine = '/' === substr( $p, -1 ) ? '/' : '';
+			$this->link_cache[ $lang . '|' . $p ] = $cambio ? '/' . implode( '/', $nuovi ) . $fine : $p;
+			$this->link_ids[ $p ]                 = (int) $catena[0];
+		}
+	}
+
+	/**
 	 * Where a page reached through its source slug in a secondary language belongs (its translated
 	 * address), or '' when it is already there. Only for a plain GET without a query, outside previews.
 	 */
@@ -1078,7 +1223,7 @@ class Router {
 	 * @param string $lang Language.
 	 */
 	public function translated_link_path( string $path, string $lang ): string {
-		static $fatti = array();
+		$fatti = &$this->link_cache;
 		if ( $this->is_default( $lang ) || '' === $path || '/' === $path ) {
 			return $path;
 		}

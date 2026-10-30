@@ -959,6 +959,7 @@
 		var nextBtn = pop.querySelector( '.trrocket-ve-next' );
 		prevBtn.disabled = ( idx <= 0 );
 		nextBtn.disabled = ( idx < 0 || idx >= items.length - 1 );
+		propsToggle( pop, el );
 		document.body.appendChild( pop );
 		position();
 		// preventScroll stops the browser scrolling the textarea into view, which
@@ -1551,6 +1552,133 @@
 		popImg = null;
 	}
 
+	// 1.8.30 (Federico: «in the photos alt, title…; every element, buttons too, must have its properties»): the
+	// properties this language adds to an element that has none in the original. A property the original already has
+	// is a translation, edited as before (its own line); here only the missing ones, as fields.
+	function propsBox( el, attrs ) {
+		var anchor = el.getAttribute( 'data-trr-anchor' );
+		if ( ! anchor ) { return null; }
+		var gia = ( el.getAttribute( 'data-trr-attrs' ) || '' ).split( ',' ).filter( Boolean );
+		var mancano = attrs.filter( function ( a ) { return gia.indexOf( a ) === -1; } );
+		if ( ! mancano.length ) { return null; }
+		var ora = {};
+		try { ora = JSON.parse( el.getAttribute( 'data-trr-props' ) || '{}' ) || {}; } catch ( e ) { ora = {}; }
+		var ph = { alt: VE.i18n.propsPhAlt, title: VE.i18n.propsPhTitle, 'aria-label': VE.i18n.propsPhAria };
+		var box = document.createElement( 'div' );
+		box.className = 'trrocket-ve-props';
+		var h = document.createElement( 'strong' );
+		h.className = 'trrocket-ve-props-tit';
+		h.textContent = VE.i18n.propsTit || '';
+		box.appendChild( h );
+		var p = document.createElement( 'p' );
+		p.className = 'trrocket-ve-props-txt';
+		p.textContent = VE.i18n.propsTxt || '';
+		box.appendChild( p );
+		var campi = {};
+		mancano.forEach( function ( a ) {
+			var l = document.createElement( 'label' );
+			l.className = 'trrocket-ve-props-row';
+			var s = document.createElement( 'span' );
+			s.textContent = attrLabel( a );
+			var i = document.createElement( 'input' );
+			i.type = 'text';
+			i.maxLength = 300;
+			i.value = ora[ a ] || '';
+			i.placeholder = ph[ a ] || '';
+			i.setAttribute( 'data-attr', a );
+			l.appendChild( s );
+			l.appendChild( i );
+			box.appendChild( l );
+			campi[ a ] = i;
+		} );
+		var riga = document.createElement( 'div' );
+		riga.className = 'trrocket-ve-props-btns';
+		var b = document.createElement( 'button' );
+		b.type = 'button';
+		b.className = 'trrocket-ve-props-save';
+		b.textContent = VE.i18n.propsSave || VE.i18n.save || 'Save';
+		var m = document.createElement( 'span' );
+		m.className = 'trrocket-ve-props-msg';
+		m.setAttribute( 'role', 'status' );
+		riga.appendChild( b );
+		riga.appendChild( m );
+		box.appendChild( riga );
+		b.addEventListener( 'click', function ( ev ) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			var dati = { anchor: anchor };
+			Object.keys( campi ).forEach( function ( a ) { dati[ 'p_' + a.replace( /-/g, '_' ) ] = campi[ a ].value; } );
+			setBusy( b, true );
+			m.textContent = VE.i18n.working || '';
+			api( 'trrocket_ve_props', dati, function ( res ) {
+				setBusy( b, false );
+				if ( res && res.success ) {
+					var nuovi = ( res.data && res.data.props ) || {};
+					Object.keys( campi ).forEach( function ( a ) {
+						if ( nuovi[ a ] ) { el.setAttribute( a, nuovi[ a ] ); } else { el.removeAttribute( a ); }
+					} );
+					el.setAttribute( 'data-trr-props', JSON.stringify( nuovi ) );
+					m.textContent = '✓ ' + ( VE.i18n.propsSaved || VE.i18n.saved || '' );
+				} else {
+					m.textContent = perche( res );
+				}
+			} );
+		} );
+		box.addEventListener( 'keydown', function ( ev ) { if ( 'Enter' === ev.key && 'INPUT' === ev.target.tagName ) { ev.preventDefault(); b.click(); } } );
+		return box;
+	}
+
+	// In the text window of a link or a button: «Properties (title, ARIA label)», folded until asked for.
+	function propsToggle( host, el ) {
+		var dove = el && el.closest ? el.closest( 'a[data-trr-anchor],button[data-trr-anchor],input[data-trr-anchor]' ) : null;
+		if ( ! dove ) { return; }
+		var box = propsBox( dove, [ 'title', 'aria-label' ] );
+		if ( ! box ) { return; }
+		var t = document.createElement( 'button' );
+		t.type = 'button';
+		t.className = 'trrocket-ve-props-toggle';
+		t.setAttribute( 'aria-expanded', 'false' );
+		t.textContent = '⚙ ' + ( VE.i18n.propsBtn || '' );
+		box.hidden = true;
+		t.addEventListener( 'click', function ( ev ) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			box.hidden = ! box.hidden;
+			t.setAttribute( 'aria-expanded', box.hidden ? 'false' : 'true' );
+			if ( 'function' === typeof position ) { position(); }
+		} );
+		var prima = host.querySelector( '.trrocket-ve-msgrow' );
+		host.insertBefore( t, prima );
+		host.insertBefore( box, prima );
+	}
+
+	// A link, a button or a frame with no text of its own to click (an icon, a picture): its own small window.
+	function apriProps( el ) {
+		chiudiImg();
+		closePop();
+		var tutti = 'IMG' === el.tagName ? [ 'alt', 'title' ] : ( 'IFRAME' === el.tagName ? [ 'title' ] : [ 'title', 'aria-label' ] );
+		var box = propsBox( el, tutti );
+		if ( ! box ) { return false; }
+		popImg = document.createElement( 'div' );
+		popImg.className = 'trrocket-ve-pop trrocket-ve-imgpop trrocket-ve-propspop';
+		popImg.setAttribute( 'translate', 'no' );
+		popImg.innerHTML =
+			'<div class="trrocket-ve-bar">' +
+				'<span class="trrocket-ve-grip" aria-hidden="true">' + ICONS.move + '</span>' +
+				flagPair() +
+				'<span class="trrocket-ve-bartitle"></span>' +
+				'<button type="button" class="trrocket-ve-close" aria-label="' + esc( VE.i18n.close ) + '" title="' + esc( VE.i18n.close ) + ' (Esc)">' + ICONS.close + '</button>' +
+			'</div>';
+		popImg.querySelector( '.trrocket-ve-bartitle' ).textContent = VE.i18n.propsTit || '';
+		box.querySelector( '.trrocket-ve-props-tit' ).hidden = true;
+		popImg.appendChild( box );
+		document.body.appendChild( popImg );
+		centra( popImg );
+		var primo = box.querySelector( 'input' );
+		if ( primo ) { try { primo.focus( { preventScroll: true } ); } catch ( e ) { primo.focus(); } }
+		return true;
+	}
+
 	function apriImg( el ) {
 		chiudiImg();
 		closePop();
@@ -1607,6 +1735,11 @@
 			zona.appendChild( b );
 		} );
 		zona.hidden = ! suoi.length;
+		// 1.8.30: the alt and title this language adds, when the original has none.
+		var proprie = propsBox( el, [ 'alt', 'title' ] );
+		if ( proprie ) {
+			popImg.insertBefore( proprie, popImg.querySelector( '.trrocket-ve-msg' ) );
+		}
 
 		popImg.querySelector( '.trrocket-ve-imgtit' ).textContent  = VE.i18n.imgTit || '';
 		popImg.querySelector( '.trrocket-ve-imgtxt' ).textContent  = VE.i18n.imgTxt || '';
@@ -1810,6 +1943,15 @@
 			return;
 		}
 		var attrEl = e.target.closest ? e.target.closest( '.trrocket-ed-attr' ) : null;
+		// 1.8.30: a link or a button with only an icon has no text to click; its properties open in their own window.
+		var propEl = e.target.closest ? e.target.closest( '[data-trr-anchor]' ) : null;
+		if ( propEl && ! propEl.closest( '.trrocket-ve-pop' ) && ( ! attrEl || propEl.contains( attrEl ) ) && ! propEl.querySelector( '.trrocket-ed' ) ) {
+			e.preventDefault();
+			e.stopPropagation();
+			var aperto = false;
+			commit( function () { aperto = apriProps( propEl ); if ( ! aperto && attrEl ) { openAttrPop( attrEl ); } } );
+			return;
+		}
 		if ( attrEl ) {
 			e.preventDefault();
 			e.stopPropagation();

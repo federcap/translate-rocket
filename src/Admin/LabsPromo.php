@@ -221,10 +221,17 @@ class LabsPromo {
 					array( __( 'SEO: translated addresses, hreflang, sitemaps, titles and descriptions', 'translate-rocket' ), true, true ),
 					array( __( 'WooCommerce, contact forms and their e-mails in the visitor\'s language', 'translate-rocket' ), true, true ),
 					array( __( 'Import from WPML, Polylang, TranslatePress, Weglot and others', 'translate-rocket' ), true, true ),
+					// 29/10/2026 (Federico: «are all the benefits here? is search there?»).
+					array( __( 'A search box that searches in the language of the page, with suggestions while typing', 'translate-rocket' ), true, true ),
+					array( __( 'Language switcher and search box with ready-made styles and a live preview', 'translate-rocket' ), true, true ),
+					array( __( 'Images, alt texts and link titles of their own for each language', 'translate-rocket' ), true, true ),
 					array( __( 'Translation with no key at all, from any browser and phones', 'translate-rocket' ), false, true ),
 					array( __( 'Every page translated by itself when you publish it', 'translate-rocket' ), false, true ),
 					array( __( 'Engines in the order you choose: if one stops, the next one translates', 'translate-rocket' ), false, true ),
+					array( __( 'A domain for each language (mysite.de instead of mysite.com/de/)', 'translate-rocket' ), false, true ),
 					array( __( 'A second opinion, external collaborators, a weekly report', 'translate-rocket' ), false, true ),
+					array( __( 'Quality that grows: a little of the free engines\' work polished with AI every day', 'translate-rocket' ), false, true ),
+					array( __( 'Remote help from support, without giving your password', 'translate-rocket' ), false, true ),
 				);
 				?>
 				<div class="trr-lp-box">

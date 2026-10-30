@@ -2260,8 +2260,8 @@ msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
 msgstr "Menemukan bug atau punya ide? Beri tahu saya — itu menentukan apa yang dibuat berikutnya."
 
 #: src/Admin/Growth.php:213
-msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
-msgstr "Jika TranslateRocket membantu Anda, ulasan di WordPress.org sangat berarti."
+msgid "If TranslateRocket helps you, a review on Trustpilot means a lot."
+msgstr "Jika TranslateRocket membantu Anda, ulasan di Trustpilot sangat berarti."
 
 #: src/Admin/Growth.php:214
 msgid "Write a review"
@@ -7557,3 +7557,156 @@ msgstr "Terjemahan Anda tersimpan, tetapi pengunjung masih melihat %s: plugin it
 #: src/Frontend/VisualEditor.php
 msgid "Open Plugins"
 msgstr "Buka Plugin"
+
+#: src/Admin/AutoPage.php
+msgid "less than a day at today’s pace"
+msgstr "kurang dari sehari dengan laju hari ini"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "about %d days at today’s pace"
+msgstr "sekitar %d hari dengan laju hari ini"
+
+#: src/Admin/AutoPage.php
+msgid "The translator built into Chrome and Edge"
+msgstr "Penerjemah bawaan Chrome dan Edge"
+
+#: src/Admin/AutoPage.php
+msgid "Not working yet: tick «I accept the conditions» below — then it starts."
+msgstr "Belum berjalan: centang «Saya menerima ketentuannya» di bawah — lalu mulai."
+
+#: src/Admin/AutoPage.php
+msgid "Take me there"
+msgstr "Bawa saya ke sana"
+
+#: src/Admin/AutoPage.php
+msgid "To switch these on: 1. get Labs (free, one minute) — 2. come back to this page — 3. tick them and accept their conditions."
+msgstr "Untuk mengaktifkannya: 1. dapatkan Labs (gratis, satu menit) — 2. kembali ke halaman ini — 3. centang dan terima ketentuannya."
+
+#: src/Admin/AutoPage.php
+msgid "How hard it works on your server"
+msgstr "Seberapa keras bekerja di server Anda"
+
+#: src/Admin/AutoPage.php
+msgid "Light — 1 page every 2 minutes (shared hosting, a busy shop)"
+msgstr "Ringan — 1 halaman setiap 2 menit (shared hosting, toko yang ramai)"
+
+#: src/Admin/AutoPage.php
+msgid "Normal — 3 pages a minute (recommended)"
+msgstr "Normal — 3 halaman per menit (disarankan)"
+
+#: src/Admin/AutoPage.php
+msgid "Fast — 6 pages every 30 seconds (a server with CPU to spare)"
+msgstr "Cepat — 6 halaman setiap 30 detik (server dengan CPU berlebih)"
+
+#: src/Admin/LabsPromo.php
+msgid "A search box that searches in the language of the page, with suggestions while typing"
+msgstr "Kotak pencarian yang mencari dalam bahasa halaman, dengan saran saat mengetik"
+
+#: src/Admin/LabsPromo.php
+msgid "Language switcher and search box with ready-made styles and a live preview"
+msgstr "Pengalih bahasa dan kotak pencarian dengan gaya siap pakai dan pratinjau langsung"
+
+#: src/Admin/LabsPromo.php
+msgid "Images, alt texts and link titles of their own for each language"
+msgstr "Gambar, teks alt, dan judul tautan tersendiri untuk setiap bahasa"
+
+#: src/Admin/LabsPromo.php
+msgid "A domain for each language (mysite.de instead of mysite.com/de/)"
+msgstr "Domain untuk setiap bahasa (mysite.de alih-alih mysite.com/de/)"
+
+#: src/Admin/LabsPromo.php
+msgid "Quality that grows: a little of the free engines' work polished with AI every day"
+msgstr "Kualitas yang terus naik: setiap hari sebagian hasil mesin gratis dipoles dengan AI"
+
+#: src/Admin/LabsPromo.php
+msgid "Remote help from support, without giving your password"
+msgstr "Bantuan jarak jauh dari dukungan, tanpa memberikan kata sandi Anda"
+
+#: src/Admin/SearchPage.php
+msgid "Pick a ready-made look, then change any colour if you like: the preview above follows every change. «Theme» leaves the colours to your theme. Save to keep them."
+msgstr "Pilih tampilan siap pakai, lalu ubah warna mana pun jika mau: pratinjau di atas mengikuti setiap perubahan. «Tema» menyerahkan warna ke tema Anda. Simpan untuk mempertahankannya."
+
+#: src/Admin/SearchPage.php
+msgid "Text"
+msgstr "Teks"
+
+#: src/Admin/SearchPage.php
+msgid "Field background"
+msgstr "Latar kolom"
+
+#: src/Admin/SearchPage.php
+msgid "Button background"
+msgstr "Latar tombol"
+
+#: src/Admin/SearchPage.php
+msgid "Button magnifier"
+msgstr "Kaca pembesar tombol"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier in the menu"
+msgstr "Kaca pembesar di menu"
+
+#: src/Admin/SearchPage.php
+msgid "theme"
+msgstr "tema"
+
+#: src/Admin/SearchPage.php
+msgid "Corners (px)"
+msgstr "Sudut (px)"
+
+#: src/Admin/SearchPage.php
+msgid "An empty colour follows your theme. «transparent» is accepted too."
+msgstr "Warna kosong mengikuti tema Anda. «transparent» juga diterima."
+
+#: src/Frontend/SearchBox.php
+msgid "Theme"
+msgstr "Tema"
+
+#: src/Frontend/SearchBox.php
+msgid "Violet"
+msgstr "Ungu"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties in this language"
+msgstr "Properti dalam bahasa ini"
+
+#: src/Frontend/VisualEditor.php
+msgid "Read by search engines and screen readers. The original has none: what you write here is shown only in this language."
+msgstr "Dibaca mesin pencari dan pembaca layar. Aslinya tidak punya: yang Anda tulis di sini hanya tampil dalam bahasa ini."
+
+#: src/Frontend/VisualEditor.php
+msgid "Save properties"
+msgstr "Simpan properti"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties saved"
+msgstr "Properti disimpan"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties (title, ARIA label)"
+msgstr "Properti (judul, label ARIA)"
+
+#: src/Frontend/VisualEditor.php
+msgid "What the picture shows, in a few words"
+msgstr "Apa yang ditampilkan gambar, dalam beberapa kata"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown when the mouse rests on it"
+msgstr "Muncul saat tetikus berhenti di atasnya"
+
+#: src/Frontend/VisualEditor.php
+msgid "What it does, for screen readers"
+msgstr "Fungsinya, untuk pembaca layar"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every sentence is translated in your %d language."
+msgid_plural "Every sentence is translated in all %d languages."
+msgstr[0] "Semua kalimat sudah diterjemahkan ke %d bahasa."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Sentences left: %1$s in %2$d language"
+msgid_plural "Sentences left: %1$s in %2$d languages"
+msgstr[0] "Kalimat tersisa: %1$s dalam %2$d bahasa"

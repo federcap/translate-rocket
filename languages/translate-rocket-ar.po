@@ -2275,8 +2275,8 @@ msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
 msgstr "وجدت خطأ أو لديك فكرة؟ أخبرني — فهذا يحدد ما سيُبنى لاحقًا."
 
 #: src/Admin/Growth.php:213
-msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
-msgstr "إن كان TranslateRocket يساعدك، فمراجعة على WordPress.org تعني الكثير."
+msgid "If TranslateRocket helps you, a review on Trustpilot means a lot."
+msgstr "إن كان TranslateRocket يساعدك، فمراجعة على Trustpilot تعني الكثير."
 
 #: src/Admin/Growth.php:214
 msgid "Write a review"
@@ -7687,3 +7687,166 @@ msgstr "تم حفظ ترجمتك، لكن الزوار ما زالوا يرون 
 #: src/Frontend/VisualEditor.php
 msgid "Open Plugins"
 msgstr "فتح الإضافات"
+
+#: src/Admin/AutoPage.php
+msgid "less than a day at today’s pace"
+msgstr "أقل من يوم بالوتيرة الحالية"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "about %d days at today’s pace"
+msgstr "نحو %d أيام بالوتيرة الحالية"
+
+#: src/Admin/AutoPage.php
+msgid "The translator built into Chrome and Edge"
+msgstr "المترجم المدمج في Chrome وEdge"
+
+#: src/Admin/AutoPage.php
+msgid "Not working yet: tick «I accept the conditions» below — then it starts."
+msgstr "لا يعمل بعد: حدّد «أوافق على الشروط» أدناه — ثم يبدأ."
+
+#: src/Admin/AutoPage.php
+msgid "Take me there"
+msgstr "خذني إلى هناك"
+
+#: src/Admin/AutoPage.php
+msgid "To switch these on: 1. get Labs (free, one minute) — 2. come back to this page — 3. tick them and accept their conditions."
+msgstr "لتشغيلها: 1. احصل على Labs (مجانًا، في دقيقة) — 2. عُد إلى هذه الصفحة — 3. حدّدها ووافق على شروطها."
+
+#: src/Admin/AutoPage.php
+msgid "How hard it works on your server"
+msgstr "مقدار العمل على خادمك"
+
+#: src/Admin/AutoPage.php
+msgid "Light — 1 page every 2 minutes (shared hosting, a busy shop)"
+msgstr "خفيف — صفحة واحدة كل دقيقتين (استضافة مشتركة، متجر مزدحم)"
+
+#: src/Admin/AutoPage.php
+msgid "Normal — 3 pages a minute (recommended)"
+msgstr "عادي — 3 صفحات في الدقيقة (موصى به)"
+
+#: src/Admin/AutoPage.php
+msgid "Fast — 6 pages every 30 seconds (a server with CPU to spare)"
+msgstr "سريع — 6 صفحات كل 30 ثانية (خادم لديه معالج فائض)"
+
+#: src/Admin/LabsPromo.php
+msgid "A search box that searches in the language of the page, with suggestions while typing"
+msgstr "مربع بحث يبحث بلغة الصفحة، مع اقتراحات أثناء الكتابة"
+
+#: src/Admin/LabsPromo.php
+msgid "Language switcher and search box with ready-made styles and a live preview"
+msgstr "مبدّل اللغة ومربع البحث بأنماط جاهزة ومعاينة مباشرة"
+
+#: src/Admin/LabsPromo.php
+msgid "Images, alt texts and link titles of their own for each language"
+msgstr "صور ونصوص بديلة وعناوين روابط خاصة بكل لغة"
+
+#: src/Admin/LabsPromo.php
+msgid "A domain for each language (mysite.de instead of mysite.com/de/)"
+msgstr "نطاق لكل لغة (mysite.de بدلًا من mysite.com/de/)"
+
+#: src/Admin/LabsPromo.php
+msgid "Quality that grows: a little of the free engines' work polished with AI every day"
+msgstr "جودة تتحسن: جزء صغير من عمل المحركات المجانية يُصقل بالذكاء الاصطناعي كل يوم"
+
+#: src/Admin/LabsPromo.php
+msgid "Remote help from support, without giving your password"
+msgstr "مساعدة عن بُعد من الدعم، دون إعطاء كلمة المرور"
+
+#: src/Admin/SearchPage.php
+msgid "Pick a ready-made look, then change any colour if you like: the preview above follows every change. «Theme» leaves the colours to your theme. Save to keep them."
+msgstr "اختر مظهرًا جاهزًا، ثم غيّر أي لون إن شئت: المعاينة أعلاه تتبع كل تغيير. «القالب» يترك الألوان لقالبك. احفظ للإبقاء عليها."
+
+#: src/Admin/SearchPage.php
+msgid "Text"
+msgstr "نص"
+
+#: src/Admin/SearchPage.php
+msgid "Field background"
+msgstr "خلفية الحقل"
+
+#: src/Admin/SearchPage.php
+msgid "Button background"
+msgstr "خلفية الزر"
+
+#: src/Admin/SearchPage.php
+msgid "Button magnifier"
+msgstr "عدسة الزر"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier in the menu"
+msgstr "العدسة في القائمة"
+
+#: src/Admin/SearchPage.php
+msgid "theme"
+msgstr "القالب"
+
+#: src/Admin/SearchPage.php
+msgid "Corners (px)"
+msgstr "الزوايا (px)"
+
+#: src/Admin/SearchPage.php
+msgid "An empty colour follows your theme. «transparent» is accepted too."
+msgstr "اللون الفارغ يتبع قالبك. وتُقبل أيضًا «transparent»."
+
+#: src/Frontend/SearchBox.php
+msgid "Theme"
+msgstr "القالب"
+
+#: src/Frontend/SearchBox.php
+msgid "Violet"
+msgstr "بنفسجي"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties in this language"
+msgstr "الخصائص بهذه اللغة"
+
+#: src/Frontend/VisualEditor.php
+msgid "Read by search engines and screen readers. The original has none: what you write here is shown only in this language."
+msgstr "تقرؤها محركات البحث وقارئات الشاشة. الأصل لا يحتوي عليها: ما تكتبه هنا يظهر بهذه اللغة فقط."
+
+#: src/Frontend/VisualEditor.php
+msgid "Save properties"
+msgstr "حفظ الخصائص"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties saved"
+msgstr "تم حفظ الخصائص"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties (title, ARIA label)"
+msgstr "الخصائص (العنوان، تسمية ARIA)"
+
+#: src/Frontend/VisualEditor.php
+msgid "What the picture shows, in a few words"
+msgstr "ما تُظهره الصورة، في بضع كلمات"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown when the mouse rests on it"
+msgstr "يظهر عند وضع الفأرة عليه"
+
+#: src/Frontend/VisualEditor.php
+msgid "What it does, for screen readers"
+msgstr "ما يفعله، لقارئات الشاشة"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every sentence is translated in your %d language."
+msgid_plural "Every sentence is translated in all %d languages."
+msgstr[0] "كل جملة مترجمة في جميع اللغات (%d)."
+msgstr[1] "كل جملة مترجمة في جميع اللغات (%d)."
+msgstr[2] "كل جملة مترجمة في جميع اللغات (%d)."
+msgstr[3] "كل جملة مترجمة في جميع اللغات (%d)."
+msgstr[4] "كل جملة مترجمة في جميع اللغات (%d)."
+msgstr[5] "كل جملة مترجمة في جميع اللغات (%d)."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Sentences left: %1$s in %2$d language"
+msgid_plural "Sentences left: %1$s in %2$d languages"
+msgstr[0] "الجمل المتبقية: %1$s في %2$d لغة"
+msgstr[1] "الجمل المتبقية: %1$s في %2$d لغة"
+msgstr[2] "الجمل المتبقية: %1$s في %2$d لغة"
+msgstr[3] "الجمل المتبقية: %1$s في %2$d لغة"
+msgstr[4] "الجمل المتبقية: %1$s في %2$d لغة"
+msgstr[5] "الجمل المتبقية: %1$s في %2$d لغة"

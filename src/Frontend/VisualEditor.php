@@ -45,6 +45,7 @@ class VisualEditor {
 	 */
 	public function boot(): void {
 		add_action( 'wp_ajax_trrocket_ve_save', array( $this, 'ajax_save' ) );
+		add_action( 'wp_ajax_trrocket_ve_props', array( $this, 'ajax_props' ) );
 		add_action( 'wp_ajax_trrocket_ve_save_block', array( $this, 'ajax_save_block' ) );
 		add_action( 'wp_ajax_trrocket_ve_ai', array( $this, 'ajax_ai' ) );
 		add_action( 'wp_ajax_trrocket_ve_online', array( $this, 'ajax_online' ) );
@@ -322,6 +323,15 @@ class VisualEditor {
 					'imgOriginal'    => __( 'Original', 'translate-rocket' ),
 					'imgNow'         => __( 'Shown in this language', 'translate-rocket' ),
 					'imgNoMedia'     => __( 'The media library did not load, so paste an image address instead.', 'translate-rocket' ),
+					// 1.8.30: properties added for this language (AddedProps).
+					'propsTit'       => __( 'Properties in this language', 'translate-rocket' ),
+					'propsTxt'       => __( 'Read by search engines and screen readers. The original has none: what you write here is shown only in this language.', 'translate-rocket' ),
+					'propsSave'      => __( 'Save properties', 'translate-rocket' ),
+					'propsSaved'     => __( 'Properties saved', 'translate-rocket' ),
+					'propsBtn'       => __( 'Properties (title, ARIA label)', 'translate-rocket' ),
+					'propsPhAlt'     => __( 'What the picture shows, in a few words', 'translate-rocket' ),
+					'propsPhTitle'   => __( 'Shown when the mouse rests on it', 'translate-rocket' ),
+					'propsPhAria'    => __( 'What it does, for screen readers', 'translate-rocket' ),
 					'bulkPasteHead'  => __( 'Or: copy → translate → paste back', 'translate-rocket' ),
 					'bulkStep1'      => __( '1. Copy the source text', 'translate-rocket' ),
 					'bulkStep2'      => __( '2. Paste it back, keeping the 1. 2. 3. numbers on each line', 'translate-rocket' ),
@@ -755,6 +765,31 @@ class VisualEditor {
 		// Send back the slug as actually saved (sanitize_title may have changed it)
 		// so the editor can follow the page to its new address.
 		wp_send_json_success( array( 'slug' => \TranslateRocket\Slugs::get( $post_id, $lang ) ) );
+	}
+
+	/**
+	 * 1.8.30: alt / title / ARIA label of one element in this language, for an element that has none in the original.
+	 */
+	public function ajax_props(): void {
+		check_ajax_referer( self::NONCE, 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'forbidden', 403 );
+		}
+		$lang   = isset( $_POST['lang'] ) ? sanitize_text_field( wp_unslash( $_POST['lang'] ) ) : '';
+		$anchor = isset( $_POST['anchor'] ) ? AddedProps::clean_anchor( wp_unslash( $_POST['anchor'] ) ) : '';
+		if ( '' === $anchor || '' === $lang || ! Languages::exists( $lang ) ) {
+			wp_send_json_error( 'invalid' );
+		}
+		$props = array();
+		foreach ( AddedProps::ATTRS as $a ) {
+			$k = 'p_' . str_replace( '-', '_', $a );
+			if ( isset( $_POST[ $k ] ) ) {
+				$props[ $a ] = AddedProps::clean_value( wp_unslash( $_POST[ $k ] ) );
+			}
+		}
+		$now = AddedProps::save( $lang, $anchor, $props );
+		\TranslateRocket\Cache::flush_later();
+		wp_send_json_success( array( 'props' => (object) $now ) );
 	}
 
 	/**

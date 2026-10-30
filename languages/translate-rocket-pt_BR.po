@@ -1483,8 +1483,8 @@ msgstr "Enviar comentários"
 msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
 msgstr "Encontrou um bug ou tem uma ideia? Diga-me: isso molda o que será construído a seguir."
 
-msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
-msgstr "Se TranslateRocket ajuda você, uma avaliação em WordPress.org significa muito."
+msgid "If TranslateRocket helps you, a review on Trustpilot means a lot."
+msgstr "Se TranslateRocket ajuda você, uma avaliação em Trustpilot significa muito."
 
 msgid "Write a review"
 msgstr "Escreva um comentário"
@@ -6736,3 +6736,158 @@ msgstr "Sua tradução foi salva, mas os visitantes ainda veem %s: ele está ati
 #: src/Frontend/VisualEditor.php
 msgid "Open Plugins"
 msgstr "Abrir Plugins"
+
+#: src/Admin/AutoPage.php
+msgid "less than a day at today’s pace"
+msgstr "menos de um dia no ritmo de hoje"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "about %d days at today’s pace"
+msgstr "cerca de %d dias no ritmo de hoje"
+
+#: src/Admin/AutoPage.php
+msgid "The translator built into Chrome and Edge"
+msgstr "O tradutor integrado ao Chrome e ao Edge"
+
+#: src/Admin/AutoPage.php
+msgid "Not working yet: tick «I accept the conditions» below — then it starts."
+msgstr "Ainda não funciona: marque «Aceito as condições» abaixo — e ele começa."
+
+#: src/Admin/AutoPage.php
+msgid "Take me there"
+msgstr "Leve-me até lá"
+
+#: src/Admin/AutoPage.php
+msgid "To switch these on: 1. get Labs (free, one minute) — 2. come back to this page — 3. tick them and accept their conditions."
+msgstr "Para ativá-los: 1. obtenha o Labs (grátis, um minuto) — 2. volte a esta página — 3. marque-os e aceite as condições."
+
+#: src/Admin/AutoPage.php
+msgid "How hard it works on your server"
+msgstr "Quanto trabalha no seu servidor"
+
+#: src/Admin/AutoPage.php
+msgid "Light — 1 page every 2 minutes (shared hosting, a busy shop)"
+msgstr "Leve — 1 página a cada 2 minutos (hospedagem compartilhada, uma loja movimentada)"
+
+#: src/Admin/AutoPage.php
+msgid "Normal — 3 pages a minute (recommended)"
+msgstr "Normal — 3 páginas por minuto (recomendado)"
+
+#: src/Admin/AutoPage.php
+msgid "Fast — 6 pages every 30 seconds (a server with CPU to spare)"
+msgstr "Rápido — 6 páginas a cada 30 segundos (um servidor com CPU de sobra)"
+
+#: src/Admin/LabsPromo.php
+msgid "A search box that searches in the language of the page, with suggestions while typing"
+msgstr "Uma caixa de busca que pesquisa no idioma da página, com sugestões enquanto você digita"
+
+#: src/Admin/LabsPromo.php
+msgid "Language switcher and search box with ready-made styles and a live preview"
+msgstr "Seletor de idioma e caixa de busca com estilos prontos e pré-visualização ao vivo"
+
+#: src/Admin/LabsPromo.php
+msgid "Images, alt texts and link titles of their own for each language"
+msgstr "Imagens, textos alternativos e títulos de link próprios para cada idioma"
+
+#: src/Admin/LabsPromo.php
+msgid "A domain for each language (mysite.de instead of mysite.com/de/)"
+msgstr "Um domínio para cada idioma (mysite.de em vez de mysite.com/de/)"
+
+#: src/Admin/LabsPromo.php
+msgid "Quality that grows: a little of the free engines' work polished with AI every day"
+msgstr "Qualidade que cresce: todo dia um pouco do trabalho dos mecanismos gratuitos é refinado com IA"
+
+#: src/Admin/LabsPromo.php
+msgid "Remote help from support, without giving your password"
+msgstr "Ajuda remota do suporte, sem fornecer sua senha"
+
+#: src/Admin/SearchPage.php
+msgid "Pick a ready-made look, then change any colour if you like: the preview above follows every change. «Theme» leaves the colours to your theme. Save to keep them."
+msgstr "Escolha um visual pronto e depois mude a cor que quiser: a pré-visualização acima acompanha cada mudança. «Tema» deixa as cores para o seu tema. Salve para mantê-las."
+
+#: src/Admin/SearchPage.php
+msgid "Text"
+msgstr "Texto"
+
+#: src/Admin/SearchPage.php
+msgid "Field background"
+msgstr "Fundo do campo"
+
+#: src/Admin/SearchPage.php
+msgid "Button background"
+msgstr "Fundo do botão"
+
+#: src/Admin/SearchPage.php
+msgid "Button magnifier"
+msgstr "Lupa do botão"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier in the menu"
+msgstr "Lupa no menu"
+
+#: src/Admin/SearchPage.php
+msgid "theme"
+msgstr "tema"
+
+#: src/Admin/SearchPage.php
+msgid "Corners (px)"
+msgstr "Cantos (px)"
+
+#: src/Admin/SearchPage.php
+msgid "An empty colour follows your theme. «transparent» is accepted too."
+msgstr "Uma cor vazia segue o seu tema. «transparent» também é aceito."
+
+#: src/Frontend/SearchBox.php
+msgid "Theme"
+msgstr "Tema"
+
+#: src/Frontend/SearchBox.php
+msgid "Violet"
+msgstr "Violeta"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties in this language"
+msgstr "Propriedades neste idioma"
+
+#: src/Frontend/VisualEditor.php
+msgid "Read by search engines and screen readers. The original has none: what you write here is shown only in this language."
+msgstr "Lidas por buscadores e leitores de tela. O original não tem: o que você escrever aqui aparece só neste idioma."
+
+#: src/Frontend/VisualEditor.php
+msgid "Save properties"
+msgstr "Salvar propriedades"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties saved"
+msgstr "Propriedades salvas"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties (title, ARIA label)"
+msgstr "Propriedades (título, rótulo ARIA)"
+
+#: src/Frontend/VisualEditor.php
+msgid "What the picture shows, in a few words"
+msgstr "O que a imagem mostra, em poucas palavras"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown when the mouse rests on it"
+msgstr "Aparece quando o mouse para sobre ele"
+
+#: src/Frontend/VisualEditor.php
+msgid "What it does, for screen readers"
+msgstr "O que faz, para leitores de tela"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every sentence is translated in your %d language."
+msgid_plural "Every sentence is translated in all %d languages."
+msgstr[0] "Todas as frases estão traduzidas (%d idioma)."
+msgstr[1] "Todas as frases estão traduzidas nos %d idiomas."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Sentences left: %1$s in %2$d language"
+msgid_plural "Sentences left: %1$s in %2$d languages"
+msgstr[0] "Frases restantes: %1$s em %2$d idioma"
+msgstr[1] "Frases restantes: %1$s em %2$d idiomas"

@@ -2263,8 +2263,8 @@ msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
 msgstr "Bir hata mı buldunuz ya da bir fikriniz mi var? Söyleyin — sonraki geliştirmeleri şekillendirir."
 
 #: src/Admin/Growth.php:213
-msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
-msgstr "TranslateRocket size yardımcı oluyorsa WordPress.org'da bir değerlendirme çok şey ifade eder."
+msgid "If TranslateRocket helps you, a review on Trustpilot means a lot."
+msgstr "TranslateRocket size yardımcı oluyorsa Trustpilot'da bir değerlendirme çok şey ifade eder."
 
 #: src/Admin/Growth.php:214
 msgid "Write a review"
@@ -7583,3 +7583,158 @@ msgstr "Çeviriniz kaydedildi ama ziyaretçiler hâlâ %s görüyor: etkin durum
 #: src/Frontend/VisualEditor.php
 msgid "Open Plugins"
 msgstr "Eklentileri aç"
+
+#: src/Admin/AutoPage.php
+msgid "less than a day at today’s pace"
+msgstr "bugünkü hızla bir günden az"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "about %d days at today’s pace"
+msgstr "bugünkü hızla yaklaşık %d gün"
+
+#: src/Admin/AutoPage.php
+msgid "The translator built into Chrome and Edge"
+msgstr "Chrome ve Edge'e yerleşik çevirmen"
+
+#: src/Admin/AutoPage.php
+msgid "Not working yet: tick «I accept the conditions» below — then it starts."
+msgstr "Henüz çalışmıyor: aşağıda «Koşulları kabul ediyorum» kutusunu işaretleyin — sonra başlar."
+
+#: src/Admin/AutoPage.php
+msgid "Take me there"
+msgstr "Beni oraya götür"
+
+#: src/Admin/AutoPage.php
+msgid "To switch these on: 1. get Labs (free, one minute) — 2. come back to this page — 3. tick them and accept their conditions."
+msgstr "Bunları açmak için: 1. Labs'ı alın (ücretsiz, bir dakika) — 2. bu sayfaya dönün — 3. işaretleyin ve koşullarını kabul edin."
+
+#: src/Admin/AutoPage.php
+msgid "How hard it works on your server"
+msgstr "Sunucunuzu ne kadar çalıştırsın"
+
+#: src/Admin/AutoPage.php
+msgid "Light — 1 page every 2 minutes (shared hosting, a busy shop)"
+msgstr "Hafif — 2 dakikada 1 sayfa (paylaşımlı hosting, yoğun bir mağaza)"
+
+#: src/Admin/AutoPage.php
+msgid "Normal — 3 pages a minute (recommended)"
+msgstr "Normal — dakikada 3 sayfa (önerilen)"
+
+#: src/Admin/AutoPage.php
+msgid "Fast — 6 pages every 30 seconds (a server with CPU to spare)"
+msgstr "Hızlı — 30 saniyede 6 sayfa (boşta CPU'su olan bir sunucu)"
+
+#: src/Admin/LabsPromo.php
+msgid "A search box that searches in the language of the page, with suggestions while typing"
+msgstr "Sayfanın dilinde arayan, yazarken öneri gösteren bir arama kutusu"
+
+#: src/Admin/LabsPromo.php
+msgid "Language switcher and search box with ready-made styles and a live preview"
+msgstr "Hazır stiller ve canlı önizlemeyle dil değiştirici ve arama kutusu"
+
+#: src/Admin/LabsPromo.php
+msgid "Images, alt texts and link titles of their own for each language"
+msgstr "Her dil için kendine ait görseller, alt metinler ve bağlantı başlıkları"
+
+#: src/Admin/LabsPromo.php
+msgid "A domain for each language (mysite.de instead of mysite.com/de/)"
+msgstr "Her dil için bir alan adı (mysite.com/de/ yerine mysite.de)"
+
+#: src/Admin/LabsPromo.php
+msgid "Quality that grows: a little of the free engines' work polished with AI every day"
+msgstr "Büyüyen kalite: ücretsiz motorların işinin bir kısmı her gün yapay zekâyla iyileştirilir"
+
+#: src/Admin/LabsPromo.php
+msgid "Remote help from support, without giving your password"
+msgstr "Şifrenizi vermeden destekten uzaktan yardım"
+
+#: src/Admin/SearchPage.php
+msgid "Pick a ready-made look, then change any colour if you like: the preview above follows every change. «Theme» leaves the colours to your theme. Save to keep them."
+msgstr "Hazır bir görünüm seçin, sonra istediğiniz rengi değiştirin: yukarıdaki önizleme her değişikliği izler. «Tema» renkleri temanıza bırakır. Korumak için kaydedin."
+
+#: src/Admin/SearchPage.php
+msgid "Text"
+msgstr "Metin"
+
+#: src/Admin/SearchPage.php
+msgid "Field background"
+msgstr "Alan arka planı"
+
+#: src/Admin/SearchPage.php
+msgid "Button background"
+msgstr "Düğme arka planı"
+
+#: src/Admin/SearchPage.php
+msgid "Button magnifier"
+msgstr "Düğmedeki büyüteç"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier in the menu"
+msgstr "Menüdeki büyüteç"
+
+#: src/Admin/SearchPage.php
+msgid "theme"
+msgstr "tema"
+
+#: src/Admin/SearchPage.php
+msgid "Corners (px)"
+msgstr "Köşeler (px)"
+
+#: src/Admin/SearchPage.php
+msgid "An empty colour follows your theme. «transparent» is accepted too."
+msgstr "Boş bırakılan renk temanızı izler. «transparent» de kabul edilir."
+
+#: src/Frontend/SearchBox.php
+msgid "Theme"
+msgstr "Tema"
+
+#: src/Frontend/SearchBox.php
+msgid "Violet"
+msgstr "Mor"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties in this language"
+msgstr "Bu dildeki özellikler"
+
+#: src/Frontend/VisualEditor.php
+msgid "Read by search engines and screen readers. The original has none: what you write here is shown only in this language."
+msgstr "Arama motorları ve ekran okuyucular okur. Orijinalde yok: buraya yazdığınız yalnızca bu dilde görünür."
+
+#: src/Frontend/VisualEditor.php
+msgid "Save properties"
+msgstr "Özellikleri kaydet"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties saved"
+msgstr "Özellikler kaydedildi"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties (title, ARIA label)"
+msgstr "Özellikler (başlık, ARIA etiketi)"
+
+#: src/Frontend/VisualEditor.php
+msgid "What the picture shows, in a few words"
+msgstr "Görselin ne gösterdiği, birkaç kelimeyle"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown when the mouse rests on it"
+msgstr "Fare üzerinde durunca gösterilir"
+
+#: src/Frontend/VisualEditor.php
+msgid "What it does, for screen readers"
+msgstr "Ne yaptığı, ekran okuyucular için"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every sentence is translated in your %d language."
+msgid_plural "Every sentence is translated in all %d languages."
+msgstr[0] "Tüm cümleler %d dile çevrildi."
+msgstr[1] "Tüm cümleler %d dile çevrildi."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Sentences left: %1$s in %2$d language"
+msgid_plural "Sentences left: %1$s in %2$d languages"
+msgstr[0] "Kalan cümle: %1$s, %2$d dilde"
+msgstr[1] "Kalan cümle: %1$s, %2$d dilde"

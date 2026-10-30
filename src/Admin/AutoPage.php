@@ -97,6 +97,7 @@ class AutoPage {
 		// (and on the test bench): the numbers are kept for 20 seconds.
 		$memo = get_transient( 'trrocket_auto_live' );
 		if ( is_array( $memo ) ) {
+			self::$totals = self::totals( $memo ); // 1.8.30: the totals line follows the memo too (sums only, no scan)
 			return $memo;
 		}
 		$out = self::live_count();
@@ -169,7 +170,77 @@ class AutoPage {
 		if ( $mosse !== $prima ) {
 			update_option( 'trrocket_auto_moved', $mosse, false );
 		}
+		self::$totals = self::totals( $out );
 		return $out;
+	}
+
+	/**
+	 * 1.8.30 (28/10/2026, globaltoolszone.com: «Pages read: 2867 of 4074» read as if the site were 70% done, while
+	 * every page is 13 languages): the number that matters, sentences still missing across every language, with the
+	 * days left at the pace of the last day. The pace comes from one small option (when it was last reset and how
+	 * many sentences were translated then), never from a scan of the translations table: a huge site pays nothing.
+	 *
+	 * @var array<string,int>
+	 */
+	private static $totals = array( 'missing' => 0, 'languages' => 0, 'days' => 0, 'translated' => 0 );
+
+	/**
+	 * The totals computed by the last live() call (missing sentences, languages, days left).
+	 *
+	 * @return array<string,int>
+	 */
+	public static function totals_last(): array {
+		return self::$totals;
+	}
+
+	/**
+	 * @param array<string,array<string,mixed>> $langs Per-language numbers from live().
+	 * @return array<string,int>
+	 */
+	private static function totals( array $langs ): array {
+		$manca = $fatte = $lingue = 0;
+		foreach ( $langs as $d ) {
+			$manca += (int) $d['missing'];
+			$fatte += (int) $d['translated'];
+			if ( (int) $d['missing'] > 0 ) {
+				++$lingue;
+			}
+		}
+		$ora   = time();
+		$base  = (array) get_option( 'trrocket_auto_ritmo', array() );
+		$ts    = (int) ( $base['ts'] ?? 0 );
+		$da    = (int) ( $base['fatte'] ?? 0 );
+		$days  = 0;
+		if ( $ts <= 0 || $fatte < $da || $ora - $ts > DAY_IN_SECONDS ) {
+			// First look, a purge or a reset, or a day gone by: the pace starts again from here (one write, rare).
+			update_option( 'trrocket_auto_ritmo', array( 'ts' => $ora, 'fatte' => $fatte ), false );
+		} elseif ( $manca > 0 && $ora - $ts >= 10 * MINUTE_IN_SECONDS && $fatte > $da ) {
+			$al_giorno = ( $fatte - $da ) / ( $ora - $ts ) * DAY_IN_SECONDS;
+			$days      = (int) max( 1, ceil( $manca / max( 1, $al_giorno ) ) );
+		}
+		return array( 'missing' => $manca, 'languages' => count( $langs ), 'behind' => $lingue, 'days' => $days, 'translated' => $fatte );
+	}
+
+	/**
+	 * The one line under the job: «Sentences left: 12,345 in 13 languages · about 4 days at today’s pace».
+	 *
+	 * @param array<string,int> $t Totals.
+	 */
+	public static function totals_line( array $t ): string {
+		if ( (int) ( $t['languages'] ?? 0 ) <= 0 ) {
+			return '';
+		}
+		if ( (int) $t['missing'] <= 0 ) {
+			/* translators: %d: languages */
+			return sprintf( _n( 'Every sentence is translated in your %d language.', 'Every sentence is translated in all %d languages.', (int) $t['languages'], 'translate-rocket' ), (int) $t['languages'] );
+		}
+		/* translators: 1: sentences, 2: languages */
+		$s = sprintf( _n( 'Sentences left: %1$s in %2$d language', 'Sentences left: %1$s in %2$d languages', (int) $t['behind'], 'translate-rocket' ), number_format_i18n( (int) $t['missing'] ), (int) $t['behind'] );
+		if ( (int) $t['days'] > 0 ) {
+			/* translators: %d: days */
+			$s .= ' · ' . ( (int) $t['days'] <= 1 ? __( 'less than a day at today’s pace', 'translate-rocket' ) : sprintf( __( 'about %d days at today’s pace', 'translate-rocket' ), (int) $t['days'] ) );
+		}
+		return $s;
 	}
 
 	/**
@@ -207,6 +278,7 @@ class AutoPage {
 		wp_send_json_success(
 			array(
 				'langs' => self::live(),
+				'tot'   => self::totals_line( self::totals_last() ),
 				'nonce' => wp_create_nonce( 'trrocket_auto_tick' ), // a page left open for a day keeps updating
 				'job'   => $labs ? array(
 					'running' => ! empty( $labs['running'] ),
@@ -431,7 +503,8 @@ class AutoPage {
 			. 'var n=row.querySelector(".trr-auto-n");if(n){n.textContent=d.translated+" / "+d.detected;}'
 			. 'var eta=row.querySelector(".trr-auto-eta");if(eta){eta.textContent=d.days?(d.days<=1?C.day1:f(C.days,d.days)):"";}'
 			. 'row.classList.toggle("is-busy",!!d.busy);var h=row.querySelector(".trr-busy");if(h){h.hidden=!d.busy;h.title=C.busy;}'
-			. '});});var j=r.job,el=document.getElementById("trr-auto-job");if(el&&j&&j.total>0){if(j.paused){el.textContent=f(C.paused,j.done,j.total)+" ";var a=document.createElement("a");a.href=C.labs;a.textContent=C.resume+" →";el.appendChild(a);el.classList.add("is-paused");}else{el.classList.remove("is-paused");el.textContent=f(C.pages,j.done,j.total)+(j.total>j.done?" · "+f(C.left,j.total-j.done):"")+(j.days?" · "+(j.days<=1?C.site1:f(C.site,j.days)):"")+(j.last?" · "+f(C.last,j.last):"");}}now(r.now||[]);extra(r);}'
+			. '});});var t=document.getElementById("trr-auto-tot");if(t&&typeof r.tot==="string"){t.textContent=r.tot;t.hidden=!r.tot;}'
+			. 'var j=r.job,el=document.getElementById("trr-auto-job");if(el&&j&&j.total>0){if(j.paused){el.textContent=f(C.paused,j.done,j.total)+" ";var a=document.createElement("a");a.href=C.labs;a.textContent=C.resume+" →";el.appendChild(a);el.classList.add("is-paused");}else{el.classList.remove("is-paused");el.textContent=f(C.pages,j.done,j.total)+(j.total>j.done?" · "+f(C.left,j.total-j.done):"")+(j.days?" · "+(j.days<=1?C.site1:f(C.site,j.days)):"")+(j.last?" · "+f(C.last,j.last):"");}}now(r.now||[]);extra(r);}'
 			// One request at a time; after two failed ones in a row (logged out, server down) the hourglasses
 			// go off instead of standing still, frozen from when the page was opened.
 			// 1.8.24: «now» = what is being translated right now (engine, page): one line each with its hourglass, and the
@@ -510,6 +583,8 @@ class AutoPage {
 							echo esc_html( sprintf( /* translators: %d: pages */ __( 'Your site has %d pages to translate.', 'translate-rocket' ), self::site_pages() ) );
 						}
 						?></p>
+						<?php $tot_riga = self::totals_line( self::totals_last() ); ?>
+						<p class="trr-auto-tot description" id="trr-auto-tot" <?php echo '' === $tot_riga ? 'hidden' : ''; ?>><?php echo esc_html( $tot_riga ); ?></p>
 					<?php elseif ( $labs_in ) : ?>
 						<p class="trr-auto-old"><strong><?php esc_html_e( 'Update TranslateRocket Labs to 0.9 or later', 'translate-rocket' ); ?></strong> — <?php esc_html_e( 'then its engines and automatic translation are switched on here. Until then they stay on the Labs page.', 'translate-rocket' ); ?> <a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>"><?php esc_html_e( 'Plugins', 'translate-rocket' ); ?></a></p>
 					<?php else : ?>

@@ -1568,6 +1568,9 @@ class Engine {
 		// del testo dentro, una locandina, un banner: tradurre la didascalia non
 		// basta se l'immagine stessa parla un'altra lingua.
 		$img_nodes = self::media_nodes( $xpath, $skip_el );
+		// 1.8.30: alt / title / ARIA label added for this language to elements that have none in the original. The
+		// elements are marked now, while they still have their original text and address, and filled at the end.
+		$props_marked = $this->is_secondary && AddedProps::mark( $xpath, $skip_el, $this->current, VisualEditor::is_editing() );
 
 		$desc_nodes   = iterator_to_array( $xpath->query( '//meta[@name="description"]/@content' ) );
 		// Social e parole chiave. ⚠️ Prima questi venivano SOLO tradotti se il
@@ -2159,6 +2162,11 @@ class Engine {
 			// language. Same for explicit translate="no" regions (hand-made
 			// language menus can opt out the same way content does).
 			$link_nodes = iterator_to_array( $xpath->query( "//a[@href][not(ancestor-or-self::*[@id='wpadminbar'] or ancestor-or-self::*[@id='trrocket-ve-bar'] or ancestor-or-self::*[contains(@class,'trrocket')] or ancestor-or-self::*[@translate='no'][not(self::html or self::body)])]" ) );
+			// 1.8.30: every linked page resolved at once (a menu of thousands of pages cost 3 queries per link).
+			$router_l = Plugin::instance()->router();
+			if ( null !== $router_l && count( $link_nodes ) > 20 ) {
+				$router_l->prime_links( array_map( static function ( $a ) { return $a instanceof \DOMElement ? (string) $a->getAttribute( 'href' ) : ''; }, $link_nodes ), $this->current, $home_host, $home_path );
+			}
 			foreach ( $link_nodes as $a ) {
 				if ( ! $a instanceof \DOMElement ) {
 					continue;
@@ -2247,6 +2255,11 @@ class Engine {
 			if ( ! $nota ) {
 				GuestScan::schedule( $cp );
 			}
+		}
+
+		// 1.8.30: the properties added for this language (marked at the start, see AddedProps).
+		if ( $props_marked && AddedProps::apply( $xpath, $this->current, $editing ) ) {
+			$changed = true;
 		}
 
 		if ( ! $changed ) {

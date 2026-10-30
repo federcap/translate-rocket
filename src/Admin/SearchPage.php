@@ -70,7 +70,7 @@ class SearchPage {
 		if ( ! empty( $_POST['sb_new_profile'] ) ) {
 			$id = sanitize_key( wp_unslash( $_POST['sb_new_profile'] ) );
 			if ( '' !== $id && 'default' !== $id && ! isset( $extras[ $id ] ) ) {
-				$extras[ $id ]       = SearchBox::clean( array( 'style' => 'icon', 'autocomplete' => 1, 'filter_types' => 1, 'filter_languages' => 1 ) );
+				$extras[ $id ]       = SearchBox::clean( array( 'style' => 'icon', 'autocomplete' => 0, 'filter_types' => 1, 'filter_languages' => 1 ) );
 				$all['search_boxes'] = $extras;
 				Settings::update( $all );
 				$back = add_query_arg( 'profile', $id, $back );
@@ -228,6 +228,53 @@ class SearchPage {
 							</td>
 						</tr>
 						<tr>
+							<th scope="row"><?php esc_html_e( 'Colours', 'translate-rocket' ); ?> <?php $info( __( 'Pick a ready-made look, then change any colour if you like: the preview above follows every change. «Theme» leaves the colours to your theme. Save to keep them.', 'translate-rocket' ) ); ?></th>
+							<td>
+								<input type="hidden" name="search_box[preset]" id="trr-sb-preset" value="<?php echo esc_attr( $s['preset'] ); ?>" />
+								<div class="trr-presets trr-sb-presets">
+									<?php foreach ( SearchBox::presets() as $pk => $p ) : ?>
+										<?php
+										$c    = $p['c'];
+										$r    = '' === $p['radius'] ? '4' : $p['radius'];
+										$fld  = 'display:inline-block;padding:3px 8px;min-width:58px;font-size:11px;background:' . ( $c['c_bg'] ? $c['c_bg'] : '#fff' ) . ';color:' . ( $c['c_text'] ? $c['c_text'] : '#50575e' ) . ';border:1px solid ' . ( $c['c_border'] ? $c['c_border'] : '#c3c4c7' ) . ';border-right:0;border-radius:' . (int) $r . 'px 0 0 ' . (int) $r . 'px';
+										$btn  = 'display:inline-block;padding:3px 7px;font-size:11px;background:' . ( $c['c_btn_bg'] ? $c['c_btn_bg'] : '#f0f0f1' ) . ';color:' . ( $c['c_btn_text'] ? $c['c_btn_text'] : '#1d2327' ) . ';border:1px solid ' . ( $c['c_border'] ? $c['c_border'] : '#c3c4c7' ) . ';border-radius:0 ' . (int) $r . 'px ' . (int) $r . 'px 0';
+										?>
+										<button type="button" class="trr-preset trr-sb-preset<?php echo $s['preset'] === $pk ? ' is-picked' : ''; ?>" data-preset="<?php echo esc_attr( $pk ); ?>" data-radius="<?php echo esc_attr( $p['radius'] ); ?>"<?php foreach ( $c as $ck => $cv ) { echo ' data-' . esc_attr( str_replace( '_', '-', $ck ) ) . '="' . esc_attr( $cv ) . '"'; } ?>>
+											<span class="trr-preset-chip" style="background:none;border:0;padding:0"><span style="<?php echo esc_attr( $fld ); ?>"><?php esc_html_e( 'Search…', 'translate-rocket' ); ?></span><span style="<?php echo esc_attr( $btn ); ?>"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" focusable="false" style="vertical-align:-1px"><path fill="currentColor" d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.39-1.42 1.42-5.39-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg></span></span>
+											<span class="trr-preset-label"><?php echo esc_html( $p['label'] ); ?></span>
+										</button>
+									<?php endforeach; ?>
+								</div>
+								<table class="trr-sb-colors" role="presentation">
+									<?php
+									$nomi = array(
+										'c_text'     => __( 'Text', 'translate-rocket' ),
+										'c_bg'       => __( 'Field background', 'translate-rocket' ),
+										'c_border'   => __( 'Border', 'translate-rocket' ),
+										'c_btn_bg'   => __( 'Button background', 'translate-rocket' ),
+										'c_btn_text' => __( 'Button magnifier', 'translate-rocket' ),
+										'c_icon'     => __( 'Magnifier in the menu', 'translate-rocket' ),
+									);
+									foreach ( $nomi as $ck => $nome ) :
+										$v = (string) $s[ $ck ];
+										?>
+										<tr>
+											<td><label for="trr-sb-<?php echo esc_attr( $ck ); ?>"><?php echo esc_html( $nome ); ?></label></td>
+											<td>
+												<input type="color" class="trr-sb-pick" data-for="trr-sb-<?php echo esc_attr( $ck ); ?>" value="<?php echo esc_attr( preg_match( '/^#[0-9a-f]{6}$/i', $v ) ? $v : '#ffffff' ); ?>" aria-label="<?php echo esc_attr( $nome ); ?>" />
+												<input type="text" class="trr-sb-color" id="trr-sb-<?php echo esc_attr( $ck ); ?>" name="search_box[<?php echo esc_attr( $ck ); ?>]" value="<?php echo esc_attr( $v ); ?>" placeholder="<?php esc_attr_e( 'theme', 'translate-rocket' ); ?>" data-var="<?php echo esc_attr( SearchBox::COLORS[ $ck ] ); ?>" style="width:7.5em" />
+											</td>
+										</tr>
+									<?php endforeach; ?>
+									<tr>
+										<td><label for="trr-sb-radius"><?php esc_html_e( 'Corners (px)', 'translate-rocket' ); ?></label></td>
+										<td><input type="number" min="0" max="999" id="trr-sb-radius" name="search_box[radius]" value="<?php echo esc_attr( $s['radius'] ); ?>" placeholder="<?php esc_attr_e( 'theme', 'translate-rocket' ); ?>" class="small-text" /></td>
+									</tr>
+								</table>
+								<p class="description"><?php esc_html_e( 'An empty colour follows your theme. «transparent» is accepted too.', 'translate-rocket' ); ?></p>
+							</td>
+						</tr>
+						<tr>
 							<th scope="row"><label for="trr-sb-width"><?php esc_html_e( 'Width of the field', 'translate-rocket' ); ?></label></th>
 							<td>
 								<input type="text" id="trr-sb-width" name="search_box[width]" value="<?php echo esc_attr( $s['width'] ); ?>" class="small-text" style="width:7em" placeholder="14em" />
@@ -314,8 +361,43 @@ class SearchPage {
 					if ( apre && p ) { p.hidden = false; if ( o ) { o.setAttribute( 'aria-expanded', 'true' ); } }
 					var i = b.querySelector( 'input[type=search]' );
 					if ( i ) { i.style.width = w; if ( ph ) { i.placeholder = ph; } }
+					// 1.8.30: the colours, live
+					f.querySelectorAll( '.trr-sb-color' ).forEach( function ( c ) {
+						var v = c.value.trim();
+						if ( /^#[0-9a-f]{6}$/i.test( v ) || /^#[0-9a-f]{3}$/i.test( v ) || 'transparent' === v.toLowerCase() ) { b.style.setProperty( c.getAttribute( 'data-var' ), v ); } else { b.style.removeProperty( c.getAttribute( 'data-var' ) ); }
+					} );
+					var r = ( document.getElementById( 'trr-sb-radius' ) || {} ).value;
+					if ( '' !== ( r || '' ) && ! isNaN( parseInt( r, 10 ) ) ) { b.style.setProperty( '--trrs-radius', parseInt( r, 10 ) + 'px' ); } else { b.style.removeProperty( '--trrs-radius' ); }
 				} );
 			}
+			// the colour wheel and the text field say the same thing
+			f.querySelectorAll( '.trr-sb-pick' ).forEach( function ( p ) {
+				p.addEventListener( 'input', function () { var t = document.getElementById( p.getAttribute( 'data-for' ) ); if ( t ) { t.value = p.value; } document.getElementById( 'trr-sb-preset' ).value = ''; f.querySelectorAll( '.trr-sb-preset' ).forEach( function ( o ) { o.classList.remove( 'is-picked' ); } ); aggiorna(); } );
+			} );
+			f.querySelectorAll( '.trr-sb-color' ).forEach( function ( t ) {
+				t.addEventListener( 'input', function () {
+					var p = f.querySelector( '.trr-sb-pick[data-for="' + t.id + '"]' );
+					if ( p && /^#[0-9a-f]{6}$/i.test( t.value.trim() ) ) { p.value = t.value.trim(); }
+					// a colour of one's own: the look is no longer the ready-made one
+					document.getElementById( 'trr-sb-preset' ).value = '';
+					f.querySelectorAll( '.trr-sb-preset' ).forEach( function ( o ) { o.classList.remove( 'is-picked' ); } );
+				} );
+			} );
+			// a ready-made look fills every colour at once
+			f.querySelectorAll( '.trr-sb-preset' ).forEach( function ( btn ) {
+				btn.addEventListener( 'click', function () {
+					[ 'c_text', 'c_bg', 'c_border', 'c_btn_bg', 'c_btn_text', 'c_icon' ].forEach( function ( k ) {
+						var t = document.getElementById( 'trr-sb-' + k ), v = btn.getAttribute( 'data-' + k.replace( /_/g, '-' ) ) || '';
+						if ( t ) { t.value = v; }
+						var p = f.querySelector( '.trr-sb-pick[data-for="trr-sb-' + k + '"]' );
+						if ( p ) { p.value = /^#[0-9a-f]{6}$/i.test( v ) ? v : '#ffffff'; }
+					} );
+					document.getElementById( 'trr-sb-radius' ).value = btn.getAttribute( 'data-radius' ) || '';
+					document.getElementById( 'trr-sb-preset' ).value = btn.getAttribute( 'data-preset' );
+					f.querySelectorAll( '.trr-sb-preset' ).forEach( function ( o ) { o.classList.toggle( 'is-picked', o === btn ); } );
+					aggiorna();
+				} );
+			} );
 			f.addEventListener( 'input', aggiorna );
 			f.addEventListener( 'change', aggiorna );
 			aggiorna();

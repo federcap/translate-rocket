@@ -489,9 +489,10 @@ class Search {
 	 * @param string[]        $langs Languages to look in.
 	 * @param string|string[] $types Post types, or «any».
 	 * @param int             $limit Most results.
+	 * @param bool            $source_first The visitor reads the site's own language: its matches come first.
 	 * @return int[]
 	 */
-	public static function ids_for( string $terms, array $langs, $types, int $limit ): array {
+	public static function ids_for( string $terms, array $langs, $types, int $limit, bool $source_first = false ): array {
 		// 22/10/2026 (translaterocket.com, «search in every language» with 21 languages: one query per language,
 		// 0,2 s each, 5-12 s for every suggestion while typing): every language in one query.
 		$nostri = $langs ? self::find( $terms, array_map( 'strval', $langs ), $limit ) : array();
@@ -502,11 +503,18 @@ class Search {
 				'post_type'        => $types,
 				'fields'           => 'ids',
 				'posts_per_page'   => min( 100, $limit ),
+				// get_posts() orders by date: a title with the words must come before a page that only mentions them.
+				'orderby'          => 'relevance',
+				'order'            => 'DESC',
 				'suppress_filters' => false,
 			)
 		);
 		self::$inner = false;
-		$ids         = array_values( array_unique( array_merge( $nostri, array_map( 'intval', (array) $nativi ) ) ) );
+		$nativi      = array_map( 'intval', (array) $nativi );
+		// 28/10/2026 (translaterocket.com, «polylang» in English with «search in every language»): the matches in 21
+		// translations filled the 6 places before the English pages with «Polylang» in their title. Someone reading
+		// the site's own language sees those first.
+		$ids = array_values( array_unique( $source_first ? array_merge( $nativi, $nostri ) : array_merge( $nostri, $nativi ) ) );
 		// Our index has every searchable type: keep the ones asked for.
 		if ( 'any' !== $types && $ids ) {
 			$tipi = array_map( 'strval', (array) $types );
@@ -538,7 +546,7 @@ class Search {
 			return;
 		}
 		$lingue = $tutte ? self::search_languages() : array( $lang );
-		$ids    = self::ids_for( $terms, $lingue, $q->get( 'post_type' ) ? $q->get( 'post_type' ) : 'any', 300 );
+		$ids    = self::ids_for( $terms, $lingue, $q->get( 'post_type' ) ? $q->get( 'post_type' ) : 'any', 300, '' === $lang || $router->is_default( $lang ) );
 		$q->set( 'post__in', empty( $ids ) ? array( 0 ) : $ids );
 		$q->set( 'orderby', 'post__in' );
 		// The words stay in «s» (the theme shows «Results for …»), but WordPress must not search them again in the

@@ -38,6 +38,11 @@ if ( is_array( $trrocket_settings ) && ! empty( $trrocket_settings['delete_data_
 
 	// Counts kept per language (1.8.24): trrocket_cn*.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( 'trrocket_cn' ) . '%' ) );
+	// The «next steps» list (1.8.29, an option instead of a transient).
+	delete_option( 'trrocket_passi_elenco' );
+	delete_option( 'trrocket_auto_ritmo' );
+delete_option( 'trrocket_added_props' );
+	delete_option( 'trrocket_auto_moved' );
 
 	// Per-term meta: translated term slugs.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE %s", $wpdb->esc_like( '_trrocket_' ) . '%' ) );

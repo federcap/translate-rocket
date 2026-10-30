@@ -2263,8 +2263,8 @@ msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
 msgstr "اشکالی پیدا کرده‌اید یا ایده‌ای دارید؟ به من بگویید — همین تعیین می‌کند چه چیزی بعداً ساخته شود."
 
 #: src/Admin/Growth.php:213
-msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
-msgstr "اگر TranslateRocket به شما کمک می‌کند، یک نقد در WordPress.org ارزش زیادی دارد."
+msgid "If TranslateRocket helps you, a review on Trustpilot means a lot."
+msgstr "اگر TranslateRocket به شما کمک می‌کند، یک نقد در Trustpilot ارزش زیادی دارد."
 
 #: src/Admin/Growth.php:214
 msgid "Write a review"
@@ -7583,3 +7583,158 @@ msgstr "ترجمهٔ شما ذخیره شد، اما بازدیدکنندگان 
 #: src/Frontend/VisualEditor.php
 msgid "Open Plugins"
 msgstr "باز کردن افزونه‌ها"
+
+#: src/Admin/AutoPage.php
+msgid "less than a day at today’s pace"
+msgstr "کمتر از یک روز با سرعت امروز"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "about %d days at today’s pace"
+msgstr "حدود %d روز با سرعت امروز"
+
+#: src/Admin/AutoPage.php
+msgid "The translator built into Chrome and Edge"
+msgstr "مترجم داخلی Chrome و Edge"
+
+#: src/Admin/AutoPage.php
+msgid "Not working yet: tick «I accept the conditions» below — then it starts."
+msgstr "هنوز کار نمی‌کند: پایین «شرایط را می‌پذیرم» را تیک بزنید — سپس شروع می‌شود."
+
+#: src/Admin/AutoPage.php
+msgid "Take me there"
+msgstr "مرا به آنجا ببر"
+
+#: src/Admin/AutoPage.php
+msgid "To switch these on: 1. get Labs (free, one minute) — 2. come back to this page — 3. tick them and accept their conditions."
+msgstr "برای روشن کردن آن‌ها: 1. Labs را بگیرید (رایگان، یک دقیقه) — 2. به این صفحه برگردید — 3. تیکشان بزنید و شرایطشان را بپذیرید."
+
+#: src/Admin/AutoPage.php
+msgid "How hard it works on your server"
+msgstr "میزان کار روی سرور شما"
+
+#: src/Admin/AutoPage.php
+msgid "Light — 1 page every 2 minutes (shared hosting, a busy shop)"
+msgstr "سبک — 1 صفحه هر 2 دقیقه (هاست اشتراکی، فروشگاه پرترافیک)"
+
+#: src/Admin/AutoPage.php
+msgid "Normal — 3 pages a minute (recommended)"
+msgstr "معمولی — 3 صفحه در دقیقه (پیشنهادی)"
+
+#: src/Admin/AutoPage.php
+msgid "Fast — 6 pages every 30 seconds (a server with CPU to spare)"
+msgstr "سریع — 6 صفحه هر 30 ثانیه (سروری با پردازنده آزاد)"
+
+#: src/Admin/LabsPromo.php
+msgid "A search box that searches in the language of the page, with suggestions while typing"
+msgstr "جعبهٔ جستجویی که به زبان صفحه جستجو می‌کند، با پیشنهاد هنگام تایپ"
+
+#: src/Admin/LabsPromo.php
+msgid "Language switcher and search box with ready-made styles and a live preview"
+msgstr "تغییردهندهٔ زبان و جعبهٔ جستجو با سبک‌های آماده و پیش‌نمایش زنده"
+
+#: src/Admin/LabsPromo.php
+msgid "Images, alt texts and link titles of their own for each language"
+msgstr "تصاویر، متن جایگزین و عنوان پیوند مخصوص هر زبان"
+
+#: src/Admin/LabsPromo.php
+msgid "A domain for each language (mysite.de instead of mysite.com/de/)"
+msgstr "یک دامنه برای هر زبان (mysite.de به‌جای mysite.com/de/)"
+
+#: src/Admin/LabsPromo.php
+msgid "Quality that grows: a little of the free engines' work polished with AI every day"
+msgstr "کیفیتی که رشد می‌کند: هر روز بخشی از کار موتورهای رایگان با هوش مصنوعی صیقل می‌خورد"
+
+#: src/Admin/LabsPromo.php
+msgid "Remote help from support, without giving your password"
+msgstr "کمک از راه دور از پشتیبانی، بدون دادن رمز عبور"
+
+#: src/Admin/SearchPage.php
+msgid "Pick a ready-made look, then change any colour if you like: the preview above follows every change. «Theme» leaves the colours to your theme. Save to keep them."
+msgstr "یک ظاهر آماده انتخاب کنید و سپس هر رنگی را خواستید تغییر دهید: پیش‌نمایش بالا هر تغییر را دنبال می‌کند. «پوسته» رنگ‌ها را به پوستهٔ شما می‌سپارد. برای نگه داشتن، ذخیره کنید."
+
+#: src/Admin/SearchPage.php
+msgid "Text"
+msgstr "متن"
+
+#: src/Admin/SearchPage.php
+msgid "Field background"
+msgstr "پس‌زمینهٔ کادر"
+
+#: src/Admin/SearchPage.php
+msgid "Button background"
+msgstr "پس‌زمینهٔ دکمه"
+
+#: src/Admin/SearchPage.php
+msgid "Button magnifier"
+msgstr "ذره‌بین دکمه"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier in the menu"
+msgstr "ذره‌بین در منو"
+
+#: src/Admin/SearchPage.php
+msgid "theme"
+msgstr "پوسته"
+
+#: src/Admin/SearchPage.php
+msgid "Corners (px)"
+msgstr "گوشه‌ها (px)"
+
+#: src/Admin/SearchPage.php
+msgid "An empty colour follows your theme. «transparent» is accepted too."
+msgstr "رنگ خالی از پوستهٔ شما پیروی می‌کند. «transparent» هم پذیرفته می‌شود."
+
+#: src/Frontend/SearchBox.php
+msgid "Theme"
+msgstr "پوسته"
+
+#: src/Frontend/SearchBox.php
+msgid "Violet"
+msgstr "بنفش"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties in this language"
+msgstr "ویژگی‌ها در این زبان"
+
+#: src/Frontend/VisualEditor.php
+msgid "Read by search engines and screen readers. The original has none: what you write here is shown only in this language."
+msgstr "موتورهای جستجو و صفحه‌خوان‌ها آن را می‌خوانند. نسخهٔ اصلی چنین چیزی ندارد: آنچه اینجا بنویسید فقط در این زبان نمایش داده می‌شود."
+
+#: src/Frontend/VisualEditor.php
+msgid "Save properties"
+msgstr "ذخیرهٔ ویژگی‌ها"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties saved"
+msgstr "ویژگی‌ها ذخیره شد"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties (title, ARIA label)"
+msgstr "ویژگی‌ها (عنوان، برچسب ARIA)"
+
+#: src/Frontend/VisualEditor.php
+msgid "What the picture shows, in a few words"
+msgstr "آنچه تصویر نشان می‌دهد، در چند کلمه"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown when the mouse rests on it"
+msgstr "وقتی نشانگر موس روی آن بماند نمایش داده می‌شود"
+
+#: src/Frontend/VisualEditor.php
+msgid "What it does, for screen readers"
+msgstr "کاری که انجام می‌دهد، برای صفحه‌خوان‌ها"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every sentence is translated in your %d language."
+msgid_plural "Every sentence is translated in all %d languages."
+msgstr[0] "همهٔ جمله‌ها به %d زبان ترجمه شده‌اند."
+msgstr[1] "همهٔ جمله‌ها به %d زبان ترجمه شده‌اند."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Sentences left: %1$s in %2$d language"
+msgid_plural "Sentences left: %1$s in %2$d languages"
+msgstr[0] "جمله‌های باقی‌مانده: %1$s در %2$d زبان"
+msgstr[1] "جمله‌های باقی‌مانده: %1$s در %2$d زبان"

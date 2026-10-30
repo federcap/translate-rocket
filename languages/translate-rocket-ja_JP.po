@@ -1548,8 +1548,8 @@ msgstr "フィードバックを送る"
 msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
 msgstr "不具合やアイデアがあれば教えてください — 次に作るものの参考にします。"
 
-msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
-msgstr "TranslateRocketがお役に立てたなら、WordPress.orgでのレビューがとても励みになります。"
+msgid "If TranslateRocket helps you, a review on Trustpilot means a lot."
+msgstr "TranslateRocketがお役に立てたなら、Trustpilotでのレビューがとても励みになります。"
 
 msgid "Write a review"
 msgstr "レビューを書く"
@@ -6712,3 +6712,156 @@ msgstr "翻訳は保存されましたが、訪問者には引き続き %s が�
 #: src/Frontend/VisualEditor.php
 msgid "Open Plugins"
 msgstr "プラグインを開く"
+
+#: src/Admin/AutoPage.php
+msgid "less than a day at today’s pace"
+msgstr "今日のペースで1日未満"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "about %d days at today’s pace"
+msgstr "今日のペースで約%d日"
+
+#: src/Admin/AutoPage.php
+msgid "The translator built into Chrome and Edge"
+msgstr "Chrome と Edge に内蔵された翻訳機能"
+
+#: src/Admin/AutoPage.php
+msgid "Not working yet: tick «I accept the conditions» below — then it starts."
+msgstr "まだ動いていません：下の「条件に同意する」にチェックを入れると開始します。"
+
+#: src/Admin/AutoPage.php
+msgid "Take me there"
+msgstr "そこへ移動"
+
+#: src/Admin/AutoPage.php
+msgid "To switch these on: 1. get Labs (free, one minute) — 2. come back to this page — 3. tick them and accept their conditions."
+msgstr "有効にするには：1. Labs を入手（無料・1分）— 2. このページに戻る — 3. チェックを入れて条件に同意する。"
+
+#: src/Admin/AutoPage.php
+msgid "How hard it works on your server"
+msgstr "サーバーへの負荷"
+
+#: src/Admin/AutoPage.php
+msgid "Light — 1 page every 2 minutes (shared hosting, a busy shop)"
+msgstr "軽め — 2分ごとに1ページ（共有サーバー、アクセスの多いショップ）"
+
+#: src/Admin/AutoPage.php
+msgid "Normal — 3 pages a minute (recommended)"
+msgstr "標準 — 1分に3ページ（推奨）"
+
+#: src/Admin/AutoPage.php
+msgid "Fast — 6 pages every 30 seconds (a server with CPU to spare)"
+msgstr "高速 — 30秒ごとに6ページ（CPU に余裕のあるサーバー）"
+
+#: src/Admin/LabsPromo.php
+msgid "A search box that searches in the language of the page, with suggestions while typing"
+msgstr "ページの言語で検索する検索ボックス（入力中の候補表示付き）"
+
+#: src/Admin/LabsPromo.php
+msgid "Language switcher and search box with ready-made styles and a live preview"
+msgstr "既製のスタイルとライブプレビュー付きの言語スイッチャーと検索ボックス"
+
+#: src/Admin/LabsPromo.php
+msgid "Images, alt texts and link titles of their own for each language"
+msgstr "言語ごとに専用の画像・代替テキスト・リンクのタイトル"
+
+#: src/Admin/LabsPromo.php
+msgid "A domain for each language (mysite.de instead of mysite.com/de/)"
+msgstr "言語ごとのドメイン（mysite.com/de/ ではなく mysite.de）"
+
+#: src/Admin/LabsPromo.php
+msgid "Quality that grows: a little of the free engines' work polished with AI every day"
+msgstr "育つ品質：無料エンジンの訳を毎日少しずつ AI で磨き上げ"
+
+#: src/Admin/LabsPromo.php
+msgid "Remote help from support, without giving your password"
+msgstr "パスワードを渡さずにサポートから遠隔支援"
+
+#: src/Admin/SearchPage.php
+msgid "Pick a ready-made look, then change any colour if you like: the preview above follows every change. «Theme» leaves the colours to your theme. Save to keep them."
+msgstr "既製の見た目を選び、必要なら色を変えてください。上のプレビューは変更にすぐ追従します。「テーマ」は色をテーマに任せます。保存すると保持されます。"
+
+#: src/Admin/SearchPage.php
+msgid "Text"
+msgstr "テキスト"
+
+#: src/Admin/SearchPage.php
+msgid "Field background"
+msgstr "入力欄の背景"
+
+#: src/Admin/SearchPage.php
+msgid "Button background"
+msgstr "ボタンの背景"
+
+#: src/Admin/SearchPage.php
+msgid "Button magnifier"
+msgstr "ボタンの虫眼鏡"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier in the menu"
+msgstr "メニューの虫眼鏡"
+
+#: src/Admin/SearchPage.php
+msgid "theme"
+msgstr "テーマ"
+
+#: src/Admin/SearchPage.php
+msgid "Corners (px)"
+msgstr "角の丸み (px)"
+
+#: src/Admin/SearchPage.php
+msgid "An empty colour follows your theme. «transparent» is accepted too."
+msgstr "空の色はテーマに従います。「transparent」も使えます。"
+
+#: src/Frontend/SearchBox.php
+msgid "Theme"
+msgstr "テーマ"
+
+#: src/Frontend/SearchBox.php
+msgid "Violet"
+msgstr "バイオレット"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties in this language"
+msgstr "この言語のプロパティ"
+
+#: src/Frontend/VisualEditor.php
+msgid "Read by search engines and screen readers. The original has none: what you write here is shown only in this language."
+msgstr "検索エンジンとスクリーンリーダーが読み取ります。元のページにはありません。ここに書いた内容はこの言語でのみ表示されます。"
+
+#: src/Frontend/VisualEditor.php
+msgid "Save properties"
+msgstr "プロパティを保存"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties saved"
+msgstr "プロパティを保存しました"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties (title, ARIA label)"
+msgstr "プロパティ（タイトル、ARIA ラベル）"
+
+#: src/Frontend/VisualEditor.php
+msgid "What the picture shows, in a few words"
+msgstr "画像に写っているものを短く"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown when the mouse rests on it"
+msgstr "マウスを重ねたときに表示"
+
+#: src/Frontend/VisualEditor.php
+msgid "What it does, for screen readers"
+msgstr "何をするか（スクリーンリーダー向け）"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every sentence is translated in your %d language."
+msgid_plural "Every sentence is translated in all %d languages."
+msgstr[0] "すべての文が %d 言語に翻訳済みです。"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Sentences left: %1$s in %2$d language"
+msgid_plural "Sentences left: %1$s in %2$d languages"
+msgstr[0] "残りの文：%2$d 言語で %1$s"

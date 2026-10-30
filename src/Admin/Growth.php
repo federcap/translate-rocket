@@ -21,7 +21,7 @@ class Growth {
 	const WELCOME_DONE   = 'trrocket_welcome_dismissed';
 	const DONATE_DONE    = 'trrocket_donate_dismissed';
 	const SITE           = 'https://translaterocket.com/';
-	const REVIEW_URL     = 'https://wordpress.org/support/plugin/translate-rocket/reviews/#new-post';
+	const REVIEW_URL     = 'https://www.trustpilot.com/evaluate/translaterocket.com'; // 28/10/2026: le recensioni su wp.org sono state azzerate
 
 	/** Ask for a review only once the plugin has actually done something useful. */
 	const REVIEW_MIN_STRINGS = 50;
@@ -373,7 +373,7 @@ class Growth {
 
 			<div class="trrocket-card">
 				<h2>⭐ <?php esc_html_e( 'Leave a review', 'translate-rocket' ); ?></h2>
-				<p><?php esc_html_e( 'If TranslateRocket helps you, a review on WordPress.org means a lot.', 'translate-rocket' ); ?></p>
+				<p><?php esc_html_e( 'If TranslateRocket helps you, a review on Trustpilot means a lot.', 'translate-rocket' ); ?></p>
 				<a class="button" href="<?php echo esc_url( self::REVIEW_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Write a review', 'translate-rocket' ); ?></a>
 			</div>
 

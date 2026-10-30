@@ -1551,8 +1551,8 @@ msgstr "Feedback sturen"
 msgid "Found a bug or have an idea? Tell me — it shapes what gets built next."
 msgstr "Een fout gevonden of een idee? Laat het weten — het bepaalt wat er hierna komt."
 
-msgid "If TranslateRocket helps you, a review on WordPress.org means a lot."
-msgstr "Als TranslateRocket je helpt, betekent een beoordeling op WordPress.org veel."
+msgid "If TranslateRocket helps you, a review on Trustpilot means a lot."
+msgstr "Als TranslateRocket je helpt, betekent een beoordeling op Trustpilot veel."
 
 msgid "Write a review"
 msgstr "Schrijf een beoordeling"
@@ -6738,3 +6738,158 @@ msgstr "Je vertaling is opgeslagen, maar bezoekers zien nog steeds %s: die is ac
 #: src/Frontend/VisualEditor.php
 msgid "Open Plugins"
 msgstr "Plugins openen"
+
+#: src/Admin/AutoPage.php
+msgid "less than a day at today’s pace"
+msgstr "minder dan een dag in het tempo van vandaag"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "about %d days at today’s pace"
+msgstr "ongeveer %d dagen in het tempo van vandaag"
+
+#: src/Admin/AutoPage.php
+msgid "The translator built into Chrome and Edge"
+msgstr "De vertaler die in Chrome en Edge is ingebouwd"
+
+#: src/Admin/AutoPage.php
+msgid "Not working yet: tick «I accept the conditions» below — then it starts."
+msgstr "Werkt nog niet: vink hieronder ‘Ik accepteer de voorwaarden’ aan — dan begint het."
+
+#: src/Admin/AutoPage.php
+msgid "Take me there"
+msgstr "Breng me erheen"
+
+#: src/Admin/AutoPage.php
+msgid "To switch these on: 1. get Labs (free, one minute) — 2. come back to this page — 3. tick them and accept their conditions."
+msgstr "Zo zet je ze aan: 1. haal Labs (gratis, één minuut) — 2. kom terug naar deze pagina — 3. vink ze aan en accepteer hun voorwaarden."
+
+#: src/Admin/AutoPage.php
+msgid "How hard it works on your server"
+msgstr "Hoe hard het op je server werkt"
+
+#: src/Admin/AutoPage.php
+msgid "Light — 1 page every 2 minutes (shared hosting, a busy shop)"
+msgstr "Licht — 1 pagina per 2 minuten (gedeelde hosting, een drukke winkel)"
+
+#: src/Admin/AutoPage.php
+msgid "Normal — 3 pages a minute (recommended)"
+msgstr "Normaal — 3 pagina's per minuut (aanbevolen)"
+
+#: src/Admin/AutoPage.php
+msgid "Fast — 6 pages every 30 seconds (a server with CPU to spare)"
+msgstr "Snel — 6 pagina's per 30 seconden (een server met CPU over)"
+
+#: src/Admin/LabsPromo.php
+msgid "A search box that searches in the language of the page, with suggestions while typing"
+msgstr "Een zoekvak dat in de taal van de pagina zoekt, met suggesties tijdens het typen"
+
+#: src/Admin/LabsPromo.php
+msgid "Language switcher and search box with ready-made styles and a live preview"
+msgstr "Taalwisselaar en zoekvak met kant-en-klare stijlen en een live voorbeeld"
+
+#: src/Admin/LabsPromo.php
+msgid "Images, alt texts and link titles of their own for each language"
+msgstr "Eigen afbeeldingen, alt-teksten en linktitels voor elke taal"
+
+#: src/Admin/LabsPromo.php
+msgid "A domain for each language (mysite.de instead of mysite.com/de/)"
+msgstr "Een domein per taal (mysite.de in plaats van mysite.com/de/)"
+
+#: src/Admin/LabsPromo.php
+msgid "Quality that grows: a little of the free engines' work polished with AI every day"
+msgstr "Kwaliteit die groeit: elke dag wordt een deel van het werk van de gratis engines met AI bijgeschaafd"
+
+#: src/Admin/LabsPromo.php
+msgid "Remote help from support, without giving your password"
+msgstr "Hulp op afstand van support, zonder je wachtwoord te geven"
+
+#: src/Admin/SearchPage.php
+msgid "Pick a ready-made look, then change any colour if you like: the preview above follows every change. «Theme» leaves the colours to your theme. Save to keep them."
+msgstr "Kies een kant-en-klare look en verander daarna elke kleur die je wilt: het voorbeeld hierboven volgt elke wijziging. ‘Thema’ laat de kleuren aan je thema over. Sla op om ze te bewaren."
+
+#: src/Admin/SearchPage.php
+msgid "Text"
+msgstr "Tekst"
+
+#: src/Admin/SearchPage.php
+msgid "Field background"
+msgstr "Achtergrond van het veld"
+
+#: src/Admin/SearchPage.php
+msgid "Button background"
+msgstr "Achtergrond van de knop"
+
+#: src/Admin/SearchPage.php
+msgid "Button magnifier"
+msgstr "Vergrootglas van de knop"
+
+#: src/Admin/SearchPage.php
+msgid "Magnifier in the menu"
+msgstr "Vergrootglas in het menu"
+
+#: src/Admin/SearchPage.php
+msgid "theme"
+msgstr "thema"
+
+#: src/Admin/SearchPage.php
+msgid "Corners (px)"
+msgstr "Hoeken (px)"
+
+#: src/Admin/SearchPage.php
+msgid "An empty colour follows your theme. «transparent» is accepted too."
+msgstr "Een lege kleur volgt je thema. ‘transparent’ mag ook."
+
+#: src/Frontend/SearchBox.php
+msgid "Theme"
+msgstr "Thema"
+
+#: src/Frontend/SearchBox.php
+msgid "Violet"
+msgstr "Violet"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties in this language"
+msgstr "Eigenschappen in deze taal"
+
+#: src/Frontend/VisualEditor.php
+msgid "Read by search engines and screen readers. The original has none: what you write here is shown only in this language."
+msgstr "Gelezen door zoekmachines en schermlezers. Het origineel heeft ze niet: wat je hier schrijft, verschijnt alleen in deze taal."
+
+#: src/Frontend/VisualEditor.php
+msgid "Save properties"
+msgstr "Eigenschappen opslaan"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties saved"
+msgstr "Eigenschappen opgeslagen"
+
+#: src/Frontend/VisualEditor.php
+msgid "Properties (title, ARIA label)"
+msgstr "Eigenschappen (titel, ARIA-label)"
+
+#: src/Frontend/VisualEditor.php
+msgid "What the picture shows, in a few words"
+msgstr "Wat de afbeelding laat zien, in een paar woorden"
+
+#: src/Frontend/VisualEditor.php
+msgid "Shown when the mouse rests on it"
+msgstr "Verschijnt als de muis erop blijft staan"
+
+#: src/Frontend/VisualEditor.php
+msgid "What it does, for screen readers"
+msgstr "Wat het doet, voor schermlezers"
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Every sentence is translated in your %d language."
+msgid_plural "Every sentence is translated in all %d languages."
+msgstr[0] "Elke zin is vertaald (%d taal)."
+msgstr[1] "Elke zin is vertaald in alle %d talen."
+
+#: src/Admin/AutoPage.php
+#, php-format
+msgid "Sentences left: %1$s in %2$d language"
+msgid_plural "Sentences left: %1$s in %2$d languages"
+msgstr[0] "Resterende zinnen: %1$s in %2$d taal"
+msgstr[1] "Resterende zinnen: %1$s in %2$d talen"

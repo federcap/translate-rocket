@@ -23,7 +23,49 @@ class Slugs {
 		if ( $post_id <= 0 ) {
 			return '';
 		}
-		return (string) get_post_meta( $post_id, self::META_PREFIX . $lang, true );
+		// The post's meta already in memory (the page being shown, the editor): read it there.
+		if ( false !== wp_cache_get( $post_id, 'post_meta' ) ) {
+			return (string) get_post_meta( $post_id, self::META_PREFIX . $lang, true );
+		}
+		// 1.8.30 (29/10/2026): otherwise every translated slug of the language at once. A translated page whose menu
+		// lists 5.000 pages asked once per link, and each get_post_meta() loaded ALL the meta of that page (Elementor's
+		// included): 5.000 queries, 3 s. Now one query of small rows, kept for the request.
+		if ( ! isset( self::$per_lingua[ $lang ] ) ) {
+			global $wpdb;
+			self::$per_lingua[ $lang ] = array();
+			foreach ( (array) $wpdb->get_results( $wpdb->prepare( "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s", self::META_PREFIX . $lang ) ) as $r ) { // phpcs:ignore WordPress.DB
+				self::$per_lingua[ $lang ][ (int) $r->post_id ] = (string) $r->meta_value;
+			}
+			self::ascolta();
+		}
+		return self::$per_lingua[ $lang ][ $post_id ] ?? '';
+	}
+
+	/**
+	 * Translated slugs read in this request, per language: [lang][post_id] = slug.
+	 *
+	 * @var array<string,array<int,string>>
+	 */
+	private static $per_lingua = array();
+
+	/**
+	 * A translated slug written in this request (by anyone): read again next time.
+	 */
+	private static function ascolta(): void {
+		static $fatto = false;
+		if ( $fatto ) {
+			return;
+		}
+		$fatto  = true;
+		$scorda = static function ( $meta_id, $object_id, $meta_key ) {
+			unset( $meta_id, $object_id );
+			if ( is_string( $meta_key ) && 0 === strpos( $meta_key, self::META_PREFIX ) ) {
+				self::$per_lingua = array();
+			}
+		};
+		foreach ( array( 'added_post_meta', 'updated_post_meta', 'deleted_post_meta' ) as $h ) {
+			add_action( $h, $scorda, 10, 3 );
+		}
 	}
 
 	/**
