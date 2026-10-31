@@ -44,6 +44,47 @@ class Seo {
 		add_filter( 'aioseo_facebook_tags', array( $this, 'aioseo_facebook' ), 20 );
 		add_filter( 'aioseo_og_locale', array( $this, 'locale' ), 20 );
 		add_filter( 'aioseo_sitemap_indexes', array( $this, 'aioseo_index' ), 20 );
+		// Yoast on a production site reads each page's address from its own table (indexables), saved in the default
+		// language: canonical, og:url and schema of /nl/ons-verhaal/ said /our-story/ (ticket 27, 31/10/2026, Yoast 28.6).
+		// On a local or staging site Yoast builds no indexables and asks WordPress every time, so our benches never saw it.
+		// Its own switch for «ask WordPress every time» puts it back on our translated links, only on translated pages.
+		add_filter( 'wpseo_dynamic_permalinks_enabled', array( $this, 'yoast_live_permalinks' ), 20 );
+		// The other way round: the first visit to a page arriving on /nl/ made Yoast save /nl/… as THE address, and the
+		// English page then declared the Dutch one as its canonical. On a translated page Yoast builds what it needs for
+		// that request and saves nothing; the next visit in the site's language saves the right address.
+		add_filter( 'wpseo_should_save_indexable', array( $this, 'yoast_save_only_in_site_language' ), 20 );
+	}
+
+	/**
+	 * A page shown in a language other than the site's, on the front end.
+	 */
+	private function translated_front_page(): bool {
+		if ( is_admin() || wp_doing_ajax() || wp_doing_cron() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+			return false;
+		}
+		$router = Plugin::instance()->router();
+		$lang   = $router->current_language();
+		return '' !== $lang && ! $router->is_default( $lang ) && ! \TranslateRocket\Coexistence::on();
+	}
+
+	/**
+	 * Yoast: build addresses live (get_permalink, get_term_link, home_url) on a page in another language.
+	 *
+	 * @param mixed $on Yoast's own setting.
+	 * @return mixed
+	 */
+	public function yoast_live_permalinks( $on ) {
+		return ( ! $on && $this->translated_front_page() ) ? true : $on;
+	}
+
+	/**
+	 * Yoast: no indexable saved while a page is shown in another language (its addresses would be that language's).
+	 *
+	 * @param mixed $save Whether Yoast means to save.
+	 * @return mixed
+	 */
+	public function yoast_save_only_in_site_language( $save ) {
+		return ( $save && $this->translated_front_page() ) ? false : $save;
 	}
 
 	/**

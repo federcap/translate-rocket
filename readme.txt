@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.30.1
+Stable tag: 1.8.30.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.30.2 =
+* Fixed: with Yoast SEO on a live (production) site, the canonical, og:url and schema address of a translated page still pointed to the original page (/nl/ons-verhaal/ said /our-story/). Yoast keeps each page's address in its own table on live sites; on translated pages it now builds the address of the language being shown. Pages in the original language and canonicals typed by hand are unchanged.
+* Fixed: with Yoast SEO on a live site, when the first visit to a page came in another language, Yoast could store that language's address and then give it as the canonical of the original page too. Yoast now stores addresses only from visits in the site's language.
 
 = 1.8.30.1 =
 * Fixed: with «Translate the addresses of pages and posts» switched off, the addresses it had made while it was on (from the translated titles) were still used in links, menus and breadcrumbs, so a link to the WooCommerce shop (/products/) became /fr/produits/ in French. Now they go back to the original address, and the old translated one sends visitors on with a 301. Addresses typed by hand in the editor are kept.
@@ -612,6 +616,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.30.2 =
+Yoast SEO: canonical and og:url of translated pages point to the translated address again on live sites.
 
 = 1.8.30.1 =
 Shop and page links with «Translate the addresses of pages and posts» switched off stay on the original address (no more 404 on /products/). Big sites that are translating: TranslateRocket's own screens open in seconds again (numbers updated in the background).
