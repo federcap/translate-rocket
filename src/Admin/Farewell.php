@@ -199,7 +199,7 @@ class Farewell {
 		if ( false === $tradotte ) {
 			$tradotte = 0;
 			foreach ( (array) ( $settings['target_languages'] ?? array() ) as $code ) {
-				$tradotte += \TranslateRocket\Strings::translated_count( (string) $code );
+				$tradotte += \TranslateRocket\Strings::translated_count( (string) $code, true );
 			}
 			set_transient( 'trrocket_conta_tradotte', $tradotte, HOUR_IN_SECONDS );
 		}

@@ -3,7 +3,7 @@
  * Plugin Name:       TranslateRocket – Free Multilingual Translation, Unlimited Languages
  * Plugin URI:        https://translaterocket.com
  * Description:       Free multilingual translation for WordPress, no API key needed. Translate your whole site — pages, menus, WooCommerce, SEO titles and addresses — with a free AI, your browser's own translator, or your keys for DeepL, OpenAI, Gemini or Claude.
- * Version:           1.8.30
+ * Version:           1.8.30.1
  * Requires at least: 5.6
  * Requires PHP:      7.4
  * Author:            federico_dev
@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
  * Constants
  * ---------------------------------------------------------------------------
  */
-define( 'TRROCKET_VERSION', '1.8.30' );
+define( 'TRROCKET_VERSION', '1.8.30.1' );
 define( 'TRROCKET_FILE', __FILE__ );
 define( 'TRROCKET_PATH', plugin_dir_path( __FILE__ ) );
 define( 'TRROCKET_URL', plugin_dir_url( __FILE__ ) );

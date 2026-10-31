@@ -3254,7 +3254,7 @@ class Admin {
 		// Non language_stats(): quello conta le righe gia' presenti nella tabella
 		// delle traduzioni e ignora le stringhe mai accodate per questa lingua,
 		// quindi il totale usciva corto.
-		$miss_total = Strings::untranslated_count( $lang );
+		$miss_total = Strings::untranslated_count( $lang, true );
 		echo '<p style="margin:8px 0">';
 		if ( null !== \TranslateRocket\Providers\Registry::active() ) {
 			printf(
@@ -6683,8 +6683,8 @@ JS;
 							<?php
 							foreach ( $scelte as $code ) :
 								$nome    = Languages::label( (string) $code );
-								$manca   = \TranslateRocket\Strings::untranslated_count( (string) $code );
-								$fatte   = \TranslateRocket\Strings::translated_count( (string) $code );
+								$manca   = \TranslateRocket\Strings::untranslated_count( (string) $code, true );
+								$fatte   = \TranslateRocket\Strings::translated_count( (string) $code, true );
 								$totale  = $manca + $fatte;
 								$perc    = $totale > 0 ? (int) floor( 100 * $fatte / $totale ) : 0; // floor: 99.6% is not «100%»
 								$is_off  = in_array( (string) $code, $offline_ora, true );
@@ -6814,7 +6814,7 @@ JS;
 							</td>
 						</tr>
 						<tr id="trr-set-page-slugs">
-							<th scope="row"><?php esc_html_e( 'Page addresses', 'translate-rocket' ); ?> <?php $this->info( __( 'On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: the addresses stay as they are; those already made keep working.', 'translate-rocket' ) ); ?></th>
+							<th scope="row"><?php esc_html_e( 'Page addresses', 'translate-rocket' ); ?> <?php $this->info( __( 'On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use.', 'translate-rocket' ) ); ?></th>
 							<td>
 								<label>
 									<input type="checkbox" name="translate_slugs" value="1" <?php checked( ! empty( $settings['translate_slugs'] ) ); ?> />
@@ -7240,7 +7240,7 @@ JS;
 		// Le tre strade per tradurre, una accanto all'altra: a mano (il pulsante
 		// "Translate" di ogni riga), tutto in una volta con l'AI, oppure con il
 		// traduttore del browser, che non chiede nessuna chiave.
-		$miss_lingua = Strings::untranslated_count( $lang );
+		$miss_lingua = Strings::untranslated_count( $lang, true );
 		$fornitore   = Registry::active();
 		?>
 		<div class="trr-actionbar">

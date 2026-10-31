@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.30
+Stable tag: 1.8.30.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.30.1 =
+* Fixed: with «Translate the addresses of pages and posts» switched off, the addresses it had made while it was on (from the translated titles) were still used in links, menus and breadcrumbs, so a link to the WooCommerce shop (/products/) became /fr/produits/ in French. Now they go back to the original address, and the old translated one sends visitors on with a 301. Addresses typed by hand in the editor are kept.
+* Fixed: the WooCommerce shop page reached at its translated address (/fr/produits/) showed an empty page or a 404 instead of the products.
+* Faster: on a big site that is translating, the TranslateRocket screens no longer count every language again whenever a sentence is saved. They show the last numbers at once and bring them up to date in the background, one at a time, after the page has been sent (the start screen of a 50,000-sentence, 13-language site went from about 30 seconds to under 4). Small sites still count right away.
 
 = 1.8.30 =
 * New: images, links and buttons get their own alt text, title and ARIA label in each language, even when the original has none. In the visual editor the image window shows the fields, a link or a button has «Properties» in its text window, and an icon with no text opens its own small window. They are kept apart from the sentences: never counted as «to translate», never rewritten by an engine.
@@ -607,6 +612,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.30.1 =
+Shop and page links with «Translate the addresses of pages and posts» switched off stay on the original address (no more 404 on /products/). Big sites that are translating: TranslateRocket's own screens open in seconds again (numbers updated in the background).
 
 = 1.8.30 =
 Alt text, titles and ARIA labels per language for images, links and buttons; search box colours with a live preview; search results in the site's language first; sentences and days left on the Automatic page.

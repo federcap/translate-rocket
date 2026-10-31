@@ -303,7 +303,7 @@ class WpRocket {
 			}
 			$path = $rest;
 			if ( $post && '' !== (string) $post->post_name ) {
-				$slug = Slugs::get( $post_id, $lang );
+				$slug = Slugs::active( $post_id, $lang );
 				if ( '' !== $slug ) {
 					$path = preg_replace( '#/' . preg_quote( (string) $post->post_name, '#' ) . '(/?)$#', '/' . $slug . '$1', $path );
 				}

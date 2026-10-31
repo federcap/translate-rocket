@@ -42,6 +42,51 @@ class Slugs {
 	}
 
 	/**
+	 * 31/10/2026 (Garlen: «Single Page Slug Translation: OFF… /products/ inside href still translated, 404»): the
+	 * translated slug the site's addresses use — the one typed by hand always, the one made from the translated title
+	 * (AutoSlugs) only while «translate slugs» is on. Switched off, those addresses stay saved (switched on again they
+	 * come back, the same ones) but links, menus, breadcrumbs, hreflang and the sitemap go back to the original slug.
+	 */
+	public static function active( int $post_id, string $lang ): string {
+		$slug = self::get( $post_id, $lang );
+		if ( '' === $slug || AutoSlugs::enabled() ) {
+			return $slug;
+		}
+		return isset( self::auto_ids( $lang )[ $post_id ] ) ? '' : $slug;
+	}
+
+	/**
+	 * Was this page's address in the language made from its title (not typed)?
+	 */
+	public static function is_auto( int $post_id, string $lang ): bool {
+		return isset( self::auto_ids( $lang )[ $post_id ] );
+	}
+
+	/**
+	 * Pages whose address in a language was made by AutoSlugs: one query per language and request.
+	 *
+	 * @return array<int,bool>
+	 */
+	private static function auto_ids( string $lang ): array {
+		if ( ! isset( self::$auto[ $lang ] ) ) {
+			global $wpdb;
+			self::$auto[ $lang ] = array();
+			foreach ( (array) $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s", AutoSlugs::AUTO . $lang ) ) as $id ) { // phpcs:ignore WordPress.DB
+				self::$auto[ $lang ][ (int) $id ] = true;
+			}
+			self::ascolta();
+		}
+		return self::$auto[ $lang ];
+	}
+
+	/**
+	 * Pages with an address made from the title, per language.
+	 *
+	 * @var array<string,array<int,bool>>
+	 */
+	private static $auto = array();
+
+	/**
 	 * Translated slugs read in this request, per language: [lang][post_id] = slug.
 	 *
 	 * @var array<string,array<int,string>>
@@ -59,8 +104,9 @@ class Slugs {
 		$fatto  = true;
 		$scorda = static function ( $meta_id, $object_id, $meta_key ) {
 			unset( $meta_id, $object_id );
-			if ( is_string( $meta_key ) && 0 === strpos( $meta_key, self::META_PREFIX ) ) {
+			if ( is_string( $meta_key ) && ( 0 === strpos( $meta_key, self::META_PREFIX ) || 0 === strpos( $meta_key, AutoSlugs::AUTO ) ) ) {
 				self::$per_lingua = array();
+				self::$auto       = array();
 			}
 		};
 		foreach ( array( 'added_post_meta', 'updated_post_meta', 'deleted_post_meta' ) as $h ) {

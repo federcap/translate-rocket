@@ -80,7 +80,7 @@ class BrowserEngine {
 			array(
 				'items'   => $pending['items'],
 				'reused'  => (int) $pending['reused'],
-				'missing' => '' !== $loc ? count( Strings::untranslated_for_page_language( $loc, $lang ) ) : Strings::untranslated_count( $lang ),
+				'missing' => '' !== $loc ? count( Strings::untranslated_for_page_language( $loc, $lang ) ) : Strings::untranslated_count( $lang, true ),
 			)
 		);
 	}
@@ -128,7 +128,7 @@ class BrowserEngine {
 			array(
 				'saved'   => (int) $res['saved'],
 				'skipped' => (int) $res['skipped'],
-				'missing' => Strings::untranslated_count( $lang ),
+				'missing' => Strings::untranslated_count( $lang, true ),
 			)
 		);
 	}

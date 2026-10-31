@@ -354,17 +354,20 @@ class Strings {
 		// 1.8.30: what changes outside the plugin (phpMyAdmin, another plugin) moves no signature: a count is never
 		// older than 10 minutes — an hour where counting is slow (a big site: Matjaž, 29/10/2026, «wp-admin and its
 		// counting still causing trouble… slow queries that add up»), so a screen never pays for it every 10 minutes.
-		$vecchio = (float) ( $tenuto['secs'] ?? 0 ) >= 0.1 ? 3600 : 600;
-		if ( $fresco && $firma === $tenuto['firma'] && ( time() - (int) ( $tenuto['at'] ?? 0 ) ) >= $vecchio ) {
+		$costo   = (float) ( $tenuto['secs'] ?? 0 );
+		$vecchio = $costo >= 0.1 ? 3600 : 600;
+		if ( $fresco && ( $firma !== $tenuto['firma'] || ( time() - (int) ( $tenuto['at'] ?? 0 ) ) >= $vecchio ) ) {
 			$fresco = false;
 		}
-		if ( $fresco && $firma !== $tenuto['firma'] ) {
-			// Something changed. On a big site, while it translates, that is every second: a count that takes
-			// 0,5 s for each of 13 languages, done again at every look, is what ate the CPU. There the last count
-			// stays good for a while, longer the more it costs (0,5 s → 2,5 min, 10 min at most). A small site
-			// (a count under 0,1 s) always counts again.
-			$costo  = (float) ( $tenuto['secs'] ?? 0 );
-			$fresco = $calm && $costo >= 0.1 && ( time() - (int) ( $tenuto['at'] ?? 0 ) ) < min( 600, (int) ceil( $costo * 300 ) );
+		if ( ! $fresco && $calm && $costo >= 0.1 && is_array( $tenuto ) && isset( $tenuto['v'] ) && ! self::$conta_ora ) {
+			// 1.8.30.1 (30/10/2026, Matjaž: «as soon as my patches are gone it's even worse on admin page»; his size on
+			// the bench, 13 languages translating: the plugin's start page 28-34 s, 28-46 counts of ~1 s each, on 1.8.29
+			// too). Something changed — on a big site that translates, every second — or the hour passed: a screen that
+			// only SHOWS the number gets the last one at once, and the count is done again after the page has been sent,
+			// one at a time, at most one every 20 s (refresh_later()). A small site (a count under 0,1 s) counts now.
+			self::refresh_later( $nome, $conta, $firma );
+			$fatti[ $nome ] = array( 'firma' => $firma, 'v' => $tenuto['v'] );
+			return $tenuto['v'];
 		}
 		if ( ! $fresco ) {
 			$t0     = microtime( true );
@@ -698,8 +701,8 @@ class Strings {
 	 *
 	 * @param string $lang Language code.
 	 */
-	public static function translated_count( string $lang ): int {
-		return (int) self::conto( 'tc', $lang, static function () use ( $lang ) { return self::translated_count_now( $lang ); } );
+	public static function translated_count( string $lang, bool $calm = false ): int {
+		return (int) self::conto( 'tc', $lang, static function () use ( $lang ) { return self::translated_count_now( $lang ); }, $calm );
 	}
 
 	/**
@@ -847,6 +850,109 @@ class Strings {
 	public static function forget_counts(): void {
 		self::$firma_db    = null;
 		self::$fatti_conti = array();
+	}
+
+	/**
+	 * Counts a screen showed old in this request, to be done again after the page is sent: name => [count, signature].
+	 *
+	 * @var array<string,array{0:callable,1:string}>
+	 */
+	private static $da_rifare = array();
+
+	/**
+	 * True while counting for real (refresh, tests, WP-CLI): no last number handed back.
+	 *
+	 * @var bool
+	 */
+	private static $conta_ora = false;
+
+	/**
+	 * Counts for reading are exact from here on in this request (WP-CLI, tests), not the last ones kept.
+	 */
+	public static function counts_exact( bool $si = true ): void {
+		self::$conta_ora = $si;
+	}
+
+	/**
+	 * A count shown old: done again at the end of this request (see refresh_one()).
+	 */
+	private static function refresh_later( string $nome, callable $conta, string $firma ): void {
+		if ( empty( self::$da_rifare ) ) {
+			add_action( 'shutdown', array( __CLASS__, 'refresh_one' ), PHP_INT_MAX );
+		}
+		self::$da_rifare[ $nome ] = array( $conta, $firma );
+	}
+
+	/**
+	 * After the page has been sent: the oldest of the counts shown old, only one, and only one every 20 s on the whole
+	 * site — a big site translating never spends more than a count every 20 s on numbers nobody waits for.
+	 */
+	public static function refresh_one(): void {
+		if ( empty( self::$da_rifare ) ) {
+			return;
+		}
+		if ( time() - (int) get_option( 'trrocket_cn_refresh_at', 0 ) < 20 ) {
+			return;
+		}
+		update_option( 'trrocket_cn_refresh_at', time(), false );
+		$scelto = '';
+		$quando = PHP_INT_MAX;
+		foreach ( array_keys( self::$da_rifare ) as $nome ) {
+			$t = get_option( $nome );
+			$a = is_array( $t ) ? (int) ( $t['at'] ?? 0 ) : 0;
+			if ( $a < $quando ) {
+				$quando = $a;
+				$scelto = $nome;
+			}
+		}
+		if ( '' === $scelto ) {
+			return;
+		}
+		// The visitor does not wait for it: the answer goes out first where the server allows it.
+		if ( ! ( defined( 'WP_CLI' ) && WP_CLI ) && 'cli' !== PHP_SAPI ) {
+			if ( function_exists( 'fastcgi_finish_request' ) ) {
+				fastcgi_finish_request();
+			} elseif ( function_exists( 'litespeed_finish_request' ) ) {
+				litespeed_finish_request();
+			}
+		}
+		self::rifai( $scelto );
+	}
+
+	/**
+	 * Every count shown old in this request, done now (tests, WP-CLI).
+	 */
+	public static function refresh_stale_now(): int {
+		$n = 0;
+		foreach ( array_keys( self::$da_rifare ) as $nome ) {
+			self::rifai( $nome );
+			++$n;
+		}
+		return $n;
+	}
+
+	/**
+	 * One count done again and kept.
+	 */
+	private static function rifai( string $nome ): void {
+		if ( ! isset( self::$da_rifare[ $nome ] ) ) {
+			return;
+		}
+		list( $conta, $firma ) = self::$da_rifare[ $nome ];
+		unset( self::$da_rifare[ $nome ] );
+		$t0 = microtime( true );
+		$v  = $conta();
+		update_option(
+			$nome,
+			array(
+				'firma' => $firma,
+				'v'     => $v,
+				'secs'  => round( microtime( true ) - $t0, 3 ),
+				'at'    => time(),
+			),
+			false
+		);
+		unset( self::$fatti_conti[ $nome ] );
 	}
 
 	/**

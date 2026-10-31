@@ -49,6 +49,13 @@ class Router {
 	private $old_term = null;
 
 	/**
+	 * A page reached through an address made from its title while «translate slugs» is off: its id, or 0 (31/10/2026).
+	 *
+	 * @var int
+	 */
+	private $old_post = 0;
+
+	/**
 	 * The request address as the visitor sent it, language prefix included (1.8.26: Themify's page cache keys its
 	 * files on $_SERVER['REQUEST_URI'] and needs the one with the language, see Integrations\Themify).
 	 *
@@ -829,7 +836,7 @@ class Router {
 		$work  = $slash ? $url : $url . '/';
 		foreach ( $chain as $pid ) {
 			$post = get_post( $pid );
-			$tr   = sanitize_title( Slugs::get( $pid, $lang ) );
+			$tr   = sanitize_title( Slugs::active( $pid, $lang ) );
 			if ( ! $post || 'publish' !== $post->post_status || '' === (string) $post->post_name || '' === $tr || $tr === $post->post_name ) {
 				continue;
 			}
@@ -908,7 +915,7 @@ class Router {
 		$real   = (string) $post->post_name;
 		$target = $real;
 		if ( ! $this->is_default( $lang ) ) {
-			$t = Slugs::get( $post_id, $lang );
+			$t = Slugs::active( $post_id, $lang );
 			if ( '' !== $t ) {
 				$target = $t;
 			}
@@ -1141,6 +1148,9 @@ class Router {
 		foreach ( array_chunk( array_keys( $ids ), 500 ) as $blocco ) {
 			$segnaposto = implode( ',', array_fill( 0, count( $blocco ), '%d' ) );
 			foreach ( (array) $wpdb->get_results( $wpdb->prepare( "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s AND post_id IN ({$segnaposto})", array_merge( array( Slugs::META_PREFIX . $lang ), $blocco ) ) ) as $r ) { // phpcs:ignore WordPress.DB
+				if ( ! AutoSlugs::enabled() && Slugs::is_auto( (int) $r->post_id, $lang ) ) {
+					continue; // 31/10/2026: made from the title, «translate slugs» switched off (Slugs::active)
+				}
 				$slug[ (int) $r->post_id ] = sanitize_title( (string) $r->meta_value );
 			}
 		}
@@ -1202,6 +1212,17 @@ class Router {
 		if ( $this->old_term ) {
 			$link = get_term_link( (int) $this->old_term[0], (string) $this->old_term[1] );
 			if ( is_string( $link ) && '' !== $link ) {
+				wp_safe_redirect( '' !== $this->query ? $link . ( false === strpos( $link, '?' ) ? '?' : '&' ) . $this->query : $link, 301, 'TranslateRocket' );
+				exit;
+			}
+		}
+		if ( $this->old_post ) {
+			$link = (string) get_permalink( $this->old_post );
+			if ( '' !== $link ) {
+				$paged = (int) get_query_var( 'paged' );
+				if ( $paged > 1 ) {
+					$link = trailingslashit( $link ) . 'page/' . $paged . '/';
+				}
 				wp_safe_redirect( '' !== $this->query ? $link . ( false === strpos( $link, '?' ) ? '?' : '&' ) . $this->query : $link, 301, 'TranslateRocket' );
 				exit;
 			}
@@ -1346,8 +1367,21 @@ class Router {
 			return $query_vars;
 		}
 
+		// 31/10/2026 (Garlen): an address made from the title while «translate slugs» was on, reached after it was
+		// switched off (search engines, shared links): the page answers, then template_redirect sends it on with a 301
+		// to the original address the site's links use now.
+		if ( ! AutoSlugs::enabled() && Slugs::is_auto( $id, $this->current_language() ) ) {
+			$this->old_post = $id;
+		}
+
 		// Point the query at the real post, using the right var for its type.
-		if ( 'page' === $post->post_type ) {
+		if ( 'page' === $post->post_type && function_exists( 'wc_get_page_id' ) && $id === (int) wc_get_page_id( 'shop' ) && $id !== (int) get_option( 'page_on_front' ) ) {
+			// 31/10/2026 (Garlen, /fr/produits/ → 404): the WooCommerce shop page is not shown as a page but as the
+			// products' archive — WordPress reaches it at /products/ through post_type=product, never pagename.
+			// As a page it answered empty (no products) or 404, depending on the theme.
+			unset( $query_vars['pagename'], $query_vars['name'], $query_vars['page'] );
+			$query_vars['post_type'] = 'product';
+		} elseif ( 'page' === $post->post_type ) {
 			$query_vars['pagename'] = get_page_uri( $id );
 			unset( $query_vars['name'] );
 		} else {
