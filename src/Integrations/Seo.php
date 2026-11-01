@@ -194,10 +194,13 @@ class Seo {
 		if ( ! is_array( $indexes ) || Preview::hidden() || empty( \TranslateRocket\Settings::get()['target_languages'] ) ) {
 			return $indexes;
 		}
-		$indexes[] = array(
-			'loc'     => home_url( '/translaterocket-sitemap.xml' ),
-			'lastmod' => gmdate( 'c' ),
-		);
+		// Our numbered files when ours is an index itself: no index inside an index (1.8.30).
+		foreach ( \TranslateRocket\Frontend\Sitemap::file_urls() as $loc ) {
+			$indexes[] = array(
+				'loc'     => $loc,
+				'lastmod' => gmdate( 'c' ),
+			);
+		}
 		return $indexes;
 	}
 
@@ -208,10 +211,13 @@ class Seo {
 	 * @return mixed
 	 */
 	public function seopress_index( $xml ) {
-		if ( ! is_string( $xml ) || Preview::hidden() || empty( \TranslateRocket\Settings::get()['target_languages'] ) || false !== strpos( $xml, 'translaterocket-sitemap.xml' ) ) {
+		if ( ! is_string( $xml ) || Preview::hidden() || empty( \TranslateRocket\Settings::get()['target_languages'] ) || false !== strpos( $xml, 'translaterocket-sitemap' ) ) {
 			return $xml;
 		}
-		$entry = "\n<sitemap>\n<loc>" . esc_url( home_url( '/translaterocket-sitemap.xml' ) ) . "</loc>\n<lastmod>" . esc_html( gmdate( 'c' ) ) . "</lastmod>\n</sitemap>";
+		$entry = '';
+		foreach ( \TranslateRocket\Frontend\Sitemap::file_urls() as $loc ) {
+			$entry .= "\n<sitemap>\n<loc>" . esc_url( $loc ) . "</loc>\n<lastmod>" . esc_html( gmdate( 'c' ) ) . "</lastmod>\n</sitemap>";
+		}
 		$out   = str_replace( '</sitemapindex>', $entry . "\n</sitemapindex>", $xml );
 		return $out;
 	}

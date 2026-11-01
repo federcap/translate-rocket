@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.30.2
+Stable tag: 1.8.30.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.30.3 =
+* Improved: the multilingual sitemap (/translaterocket-sitemap.xml) now lists every language version of a page as its own <url> with its own <loc>, each with the full set of hreflang alternates, as in Google's multilingual sitemap guidelines. Before, only the original address had a <loc> and the translations were listed only as alternates. Very large sites get an index of numbered files (/translaterocket-sitemap-1.xml, -2.xml...) under the 50,000 URL / 50 MB limits; Yoast, Rank Math, SEOPress and All in One SEO list them in their own index.
+* Improved: pages kept out of search engines are left out of the multilingual sitemap in every language: noindex in Yoast SEO, Rank Math, SEOPress, All in One SEO or The SEO Framework (for the page or for its whole post type), password-protected pages, and WooCommerce's cart, checkout and account pages.
 
 = 1.8.30.2 =
 * Fixed: with Yoast SEO on a live (production) site, the canonical, og:url and schema address of a translated page still pointed to the original page (/nl/ons-verhaal/ said /our-story/). Yoast keeps each page's address in its own table on live sites; on translated pages it now builds the address of the language being shown. Pages in the original language and canonicals typed by hand are unchanged.
@@ -616,6 +620,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.30.3 =
+Multilingual sitemap: every language version is its own entry, and noindex pages (Yoast, Rank Math, SEOPress, AIOSEO, WooCommerce cart/checkout) are left out.
 
 = 1.8.30.2 =
 Yoast SEO: canonical and og:url of translated pages point to the translated address again on live sites.
