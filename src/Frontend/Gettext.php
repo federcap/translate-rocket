@@ -86,6 +86,14 @@ class Gettext {
 	public static $originals = array();
 
 	/**
+	 * 1/11/2026 (1.8.30.4): every label WordPress itself translated on this request, core included («Cerca», the
+	 * 404 page): the visitor already reads it in the page language, so the visual editor does not count it as missing.
+	 *
+	 * @var array<string,bool>
+	 */
+	public static $wp_translated = array();
+
+	/**
 	 * Whether the document <head> is done (global styles generated). We only
 	 * collect after this, to skip theme.json editor metadata (colour, font-size
 	 * and spacing labels) that is translated while building the head.
@@ -188,7 +196,13 @@ class Gettext {
 	}
 
 	private static function remember( string $translation, string $text, string $domain ): void {
-		if ( 'translate-rocket' === $domain || 'default' === $domain || '' === $domain || $translation === $text || count( self::$originals ) > 3000 ) {
+		if ( 'translate-rocket' !== $domain && $translation !== $text && count( self::$wp_translated ) < 5000 ) {
+			$t = trim( $translation );
+			if ( '' !== $t ) {
+				self::$wp_translated[ $t ] = true;
+			}
+		}
+		if ('translate-rocket' === $domain || 'default' === $domain || '' === $domain || $translation === $text || count( self::$originals ) > 3000 ) {
 			return;
 		}
 		$k = trim( $translation );

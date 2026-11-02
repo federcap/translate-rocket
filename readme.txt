@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.30.3
+Stable tag: 1.8.30.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.30.4 =
+* Fixed: the visual editor counted as missing the texts WordPress, the theme or WooCommerce already show in the page language («Search», the 404 page, the cart: «Tu carrito», «Ver mi carrito»...), so a page translated in full could show 73%. They now count as translated; a sentence where only a name was translated still counts as missing.
 
 = 1.8.30.3 =
 * Improved: the multilingual sitemap (/translaterocket-sitemap.xml) now lists every language version of a page as its own <url> with its own <loc>, each with the full set of hreflang alternates, as in Google's multilingual sitemap guidelines. Before, only the original address had a <loc> and the translations were listed only as alternates. Very large sites get an index of numbered files (/translaterocket-sitemap-1.xml, -2.xml...) under the 50,000 URL / 50 MB limits; Yoast, Rank Math, SEOPress and All in One SEO list them in their own index.
@@ -620,6 +623,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.30.4 =
+The visual editor's progress no longer counts texts WordPress already shows in the page language as missing.
 
 = 1.8.30.3 =
 Multilingual sitemap: every language version is its own entry, and noindex pages (Yoast, Rank Math, SEOPress, AIOSEO, WooCommerce cart/checkout) are left out.

@@ -1754,7 +1754,7 @@ class Engine {
 				// Nell'editor visivo la frase si clicca tutta insieme: il pezzo
 				// dentro il link non ha vita propria.
 				$cls = (string) $unit['el']->getAttribute( 'class' );
-				$add = ( isset( $map[ $src ] ) || null !== $composto ) ? 'trrocket-ed' : 'trrocket-ed trrocket-ed-untr';
+				$add = ( isset( $map[ $src ] ) || null !== $composto || isset( Gettext::$wp_translated[ trim( wp_strip_all_tags( $src ) ) ] ) ) ? 'trrocket-ed' : 'trrocket-ed trrocket-ed-untr';
 				$unit['el']->setAttribute( 'class', '' === $cls ? $add : $cls . ' ' . $add );
 				$unit['el']->setAttribute( 'data-trr-src', rawurlencode( $src ) );
 				if ( isset( Gettext::$originals[ trim( wp_strip_all_tags( $src ) ) ] ) ) { // a label WordPress translated (1.8.21)
@@ -1797,18 +1797,24 @@ class Engine {
 					'context'  => null,
 				);
 			}
+			// The visitor already reads this text in the page language: our translation, or a label
+			// WordPress itself translated («Cerca», the 404 page). The visual editor must not count
+			// it as missing (73% on a page translated in full, 1.8.30.4).
+			$tradotto = isset( Gettext::$wp_translated[ $text ] );
 			if ( isset( $map[ $text ] ) ) {
 				$node->nodeValue = str_replace( $text, $map[ $text ], (string) $node->nodeValue );
 				$changed         = true;
+				$tradotto        = true;
 			} elseif ( null !== $senza && isset( $map[ $senza[1] ] ) ) {
 				$node->nodeValue = str_replace( $text, $senza[0] . $map[ $senza[1] ], (string) $node->nodeValue );
 				$changed         = true;
+				$tradotto        = true;
 			} else {
 				$with = self::with_quoted( $text, $map );
 				if ( null === $with ) {
 					$with = self::with_affix( $text, $map, $affix );
 				}
-				if ( null !== $with ) {
+				if ( null !== $with ) { // only a name inside the sentence: the rest may still be in the source language
 					$node->nodeValue = str_replace( $text, $with, (string) $node->nodeValue );
 					$changed         = true;
 				}
@@ -1817,7 +1823,7 @@ class Engine {
 				$span = $dom->createElement( 'span' );
 				// Flag nodes still showing the source (no translation yet) so the
 				// editor can mark them as "to translate".
-				$span->setAttribute( 'class', isset( $map[ $text ] ) ? 'trrocket-ed' : 'trrocket-ed trrocket-ed-untr' );
+				$span->setAttribute( 'class', $tradotto ? 'trrocket-ed' : 'trrocket-ed trrocket-ed-untr' );
 				$span->setAttribute( 'data-trr-src', rawurlencode( $text ) );
 				// a theme or shop label WordPress translated: its real original, for «Restore original» (1.8.21)
 				if ( isset( Gettext::$originals[ trim( $text ) ] ) ) {
