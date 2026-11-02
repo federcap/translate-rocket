@@ -4228,7 +4228,15 @@ JS;
 				@set_time_limit( 120 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			}
 			$r = Translator::translate_missing( $lang, $loc, 0, false, $solo, microtime( true ) + 25 );
-			\TranslateRocket\Cache::flush();
+			// 2/11/2026: one page shows at once; the whole site, step after step, empties the site's caches at most every
+			// ten minutes and at once on its last step (Cache::bulk_step()).
+			if ( '' !== $loc ) {
+				\TranslateRocket\Cache::flush_later(); // once at the end of the request (the step booked it already)
+			} elseif ( ! empty( $r['more'] ) ) {
+				\TranslateRocket\Cache::bulk_step();
+			} else {
+				\TranslateRocket\Cache::bulk_done();
+			}
 		}
 		$totale = $prima + (int) $r['count'];
 		$tenute = ( isset( $_POST['kept'] ) ? max( 0, (int) $_POST['kept'] ) : 0 ) + (int) ( $r['kept'] ?? 0 );

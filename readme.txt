@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.30.4
+Stable tag: 1.8.30.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.30.5 =
+* Fixed: translating the whole site in the browser, or with «Translate all», emptied every cache of the site (the plugin's own, the cache plugin's — WP Fastest Cache, LiteSpeed Cache, WP Rocket… — and the host's) after every batch of 60 sentences, about every 40 seconds for as long as the run lasted: a shop with 277,000 sentences ran a whole day without its page cache and got slow. A long run now empties the caches at most once every ten minutes, and once more when it ends; a page saved in the visual editor still shows at once.
+* Improved: every batch saved by the browser engine refreshes the translation maps once, not once per sentence.
+* Fixed: when a free engine (Groq, Cloudflare Workers AI, OpenRouter) answered «rate limit reached, try again in a few seconds» in bursts, a step of «Translate all» could spend over a minute waiting and retrying sentence by sentence inside one request — a proxy cuts it at 60 seconds and the run looked dead. The step now ends at once, says «the free engine asked for a short pause: the translation goes on by itself in N seconds», and resumes on its own.
 
 = 1.8.30.4 =
 * Fixed: the visual editor counted as missing the texts WordPress, the theme or WooCommerce already show in the page language («Search», the 404 page, the cart: «Tu carrito», «Ver mi carrito»...), so a page translated in full could show 73%. They now count as translated; a sentence where only a name was translated still counts as missing.
@@ -623,6 +628,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.30.5 =
+Translating the whole site no longer empties the site's caches after every batch of sentences (at most every ten minutes, and once at the end).
 
 = 1.8.30.4 =
 The visual editor's progress no longer counts texts WordPress already shows in the page language as missing.

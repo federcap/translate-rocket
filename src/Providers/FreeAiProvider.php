@@ -83,7 +83,9 @@ abstract class FreeAiProvider extends LlmProvider {
 		if ( $this->quick ) {
 			return $r;
 		}
-		if ( 429 === $r['code'] && $r['retry'] > 0 && $r['retry'] <= 25 ) {
+		// 2/11/2026: a pause of a few seconds is waited out here, once; a longer one is a rest the run announces and
+		// resumes by itself (OpenAiCompatProvider / CloudflareProvider) — never 25 s asleep inside one request.
+		if ( 429 === $r['code'] && $r['retry'] > 0 && $r['retry'] <= 6 ) {
 			sleep( $r['retry'] + 1 );
 			$r = $this->post_json( $url, $body, $headers );
 		} elseif ( 0 === $r['code'] || in_array( $r['code'], array( 500, 502, 503, 504, 520, 522, 524 ), true ) ) {

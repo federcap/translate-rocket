@@ -75,6 +75,13 @@ class BrowserEngine {
 		// One page's editor sends its hash: only that page's strings (6/10/2026).
 		$loc     = isset( $_POST['loc'] ) ? sanitize_text_field( wp_unslash( $_POST['loc'] ) ) : '';
 		$pending = Translator::pending_for_browser( $lang, $loc, self::BATCH );
+		if ( '' === $loc ) {
+			if ( empty( $pending['items'] ) ) {
+				\TranslateRocket\Cache::bulk_done_if_waiting(); // the run is over: its last sentences show now
+			} else {
+				\TranslateRocket\Cache::bulk_mode(); // the translations reused and saved here are one step of the run too
+			}
+		}
 
 		wp_send_json_success(
 			array(
@@ -122,13 +129,24 @@ class BrowserEngine {
 		if ( ! empty( $res['saved'] ) ) {
 			update_option( self::NOW, array( 'lang' => $lang, 't' => time() ), false );
 		}
-		\TranslateRocket\Cache::flush();
+		// One page (the visual editor sends its hash): it shows at once. The whole site, 60 sentences at a time for
+		// hours: the site's caches are emptied at most every ten minutes, and at once when nothing is left (see
+		// Cache::bulk_step(), 2/11/2026).
+		$loc     = isset( $_POST['loc'] ) ? sanitize_text_field( wp_unslash( $_POST['loc'] ) ) : '';
+		$missing = Strings::untranslated_count( $lang, true );
+		if ( '' !== $loc ) {
+			\TranslateRocket\Cache::flush_later(); // once at the end of the request (the saves booked it already)
+		} elseif ( $missing > 0 ) {
+			\TranslateRocket\Cache::bulk_step();
+		} else {
+			\TranslateRocket\Cache::bulk_done();
+		}
 
 		wp_send_json_success(
 			array(
 				'saved'   => (int) $res['saved'],
 				'skipped' => (int) $res['skipped'],
-				'missing' => Strings::untranslated_count( $lang, true ),
+				'missing' => $missing,
 			)
 		);
 	}

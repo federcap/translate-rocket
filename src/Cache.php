@@ -154,7 +154,58 @@ class Cache {
 			return;
 		}
 		self::$da_svuotare = false;
+		if ( self::$bulk ) {
+			self::flush_background();
+			return;
+		}
 		self::flush();
+	}
+
+	/**
+	 * Whether this request is one step of a long run over the whole site (see bulk_step()).
+	 *
+	 * @var bool
+	 */
+	private static $bulk = false;
+
+	/**
+	 * 2/11/2026 (1.8.30.5, a deactivation «slow»: a WooCommerce shop with 277,000 sentences, 110,000 translated in 20
+	 * hours by the browser engine, WP Fastest Cache): every batch of 60 sentences the browser saved emptied the whole
+	 * site's page cache, about every 40 s for the whole day, so the shop ran without its cache. The same for each
+	 * 25-second step of «Translate all». One step of such a run is now background work: the caches are emptied at most
+	 * every ten minutes (flush_background()), and the run's last step empties them at once (bulk_done()).
+	 */
+	public static function bulk_step(): void {
+		self::bulk_mode();
+		self::flush_later();
+	}
+
+	/**
+	 * This request is part of a long run: whatever books a flush here (a translation reused and saved while handing
+	 * out the next batch) empties the site's caches at most every ten minutes, not at once.
+	 */
+	public static function bulk_mode(): void {
+		self::$bulk = true;
+	}
+
+	/**
+	 * The last step of a long run: everything it translated shows now.
+	 */
+	public static function bulk_done(): void {
+		self::$bulk        = false;
+		self::$da_svuotare = false;
+		wp_clear_scheduled_hook( self::QUIET_EVENT );
+		update_option( self::QUIET_LAST, time(), false );
+		self::flush();
+	}
+
+	/**
+	 * A run found nothing left to do: if a flush is still waiting for its ten minutes, it happens now.
+	 */
+	public static function bulk_done_if_waiting(): void {
+		if ( wp_next_scheduled( self::QUIET_EVENT ) ) {
+			self::bulk_done();
+		}
 	}
 
 	/**

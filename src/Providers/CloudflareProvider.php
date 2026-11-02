@@ -105,7 +105,12 @@ class CloudflareProvider extends FreeAiProvider {
 				$perche = (string) ( $r['data']['errors'][0]['message'] ?? '' );
 				return array( 'error' => '' !== $perche ? $this->label() . ': HTTP ' . $r['code'] . ': ' . $perche : $this->unreadable( (string) $r['raw'] ) );
 			}
-			return array( 'error' => $this->label() . ': ' . $r['error'] );
+			$out = array( 'error' => $this->label() . ': ' . $r['error'] );
+			// 2/11/2026: a 429 that says when to come back is a short rest, not a failure (see OpenAiCompatProvider).
+			if ( 429 === (int) $r['code'] && (int) $r['retry'] > 0 && false === stripos( (string) $r['raw'], 'insufficient_quota' ) ) {
+				$out['rest'] = time() + min( 180, max( 3, (int) $r['retry'] + 1 ) );
+			}
+			return $out;
 		}
 		FreeUsage::add( $this->id(), (float) ( $r['data']['result']['usage']['neurons'] ?? 0 ), 0 );
 		return array( 'result' => (array) $r['data']['result'] );
@@ -114,7 +119,7 @@ class CloudflareProvider extends FreeAiProvider {
 	protected function chat( string $prompt ): TranslationResult {
 		$r = $this->run( self::BEST, array( 'messages' => array( array( 'role' => 'user', 'content' => $prompt ) ), 'max_tokens' => 4000, 'temperature' => 0.2 ) );
 		if ( isset( $r['error'] ) ) {
-			return TranslationResult::fail( $r['error'] );
+			return ! empty( $r['rest'] ) ? TranslationResult::rest( $r['error'], (int) $r['rest'] ) : TranslationResult::fail( $r['error'] );
 		}
 		$resp = $r['result']['response'] ?? '';
 		// Cloudflare may hand the JSON list already decoded: give it back as JSON text.
@@ -156,7 +161,7 @@ class CloudflareProvider extends FreeAiProvider {
 			$r = $this->run( self::VOLUME, array( 'text' => (string) $t, 'source_lang' => substr( strtolower( $source ), 0, 2 ), 'target_lang' => substr( strtolower( $target ), 0, 2 ) ) );
 			if ( isset( $r['error'] ) ) {
 				if ( empty( $out ) ) {
-					return TranslationResult::fail( $r['error'] );
+					return ! empty( $r['rest'] ) ? TranslationResult::rest( $r['error'], (int) $r['rest'] ) : TranslationResult::fail( $r['error'] );
 				}
 				break;
 			}

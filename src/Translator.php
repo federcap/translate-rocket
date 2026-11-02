@@ -617,6 +617,9 @@ class Translator {
 
 		$saved   = 0;
 		$skipped = 0;
+		// 2/11/2026: the maps are flushed once per batch, not once per sentence (60 DELETEs on the options table per
+		// batch, every 40 s for a day on a 277,000-sentence shop); same as one step of «Translate all».
+		Strings::defer_start();
 		foreach ( $items as $item ) {
 			$text        = trim( (string) ( $item['text'] ?? '' ) );
 			$translation = trim( (string) ( $item['translation'] ?? '' ) );
@@ -634,6 +637,7 @@ class Translator {
 			}
 			self::save_group( $group, $lang, $translation, 'browser', $text, $saved );
 		}
+		Strings::defer_end();
 
 		return array(
 			'saved'   => $saved,

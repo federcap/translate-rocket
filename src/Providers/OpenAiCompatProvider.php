@@ -53,6 +53,13 @@ abstract class OpenAiCompatProvider extends FreeAiProvider {
 			);
 			if ( isset( $r['error'] ) ) {
 				$ultimo = array( 'error' => $this->label() . ': ' . $r['error'] );
+				// 2/11/2026 (a shop on Hostinger left «could not make it work»; the same day Groq answered «Rate limit
+				// reached … tokens per minute» in bursts): a 429 that says when to come back is a short rest, not a
+				// failure — the step ends now and says «goes on by itself in N seconds», instead of sleeping and
+				// retrying sentence by sentence inside the request (one step took 63 s: a proxy cuts it at 60).
+				if ( 429 === (int) $r['code'] && (int) $r['retry'] > 0 && false === stripos( (string) $r['raw'], 'insufficient_quota' ) ) {
+					$ultimo['rest'] = time() + min( 180, max( 3, (int) $r['retry'] + 1 ) );
+				}
 				if ( in_array( $r['code'], array( 401, 403 ), true ) ) {
 					break; // the key: another model would not help
 				}
@@ -67,7 +74,7 @@ abstract class OpenAiCompatProvider extends FreeAiProvider {
 	protected function chat( string $prompt ): TranslationResult {
 		$r = $this->ask( array( array( 'role' => 'user', 'content' => $prompt ) ), 4000 );
 		if ( isset( $r['error'] ) ) {
-			return TranslationResult::fail( $r['error'] );
+			return ! empty( $r['rest'] ) ? TranslationResult::rest( $r['error'], (int) $r['rest'] ) : TranslationResult::fail( $r['error'] );
 		}
 		if ( '' === trim( $r['text'] ) ) {
 			if ( 'content_filter' === ( $r['finish'] ?? '' ) ) {
