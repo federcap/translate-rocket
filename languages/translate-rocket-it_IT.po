@@ -7088,3 +7088,31 @@ msgid "Sentences left: %1$s in %2$d language"
 msgid_plural "Sentences left: %1$s in %2$d languages"
 msgstr[0] "Frasi da tradurre: %1$s in %2$d lingua"
 msgstr[1] "Frasi da tradurre: %1$s in %2$d lingue"
+
+#: src/Admin/Admin.php
+msgid "Nothing else to set up: this browser translates your site for free, with no key."
+msgstr "Nient’altro da configurare: questo browser traduce il tuo sito gratis, senza chiavi."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner)."
+msgstr "Premi «Fine e inizia a tradurre» e la tua pagina iniziale si traduce davanti a te. Il selettore delle lingue va nel tuo menu (o fluttua in un angolo)."
+
+#: src/Admin/Admin.php
+msgid "More options →"
+msgstr "Altre opzioni →"
+
+#: src/Frontend/VisualEditor.php
+msgid "Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself."
+msgstr "Premi il pulsante per iniziare. La prima volta il browser scarica questa lingua (circa un minuto), poi traduce la pagina da solo."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or use the free AI in the next step."
+msgstr "Il traduttore integrato in questo browser non conosce una delle lingue che hai scelto. Senza nessuna chiave: chiedi TranslateRocket Labs, gratis — traduce dal tuo server, in tutte le lingue. Oppure usa l’AI gratuita nel passo successivo."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation."
+msgstr "Premi «Fine e inizia a tradurre»: le lingue vengono salvate e la pagina iniziale si apre pronta da tradurre — copia il testo in un traduttore qualsiasi e incollalo di nuovo. Per tradurre tutto in automatico, aggiungi una chiave AI gratuita ora in «Altre opzioni», oppure più tardi in Traduzione AI."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
+msgstr "Il traduttore integrato in questo browser non conosce una delle lingue che hai scelto. Senza nessuna chiave: chiedi TranslateRocket Labs, gratis — traduce dal tuo server, in tutte le lingue. Oppure aggiungi una chiave AI gratuita in «Altre opzioni»."

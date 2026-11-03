@@ -7738,3 +7738,31 @@ msgid "Sentences left: %1$s in %2$d language"
 msgid_plural "Sentences left: %1$s in %2$d languages"
 msgstr[0] "Kalan cümle: %1$s, %2$d dilde"
 msgstr[1] "Kalan cümle: %1$s, %2$d dilde"
+
+#: src/Admin/Admin.php
+msgid "Nothing else to set up: this browser translates your site for free, with no key."
+msgstr "Başka ayar yok: bu tarayıcı sitenizi ücretsiz ve anahtarsız çevirir."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner)."
+msgstr "«Bitir ve çevirmeye başla»ya basın, ana sayfanız gözünüzün önünde çevrilsin. Dil seçici menünüze yerleşir (ya da bir köşede yüzer)."
+
+#: src/Admin/Admin.php
+msgid "More options →"
+msgstr "Daha fazla seçenek →"
+
+#: src/Frontend/VisualEditor.php
+msgid "Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself."
+msgstr "Başlamak için düğmeye basın. İlk seferde tarayıcınız bu dili indirir (yaklaşık bir dakika), sonra sayfayı kendisi çevirir."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or use the free AI in the next step."
+msgstr "Bu tarayıcının yerleşik çevirmeni seçtiğiniz dillerden birini bilmiyor. Hiç anahtar olmadan: TranslateRocket Labs'ı ücretsiz isteyin — sunucunuzdan her dile çevirir. Ya da sonraki adımdaki ücretsiz yapay zekâyı kullanın."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation."
+msgstr "«Bitir ve çevirmeye başla»ya basın: dilleriniz kaydedilir ve ana sayfanız çevrilmeye hazır olarak açılır — metnini herhangi bir çeviriciye kopyalayıp geri yapıştırın. Her şeyi otomatik çevirmek için şimdi «Daha fazla seçenek» bölümünde ücretsiz bir yapay zekâ anahtarı ekleyin ya da daha sonra Yapay Zekâ Çevirisi'nde ekleyin."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
+msgstr "Bu tarayıcının yerleşik çevirmeni seçtiğiniz dillerden birini bilmiyor. Hiç anahtar olmadan: TranslateRocket Labs'ı ücretsiz isteyin — sunucunuzdan her dile çevirir. Ya da «Daha fazla seçenek» bölümünde ücretsiz bir yapay zekâ anahtarı ekleyin."

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.30.5
+Stable tag: 1.8.30.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,13 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.30.6 =
+* Fixed: a REST request made from a translated page (/fr/wp-json/…, used by other plugins to load their apps, maps and lists) loaded every translation of the language into memory to translate its answer. On a site with WooCommerce and a 128 MB PHP limit the request died with «Allowed memory size exhausted» in the translated languages only. REST and AJAX answers now look up only the sentences they contain.
+* Improved: the setup wizard is one screen, in every browser: pick the languages and press «Finish & start translating» — no key, nothing else to choose. The engine and the switcher wait behind «More options». When the browser can translate every language you picked (Chrome and Edge on a computer) the homepage is translated in front of you; otherwise the wizard says how to go on without a key (copy and paste into any translator, a free AI key, or Labs). «Finish» waits until at least one language is ticked.
+* Fixed: arriving from the wizard, the in-browser translation of the homepage started without a click, and Chrome downloads a language only after a real click: it could sit at «Downloading the language model… 0%». When the language still has to be downloaded, the button now lights up and asks for that one click.
+* Fixed: after an error the in-browser translator was rebuilt without closing the old one; after a few errors Chrome refused them all («translation service count exceeded») and the page ended with 0 sentences translated.
+* Fixed: the German label of the wizard's «Finish» button.
 
 = 1.8.30.5 =
 * Fixed: translating the whole site in the browser, or with «Translate all», emptied every cache of the site (the plugin's own, the cache plugin's — WP Fastest Cache, LiteSpeed Cache, WP Rocket… — and the host's) after every batch of 60 sentences, about every 40 seconds for as long as the run lasted: a shop with 277,000 sentences ran a whole day without its page cache and got slow. A long run now empties the caches at most once every ten minutes, and once more when it ends; a page saved in the visual editor still shows at once.
@@ -628,6 +635,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.30.6 =
+Fixes REST requests from translated pages running out of memory, and a one-screen setup in every browser — no key needed to start.
 
 = 1.8.30.5 =
 Translating the whole site no longer empties the site's caches after every batch of sentences (at most every ten minutes, and once at the end).

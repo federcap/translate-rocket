@@ -7710,3 +7710,31 @@ msgstr[0] "모든 문장이 %d개 언어로 번역되었습니다."
 msgid "Sentences left: %1$s in %2$d language"
 msgid_plural "Sentences left: %1$s in %2$d languages"
 msgstr[0] "남은 문장: %2$d개 언어에서 %1$s"
+
+#: src/Admin/Admin.php
+msgid "Nothing else to set up: this browser translates your site for free, with no key."
+msgstr "더 설정할 것이 없습니다. 이 브라우저가 키 없이 무료로 사이트를 번역합니다."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner)."
+msgstr "「완료하고 번역 시작」을 누르면 눈앞에서 홈페이지가 번역됩니다. 언어 전환기는 메뉴에 들어갑니다(또는 모서리에 떠 있습니다)."
+
+#: src/Admin/Admin.php
+msgid "More options →"
+msgstr "추가 옵션 →"
+
+#: src/Frontend/VisualEditor.php
+msgid "Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself."
+msgstr "버튼을 눌러 시작하세요. 처음에는 브라우저가 이 언어를 내려받고(약 1분), 그다음 페이지를 알아서 번역합니다."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or use the free AI in the next step."
+msgstr "이 브라우저의 내장 번역기는 선택한 언어 중 하나를 지원하지 않습니다. 키 없이: TranslateRocket Labs를 무료로 요청하세요. 서버에서 모든 언어로 번역합니다. 또는 다음 단계의 무료 AI를 사용하세요."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation."
+msgstr "「완료하고 번역 시작」을 누르면 언어가 저장되고 홈페이지가 번역할 준비가 된 상태로 열립니다. 텍스트를 아무 번역기에 복사한 뒤 다시 붙여 넣으세요. 모든 것을 자동으로 번역하려면 지금 「추가 옵션」에서 무료 AI 키를 추가하거나 나중에 AI 번역에서 추가하세요."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
+msgstr "이 브라우저의 내장 번역기는 선택한 언어 중 하나를 지원하지 않습니다. 키 없이: TranslateRocket Labs를 무료로 요청하세요. 서버에서 모든 언어로 번역합니다. 또는 「추가 옵션」에서 무료 AI 키를 추가하세요."

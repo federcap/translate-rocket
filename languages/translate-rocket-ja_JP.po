@@ -6865,3 +6865,31 @@ msgstr[0] "すべての文が %d 言語に翻訳済みです。"
 msgid "Sentences left: %1$s in %2$d language"
 msgid_plural "Sentences left: %1$s in %2$d languages"
 msgstr[0] "残りの文：%2$d 言語で %1$s"
+
+#: src/Admin/Admin.php
+msgid "Nothing else to set up: this browser translates your site for free, with no key."
+msgstr "ほかに設定は不要です。このブラウザーがキーなしで、無料でサイトを翻訳します。"
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner)."
+msgstr "「完了して翻訳を始める」を押すと、目の前でホームページが翻訳されます。言語スイッチャーはメニューに入ります（またはページの隅に浮かびます）。"
+
+#: src/Admin/Admin.php
+msgid "More options →"
+msgstr "その他のオプション →"
+
+#: src/Frontend/VisualEditor.php
+msgid "Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself."
+msgstr "ボタンを押すと始まります。初回はブラウザーがこの言語をダウンロードし（約1分）、そのあと自動でページを翻訳します。"
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or use the free AI in the next step."
+msgstr "このブラウザーの内蔵翻訳は、選んだ言語のうち1つに対応していません。キー不要の方法：TranslateRocket Labs を無料でリクエストしてください。サーバーからすべての言語に翻訳します。または次のステップの無料 AI を使ってください。"
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation."
+msgstr "「完了して翻訳を始める」を押すと、言語が保存され、ホームページが翻訳できる状態で開きます。テキストを任意の翻訳ツールにコピーして、貼り付けて戻してください。すべてを自動で翻訳するには、いま「その他のオプション」で無料の AI キーを追加するか、あとで「AI 翻訳」で追加してください。"
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
+msgstr "このブラウザーの内蔵翻訳は、選んだ言語のうち1つに対応していません。キー不要の方法：TranslateRocket Labs を無料でリクエストしてください。サーバーからすべての言語に翻訳します。または「その他のオプション」で無料の AI キーを追加してください。"

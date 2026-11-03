@@ -7710,3 +7710,31 @@ msgstr[0] "Semua kalimat sudah diterjemahkan ke %d bahasa."
 msgid "Sentences left: %1$s in %2$d language"
 msgid_plural "Sentences left: %1$s in %2$d languages"
 msgstr[0] "Kalimat tersisa: %1$s dalam %2$d bahasa"
+
+#: src/Admin/Admin.php
+msgid "Nothing else to set up: this browser translates your site for free, with no key."
+msgstr "Tidak ada lagi yang perlu diatur: browser ini menerjemahkan situs Anda secara gratis, tanpa kunci."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner)."
+msgstr "Tekan «Selesai & mulai menerjemahkan» dan beranda Anda diterjemahkan di depan mata Anda. Pengalih bahasa masuk ke menu Anda (atau melayang di sudut)."
+
+#: src/Admin/Admin.php
+msgid "More options →"
+msgstr "Opsi lainnya →"
+
+#: src/Frontend/VisualEditor.php
+msgid "Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself."
+msgstr "Tekan tombol untuk memulai. Pertama kali, browser Anda mengunduh bahasa ini (sekitar satu menit), lalu menerjemahkan halaman dengan sendirinya."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or use the free AI in the next step."
+msgstr "Penerjemah bawaan browser ini tidak mengenal salah satu bahasa yang Anda pilih. Tanpa kunci apa pun: minta TranslateRocket Labs, gratis — menerjemahkan dari server Anda, ke semua bahasa. Atau gunakan AI gratis di langkah berikutnya."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation."
+msgstr "Tekan «Selesai & mulai menerjemahkan»: bahasa Anda tersimpan dan beranda Anda terbuka siap diterjemahkan — salin teksnya ke penerjemah mana pun lalu tempel kembali. Untuk menerjemahkan semuanya secara otomatis, tambahkan kunci AI gratis sekarang di «Opsi lainnya», atau nanti di Terjemahan AI."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
+msgstr "Penerjemah bawaan browser ini tidak mengenal salah satu bahasa yang Anda pilih. Tanpa kunci apa pun: minta TranslateRocket Labs, gratis — menerjemahkan dari server Anda, ke semua bahasa. Atau tambahkan kunci AI gratis di «Opsi lainnya»."

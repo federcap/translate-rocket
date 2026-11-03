@@ -6893,3 +6893,31 @@ msgid "Sentences left: %1$s in %2$d language"
 msgid_plural "Sentences left: %1$s in %2$d languages"
 msgstr[0] "Resterende zinnen: %1$s in %2$d taal"
 msgstr[1] "Resterende zinnen: %1$s in %2$d talen"
+
+#: src/Admin/Admin.php
+msgid "Nothing else to set up: this browser translates your site for free, with no key."
+msgstr "Verder hoef je niets in te stellen: deze browser vertaalt je site gratis, zonder sleutel."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner)."
+msgstr "Klik op «Afronden en beginnen met vertalen» en je startpagina wordt voor je ogen vertaald. De taalkiezer komt in je menu (of zweeft in een hoek)."
+
+#: src/Admin/Admin.php
+msgid "More options →"
+msgstr "Meer opties →"
+
+#: src/Frontend/VisualEditor.php
+msgid "Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself."
+msgstr "Druk op de knop om te beginnen. De eerste keer downloadt je browser deze taal (ongeveer een minuut), daarna vertaalt hij de pagina vanzelf."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or use the free AI in the next step."
+msgstr "De ingebouwde vertaler van deze browser kent een van de gekozen talen niet. Zonder sleutel: vraag gratis TranslateRocket Labs aan — het vertaalt vanaf je server, in elke taal. Of gebruik de gratis AI in de volgende stap."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation."
+msgstr "Klik op «Afronden en beginnen met vertalen»: je talen worden opgeslagen en je startpagina opent klaar om te vertalen — kopieer de tekst naar een willekeurige vertaler en plak hem terug. Om alles automatisch te vertalen, voeg je nu een gratis AI-sleutel toe bij «Meer opties», of later bij AI-vertaling."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
+msgstr "De ingebouwde vertaler van deze browser kent een van de gekozen talen niet. Zonder sleutel: vraag gratis TranslateRocket Labs aan — het vertaalt vanaf je server, in elke taal. Of voeg een gratis AI-sleutel toe bij «Meer opties»."

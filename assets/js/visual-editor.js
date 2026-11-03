@@ -237,6 +237,12 @@
 	// barra sotto il pulsante. Una sola funzione alla volta, sostituita a ogni lavoro.
 	var suScaricamento = null;
 	function prendiTraduttore( rifai ) {
+		// 3/11/2026 (new user, Chrome, German: «The translation service count exceeded the limitation», 0 of 47):
+		// every retry made a new translator and left the old one open, until Chrome refused them all. The old one
+		// is closed before a new one is made.
+		if ( rifai && trBrowserPromessa ) {
+			trBrowserPromessa.then( function ( vecchio ) { try { if ( vecchio && vecchio.destroy ) { vecchio.destroy(); } } catch ( e ) {} }, function () {} );
+		}
 		if ( rifai ) { trBrowserPromessa = null; }
 		if ( ! trBrowserPromessa ) {
 			trBrowserPromessa = Translator.create( {
@@ -262,7 +268,8 @@
 	function traduciUnaVolta( testo ) {
 		return prendiTraduttore().then( function ( tr ) {
 			return tr.translate( testo );
-		} ).catch( function () {
+		} ).catch( function ( err ) {
+			if ( ! traduciUnaVolta.detto ) { traduciUnaVolta.detto = true; try { console.warn( 'TranslateRocket: the browser translator refused a sentence:', err && ( err.name + ': ' + err.message ) ); } catch ( e ) {} }
 			return prendiTraduttore( true ).then( function ( tr2 ) {
 				return tr2.translate( testo );
 			} );
@@ -2757,6 +2764,22 @@
 					return;
 				}
 				if ( panel.hidden ) { btn.click(); }
+				// 3/11/2026 (new user, Chrome, German: «Downloading the language model… 0%» for four minutes): Chrome
+				// downloads a language only after a real click, and this start has none. When the language still has
+				// to be downloaded, the big button waits for that one click instead, lit up and saying why.
+				if ( go && go === br && typeof Translator !== 'undefined' && Translator.availability ) {
+					Translator.availability( { sourceLanguage: VE.srcBcp, targetLanguage: VE.dstBcp } ).then( function ( st ) {
+						if ( 'available' === st ) { go.click(); return; }
+						go.classList.add( 'trrocket-ve-pulse' );
+						var invito = document.createElement( 'p' );
+						invito.className = 'trrocket-ve-bulk-invito';
+						invito.textContent = VE.i18n.bulkFirstClick || '';
+						go.parentNode.insertBefore( invito, go.nextSibling );
+						go.addEventListener( 'click', function () { go.classList.remove( 'trrocket-ve-pulse' ); invito.remove(); }, { once: true } );
+						try { go.focus(); go.scrollIntoView( { block: 'nearest' } ); } catch ( e ) {}
+					} ).catch( function () { go.click(); } );
+					return;
+				}
 				if ( go ) { go.click(); }
 			};
 			setTimeout( primoAvvio, 600 );

@@ -1146,7 +1146,12 @@ class Strings {
 			return array();
 		}
 
-		if ( ! self::is_huge() ) {
+		// 3/11/2026 (ticket 28: «Allowed memory size of 134217728 bytes exhausted» on /fr/wp-json/…/bootstrap, fine in
+		// English): a REST or AJAX answer needs a handful of sentences, not the whole language — loading the full map
+		// (every row, then the array, then its cached copy) cost 25+ MB on top of WooCommerce and broke the call.
+		// There only the sentences asked for are looked up, unless the map is already in memory.
+		$lean = ! isset( self::$map_cache[ $lang ] ) && ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || wp_doing_ajax() );
+		if ( isset( self::$map_cache[ $lang ] ) || ( ! $lean && ! self::is_huge() ) ) {
 			$map = self::map_for_language( $lang );
 			$out = array();
 			foreach ( $wanted as $text => $unused ) {

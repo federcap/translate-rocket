@@ -283,6 +283,7 @@ class VisualEditor {
 					'bulkGt'         => __( 'Auto-translate everything with Google', 'translate-rocket' ),
 					'bulkNoProvider' => __( 'Add an AI key (or enable free Google) in TranslateRocket settings to auto-translate. Meanwhile, use copy-paste below.', 'translate-rocket' ),
 					'bulkBrowser'    => __( 'Translate everything in this browser — no key', 'translate-rocket' ),
+					'bulkFirstClick' => __( 'Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself.', 'translate-rocket' ),
 					'bulkBrowserTip' => __( 'Chrome and Edge on a computer can translate on the device itself: it costs nothing and the text never leaves your machine. Quality is below the AI models.', 'translate-rocket' ),
 					'bulkBrowserDl'  => __( 'Downloading the language model — this happens once…', 'translate-rocket' ),
 					'bulkBrowserErr' => __( 'The browser translator stopped with an error.', 'translate-rocket' ),

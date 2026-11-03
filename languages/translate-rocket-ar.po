@@ -7850,3 +7850,31 @@ msgstr[2] "الجمل المتبقية: %1$s في %2$d لغة"
 msgstr[3] "الجمل المتبقية: %1$s في %2$d لغة"
 msgstr[4] "الجمل المتبقية: %1$s في %2$d لغة"
 msgstr[5] "الجمل المتبقية: %1$s في %2$d لغة"
+
+#: src/Admin/Admin.php
+msgid "Nothing else to set up: this browser translates your site for free, with no key."
+msgstr "لا شيء آخر لإعداده: هذا المتصفح يترجم موقعك مجانًا، دون أي مفتاح."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner)."
+msgstr "اضغط «إنهاء وبدء الترجمة» وستُترجم صفحتك الرئيسية أمامك. يوضع مبدّل اللغة في قائمتك (أو يطفو في زاوية)."
+
+#: src/Admin/Admin.php
+msgid "More options →"
+msgstr "خيارات أخرى ←"
+
+#: src/Frontend/VisualEditor.php
+msgid "Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself."
+msgstr "اضغط الزر للبدء. في المرة الأولى ينزّل متصفحك هذه اللغة (نحو دقيقة)، ثم يترجم الصفحة وحده."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or use the free AI in the next step."
+msgstr "المترجم المدمج في هذا المتصفح لا يعرف إحدى اللغات التي اخترتها. دون أي مفتاح: اطلب TranslateRocket Labs مجانًا — يترجم من خادمك وبكل اللغات. أو استخدم الذكاء الاصطناعي المجاني في الخطوة التالية."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation."
+msgstr "اضغط «إنهاء وبدء الترجمة»: تُحفظ لغاتك وتُفتح صفحتك الرئيسية جاهزة للترجمة — انسخ نصها إلى أي مترجم ثم الصقه مرة أخرى. لترجمة كل شيء تلقائيًا، أضف مفتاح ذكاء اصطناعي مجانيًا الآن في «خيارات أخرى»، أو لاحقًا في ترجمة الذكاء الاصطناعي."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
+msgstr "المترجم المدمج في هذا المتصفح لا يعرف إحدى اللغات التي اخترتها. دون أي مفتاح: اطلب TranslateRocket Labs مجانًا — يترجم من خادمك وبكل اللغات. أو أضف مفتاح ذكاء اصطناعي مجانيًا في «خيارات أخرى»."

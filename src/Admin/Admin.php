@@ -6237,6 +6237,20 @@ JS;
 							</label>
 						<?php endforeach; ?>
 					</div>
+					<?php
+					// 3/11/2026 (who left after 12 hours, Chrome, wizard never finished: «too many settings, the AI keys,
+					// where to start»): in Chrome and Edge the site translates for free with no key — then the languages
+					// are the only question, engine and switcher wait behind «More options».
+					?>
+					<?php if ( ! defined( 'TRRLABS_VERSION' ) ) : ?>
+					<p class="trr-wiz-nolang" id="trr-wiz-nolang" style="margin:22px 0 0;padding:12px 16px;border-left:4px solid #dba617;background:#fcf9e8;border-radius:6px;font-size:14px;line-height:1.55" hidden><?php esc_html_e( 'The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options».', 'translate-rocket' ); ?> <a href="https://translaterocket.com/labs/?utm_source=plugin&amp;utm_medium=wizard" target="_blank" rel="noopener"><?php esc_html_e( 'About Labs ↗', 'translate-rocket' ); ?></a></p>
+					<?php endif; ?>
+					<?php
+					// 3/11/2026 (second «too complicated» of the day: Chrome, 8 minutes, no language saved — the wall was the key in
+					// step 2): ONE screen for everybody. Where this browser cannot translate by itself, it says how to go on anyway.
+					?>
+					<p class="trr-wiz-slow" id="trr-wiz-slow" style="margin:22px 0 0;padding:12px 16px;border-left:4px solid #2271b1;background:#f0f6fc;border-radius:6px;font-size:14px;line-height:1.55" hidden><?php esc_html_e( 'Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation.', 'translate-rocket' ); ?></p>
+					<p class="trr-wiz-quick" id="trr-wiz-quick" style="margin:22px 0 0;padding:12px 16px;border-left:4px solid #00a32a;background:#edfaef;border-radius:6px;font-size:14px;line-height:1.55" hidden><strong><?php esc_html_e( 'Nothing else to set up: this browser translates your site for free, with no key.', 'translate-rocket' ); ?></strong> <?php esc_html_e( 'Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner).', 'translate-rocket' ); ?></p>
 				</section>
 
 				<!-- Step 2: translation method -->
@@ -6322,6 +6336,7 @@ JS;
 				<div class="trr-wiz-nav">
 					<button type="button" class="button trr-wiz-back" hidden><?php esc_html_e( '← Back', 'translate-rocket' ); ?></button>
 					<span class="trr-wiz-spacer"></span>
+					<button type="button" class="button trr-wiz-more" hidden><?php esc_html_e( 'More options →', 'translate-rocket' ); ?></button>
 					<button type="button" class="button button-primary trr-wiz-next"><?php esc_html_e( 'Next →', 'translate-rocket' ); ?></button>
 					<button type="submit" class="button button-primary trr-wiz-finish" hidden><?php esc_html_e( 'Finish & start translating', 'translate-rocket' ); ?></button>
 				</div>
@@ -6351,7 +6366,61 @@ JS;
 		back.hidden = ( i === 0 );
 		next.hidden = ( i === steps.length - 1 );
 		finish.hidden = ( i !== steps.length - 1 );
+		// The languages are the only question, in every browser (3/11/2026); engine and switcher wait behind «More options».
+		if ( more ) { more.hidden = ( 0 !== i ); }
+		if ( 0 === i ) { next.hidden = true; finish.hidden = false; }
+		// no language ticked: nothing to finish (who left after 8 minutes had saved none)
+		finish.disabled = ! document.querySelector( '.trr-wiz-target input:checked' );
+		var lista = document.querySelector( '.trr-wiz-steps' );
+		if ( lista ) { lista.style.visibility = ( 0 === i ) ? 'hidden' : ''; }
 	}
+	var more = document.querySelector( '.trr-wiz-more' );
+	var quick = false;
+	var toccato = false; // the owner picked an engine by hand: never overridden
+	document.querySelectorAll( 'input[name="trr_method"]' ).forEach( function ( r ) { r.addEventListener( 'change', function ( e ) { if ( e.isTrusted ) { toccato = true; } } ); } );
+	var quickBox = document.getElementById( 'trr-wiz-quick' );
+	function puoTradurre( fatto ) {
+		var uad = navigator.userAgentData;
+		var telefono = ( uad && typeof uad.mobile === 'boolean' ) ? uad.mobile : /Android|iPhone|iPad|iPod|Mobile/i.test( navigator.userAgent || '' );
+		if ( telefono || typeof Translator === 'undefined' || ! Translator.availability || ! window.isSecureContext ) { fatto( false ); return; }
+		// 3/11/2026: EVERY language chosen, not the first one (Chrome's translator knows Finnish but not Estonian); and
+		// only the latest answer counts — two ticks in a row answered in the wrong order showed the long wizard.
+		var da = ( ( document.getElementById( 'trr-wiz-source' ) || {} ).value || 'en' ).split( '-' )[ 0 ];
+		var verso = Array.prototype.map.call( document.querySelectorAll( '.trr-wiz-target input:checked' ), function ( x ) { return x.value.split( '-' )[ 0 ]; } );
+		if ( ! verso.length ) { verso = [ 'en' === da ? 'fr' : 'en' ]; }
+		var mio = ++giro;
+		Promise.all( verso.map( function ( v ) {
+			return Translator.availability( { sourceLanguage: da, targetLanguage: v } ).then( function ( st ) { return !! st && 'unavailable' !== st; } ).catch( function () { return false; } );
+		} ) ).then( function ( tutte ) {
+			if ( mio === giro ) { fatto( tutte.every( Boolean ) ); }
+		} );
+	}
+	var giro = 0;
+	function rapido() {
+		puoTradurre( function ( si ) {
+			quick = si;
+			var scelta = !! document.querySelector( '.trr-wiz-target input:checked' );
+			if ( quickBox ) { quickBox.hidden = ! si; }
+			var slowBox = document.getElementById( 'trr-wiz-slow' );
+			if ( slowBox ) { slowBox.hidden = si || ! scelta; }
+			// 3/11/2026: Chrome has no Estonian, no Latvian…: the way without a key for those is Labs — said here.
+			var nolang = document.getElementById( 'trr-wiz-nolang' );
+			if ( nolang ) { nolang.hidden = si || typeof Translator === 'undefined' || ! document.querySelector( '.trr-wiz-target input:checked' ); }
+			if ( si ) {
+				// the no-key way becomes the first and chosen one in «How do you want to translate?»
+				var man = document.querySelector( 'input[name="trr_method"][value="manual"]' );
+				var primo = document.querySelector( '.trr-wiz-step[data-step="2"] .trr-wiz-radio' );
+				if ( man ) {
+					var lab = man.closest( 'label' );
+					if ( lab && primo && lab !== primo ) { primo.parentNode.insertBefore( lab, primo ); }
+					if ( ! toccato ) { man.checked = true; }
+					man.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+				}
+			}
+			show( i );
+		} );
+	}
+	if ( more ) { more.addEventListener( 'click', function () { show( 1 ); controllaBrowser(); } ); }
 	// Il traduttore del browser c'e'? Solo sui computer, in Chrome ed Edge recenti. Se no, la
 	// nota sotto «No API key for now» dice subito che qui quella strada non funziona.
 	var nobr = document.getElementById( 'trr-wiz-nobr' );
@@ -6377,7 +6446,9 @@ JS;
 			if ( isSrc ) { var cb = el.querySelector( 'input' ); if ( cb ) { cb.checked = false; } }
 		} );
 	}
-	if ( src ) { src.addEventListener( 'change', syncTargets ); }
+	if ( src ) { src.addEventListener( 'change', syncTargets ); src.addEventListener( 'change', rapido ); }
+	document.querySelectorAll( '.trr-wiz-target input' ).forEach( function ( cb ) { cb.addEventListener( 'change', rapido ); } );
+	rapido();
 	// Reveal the AI key fields only when "Use an AI provider" is chosen.
 	var aiBox = document.querySelector( '.trr-wiz-ai' );
 	var freeBox = document.querySelector( '.trr-wiz-free' );

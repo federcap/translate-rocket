@@ -7738,3 +7738,31 @@ msgid "Sentences left: %1$s in %2$d language"
 msgid_plural "Sentences left: %1$s in %2$d languages"
 msgstr[0] "جمله‌های باقی‌مانده: %1$s در %2$d زبان"
 msgstr[1] "جمله‌های باقی‌مانده: %1$s در %2$d زبان"
+
+#: src/Admin/Admin.php
+msgid "Nothing else to set up: this browser translates your site for free, with no key."
+msgstr "چیز دیگری برای تنظیم نیست: این مرورگر سایت شما را رایگان و بدون کلید ترجمه می‌کند."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner)."
+msgstr "روی «پایان و شروع ترجمه» بزنید تا صفحهٔ اصلی شما جلوی چشمتان ترجمه شود. انتخابگر زبان در منوی شما قرار می‌گیرد (یا در گوشه‌ای شناور می‌ماند)."
+
+#: src/Admin/Admin.php
+msgid "More options →"
+msgstr "گزینه‌های بیشتر ←"
+
+#: src/Frontend/VisualEditor.php
+msgid "Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself."
+msgstr "برای شروع دکمه را بزنید. بار اول مرورگر شما این زبان را دانلود می‌کند (حدود یک دقیقه) و بعد خودش صفحه را ترجمه می‌کند."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or use the free AI in the next step."
+msgstr "مترجم داخلی این مرورگر یکی از زبان‌هایی را که انتخاب کرده‌اید نمی‌شناسد. بدون هیچ کلیدی: TranslateRocket Labs را رایگان درخواست کنید — از سرور شما و به همهٔ زبان‌ها ترجمه می‌کند. یا از هوش مصنوعی رایگان در مرحلهٔ بعد استفاده کنید."
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation."
+msgstr "روی «پایان و شروع ترجمه» بزنید: زبان‌های شما ذخیره می‌شوند و صفحهٔ اصلی آمادهٔ ترجمه باز می‌شود — متن آن را در هر مترجمی کپی کنید و دوباره بچسبانید. برای ترجمهٔ خودکار همه‌چیز، همین حالا در «گزینه‌های بیشتر» یک کلید رایگان هوش مصنوعی اضافه کنید، یا بعداً در ترجمهٔ هوش مصنوعی."
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
+msgstr "مترجم داخلی این مرورگر یکی از زبان‌هایی را که انتخاب کرده‌اید نمی‌شناسد. بدون هیچ کلیدی: TranslateRocket Labs را رایگان درخواست کنید — از سرور شما و به همهٔ زبان‌ها ترجمه می‌کند. یا در «گزینه‌های بیشتر» یک کلید رایگان هوش مصنوعی اضافه کنید."

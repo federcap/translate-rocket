@@ -7710,3 +7710,31 @@ msgstr[0] "所有句子都已翻译成 %d 种语言。"
 msgid "Sentences left: %1$s in %2$d language"
 msgid_plural "Sentences left: %1$s in %2$d languages"
 msgstr[0] "剩余句子：%2$d 种语言共 %1$s 句"
+
+#: src/Admin/Admin.php
+msgid "Nothing else to set up: this browser translates your site for free, with no key."
+msgstr "无需其他设置：此浏览器可免费翻译您的网站，无需密钥。"
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner)."
+msgstr "点击「完成并开始翻译」，您的首页就会在您眼前完成翻译。语言切换器会放在您的菜单中（或悬浮在角落）。"
+
+#: src/Admin/Admin.php
+msgid "More options →"
+msgstr "更多选项 →"
+
+#: src/Frontend/VisualEditor.php
+msgid "Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself."
+msgstr "按下按钮即可开始。首次使用时，浏览器会下载该语言（约一分钟），然后自动翻译页面。"
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or use the free AI in the next step."
+msgstr "此浏览器的内置翻译器不支持您所选的某种语言。无需任何密钥：免费申请 TranslateRocket Labs——它从您的服务器翻译成所有语言。或者在下一步使用免费 AI。"
+
+#: src/Admin/Admin.php
+msgid "Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation."
+msgstr "点击「完成并开始翻译」：您的语言将被保存，首页会以待翻译状态打开——将其文本复制到任意翻译工具，再粘贴回来。若要自动翻译全部内容，请现在在「更多选项」中添加免费的 AI 密钥，或稍后在「AI 翻译」中添加。"
+
+#: src/Admin/Admin.php
+msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
+msgstr "此浏览器的内置翻译器不支持您所选的某种语言。无需任何密钥：免费申请 TranslateRocket Labs——它从您的服务器翻译成所有语言。或者在「更多选项」中添加免费的 AI 密钥。"
