@@ -325,10 +325,30 @@ class Translator {
 						if ( $altro ) {
 							self::save_group( $pending[ $text ], $lang, $altro[0], $altro[1], $text, $count );
 							AiUsage::add( mb_strlen( $text ) );
+						} elseif ( ! self::looks_like( $text, $source ) ) {
+							// 3/11/2026 (lungomare.ee, «99%» in every language): guests' reviews in German, Italian, French on an
+							// English site. Asked into its own language, every engine gives a review back as it is — rightly — and
+							// it stayed «to translate» for ever. Not written in the site's language (almost none of its common
+							// words) and unchanged by the whole chain: it is already in the right language, kept as it is.
+							foreach ( $pending[ $text ] as $id ) {
+								if ( Strings::save_translation( (int) $id, $lang, $text, 1, 'kept' ) ) {
+									++$kept;
+								}
+							}
 						}
 					} elseif ( '' !== $uno && self::parts_kept( $text, $uno ) ) {
 						self::save_group( $pending[ $text ], $lang, $uno, $one['provider'], $text, $count );
 						AiUsage::add( mb_strlen( $text ) );
+					} elseif ( '' !== $uno && null !== $one ) {
+						// 3/11/2026 (lungomare.ee, Brizy: «…and the town<1>.</1>This provides…», a bold full stop between two
+						// sentences): the engine joined the sentences and dropped the mark, every time, in every language — one
+						// sentence «to translate» for ever, «99%». As the browser engine already does: the pieces between the
+						// marks one by one, the marks left where they are.
+						$pezzi = self::by_pieces( $providers, $dead, $text, $source, $lang, $error, $resting );
+						if ( null !== $pezzi && self::parts_kept( $text, $pezzi[0] ) ) {
+							self::save_group( $pending[ $text ], $lang, $pezzi[0], $pezzi[1], $text, $count );
+							AiUsage::add( mb_strlen( $text ) );
+						}
 					} elseif ( null !== $one && '' === $uno ) {
 						// 24/10/2026: only when the engine really gave nothing back. A translation that lost the marks
 						// of its links stays pending (parts_kept: «tried again next time»): kept, it was an English
@@ -686,6 +706,88 @@ class Translator {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 3/11/2026: a sentence with marks (links, bold) whose translation keeps losing them, translated piece by piece:
+	 * the text between two marks on its own, the marks and the blanks left as they are. One request for all the pieces.
+	 * Null when it cannot be done (no engine answered, a piece missing); else [translation, engine].
+	 *
+	 * @param array  $providers Engines.
+	 * @param array  $dead      Engines out of use (by ref).
+	 * @param string $text      Sentence with marks.
+	 * @param string $source    Source language.
+	 * @param string $lang      Target language.
+	 * @param string $error     Last error (by ref).
+	 * @param array  $resting   Engines resting (by ref).
+	 */
+	private static function by_pieces( array $providers, array &$dead, string $text, string $source, string $lang, string &$error, array &$resting ): ?array {
+		if ( ! \TranslateRocket\Frontend\InlineText::has_parts( $text ) ) {
+			return null;
+		}
+		$bits  = preg_split( '#(</?\d{1,3}/?>)#', $text, -1, PREG_SPLIT_DELIM_CAPTURE );
+		$chi   = array();
+		$pezzi = array();
+		foreach ( (array) $bits as $k => $bit ) {
+			if ( 1 === $k % 2 || ! preg_match( '/\p{L}/u', $bit ) ) {
+				continue; // a mark, or nothing to translate (blank, a full stop, a number)
+			}
+			$chi[]   = $k;
+			$pezzi[] = trim( $bit );
+		}
+		if ( empty( $pezzi ) ) {
+			return null;
+		}
+		$r = self::first_ok( $providers, $dead, $pezzi, $source, $lang, $error, $resting );
+		if ( null === $r ) {
+			return null;
+		}
+		foreach ( $chi as $j => $k ) {
+			$t = isset( $r['translations'][ $j ] ) ? trim( (string) $r['translations'][ $j ] ) : '';
+			if ( '' === $t || \TranslateRocket\Frontend\InlineText::has_parts( $t ) ) {
+				return null;
+			}
+			preg_match( '/^\s*/u', $bits[ $k ], $lead );
+			preg_match( '/\s*$/u', $bits[ $k ], $tail );
+			$bits[ $k ] = $lead[0] . $t . $tail[0];
+		}
+		return array( implode( '', $bits ), (string) $r['provider'] );
+	}
+
+	/**
+	 * 3/11/2026: does a text read like the given language? Only the share of its most common short words (the, and,
+	 * of…): enough to tell a guest's review in French from an English sentence. Unknown language: yes (nothing changes).
+	 *
+	 * @param string $text Text.
+	 * @param string $lang Language code.
+	 */
+	private static function looks_like( string $text, string $lang ): bool {
+		$comuni = array(
+			'en' => 'the and of to in is are was were with for you your a an on at this that it we our be from by as or not have has will can all',
+			'it' => 'il lo la i gli le di da in con per su un una che e è non del della dei delle al alla sono si ci come anche',
+			'de' => 'der die das und ist in zu den mit von für auf nicht ein eine es im sich dem des sie wir ihr sind auch',
+			'fr' => 'le la les et est de des du un une en à au aux pour dans sur avec que qui ne pas vous nous il elle sont ce',
+			'es' => 'el la los las y es de del en un una que con por para no se su al lo como más sus muy',
+			'pt' => 'o a os as e é de do da dos das em um uma que com por para não se no na ao mais',
+			'nl' => 'de het een en is van in op te met voor niet dat die zijn er ook aan je we bij',
+			'ru' => 'и в не на я что с по это как а но из у к за он она мы вы они так',
+		);
+		$base = strtok( strtolower( $lang ), '-_' );
+		if ( ! isset( $comuni[ $base ] ) ) {
+			return true;
+		}
+		$parole = preg_split( '/[^\p{L}]+/u', mb_strtolower( (string) preg_replace( '#</?\d+/?>#', ' ', $text ) ), -1, PREG_SPLIT_NO_EMPTY );
+		if ( count( $parole ) < 5 ) {
+			return true;
+		}
+		$lista = array_flip( explode( ' ', $comuni[ $base ] ) );
+		$si    = 0;
+		foreach ( $parole as $w ) {
+			if ( isset( $lista[ $w ] ) ) {
+				++$si;
+			}
+		}
+		return $si / count( $parole ) >= 0.15; // English prose: ~40 %; a German review: «was», «an» = 10 %
 	}
 
 	private static function parts_kept( string $original, string $translation ): bool {

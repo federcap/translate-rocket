@@ -391,6 +391,8 @@ class Admin {
 				while ( grid && ! grid.classList.contains( 'trrocket-lang-grid' ) ) { grid = grid.nextElementSibling; }
 				if ( ! grid ) { return; }
 				var q = box.value.trim().toLowerCase(), shown = 0;
+				// the folded lists (wizard, Languages page) open while searching — set here, the one handler that is live from the start
+				grid.classList.toggle( 'is-searching', '' !== q );
 				grid.querySelectorAll( '.trrocket-lang-item' ).forEach( function ( it ) {
 					// the site's own language stays hidden in the wizard grid whatever is typed
 					if ( it.style.display === 'none' && ! it.hasAttribute( 'data-cerca-nascosta' ) ) { return; }
@@ -6217,25 +6219,48 @@ JS;
 				<section class="trr-wiz-step is-current" data-step="1">
 					<h2><?php esc_html_e( 'What languages?', 'translate-rocket' ); ?></h2>
 					<p class="trr-wiz-lead"><?php esc_html_e( 'Pick the language your site is written in, then the languages to translate it into.', 'translate-rocket' ); ?></p>
-					<p>
-						<label class="trr-wiz-srclabel"><?php esc_html_e( 'My site is written in:', 'translate-rocket' ); ?>
+					<?php // 3/11/2026 (Federico: «tutto in 2 colonne, testo a sinistra e select e input a destra»): a form, label | control. ?>
+					<div class="trr-wiz-form">
+						<label class="trr-wiz-lab" for="trr-wiz-source"><?php esc_html_e( 'My site is written in:', 'translate-rocket' ); ?></label>
+						<div class="trr-wiz-ctl">
 							<select name="source_language" id="trr-wiz-source">
 								<?php foreach ( $builtins as $code => $info ) : ?>
 									<option value="<?php echo esc_attr( $code ); ?>" <?php selected( $code, $source ); ?>><?php echo esc_html( self::lang_option_label( $info ) ); ?></option>
 								<?php endforeach; ?>
 							</select>
-						</label>
-					</p>
-					<p class="trr-wiz-sub"><?php esc_html_e( 'Translate into:', 'translate-rocket' ); ?></p>
+						</div>
+						<div class="trr-wiz-lab"><?php esc_html_e( 'Translate into:', 'translate-rocket' ); ?></div>
+						<div class="trr-wiz-ctl">
 					<?php self::lang_search_box(); ?>
-					<div class="trrocket-lang-grid trr-wiz-grid">
+					<?php
+					// 3/11/2026 (on a phone the 100 languages made the one screen 7,000 px, the button at the very bottom): the most
+					// used languages, the site's and the owner's own and those already chosen; the rest behind one button (the search
+					// box still finds them all). Same words as the Languages page, already translated.
+					$trr_pop = array( 'en', 'it', 'es', 'fr', 'de', 'pt', 'pt-br', 'nl', 'ru', 'pl', 'tr', 'ar', 'ja', 'ko', 'zh' );
+					foreach ( array( get_locale(), get_user_locale() ) as $trr_loc ) {
+						$trr_loc = strtolower( str_replace( '_', '-', (string) $trr_loc ) );
+						foreach ( array( $trr_loc, (string) strtok( $trr_loc, '-' ) ) as $trr_c ) {
+							if ( isset( $builtins[ $trr_c ] ) ) {
+								$trr_pop[] = $trr_c;
+								break;
+							}
+						}
+					}
+					$trr_pop = array_merge( $trr_pop, array_map( 'strval', $targets ) );
+					?>
+					<?php // :has() keeps a ticked language in view even before the scripts load; a browser without :has() drops the rule and shows them all ?>
+					<style>.trr-wiz-grid.trr-wiz-folded:not(.is-searching) .trr-wiz-target:not(.trr-wiz-pop):not(.is-chosen):not(:has(input:checked)){display:none}</style>
+					<div class="trrocket-lang-grid trr-wiz-grid trr-wiz-folded">
 						<?php foreach ( $builtins as $code => $info ) : ?>
-							<label class="trrocket-lang-item trr-wiz-target" data-code="<?php echo esc_attr( $code ); ?>" data-cerca="<?php echo esc_attr( self::lang_search_text( (string) $code, $info ) ); ?>"<?php echo ( $code === $source ) ? ' style="display:none"' : ''; ?>>
+							<label class="trrocket-lang-item trr-wiz-target<?php echo in_array( (string) $code, $trr_pop, true ) ? ' trr-wiz-pop' : ''; ?><?php echo in_array( $code, $targets, true ) ? ' is-chosen' : ''; ?>" data-code="<?php echo esc_attr( $code ); ?>" data-cerca="<?php echo esc_attr( self::lang_search_text( (string) $code, $info ) ); ?>"<?php echo ( $code === $source ) ? ' style="display:none"' : ''; ?>>
 								<input type="checkbox" name="target_languages[]" value="<?php echo esc_attr( $code ); ?>" <?php checked( in_array( $code, $targets, true ) ); ?> />
 								<span class="trrocket-flag"><?php echo wp_kses( \TranslateRocket\Flags::html( (string) $code, (string) ( $info[2] ?? '' ) ) , \TranslateRocket\Kses::html_rules() ); ?></span>
 								<span><?php echo esc_html( $info[0] ); ?><?php self::lang_english( $info ); ?></span>
 							</label>
 						<?php endforeach; ?>
+					</div>
+					<p class="trr-wiz-allp" style="margin:10px 0 0"><button type="button" class="button button-small" id="trr-wiz-all"><?php echo esc_html( sprintf( /* translators: %d: how many languages there are. */ __( 'Show all languages (%d)', 'translate-rocket' ), count( $builtins ) - 1 ) ); ?></button></p>
+						</div>
 					</div>
 					<?php
 					// 3/11/2026 (who left after 12 hours, Chrome, wizard never finished: «too many settings, the AI keys,
@@ -6448,6 +6473,11 @@ JS;
 	}
 	if ( src ) { src.addEventListener( 'change', syncTargets ); src.addEventListener( 'change', rapido ); }
 	document.querySelectorAll( '.trr-wiz-target input' ).forEach( function ( cb ) { cb.addEventListener( 'change', rapido ); } );
+	// the folded list: a ticked language stays in view; one button opens them all (searching: lang_search_box)
+	var wizGrid = document.querySelector( '.trr-wiz-grid' );
+	var wizAll = document.getElementById( 'trr-wiz-all' );
+	document.querySelectorAll( '.trr-wiz-target input' ).forEach( function ( cb ) { cb.addEventListener( 'change', function () { cb.closest( '.trr-wiz-target' ).classList.toggle( 'is-chosen', cb.checked ); } ); } );
+	if ( wizAll && wizGrid ) { wizAll.addEventListener( 'click', function () { wizGrid.classList.remove( 'trr-wiz-folded' ); wizAll.parentNode.hidden = true; } ); }
 	rapido();
 	// Reveal the AI key fields only when "Use an AI provider" is chosen.
 	var aiBox = document.querySelector( '.trr-wiz-ai' );

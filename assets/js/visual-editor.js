@@ -281,7 +281,27 @@
 	// tornano identici, si traducono i pezzi fra un segnaposto e l'altro e si rimettono.
 	var SEGNI = /<\/?\d{1,3}\/?>/g;
 	function segni( t ) { return ( String( t ).match( SEGNI ) || [] ).join( '' ); }
+	// 3/11/2026: Chrome's translator often drops the capital at the start («The pools» → «le piscine», «Sink into…» →
+	// «affondare…»). When the source starts with a capital letter, the translation does too.
+	function primaLettera( t ) {
+		var re = /<\/?\d{1,3}\/?>|\p{L}/gu, m;
+		while ( ( m = re.exec( String( t ) ) ) ) { if ( /^\p{L}$/u.test( m[ 0 ] ) ) { return m; } }
+		return null;
+	}
+	function maiuscola( fonte, fatto ) {
+		if ( ! fatto ) { return fatto; }
+		var a = primaLettera( fonte ), b = primaLettera( fatto );
+		if ( ! a || ! b ) { return fatto; }
+		var ca = a[ 0 ], cb = b[ 0 ];
+		if ( ca === ca.toLowerCase() || cb === cb.toUpperCase() ) { return fatto; }
+		var su;
+		try { su = cb.toLocaleUpperCase( VE.dstBcp || undefined ); } catch ( e ) { su = cb.toUpperCase(); }
+		return fatto.slice( 0, b.index ) + su + fatto.slice( b.index + cb.length );
+	}
 	function traduciColBrowser( testo ) {
+		return traduciColBrowserGrezzo( testo ).then( function ( t ) { return maiuscola( testo, t ); } );
+	}
+	function traduciColBrowserGrezzo( testo ) {
 		var voluti = segni( testo );
 		if ( '' === voluti ) {
 			return traduciUnaVolta( testo );

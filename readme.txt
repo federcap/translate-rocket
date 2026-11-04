@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.30.6
+Stable tag: 1.8.30.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.30.7 =
+* Fixed: a site could stay at «99%» in every language for ever. A sentence with a mark that has no words of its own — a bold full stop between two sentences, which page builders such as Brizy write — came back from the AI with the two sentences joined and the mark gone, and the translation was refused every time. When a translation keeps losing its marks, the text between them is now translated piece by piece, with links and bold left where they are (the browser engine already did this).
+* Fixed: guests' reviews written in German, Italian or French on an English site stayed «to translate» in their own language: asked to translate them into the language they are already written in, every engine gives them back as they are. A text that is not in the site's language and that the whole chain of engines leaves unchanged is now kept as it is and counted as done. An English sentence an engine sends back untranslated still waits for a real translation.
+* Improved: the setup wizard shows a short list of languages — the most used, your visitors' and the ones you picked — with «Show all languages» and a search box that finds any of them; labels on the left and choices on the right, so it fits on one screen.
+* Fixed: Chrome's translator drops the capital letter at the start of a sentence («The pools» became «le piscine»). In-browser translation now keeps it when the original starts with one.
 
 = 1.8.30.6 =
 * Fixed: a REST request made from a translated page (/fr/wp-json/…, used by other plugins to load their apps, maps and lists) loaded every translation of the language into memory to translate its answer. On a site with WooCommerce and a 128 MB PHP limit the request died with «Allowed memory size exhausted» in the translated languages only. REST and AJAX answers now look up only the sentences they contain.
@@ -635,6 +641,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.30.7 =
+Sites stuck at 99% now reach 100%: sentences whose bold or link marks the AI kept dropping are translated piece by piece, and reviews already written in the target language are kept as they are.
 
 = 1.8.30.6 =
 Fixes REST requests from translated pages running out of memory, and a one-screen setup in every browser — no key needed to start.

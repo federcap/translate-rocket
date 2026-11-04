@@ -2587,3 +2587,10 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-sb-presets { margin-bottom: 10px; }
 .trr-sb-colors td { padding: 3px 10px 3px 0; vertical-align: middle; }
 .trr-sb-colors input[type=color] { width: 34px; height: 28px; padding: 0 2px; vertical-align: middle; cursor: pointer; }
+/* 3/11/2026: wizard step 1 as a form — labels on the left, select / search / languages on the right; one column on phones. */
+.trr-wiz-form{display:grid;grid-template-columns:180px minmax(0,1fr);gap:16px 22px;align-items:start;margin-top:6px}
+.trr-wiz-lab{font-weight:600;padding-top:7px;margin:0}
+.trr-wiz-ctl{min-width:0}
+.trr-wiz-ctl > .trr-lang-cerca{margin-top:0}
+.trr-wiz-ctl #trr-wiz-source,.trr-wiz-ctl .trr-lang-cerca-in{width:min(320px,100%);box-sizing:border-box}
+@media screen and ( max-width: 600px ){.trr-wiz-form{grid-template-columns:minmax(0,1fr);gap:6px}.trr-wiz-lab{padding-top:10px}.trr-wiz-ctl #trr-wiz-source{min-width:0;width:100%}}

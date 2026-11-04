@@ -179,7 +179,42 @@
 		return ( String( text ).match( MARK ) || [] ).join( '' );
 	}
 
+	// 3/11/2026: Chrome's translator often drops the capital at the start («The pools» → «le piscine»). When the
+	// source starts with a capital letter, the translation does too.
+	function firstLetter( t ) {
+		var re = /<\/?\d{1,3}\/?>|\p{L}/gu, m;
+		while ( ( m = re.exec( String( t ) ) ) ) {
+			if ( /^\p{L}$/u.test( m[ 0 ] ) ) {
+				return m;
+			}
+		}
+		return null;
+	}
+
+	function keepCapital( src, out ) {
+		if ( ! out ) {
+			return out;
+		}
+		var a = firstLetter( src ), b = firstLetter( out );
+		if ( ! a || ! b || a[ 0 ] === a[ 0 ].toLowerCase() || b[ 0 ] === b[ 0 ].toUpperCase() ) {
+			return out;
+		}
+		var up;
+		try {
+			up = b[ 0 ].toLocaleUpperCase( C.target || undefined );
+		} catch ( e ) {
+			up = b[ 0 ].toUpperCase();
+		}
+		return out.slice( 0, b.index ) + up + out.slice( b.index + b[ 0 ].length );
+	}
+
 	function tagSafe( text ) {
+		return tagSafeRaw( text ).then( function ( t ) {
+			return keepCapital( text, t );
+		} );
+	}
+
+	function tagSafeRaw( text ) {
 		var want = marks( text );
 		if ( '' === want ) {
 			return translator.translate( text );
