@@ -202,7 +202,17 @@ class Kses {
 		$masked = (string) preg_replace( '/<!--[\s\S]*?(?:-->|$)/', '', $masked );
 		$masked = (string) preg_replace_callback(
 			'/<\/?[a-zA-Z][^<>]*>/',
-			static function ( $m ) use ( $rules ) {
+			static function ( $m ) use ( $rules, $original ) {
+				// 4/11/2026 (translaterocket.com stuck at 99,9%): a tag written letter for letter in the
+				// original is not new markup: it is the text of a code example («<link rel="alternate"
+				// hreflang="it" …>» in an article about hreflang, and in its meta description), shown on
+				// the page as it is. Stripping it emptied the translation, refused forever. Not for the
+				// tags whose CONTENT runs or loads (script, style…): there the danger is what a
+				// translation puts between the two tags, and copying the tags would let it through.
+				if ( false !== strpos( (string) $original, $m[0] )
+					&& ! preg_match( '/^<\/?(?:script|style|iframe|frame|frameset|object|embed|applet|noscript|template|textarea|svg|math)\b/i', $m[0] ) ) {
+					return $m[0];
+				}
 				return wp_kses( $m[0], $rules );
 			},
 			$masked

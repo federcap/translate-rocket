@@ -6949,3 +6949,72 @@ msgstr "Нажмите «Завершить и начать перевод»: в
 #: src/Admin/Admin.php
 msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
 msgstr "Встроенный переводчик этого браузера не знает один из выбранных языков. Без всяких ключей: запросите бесплатный TranslateRocket Labs — он переводит с вашего сервера на любой язык. Или добавьте бесплатный ключ ИИ в «Другие настройки»."
+
+#: src/Admin/Admin.php
+msgid "Still to translate"
+msgstr "Ещё не переведено"
+
+#: src/Admin/Admin.php
+msgid "Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it."
+msgstr "Каждая фраза, у которой ещё нет перевода, и языки, на которых его нет. Некоторые лучше оставить как есть: пример кода, артикул, имя, адрес. «Оставить как есть» показывает оригинал на этих языках и больше не считает фразу недостающей, так что прогресс может дойти до 100%. Уже сделанные переводы никогда не затрагиваются. «Перевести выбранные снова» отменяет это."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as they are: %d."
+msgstr "Оставлено как есть: %d."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Back to translate: %d."
+msgstr "Снова к переводу: %d."
+
+#: src/Admin/Admin.php
+msgid "Nothing is missing: every sentence has a translation or is kept as it is."
+msgstr "Ничего не пропущено: у каждой фразы есть перевод, или она оставлена как есть."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "See the first %d sentences still to translate"
+msgstr "Показать первые %d фраз без перевода"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences still to translate: %d — see the list"
+msgstr "Фраз без перевода: %d — открыть список"
+
+#: src/Admin/Admin.php
+msgid "Sentence"
+msgstr "Фраза"
+
+#: src/Admin/Admin.php
+msgid "Missing in"
+msgstr "Нет на"
+
+#: src/Admin/Admin.php
+msgid "all languages"
+msgstr "всех языках"
+
+#: src/Admin/Admin.php
+msgid "Keep the selected as they are"
+msgstr "Оставить выбранные как есть"
+
+#: src/Admin/Admin.php
+msgid "Keep every sentence still missing as it is, in every language? You can undo it below."
+msgstr "Оставить как есть каждую фразу без перевода на всех языках? Это можно отменить ниже."
+
+#: src/Admin/Admin.php
+msgid "Keep all as they are"
+msgstr "Оставить все как есть"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences kept as they are: %d — see the list"
+msgstr "Фраз, оставленных как есть: %d — открыть список"
+
+#: src/Admin/Admin.php
+msgid "Kept in"
+msgstr "Оставлено на"
+
+#: src/Admin/Admin.php
+msgid "Translate the selected again"
+msgstr "Перевести выбранные снова"

@@ -6921,3 +6921,72 @@ msgstr "Klik op «Afronden en beginnen met vertalen»: je talen worden opgeslage
 #: src/Admin/Admin.php
 msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
 msgstr "De ingebouwde vertaler van deze browser kent een van de gekozen talen niet. Zonder sleutel: vraag gratis TranslateRocket Labs aan — het vertaalt vanaf je server, in elke taal. Of voeg een gratis AI-sleutel toe bij «Meer opties»."
+
+#: src/Admin/Admin.php
+msgid "Still to translate"
+msgstr "Nog te vertalen"
+
+#: src/Admin/Admin.php
+msgid "Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it."
+msgstr "Elke zin die nog geen vertaling heeft, met de talen waarin hij ontbreekt. Sommige laat je beter zoals ze zijn: een codevoorbeeld, een productcode, een naam, een adres. «Zo laten» toont het origineel in die talen en telt de zin niet meer als ontbrekend, zodat de voortgang 100% kan halen. Bestaande vertalingen worden nooit aangeraakt. «Selectie opnieuw vertalen» maakt het ongedaan."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as they are: %d."
+msgstr "Zo gelaten: %d."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Back to translate: %d."
+msgstr "Weer te vertalen: %d."
+
+#: src/Admin/Admin.php
+msgid "Nothing is missing: every sentence has a translation or is kept as it is."
+msgstr "Er ontbreekt niets: elke zin heeft een vertaling of blijft zoals hij is."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "See the first %d sentences still to translate"
+msgstr "Bekijk de eerste %d zinnen die nog vertaald moeten worden"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences still to translate: %d — see the list"
+msgstr "Zinnen die nog vertaald moeten worden: %d — bekijk de lijst"
+
+#: src/Admin/Admin.php
+msgid "Sentence"
+msgstr "Zin"
+
+#: src/Admin/Admin.php
+msgid "Missing in"
+msgstr "Ontbreekt in"
+
+#: src/Admin/Admin.php
+msgid "all languages"
+msgstr "alle talen"
+
+#: src/Admin/Admin.php
+msgid "Keep the selected as they are"
+msgstr "Selectie zo laten"
+
+#: src/Admin/Admin.php
+msgid "Keep every sentence still missing as it is, in every language? You can undo it below."
+msgstr "Elke ontbrekende zin in alle talen laten zoals hij is? Je kunt het hieronder ongedaan maken."
+
+#: src/Admin/Admin.php
+msgid "Keep all as they are"
+msgstr "Alles zo laten"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences kept as they are: %d — see the list"
+msgstr "Zo gelaten zinnen: %d — bekijk de lijst"
+
+#: src/Admin/Admin.php
+msgid "Kept in"
+msgstr "Zo gelaten in"
+
+#: src/Admin/Admin.php
+msgid "Translate the selected again"
+msgstr "Selectie opnieuw vertalen"

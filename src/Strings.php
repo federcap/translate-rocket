@@ -45,6 +45,79 @@ class Strings {
 	}
 
 	/**
+	 * Drop, among the texts not yet in the list, two kinds that must never become new originals.
+	 *
+	 * 4/11/2026 (translaterocket.com stuck at 88%: 201 «sentences to translate» were Hindi, Vietnamese,
+	 * Czech… titles): a piece read on a page in another language — a search answer, a «load more», a
+	 * title another plugin already printed translated — can carry text that is already a translation.
+	 * Filed as a new original it is «missing» in every language for good, and the page never reaches
+	 * 100%. On a page in another language, a new text equal to a translation saved for that language is
+	 * that translation coming back: it is not filed.
+	 * Same day: the signed-in person's own name and e-mail (a support form that greets the administrator)
+	 * were filed as sentences, ready to be sent to a translation service. They never are.
+	 * Only texts not yet in the list are looked at, so a page already read costs one indexed query.
+	 *
+	 * @param array<string,array{hash:string,original:string,context:string,type:string}> $by_hash Items by hash.
+	 * @return array<string,array{hash:string,original:string,context:string,type:string}>
+	 */
+	private static function without_echoes_and_person( array $by_hash ): array {
+		global $wpdb;
+		$strings = Database::strings_table();
+		$hashes  = array_keys( $by_hash );
+		$known   = array();
+		foreach ( array_chunk( $hashes, 500 ) as $chunk ) {
+			$in    = implode( ',', array_fill( 0, count( $chunk ), '%s' ) );
+			$known = array_merge( $known, (array) $wpdb->get_col( $wpdb->prepare( "SELECT string_hash FROM {$strings} WHERE string_hash IN ({$in})", $chunk ) ) ); // phpcs:ignore WordPress.DB -- one placeholder per value.
+		}
+		$new = array_diff_key( $by_hash, array_flip( $known ) );
+		if ( empty( $new ) ) {
+			return $by_hash;
+		}
+
+		$drop = array();
+		// The signed-in person.
+		if ( function_exists( 'is_user_logged_in' ) && is_user_logged_in() ) {
+			// The e-mail only: a login such as «admin» is also an ordinary word («Go to the admin area»).
+			$user  = wp_get_current_user();
+			$marks = array_filter( array( (string) $user->user_email ), static function ( $m ) {
+				return false !== strpos( $m, '@' );
+			} );
+			foreach ( $new as $h => $row ) {
+				foreach ( $marks as $m ) {
+					if ( false !== stripos( $row['original'], $m ) ) {
+						$drop[ $h ] = true;
+						break;
+					}
+				}
+			}
+		}
+
+		// A translation coming back, on a page in another language.
+		$router = Plugin::instance()->router();
+		$lang   = $router->request_language();
+		if ( '' !== $lang && ! $router->is_default( $lang ) ) {
+			$texts = array();
+			foreach ( $new as $h => $row ) {
+				if ( 'image' !== $row['type'] && ! isset( $drop[ $h ] ) ) {
+					$texts[ $row['original'] ] = $h;
+				}
+			}
+			$translations = Database::translations_table();
+			foreach ( array_chunk( array_keys( $texts ), 100 ) as $chunk ) {
+				$in    = implode( ',', array_fill( 0, count( $chunk ), '%s' ) );
+				$found = (array) $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT translation FROM {$translations} WHERE language = %s AND status > 0 AND translation IN ({$in})", array_merge( array( $lang ), $chunk ) ) ); // phpcs:ignore WordPress.DB -- one placeholder per value.
+				foreach ( $found as $t ) {
+					if ( isset( $texts[ $t ] ) ) {
+						$drop[ $texts[ $t ] ] = true;
+					}
+				}
+			}
+		}
+
+		return empty( $drop ) ? $by_hash : array_diff_key( $by_hash, $drop );
+	}
+
+	/**
 	 * Record a batch of strings found on one page, in a handful of queries:
 	 * upsert sources, ensure (missing) translation rows, record occurrences.
 	 *
@@ -75,6 +148,11 @@ class Strings {
 				'type'     => $type,
 			);
 		}
+		if ( empty( $by_hash ) ) {
+			return;
+		}
+
+		$by_hash = self::without_echoes_and_person( $by_hash );
 		if ( empty( $by_hash ) ) {
 			return;
 		}
@@ -763,6 +841,153 @@ class Strings {
 				$limit
 			)
 		); // phpcs:ignore WordPress.DB
+	}
+
+	/**
+	 * Provider name of a sentence kept as it is: the original stands as its translation.
+	 */
+	const KEPT = 'kept';
+
+	/**
+	 * 4/11/2026 (Federico: «a list of everything not translated, and at some point you accept it as it is»): the
+	 * sentences still missing in at least one of these languages, with the languages they miss.
+	 *
+	 * @param string[] $langs Languages.
+	 * @param int      $limit Sentences at most.
+	 * @return array<int,array{id:int,original:string,langs:string[]}>
+	 */
+	public static function missing_anywhere( array $langs, int $limit = 300 ): array {
+		global $wpdb;
+		$strings      = Database::strings_table();
+		$translations = Database::translations_table();
+		$occurrences  = Database::occurrences_table();
+		$out          = array();
+		foreach ( $langs as $l ) {
+			// Newest first: what was just written is what one is looking at (same filter as untranslated_for_language()).
+			$righe = (array) $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT st.id AS string_id, st.original
+					 FROM {$strings} st
+					 LEFT JOIN {$translations} tr ON tr.string_id = st.id AND tr.language = %s
+					 WHERE st.type <> 'image'
+					   AND EXISTS ( SELECT 1 FROM {$occurrences} o WHERE o.string_id = st.id )
+					   AND ( tr.id IS NULL OR tr.status = 0 OR tr.translation IS NULL OR tr.translation = '' )
+					 ORDER BY st.id DESC
+					 LIMIT %d",
+					(string) $l,
+					$limit
+				)
+			); // phpcs:ignore WordPress.DB
+			foreach ( $righe as $r ) {
+				$id = (int) $r->string_id;
+				if ( ! isset( $out[ $id ] ) ) {
+					$out[ $id ] = array( 'id' => $id, 'original' => (string) $r->original, 'langs' => array() );
+				}
+				$out[ $id ]['langs'][] = (string) $l;
+			}
+		}
+		krsort( $out );
+		return array_slice( array_values( $out ), 0, $limit );
+	}
+
+	/**
+	 * Keeps these sentences as they are in these languages: the original is saved as the translation, so the page
+	 * shows what it showed already and the sentence stops counting as missing. Only where there is no usable
+	 * translation: one already made is never overwritten. Code samples, names, a line nobody needs translated:
+	 * «what is done is done».
+	 *
+	 * @param int[]    $ids   Source string ids.
+	 * @param string[] $langs Languages.
+	 * @return int Translations written.
+	 */
+	public static function keep_as_is( array $ids, array $langs ): int {
+		global $wpdb;
+		$langs = array_values( array_filter( array_map( 'strval', $langs ), 'strlen' ) );
+		$orig  = self::originals( $ids );
+		if ( ! $orig || ! $langs ) {
+			return 0;
+		}
+		$tt  = Database::translations_table();
+		$now = current_time( 'mysql' );
+		$lin = implode( ',', array_fill( 0, count( $langs ), '%s' ) );
+		$n   = 0;
+		foreach ( array_chunk( array_keys( $orig ), 200 ) as $chunk ) {
+			$in   = implode( ',', array_map( 'intval', $chunk ) );
+			$done = array();
+			foreach ( (array) $wpdb->get_results( $wpdb->prepare( "SELECT string_id, language FROM {$tt} WHERE string_id IN ({$in}) AND language IN ({$lin}) AND status > 0 AND translation IS NOT NULL AND translation <> ''", $langs ) ) as $r ) { // phpcs:ignore WordPress.DB -- ids are ints, one placeholder per language.
+				$done[ $r->string_id . '|' . $r->language ] = true;
+			}
+			$place = array();
+			$vals  = array();
+			foreach ( $chunk as $id ) {
+				if ( '' === trim( (string) $orig[ $id ] ) ) {
+					continue;
+				}
+				foreach ( $langs as $l ) {
+					if ( isset( $done[ $id . '|' . $l ] ) ) {
+						continue;
+					}
+					$place[] = '(%d,%s,%s,2,%s,%s)';
+					array_push( $vals, (int) $id, $l, (string) $orig[ $id ], self::KEPT, $now );
+				}
+			}
+			if ( $place ) {
+				$wpdb->query( $wpdb->prepare( "INSERT INTO {$tt} (string_id, language, translation, status, provider, updated_at) VALUES " . implode( ',', $place ) . ' ON DUPLICATE KEY UPDATE translation = VALUES(translation), status = VALUES(status), provider = VALUES(provider), updated_at = VALUES(updated_at)', $vals ) ); // phpcs:ignore WordPress.DB
+				$n += count( $place );
+			}
+		}
+		foreach ( $langs as $l ) {
+			self::flush_maps( $l );
+		}
+		return $n;
+	}
+
+	/**
+	 * Sentences kept as they are, with their languages (newest first).
+	 *
+	 * @param int $limit Sentences at most.
+	 * @return array<int,array{id:int,original:string,langs:string[]}>
+	 */
+	public static function kept_as_is( int $limit = 300 ): array {
+		global $wpdb;
+		$st  = Database::strings_table();
+		$tt  = Database::translations_table();
+		$out = array();
+		foreach ( (array) $wpdb->get_results( $wpdb->prepare( "SELECT st.id, st.original, GROUP_CONCAT(tr.language ORDER BY tr.language) AS langs FROM {$tt} tr JOIN {$st} st ON st.id = tr.string_id WHERE tr.provider = %s GROUP BY st.id, st.original ORDER BY MAX(tr.updated_at) DESC, st.id DESC LIMIT %d", self::KEPT, $limit ) ) as $r ) { // phpcs:ignore WordPress.DB
+			$out[] = array( 'id' => (int) $r->id, 'original' => (string) $r->original, 'langs' => explode( ',', (string) $r->langs ) );
+		}
+		return $out;
+	}
+
+	/**
+	 * How many sentences are kept as they are.
+	 */
+	public static function kept_count(): int {
+		global $wpdb;
+		$tt = Database::translations_table();
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT string_id) FROM {$tt} WHERE provider = %s", self::KEPT ) ); // phpcs:ignore WordPress.DB
+	}
+
+	/**
+	 * Back to «to translate»: the kept copies of the original go away (translations made since are not touched).
+	 *
+	 * @param int[] $ids Source string ids.
+	 * @return int Rows removed.
+	 */
+	public static function unkeep( array $ids ): int {
+		global $wpdb;
+		$ids = array_values( array_filter( array_map( 'intval', $ids ) ) );
+		if ( ! $ids ) {
+			return 0;
+		}
+		$tt    = Database::translations_table();
+		$in    = implode( ',', $ids );
+		$langs = (array) $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT language FROM {$tt} WHERE provider = %s AND string_id IN ({$in})", self::KEPT ) ); // phpcs:ignore WordPress.DB -- ids are ints.
+		$n     = (int) $wpdb->query( $wpdb->prepare( "DELETE FROM {$tt} WHERE provider = %s AND string_id IN ({$in})", self::KEPT ) ); // phpcs:ignore WordPress.DB -- ids are ints.
+		foreach ( $langs as $l ) {
+			self::flush_maps( (string) $l );
+		}
+		return $n;
 	}
 
 	/**

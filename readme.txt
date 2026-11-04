@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.30.7
+Stable tag: 1.8.31
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,6 +220,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.31 =
+* New: «Still to translate» on the AI Translation page — every sentence still without a translation, with the languages it misses. Some are better left as they are (a code sample, a product code, a name): tick them and press «Keep the selected as they are», or «Keep all as they are». The original stands in those languages and the progress reaches 100%. Translations already made are never touched, and «Translate the selected again» undoes it.
+* Fixed: the translation of a text that shows HTML code as an example — a `<link rel="alternate">` line in an article about hreflang, or the meta description of such a page — was refused every time: the security check removed the code, which is part of the text, and an empty translation is not saved. A tag written exactly as in the original is now kept; scripts, styles and any tag the original does not have are still removed.
+* Fixed: on a translated page, text already shown in that language (a translation coming back from a cached piece or a widget) could be collected as a new sentence to translate — «echoes» that kept a site just below 100%. The e-mail address of the signed-in administrator is no longer collected either.
 
 = 1.8.30.7 =
 * Fixed: a site could stay at «99%» in every language for ever. A sentence with a mark that has no words of its own — a bold full stop between two sentences, which page builders such as Brizy write — came back from the AI with the two sentences joined and the mark gone, and the translation was refused every time. When a translation keeps losing its marks, the text between them is now translated piece by piece, with links and bold left where they are (the browser engine already did this).
@@ -641,6 +646,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.31 =
+Reach 100%: keep code samples, product codes and names as they are with one click, and translations of texts that show HTML code are no longer refused.
 
 = 1.8.30.7 =
 Sites stuck at 99% now reach 100%: sentences whose bold or link marks the AI kept dropping are translated piece by piece, and reviews already written in the target language are kept as they are.

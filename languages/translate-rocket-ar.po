@@ -7878,3 +7878,72 @@ msgstr "اضغط «إنهاء وبدء الترجمة»: تُحفظ لغاتك �
 #: src/Admin/Admin.php
 msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
 msgstr "المترجم المدمج في هذا المتصفح لا يعرف إحدى اللغات التي اخترتها. دون أي مفتاح: اطلب TranslateRocket Labs مجانًا — يترجم من خادمك وبكل اللغات. أو أضف مفتاح ذكاء اصطناعي مجانيًا في «خيارات أخرى»."
+
+#: src/Admin/Admin.php
+msgid "Still to translate"
+msgstr "ما زال بحاجة إلى ترجمة"
+
+#: src/Admin/Admin.php
+msgid "Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it."
+msgstr "كل جملة ما زالت بلا ترجمة، مع اللغات التي تنقصها. بعضها من الأفضل تركه كما هو: مثال برمجي، رمز منتج، اسم، عنوان. «إبقاؤها كما هي» يعرض النص الأصلي في تلك اللغات ويتوقف عن عدّه ناقصًا، فيمكن أن يصل التقدم إلى 100%. الترجمات الموجودة لا تُمس أبدًا. «ترجمة المحدد من جديد» يتراجع عن ذلك."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as they are: %d."
+msgstr "تُركت كما هي: %d."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Back to translate: %d."
+msgstr "عادت إلى قائمة الترجمة: %d."
+
+#: src/Admin/Admin.php
+msgid "Nothing is missing: every sentence has a translation or is kept as it is."
+msgstr "لا شيء ناقص: كل جملة لها ترجمة أو تُركت كما هي."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "See the first %d sentences still to translate"
+msgstr "عرض أول %d جملة ما زالت بحاجة إلى ترجمة"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences still to translate: %d — see the list"
+msgstr "جمل ما زالت بحاجة إلى ترجمة: %d — عرض القائمة"
+
+#: src/Admin/Admin.php
+msgid "Sentence"
+msgstr "الجملة"
+
+#: src/Admin/Admin.php
+msgid "Missing in"
+msgstr "ناقصة في"
+
+#: src/Admin/Admin.php
+msgid "all languages"
+msgstr "كل اللغات"
+
+#: src/Admin/Admin.php
+msgid "Keep the selected as they are"
+msgstr "إبقاء المحدد كما هو"
+
+#: src/Admin/Admin.php
+msgid "Keep every sentence still missing as it is, in every language? You can undo it below."
+msgstr "إبقاء كل جملة ناقصة كما هي، في كل اللغات؟ يمكنك التراجع عن ذلك في الأسفل."
+
+#: src/Admin/Admin.php
+msgid "Keep all as they are"
+msgstr "إبقاء الكل كما هو"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences kept as they are: %d — see the list"
+msgstr "جمل تُركت كما هي: %d — عرض القائمة"
+
+#: src/Admin/Admin.php
+msgid "Kept in"
+msgstr "متروكة كما هي في"
+
+#: src/Admin/Admin.php
+msgid "Translate the selected again"
+msgstr "ترجمة المحدد من جديد"

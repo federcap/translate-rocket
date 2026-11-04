@@ -7116,3 +7116,72 @@ msgstr "Premi «Fine e inizia a tradurre»: le lingue vengono salvate e la pagin
 #: src/Admin/Admin.php
 msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
 msgstr "Il traduttore integrato in questo browser non conosce una delle lingue che hai scelto. Senza nessuna chiave: chiedi TranslateRocket Labs, gratis — traduce dal tuo server, in tutte le lingue. Oppure aggiungi una chiave AI gratuita in «Altre opzioni»."
+
+#: src/Admin/Admin.php
+msgid "Still to translate"
+msgstr "Ancora da tradurre"
+
+#: src/Admin/Admin.php
+msgid "Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it."
+msgstr "Ogni frase ancora senza traduzione, con le lingue in cui manca. Alcune è meglio lasciarle così come sono: un esempio di codice, un codice prodotto, un nome, un indirizzo. «Lascia così come sono» mostra l’originale in quelle lingue e smette di contarla come mancante, così l’avanzamento può arrivare al 100%. Le traduzioni già fatte non vengono mai toccate. «Traduci di nuovo le selezionate» annulla."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as they are: %d."
+msgstr "Lasciate così come sono: %d."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Back to translate: %d."
+msgstr "Di nuovo da tradurre: %d."
+
+#: src/Admin/Admin.php
+msgid "Nothing is missing: every sentence has a translation or is kept as it is."
+msgstr "Non manca niente: ogni frase ha una traduzione o resta così com’è."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "See the first %d sentences still to translate"
+msgstr "Vedi le prime %d frasi ancora da tradurre"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences still to translate: %d — see the list"
+msgstr "Frasi ancora da tradurre: %d — vedi l’elenco"
+
+#: src/Admin/Admin.php
+msgid "Sentence"
+msgstr "Frase"
+
+#: src/Admin/Admin.php
+msgid "Missing in"
+msgstr "Manca in"
+
+#: src/Admin/Admin.php
+msgid "all languages"
+msgstr "tutte le lingue"
+
+#: src/Admin/Admin.php
+msgid "Keep the selected as they are"
+msgstr "Lascia le selezionate così come sono"
+
+#: src/Admin/Admin.php
+msgid "Keep every sentence still missing as it is, in every language? You can undo it below."
+msgstr "Lasciare così com’è ogni frase ancora mancante, in tutte le lingue? Puoi annullare più sotto."
+
+#: src/Admin/Admin.php
+msgid "Keep all as they are"
+msgstr "Lascia tutte così come sono"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences kept as they are: %d — see the list"
+msgstr "Frasi lasciate così come sono: %d — vedi l’elenco"
+
+#: src/Admin/Admin.php
+msgid "Kept in"
+msgstr "Lasciata in"
+
+#: src/Admin/Admin.php
+msgid "Translate the selected again"
+msgstr "Traduci di nuovo le selezionate"

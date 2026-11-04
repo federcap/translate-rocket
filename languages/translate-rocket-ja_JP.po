@@ -6893,3 +6893,72 @@ msgstr "「完了して翻訳を始める」を押すと、言語が保存され
 #: src/Admin/Admin.php
 msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
 msgstr "このブラウザーの内蔵翻訳は、選んだ言語のうち1つに対応していません。キー不要の方法：TranslateRocket Labs を無料でリクエストしてください。サーバーからすべての言語に翻訳します。または「その他のオプション」で無料の AI キーを追加してください。"
+
+#: src/Admin/Admin.php
+msgid "Still to translate"
+msgstr "未翻訳のもの"
+
+#: src/Admin/Admin.php
+msgid "Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it."
+msgstr "まだ翻訳のない文と、翻訳が足りない言語の一覧です。コード例、商品コード、名前、住所など、そのままにしたほうがよいものもあります。「そのままにする」を押すと、それらの言語で原文が表示され、未翻訳として数えられなくなるため、進捗が100%に達します。すでにある翻訳は変更されません。「選択したものを再翻訳」で元に戻せます。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as they are: %d."
+msgstr "そのままにしたもの: %d"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Back to translate: %d."
+msgstr "再び翻訳対象に: %d"
+
+#: src/Admin/Admin.php
+msgid "Nothing is missing: every sentence has a translation or is kept as it is."
+msgstr "不足はありません。すべての文に翻訳があるか、そのままにされています。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "See the first %d sentences still to translate"
+msgstr "まだ翻訳されていない最初の %d 文を見る"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences still to translate: %d — see the list"
+msgstr "まだ翻訳されていない文: %d — 一覧を見る"
+
+#: src/Admin/Admin.php
+msgid "Sentence"
+msgstr "文"
+
+#: src/Admin/Admin.php
+msgid "Missing in"
+msgstr "未翻訳の言語"
+
+#: src/Admin/Admin.php
+msgid "all languages"
+msgstr "すべての言語"
+
+#: src/Admin/Admin.php
+msgid "Keep the selected as they are"
+msgstr "選択したものをそのままにする"
+
+#: src/Admin/Admin.php
+msgid "Keep every sentence still missing as it is, in every language? You can undo it below."
+msgstr "まだ翻訳のないすべての文を、すべての言語でそのままにしますか？下で元に戻せます。"
+
+#: src/Admin/Admin.php
+msgid "Keep all as they are"
+msgstr "すべてそのままにする"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences kept as they are: %d — see the list"
+msgstr "そのままにした文: %d — 一覧を見る"
+
+#: src/Admin/Admin.php
+msgid "Kept in"
+msgstr "そのままの言語"
+
+#: src/Admin/Admin.php
+msgid "Translate the selected again"
+msgstr "選択したものを再翻訳"

@@ -7738,3 +7738,72 @@ msgstr "Tekan «Selesai & mulai menerjemahkan»: bahasa Anda tersimpan dan beran
 #: src/Admin/Admin.php
 msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
 msgstr "Penerjemah bawaan browser ini tidak mengenal salah satu bahasa yang Anda pilih. Tanpa kunci apa pun: minta TranslateRocket Labs, gratis — menerjemahkan dari server Anda, ke semua bahasa. Atau tambahkan kunci AI gratis di «Opsi lainnya»."
+
+#: src/Admin/Admin.php
+msgid "Still to translate"
+msgstr "Belum diterjemahkan"
+
+#: src/Admin/Admin.php
+msgid "Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it."
+msgstr "Setiap kalimat yang belum punya terjemahan, beserta bahasa yang belum ada. Sebagian lebih baik dibiarkan apa adanya: contoh kode, kode produk, nama, alamat. «Biarkan apa adanya» menampilkan teks asli dalam bahasa tersebut dan tidak lagi menghitungnya sebagai kurang, sehingga kemajuan bisa mencapai 100%. Terjemahan yang sudah ada tidak pernah diubah. «Terjemahkan lagi yang dipilih» membatalkannya."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as they are: %d."
+msgstr "Dibiarkan apa adanya: %d."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Back to translate: %d."
+msgstr "Kembali untuk diterjemahkan: %d."
+
+#: src/Admin/Admin.php
+msgid "Nothing is missing: every sentence has a translation or is kept as it is."
+msgstr "Tidak ada yang kurang: setiap kalimat sudah diterjemahkan atau dibiarkan apa adanya."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "See the first %d sentences still to translate"
+msgstr "Lihat %d kalimat pertama yang belum diterjemahkan"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences still to translate: %d — see the list"
+msgstr "Kalimat yang belum diterjemahkan: %d — lihat daftar"
+
+#: src/Admin/Admin.php
+msgid "Sentence"
+msgstr "Kalimat"
+
+#: src/Admin/Admin.php
+msgid "Missing in"
+msgstr "Belum ada di"
+
+#: src/Admin/Admin.php
+msgid "all languages"
+msgstr "semua bahasa"
+
+#: src/Admin/Admin.php
+msgid "Keep the selected as they are"
+msgstr "Biarkan yang dipilih apa adanya"
+
+#: src/Admin/Admin.php
+msgid "Keep every sentence still missing as it is, in every language? You can undo it below."
+msgstr "Biarkan setiap kalimat yang masih kurang apa adanya, di semua bahasa? Anda bisa membatalkannya di bawah."
+
+#: src/Admin/Admin.php
+msgid "Keep all as they are"
+msgstr "Biarkan semua apa adanya"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences kept as they are: %d — see the list"
+msgstr "Kalimat yang dibiarkan apa adanya: %d — lihat daftar"
+
+#: src/Admin/Admin.php
+msgid "Kept in"
+msgstr "Dibiarkan di"
+
+#: src/Admin/Admin.php
+msgid "Translate the selected again"
+msgstr "Terjemahkan lagi yang dipilih"

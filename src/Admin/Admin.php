@@ -45,6 +45,7 @@ class Admin {
 		add_action( 'admin_init', array( $this, 'maybe_import_tmx' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_switcher' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_exclusions' ) );
+		add_action( 'admin_init', array( $this, 'maybe_keep_as_is' ) );
 		add_action( 'admin_init', array( $this, 'maybe_retranslate_terms' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_memory' ) );
 		add_action( 'admin_post_trrocket_auto_updates', array( NextSteps::class, 'auto_updates' ) );
@@ -5322,9 +5323,162 @@ JS
 						</tbody>
 					</table>
 				</div>
+				<?php $this->render_keep_as_is( $targets ); ?>
 			<?php endif; ?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * 4/11/2026 (Federico: «show everything not translated, and at some point accept it as it is»): what is still
+	 * missing, sentence by sentence, with «Keep as it is». A kept sentence shows its original in every language and
+	 * stops counting as missing; «Translate again» undoes it.
+	 *
+	 * @param string[] $targets Languages.
+	 */
+	private function render_keep_as_is( array $targets ): void {
+		$limite  = 300;
+		$manca   = Strings::missing_anywhere( $targets, $limite );
+		$tenute  = Strings::kept_as_is( $limite );
+		$n_tenute = Strings::kept_count();
+		if ( empty( $manca ) && 0 === $n_tenute ) {
+			return;
+		}
+		$riga = static function ( array $r ): string {
+			// Shown as text, tags included (a code sample must be seen to be judged); only the numbered marks of links go.
+			$t = trim( (string) preg_replace( '#</?\d{1,3}/?>#', '', (string) $r['original'] ) );
+			$t = mb_strlen( $t ) > 220 ? mb_substr( $t, 0, 220 ) . '…' : $t;
+			return $t;
+		};
+		?>
+		<div class="trrocket-card" id="trr-keep" style="max-width:none">
+			<h2><?php esc_html_e( 'Still to translate', 'translate-rocket' ); ?> <?php $this->info( __( 'Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it.', 'translate-rocket' ) ); ?></h2>
+			<?php if ( isset( $_GET['kept'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
+				<div class="notice notice-success inline"><p>
+					<?php
+					/* translators: %d: number of sentences. */
+					printf( esc_html__( 'Kept as they are: %d.', 'translate-rocket' ), absint( $_GET['kept'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+					?>
+				</p></div>
+			<?php endif; ?>
+			<?php if ( isset( $_GET['unkept'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification ?>
+				<div class="notice notice-success inline"><p>
+					<?php
+					/* translators: %d: number of sentences. */
+					printf( esc_html__( 'Back to translate: %d.', 'translate-rocket' ), absint( $_GET['unkept'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+					?>
+				</p></div>
+			<?php endif; ?>
+
+			<?php if ( empty( $manca ) ) : ?>
+				<p><?php esc_html_e( 'Nothing is missing: every sentence has a translation or is kept as it is.', 'translate-rocket' ); ?></p>
+			<?php else : ?>
+				<details>
+					<summary style="cursor:pointer">
+						<?php
+						if ( count( $manca ) >= $limite ) {
+							/* translators: %d: number of sentences shown. */
+							printf( esc_html__( 'See the first %d sentences still to translate', 'translate-rocket' ), (int) $limite );
+						} else {
+							/* translators: %d: number of sentences. */
+							printf( esc_html__( 'Sentences still to translate: %d — see the list', 'translate-rocket' ), (int) count( $manca ) );
+						}
+						?>
+					</summary>
+					<form method="post" action="">
+						<?php wp_nonce_field( 'trrocket_keep_as_is', 'trrocket_keep_nonce' ); ?>
+						<table class="widefat striped" style="margin-top:8px">
+							<thead><tr>
+								<td class="check-column"><input type="checkbox" onclick="var c=this.checked;this.closest('table').querySelectorAll('tbody input[type=checkbox]').forEach(function(x){x.checked=c;});" aria-label="<?php esc_attr_e( 'Select all', 'translate-rocket' ); ?>" /></td>
+								<th><?php esc_html_e( 'Sentence', 'translate-rocket' ); ?></th>
+								<th><?php esc_html_e( 'Missing in', 'translate-rocket' ); ?></th>
+							</tr></thead>
+							<tbody>
+								<?php foreach ( $manca as $r ) : ?>
+									<tr>
+										<th scope="row" class="check-column"><input type="checkbox" name="ids[]" value="<?php echo (int) $r['id']; ?>" /></th>
+										<td><code style="white-space:pre-wrap;word-break:break-word"><?php echo esc_html( $riga( $r ) ); ?></code></td>
+										<td><?php echo esc_html( count( $r['langs'] ) === count( $targets ) ? __( 'all languages', 'translate-rocket' ) : strtoupper( implode( ', ', $r['langs'] ) ) ); ?></td>
+									</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+						<p>
+							<button type="submit" name="keep" value="selected" class="button"><?php esc_html_e( 'Keep the selected as they are', 'translate-rocket' ); ?></button>
+							<button type="submit" name="keep" value="all" class="button" onclick="return confirm(this.getAttribute('data-q'));" data-q="<?php esc_attr_e( 'Keep every sentence still missing as it is, in every language? You can undo it below.', 'translate-rocket' ); ?>"><?php esc_html_e( 'Keep all as they are', 'translate-rocket' ); ?></button>
+						</p>
+					</form>
+				</details>
+			<?php endif; ?>
+
+			<?php if ( $n_tenute > 0 ) : ?>
+				<details style="margin-top:10px">
+					<summary style="cursor:pointer">
+						<?php
+						/* translators: %d: number of sentences. */
+						printf( esc_html__( 'Sentences kept as they are: %d — see the list', 'translate-rocket' ), (int) $n_tenute );
+						?>
+					</summary>
+					<form method="post" action="">
+						<?php wp_nonce_field( 'trrocket_keep_as_is', 'trrocket_keep_nonce' ); ?>
+						<table class="widefat striped" style="margin-top:8px">
+							<thead><tr>
+								<td class="check-column"><input type="checkbox" onclick="var c=this.checked;this.closest('table').querySelectorAll('tbody input[type=checkbox]').forEach(function(x){x.checked=c;});" aria-label="<?php esc_attr_e( 'Select all', 'translate-rocket' ); ?>" /></td>
+								<th><?php esc_html_e( 'Sentence', 'translate-rocket' ); ?></th>
+								<th><?php esc_html_e( 'Kept in', 'translate-rocket' ); ?></th>
+							</tr></thead>
+							<tbody>
+								<?php foreach ( $tenute as $r ) : ?>
+									<tr>
+										<th scope="row" class="check-column"><input type="checkbox" name="ids[]" value="<?php echo (int) $r['id']; ?>" /></th>
+										<td><code style="white-space:pre-wrap;word-break:break-word"><?php echo esc_html( $riga( $r ) ); ?></code></td>
+										<td><?php echo esc_html( count( $r['langs'] ) >= count( $targets ) ? __( 'all languages', 'translate-rocket' ) : strtoupper( implode( ', ', $r['langs'] ) ) ); ?></td>
+									</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+						<p><button type="submit" name="keep" value="undo" class="button"><?php esc_html_e( 'Translate the selected again', 'translate-rocket' ); ?></button></p>
+					</form>
+				</details>
+			<?php endif; ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * The «Keep as it is» / «Translate again» buttons.
+	 */
+	public function maybe_keep_as_is(): void {
+		if ( ! isset( $_POST['trrocket_keep_nonce'], $_POST['keep'] ) || wp_doing_ajax() ) {
+			return;
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['trrocket_keep_nonce'] ) ), 'trrocket_keep_as_is' ) ) {
+			return;
+		}
+		$targets = (array) Settings::get()['target_languages'];
+		$cosa    = sanitize_key( wp_unslash( $_POST['keep'] ) );
+		$ids     = isset( $_POST['ids'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['ids'] ) ) : array();
+		$args    = array( 'page' => 'translate-rocket-ai' );
+		if ( 'undo' === $cosa ) {
+			Strings::unkeep( $ids );
+			$args['unkept'] = count( array_filter( $ids ) );
+		} else {
+			$manca = Strings::missing_anywhere( $targets, 100000 );
+			if ( 'all' !== $cosa ) {
+				$scelte = array_flip( $ids );
+				$manca  = array_filter( $manca, static function ( $r ) use ( $scelte ) {
+					return isset( $scelte[ $r['id'] ] );
+				} );
+			}
+			Strings::keep_as_is( wp_list_pluck( $manca, 'id' ), $targets );
+			$args['kept'] = count( $manca );
+		}
+		\TranslateRocket\Cache::flush();
+		wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php' ) ) . '#trr-keep' );
+		exit;
 	}
 
 	/**

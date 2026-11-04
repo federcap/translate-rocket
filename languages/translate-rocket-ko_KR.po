@@ -7738,3 +7738,72 @@ msgstr "「완료하고 번역 시작」을 누르면 언어가 저장되고 홈
 #: src/Admin/Admin.php
 msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
 msgstr "이 브라우저의 내장 번역기는 선택한 언어 중 하나를 지원하지 않습니다. 키 없이: TranslateRocket Labs를 무료로 요청하세요. 서버에서 모든 언어로 번역합니다. 또는 「추가 옵션」에서 무료 AI 키를 추가하세요."
+
+#: src/Admin/Admin.php
+msgid "Still to translate"
+msgstr "아직 번역되지 않음"
+
+#: src/Admin/Admin.php
+msgid "Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it."
+msgstr "아직 번역이 없는 모든 문장과, 번역이 빠진 언어입니다. 코드 예시, 제품 코드, 이름, 주소처럼 그대로 두는 편이 나은 것도 있습니다. «그대로 두기»를 누르면 해당 언어에서 원문이 표시되고 더 이상 누락으로 세지 않으므로 진행률이 100%에 도달할 수 있습니다. 이미 있는 번역은 절대 바뀌지 않습니다. «선택 항목 다시 번역»으로 되돌릴 수 있습니다."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as they are: %d."
+msgstr "그대로 둔 항목: %d"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Back to translate: %d."
+msgstr "다시 번역 대상: %d"
+
+#: src/Admin/Admin.php
+msgid "Nothing is missing: every sentence has a translation or is kept as it is."
+msgstr "빠진 것이 없습니다. 모든 문장에 번역이 있거나 그대로 두었습니다."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "See the first %d sentences still to translate"
+msgstr "아직 번역되지 않은 처음 %d개 문장 보기"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences still to translate: %d — see the list"
+msgstr "아직 번역되지 않은 문장: %d — 목록 보기"
+
+#: src/Admin/Admin.php
+msgid "Sentence"
+msgstr "문장"
+
+#: src/Admin/Admin.php
+msgid "Missing in"
+msgstr "누락된 언어"
+
+#: src/Admin/Admin.php
+msgid "all languages"
+msgstr "모든 언어"
+
+#: src/Admin/Admin.php
+msgid "Keep the selected as they are"
+msgstr "선택 항목 그대로 두기"
+
+#: src/Admin/Admin.php
+msgid "Keep every sentence still missing as it is, in every language? You can undo it below."
+msgstr "아직 빠진 모든 문장을 모든 언어에서 그대로 둘까요? 아래에서 되돌릴 수 있습니다."
+
+#: src/Admin/Admin.php
+msgid "Keep all as they are"
+msgstr "모두 그대로 두기"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences kept as they are: %d — see the list"
+msgstr "그대로 둔 문장: %d — 목록 보기"
+
+#: src/Admin/Admin.php
+msgid "Kept in"
+msgstr "그대로 둔 언어"
+
+#: src/Admin/Admin.php
+msgid "Translate the selected again"
+msgstr "선택 항목 다시 번역"

@@ -7766,3 +7766,72 @@ msgstr "«Bitir ve çevirmeye başla»ya basın: dilleriniz kaydedilir ve ana sa
 #: src/Admin/Admin.php
 msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
 msgstr "Bu tarayıcının yerleşik çevirmeni seçtiğiniz dillerden birini bilmiyor. Hiç anahtar olmadan: TranslateRocket Labs'ı ücretsiz isteyin — sunucunuzdan her dile çevirir. Ya da «Daha fazla seçenek» bölümünde ücretsiz bir yapay zekâ anahtarı ekleyin."
+
+#: src/Admin/Admin.php
+msgid "Still to translate"
+msgstr "Henüz çevrilmeyenler"
+
+#: src/Admin/Admin.php
+msgid "Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it."
+msgstr "Henüz çevirisi olmayan her cümle ve eksik olduğu diller. Bazılarını olduğu gibi bırakmak daha iyidir: bir kod örneği, bir ürün kodu, bir ad, bir adres. «Olduğu gibi bırak» bu dillerde orijinali gösterir ve onu artık eksik saymaz, böylece ilerleme 100% olabilir. Mevcut çeviriler asla değiştirilmez. «Seçilenleri yeniden çevir» bunu geri alır."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as they are: %d."
+msgstr "Olduğu gibi bırakılan: %d."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Back to translate: %d."
+msgstr "Yeniden çevrilecek: %d."
+
+#: src/Admin/Admin.php
+msgid "Nothing is missing: every sentence has a translation or is kept as it is."
+msgstr "Eksik bir şey yok: her cümlenin çevirisi var ya da olduğu gibi bırakıldı."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "See the first %d sentences still to translate"
+msgstr "Henüz çevrilmemiş ilk %d cümleyi gör"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences still to translate: %d — see the list"
+msgstr "Henüz çevrilmemiş cümleler: %d — listeyi gör"
+
+#: src/Admin/Admin.php
+msgid "Sentence"
+msgstr "Cümle"
+
+#: src/Admin/Admin.php
+msgid "Missing in"
+msgstr "Eksik olduğu diller"
+
+#: src/Admin/Admin.php
+msgid "all languages"
+msgstr "tüm diller"
+
+#: src/Admin/Admin.php
+msgid "Keep the selected as they are"
+msgstr "Seçilenleri olduğu gibi bırak"
+
+#: src/Admin/Admin.php
+msgid "Keep every sentence still missing as it is, in every language? You can undo it below."
+msgstr "Hâlâ eksik olan her cümle tüm dillerde olduğu gibi bırakılsın mı? Aşağıdan geri alabilirsiniz."
+
+#: src/Admin/Admin.php
+msgid "Keep all as they are"
+msgstr "Hepsini olduğu gibi bırak"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences kept as they are: %d — see the list"
+msgstr "Olduğu gibi bırakılan cümleler: %d — listeyi gör"
+
+#: src/Admin/Admin.php
+msgid "Kept in"
+msgstr "Bırakıldığı diller"
+
+#: src/Admin/Admin.php
+msgid "Translate the selected again"
+msgstr "Seçilenleri yeniden çevir"

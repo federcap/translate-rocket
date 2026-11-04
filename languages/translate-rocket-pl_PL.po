@@ -6949,3 +6949,72 @@ msgstr "Kliknij «Zakończ i zacznij tłumaczyć»: Twoje języki zostaną zapis
 #: src/Admin/Admin.php
 msgid "The translator built into this browser does not know one of the languages you chose. Without any key: ask for TranslateRocket Labs, free — it translates from your server, in every language. Or add a free AI key in «More options»."
 msgstr "Wbudowany tłumacz tej przeglądarki nie zna jednego z wybranych języków. Bez żadnego klucza: poproś o darmowe TranslateRocket Labs — tłumaczy z Twojego serwera, na każdy język. Albo dodaj darmowy klucz AI w «Więcej opcji»."
+
+#: src/Admin/Admin.php
+msgid "Still to translate"
+msgstr "Jeszcze do przetłumaczenia"
+
+#: src/Admin/Admin.php
+msgid "Every sentence that is still without a translation, with the languages it misses. Some are better left as they are: a code sample, a product code, a name, an address. «Keep as they are» shows the original in those languages and stops counting it as missing, so the progress can reach 100%. Translations already made are never touched. «Translate the selected again» undoes it."
+msgstr "Każde zdanie, które nie ma jeszcze tłumaczenia, wraz z językami, w których go brakuje. Niektóre lepiej zostawić bez zmian: przykład kodu, kod produktu, nazwę, adres. «Zostaw bez zmian» pokazuje oryginał w tych językach i przestaje liczyć zdanie jako brakujące, dzięki czemu postęp może dojść do 100%. Istniejące tłumaczenia nigdy nie są zmieniane. «Przetłumacz zaznaczone ponownie» cofa tę zmianę."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as they are: %d."
+msgstr "Zostawione bez zmian: %d."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Back to translate: %d."
+msgstr "Ponownie do przetłumaczenia: %d."
+
+#: src/Admin/Admin.php
+msgid "Nothing is missing: every sentence has a translation or is kept as it is."
+msgstr "Niczego nie brakuje: każde zdanie ma tłumaczenie lub zostało bez zmian."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "See the first %d sentences still to translate"
+msgstr "Zobacz pierwsze %d zdań do przetłumaczenia"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences still to translate: %d — see the list"
+msgstr "Zdania do przetłumaczenia: %d — zobacz listę"
+
+#: src/Admin/Admin.php
+msgid "Sentence"
+msgstr "Zdanie"
+
+#: src/Admin/Admin.php
+msgid "Missing in"
+msgstr "Brak w"
+
+#: src/Admin/Admin.php
+msgid "all languages"
+msgstr "wszystkich językach"
+
+#: src/Admin/Admin.php
+msgid "Keep the selected as they are"
+msgstr "Zostaw zaznaczone bez zmian"
+
+#: src/Admin/Admin.php
+msgid "Keep every sentence still missing as it is, in every language? You can undo it below."
+msgstr "Zostawić bez zmian każde brakujące zdanie we wszystkich językach? Możesz to cofnąć poniżej."
+
+#: src/Admin/Admin.php
+msgid "Keep all as they are"
+msgstr "Zostaw wszystkie bez zmian"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Sentences kept as they are: %d — see the list"
+msgstr "Zdania zostawione bez zmian: %d — zobacz listę"
+
+#: src/Admin/Admin.php
+msgid "Kept in"
+msgstr "Bez zmian w"
+
+#: src/Admin/Admin.php
+msgid "Translate the selected again"
+msgstr "Przetłumacz zaznaczone ponownie"
