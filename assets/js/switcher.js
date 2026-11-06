@@ -168,3 +168,22 @@
 	}
 	if ( 'loading' !== document.readyState ) { start(); } else { document.addEventListener( 'DOMContentLoaded', start ); }
 }() );
+
+/* Phones (5/11/2026): the floating switcher steps aside while the page scrolls and comes back 0.7 s after it stops,
+   so it never sits on the button the visitor is scrolling to. Not while its list is open. */
+( function () {
+	var timer = null;
+	function boxes() { return document.querySelectorAll( '.trrocket-floating' ); }
+	window.addEventListener( 'scroll', function () {
+		if ( window.innerWidth > 600 ) { return; }
+		var list = boxes();
+		if ( ! list.length ) { return; }
+		Array.prototype.forEach.call( list, function ( b ) {
+			if ( ! b.querySelector( '.trrocket-dd.is-open' ) ) { b.classList.add( 'trrocket-scrolling' ); }
+		} );
+		window.clearTimeout( timer );
+		timer = window.setTimeout( function () {
+			Array.prototype.forEach.call( boxes(), function ( b ) { b.classList.remove( 'trrocket-scrolling' ); } );
+		}, 700 );
+	}, { passive: true } );
+}() );

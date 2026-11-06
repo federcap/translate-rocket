@@ -96,10 +96,22 @@ class InlineCleanup {
 		foreach ( $gruppi as $re ) {
 			$pulito = preg_replace_callback(
 				$re,
-				function ( $m ) {
-					return (string) $this->text( $m[0] );
+				function ( $m ) use ( &$html ) {
+					$gruppo = (string) $m[0][0];
+					$dove   = (int) $m[0][1];
+					// A group with one language only, in the middle of a sentence ("The [:en]…[:]
+					// markers"), is someone writing about the markers: leave it. Real leftovers sit
+					// at the start of a value: after ">", a quote, or at the very beginning.
+					$prima = $dove > 0 ? $html[ $dove - 1 ] : '';
+					if ( count( InlineMarkers::dividi( $gruppo ) ) < 2 && '' !== $prima && false === strpos( '>"\'', $prima ) ) {
+						return $gruppo;
+					}
+					return (string) $this->text( $gruppo );
 				},
-				$html
+				$html,
+				-1,
+				$quanti,
+				PREG_OFFSET_CAPTURE
 			);
 			if ( is_string( $pulito ) ) {
 				$html = $pulito;
@@ -123,6 +135,12 @@ class InlineCleanup {
 			return $text;
 		}
 		if ( ! InlineMarkers::ha_lingue( $text ) ) {
+			return $text;
+		}
+		// A page that only talks about the markers ("The [:en]…[:] markers are read") is not
+		// a multilingual field: its text starts before the first marker. Found 4/11/2026 on
+		// translaterocket.com, where the migration guides were reduced to "…".
+		if ( ! self::whole_field( $text ) ) {
 			return $text;
 		}
 		$parti = InlineMarkers::dividi( $text );
@@ -152,6 +170,34 @@ class InlineCleanup {
 			$parts[ $k ] = $this->text( $v );
 		}
 		return $parts;
+	}
+
+	/**
+	 * Whether the markers hold the whole text: nothing but tags and spaces before the
+	 * first one and after the last closing one.
+	 *
+	 * @param string $text Text.
+	 */
+	private static function whole_field( string $text ): bool {
+		$codice = '[a-z]{2,3}(?:[_-][a-z0-9]{2,4})?';
+		$apre   = '/\[:' . $codice . '\]|\{:' . $codice . '\}|<!--:' . $codice . '-->|&lt;!--:' . $codice . '--&gt;/i';
+		if ( ! preg_match( $apre, $text, $m, PREG_OFFSET_CAPTURE ) ) {
+			return false;
+		}
+		$vuoto = static function ( string $s ): bool {
+			$s = html_entity_decode( wp_strip_all_tags( $s ), ENT_QUOTES, 'UTF-8' );
+			return '' === (string) preg_replace( '/[\s\x{00A0}]+/u', '', $s );
+		};
+		if ( ! $vuoto( substr( $text, 0, (int) $m[0][1] ) ) ) {
+			return false;
+		}
+		if ( preg_match_all( '/\[:\]|\{:\}|<!--:-->|&lt;!--:--&gt;/', $text, $c, PREG_OFFSET_CAPTURE ) ) {
+			$ultimo = end( $c[0] );
+			if ( ! $vuoto( substr( $text, (int) $ultimo[1] + strlen( $ultimo[0] ) ) ) ) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

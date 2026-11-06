@@ -92,6 +92,32 @@ class NoTranslate {
 	}
 
 	/**
+	 * The site's own address («example.com», also «Example.com»), kept as it is inside every sentence without being
+	 * written in Words & phrases (5/11/2026, Federico: «the domain name automatically among the words to exclude»).
+	 * Hosts without a dot (localhost) and IP addresses are left out.
+	 *
+	 * @return string[]
+	 */
+	public static function site_names(): array {
+		$out = array();
+		foreach ( array( home_url(), site_url() ) as $u ) {
+			$h = strtolower( (string) wp_parse_url( (string) $u, PHP_URL_HOST ) );
+			$h = (string) preg_replace( '/^www\./', '', $h );
+			if ( false === strpos( $h, '.' ) || filter_var( $h, FILTER_VALIDATE_IP ) ) {
+				continue;
+			}
+			$out[] = $h;
+			$out[] = ucfirst( $h );
+		}
+		/**
+		 * Filters the site addresses kept as they are inside sentences. Return an empty array to turn it off.
+		 *
+		 * @param string[] $names Lower-case host and the same with a capital letter.
+		 */
+		return self::clean_list( apply_filters( 'trrocket_keep_site_names', array_values( array_unique( $out ) ) ) );
+	}
+
+	/**
 	 * Whether a clean request path (no language prefix) matches an exclusion
 	 * pattern. "*" is a wildcard; matching is case-insensitive.
 	 */

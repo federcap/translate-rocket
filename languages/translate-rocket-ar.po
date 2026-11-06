@@ -7947,3 +7947,150 @@ msgstr "متروكة كما هي في"
 #: src/Admin/Admin.php
 msgid "Translate the selected again"
 msgstr "ترجمة المحدد من جديد"
+
+#: src/Admin/OneClick.php
+msgid "Translate your site"
+msgstr "ترجم موقعك"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Into: %s"
+msgstr "إلى: %s"
+
+#: src/Admin/OneClick.php
+msgid "change"
+msgstr "تغيير"
+
+#: src/Admin/OneClick.php
+msgid "Translate my site"
+msgstr "ترجم موقعي"
+
+#: src/Admin/OneClick.php
+msgid "Free. No key, no account. Keep this tab open while it works."
+msgstr "مجاني. بلا مفتاح ولا حساب. أبقِ هذه الصفحة مفتوحة أثناء العمل."
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Translate ten times more each day: send my e-mail (%s) to MyMemory with each sentence."
+msgstr "ترجم عشرة أضعاف كل يوم: أرسل بريدي الإلكتروني (%s) إلى MyMemory مع كل جملة."
+
+#: src/Admin/OneClick.php
+msgid "Optional. MyMemory (Translated.net) allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Nothing else is sent, and you can remove it here at any time."
+msgstr "اختياري. يسمح MyMemory (Translated.net) بنحو 50,000 حرف يوميًا بدل 5,000 عندما يعرف من يطلب. لا يُرسل شيء آخر، ويمكنك إزالته من هنا في أي وقت."
+
+#: src/Admin/OneClick.php
+msgid "Terms"
+msgstr "الشروط"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "MyMemory knows your e-mail (%s): about 50,000 characters a day."
+msgstr "يعرف MyMemory بريدك الإلكتروني (%s): نحو 50,000 حرف يوميًا."
+
+#: src/Admin/OneClick.php
+msgid "Remove it"
+msgstr "إزالته"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Reading your pages… %1$s of %2$s"
+msgstr "جارٍ قراءة صفحاتك… %1$s من %2$s"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "%1$s: %2$s of %3$s sentences"
+msgstr "%1$s: %2$s من %3$s جملة"
+
+#: src/Admin/OneClick.php
+msgid "Getting the translator ready…"
+msgstr "جارٍ تجهيز المترجم…"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Downloading the language model, once: %s"
+msgstr "تنزيل نموذج اللغة، مرة واحدة فقط: %s"
+
+#: src/Admin/OneClick.php
+msgid "Translating with your AI key."
+msgstr "الترجمة بمفتاح الذكاء الاصطناعي الخاص بك."
+
+#: src/Admin/OneClick.php
+msgid "Translating with the translator built into your browser — free, on this computer."
+msgstr "الترجمة بالمترجم المدمج في متصفحك — مجانًا، على هذا الحاسوب."
+
+#: src/Admin/OneClick.php
+msgid "Translating with MyMemory — free, about 5,000 characters a day."
+msgstr "الترجمة عبر MyMemory — مجانًا، نحو 5,000 حرف يوميًا."
+
+#: src/Admin/OneClick.php
+msgid "Translating with MyMemory — free, about 50,000 characters a day with your e-mail."
+msgstr "الترجمة عبر MyMemory — مجانًا، نحو 50,000 حرف يوميًا مع بريدك الإلكتروني."
+
+#: src/Admin/OneClick.php
+msgid "Putting the languages online…"
+msgstr "جارٍ نشر اللغات على الموقع…"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Done! Your site is now in %s."
+msgstr "تم! موقعك الآن متاح بـ %s."
+
+#: src/Admin/OneClick.php
+msgid "See it"
+msgstr "شاهده"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "%s sentences are still waiting. Press the button again tomorrow to finish them — or open this page in Chrome or Edge on a computer, which translates without a daily limit."
+msgstr "ما زالت %s جملة بانتظار الترجمة. اضغط الزر مرة أخرى غدًا لإنهائها — أو افتح هذه الصفحة في Chrome أو Edge على حاسوب، فهو يترجم بلا حد يومي."
+
+#: src/Admin/OneClick.php
+msgid "The free daily limit is reached for today."
+msgstr "تم بلوغ الحد اليومي المجاني لهذا اليوم."
+
+#: src/Admin/OneClick.php
+msgid "Nothing to translate yet: no text found on your pages."
+msgstr "لا شيء للترجمة بعد: لم يُعثر على نص في صفحاتك."
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Something went wrong: %s. Press the button again to continue where it stopped."
+msgstr "حدث خطأ: %s. اضغط الزر مرة أخرى للمتابعة من حيث توقف."
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Get ten times more for free: let MyMemory know my e-mail (%s)"
+msgstr "احصل على عشرة أضعاف مجانًا: دع MyMemory يعرف بريدي الإلكتروني (%s)"
+
+#: src/Admin/OneClick.php
+msgid "MyMemory allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Only the address is sent, with each sentence; you can remove it from this card at any time."
+msgstr "يسمح MyMemory بنحو 50,000 حرف يوميًا بدل 5,000 عندما يعرف من يطلب. يُرسل العنوان فقط، مع كل جملة؛ ويمكنك إزالته من هذه البطاقة في أي وقت."
+
+#: src/Admin/OneClick.php
+msgid "Done. Press «Translate my site» again to continue."
+msgstr "تم. اضغط «ترجم موقعي» مرة أخرى للمتابعة."
+
+#: src/Admin/OneClick.php
+msgid "Removed: MyMemory no longer receives your e-mail."
+msgstr "تمت الإزالة: لم يعد MyMemory يتلقى بريدك الإلكتروني."
+
+#: src/Admin/OneClick.php
+msgid "The translation is still running. Leave anyway?"
+msgstr "ما زالت الترجمة جارية. هل تريد المغادرة رغم ذلك؟"
+
+#: src/Admin/Admin.php
+msgid "Tick the languages you want below and save: then one button translates the whole site."
+msgstr "حدّد اللغات التي تريدها أدناه واحفظ: بعدها يترجم زر واحد الموقع كله."
+
+#: src/Admin/Admin.php
+msgid "OVHcloud (EU): AI models, without a key; texts are not stored"
+msgstr "OVHcloud (الاتحاد الأوروبي): نماذج ذكاء اصطناعي بلا مفتاح؛ لا تُخزَّن النصوص"
+
+#: src/Admin/Admin.php
+msgid "About 2 requests a minute for each of its models, no daily limit"
+msgstr "نحو طلبين في الدقيقة لكل نموذج من نماذجه، بلا حد يومي"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
+msgstr "يُترك كما هو تلقائيًا، دون حاجة إلى كتابته: عنوان موقعك (%s)."

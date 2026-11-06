@@ -7807,3 +7807,150 @@ msgstr "그대로 둔 언어"
 #: src/Admin/Admin.php
 msgid "Translate the selected again"
 msgstr "선택 항목 다시 번역"
+
+#: src/Admin/OneClick.php
+msgid "Translate your site"
+msgstr "사이트 번역"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Into: %s"
+msgstr "대상 언어: %s"
+
+#: src/Admin/OneClick.php
+msgid "change"
+msgstr "변경"
+
+#: src/Admin/OneClick.php
+msgid "Translate my site"
+msgstr "내 사이트 번역"
+
+#: src/Admin/OneClick.php
+msgid "Free. No key, no account. Keep this tab open while it works."
+msgstr "무료. 키도 계정도 필요 없습니다. 작업하는 동안 이 탭을 열어 두세요."
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Translate ten times more each day: send my e-mail (%s) to MyMemory with each sentence."
+msgstr "매일 10배 더 번역하기: 문장마다 내 이메일(%s)을 MyMemory에 보냅니다."
+
+#: src/Admin/OneClick.php
+msgid "Optional. MyMemory (Translated.net) allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Nothing else is sent, and you can remove it here at any time."
+msgstr "선택 사항. MyMemory(Translated.net)는 요청자를 알면 하루 5,000자 대신 약 50,000자를 허용합니다. 다른 것은 전송되지 않으며, 여기에서 언제든지 삭제할 수 있습니다."
+
+#: src/Admin/OneClick.php
+msgid "Terms"
+msgstr "이용 약관"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "MyMemory knows your e-mail (%s): about 50,000 characters a day."
+msgstr "MyMemory가 이메일(%s)을 알고 있습니다: 하루 약 50,000자."
+
+#: src/Admin/OneClick.php
+msgid "Remove it"
+msgstr "삭제"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Reading your pages… %1$s of %2$s"
+msgstr "페이지 읽는 중… %2$s개 중 %1$s"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "%1$s: %2$s of %3$s sentences"
+msgstr "%1$s: %3$s개 문장 중 %2$s개"
+
+#: src/Admin/OneClick.php
+msgid "Getting the translator ready…"
+msgstr "번역기 준비 중…"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Downloading the language model, once: %s"
+msgstr "언어 모델 다운로드 중(한 번만): %s"
+
+#: src/Admin/OneClick.php
+msgid "Translating with your AI key."
+msgstr "내 AI 키로 번역 중."
+
+#: src/Admin/OneClick.php
+msgid "Translating with the translator built into your browser — free, on this computer."
+msgstr "브라우저에 내장된 번역기로 번역 중 — 무료, 이 컴퓨터에서."
+
+#: src/Admin/OneClick.php
+msgid "Translating with MyMemory — free, about 5,000 characters a day."
+msgstr "MyMemory로 번역 중 — 무료, 하루 약 5,000자."
+
+#: src/Admin/OneClick.php
+msgid "Translating with MyMemory — free, about 50,000 characters a day with your e-mail."
+msgstr "MyMemory로 번역 중 — 무료, 이메일로 하루 약 50,000자."
+
+#: src/Admin/OneClick.php
+msgid "Putting the languages online…"
+msgstr "언어를 공개하는 중…"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Done! Your site is now in %s."
+msgstr "완료! 이제 사이트를 %s(으)로 볼 수 있습니다."
+
+#: src/Admin/OneClick.php
+msgid "See it"
+msgstr "보기"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "%s sentences are still waiting. Press the button again tomorrow to finish them — or open this page in Chrome or Edge on a computer, which translates without a daily limit."
+msgstr "아직 %s개 문장이 남아 있습니다. 내일 버튼을 다시 눌러 마무리하세요 — 또는 컴퓨터의 Chrome이나 Edge에서 이 페이지를 열면 하루 한도 없이 번역됩니다."
+
+#: src/Admin/OneClick.php
+msgid "The free daily limit is reached for today."
+msgstr "오늘의 무료 한도에 도달했습니다."
+
+#: src/Admin/OneClick.php
+msgid "Nothing to translate yet: no text found on your pages."
+msgstr "아직 번역할 것이 없습니다: 페이지에서 텍스트를 찾지 못했습니다."
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Something went wrong: %s. Press the button again to continue where it stopped."
+msgstr "문제가 발생했습니다: %s. 버튼을 다시 누르면 멈춘 곳부터 계속합니다."
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Get ten times more for free: let MyMemory know my e-mail (%s)"
+msgstr "무료로 10배 더: MyMemory에 내 이메일(%s) 알리기"
+
+#: src/Admin/OneClick.php
+msgid "MyMemory allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Only the address is sent, with each sentence; you can remove it from this card at any time."
+msgstr "MyMemory는 요청자를 알면 하루 5,000자 대신 약 50,000자를 허용합니다. 주소만 문장마다 함께 전송되며, 이 카드에서 언제든지 삭제할 수 있습니다."
+
+#: src/Admin/OneClick.php
+msgid "Done. Press «Translate my site» again to continue."
+msgstr "완료. 계속하려면 «내 사이트 번역»을 다시 누르세요."
+
+#: src/Admin/OneClick.php
+msgid "Removed: MyMemory no longer receives your e-mail."
+msgstr "삭제됨: MyMemory는 더 이상 이메일을 받지 않습니다."
+
+#: src/Admin/OneClick.php
+msgid "The translation is still running. Leave anyway?"
+msgstr "번역이 아직 진행 중입니다. 그래도 나가시겠습니까?"
+
+#: src/Admin/Admin.php
+msgid "Tick the languages you want below and save: then one button translates the whole site."
+msgstr "아래에서 원하는 언어를 선택하고 저장하세요. 그러면 버튼 하나로 사이트 전체가 번역됩니다."
+
+#: src/Admin/Admin.php
+msgid "OVHcloud (EU): AI models, without a key; texts are not stored"
+msgstr "OVHcloud(EU): AI 모델, 키 없이 사용; 텍스트는 저장되지 않음"
+
+#: src/Admin/Admin.php
+msgid "About 2 requests a minute for each of its models, no daily limit"
+msgstr "모델마다 분당 약 2회 요청, 하루 한도 없음"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
+msgstr "자동으로 그대로 유지되므로 적을 필요가 없습니다: 사이트 주소(%s)."

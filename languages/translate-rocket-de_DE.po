@@ -6988,3 +6988,150 @@ msgstr "So gelassen in"
 #: src/Admin/Admin.php
 msgid "Translate the selected again"
 msgstr "Auswahl erneut übersetzen"
+
+#: src/Admin/OneClick.php
+msgid "Translate your site"
+msgstr "Website übersetzen"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Into: %s"
+msgstr "In: %s"
+
+#: src/Admin/OneClick.php
+msgid "change"
+msgstr "ändern"
+
+#: src/Admin/OneClick.php
+msgid "Translate my site"
+msgstr "Meine Website übersetzen"
+
+#: src/Admin/OneClick.php
+msgid "Free. No key, no account. Keep this tab open while it works."
+msgstr "Kostenlos. Kein Schlüssel, kein Konto. Lassen Sie diesen Tab geöffnet, solange es läuft."
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Translate ten times more each day: send my e-mail (%s) to MyMemory with each sentence."
+msgstr "Täglich zehnmal mehr übersetzen: meine E-Mail-Adresse (%s) mit jedem Satz an MyMemory senden."
+
+#: src/Admin/OneClick.php
+msgid "Optional. MyMemory (Translated.net) allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Nothing else is sent, and you can remove it here at any time."
+msgstr "Optional. MyMemory (Translated.net) erlaubt etwa 50.000 statt 5.000 Zeichen pro Tag, wenn es weiß, wer fragt. Sonst wird nichts gesendet, und Sie können die Adresse hier jederzeit entfernen."
+
+#: src/Admin/OneClick.php
+msgid "Terms"
+msgstr "Bedingungen"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "MyMemory knows your e-mail (%s): about 50,000 characters a day."
+msgstr "MyMemory kennt Ihre E-Mail-Adresse (%s): etwa 50.000 Zeichen pro Tag."
+
+#: src/Admin/OneClick.php
+msgid "Remove it"
+msgstr "Entfernen"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Reading your pages… %1$s of %2$s"
+msgstr "Ihre Seiten werden gelesen … %1$s von %2$s"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "%1$s: %2$s of %3$s sentences"
+msgstr "%1$s: %2$s von %3$s Sätzen"
+
+#: src/Admin/OneClick.php
+msgid "Getting the translator ready…"
+msgstr "Der Übersetzer wird vorbereitet …"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Downloading the language model, once: %s"
+msgstr "Das Sprachmodell wird einmalig heruntergeladen: %s"
+
+#: src/Admin/OneClick.php
+msgid "Translating with your AI key."
+msgstr "Übersetzung mit Ihrem KI-Schlüssel."
+
+#: src/Admin/OneClick.php
+msgid "Translating with the translator built into your browser — free, on this computer."
+msgstr "Übersetzung mit dem in Ihren Browser eingebauten Übersetzer — kostenlos, auf diesem Computer."
+
+#: src/Admin/OneClick.php
+msgid "Translating with MyMemory — free, about 5,000 characters a day."
+msgstr "Übersetzung mit MyMemory — kostenlos, etwa 5.000 Zeichen pro Tag."
+
+#: src/Admin/OneClick.php
+msgid "Translating with MyMemory — free, about 50,000 characters a day with your e-mail."
+msgstr "Übersetzung mit MyMemory — kostenlos, etwa 50.000 Zeichen pro Tag mit Ihrer E-Mail-Adresse."
+
+#: src/Admin/OneClick.php
+msgid "Putting the languages online…"
+msgstr "Die Sprachen werden online gestellt …"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Done! Your site is now in %s."
+msgstr "Fertig! Ihre Website ist jetzt auf %s."
+
+#: src/Admin/OneClick.php
+msgid "See it"
+msgstr "Ansehen"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "%s sentences are still waiting. Press the button again tomorrow to finish them — or open this page in Chrome or Edge on a computer, which translates without a daily limit."
+msgstr "%s Sätze warten noch. Drücken Sie morgen erneut auf die Schaltfläche, um sie fertigzustellen — oder öffnen Sie diese Seite in Chrome oder Edge auf einem Computer, der ohne Tageslimit übersetzt."
+
+#: src/Admin/OneClick.php
+msgid "The free daily limit is reached for today."
+msgstr "Das kostenlose Tageslimit ist für heute erreicht."
+
+#: src/Admin/OneClick.php
+msgid "Nothing to translate yet: no text found on your pages."
+msgstr "Noch nichts zu übersetzen: Auf Ihren Seiten wurde kein Text gefunden."
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Something went wrong: %s. Press the button again to continue where it stopped."
+msgstr "Etwas ist schiefgelaufen: %s. Drücken Sie die Schaltfläche erneut, um dort weiterzumachen, wo es angehalten hat."
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Get ten times more for free: let MyMemory know my e-mail (%s)"
+msgstr "Zehnmal mehr kostenlos: MyMemory meine E-Mail-Adresse (%s) mitteilen"
+
+#: src/Admin/OneClick.php
+msgid "MyMemory allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Only the address is sent, with each sentence; you can remove it from this card at any time."
+msgstr "MyMemory erlaubt etwa 50.000 statt 5.000 Zeichen pro Tag, wenn es weiß, wer fragt. Nur die Adresse wird gesendet, mit jedem Satz; Sie können sie in diesem Kasten jederzeit entfernen."
+
+#: src/Admin/OneClick.php
+msgid "Done. Press «Translate my site» again to continue."
+msgstr "Erledigt. Drücken Sie erneut auf «Meine Website übersetzen», um fortzufahren."
+
+#: src/Admin/OneClick.php
+msgid "Removed: MyMemory no longer receives your e-mail."
+msgstr "Entfernt: MyMemory erhält Ihre E-Mail-Adresse nicht mehr."
+
+#: src/Admin/OneClick.php
+msgid "The translation is still running. Leave anyway?"
+msgstr "Die Übersetzung läuft noch. Trotzdem verlassen?"
+
+#: src/Admin/Admin.php
+msgid "Tick the languages you want below and save: then one button translates the whole site."
+msgstr "Wählen Sie unten die gewünschten Sprachen aus und speichern Sie: Dann übersetzt eine einzige Schaltfläche die ganze Website."
+
+#: src/Admin/Admin.php
+msgid "OVHcloud (EU): AI models, without a key; texts are not stored"
+msgstr "OVHcloud (EU): KI-Modelle ohne Schlüssel; Texte werden nicht gespeichert"
+
+#: src/Admin/Admin.php
+msgid "About 2 requests a minute for each of its models, no daily limit"
+msgstr "Etwa 2 Anfragen pro Minute je Modell, kein Tageslimit"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
+msgstr "Wird automatisch unverändert gelassen, Sie müssen ihn nicht eintragen: die Adresse Ihrer Website (%s)."

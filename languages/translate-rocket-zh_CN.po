@@ -7807,3 +7807,150 @@ msgstr "保持原样的语言"
 #: src/Admin/Admin.php
 msgid "Translate the selected again"
 msgstr "重新翻译所选"
+
+#: src/Admin/OneClick.php
+msgid "Translate your site"
+msgstr "翻译您的网站"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Into: %s"
+msgstr "目标语言：%s"
+
+#: src/Admin/OneClick.php
+msgid "change"
+msgstr "更改"
+
+#: src/Admin/OneClick.php
+msgid "Translate my site"
+msgstr "翻译我的网站"
+
+#: src/Admin/OneClick.php
+msgid "Free. No key, no account. Keep this tab open while it works."
+msgstr "免费。无需密钥，无需账户。运行期间请保持此标签页打开。"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Translate ten times more each day: send my e-mail (%s) to MyMemory with each sentence."
+msgstr "每天多翻译十倍：每句都将我的邮箱（%s）发送给 MyMemory。"
+
+#: src/Admin/OneClick.php
+msgid "Optional. MyMemory (Translated.net) allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Nothing else is sent, and you can remove it here at any time."
+msgstr "可选。MyMemory（Translated.net）知道请求者是谁时，每天允许约 50,000 个字符，而不是 5,000。不会发送其他任何内容，您可以随时在这里移除。"
+
+#: src/Admin/OneClick.php
+msgid "Terms"
+msgstr "条款"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "MyMemory knows your e-mail (%s): about 50,000 characters a day."
+msgstr "MyMemory 已知道您的邮箱（%s）：每天约 50,000 个字符。"
+
+#: src/Admin/OneClick.php
+msgid "Remove it"
+msgstr "移除"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Reading your pages… %1$s of %2$s"
+msgstr "正在读取您的页面… 第 %1$s 个，共 %2$s 个"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "%1$s: %2$s of %3$s sentences"
+msgstr "%1$s：%2$s / %3$s 句"
+
+#: src/Admin/OneClick.php
+msgid "Getting the translator ready…"
+msgstr "正在准备翻译器…"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Downloading the language model, once: %s"
+msgstr "正在下载语言模型（仅一次）：%s"
+
+#: src/Admin/OneClick.php
+msgid "Translating with your AI key."
+msgstr "正在使用您的 AI 密钥翻译。"
+
+#: src/Admin/OneClick.php
+msgid "Translating with the translator built into your browser — free, on this computer."
+msgstr "正在使用浏览器内置的翻译器翻译——免费，在这台电脑上。"
+
+#: src/Admin/OneClick.php
+msgid "Translating with MyMemory — free, about 5,000 characters a day."
+msgstr "正在使用 MyMemory 翻译——免费，每天约 5,000 个字符。"
+
+#: src/Admin/OneClick.php
+msgid "Translating with MyMemory — free, about 50,000 characters a day with your e-mail."
+msgstr "正在使用 MyMemory 翻译——免费，提供邮箱后每天约 50,000 个字符。"
+
+#: src/Admin/OneClick.php
+msgid "Putting the languages online…"
+msgstr "正在上线语言…"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Done! Your site is now in %s."
+msgstr "完成！您的网站现已提供 %s 版本。"
+
+#: src/Admin/OneClick.php
+msgid "See it"
+msgstr "查看"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "%s sentences are still waiting. Press the button again tomorrow to finish them — or open this page in Chrome or Edge on a computer, which translates without a daily limit."
+msgstr "还有 %s 句等待翻译。明天再按一次按钮即可完成——或在电脑上用 Chrome 或 Edge 打开此页面，它没有每日限额。"
+
+#: src/Admin/OneClick.php
+msgid "The free daily limit is reached for today."
+msgstr "今天的免费额度已用完。"
+
+#: src/Admin/OneClick.php
+msgid "Nothing to translate yet: no text found on your pages."
+msgstr "暂无可翻译内容：您的页面上没有找到文本。"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Something went wrong: %s. Press the button again to continue where it stopped."
+msgstr "出了点问题：%s。再按一次按钮，将从停止的地方继续。"
+
+#: src/Admin/OneClick.php
+#, php-format
+msgid "Get ten times more for free: let MyMemory know my e-mail (%s)"
+msgstr "免费多十倍：让 MyMemory 知道我的邮箱（%s）"
+
+#: src/Admin/OneClick.php
+msgid "MyMemory allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Only the address is sent, with each sentence; you can remove it from this card at any time."
+msgstr "MyMemory 知道请求者是谁时，每天允许约 50,000 个字符，而不是 5,000。只发送邮箱地址，随每句发送；您可以随时在此卡片中移除。"
+
+#: src/Admin/OneClick.php
+msgid "Done. Press «Translate my site» again to continue."
+msgstr "完成。再按一次“翻译我的网站”继续。"
+
+#: src/Admin/OneClick.php
+msgid "Removed: MyMemory no longer receives your e-mail."
+msgstr "已移除：MyMemory 不再接收您的邮箱。"
+
+#: src/Admin/OneClick.php
+msgid "The translation is still running. Leave anyway?"
+msgstr "翻译仍在进行。仍要离开吗？"
+
+#: src/Admin/Admin.php
+msgid "Tick the languages you want below and save: then one button translates the whole site."
+msgstr "在下方勾选所需语言并保存：之后一个按钮即可翻译整个网站。"
+
+#: src/Admin/Admin.php
+msgid "OVHcloud (EU): AI models, without a key; texts are not stored"
+msgstr "OVHcloud（欧盟）：AI 模型，无需密钥；不保存文本"
+
+#: src/Admin/Admin.php
+msgid "About 2 requests a minute for each of its models, no daily limit"
+msgstr "每个模型每分钟约 2 次请求，无每日限额"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
+msgstr "自动保持原样，无需填写：您网站的地址（%s）。"

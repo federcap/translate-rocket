@@ -54,7 +54,9 @@ class Copies {
 	 */
 	public static function is_active( int $source_id, string $lang ): bool {
 		$cid = self::copy_id( $source_id, $lang );
-		if ( $cid <= 0 || ! ( get_post( $cid ) instanceof \WP_Post ) ) {
+		$copy = $cid > 0 ? get_post( $cid ) : null;
+		// 5/11/2026 (lungomare.ee, /it/ in English): a copy moved to the Trash kept being served in place of the translation.
+		if ( ! ( $copy instanceof \WP_Post ) || 'trash' === $copy->post_status ) {
 			return false;
 		}
 		return '1' === (string) get_post_meta( $source_id, self::META_ACTIVE . $lang, true );

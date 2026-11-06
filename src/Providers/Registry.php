@@ -59,6 +59,10 @@ class Registry {
 	 * A provider by id, or null.
 	 */
 	public static function get( string $id ): ?ProviderInterface {
+		// 5/11/2026: MyMemory is asked for by id by the one-click translation only, never part of the chain.
+		if ( MyMemoryProvider::ID === $id ) {
+			return new MyMemoryProvider();
+		}
 		foreach ( self::all() as $provider ) {
 			if ( $provider->id() === $id ) {
 				return $provider;

@@ -2594,3 +2594,20 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-wiz-ctl > .trr-lang-cerca{margin-top:0}
 .trr-wiz-ctl #trr-wiz-source,.trr-wiz-ctl .trr-lang-cerca-in{width:min(320px,100%);box-sizing:border-box}
 @media screen and ( max-width: 600px ){.trr-wiz-form{grid-template-columns:minmax(0,1fr);gap:6px}.trr-wiz-lab{padding-top:10px}.trr-wiz-ctl #trr-wiz-source{min-width:0;width:100%}}
+
+/* 5/11/2026: «Translate my site» — one button (Simple view) */
+.trr-oneclick{border-left:4px solid #4f46e5;max-width:760px}
+.trr-oneclick h2{margin-top:0}
+.trr-oneclick .button-hero{font-size:17px}
+.trr-oneclick-free{margin-top:-4px}
+.trr-oneclick-consent{max-width:680px}.trr-oneclick-consent label{display:flex;gap:8px;align-items:flex-start;font-weight:500}.trr-oneclick-consent label input{margin-top:3px}.trr-oneclick-consent .description{display:block;margin:4px 0 0 26px}
+.trr-oneclick-run .trr-prog{max-width:520px;margin:12px 0 6px}
+.trr-oneclick-run .trr-prog-fill{background:#4f46e5;transition:width .4s}
+.trr-oneclick-ok{font-size:16px;font-weight:600;color:#065f46}
+.trr-oneclick-end .button{margin:0 6px 6px 0}
+.trr-oneclick-first{font-size:15px;max-width:760px}
+/* 5/11/2026: in the Simple view «Translate my site» does it all: no per-language Translate button, no online switch */
+.trr-simple .trr-lang-state-go,
+.trr-simple .trr-lang-state-switch,
+.trr-simple .trrocket-lang-item .trr-onoff,
+.trr-simple .trr-offline-hint { display: none !important; }

@@ -241,6 +241,7 @@ final class Plugin {
 				add_action( $quando, array( '\\TranslateRocket\\Admin\\NextSteps', 'forget' ), 10, 0 );
 			}
 			( new \TranslateRocket\Admin\BrowserEngine() )->register();
+			( new \TranslateRocket\Admin\OneClick() )->register(); // 5/11/2026: «Translate my site», one button
 			( new \TranslateRocket\Admin\View() )->register(); // 1.8.8: Simple / Advanced
 			( new \TranslateRocket\Admin\SearchPage() )->register(); // 1.8.8: the search box, its own screen with profiles
 		} elseif ( $coexist ) {

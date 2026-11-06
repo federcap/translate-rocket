@@ -262,6 +262,20 @@ class Translator {
 		// Improving browser translations: never copy a browser translation back.
 		$pending = self::reuse_pass( $rows, $lang, $count, $migliora ? ( 'none' === self::reuse_mode() ? 'none' : 'no_browser' ) : self::reuse_mode() );
 
+		// 5/11/2026 (lungomare.ee: «lungomare.ee», the site's name, the last sentence «to translate» in 13 languages): a text
+		// that is only an address — a domain, a web address, an e-mail — is the same in every language. Kept as it is,
+		// never sent to the engine.
+		foreach ( $pending as $text => $ids ) {
+			if ( self::only_address( (string) $text ) ) {
+				foreach ( (array) $ids as $id ) {
+					if ( Strings::save_translation( (int) $id, $lang, (string) $text, 1, 'kept' ) ) {
+						++$kept;
+					}
+				}
+				unset( $pending[ $text ] );
+			}
+		}
+
 		$fermato = false;
 		foreach ( array_chunk( array_keys( $pending ), max( 1, $batch ) ) as $texts ) {
 			if ( $deadline > 0 && microtime( true ) >= $deadline ) {
@@ -788,6 +802,23 @@ class Translator {
 			}
 		}
 		return $si / count( $parole ) >= 0.15; // English prose: ~40 %; a German review: «was», «an» = 10 %
+	}
+
+	/**
+	 * 5/11/2026: the text is only an address (lungomare.ee, www.example.com, https://example.co.uk/page, an e-mail):
+	 * the same in every language. The ending in small letters, so «St.Louis» or «Node.JS» are not taken for one.
+	 *
+	 * @param string $text Text.
+	 */
+	public static function only_address( string $text ): bool {
+		$t = trim( $text );
+		if ( '' === $t || mb_strlen( $t ) > 200 || preg_match( '/\s/u', $t ) ) {
+			return false;
+		}
+		if ( is_email( $t ) ) {
+			return true;
+		}
+		return (bool) preg_match( '#^(?:https?://)?(?:www\.)?[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)*\.[a-z]{2,24}(?::\d+)?(?:/\S*)?$#u', $t );
 	}
 
 	private static function parts_kept( string $original, string $translation ): bool {

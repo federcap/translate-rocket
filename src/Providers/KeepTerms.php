@@ -33,7 +33,8 @@ final class KeepTerms {
 	 */
 	public static function in( array $texts ): array {
 		$found = array();
-		foreach ( NoTranslate::strings() as $term ) {
+		// Words & phrases, and the site's own address (always: nobody wants «example.com» translated).
+		foreach ( array_unique( array_merge( NoTranslate::strings(), NoTranslate::site_names() ) ) as $term ) {
 			$term = trim( (string) $term );
 			if ( mb_strlen( $term ) < 2 ) {
 				continue;

@@ -709,6 +709,20 @@ class Admin {
 	const SCAN_BLOCK = 500;
 
 	/**
+	 * 5/11/2026: what the one-click translation needs to read the site by itself (same addresses as «Scan site for text»).
+	 *
+	 * @return array<string,mixed>
+	 */
+	public static function scan_data(): array {
+		return array(
+			'urls'  => array_merge( array( home_url( '/' ) ), self::scannable_urls( 0 ) ),
+			'total' => self::scannable_total(),
+			'block' => self::SCAN_BLOCK,
+			'nonce' => wp_create_nonce( 'trrocket_scan_urls' ),
+		);
+	}
+
+	/**
 	 * The content types the scan visits: every public one with its own pages (posts, pages,
 	 * WooCommerce products, events…), not media files.
 	 *
@@ -4020,12 +4034,14 @@ JS;
 		$labs_ids = array(
 			'mymemory' => 'mymemory',
 			'edge'     => 'edge-unofficial',
+			'ovh'      => 'ovh-ai', // 5/11/2026: OVHcloud AI Endpoints without a key (Labs 0.9.14)
 			'yandex'   => 'yandex-unofficial',
 		);
 		// 11/10/2026 (Federico: «choose the engine, an official endpoint or not, and warn when it is from Labs»).
 		$ufficiale = array(
 			'mymemory' => true,
 			'edge'     => false,
+			'ovh'      => false, // documented, but no terms for the keyless access: treated as unofficial (Federico, 5/11/2026)
 			'yandex'   => false,
 		);
 		$per_id = array();
@@ -4055,6 +4071,7 @@ JS;
 		$nomi    = array(
 			'edge'     => 'Microsoft Edge Translator',
 			'mymemory' => 'MyMemory',
+			'ovh'      => 'OVHcloud AI (Europe)',
 			'yandex'   => 'Yandex Translate',
 		);
 		foreach ( $labs_ids as $lid => $pid ) {
@@ -4126,6 +4143,7 @@ JS;
 			''              => array( '', '', __( 'Each provider\'s own limit', 'translate-rocket' ), __( 'At least one AI key on AI Translation', 'translate-rocket' ), $srv, __( 'The providers in your priority order', 'translate-rocket' ) ),
 			'browser'       => array( 'free', 'good', __( 'No limit', 'translate-rocket' ), __( 'Nothing: Chrome or Edge on a computer (the first time it downloads its language model)', 'translate-rocket' ), __( 'In this browser, while this page is open', 'translate-rocket' ), __( 'Nowhere: the text stays on this computer', 'translate-rocket' ) ),
 			'labs:edge'     => array( 'free', 'good', __( 'No fixed daily limit', 'translate-rocket' ), __( 'TranslateRocket Labs (free); you accept its conditions once', 'translate-rocket' ), $srv, __( 'Microsoft, through an unofficial endpoint', 'translate-rocket' ) ),
+			'labs:ovh'      => array( 'free', 'good', __( 'About 2 requests a minute for each of its models, no daily limit', 'translate-rocket' ), __( 'TranslateRocket Labs (free); you accept its conditions once', 'translate-rocket' ), $srv, __( 'OVHcloud (EU): AI models, without a key; texts are not stored', 'translate-rocket' ) ),
 			'labs:yandex'   => array( 'free', 'fair', __( 'No fixed daily limit', 'translate-rocket' ), __( 'TranslateRocket Labs (free); you accept its conditions once', 'translate-rocket' ), $srv, __( 'Yandex (Russia), through an unofficial endpoint', 'translate-rocket' ) ),
 			'groq'          => array( 'limit', 'very-good', __( 'About 1,000 requests a day', 'translate-rocket' ), __( 'A free Groq key: 2 minutes, no card', 'translate-rocket' ), $srv, __( 'Groq (USA)', 'translate-rocket' ) ),
 			'cloudflare'    => array( 'limit', 'good', __( '10,000 neurons a day (a few thousand sentences)', 'translate-rocket' ), __( 'A free Cloudflare account and its API token', 'translate-rocket' ), $srv, __( 'Cloudflare', 'translate-rocket' ) ),
@@ -4175,6 +4193,10 @@ JS;
 	private static function solo_engine( string $motore, bool $ack ): ?string {
 		if ( '' === $motore || 'browser' === $motore ) {
 			return '';
+		}
+		// 5/11/2026: the one-click translation's last engine, built in (official, free, no key).
+		if ( \TranslateRocket\Providers\MyMemoryProvider::ID === $motore ) {
+			return $motore;
 		}
 		// MyMemory's e-mail, written in its box under the menu (13/10/2026): kept in Labs' own setting.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- both callers checked the nonce.
@@ -4327,6 +4349,8 @@ JS;
 			'mymemory'          => 'MyMemory (Labs)',
 			'edge-unofficial'   => 'Microsoft Edge (Labs)',
 			'yandex-unofficial' => 'Yandex (Labs)',
+			'ovh-ai'            => 'OVHcloud AI (Labs)',
+			'mymemory-free'     => 'MyMemory',
 			'google-unofficial' => 'Google (Labs)',
 		);
 		if ( isset( $fissi[ $id ] ) ) {
@@ -5678,6 +5702,15 @@ JS
 				<div class="trrocket-card">
 					<h2><?php esc_html_e( 'Words &amp; phrases', 'translate-rocket' ); ?> <?php $this->info( __( 'Names that must stay as they are, such as your brand or product names. A text that is only the name is never translated; inside a sentence, DeepL, Google Cloud and the AI models are told to leave the name unchanged.', 'translate-rocket' ) ); ?></h2>
 					<textarea name="exclude_strings" rows="6" class="large-text code" placeholder="TranslateRocket&#10;WordPress&#10;WooCommerce"><?php echo esc_textarea( $box( $settings['exclude_strings'] ?? array() ) ); ?></textarea>
+					<?php $trr_dom = \TranslateRocket\NoTranslate::site_names(); ?>
+					<?php if ( ! empty( $trr_dom ) ) : ?>
+						<p class="description" id="trr-keep-domain">
+							<?php
+							/* translators: %s: the site's address, such as example.com. */
+							printf( esc_html__( 'Kept as it is automatically, no need to write it: your site\'s address (%s).', 'translate-rocket' ), '<code>' . esc_html( $trr_dom[0] ) . '</code>' );
+							?>
+						</p>
+					<?php endif; ?>
 				</div>
 
 				<?php
@@ -6273,6 +6306,14 @@ JS;
 			}
 		}
 		\TranslateRocket\Cache::flush();
+		// 5/11/2026 (Federico: «one click and it translates»): straight to the «Translate my site» button, the whole site
+		// in one go. The «done» screen (homepage first, then the editor) stays for whoever gave a key in the wizard —
+		// its whole path, errors included, is the proven one — and for the Advanced view.
+		$wiz_method = isset( $_POST['trr_method'] ) ? sanitize_key( $_POST['trr_method'] ) : 'manual';
+		if ( 'manual' === $wiz_method && ! get_option( 'trrocket_wizard_keycheck' ) && View::simple() ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=translate-rocket#trr-oneclick' ) );
+			exit;
+		}
 		wp_safe_redirect( add_query_arg( 'done', '1', admin_url( 'admin.php?page=translate-rocket-wizard' ) ) );
 		exit;
 	}
@@ -6751,9 +6792,19 @@ JS;
 				}
 				$guarda = '' !== $prima ? \TranslateRocket\Plugin::instance()->router()->home_for_language( $prima ) : '';
 				?>
-				<h1 class="trr-page-title"><?php esc_html_e( 'Translate your site in three steps', 'translate-rocket' ); ?></h1>
-				<p class="trr-guide-link"><?php esc_html_e( 'First time here?', 'translate-rocket' ); ?> <a href="<?php echo esc_url( self::doc( '/getting-started/' ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Step-by-step setup guide ↗', 'translate-rocket' ); ?></a></p>
-				<ol class="trr-steps3">
+				<?php
+				// 5/11/2026 (Federico: «one click and it translates, stop»): one button that does everything, engine
+				// chosen by the plugin. Without languages yet, a single line pointing at the list below.
+				$uno = array_values( array_diff( array_map( 'strval', $targets ), array( (string) $source ) ) );
+				?>
+				<h1 class="trr-page-title"><?php esc_html_e( 'Translate your site', 'translate-rocket' ); ?></h1>
+				<?php if ( ! empty( $uno ) ) : ?>
+					<?php \TranslateRocket\Admin\OneClick::render(); ?>
+				<?php else : ?>
+					<p class="trr-oneclick-first"><?php esc_html_e( 'Tick the languages you want below and save: then one button translates the whole site.', 'translate-rocket' ); ?></p>
+				<?php endif; ?>
+				<?php $guarda = ''; // the one-click card shows its own links at the end ?>
+				<ol class="trr-steps3" hidden>
 					<li class="<?php echo empty( $targets ) ? 'is-now' : 'is-done'; ?>"><strong><?php esc_html_e( 'Choose the languages', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'Tick them below and save.', 'translate-rocket' ); ?></span></li>
 					<li class="<?php echo empty( $targets ) ? '' : 'is-now'; ?>"><strong><?php esc_html_e( 'Translate, for free', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'Press «Translate» next to a language: no key, no account.', 'translate-rocket' ); ?></span></li>
 					<li><strong><?php esc_html_e( 'Put it online', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'Flip its switch to Online when you like it.', 'translate-rocket' ); ?></span></li>
@@ -6768,7 +6819,7 @@ JS;
 			<div class="trr-adv"><?php \TranslateRocket\Admin\Overview::render(); ?></div>
 
 
-			<?php if ( empty( $targets ) ) : ?>
+			<?php if ( empty( $targets ) && ! View::simple() ) : ?>
 				<div class="trrocket-card" style="border-left:4px solid #4f46e5">
 					<h2>🚀 <?php esc_html_e( 'Quick start', 'translate-rocket' ); ?></h2>
 					<ol style="margin:0 0 4px 18px;line-height:1.9">
@@ -6824,7 +6875,7 @@ JS;
 
 			<form method="post" action="">
 				<?php wp_nonce_field( 'trrocket_save_settings', 'trrocket_settings_nonce' ); ?>
-				<div class="trrocket-card trr-card-langs">
+				<div class="trrocket-card trr-card-langs" id="trr-languages">
 					<h2><?php esc_html_e( 'Languages', 'translate-rocket' ); ?></h2>
 					<table class="form-table" role="presentation">
 						<tr>
@@ -6870,7 +6921,7 @@ JS;
 					<?php
 					self::lang_search_box();
 					?>
-						<p class="description trr-into-td trr-under-search"><?php esc_html_e( 'A language you add starts offline: only you see it while you translate it. Flip its switch to green when it is ready.', 'translate-rocket' ); ?></p>
+						<p class="description trr-into-td trr-under-search trr-offline-hint"><?php esc_html_e( 'A language you add starts offline: only you see it while you translate it. Flip its switch to green when it is ready.', 'translate-rocket' ); ?></p>
 					<?php
 					// 14/10/2026 (visual check: 80 languages always open made the page 3,900 px, 7,400 on a phone): with
 					// languages chosen, only those show; typing in the search box shows every match; one button opens all.

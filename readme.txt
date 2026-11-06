@@ -5,11 +5,11 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.31
+Stable tag: 1.8.32
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Translate your whole site with no API key — Chrome and Edge do it on your own computer. Unlimited languages, free, no paid tier.
+Translate your whole site in one click, with no API key, from any browser. Unlimited languages, free, no paid tier.
 
 == Description ==
 
@@ -19,7 +19,7 @@ https://www.youtube.com/watch?v=WsLpAISB_vo
 
 **Already using WPML, Polylang, TranslatePress or Weglot? Try TranslateRocket next to it — your site does not change.** Activate it alongside your current translation plugin: visitors keep seeing exactly the same site, while you import your translations, complete them and preview any page in any language as an administrator. When you are convinced, deactivate the old plugin and put TranslateRocket online with one click. Nothing of the other plugin is deleted, and switching it back on takes you straight back to where you started.
 
-**You do not need an API key at all.** Chrome and Edge on a computer carry a translator that runs on the device itself, and TranslateRocket can drive it: install the plugin, pick your languages, press one button and the site is translated. It costs nothing, needs no account, and the text never leaves your machine. It is the fastest way to a translated site. When you want fluent, idiomatic copy, the same pages can go through DeepL or an AI model with your own key (OpenAI, Anthropic, Gemini — you pay the provider directly), through ChatGPT or Gemini with a ready-made prompt at no cost, or through your own hands, line by line — and everything already translated is kept, so nothing is ever done twice.
+**You do not need an API key at all, and any browser will do.** Install the plugin, pick your languages and press «Translate my site»: every page is read and translated, and the languages go online. With no key, TranslateRocket uses the translator built into Chrome and Edge on a computer (it runs on the device itself, so the text never leaves your machine), and from Firefox, Safari or a phone it uses MyMemory, the free public translation service of Translated. It costs nothing and needs no account. It is the fastest way to a translated site. When you want fluent, idiomatic copy, the same pages can go through DeepL or an AI model with your own key (OpenAI, Anthropic, Gemini — you pay the provider directly), through ChatGPT or Gemini with a ready-made prompt at no cost, or through your own hands, line by line — and everything already translated is kept, so nothing is ever done twice.
 
 **Switching from another translation plugin? Your existing translations come with you.** One click imports everything you have already paid for or typed by hand — from **TranslatePress, Polylang, WPML, Weglot, qTranslate (X and XT), WPGlobus, WP Multilang, Bogo, Multilanguage by BestWebSoft, Falang, Sublanguage, Loco Translate and Autoglot**, plus CSV and TMX for anything else. Most are read straight from the tables, the posts or the files, so the import still works after the other plugin has been deactivated or even deleted — which is the usual state of a site that is moving on. Pages built with Elementor or Bricks come across too, widget by widget — their words live in a meta field, not in the page content, and most importers never look there.
 
@@ -27,7 +27,7 @@ It detects translatable text as you browse — visible text, link titles, image 
 
 You translate however you like:
 
-* 🆓 **In your browser, with no key** — Chrome and Edge translate the whole page, or the whole site, on the device itself. Nothing to sign up for, nothing to pay, nothing sent anywhere. Available both on the live page and on the bulk screen.
+* 🆓 **No key, any browser** — one button translates the whole site. Chrome and Edge do it on the device itself (nothing sent anywhere); Firefox, Safari and phones use MyMemory, free and official, about 5,000 characters a day (about 50,000 if you choose to give it your e-mail). Nothing to sign up for, nothing to pay.
 * 🖱️ **On the live page** — switch on the visual editor and click any text to translate it in a small, draggable popup, with Previous/Next, a progress bar and a "skip already-translated" mode.
 * 🆓 **Free with Google Translate (no key)** — every field has a link that opens Google Translate prefilled, so you translate for free on Google's own site and paste the result back.
 * ✍️ **By hand**, in a clear per-page editor (also inside the post/page screen) with red highlighting for what's still missing — plus a copy & paste box for bulk Google translation.
@@ -38,13 +38,13 @@ You translate however you like:
 = Highlights =
 
 * 🔎 **Search in every language, free** — a search box that always searches in the language of the page: a visitor on `/it/` types in Italian and finds your pages, posts and WooCommerce products by their translated title and text, with suggestions as they type. Make one profile for the header, one for the footer and one for the phone menu, each with its own look and a live preview; add it as a block, with the `[translaterocket_search]` shortcode or as an item of your menu. The site's own search box, Ajax Search Lite and FiboSearch find translated text too.
-* 🟢 **Simple view: translate a site in three steps** — choose the languages, press «Translate», put each language online. Nothing to configure and no key: the free engines are already there. Everything else stays one click away under «Advanced», and nothing is ever removed.
+* 🟢 **Simple view: one click** — choose the languages, press «Translate my site». The plugin picks the engine by itself, translates every page and puts the languages online. Nothing to configure and no key. Everything else stays one click away under «Advanced», and nothing is ever removed.
 * 🧠 **Sentences an engine cannot translate are kept** — a brand name, an address or a line already in another language stays as it is and the page still counts as complete, with a «translate again» button if you want to try another engine.
 * 📊 **Visits per language, without cookies** — how many visits each language gets, its most read pages and the languages your visitors' browsers ask for, so you know which language to translate next.
 * 🍪 **Cookie banners in the visitor's language** — Complianz, CookieYes, iubenda, Cookiebot and Usercentrics show their banner in the language of the page, and their legal texts are never machine-translated.
 * 💳 **Checkout and e-mails in the customer's language** — the WooCommerce checkout (Stripe tested), the order e-mails and the e-mails of form plugins (WPForms, Contact Form 7, Fluent Forms, Ninja Forms, Gravity Forms) reach each visitor in the language they used. WooCommerce lists TranslateRocket as compatible with High-Performance Order Storage and with the Cart and Checkout blocks.
-* 🆓 **Free AI on your own free account** — Groq, Cloudflare Workers AI or OpenRouter’s free models, with a two-minute guide to the key and no card; and, with the free Labs add-on, MyMemory with no key at all (about 5,000 characters a day, about 50,000 with an e-mail address).
-* 🔑 **No API key required — and not just "by hand".** Chrome and Edge translate the whole site automatically, on your own computer, for free. Or do it by hand in the visual editor, or free with Google Translate, and edit any translation later. There is no signup, no account and no key to create — AI providers are optional and only used if you add one yourself.
+* 🆓 **Free AI on your own free account** — Groq, Cloudflare Workers AI or OpenRouter’s free models, with a two-minute guide to the key and no card; and MyMemory with no key at all, built in (about 5,000 characters a day, about 50,000 with an e-mail address).
+* 🔑 **No API key required — and not just "by hand".** The whole site is translated automatically, for free, from any browser: Chrome and Edge on your own computer, MyMemory everywhere else. Or do it by hand in the visual editor, or free with Google Translate, and edit any translation later. There is no signup, no account and no key to create — AI providers are optional and only used if you add one yourself.
 * 🌍 **Unlimited languages** (36 built in), 100% free. Donations welcome, never required.
 * ⚡ **Built for huge sites**: past ~20,000 strings the engine switches by itself to indexed per-page lookups — flat memory and the same render time at 500 or 500,000 strings (load-tested), where map-loading translation plugins hit the PHP memory limit.
 * 🖱️ **On-page visual editor**: click text to translate it in a draggable popup — no admin round-trips.
@@ -102,6 +102,7 @@ This plugin can connect to third-party services, but only with your involvement:
   * Cloudflare Workers AI — service: https://developers.cloudflare.com/workers-ai/ , privacy: https://www.cloudflare.com/privacypolicy/
   * Groq — service: https://console.groq.com , privacy: https://groq.com/privacy-policy/
   * OpenRouter (and the provider of the model you pick there) — service: https://openrouter.ai , privacy: https://openrouter.ai/privacy
+* **MyMemory (only when you press «Translate my site» and no other engine can do it).** In the Simple view, «Translate my site» uses your own AI key if you set one, otherwise the translator built into Chrome or Edge, which works on your computer and sends nothing. Only when neither is available (Firefox, Safari, a phone, a plain-http admin) are the site's texts sent, one sentence at a time, to the free public MyMemory API by Translated (about 5,000 characters a day, no account). No personal data is sent, unless you tick the box under «Translate my site» (never ticked for you), or press the button shown when the daily limit runs out, that lets MyMemory know your e-mail address: it then allows about 50,000 characters a day. You can remove the address at any time from the same card. Service: https://mymemory.translated.net , terms and privacy: https://mymemory.translated.net/terms-and-conditions
 * **Google Translate (manual, always available).** Every editor offers a per-phrase link and a copy-paste box that open Google Translate (translate.google.com) prefilled, so you translate on Google's own site and paste the result back. This is just a convenience link — your browser, not the plugin, contacts Google. Service: https://translate.google.com , terms: https://policies.google.com/terms , privacy: https://policies.google.com/privacy
 * **Optional one-click Google auto-fill (off by default).** A site owner can opt in (the `TRROCKET_AUTO_GOOGLE` constant / the `trrocket_auto_google` filter) to let the server fetch a translation from Google's free endpoint with one click. This uses an undocumented endpoint and is best-effort, so it is disabled out of the box and the plugin never calls it on its own. For dependable automatic translation use the official AI providers below.
 * **translaterocket.com support ticket (optional, on request).** The Diagnostics screen has a form that opens a support ticket for you. It sends nothing until you fill it in and press Send, and what it sends is exactly what the page shows you: your name, your email address (so the answer can reach you), your subject and message, your site address and the plugin version, plus the technical report if you leave that box ticked. The report never contains API keys. To prove the request really comes from your site and not from a spam robot, the support site then makes one request back to your site's home URL with a one-time token. Nothing else is transmitted, nothing is stored on your site, and if you would rather not use it the same page still offers the copy-and-paste route. Service: https://translaterocket.com , privacy: https://translaterocket.com/privacy-policy/
@@ -111,9 +112,9 @@ This plugin can connect to third-party services, but only with your involvement:
 == Installation ==
 
 1. Install TranslateRocket from **Plugins → Add New** (search for "TranslateRocket") and activate it.
-2. Open **TranslateRocket**: the Simple view shows three steps. Tick the languages you want and save.
-3. Press **Translate** next to a language: Chrome or Edge translate it on your computer, free and with no key — or add a free AI account, or your own key, whenever you like.
-4. Flip the language's switch to **Online** when you are happy with it. Until then only you see it.
+2. Open **TranslateRocket** and tick the languages you want (the quick setup asks for them).
+3. Press **Translate my site**: every page is translated, free and with no key, from any browser — Chrome or Edge on your computer, MyMemory anywhere else. Add a free AI account, or your own key, whenever you like.
+4. The languages go online at the end, and a link opens your translated site. In the Advanced view you can keep a language offline until you are happy with it.
 5. Add the language switcher and the search box where you want them — block, shortcode or menu — from the **Switcher** and **Search** screens.
 
 First steps, filmed from installation to the first translated page:
@@ -134,9 +135,9 @@ I build websites for a living, and I use TranslateRocket on every multilingual s
 
 = Do I need an AI key? =
 
-No — and without one you are not limited to typing by hand. **Chrome and Edge on a computer carry a translator that runs on the device itself, and one button puts it to work on your whole site.** It costs nothing, needs no account and no signup, and the text never leaves your machine. Quality sits below DeepL and the AI models, so it is the quickest way to a translated site rather than the finest one — but everything it translates is kept, so adding a provider later never repeats the work.
+No — and without one you are not limited to typing by hand. **One button, «Translate my site», translates the whole site with no key, from any browser.** On a computer with Chrome or Edge it uses the translator built into the browser, which runs on the device itself, so the text never leaves your machine; in Firefox, Safari or on a phone it uses MyMemory (Translated), free and official. It costs nothing, needs no account and no signup. Quality sits below DeepL and the AI models, so it is the quickest way to a translated site rather than the finest one — but everything it translates is kept, so adding a provider later never repeats the work.
 
-It needs Chrome, or Edge 148 or later, on a computer that can run the built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM or a graphics card with more than 4 GB, and 22 GB of free disk space, with the admin on https. Anywhere else, the copy-and-paste route works in any browser and still needs no key.
+It needs Chrome, or Edge 148 or later, on a computer that can run the built-in model: Windows 10 or 11, macOS 13 or later, Linux or ChromeOS (not Windows Server), 16 GB of RAM or a graphics card with more than 4 GB, and 22 GB of free disk space, with the admin on https. Anywhere else MyMemory takes over by itself, still with no key.
 
 Beyond that you can click any text on the live page and type its translation, edit it again later, and publish it. Every field also offers a free Google Translate link you can paste back from. AI keys are optional and only used at the moment you ask for one.
 
@@ -204,7 +205,7 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 = My browser isn't Chrome or Edge, or I work from a phone. Can I still translate without a key? =
 
-The translator built into the browser exists only in Chrome and Edge on a computer. TranslateRocket Labs, a separate free add-on you can ask for at https://translaterocket.com/labs/, adds free translation engines that work from any browser, phones included — each one is switched on only after you read and accept its conditions. Labs is not needed: everything described on this page works without it.
+Yes. «Translate my site» then uses MyMemory, the free public service of Translated: no key, no account, about 5,000 characters a day, about 50,000 if you tick the optional box that gives it your e-mail. TranslateRocket Labs, a separate free add-on you can ask for at https://translaterocket.com/labs/, adds more free engines with no key that work from any browser, phones included — each one is switched on only after you read and accept its conditions. Labs is not needed: everything described on this page works without it.
 
 Both, in one minute — a page translated in the browser with no key, then Labs translating a new page the moment it is published:
 
@@ -220,6 +221,16 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.32 =
+* New: «Translate my site» — one button, nothing to choose. In the Simple view the plugin reads every page, picks the engine by itself (your AI key if you have one, otherwise the free translator built into Chrome and Edge, otherwise MyMemory, free and official, for Firefox, Safari and phones), translates every language and puts it online. When it ends, a link opens your translated site.
+* New: MyMemory (Translated.net) as the free engine of «Translate my site» when the browser has no translator: no key, no account, about 5,000 characters a day — ten times more if you tick the optional box that lets MyMemory know your e-mail.
+* New: your site's own address (such as «example.com») is kept as it is inside every sentence, with DeepL, Google Cloud and the AI models, without writing it in Words & phrases.
+* Fixed: a text that is only an address — the site's name such as «example.com», a web address, an e-mail — is now kept as it is in every language and never sent to the AI. On one site it was the last sentence «to translate» in 13 languages, holding them at 99%.
+* Improved: on phones the floating language switcher shrinks to its flag (the names come back as soon as it opens) and steps aside while the page scrolls, so it no longer covers the button of a page's first screen. Nothing changes on computers, and a switcher that shows names only keeps them.
+* Fixed: a page explaining qTranslate or WPGlobus, with examples of their [:en]…[:] marks written in the text, was cut down to almost nothing: the examples were taken for real marks. Marks with a single language in the middle of a sentence are now left as they are written.
+* Fixed: after importing from Polylang, a page whose old copy in another language had been moved to the Trash kept showing that copy (still in the original language) instead of its translation. A copy in the Trash is no longer shown.
+* Fixed: OpenRouter withdrew the free model TranslateRocket tried first, so every batch began with an error before moving to the next model. Gemma 4 now comes first, and models OpenRouter no longer lists (checked once a day in its public catalogue) are skipped by themselves.
 
 = 1.8.31 =
 * New: «Still to translate» on the AI Translation page — every sentence still without a translation, with the languages it misses. Some are better left as they are (a code sample, a product code, a name): tick them and press «Keep the selected as they are», or «Keep all as they are». The original stands in those languages and the progress reaches 100%. Translations already made are never touched, and «Translate the selected again» undoes it.
@@ -646,6 +657,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.32 =
+New «Translate my site»: one click and the plugin picks the free engine, translates every language and puts it online. Site names and addresses are kept as they are in every language (no more 99% for one «example.com»), and on phones the floating switcher no longer covers your buttons.
 
 = 1.8.31 =
 Reach 100%: keep code samples, product codes and names as they are with one click, and translations of texts that show HTML code are no longer refused.
