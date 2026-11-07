@@ -7954,3 +7954,146 @@ msgstr "每个模型每分钟约 2 次请求，无每日限额"
 #, php-format
 msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
 msgstr "自动保持原样，无需填写：您网站的地址（%s）。"
+
+#: src/Admin/OneClick.php
+msgid "Your whole site, translated in one click"
+msgstr "一键翻译整个网站"
+
+#: src/Admin/OneClick.php
+msgid "Reads every page"
+msgstr "读取每个页面"
+
+#: src/Admin/OneClick.php
+msgid "pages, posts, products and archives"
+msgstr "页面、文章、产品和归档"
+
+#: src/Admin/OneClick.php
+msgid "Translates everything"
+msgstr "翻译所有内容"
+
+#: src/Admin/OneClick.php
+msgid "texts, menus, buttons and SEO"
+msgstr "文本、菜单、按钮和 SEO"
+
+#: src/Admin/OneClick.php
+msgid "Puts it online"
+msgstr "发布上线"
+
+#: src/Admin/OneClick.php
+msgid "one address for each language"
+msgstr "每种语言一个网址"
+
+#: src/Admin/OneClick.php
+msgid "Your site will be translated into:"
+msgstr "您的网站将被翻译成："
+
+#: src/Admin/OneClick.php
+msgid "No key, no account"
+msgstr "无需密钥，无需账户"
+
+#: src/Admin/OneClick.php
+msgid "Keep this tab open while it works"
+msgstr "运行期间请保持此标签页打开"
+
+#: src/Admin/OneClick.php
+msgid "Now reading:"
+msgstr "正在读取："
+
+#: src/Admin/OneClick.php
+msgid "Now translating:"
+msgstr "正在翻译："
+
+#: src/Admin/OneClick.php
+msgid "Please enter a valid e-mail address."
+msgstr "请输入有效的电子邮件地址。"
+
+#: src/Admin/OneClick.php
+msgid "Stopping after the current sentence…"
+msgstr "将在当前句子后停止…"
+
+#: src/Admin/OneClick.php
+msgid "Stopped. Everything translated so far is saved. Press «Translate my site» to continue from where it stopped."
+msgstr "已停止。目前已翻译的内容均已保存。点击「翻译我的网站」从停止处继续。"
+
+#: src/Admin/OneClick.php
+msgid "Use another e-mail"
+msgstr "使用其他电子邮件"
+
+#: src/Admin/BrowserEngine.php
+msgid "Paused. Press «Resume» to go on from here."
+msgstr "已暂停。点击「继续」从这里继续。"
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge on a computer"
+msgstr "电脑上的 Chrome 和 Edge"
+
+#: src/Admin/BrowserEngine.php
+msgid "translate on the device itself, one sentence at a time"
+msgstr "在设备本地逐句翻译"
+
+#: src/Admin/BrowserEngine.php
+msgid "no account, no key"
+msgstr "无需账户，无需密钥"
+
+#: src/Admin/BrowserEngine.php
+msgid "Private"
+msgstr "私密"
+
+#: src/Admin/BrowserEngine.php
+msgid "the text never leaves this computer"
+msgstr "文本绝不会离开这台电脑"
+
+#: src/Admin/BrowserEngine.php
+msgid "The quickest way"
+msgstr "最快的方式"
+
+#: src/Admin/BrowserEngine.php
+msgid "to have your site translated today"
+msgstr "今天就让您的网站完成翻译"
+
+#: src/Admin/BrowserEngine.php
+msgid "Quality:"
+msgstr "质量："
+
+#: src/Admin/BrowserEngine.php
+msgid "below DeepL and the AI models"
+msgstr "低于 DeepL 和 AI 模型"
+
+#: src/Admin/BrowserEngine.php
+msgid "Better quality later?"
+msgstr "以后想要更好的质量？"
+
+#: src/Admin/AutoPage.php
+msgid "Stop every translation running now (this tab, other tabs, Labs in the background)? What was translated stays."
+msgstr "停止当前所有正在进行的翻译（本标签页、其他标签页、后台的 Labs）？已翻译的内容会保留。"
+
+#: src/Admin/AutoPage.php
+msgid "Click again to stop everything"
+msgstr "再次点击以停止全部"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved: press the button again to go on."
+msgstr "已停止。已翻译的内容已保存：再次点击按钮即可继续。"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved."
+msgstr "已停止。已翻译的内容已保存。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "A translation is already running in another tab (%s). Stop it with «Stop» next to the hourglass, or wait for it to end: a second one would translate the same sentences twice."
+msgstr "另一个标签页中已有翻译正在进行（%s）。请点击沙漏旁的「停止」将其停止，或等待它结束：再开一个会把同样的句子翻译两次。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translation quality: %1$s (%2$d/4)"
+msgstr "翻译质量：%1$s（%2$d/4）"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Quality: %s"
+msgstr "质量：%s"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
+msgstr "开启：每个页面、文章和产品在每种语言中都会获得由其翻译后标题生成的网址，例如用 /it/chi-siamo/ 代替 /it/about-us/。打开原网址的访客和搜索引擎会被转到新网址（301）。您在编辑器中手动填写的网址永远不会被更改，网址一旦生成，即使之后修改翻译也保持不变。关闭：所有语言重新使用您自己的网址，已生成的网址也一样（它们会被保留，重新开启后会恢复）；打开这些网址的访客会以 301 被转到原网址。您在编辑器中填写的网址继续使用。"

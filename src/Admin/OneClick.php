@@ -71,18 +71,28 @@ class OneClick {
 		$names = implode( ', ', wp_list_pluck( $langs, 'label' ) );
 		?>
 		<div class="trrocket-card trr-oneclick" id="trr-oneclick">
-			<?php // 6/11/2026: no second «Translate your site» here, the page title above already says it ?>
-			<p class="trr-oneclick-langs">
-				<?php
-				/* translators: %s: list of languages. */
-				printf( esc_html__( 'Into: %s', 'translate-rocket' ), '<strong>' . esc_html( $names ) . '</strong>' );
-				?>
-				· <a href="#trr-languages"><?php esc_html_e( 'change', 'translate-rocket' ); ?></a>
-			</p>
-			<p>
-				<button type="button" class="button button-primary button-hero" id="trr-oneclick-go" disabled>🚀 <?php esc_html_e( 'Translate my site', 'translate-rocket' ); ?></button>
-			</p>
-			<p class="description trr-oneclick-free"><?php esc_html_e( 'Free. No key, no account. Keep this tab open while it works.', 'translate-rocket' ); ?></p>
+			<?php // 7/11/2026 (Federico): the most important button of the plugin — centred, coloured, a rocket and a line on what it does. ?>
+			<div class="trr-oneclick-hero">
+				<p class="trr-oneclick-title"><?php esc_html_e( 'Your whole site, translated in one click', 'translate-rocket' ); ?></p>
+				<?php // 7/11/2026 (Federico): wider, bold words, small icons — four steps instead of one long sentence. ?>
+				<ul class="trr-oneclick-steps">
+					<li><span class="trr-ocs-ico" aria-hidden="true">📄</span><strong><?php esc_html_e( 'Reads every page', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'pages, posts, products and archives', 'translate-rocket' ); ?></span></li>
+					<li><span class="trr-ocs-ico" aria-hidden="true">🌍</span><strong><?php esc_html_e( 'Translates everything', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'texts, menus, buttons and SEO', 'translate-rocket' ); ?></span></li>
+					<li><span class="trr-ocs-ico" aria-hidden="true">✅</span><strong><?php esc_html_e( 'Puts it online', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'one address for each language', 'translate-rocket' ); ?></span></li>
+				</ul>
+				<?php // 7/11/2026 (Federico): the target languages as flag + name chips, right above the button. ?>
+				<p class="trr-oneclick-into"><?php esc_html_e( 'Your site will be translated into:', 'translate-rocket' ); ?></p>
+				<ul class="trr-oneclick-langchips" aria-label="<?php echo esc_attr( $names ); ?>">
+					<?php foreach ( $langs as $lg ) : ?>
+						<li><span class="trrocket-flag"><?php echo \TranslateRocket\Flags::html( $lg['code'], Languages::flag( $lg['code'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Flags::html returns escaped markup. ?></span><strong><?php echo esc_html( $lg['label'] ); ?></strong></li>
+					<?php endforeach; ?>
+					<li class="trr-oneclick-langchange"><a href="#trr-languages">✏️ <?php esc_html_e( 'change', 'translate-rocket' ); ?></a></li>
+				</ul>
+				<p class="trr-oneclick-btnrow">
+					<button type="button" class="button button-primary button-hero" id="trr-oneclick-go" disabled><span class="trr-go-rocket" aria-hidden="true">🚀</span><span class="trr-go-label"><?php esc_html_e( 'Translate my site', 'translate-rocket' ); ?></span></button>
+				</p>
+				<p class="description trr-oneclick-free"><span class="trr-ocf-pill">🎁 <strong><?php esc_html_e( 'Free', 'translate-rocket' ); ?></strong></span> <span class="trr-ocf-pill">🔑 <strong><?php esc_html_e( 'No key, no account', 'translate-rocket' ); ?></strong></span> <span class="trr-ocf-pill">🖥️ <?php esc_html_e( 'Keep this tab open while it works', 'translate-rocket' ); ?></span></p>
+			</div>
 			<?php
 			// 5/11/2026 (Federico): MyMemory with the owner's e-mail from the start, ten times the free day — only if they tick
 			// it (never pre-ticked). one-click.js shows it only when MyMemory is the engine that will work.
@@ -93,7 +103,8 @@ class OneClick {
 					<label><input type="checkbox" id="trr-oneclick-mm-ok"><span>
 					<?php
 					/* translators: %s: the administrator's e-mail address. */
-					printf( esc_html__( 'Translate ten times more each day: send my e-mail (%s) to MyMemory with each sentence.', 'translate-rocket' ), '<strong>' . esc_html( $me ) . '</strong>' );
+					// 6/11/2026 (Federico): the pencil lets the owner give MyMemory any other address, not only the WordPress one.
+					printf( esc_html__( 'Translate ten times more each day: send my e-mail (%s) to MyMemory with each sentence.', 'translate-rocket' ), self::mail_with_pencil( $me ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside
 					?>
 					</span></label>
 					<span class="description"><?php esc_html_e( 'Optional. MyMemory (Translated.net) allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Nothing else is sent, and you can remove it here at any time.', 'translate-rocket' ); ?> <a href="https://mymemory.translated.net/terms-and-conditions" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Terms', 'translate-rocket' ); ?></a></span>
@@ -102,7 +113,7 @@ class OneClick {
 				<p class="description trr-oneclick-mm-on" id="trr-oneclick-mm-on">
 					<?php
 					/* translators: %s: e-mail address. */
-					printf( esc_html__( 'MyMemory knows your e-mail (%s): about 50,000 characters a day.', 'translate-rocket' ), esc_html( MyMemoryProvider::email() ) );
+					printf( esc_html__( 'MyMemory knows your e-mail (%s): about 50,000 characters a day.', 'translate-rocket' ), self::mail_with_pencil( MyMemoryProvider::email() ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside
 					?>
 					<button type="button" class="button-link" id="trr-oneclick-mm-off"><?php esc_html_e( 'Remove it', 'translate-rocket' ); ?></button>
 				</p>
@@ -110,7 +121,13 @@ class OneClick {
 			<div class="trr-oneclick-run" id="trr-oneclick-run" hidden>
 				<div class="trr-prog"><div class="trr-prog-bar"><div class="trr-prog-fill" id="trr-oneclick-fill" style="width:0"></div></div></div>
 				<p id="trr-oneclick-step" role="status" aria-live="polite"></p>
+				<?php // 7/11/2026 (Federico): which page is being read / which sentence is being translated right now. ?>
+				<p class="trr-oneclick-now" id="trr-oneclick-now" hidden><span class="trr-oneclick-now-lab" id="trr-oneclick-now-lab"></span> <span class="trr-oneclick-now-what" id="trr-oneclick-now-what"></span></p>
 				<p class="description" id="trr-oneclick-engine"></p>
+				<p class="trr-oneclick-ctrl">
+					<button type="button" class="button" id="trr-oneclick-pause" disabled>⏸ <?php esc_html_e( 'Pause', 'translate-rocket' ); ?></button>
+					<button type="button" class="button" id="trr-oneclick-stop" disabled>⏹ <?php esc_html_e( 'Stop', 'translate-rocket' ); ?></button>
+				</p>
 			</div>
 			<div class="trr-oneclick-end" id="trr-oneclick-end" hidden></div>
 		</div>
@@ -138,6 +155,8 @@ class OneClick {
 				'myEmail'   => (string) wp_get_current_user()->user_email,
 				'i18n'      => array(
 					'reading'    => __( 'Reading your pages… %1$s of %2$s', 'translate-rocket' ),
+					'nowPage'    => __( 'Now reading:', 'translate-rocket' ),
+					'nowText'    => __( 'Now translating:', 'translate-rocket' ),
 					/* translators: 1: language, 2: done, 3: total. */
 					'translating' => __( '%1$s: %2$s of %3$s sentences', 'translate-rocket' ),
 					'preparing'  => __( 'Getting the translator ready…', 'translate-rocket' ),
@@ -161,11 +180,29 @@ class OneClick {
 					'mmAsk'      => __( 'Get ten times more for free: let MyMemory know my e-mail (%s)', 'translate-rocket' ),
 					'mmWhy'      => __( 'MyMemory allows about 50,000 characters a day instead of 5,000 when it knows who is asking. Only the address is sent, with each sentence; you can remove it from this card at any time.', 'translate-rocket' ),
 					'mmOff'      => __( 'Removed: MyMemory no longer receives your e-mail.', 'translate-rocket' ),
+					'mmSave'     => __( 'Save', 'translate-rocket' ),
+					'mmEdit'     => __( 'E-mail for MyMemory', 'translate-rocket' ),
+					'mmBad'      => __( 'Please enter a valid e-mail address.', 'translate-rocket' ),
 					'mmOk'       => __( 'Done. Press «Translate my site» again to continue.', 'translate-rocket' ),
 					'leave'      => __( 'The translation is still running. Leave anyway?', 'translate-rocket' ),
+					'pause'      => __( 'Pause', 'translate-rocket' ),
+					'resume'     => __( 'Resume', 'translate-rocket' ),
+					'paused'     => __( 'Paused. Press «Resume» to go on from here.', 'translate-rocket' ),
+					'stopping'   => __( 'Stopping after the current sentence…', 'translate-rocket' ),
+					'stopped'    => __( 'Stopped. Everything translated so far is saved. Press «Translate my site» to continue from where it stopped.', 'translate-rocket' ),
 				),
 			)
 		);
+	}
+
+	/**
+	 * The e-mail in bold with a small pencil next to it: one-click.js turns it into a field to write another address.
+	 *
+	 * @param string $mail Address shown.
+	 */
+	private static function mail_with_pencil( string $mail ): string {
+		return '<strong class="trr-mm-addr">' . esc_html( $mail ) . '</strong>'
+			. ' <button type="button" class="button-link trr-mm-edit" title="' . esc_attr__( 'Use another e-mail', 'translate-rocket' ) . '" aria-label="' . esc_attr__( 'Use another e-mail', 'translate-rocket' ) . '"><span class="dashicons dashicons-edit" aria-hidden="true"></span></button>';
 	}
 
 	/**
@@ -181,9 +218,10 @@ class OneClick {
 			delete_option( MyMemoryProvider::EMAIL );
 			wp_send_json_success( array( 'email' => '' ) );
 		}
-		$e = sanitize_email( (string) wp_get_current_user()->user_email );
-		if ( '' === $e ) {
-			wp_send_json_error( array() );
+		// 6/11/2026: any address the owner typed with the pencil; otherwise their WordPress one.
+		$e = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( (string) $_POST['email'] ) ) : sanitize_email( (string) wp_get_current_user()->user_email );
+		if ( '' === $e || ! is_email( $e ) ) {
+			wp_send_json_error( array( 'message' => __( 'Please enter a valid e-mail address.', 'translate-rocket' ) ) );
 		}
 		update_option( MyMemoryProvider::EMAIL, $e, false );
 		// the day starts again with the larger limit (MyMemory counts by address and e-mail)

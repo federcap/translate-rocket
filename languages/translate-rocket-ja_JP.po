@@ -7109,3 +7109,146 @@ msgstr "モデルごとに1分あたり約2リクエスト、1日の上限なし
 #, php-format
 msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
 msgstr "自動でそのまま残ります。書く必要はありません: サイトのアドレス (%s)。"
+
+#: src/Admin/OneClick.php
+msgid "Your whole site, translated in one click"
+msgstr "サイト全体をワンクリックで翻訳"
+
+#: src/Admin/OneClick.php
+msgid "Reads every page"
+msgstr "すべてのページを読み込み"
+
+#: src/Admin/OneClick.php
+msgid "pages, posts, products and archives"
+msgstr "固定ページ、投稿、商品、アーカイブ"
+
+#: src/Admin/OneClick.php
+msgid "Translates everything"
+msgstr "すべてを翻訳"
+
+#: src/Admin/OneClick.php
+msgid "texts, menus, buttons and SEO"
+msgstr "テキスト、メニュー、ボタン、SEO"
+
+#: src/Admin/OneClick.php
+msgid "Puts it online"
+msgstr "公開します"
+
+#: src/Admin/OneClick.php
+msgid "one address for each language"
+msgstr "言語ごとに1つのアドレス"
+
+#: src/Admin/OneClick.php
+msgid "Your site will be translated into:"
+msgstr "サイトの翻訳先："
+
+#: src/Admin/OneClick.php
+msgid "No key, no account"
+msgstr "キーもアカウントも不要"
+
+#: src/Admin/OneClick.php
+msgid "Keep this tab open while it works"
+msgstr "処理中はこのタブを開いたままに"
+
+#: src/Admin/OneClick.php
+msgid "Now reading:"
+msgstr "読み込み中："
+
+#: src/Admin/OneClick.php
+msgid "Now translating:"
+msgstr "翻訳中："
+
+#: src/Admin/OneClick.php
+msgid "Please enter a valid e-mail address."
+msgstr "有効なメールアドレスを入力してください。"
+
+#: src/Admin/OneClick.php
+msgid "Stopping after the current sentence…"
+msgstr "現在の文の後で停止します…"
+
+#: src/Admin/OneClick.php
+msgid "Stopped. Everything translated so far is saved. Press «Translate my site» to continue from where it stopped."
+msgstr "停止しました。ここまでの翻訳は保存されています。「サイトを翻訳する」を押すと続きから再開します。"
+
+#: src/Admin/OneClick.php
+msgid "Use another e-mail"
+msgstr "別のメールを使う"
+
+#: src/Admin/BrowserEngine.php
+msgid "Paused. Press «Resume» to go on from here."
+msgstr "一時停止中。「再開」を押すとここから続けます。"
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge on a computer"
+msgstr "パソコンの Chrome と Edge は"
+
+#: src/Admin/BrowserEngine.php
+msgid "translate on the device itself, one sentence at a time"
+msgstr "端末上で1文ずつ翻訳します"
+
+#: src/Admin/BrowserEngine.php
+msgid "no account, no key"
+msgstr "アカウントもキーも不要"
+
+#: src/Admin/BrowserEngine.php
+msgid "Private"
+msgstr "プライベート"
+
+#: src/Admin/BrowserEngine.php
+msgid "the text never leaves this computer"
+msgstr "テキストはこのパソコンから出ません"
+
+#: src/Admin/BrowserEngine.php
+msgid "The quickest way"
+msgstr "最速の方法"
+
+#: src/Admin/BrowserEngine.php
+msgid "to have your site translated today"
+msgstr "でサイトを今日中に翻訳"
+
+#: src/Admin/BrowserEngine.php
+msgid "Quality:"
+msgstr "品質："
+
+#: src/Admin/BrowserEngine.php
+msgid "below DeepL and the AI models"
+msgstr "DeepL や AI モデルには劣ります"
+
+#: src/Admin/BrowserEngine.php
+msgid "Better quality later?"
+msgstr "後で品質を上げたい？"
+
+#: src/Admin/AutoPage.php
+msgid "Stop every translation running now (this tab, other tabs, Labs in the background)? What was translated stays."
+msgstr "実行中のすべての翻訳を停止しますか（このタブ、他のタブ、バックグラウンドの Labs）？ 翻訳済みの内容は残ります。"
+
+#: src/Admin/AutoPage.php
+msgid "Click again to stop everything"
+msgstr "もう一度クリックするとすべて停止します"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved: press the button again to go on."
+msgstr "停止しました。翻訳済みの内容は保存されています。続けるにはもう一度ボタンを押してください。"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved."
+msgstr "停止しました。翻訳済みの内容は保存されています。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "A translation is already running in another tab (%s). Stop it with «Stop» next to the hourglass, or wait for it to end: a second one would translate the same sentences twice."
+msgstr "別のタブで翻訳がすでに実行中です（%s）。砂時計の横の「停止」で止めるか、終わるまでお待ちください。2つ目を始めると同じ文を二重に翻訳します。"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translation quality: %1$s (%2$d/4)"
+msgstr "翻訳品質：%1$s（%2$d/4）"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Quality: %s"
+msgstr "品質：%s"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
+msgstr "オン：各ページ・投稿・商品に、言語ごとに翻訳後のタイトルから作ったアドレスが付きます（例：/it/about-us/ ではなく /it/chi-siamo/）。元のアドレスを開いた訪問者や検索エンジンは新しいアドレスへ転送されます（301）。エディターで入力したアドレスは変更されず、一度作ったアドレスは後で翻訳を編集しても変わりません。オフ：すべての言語で元のアドレスに戻ります。作成済みのアドレスも同様です（保存されており、再びオンにすると戻ります）。それらを開いた訪問者は 301 で元のアドレスへ転送されます。エディターで入力したアドレスは引き続き使われます。"

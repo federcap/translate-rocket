@@ -18,20 +18,89 @@
 	var end = document.getElementById( 'trr-oneclick-end' );
 	var T = C.i18n || {};
 	var busy = false;
+	// 7/11/2026 (Federico: «fai anche pausa/stop»): every step waits at gate() while paused and stops there on Stop.
+	var paused = false, stopped = false, resumeNow = null;
+	var pauseBtn = document.getElementById( 'trr-oneclick-pause' );
+	var stopBtn = document.getElementById( 'trr-oneclick-stop' );
+	var STOP = 'trr-stop';
+	function gate() {
+		if ( stopped ) { return Promise.reject( new Error( STOP ) ); }
+		if ( ! paused ) { return Promise.resolve(); }
+		return new Promise( function ( ok ) { resumeNow = ok; } ).then( gate );
+	}
+	var lastSaid = '', saidPaused = false; // on Resume, the progress line comes back at once
+	function setPaused( p ) {
+		paused = p;
+		if ( pauseBtn ) { pauseBtn.textContent = p ? ( '▶ ' + ( T.resume || 'Resume' ) ) : ( '⏸ ' + ( T.pause || 'Pause' ) ); }
+		if ( run ) { run.classList.toggle( 'is-paused', p ); }
+		if ( p ) { if ( ! saidPaused ) { lastSaid = step.textContent; } saidPaused = true; say( T.paused || '' ); }
+		else if ( saidPaused ) { saidPaused = false; if ( busy && ! stopped && lastSaid ) { say( lastSaid ); } }
+		if ( ! p && resumeNow ) { var r = resumeNow; resumeNow = null; r(); }
+	}
+	if ( pauseBtn ) {
+		pauseBtn.addEventListener( 'click', function () { if ( busy && ! stopped ) { setPaused( ! paused ); } } );
+	}
+	if ( stopBtn ) {
+		stopBtn.addEventListener( 'click', function () {
+			if ( ! busy || stopped ) { return; }
+			stopped = true;
+			stopBtn.disabled = true;
+			if ( pauseBtn ) { pauseBtn.disabled = true; }
+			say( T.stopping || '' );
+			if ( paused ) { setPaused( false ); }
+		} );
+	}
 
 	function fmt( s ) {
 		var a = arguments;
 		return String( s || '' ).replace( /%(\d)\$s/g, function ( m, n ) { return a[ +n ]; } ).replace( '%s', a[ 1 ] );
 	}
 	function say( t ) { step.textContent = t; }
+	// 7/11/2026 (Federico): show the page being read, or the sentence being translated, under the progress line.
+	var nowBox = document.getElementById( 'trr-oneclick-now' );
+	var nowLab = document.getElementById( 'trr-oneclick-now-lab' );
+	var nowWhat = document.getElementById( 'trr-oneclick-now-what' );
+	function now( label, what ) {
+		if ( ! nowBox ) { return; }
+		if ( ! what ) { nowBox.hidden = true; return; }
+		nowLab.textContent = label || '';
+		nowWhat.textContent = what;
+		nowBox.hidden = false;
+	}
+	function pagePath( u ) {
+		try {
+			var x = new URL( u, location.href ), p = decodeURIComponent( x.pathname + x.search );
+			return '/' === p ? '🏠 ' + x.host + '/' : p;
+		} catch ( e ) { return String( u ); }
+	}
+	function shortText( t ) {
+		t = String( t ).replace( /<\/?\d{1,3}\/?>/g, '' ).replace( /\s+/g, ' ' ).trim();
+		return '«' + ( t.length > 90 ? t.slice( 0, 88 ) + '…' : t ) + '»';
+	}
 	function bar( p ) { fill.style.width = Math.max( 2, Math.min( 100, Math.round( p ) ) ) + '%'; }
+	// 7/11/2026: the same tab id as the Translations screen (sessionStorage «trrTab»): the server refuses a second run
+	// from another tab and ends this one when «Stop» is pressed next to an hourglass, in any tab.
+	function tabId() {
+		try {
+			var v = window.sessionStorage.getItem( 'trrTab' );
+			if ( ! v ) { v = Math.random().toString( 36 ).slice( 2, 14 ); window.sessionStorage.setItem( 'trrTab', v ); }
+			return v;
+		} catch ( e ) { return window.trrTabId || ( window.trrTabId = Math.random().toString( 36 ).slice( 2, 14 ) ); }
+	}
 	function post( data ) {
 		var b = new FormData();
 		Object.keys( data ).forEach( function ( k ) { b.append( k, data[ k ] ); } );
+		if ( /^trrocket_(translate_step|browser_pending|browser_store|browser_beat)$/.test( data.action || '' ) ) { b.append( 'tab', tabId() ); }
 		return fetch( C.ajax, { method: 'POST', credentials: 'same-origin', body: b } ).then( function ( r ) {
 			if ( ! r.ok ) { throw new Error( 'HTTP ' + r.status ); }
 			return r.json();
 		} );
+	}
+	// «already running in another tab» / «Stop» pressed next to an hourglass (maybe in another tab): end the run here.
+	var ALREADY = 'trr-already:';
+	function guard( x ) {
+		if ( x && x.already ) { throw new Error( ALREADY + x.already ); }
+		if ( x && x.stopped ) { stopped = true; throw new Error( STOP ); }
 	}
 	function wait( s ) { return new Promise( function ( ok ) { setTimeout( ok, s * 1000 ); } ); }
 
@@ -106,15 +175,22 @@
 	function inBrowser( l, tr, share ) {
 		var tried = {}, seen = 0, total = Math.max( 1, l.missing );
 		function round() {
-			return post( { action: 'trrocket_browser_pending', nonce: C.brNonce, lang: l.code } ).then( function ( j ) {
+			return post( { action: 'trrocket_browser_pending', nonce: C.brNonce, lang: l.code, first: seen ? '' : '1' } ).then( function ( j ) {
 				var d = ( j && j.data ) || {};
-				var items = ( d.items || [] ).filter( function ( it ) { return ! Object.prototype.hasOwnProperty.call( tried, it.text ); } );
+				guard( d );
+				var items =( d.items || [] ).filter( function ( it ) { return ! Object.prototype.hasOwnProperty.call( tried, it.text ); } );
 				if ( ! items.length ) { return; }
 				total = Math.max( total, seen + items.length );
-				var out = [];
+				var out = [], halt = null;
 				return items.reduce( function ( ch, it ) {
 					return ch.then( function () {
+						// 7/11/2026: every 10 sentences a light heartbeat, so «Stop» from another tab arrives within seconds
+						if ( seen > 0 && seen % 10 === 0 ) {
+							return post( { action: 'trrocket_browser_beat', nonce: C.brNonce, lang: l.code } ).then( function ( j ) { guard( j && j.data ); }, function ( e ) { if ( e && STOP === e.message ) { throw e; } } );
+						}
+					} ).then( gate ).then( function () {
 						tried[ it.text ] = true;
+						now( T.nowText, shortText( it.text ) );
 						return tagSafe( tr, it.text ).then( function ( t ) {
 							t = keepCapital( it.text, t, l.bcp );
 							if ( t && t.trim() ) { out.push( { text: it.text, ids: it.ids, translation: t } ); }
@@ -124,9 +200,13 @@
 							share( seen / total );
 						} );
 					} );
-				}, Promise.resolve() ).then( function () {
+				}, Promise.resolve() ).catch( function ( e ) { halt = e; } ).then( function () {
+					// on Stop too: what the browser has translated so far is saved before stopping
 					return out.length ? post( { action: 'trrocket_browser_store', nonce: C.brNonce, lang: l.code, items: JSON.stringify( out ) } ) : null;
-				} ).then( round );
+				} ).then( function () {
+					if ( halt ) { throw halt; }
+					return round();
+				} );
 			} );
 		}
 		return round().then( function () { return { left: 0 }; } );
@@ -134,11 +214,14 @@
 
 	/* ---- on the server: the owner's key, or MyMemory ---- */
 	function onServer( l, engine, share ) {
+		now(); // the server works on many sentences at once: no single one to show
 		var done = 0, laps = 0, retry = 0;
 		function lap() {
-			return post( { action: 'trrocket_translate_step', trrocket_auto_nonce: C.stepNonce, lang: l.code, engine: engine, done: done } ).then( function ( j ) {
+			return gate().then( function () {
+				return post( { action: 'trrocket_translate_step', trrocket_auto_nonce: C.stepNonce, lang: l.code, engine: engine, done: done } ).then( function ( j ) {
 				if ( ! j || ! j.success ) { throw new Error( ( j && j.data && j.data.error ) || '?' ); }
 				var x = j.data;
+				guard( x );
 				retry = 0;
 				done = x.total || done;
 				laps++;
@@ -153,8 +236,10 @@
 				if ( x.more && x.count > 0 && laps < 400 ) { return lap(); }
 				return { left: left };
 			}, function ( e ) {
+				if ( e && STOP === e.message ) { throw e; }
 				if ( retry < 5 ) { retry++; return wait( 10 * retry ).then( lap ); }
 				throw e;
+			} );
 			} );
 		}
 		return lap();
@@ -180,7 +265,11 @@
 				return more().then( function ( ok ) { if ( ! ok ) { total = urls.length; } return next(); } );
 			}
 			if ( i >= total || i >= urls.length ) { return Promise.resolve(); }
+			return gate().then( readOne );
+		}
+		function readOne() {
 			say( fmt( T.reading, i + 1, total ) );
+			now( T.nowPage, pagePath( urls[ i ] ) );
 			share( i / total );
 			// The visit itself collects the page's sentences; the answer is thrown away.
 			return fetch( urls[ i ], { credentials: 'same-origin', cache: 'no-store' } ).catch( function () {} ).then( function () {
@@ -232,9 +321,17 @@
 					why.className = 'description';
 					why.style.display = 'block';
 					why.textContent = T.mmWhy;
+					// the pencil next to the button: another address instead of the WordPress one
+					var pen = document.createElement( 'button' );
+					pen.type = 'button';
+					pen.className = 'button-link trr-mm-edit';
+					pen.title = T.mmEdit || '';
+					pen.setAttribute( 'aria-label', T.mmEdit || '' );
+					pen.innerHTML = '<span class="dashicons dashicons-edit" aria-hidden="true"></span>';
+					pencil( pen, null, function ( v ) { C.myEmail = v; mb.textContent = fmt( T.mmAsk, v ); return true; } );
 					mb.addEventListener( 'click', function () {
 						mb.disabled = true;
-						post( { action: 'trrocket_oneclick_mm', nonce: C.nonce } ).then( function ( j ) {
+						post( { action: 'trrocket_oneclick_mm', nonce: C.nonce, email: C.myEmail || '' } ).then( function ( j ) {
 							if ( j && j.success ) {
 								C.mmEmail = true;
 								why.textContent = T.mmOk;
@@ -244,6 +341,8 @@
 						} ).catch( function () { mb.disabled = false; } );
 					} );
 					mm.appendChild( mb );
+					mm.appendChild( document.createTextNode( ' ' ) );
+					mm.appendChild( pen );
 					mm.appendChild( why );
 					end.appendChild( mm );
 				}
@@ -259,6 +358,76 @@
 	var consentBox = document.getElementById( 'trr-oneclick-mm-ok' );
 	if ( consent && ! C.hasKey && ! C.mmEmail && ! ( 'Translator' in self && self.Translator ) ) {
 		consent.hidden = false;
+	}
+
+	// 6/11/2026 (Federico): the pencil next to the e-mail opens a field, so the owner can give MyMemory any other address.
+	function pencil( btn, shown, save ) {
+		if ( ! btn ) { return; }
+		btn.addEventListener( 'click', function ( e ) {
+			e.preventDefault();
+			e.stopPropagation();
+			var inp = document.createElement( 'input' );
+			inp.type = 'email';
+			inp.required = true;
+			inp.className = 'trr-mm-input';
+			inp.value = shown ? shown.textContent : ( C.myEmail || '' );
+			inp.setAttribute( 'aria-label', T.mmEdit || '' );
+			var ok = document.createElement( 'button' );
+			ok.type = 'button';
+			ok.className = 'button button-small trr-mm-save';
+			ok.textContent = T.mmSave || 'Save';
+			var bad = document.createElement( 'span' );
+			bad.className = 'trr-mm-bad';
+			bad.setAttribute( 'role', 'alert' );
+			var hid = shown ? [ btn, shown ] : [ btn ];
+			hid.forEach( function ( h ) { h.hidden = true; } );
+			btn.parentNode.insertBefore( inp, btn );
+			btn.parentNode.insertBefore( ok, btn );
+			btn.parentNode.insertBefore( bad, btn );
+			inp.focus();
+			inp.select();
+			function close() {
+				[ inp, ok, bad ].forEach( function ( n ) { if ( n.parentNode ) { n.parentNode.removeChild( n ); } } );
+				hid.forEach( function ( h ) { h.hidden = false; } );
+				btn.focus();
+			}
+			function done() {
+				var v = inp.value.trim();
+				inp.value = v;
+				if ( ! v || ! inp.checkValidity() ) { bad.textContent = T.mmBad || ''; inp.focus(); return; }
+				ok.disabled = true;
+				Promise.resolve( save( v ) ).then( function ( r ) {
+					if ( false === r ) { ok.disabled = false; bad.textContent = T.mmBad || ''; return; }
+					if ( shown ) { shown.textContent = v; }
+					close();
+				} ).catch( function () { ok.disabled = false; bad.textContent = T.mmBad || ''; } );
+			}
+			// inside the consent label a click must not tick or untick the box
+			[ inp, ok ].forEach( function ( n ) { n.addEventListener( 'click', function ( ev ) { ev.stopPropagation(); } ); } );
+			ok.addEventListener( 'click', function ( ev ) { ev.preventDefault(); done(); } );
+			inp.addEventListener( 'keydown', function ( ev ) {
+				if ( 'Enter' === ev.key ) { ev.preventDefault(); done(); }
+				if ( 'Escape' === ev.key ) { ev.preventDefault(); close(); }
+			} );
+		} );
+	}
+	// before the first translation: the new address is used when the box is ticked (writing it means yes)
+	if ( consent ) {
+		pencil( consent.querySelector( '.trr-mm-edit' ), consent.querySelector( '.trr-mm-addr' ), function ( v ) {
+			C.myEmail = v;
+			if ( consentBox ) { consentBox.checked = true; }
+			return true;
+		} );
+	}
+	// MyMemory already has an address: it is changed at once
+	var mmOn = document.getElementById( 'trr-oneclick-mm-on' );
+	if ( mmOn ) {
+		pencil( mmOn.querySelector( '.trr-mm-edit' ), mmOn.querySelector( '.trr-mm-addr' ), function ( v ) {
+			return post( { action: 'trrocket_oneclick_mm', nonce: C.nonce, email: v } ).then( function ( j ) {
+				if ( j && j.success ) { C.mmEmail = true; C.myEmail = v; return true; }
+				return false;
+			} );
+		} );
 	}
 
 	// «Remove it»: MyMemory no longer receives the e-mail.
@@ -280,6 +449,10 @@
 	go.addEventListener( 'click', function () {
 		if ( busy ) { return; }
 		busy = true;
+		stopped = false;
+		setPaused( false );
+		if ( pauseBtn ) { pauseBtn.disabled = false; }
+		if ( stopBtn ) { stopBtn.disabled = false; }
 		go.disabled = true;
 		end.hidden = true;
 		run.hidden = false;
@@ -291,7 +464,7 @@
 		var nL = C.langs.length;
 		// The owner ticked the box: the e-mail is saved before the first sentence, so the larger day counts from the start.
 		var agreed = ( consent && ! consent.hidden && consentBox && consentBox.checked && ! C.mmEmail )
-			? post( { action: 'trrocket_oneclick_mm', nonce: C.nonce } ).then( function ( j ) {
+			? post( { action: 'trrocket_oneclick_mm', nonce: C.nonce, email: C.myEmail || '' } ).then( function ( j ) {
 				if ( j && j.success ) { C.mmEmail = true; consent.hidden = true; }
 			} ).catch( function () {} )
 			: Promise.resolve();
@@ -319,11 +492,27 @@
 				} );
 			}, Promise.resolve() );
 		} ).then( function () {
+			if ( pauseBtn ) { pauseBtn.disabled = true; }
+			if ( stopBtn ) { stopBtn.disabled = true; }
+			now();
 			return finish( left, limited );
 		} ).catch( function ( e ) {
+			now();
+			if ( e && STOP === e.message ) {
+				say( T.stopped || '' );
+				return;
+			}
+			if ( e && 0 === String( e.message ).indexOf( ALREADY ) ) {
+				say( String( e.message ).slice( ALREADY.length ) );
+				return;
+			}
 			say( fmt( T.error, e && e.message ? e.message : '?' ) );
 		} ).then( function () {
 			busy = false;
+			stopped = false;
+			setPaused( false );
+			if ( pauseBtn ) { pauseBtn.disabled = true; }
+			if ( stopBtn ) { stopBtn.disabled = true; }
 			go.disabled = false;
 		} );
 	} );

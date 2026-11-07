@@ -49,6 +49,21 @@ class BrowserEngine {
 	public function register(): void {
 		add_action( 'wp_ajax_trrocket_browser_pending', array( $this, 'ajax_pending' ) );
 		add_action( 'wp_ajax_trrocket_browser_store', array( $this, 'ajax_store' ) );
+		add_action( 'wp_ajax_trrocket_browser_beat', array( $this, 'ajax_beat' ) ); // 7/11/2026: «Stop» from another tab, within 10 sentences
+	}
+
+	/**
+	 * A light heartbeat every few sentences: a «Stop» pressed anywhere reaches this run within seconds,
+	 * not at the end of its batch of 60 (tried on the bench: up to 30 s).
+	 */
+	public function ajax_beat(): void {
+		$this->guard();
+		$lang = isset( $_POST['lang'] ) ? sanitize_key( wp_unslash( $_POST['lang'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- guard() checked it.
+		$tab  = \TranslateRocket\RunGuard::tab_from_request();
+		if ( '' === $tab || '' === $lang ) {
+			wp_send_json_success( array( 'stopped' => 0 ) );
+		}
+		wp_send_json_success( array( 'stopped' => \TranslateRocket\RunGuard::beat( $tab, 'browser', $lang ) ? 0 : 1 ) );
 	}
 
 	/**
@@ -74,7 +89,20 @@ class BrowserEngine {
 
 		// One page's editor sends its hash: only that page's strings (6/10/2026).
 		$loc     = isset( $_POST['loc'] ) ? sanitize_text_field( wp_unslash( $_POST['loc'] ) ) : '';
+		// 7/11/2026: same rules as the server steps — no second run from another tab, and «Stop» ends this one
+		// (Labs' background worker sends no tab: after «Stop» it rests ten minutes).
+		$tab   = \TranslateRocket\RunGuard::tab_from_request();
+		$altra = '' !== $tab && ! empty( $_POST['first'] ) ? \TranslateRocket\RunGuard::other( $tab ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- guard() checked it.
+		if ( null !== $altra ) {
+			wp_send_json_success( array( 'items' => array(), 'reused' => 0, 'missing' => 0, 'already' => Admin::already_msg( $altra ) ) );
+		}
+		if ( ! \TranslateRocket\RunGuard::beat( $tab, 'browser', $lang, ! empty( $_POST['first'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- guard() checked it.
+			wp_send_json_success( array( 'items' => array(), 'reused' => 0, 'missing' => 0, 'stopped' => 1 ) );
+		}
 		$pending = Translator::pending_for_browser( $lang, $loc, self::BATCH );
+		if ( empty( $pending['items'] ) ) {
+			\TranslateRocket\RunGuard::done( $tab );
+		}
 		if ( '' === $loc ) {
 			if ( empty( $pending['items'] ) ) {
 				\TranslateRocket\Cache::bulk_done_if_waiting(); // the run is over: its last sentences show now
@@ -211,15 +239,18 @@ class BrowserEngine {
 		?>
 		<div id="trr-browser-engine" style="margin:10px 0;padding:14px 16px;border:1px solid #dcdcde;border-left:4px solid #2271b1;background:#fff">
 			<p style="margin:0 0 6px;font-weight:600">
-				<span id="trr-browser-title"><?php esc_html_e( 'Translate with your browser — no API key', 'translate-rocket' ); ?></span>
+				<span aria-hidden="true">🌐</span> <span id="trr-browser-title"><?php esc_html_e( 'Translate with your browser — no API key', 'translate-rocket' ); ?></span>
 				<span id="trr-browser-title-alt" hidden><?php esc_html_e( 'Translate without an API key', 'translate-rocket' ); ?></span>
 			</p>
-			<p class="description" style="margin:0 0 10px" id="trr-browser-intro">
-				<?php
-				esc_html_e( 'Chrome and Edge on a computer can translate on the device itself. It costs nothing, needs no account, and the text never leaves this machine. Quality is below DeepL and the AI models, and it works through one phrase at a time — so it is the quickest way to get a translated site today, not the best one you can have.', 'translate-rocket' );
-				?>
-			</p>
-			<p style="margin:0 0 8px" id="trr-browser-actions">
+			<?php // 7/11/2026 (Federico): a short list with bold words and small icons instead of one long paragraph. ?>
+			<ul class="trr-br-points" id="trr-browser-intro">
+				<li><span aria-hidden="true">💻</span> <strong><?php esc_html_e( 'Chrome and Edge on a computer', 'translate-rocket' ); ?></strong> <?php esc_html_e( 'translate on the device itself, one sentence at a time', 'translate-rocket' ); ?></li>
+				<li><span aria-hidden="true">🎁</span> <strong><?php esc_html_e( 'Free', 'translate-rocket' ); ?></strong> — <?php esc_html_e( 'no account, no key', 'translate-rocket' ); ?></li>
+				<li><span aria-hidden="true">🔒</span> <strong><?php esc_html_e( 'Private', 'translate-rocket' ); ?></strong> — <?php esc_html_e( 'the text never leaves this computer', 'translate-rocket' ); ?></li>
+				<li><span aria-hidden="true">⚡</span> <strong><?php esc_html_e( 'The quickest way', 'translate-rocket' ); ?></strong> <?php esc_html_e( 'to have your site translated today', 'translate-rocket' ); ?></li>
+				<li><span aria-hidden="true">📊</span> <?php esc_html_e( 'Quality:', 'translate-rocket' ); ?> <strong><?php esc_html_e( 'Good', 'translate-rocket' ); ?></strong> — <?php esc_html_e( 'below DeepL and the AI models', 'translate-rocket' ); ?></li>
+			</ul>
+			<p style="margin:0 0 8px" id="trr-browser-actions" class="trr-br-actions">
 				<button type="button" class="button button-primary" id="trr-browser-go" <?php disabled( 0 === $missing ); ?>>
 					<?php
 					printf(
@@ -230,9 +261,11 @@ class BrowserEngine {
 					?>
 				</button>
 				<?php // Not the hidden attribute: WordPress gives .button display:inline-block, and an author display rule beats the browser's [hidden]. ?>
-				<button type="button" class="button" id="trr-browser-stop" style="display:none"><?php esc_html_e( 'Stop', 'translate-rocket' ); ?></button>
+				<?php // 7/11/2026 (Federico): Pause next to Stop, both clearly visible and centred. ?>
+				<button type="button" class="button trr-br-pause" id="trr-browser-pause" style="display:none">⏸ <?php esc_html_e( 'Pause', 'translate-rocket' ); ?></button>
+				<button type="button" class="button trr-br-stop" id="trr-browser-stop" style="display:none">⏹ <?php esc_html_e( 'Stop', 'translate-rocket' ); ?></button>
 			</p>
-			<p id="trr-browser-status" style="margin:0;min-height:1.4em" aria-live="polite"></p>
+			<p id="trr-browser-status" class="trr-br-status" style="margin:0;min-height:1.4em" aria-live="polite"></p>
 			<div id="trr-browser-fallback" hidden>
 				<p class="description" style="margin:0 0 10px" id="trr-browser-needs"><?php echo esc_html( self::needs() ); ?></p>
 				<p class="description" style="margin:0 0 10px">
@@ -245,7 +278,8 @@ class BrowserEngine {
 				</p>
 			</div>
 			<?php if ( $no_api_key ) : ?>
-				<p class="description" style="margin:8px 0 0">
+				<p class="description trr-br-later" style="margin:8px 0 0">
+					<span aria-hidden="true">➕</span> <strong><?php esc_html_e( 'Better quality later?', 'translate-rocket' ); ?></strong>
 					<?php esc_html_e( 'You can add an API provider later for better quality — what you translate here is kept and never translated again.', 'translate-rocket' ); ?>
 				</p>
 			<?php endif; ?>
@@ -285,6 +319,9 @@ class BrowserEngine {
 					'done'        => __( 'Done — %d strings translated in this browser.', 'translate-rocket' ),
 					'nothing'     => __( 'Nothing left to translate in this language.', 'translate-rocket' ),
 					'stopped'     => __( 'Stopped.', 'translate-rocket' ),
+					'pause'       => __( 'Pause', 'translate-rocket' ),
+					'resume'      => __( 'Resume', 'translate-rocket' ),
+					'paused'      => __( 'Paused. Press «Resume» to go on from here.', 'translate-rocket' ),
 					'failed'      => __( 'The browser translator stopped with an error.', 'translate-rocket' ),
 					'needs'       => self::needs(),
 					'reload'      => __( 'Reload the page to see the new totals.', 'translate-rocket' ),

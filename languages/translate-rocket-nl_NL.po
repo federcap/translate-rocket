@@ -7137,3 +7137,146 @@ msgstr "Ongeveer 2 verzoeken per minuut per model, geen daglimiet"
 #, php-format
 msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
 msgstr "Blijft automatisch zoals het is, je hoeft het niet op te schrijven: het adres van je site (%s)."
+
+#: src/Admin/OneClick.php
+msgid "Your whole site, translated in one click"
+msgstr "Je hele site, vertaald met één klik"
+
+#: src/Admin/OneClick.php
+msgid "Reads every page"
+msgstr "Leest elke pagina"
+
+#: src/Admin/OneClick.php
+msgid "pages, posts, products and archives"
+msgstr "pagina's, berichten, producten en archieven"
+
+#: src/Admin/OneClick.php
+msgid "Translates everything"
+msgstr "Vertaalt alles"
+
+#: src/Admin/OneClick.php
+msgid "texts, menus, buttons and SEO"
+msgstr "teksten, menu’s, knoppen en SEO"
+
+#: src/Admin/OneClick.php
+msgid "Puts it online"
+msgstr "Zet het online"
+
+#: src/Admin/OneClick.php
+msgid "one address for each language"
+msgstr "één adres per taal"
+
+#: src/Admin/OneClick.php
+msgid "Your site will be translated into:"
+msgstr "Je site wordt vertaald naar:"
+
+#: src/Admin/OneClick.php
+msgid "No key, no account"
+msgstr "Geen sleutel, geen account"
+
+#: src/Admin/OneClick.php
+msgid "Keep this tab open while it works"
+msgstr "Houd dit tabblad open terwijl het bezig is"
+
+#: src/Admin/OneClick.php
+msgid "Now reading:"
+msgstr "Nu aan het lezen:"
+
+#: src/Admin/OneClick.php
+msgid "Now translating:"
+msgstr "Nu aan het vertalen:"
+
+#: src/Admin/OneClick.php
+msgid "Please enter a valid e-mail address."
+msgstr "Voer een geldig e-mailadres in."
+
+#: src/Admin/OneClick.php
+msgid "Stopping after the current sentence…"
+msgstr "Stopt na de huidige zin…"
+
+#: src/Admin/OneClick.php
+msgid "Stopped. Everything translated so far is saved. Press «Translate my site» to continue from where it stopped."
+msgstr "Gestopt. Alles wat tot nu toe is vertaald, is opgeslagen. Klik op «Mijn site vertalen» om verder te gaan waar het stopte."
+
+#: src/Admin/OneClick.php
+msgid "Use another e-mail"
+msgstr "Ander e-mailadres gebruiken"
+
+#: src/Admin/BrowserEngine.php
+msgid "Paused. Press «Resume» to go on from here."
+msgstr "Gepauzeerd. Klik op «Hervatten» om hier verder te gaan."
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge on a computer"
+msgstr "Chrome en Edge op een computer"
+
+#: src/Admin/BrowserEngine.php
+msgid "translate on the device itself, one sentence at a time"
+msgstr "vertalen op het apparaat zelf, zin voor zin"
+
+#: src/Admin/BrowserEngine.php
+msgid "no account, no key"
+msgstr "geen account, geen sleutel"
+
+#: src/Admin/BrowserEngine.php
+msgid "Private"
+msgstr "Privé"
+
+#: src/Admin/BrowserEngine.php
+msgid "the text never leaves this computer"
+msgstr "de tekst verlaat deze computer nooit"
+
+#: src/Admin/BrowserEngine.php
+msgid "The quickest way"
+msgstr "De snelste manier"
+
+#: src/Admin/BrowserEngine.php
+msgid "to have your site translated today"
+msgstr "om je site vandaag vertaald te hebben"
+
+#: src/Admin/BrowserEngine.php
+msgid "Quality:"
+msgstr "Kwaliteit:"
+
+#: src/Admin/BrowserEngine.php
+msgid "below DeepL and the AI models"
+msgstr "onder DeepL en de AI-modellen"
+
+#: src/Admin/BrowserEngine.php
+msgid "Better quality later?"
+msgstr "Later betere kwaliteit?"
+
+#: src/Admin/AutoPage.php
+msgid "Stop every translation running now (this tab, other tabs, Labs in the background)? What was translated stays."
+msgstr "Alle lopende vertalingen stoppen (dit tabblad, andere tabbladen, Labs op de achtergrond)? Wat vertaald is, blijft bewaard."
+
+#: src/Admin/AutoPage.php
+msgid "Click again to stop everything"
+msgstr "Klik nogmaals om alles te stoppen"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved: press the button again to go on."
+msgstr "Gestopt. Wat vertaald is, is opgeslagen: klik nogmaals op de knop om verder te gaan."
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved."
+msgstr "Gestopt. Wat vertaald is, is opgeslagen."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "A translation is already running in another tab (%s). Stop it with «Stop» next to the hourglass, or wait for it to end: a second one would translate the same sentences twice."
+msgstr "Er loopt al een vertaling in een ander tabblad (%s). Stop die met «Stoppen» naast de zandloper, of wacht tot ze klaar is: een tweede zou dezelfde zinnen twee keer vertalen."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translation quality: %1$s (%2$d/4)"
+msgstr "Vertaalkwaliteit: %1$s (%2$d/4)"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Quality: %s"
+msgstr "Kwaliteit: %s"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
+msgstr "Aan: elke pagina, elk bericht en elk product krijgt in elke taal het adres op basis van de vertaalde titel, bijvoorbeeld /it/chi-siamo/ in plaats van /it/about-us/. Bezoekers en zoekmachines die het oorspronkelijke adres openen, worden naar het nieuwe gestuurd (301). Een adres dat je in de editor hebt getypt, wordt nooit gewijzigd, en een eenmaal gemaakt adres blijft hetzelfde, ook als je de vertaling later aanpast. Uit: elke taal gebruikt weer je eigen adres, ook voor al gemaakte adressen (ze blijven bewaard en komen terug als je dit weer aanzet); bezoekers die er een openen, gaan met een 301 naar het oorspronkelijke adres. Een adres dat je in de editor hebt getypt, blijft in gebruik."

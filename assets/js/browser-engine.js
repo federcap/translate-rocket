@@ -25,9 +25,29 @@
 	}
 
 	var stopping = false;
+	// 7/11/2026 (Federico): Pause / Resume. The run waits before the next phrase; Stop also ends a pause.
+	var pauseBtn = document.getElementById( 'trr-browser-pause' );
+	var paused = false, resumeNow = null, lastSaid = '';
+	function gate() {
+		if ( ! paused || stopping ) { return Promise.resolve(); }
+		return new Promise( function ( ok ) { resumeNow = ok; } );
+	}
+	function setPaused( p ) {
+		paused = p;
+		if ( pauseBtn ) { pauseBtn.textContent = p ? '▶ ' + ( C.i18n.resume || 'Resume' ) : '⏸ ' + ( C.i18n.pause || 'Pause' ); }
+		box.classList.toggle( 'is-paused', p );
+		if ( p ) { lastSaid = status.textContent; status.textContent = C.i18n.paused || ''; }
+		else if ( lastSaid && ! stopping ) { status.textContent = lastSaid; lastSaid = ''; }
+		if ( ! p && resumeNow ) { var r = resumeNow; resumeNow = null; r(); }
+	}
+	if ( pauseBtn ) {
+		pauseBtn.addEventListener( 'click', function () { setPaused( ! paused ); } );
+	}
 	var translator = null;
 
 	function say( text ) {
+		// while paused the line keeps «Paused»: the progress is kept for Resume
+		if ( paused && text !== ( C.i18n.paused || '' ) ) { lastSaid = text; return; }
 		status.textContent = text;
 	}
 
@@ -54,9 +74,15 @@
 		return String( template ).replace( '%1$d', a ).replace( '%2$d', b ).replace( '%d', a );
 	}
 
+	// 7/11/2026: the same tab id as the server steps (Admin.php), so a second tab does not start a second run.
+	function tabId() {
+		return typeof window.trrTab === 'function' ? window.trrTab() : '';
+	}
+
 	function post( action, data ) {
 		var body = new FormData();
 		body.append( 'action', action );
+		body.append( 'tab', tabId() );
 		body.append( 'nonce', C.nonce );
 		body.append( 'lang', C.lang );
 		if ( C.loc ) {
@@ -280,10 +306,17 @@
 			if ( stopping || i >= items.length ) {
 				return Promise.resolve();
 			}
-			var item = items[ i++ ];
-			return one( item, false ).then( function () {
+			// 7/11/2026: every 10 sentences a light heartbeat — a «Stop» pressed in another tab ends this run within seconds
+			var beat = ( i > 0 && i % 10 === 0 ) ? post( 'trrocket_browser_beat', {} ).then( function ( d ) {
+				if ( d && d.stopped ) { stopping = true; }
+			}, function () {} ) : Promise.resolve();
+			return beat.then( gate ).then( function () {
+				if ( stopping ) { return; }
+				var item = items[ i++ ];
+				return one( item, false ).then( function () {
 				say( fmt( C.i18n.progress, done + i, total ) );
 				return next();
+			} );
 			} );
 		}
 
@@ -305,12 +338,21 @@
 		// counted again it pushed the bar past the total ("162 of 154"), and a
 		// phrase refused every time kept the run going round forever (6/10/2026).
 		var tried = {};
+		var blocked = '';
 
 		function round() {
 			if ( stopping ) {
 				return Promise.resolve();
 			}
-			return post( 'trrocket_browser_pending', {} ).then( function ( data ) {
+			return post( 'trrocket_browser_pending', seen ? {} : { first: '1' } ).then( function ( data ) {
+				if ( data.already ) {
+					blocked = data.already;
+					return null;
+				}
+				if ( data.stopped ) {
+					stopping = true; // «Stop» next to the hourglass, maybe in another tab
+					return null;
+				}
 				reused += data.reused || 0;
 				var items = ( data.items || [] ).filter( function ( it ) {
 					return ! Object.prototype.hasOwnProperty.call( tried, it.text );
@@ -335,7 +377,9 @@
 
 		return makeTranslator().then( round ).then( function () {
 			var n = saved + reused;
-			if ( stopping ) {
+			if ( blocked ) {
+				say( blocked );
+			} else if ( stopping ) {
 				say( C.i18n.stopped + ' ' + fmt( C.i18n.done, n ) + ' ' + C.i18n.reload );
 			} else if ( n === 0 ) {
 				say( C.i18n.nothing );
@@ -353,6 +397,9 @@
 		} ).then( function () {
 			go.disabled = false;
 			stopBtn.style.display = 'none';
+			if ( pauseBtn ) { pauseBtn.style.display = 'none'; }
+			lastSaid = '';
+			setPaused( false );
 			stopping = false;
 		} );
 	}
@@ -360,6 +407,7 @@
 	go.addEventListener( 'click', function () {
 		go.disabled = true;
 		stopBtn.style.display = '';
+		if ( pauseBtn ) { pauseBtn.style.display = ''; }
 		stopping = false;
 		run();
 	} );
@@ -367,6 +415,8 @@
 	stopBtn.addEventListener( 'click', function () {
 		stopping = true;
 		stopBtn.disabled = true;
+		lastSaid = '';
+		setPaused( false );
 		say( C.i18n.stopped );
 		window.setTimeout( function () {
 			stopBtn.disabled = false;

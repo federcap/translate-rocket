@@ -7135,3 +7135,146 @@ msgstr "Environ 2 requêtes par minute pour chacun de ses modèles, sans limite 
 #, php-format
 msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
 msgstr "Conservée telle quelle automatiquement, inutile de l’écrire : l’adresse de votre site (%s)."
+
+#: src/Admin/OneClick.php
+msgid "Your whole site, translated in one click"
+msgstr "Tout votre site, traduit en un clic"
+
+#: src/Admin/OneClick.php
+msgid "Reads every page"
+msgstr "Lit chaque page"
+
+#: src/Admin/OneClick.php
+msgid "pages, posts, products and archives"
+msgstr "pages, articles, produits et archives"
+
+#: src/Admin/OneClick.php
+msgid "Translates everything"
+msgstr "Traduit tout"
+
+#: src/Admin/OneClick.php
+msgid "texts, menus, buttons and SEO"
+msgstr "textes, menus, boutons et SEO"
+
+#: src/Admin/OneClick.php
+msgid "Puts it online"
+msgstr "Le met en ligne"
+
+#: src/Admin/OneClick.php
+msgid "one address for each language"
+msgstr "une adresse pour chaque langue"
+
+#: src/Admin/OneClick.php
+msgid "Your site will be translated into:"
+msgstr "Votre site sera traduit en :"
+
+#: src/Admin/OneClick.php
+msgid "No key, no account"
+msgstr "Sans clé, sans compte"
+
+#: src/Admin/OneClick.php
+msgid "Keep this tab open while it works"
+msgstr "Gardez cet onglet ouvert pendant le travail"
+
+#: src/Admin/OneClick.php
+msgid "Now reading:"
+msgstr "Lecture en cours :"
+
+#: src/Admin/OneClick.php
+msgid "Now translating:"
+msgstr "Traduction en cours :"
+
+#: src/Admin/OneClick.php
+msgid "Please enter a valid e-mail address."
+msgstr "Veuillez saisir une adresse e-mail valide."
+
+#: src/Admin/OneClick.php
+msgid "Stopping after the current sentence…"
+msgstr "Arrêt après la phrase en cours…"
+
+#: src/Admin/OneClick.php
+msgid "Stopped. Everything translated so far is saved. Press «Translate my site» to continue from where it stopped."
+msgstr "Arrêté. Tout ce qui a été traduit est enregistré. Cliquez sur «Traduire mon site» pour reprendre là où il s’est arrêté."
+
+#: src/Admin/OneClick.php
+msgid "Use another e-mail"
+msgstr "Utiliser une autre adresse"
+
+#: src/Admin/BrowserEngine.php
+msgid "Paused. Press «Resume» to go on from here."
+msgstr "En pause. Cliquez sur «Reprendre» pour continuer d’ici."
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge on a computer"
+msgstr "Chrome et Edge sur ordinateur"
+
+#: src/Admin/BrowserEngine.php
+msgid "translate on the device itself, one sentence at a time"
+msgstr "traduisent sur l’appareil lui-même, phrase par phrase"
+
+#: src/Admin/BrowserEngine.php
+msgid "no account, no key"
+msgstr "sans compte, sans clé"
+
+#: src/Admin/BrowserEngine.php
+msgid "Private"
+msgstr "Privé"
+
+#: src/Admin/BrowserEngine.php
+msgid "the text never leaves this computer"
+msgstr "le texte ne quitte jamais cet ordinateur"
+
+#: src/Admin/BrowserEngine.php
+msgid "The quickest way"
+msgstr "Le moyen le plus rapide"
+
+#: src/Admin/BrowserEngine.php
+msgid "to have your site translated today"
+msgstr "d’avoir votre site traduit dès aujourd’hui"
+
+#: src/Admin/BrowserEngine.php
+msgid "Quality:"
+msgstr "Qualité :"
+
+#: src/Admin/BrowserEngine.php
+msgid "below DeepL and the AI models"
+msgstr "en dessous de DeepL et des modèles d’IA"
+
+#: src/Admin/BrowserEngine.php
+msgid "Better quality later?"
+msgstr "Une meilleure qualité plus tard ?"
+
+#: src/Admin/AutoPage.php
+msgid "Stop every translation running now (this tab, other tabs, Labs in the background)? What was translated stays."
+msgstr "Arrêter toutes les traductions en cours (cet onglet, les autres onglets, Labs en arrière-plan) ? Ce qui est traduit est conservé."
+
+#: src/Admin/AutoPage.php
+msgid "Click again to stop everything"
+msgstr "Cliquez à nouveau pour tout arrêter"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved: press the button again to go on."
+msgstr "Arrêté. Ce qui est traduit est enregistré : cliquez à nouveau sur le bouton pour continuer."
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved."
+msgstr "Arrêté. Ce qui est traduit est enregistré."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "A translation is already running in another tab (%s). Stop it with «Stop» next to the hourglass, or wait for it to end: a second one would translate the same sentences twice."
+msgstr "Une traduction est déjà en cours dans un autre onglet (%s). Arrêtez-la avec «Arrêter» à côté du sablier, ou attendez qu’elle se termine : une seconde traduirait deux fois les mêmes phrases."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translation quality: %1$s (%2$d/4)"
+msgstr "Qualité de traduction : %1$s (%2$d/4)"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Quality: %s"
+msgstr "Qualité : %s"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
+msgstr "Activé : chaque page, article et produit reçoit dans chaque langue l’adresse tirée de son titre traduit, par exemple /it/chi-siamo/ au lieu de /it/about-us/. Les visiteurs et moteurs de recherche qui ouvrent l’adresse d’origine sont redirigés vers la nouvelle (301). Une adresse saisie dans l’éditeur n’est jamais modifiée, et une adresse créée reste la même même si vous modifiez la traduction ensuite. Désactivé : chaque langue reprend votre propre adresse, y compris pour les adresses déjà créées (elles sont conservées et reviennent si vous réactivez l’option) ; les visiteurs qui en ouvrent une sont redirigés vers l’adresse d’origine avec un 301. Une adresse saisie dans l’éditeur reste utilisée."

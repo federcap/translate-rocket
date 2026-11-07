@@ -7954,3 +7954,146 @@ msgstr "모델마다 분당 약 2회 요청, 하루 한도 없음"
 #, php-format
 msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
 msgstr "자동으로 그대로 유지되므로 적을 필요가 없습니다: 사이트 주소(%s)."
+
+#: src/Admin/OneClick.php
+msgid "Your whole site, translated in one click"
+msgstr "클릭 한 번으로 사이트 전체 번역"
+
+#: src/Admin/OneClick.php
+msgid "Reads every page"
+msgstr "모든 페이지를 읽습니다"
+
+#: src/Admin/OneClick.php
+msgid "pages, posts, products and archives"
+msgstr "페이지, 글, 상품, 아카이브"
+
+#: src/Admin/OneClick.php
+msgid "Translates everything"
+msgstr "모든 것을 번역합니다"
+
+#: src/Admin/OneClick.php
+msgid "texts, menus, buttons and SEO"
+msgstr "텍스트, 메뉴, 버튼, SEO"
+
+#: src/Admin/OneClick.php
+msgid "Puts it online"
+msgstr "온라인에 게시합니다"
+
+#: src/Admin/OneClick.php
+msgid "one address for each language"
+msgstr "언어마다 하나의 주소"
+
+#: src/Admin/OneClick.php
+msgid "Your site will be translated into:"
+msgstr "사이트가 번역될 언어:"
+
+#: src/Admin/OneClick.php
+msgid "No key, no account"
+msgstr "키도 계정도 필요 없음"
+
+#: src/Admin/OneClick.php
+msgid "Keep this tab open while it works"
+msgstr "작업하는 동안 이 탭을 열어 두세요"
+
+#: src/Admin/OneClick.php
+msgid "Now reading:"
+msgstr "지금 읽는 중:"
+
+#: src/Admin/OneClick.php
+msgid "Now translating:"
+msgstr "지금 번역 중:"
+
+#: src/Admin/OneClick.php
+msgid "Please enter a valid e-mail address."
+msgstr "올바른 이메일 주소를 입력하세요."
+
+#: src/Admin/OneClick.php
+msgid "Stopping after the current sentence…"
+msgstr "현재 문장 다음에 멈춥니다…"
+
+#: src/Admin/OneClick.php
+msgid "Stopped. Everything translated so far is saved. Press «Translate my site» to continue from where it stopped."
+msgstr "중지되었습니다. 지금까지 번역한 내용은 저장되었습니다. 「내 사이트 번역」을 누르면 멈춘 곳부터 계속합니다."
+
+#: src/Admin/OneClick.php
+msgid "Use another e-mail"
+msgstr "다른 이메일 사용"
+
+#: src/Admin/BrowserEngine.php
+msgid "Paused. Press «Resume» to go on from here."
+msgstr "일시 중지됨. 「재개」를 누르면 여기서부터 계속합니다."
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge on a computer"
+msgstr "컴퓨터의 Chrome과 Edge는"
+
+#: src/Admin/BrowserEngine.php
+msgid "translate on the device itself, one sentence at a time"
+msgstr "기기 자체에서 한 문장씩 번역합니다"
+
+#: src/Admin/BrowserEngine.php
+msgid "no account, no key"
+msgstr "계정도 키도 필요 없음"
+
+#: src/Admin/BrowserEngine.php
+msgid "Private"
+msgstr "비공개"
+
+#: src/Admin/BrowserEngine.php
+msgid "the text never leaves this computer"
+msgstr "텍스트가 이 컴퓨터 밖으로 나가지 않습니다"
+
+#: src/Admin/BrowserEngine.php
+msgid "The quickest way"
+msgstr "가장 빠른 방법"
+
+#: src/Admin/BrowserEngine.php
+msgid "to have your site translated today"
+msgstr "오늘 사이트를 번역하는"
+
+#: src/Admin/BrowserEngine.php
+msgid "Quality:"
+msgstr "품질:"
+
+#: src/Admin/BrowserEngine.php
+msgid "below DeepL and the AI models"
+msgstr "DeepL과 AI 모델보다는 낮음"
+
+#: src/Admin/BrowserEngine.php
+msgid "Better quality later?"
+msgstr "나중에 더 좋은 품질을 원하나요?"
+
+#: src/Admin/AutoPage.php
+msgid "Stop every translation running now (this tab, other tabs, Labs in the background)? What was translated stays."
+msgstr "지금 실행 중인 모든 번역(이 탭, 다른 탭, 백그라운드의 Labs)을 중지할까요? 번역된 내용은 남습니다."
+
+#: src/Admin/AutoPage.php
+msgid "Click again to stop everything"
+msgstr "모두 중지하려면 다시 클릭하세요"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved: press the button again to go on."
+msgstr "중지되었습니다. 번역된 내용은 저장되었습니다. 계속하려면 버튼을 다시 누르세요."
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved."
+msgstr "중지되었습니다. 번역된 내용은 저장되었습니다."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "A translation is already running in another tab (%s). Stop it with «Stop» next to the hourglass, or wait for it to end: a second one would translate the same sentences twice."
+msgstr "다른 탭에서 이미 번역이 실행 중입니다(%s). 모래시계 옆의 「중지」로 멈추거나 끝날 때까지 기다리세요. 두 번째 번역은 같은 문장을 두 번 번역하게 됩니다."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translation quality: %1$s (%2$d/4)"
+msgstr "번역 품질: %1$s (%2$d/4)"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Quality: %s"
+msgstr "품질: %s"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
+msgstr "켜기: 모든 페이지, 글, 상품이 언어마다 번역된 제목으로 만든 주소를 갖습니다. 예: /it/about-us/ 대신 /it/chi-siamo/. 원래 주소를 연 방문자와 검색 엔진은 새 주소로 이동합니다(301). 편집기에서 직접 입력한 주소는 절대 바뀌지 않으며, 한 번 만든 주소는 나중에 번역을 수정해도 그대로입니다. 끄기: 모든 언어가 다시 원래 주소를 사용하며, 이미 만든 주소도 마찬가지입니다(저장되어 있다가 다시 켜면 돌아옵니다). 그 주소를 연 방문자는 301로 원래 주소로 이동합니다. 편집기에서 입력한 주소는 계속 사용됩니다."

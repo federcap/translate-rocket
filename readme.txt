@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.32
+Stable tag: 1.8.33
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,20 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.33 =
+* New: «Translate my site» shows what it does in three steps, your languages as flags right above the button, and a bigger button. While it works you can Pause or Stop it, and a line shows the page being read or the sentence being translated right now.
+* New: «Stop» next to the hourglass. It stops every translation running now — in this tab, in other tabs and Labs in the background — and keeps what was already translated. Starting a second translation from another tab is no longer possible: it says one is already running, instead of translating the same sentences twice.
+* New: the translation quality of every engine (Fair, Good, Very good, Excellent) in the «Active provider» menu and on every provider card, on the same scale as the engine menu of the Translations page.
+* New: «Pause» in the «Translate with your browser» box, next to «Stop»; both are centred and easy to see, and the box explains itself in a short list.
+* New: in «Translate my site», a pencil to give MyMemory another e-mail address.
+* Improved: the Languages card is centred and easier to read, and «Save changes» stays visible at the bottom of the screen while you scroll the list of languages.
+* Improved: on the Translations page the list of pages loads 50 at a time with «Show 50 more», so a site with thousands of pages opens quickly; the search still finds every page.
+* Improved: Labs is reachable from the Simple view too.
+* Fixed: during a translation the percentage on the language button moved while the bar and «N strings still to translate» under it stayed at the figure of when the page was opened. They now move together.
+* Fixed: the hourglass came on when sentences were only reused, edited by hand or imported, as if a translation were running.
+* Fixed: lines of code from WordPress JavaScript templates («<# if ( closeType ) { #>») were collected as sentences that no engine can translate, holding a language at 99%. They are no longer collected, and the ones already collected are removed by themselves.
+* Fixed: the flag menu of «Custom language» did not close with Esc, and stayed open over the «i» of the next setting.
 
 = 1.8.32 =
 * New: «Translate my site» — one button, nothing to choose. In the Simple view the plugin reads every page, picks the engine by itself (your AI key if you have one, otherwise the free translator built into Chrome and Edge, otherwise MyMemory, free and official, for Firefox, Safari and phones), translates every language and puts it online. When it ends, a link opens your translated site.
@@ -657,6 +671,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.33 =
+A redesigned «Translate my site» with Pause and Stop, a «Stop» next to the hourglass that ends every running translation, the quality of each engine at a glance, and no more 99% because of WordPress template code.
 
 = 1.8.32 =
 New «Translate my site»: one click and the plugin picks the free engine, translates every language and puts it online. Site names and addresses are kept as they are in every language (no more 99% for one «example.com»), and on phones the floating switcher no longer covers your buttons.

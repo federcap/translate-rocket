@@ -7954,3 +7954,146 @@ msgstr "Sekitar 2 permintaan per menit untuk tiap modelnya, tanpa batas harian"
 #, php-format
 msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
 msgstr "Otomatis dibiarkan apa adanya, tidak perlu ditulis: alamat situs Anda (%s)."
+
+#: src/Admin/OneClick.php
+msgid "Your whole site, translated in one click"
+msgstr "Seluruh situs Anda, diterjemahkan dengan satu klik"
+
+#: src/Admin/OneClick.php
+msgid "Reads every page"
+msgstr "Membaca setiap halaman"
+
+#: src/Admin/OneClick.php
+msgid "pages, posts, products and archives"
+msgstr "halaman, pos, produk, dan arsip"
+
+#: src/Admin/OneClick.php
+msgid "Translates everything"
+msgstr "Menerjemahkan semuanya"
+
+#: src/Admin/OneClick.php
+msgid "texts, menus, buttons and SEO"
+msgstr "teks, menu, tombol, dan SEO"
+
+#: src/Admin/OneClick.php
+msgid "Puts it online"
+msgstr "Menayangkannya"
+
+#: src/Admin/OneClick.php
+msgid "one address for each language"
+msgstr "satu alamat untuk setiap bahasa"
+
+#: src/Admin/OneClick.php
+msgid "Your site will be translated into:"
+msgstr "Situs Anda akan diterjemahkan ke:"
+
+#: src/Admin/OneClick.php
+msgid "No key, no account"
+msgstr "Tanpa kunci, tanpa akun"
+
+#: src/Admin/OneClick.php
+msgid "Keep this tab open while it works"
+msgstr "Biarkan tab ini terbuka selama proses berjalan"
+
+#: src/Admin/OneClick.php
+msgid "Now reading:"
+msgstr "Sedang membaca:"
+
+#: src/Admin/OneClick.php
+msgid "Now translating:"
+msgstr "Sedang menerjemahkan:"
+
+#: src/Admin/OneClick.php
+msgid "Please enter a valid e-mail address."
+msgstr "Masukkan alamat email yang valid."
+
+#: src/Admin/OneClick.php
+msgid "Stopping after the current sentence…"
+msgstr "Berhenti setelah kalimat ini…"
+
+#: src/Admin/OneClick.php
+msgid "Stopped. Everything translated so far is saved. Press «Translate my site» to continue from where it stopped."
+msgstr "Dihentikan. Semua yang sudah diterjemahkan tersimpan. Klik «Terjemahkan situs saya» untuk melanjutkan dari titik berhenti."
+
+#: src/Admin/OneClick.php
+msgid "Use another e-mail"
+msgstr "Gunakan email lain"
+
+#: src/Admin/BrowserEngine.php
+msgid "Paused. Press «Resume» to go on from here."
+msgstr "Dijeda. Klik «Lanjutkan» untuk meneruskan dari sini."
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge on a computer"
+msgstr "Chrome dan Edge di komputer"
+
+#: src/Admin/BrowserEngine.php
+msgid "translate on the device itself, one sentence at a time"
+msgstr "menerjemahkan di perangkat itu sendiri, kalimat demi kalimat"
+
+#: src/Admin/BrowserEngine.php
+msgid "no account, no key"
+msgstr "tanpa akun, tanpa kunci"
+
+#: src/Admin/BrowserEngine.php
+msgid "Private"
+msgstr "Privat"
+
+#: src/Admin/BrowserEngine.php
+msgid "the text never leaves this computer"
+msgstr "teks tidak pernah meninggalkan komputer ini"
+
+#: src/Admin/BrowserEngine.php
+msgid "The quickest way"
+msgstr "Cara tercepat"
+
+#: src/Admin/BrowserEngine.php
+msgid "to have your site translated today"
+msgstr "untuk menerjemahkan situs Anda hari ini"
+
+#: src/Admin/BrowserEngine.php
+msgid "Quality:"
+msgstr "Kualitas:"
+
+#: src/Admin/BrowserEngine.php
+msgid "below DeepL and the AI models"
+msgstr "di bawah DeepL dan model AI"
+
+#: src/Admin/BrowserEngine.php
+msgid "Better quality later?"
+msgstr "Kualitas lebih baik nanti?"
+
+#: src/Admin/AutoPage.php
+msgid "Stop every translation running now (this tab, other tabs, Labs in the background)? What was translated stays."
+msgstr "Hentikan semua terjemahan yang sedang berjalan (tab ini, tab lain, Labs di latar belakang)? Yang sudah diterjemahkan tetap tersimpan."
+
+#: src/Admin/AutoPage.php
+msgid "Click again to stop everything"
+msgstr "Klik lagi untuk menghentikan semuanya"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved: press the button again to go on."
+msgstr "Dihentikan. Yang sudah diterjemahkan tersimpan: klik tombolnya lagi untuk melanjutkan."
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved."
+msgstr "Dihentikan. Yang sudah diterjemahkan tersimpan."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "A translation is already running in another tab (%s). Stop it with «Stop» next to the hourglass, or wait for it to end: a second one would translate the same sentences twice."
+msgstr "Sebuah terjemahan sudah berjalan di tab lain (%s). Hentikan dengan «Berhenti» di samping jam pasir, atau tunggu sampai selesai: terjemahan kedua akan menerjemahkan kalimat yang sama dua kali."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translation quality: %1$s (%2$d/4)"
+msgstr "Kualitas terjemahan: %1$s (%2$d/4)"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Quality: %s"
+msgstr "Kualitas: %s"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
+msgstr "Aktif: setiap halaman, pos, dan produk mendapat alamat dari judul terjemahannya di setiap bahasa, misalnya /it/chi-siamo/ alih-alih /it/about-us/. Pengunjung dan mesin pencari yang membuka alamat asli dialihkan ke alamat baru (301). Alamat yang Anda ketik di editor tidak pernah diubah, dan alamat yang sudah dibuat tetap sama meski Anda mengedit terjemahannya nanti. Nonaktif: setiap bahasa kembali memakai alamat Anda sendiri, juga untuk alamat yang sudah dibuat (alamat itu disimpan dan kembali jika Anda mengaktifkannya lagi); pengunjung yang membukanya dialihkan ke alamat asli dengan 301. Alamat yang Anda ketik di editor tetap dipakai."

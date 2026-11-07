@@ -126,7 +126,7 @@ class AutoPage {
 		// bars and percentages stay, the hourglass and the pace estimate do not (10/10/2026).
 		if ( $targets && ! Strings::is_huge() ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$righe = $wpdb->get_results( $wpdb->prepare( "SELECT language, SUM( updated_at >= %s ) AS q, SUM( updated_at >= %s ) AS r, COUNT(*) AS d FROM {$tab} WHERE status > 0 AND updated_at >= %s GROUP BY language", $quarto, $adesso, $giorno ), ARRAY_A );
+			$righe = $wpdb->get_results( $wpdb->prepare( "SELECT language, SUM( updated_at >= %s ) AS q, SUM( updated_at >= %s ) AS r, COUNT(*) AS d FROM {$tab} WHERE status > 0 AND updated_at >= %s AND ( provider IS NULL OR provider NOT IN ( 'reuse', 'pieces', 'manual', 'visual', 'import' ) ) GROUP BY language", $quarto, $adesso, $giorno ), ARRAY_A );
 			foreach ( (array) $righe as $r ) {
 				$recenti[ (string) $r['language'] ] = (int) $r['q'];
 				$ora[ (string) $r['language'] ]     = (int) $r['r'];
@@ -135,6 +135,11 @@ class AutoPage {
 		}
 		$labs = self::labs_status();
 		$out  = array();
+		// 7/11/2026: the runs started from a screen, with their language (RunGuard heartbeats, 45 s).
+		$vivi = array();
+		foreach ( \TranslateRocket\RunGuard::runs() as $run ) {
+			$vivi[ (string) ( $run['lang'] ?? '' ) ] = true;
+		}
 		// When each language's count last moved. Rows saved recently are not enough for the hourglass:
 		// a job saving the same sentences again and again, never the last few, kept it on for ever
 		// next to a number that did not move (10/10/2026, «690 / 693» in Arabic).
@@ -161,7 +166,7 @@ class AutoPage {
 				'missing'    => $manca,
 				'pct'        => $det > 0 ? (int) floor( 100 * $fatte / $det ) : 0,
 				'today'      => $ritmo,
-				'busy'       => $manca > 0 && $si_muove && ( ( $labs && ! empty( $labs['running'] ) ) ? (int) ( $recenti[ $code ] ?? 0 ) > 0 : (int) ( $ora[ $code ] ?? 0 ) > 0 ),
+				'busy'       => $manca > 0 && ( isset( $vivi[ $code ] ) || ( $si_muove && ( ( $labs && ! empty( $labs['running'] ) ) ? (int) ( $recenti[ $code ] ?? 0 ) > 0 : (int) ( $ora[ $code ] ?? 0 ) > 0 ) ) ),
 				'days'       => ( $ritmo > 0 && $manca > 0 && $labs && ! empty( $labs['on'] ) && empty( $labs['running'] ) ) ? (int) ceil( $manca / $ritmo ) : 0,
 				'online'     => ! in_array( $code, $offline, true ),
 			);
@@ -292,6 +297,7 @@ class AutoPage {
 				'now'   => self::now_lines( $labs ),
 				'recent' => self::recent_lines( $labs ),
 				'rest'  => self::rest_line( $labs ),
+				'runs'  => count( \TranslateRocket\RunGuard::runs() ), // 7/11/2026: tabs translating now
 			)
 		);
 	}
@@ -493,6 +499,13 @@ class AutoPage {
 				'bPause' => __( 'Pause', 'translate-rocket' ),
 				'bResume' => __( 'Resume', 'translate-rocket' ),
 				'labs'  => admin_url( 'admin.php?page=translate-rocket-labs#trrlabs-auto' ),
+				// 7/11/2026 (Federico: «nessun pulsante interrompi quando c'è la clessidra»).
+				'sNonce' => wp_create_nonce( 'trrocket_stop_all' ),
+				'sLabel' => __( 'Stop', 'translate-rocket' ),
+				'sAsk'   => __( 'Stop every translation running now (this tab, other tabs, Labs in the background)? What was translated stays.', 'translate-rocket' ),
+				// no window.confirm(): a browser dialog freezes the page (and the other tabs' scripts wait on it) — a second click confirms
+				'sSure'  => __( 'Click again to stop everything', 'translate-rocket' ),
+				'sDone'  => __( 'Stopped. What was translated is saved.', 'translate-rocket' ),
 			)
 		);
 		return '(function(){var C=' . $cfg . ';function f(n,a,b){return String(n).replace("%1$d",a).replace("%2$d",b).replace("%d",a).replace("%s",a);}'
@@ -501,10 +514,19 @@ class AutoPage {
 			. 'var fill=row.querySelector(".trr-prog-fill");if(fill){fill.style.width=d.pct+"%";}'
 			. 'var pc=row.querySelector(".trr-lang-state-pc,.trr-auto-pc");if(pc){pc.textContent=d.pct+"%";}'
 			. 'var n=row.querySelector(".trr-auto-n");if(n){n.textContent=d.translated+" / "+d.detected;}'
+			. 'var mi=row.querySelector(".trr-auto-miss");if(mi){mi.textContent=d.missing;}var de=row.querySelector(".trr-auto-det");if(de){de.textContent=d.detected;}'
+			. 'if(fill&&row.classList.contains("trr-lang-live")){fill.style.background="hsl("+Math.round(d.pct*1.2)+",72%,45%)";}'
 			. 'var eta=row.querySelector(".trr-auto-eta");if(eta){eta.textContent=d.days?(d.days<=1?C.day1:f(C.days,d.days)):"";}'
 			. 'row.classList.toggle("is-busy",!!d.busy);var h=row.querySelector(".trr-busy");if(h){h.hidden=!d.busy;h.title=C.busy;}'
 			. '});});var t=document.getElementById("trr-auto-tot");if(t&&typeof r.tot==="string"){t.textContent=r.tot;t.hidden=!r.tot;}'
-			. 'var j=r.job,el=document.getElementById("trr-auto-job");if(el&&j&&j.total>0){if(j.paused){el.textContent=f(C.paused,j.done,j.total)+" ";var a=document.createElement("a");a.href=C.labs;a.textContent=C.resume+" →";el.appendChild(a);el.classList.add("is-paused");}else{el.classList.remove("is-paused");el.textContent=f(C.pages,j.done,j.total)+(j.total>j.done?" · "+f(C.left,j.total-j.done):"")+(j.days?" · "+(j.days<=1?C.site1:f(C.site,j.days)):"")+(j.last?" · "+f(C.last,j.last):"");}}now(r.now||[]);extra(r);}'
+			. 'var j=r.job,el=document.getElementById("trr-auto-job");if(el&&j&&j.total>0){if(j.paused){el.textContent=f(C.paused,j.done,j.total)+" ";var a=document.createElement("a");a.href=C.labs;a.textContent=C.resume+" →";el.appendChild(a);el.classList.add("is-paused");}else{el.classList.remove("is-paused");el.textContent=f(C.pages,j.done,j.total)+(j.total>j.done?" · "+f(C.left,j.total-j.done):"")+(j.days?" · "+(j.days<=1?C.site1:f(C.site,j.days)):"")+(j.last?" · "+f(C.last,j.last):"");}}now(r.now||[]);extra(r);stopBtn(Object.keys(L).some(function(c){return L[c].busy;})||!!(r.now&&r.now.length)||r.runs>0||!!(r.job&&r.job.running&&!r.job.paused));}'
+			. 'function stopBtn(on){var b=document.getElementById("trr-stop-all");if(!b){if(!on){return;}var at=document.querySelector(".trr-lang-live")||document.querySelector(".trr-langbar-live,.trr-lang-state-table,#trr-auto-now");if(!at){return;}'
+			. 'b=document.createElement("button");b.type="button";b.id="trr-stop-all";b.className="button trr-stop-all";b.textContent="\u23F9 "+C.sLabel;at.parentNode.insertBefore(b,at.nextSibling);'
+			. 'b.title=C.sAsk;b.addEventListener("click",function(){if(!b.getAttribute("data-sure")){b.setAttribute("data-sure","1");b.textContent="⏹ "+C.sSure;setTimeout(function(){if(b.getAttribute("data-sure")){b.removeAttribute("data-sure");b.textContent="⏹ "+C.sLabel;}},5000);return;}b.removeAttribute("data-sure");b.disabled=true;'
+			. '["trr-browser-stop","trr-oneclick-stop"].forEach(function(id){var x=document.getElementById(id);if(x&&!x.disabled&&x.offsetParent!==null){x.click();}});'
+			. 'var q=new URLSearchParams();q.append("action","trrocket_stop_all");q.append("nonce",C.sNonce);'
+			. 'fetch(C.ajax,{method:"POST",credentials:"same-origin",body:q}).then(function(x){return x.json();}).then(function(){document.querySelectorAll("[data-trr-live]").forEach(function(row){row.classList.remove("is-busy");var h=row.querySelector(".trr-busy");if(h){h.hidden=true;}});now([]);b.textContent=C.sDone;setTimeout(function(){b.hidden=true;b.disabled=false;b.textContent="\u23F9 "+C.sLabel;},4000);}).catch(function(){b.disabled=false;});});}'
+			. 'if(!b.disabled&&b.textContent!==C.sDone){b.hidden=!on;}}'
 			// One request at a time; after two failed ones in a row (logged out, server down) the hourglasses
 			// go off instead of standing still, frozen from when the page was opened.
 			// 1.8.24: «now» = what is being translated right now (engine, page): one line each with its hourglass, and the

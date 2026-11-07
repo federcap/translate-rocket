@@ -52,6 +52,7 @@ class Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'wp_ajax_trrocket_models', array( $this, 'ajax_models' ) );
 		add_action( 'wp_ajax_trrocket_translate_step', array( $this, 'ajax_translate_step' ) );
+		add_action( 'wp_ajax_trrocket_stop_all', array( $this, 'ajax_stop_all' ) ); // 7/11/2026: «Interrompi» next to the hourglass
 		add_action( 'wp_ajax_trrocket_mm_email', array( $this, 'ajax_mm_email' ) );
 		add_action( 'wp_ajax_trrocket_sw_preview', array( $this, 'ajax_switcher_preview' ) );
 		add_action( 'wp_ajax_trrocket_scan_urls', array( $this, 'ajax_scan_urls' ) );
@@ -3940,6 +3941,9 @@ JS;
 				// 13/10/2026: «Translate all missing» in short steps (about 25 s each) with a bar, so no request meets
 				// the 100 s of Cloudflare or of the host. Without fetch, the form posts as before.
 				var T=window.TRRocketStep||{};
+				// 7/11/2026: one id per tab (kept across reloads of the same tab), so the server tells the runs apart.
+				function trrTab(){try{var v=sessionStorage.getItem('trrTab');if(!v){v=Math.random().toString(36).slice(2,14);sessionStorage.setItem('trrTab',v);}return v;}catch(e){return window.trrTabId||(window.trrTabId=Math.random().toString(36).slice(2,14));}}
+				window.trrTab=trrTab;
 				function passi(pagina){
 					var go=document.getElementById('trr-engine-go'),box=document.getElementById('trr-step');
 					if(!box){box=document.createElement('div');box.id='trr-step';box.className='trr-step';box.setAttribute('role','status');box.innerHTML='<span class="trr-prog-bar"><span class="trr-prog-fill" style="width:0"></span></span> <span class="trr-step-txt"></span>';f.parentNode.insertBefore(box,f.nextSibling);}
@@ -3951,14 +3955,14 @@ JS;
 							// on a stop, so the ⏳ drawn at load would stay on; nothing is being translated any more.
 							document.querySelectorAll('.trr-busy').forEach(function(b){b.hidden=true;});document.querySelectorAll('.is-busy').forEach(function(b){b.classList.remove('is-busy');});}
 					function giro(){
-						var d=new FormData(f);d.append('action','trrocket_translate_step');d.append('done',fatte);d.append('kept',tenute);
+						var d=new FormData(f);d.append('action','trrocket_translate_step');d.append('done',fatte);d.append('kept',tenute);d.append('tab',trrTab());
 						// 15/10/2026: the «AI» button of one page goes the same way, in short steps (it was one request: 504).
 						if(pagina){d.set('loc',pagina.loc);d.set('engine',pagina.engine);d.delete('engine_main');}
 						fetch(window.ajaxurl,{method:'POST',body:d,credentials:'same-origin'}).then(function(r){
 							if(!r.ok){throw new Error('HTTP '+r.status);}return r.json();
 						}).then(function(j){
 							if(!j||!j.success){throw new Error((j&&j.data&&j.data.error)||'?');}
-							var x=j.data;riprove=0;fatte=x.total;tenute=x.kept||0;giri++;scrivi(x.left);if(x.wait&&giri<2000){txt.textContent=x.waitmsg||T.wait||txt.textContent;setTimeout(giro,x.wait*1000);return;}
+							var x=j.data;if(x.already||x.stopped){ferma(x.already||x.stopped);return;}riprove=0;fatte=x.total;tenute=x.kept||0;giri++;scrivi(x.left);if(x.wait&&giri<2000){txt.textContent=x.waitmsg||T.wait||txt.textContent;setTimeout(giro,x.wait*1000);return;}
 							if(x.error&&!x.count){ferma(x.error);return;}
 							if(x.more&&x.count>0&&giri<400){giro();return;}
 								// 16/10/2026: the engine left sentences behind (often not in the site's language): say so, with
@@ -4184,6 +4188,42 @@ JS;
 	}
 
 	/**
+	 * 7/11/2026: translation quality of an engine — array( key, word, level 1-4 ), or array() if unknown.
+	 * Same scale as the engine menu of the Translations screen (keep the two in step).
+	 *
+	 * @param string $id Provider id (or 'browser', 'labs:<id>').
+	 */
+	private static function engine_quality( string $id ): array {
+		$map = array(
+			'browser'       => 'good',
+			'labs:edge'     => 'good',
+			'labs:ovh'      => 'good',
+			'labs:yandex'   => 'fair',
+			'labs:mymemory' => 'fair',
+			'mymemory-free' => 'fair',
+			'groq'          => 'very-good',
+			'cloudflare'    => 'good',
+			'openrouter'    => 'very-good',
+			'deepl'         => 'excellent',
+			'openai'        => 'excellent',
+			'anthropic'     => 'excellent',
+			'gemini'        => 'excellent',
+			'google'        => 'very-good',
+		);
+		if ( ! isset( $map[ $id ] ) ) {
+			return array();
+		}
+		$words = array(
+			'fair'      => array( __( 'Fair', 'translate-rocket' ), 1 ),
+			'good'      => array( __( 'Good', 'translate-rocket' ), 2 ),
+			'very-good' => array( __( 'Very good', 'translate-rocket' ), 3 ),
+			'excellent' => array( __( 'Excellent', 'translate-rocket' ), 4 ),
+		);
+		$k = $map[ $id ];
+		return array( $k, $words[ $k ][0], $words[ $k ][1] );
+	}
+
+	/**
 	 * The provider id for the engine chosen on the Translations screen: '' = the priority order,
 	 * null = not ready (no key, or a Labs engine whose conditions were not accepted).
 	 *
@@ -4237,6 +4277,16 @@ JS;
 		$loc    = isset( $_POST['loc'] ) ? sanitize_text_field( wp_unslash( $_POST['loc'] ) ) : '';
 		$motore = isset( $_POST['engine'] ) ? sanitize_text_field( wp_unslash( $_POST['engine'] ) ) : '';
 		$prima  = isset( $_POST['done'] ) ? max( 0, (int) $_POST['done'] ) : 0;
+		// 7/11/2026 (Federico: «se rifaccio start cosa fa?»): one run at a time from the screens. A new run while another
+		// tab is translating is not started; a run started before «Stop» ends here, in whatever tab it is.
+		$tab   = \TranslateRocket\RunGuard::tab_from_request();
+		$altra = '' !== $tab && 0 === $prima && ! isset( \TranslateRocket\RunGuard::runs()[ $tab ] ) ? \TranslateRocket\RunGuard::other( $tab ) : null;
+		if ( null !== $altra ) {
+			wp_send_json_success( array( 'already' => self::already_msg( $altra ), 'count' => 0, 'total' => 0, 'more' => false ) );
+		}
+		if ( '' !== $tab && ! \TranslateRocket\RunGuard::beat( $tab, '' !== $loc ? 'page' : 'server', $lang, 0 === $prima ) ) {
+			wp_send_json_success( array( 'stopped' => __( 'Stopped. What was translated is saved: press the button again to go on.', 'translate-rocket' ), 'count' => 0, 'total' => $prima, 'more' => false ) );
+		}
 		if ( ! empty( $_POST['engine_main'] ) && 0 === $prima ) {
 			update_user_meta( get_current_user_id(), 'trrocket_strings_engine', $motore );
 		}
@@ -4267,6 +4317,7 @@ JS;
 		$tenute = ( isset( $_POST['kept'] ) ? max( 0, (int) $_POST['kept'] ) : 0 ) + (int) ( $r['kept'] ?? 0 );
 		$resta  = '' === $loc ? Strings::untranslated_count( $lang ) : -1;
 		if ( empty( $r['more'] ) ) {
+			\TranslateRocket\RunGuard::done( $tab );
 			// 16/10/2026 (Federico: «it stopped and the hourglass stayed»): the work is over, the hourglass goes off now
 			// (it reads «the count moved in the last minutes», which stayed true after the last step).
 			$mosse = (array) get_option( 'trrocket_auto_moved', array() );
@@ -4307,6 +4358,29 @@ JS;
 				'stuck' => empty( $r['more'] ) && 0 === (int) $r['count'] && 0 === $tenute && $resta > 0 ? admin_url( 'admin.php?page=translate-rocket-memory&lang=' . rawurlencode( $lang ) . '&onlymiss=1' ) : '',
 			)
 		);
+	}
+
+	/**
+	 * «Interrompi» (7/11/2026): stops every run — this tab, the others, server steps, the browser, Labs' job (paused).
+	 */
+	public function ajax_stop_all(): void {
+		check_ajax_referer( 'trrocket_stop_all', 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(), 403 );
+		}
+		\TranslateRocket\RunGuard::stop_all();
+		wp_send_json_success( array( 'msg' => __( 'Stopped. What was translated is saved.', 'translate-rocket' ) ) );
+	}
+
+	/**
+	 * «Already running elsewhere», with which language.
+	 *
+	 * @param array<string,mixed>|null $r A heartbeat from RunGuard::runs().
+	 */
+	public static function already_msg( ?array $r ): string {
+		$lingua = is_array( $r ) && ! empty( $r['lang'] ) ? Languages::label( (string) $r['lang'] ) : '';
+		/* translators: %s: language name. */
+		return sprintf( __( 'A translation is already running in another tab (%s). Stop it with «Stop» next to the hourglass, or wait for it to end: a second one would translate the same sentences twice.', 'translate-rocket' ), $lingua );
 	}
 
 	/**
@@ -4597,12 +4671,15 @@ JS;
 		foreach ( $altre as $slug => $p ) {
 			echo wp_kses( $pillola( $slug, $p, ' trr-nav-phone' ), \TranslateRocket\Kses::html_rules() );
 		}
+		endif;
 		// «Labs ✨»: what the free add-on adds (or Labs itself, once installed). Opens only when clicked.
+		// 7/11/2026 (Federico: «nella versione semplice non c'è una sezione Labs»): in Simple too.
 		$labs = \TranslateRocket\Admin\LabsPromo::slug();
 		echo '<a class="trr-nav-item trr-nav-labs' . ( $labs === $current ? ' is-active' : '' ) . '" href="' . esc_url( admin_url( 'admin.php?page=' . $labs ) ) . '">'
 			. '<span class="dashicons dashicons-star-filled"></span> ' . esc_html__( 'Labs ✨', 'translate-rocket' )
 			. ' <span class="trr-free-badge">FREE</span>' // 14/10/2026 (Federico: «in green FREE, make it clear it is really free»)
 			. '</a>';
+		if ( ! $semplice ) :
 		// Optional donation link: keeps the plugin free + supporters get priority help.
 		echo '<a class="trr-nav-item trr-nav-support" href="https://translaterocket.com/donate/" target="_blank" rel="noopener" title="'
 			. esc_attr__( 'TranslateRocket is 100% free. Support development to keep it free — supporters get priority support & custom help.', 'translate-rocket' ) . '">'
@@ -4851,7 +4928,8 @@ JS
 						<select id="trrocket-active" name="active_provider">
 							<option value="" <?php selected( '', $active ); ?>><?php esc_html_e( '— None —', 'translate-rocket' ); ?></option>
 							<?php foreach ( $defs as $pid => $def ) : ?>
-								<option value="<?php echo esc_attr( $pid ); ?>" <?php selected( $pid, $active ); ?>><?php echo esc_html( $def['label'] ); ?></option>
+								<?php $trr_q = self::engine_quality( (string) $pid ); ?>
+								<option value="<?php echo esc_attr( $pid ); ?>" <?php selected( $pid, $active ); ?>><?php echo esc_html( $def['label'] . ( $trr_q ? '   ' . str_repeat( '★', $trr_q[2] ) . str_repeat( '☆', 4 - $trr_q[2] ) . ' ' . $trr_q[1] : '' ) ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</div>
@@ -4875,6 +4953,13 @@ JS
 						<div class="trr-ai-provider<?php echo $is_active ? ' is-active' : ''; ?><?php echo $aperto ? '' : ' is-folded'; ?>" data-provider="<?php echo esc_attr( $pid ); ?>" id="trr-prov-<?php echo esc_attr( $pid ); ?>">
 							<div class="trr-ai-phead">
 								<strong class="trr-ai-pname"><?php echo esc_html( $def['label'] ); ?></strong>
+								<?php
+								// 7/11/2026 (Federico): the translation quality, in the menu and on every card (same scale as the Translations screen).
+								$trr_q = self::engine_quality( (string) $pid );
+								if ( $trr_q ) :
+									?>
+									<span class="trr-equal trr-equal-<?php echo esc_attr( $trr_q[0] ); ?> trr-ai-quality" title="<?php echo esc_attr( sprintf( /* translators: 1: quality word, 2: level out of 4. */ __( 'Translation quality: %1$s (%2$d/4)', 'translate-rocket' ), $trr_q[1], $trr_q[2] ) ); ?>"><span class="trr-qbars" aria-hidden="true"><?php for ( $trr_j = 1; $trr_j <= 4; $trr_j++ ) : ?><i<?php echo $trr_j <= $trr_q[2] ? ' class="on"' : ''; ?>></i><?php endfor; ?></span><?php echo esc_html( sprintf( /* translators: %s: quality word (Fair, Good, Very good, Excellent). */ __( 'Quality: %s', 'translate-rocket' ), $trr_q[1] ) ); ?></span>
+								<?php endif; ?>
 								<?php if ( ! empty( $def['free'] ) ) : ?><span class="trr-ai-badge" style="background:#00a32a;color:#fff;border:0"><?php esc_html_e( 'Free', 'translate-rocket' ); ?></span><?php endif; ?>
 								<?php $provato = self::provider_tested( (string) $pid ); ?>
 								<span class="trr-ai-badge trr-ai-tested" <?php echo $provato ? '' : 'hidden'; ?> title="<?php echo esc_attr( $provato ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $provato ) : '' ); ?>">&#10003; <?php esc_html_e( 'Tested', 'translate-rocket' ); ?></span>
@@ -6744,6 +6829,10 @@ JS;
 	document.addEventListener( 'click', function ( e ) {
 		if ( ! e.target.closest || ! e.target.closest( '.trr-flagpick-wrap' ) ) { pal.hidden = true; }
 	} );
+	// 7/11/2026: Esc closes the open palette too (it stayed open over the «i» of the next setting).
+	document.addEventListener( 'keydown', function ( e ) {
+		if ( 'Escape' === e.key && ! pal.hidden ) { pal.hidden = true; btn.focus(); }
+	} );
 	// Upload a custom flag image (for languages with no matching country flag).
 	var up = pal.querySelector( '.trr-flagpick-upload' );
 	if ( up ) {
@@ -7533,22 +7622,34 @@ JS;
 		$per_motore = Strings::engines_by_page( $lang ); // who translated each page: the labels under its name
 		$stats = Strings::language_stats( $lang );
 
+		// 7/11/2026 (Federico: «le percentuali sono discordanti»): the language button moved by itself every few seconds
+		// (53%) while this line and bar stayed at the page-load figure (38%). Same numbers, now both live (AutoPage::live()).
+		$detected_total = (int) $stats['detected'];
+		$trr_fatte      = $detected_total - (int) $stats['missing'];
+		$trr_pct        = $detected_total > 0 ? (int) floor( $trr_fatte / $detected_total * 100 ) : 0;
+		echo '<div class="trr-lang-live" data-trr-live="' . esc_attr( $lang ) . '">';
 		printf(
-			'<p class="description">%s</p>',
+			'<p class="description trr-lang-live-txt">%s</p>',
 			sprintf(
-				/* translators: 1: missing count, 2: total count. */
-				esc_html__( '%1$d strings still to translate out of %2$d detected.', 'translate-rocket' ),
-				(int) $stats['missing'],
-				(int) $stats['detected']
+				// the translated sentence keeps its %d (23 languages already have it); here the numbers go in spans
+				str_replace(
+					array( '%1$d', '%2$d' ),
+					array( '%1$s', '%2$s' ),
+					/* translators: 1: missing count, 2: total count. */
+					esc_html__( '%1$d strings still to translate out of %2$d detected.', 'translate-rocket' )
+				),
+				'<span class="trr-auto-miss">' . (int) $stats['missing'] . '</span>',
+				'<span class="trr-auto-det">' . (int) $detected_total . '</span>'
 			)
 		);
-		$detected_total = (int) $stats['detected'];
-		echo wp_kses(
-			'<div style="max-width:360px;margin:10px 0 16px">'
-			. $this->progress_bar( $detected_total - (int) $stats['missing'], $detected_total, true )
-			. '</div>',
-			\TranslateRocket\Kses::html_rules()
-		);
+		if ( $detected_total > 0 ) {
+			echo '<div class="trr-lang-live-bar"><div class="trr-prog">'
+				. '<div class="trr-prog-bar"><div class="trr-prog-fill" style="width:' . (int) $trr_pct . '%;background:' . esc_attr( self::hsl_to_hex( (int) round( $trr_pct * 1.2 ), 72, 45 ) ) . '"></div></div>'
+				. '<div class="trr-prog-label"><span class="trr-auto-pc">' . (int) $trr_pct . '%</span> · <span class="trr-auto-n">' . (int) $trr_fatte . ' / ' . (int) $detected_total . '</span></div></div></div>';
+		} else {
+			echo wp_kses( '<div style="max-width:360px;margin:10px 0 16px">' . $this->progress_bar( 0, 0, true ) . '</div>', \TranslateRocket\Kses::html_rules() );
+		}
+		echo '</div>';
 		?>
 		<?php
 		// Le tre strade per tradurre, una accanto all'altra: a mano (il pulsante
@@ -7790,7 +7891,7 @@ JS;
 				printf(
 					/* translators: 1: number of visible pages, 2: total pages. */
 					esc_html__( 'Showing %1$s of %2$s pages', 'translate-rocket' ),
-					'<strong id="trr-pcount">' . (int) ( $locale ? $count : min( $count, self::PAGES_BLOCK ) ) . '</strong>',
+					'<strong id="trr-pcount">' . (int) min( $count, self::PAGES_BLOCK ) . '</strong>',
 					'<strong id="trr-ptotal">' . (int) $count . '</strong>'
 				);
 				?>
@@ -7828,13 +7929,21 @@ JS;
 				<?php
 				// 14/10/2026 (Federico: «2,051 pages make the screen very heavy»): the first block only; search, filter,
 				// sort and «Show more» ask the server for the next ones (ajax_pages_rows).
+				// 7/11/2026 (Federico: «carichi tutte le pagine… ne carichi meno con load more»): up to PAGES_LOCAL the rows
+				// are still all in the page (instant search, 18/10), but only the first block is shown; «Show more» opens the next.
+				$riga_n = 0;
 				foreach ( ( $locale ? $pages : array_slice( $pages, 0, self::PAGES_BLOCK ) ) as $page ) {
-					echo $this->page_row( $page, $lang, $per_motore, $riga_ok ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with esc_* in page_row().
+					$riga = $this->page_row( $page, $lang, $per_motore, $riga_ok );
+					if ( $locale && $riga_n >= self::PAGES_BLOCK ) {
+						$riga = preg_replace( '/^(\s*<tr)\b/', '$1 hidden', $riga, 1 );
+					}
+					++$riga_n;
+					echo $riga; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with esc_* in page_row().
 				}
 				?>
 			</tbody>
 		</table>
-		<p class="trr-pmore-wrap"<?php echo ( ! $locale && $count > self::PAGES_BLOCK ) ? '' : ' hidden'; ?>><button type="button" class="button" id="trr-pmore"><?php echo esc_html( sprintf( /* translators: %d: how many more pages are shown. */ __( 'Show %d more', 'translate-rocket' ), self::PAGES_BLOCK ) ); ?></button> <span class="spinner" id="trr-pspin"></span></p>
+		<p class="trr-pmore-wrap"<?php echo ( $count > self::PAGES_BLOCK ) ? '' : ' hidden'; ?>><button type="button" class="button" id="trr-pmore"><?php echo esc_html( sprintf( /* translators: %d: how many more pages are shown. */ __( 'Show %d more', 'translate-rocket' ), self::PAGES_BLOCK ) ); ?></button> <span class="spinner" id="trr-pspin"></span></p>
 
 		<?php
 		wp_add_inline_script( 'trrocket-admin-info', self::pages_list_js() );
@@ -8043,17 +8152,12 @@ JS;
 	// the sort act on the rows themselves — nothing is asked of the server, so nothing waits for WordPress to start.
 	// Same rules as pages_filtered(): spaces count as hyphens, name and address both searched.
 	var attributi = { title: 'data-title', strings: 'data-strings', translated: 'data-translated', missing: 'data-missing', pct: 'data-pct' };
+	// 7/11/2026 (Federico: «ne carichi meno con load more»): even with every row in the page, only `mostra` are shown.
+	var mostra = block;
 	function filtraQui() {
 		var q = input.value.trim().toLowerCase().replace( / /g, '-' );
 		var soloDaFare = todo && todo.checked;
 		var righe = Array.prototype.slice.call( tbody.rows );
-		var n = 0;
-		righe.forEach( function ( r ) {
-			var ok = ( ! soloDaFare || parseInt( r.getAttribute( 'data-missing' ), 10 ) > 0 )
-				&& ( ! q || ( r.getAttribute( 'data-search' ) || '' ).replace( / /g, '-' ).indexOf( q ) !== -1 );
-			r.hidden = ! ok;
-			if ( ok ) { n++; }
-		} );
 		if ( stato.key && attributi[ stato.key ] ) {
 			var attr = attributi[ stato.key ], num = 'title' !== stato.key;
 			righe.sort( function ( a, b ) {
@@ -8063,13 +8167,24 @@ JS;
 			} );
 			righe.forEach( function ( r ) { tbody.appendChild( r ); } );
 		}
-		if ( counter ) { counter.textContent = n; }
+		var trovate = 0, viste = 0;
+		righe.forEach( function ( r ) {
+			var ok = ( ! soloDaFare || parseInt( r.getAttribute( 'data-missing' ), 10 ) > 0 )
+				&& ( ! q || ( r.getAttribute( 'data-search' ) || '' ).replace( / /g, '-' ).indexOf( q ) !== -1 );
+			if ( ok ) { trovate++; }
+			var vedi = ok && trovate <= mostra;
+			r.hidden = ! vedi;
+			if ( vedi ) { viste++; }
+		} );
+		if ( counter ) { counter.textContent = viste; }
+		if ( totale ) { totale.textContent = trovate; }
+		if ( more ) { more.parentNode.hidden = trovate <= mostra; }
 	}
 
 	// 14/10/2026 (Federico: «with every page loaded the screen gets very heavy»): the server sends 50 rows at a
 	// time; the search box, «Only pages still to translate» and the column sort ask it again from the start.
 	function carica( daCapo ) {
-		if ( locale ) { filtraQui(); return; }
+		if ( locale ) { mostra = daCapo ? block : mostra + block; filtraQui(); return; }
 		var mio = ++stato.seq;
 		var body = new URLSearchParams();
 		body.append( 'action', 'trrocket_pages_rows' );

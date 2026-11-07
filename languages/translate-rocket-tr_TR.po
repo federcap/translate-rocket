@@ -7982,3 +7982,146 @@ msgstr "Her modeli için dakikada yaklaşık 2 istek, günlük sınır yok"
 #, php-format
 msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
 msgstr "Otomatik olarak olduğu gibi bırakılır, yazmanıza gerek yok: sitenizin adresi (%s)."
+
+#: src/Admin/OneClick.php
+msgid "Your whole site, translated in one click"
+msgstr "Tüm siteniz, tek tıkla çevrildi"
+
+#: src/Admin/OneClick.php
+msgid "Reads every page"
+msgstr "Her sayfayı okur"
+
+#: src/Admin/OneClick.php
+msgid "pages, posts, products and archives"
+msgstr "sayfalar, yazılar, ürünler ve arşivler"
+
+#: src/Admin/OneClick.php
+msgid "Translates everything"
+msgstr "Her şeyi çevirir"
+
+#: src/Admin/OneClick.php
+msgid "texts, menus, buttons and SEO"
+msgstr "metinler, menüler, düğmeler ve SEO"
+
+#: src/Admin/OneClick.php
+msgid "Puts it online"
+msgstr "Yayına alır"
+
+#: src/Admin/OneClick.php
+msgid "one address for each language"
+msgstr "her dil için bir adres"
+
+#: src/Admin/OneClick.php
+msgid "Your site will be translated into:"
+msgstr "Siteniz şu dillere çevrilecek:"
+
+#: src/Admin/OneClick.php
+msgid "No key, no account"
+msgstr "Anahtar yok, hesap yok"
+
+#: src/Admin/OneClick.php
+msgid "Keep this tab open while it works"
+msgstr "İşlem sürerken bu sekmeyi açık tutun"
+
+#: src/Admin/OneClick.php
+msgid "Now reading:"
+msgstr "Şu an okunuyor:"
+
+#: src/Admin/OneClick.php
+msgid "Now translating:"
+msgstr "Şu an çevriliyor:"
+
+#: src/Admin/OneClick.php
+msgid "Please enter a valid e-mail address."
+msgstr "Lütfen geçerli bir e-posta adresi girin."
+
+#: src/Admin/OneClick.php
+msgid "Stopping after the current sentence…"
+msgstr "Geçerli cümleden sonra duruluyor…"
+
+#: src/Admin/OneClick.php
+msgid "Stopped. Everything translated so far is saved. Press «Translate my site» to continue from where it stopped."
+msgstr "Durduruldu. Şimdiye kadar çevrilenlerin hepsi kaydedildi. Kaldığı yerden devam etmek için «Sitemi çevir»e basın."
+
+#: src/Admin/OneClick.php
+msgid "Use another e-mail"
+msgstr "Başka bir e-posta kullan"
+
+#: src/Admin/BrowserEngine.php
+msgid "Paused. Press «Resume» to go on from here."
+msgstr "Duraklatıldı. Buradan devam etmek için «Sürdür»e basın."
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge on a computer"
+msgstr "Bilgisayardaki Chrome ve Edge"
+
+#: src/Admin/BrowserEngine.php
+msgid "translate on the device itself, one sentence at a time"
+msgstr "cihazın kendisinde, cümle cümle çevirir"
+
+#: src/Admin/BrowserEngine.php
+msgid "no account, no key"
+msgstr "hesap yok, anahtar yok"
+
+#: src/Admin/BrowserEngine.php
+msgid "Private"
+msgstr "Gizli"
+
+#: src/Admin/BrowserEngine.php
+msgid "the text never leaves this computer"
+msgstr "metin bu bilgisayardan hiç çıkmaz"
+
+#: src/Admin/BrowserEngine.php
+msgid "The quickest way"
+msgstr "En hızlı yol"
+
+#: src/Admin/BrowserEngine.php
+msgid "to have your site translated today"
+msgstr "sitenizi bugün çevirmenin"
+
+#: src/Admin/BrowserEngine.php
+msgid "Quality:"
+msgstr "Kalite:"
+
+#: src/Admin/BrowserEngine.php
+msgid "below DeepL and the AI models"
+msgstr "DeepL ve yapay zekâ modellerinin altında"
+
+#: src/Admin/BrowserEngine.php
+msgid "Better quality later?"
+msgstr "Daha sonra daha iyi kalite mi?"
+
+#: src/Admin/AutoPage.php
+msgid "Stop every translation running now (this tab, other tabs, Labs in the background)? What was translated stays."
+msgstr "Şu an çalışan tüm çeviriler durdurulsun mu (bu sekme, diğer sekmeler, arka plandaki Labs)? Çevrilenler kalır."
+
+#: src/Admin/AutoPage.php
+msgid "Click again to stop everything"
+msgstr "Hepsini durdurmak için tekrar tıklayın"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved: press the button again to go on."
+msgstr "Durduruldu. Çevrilenler kaydedildi: devam etmek için düğmeye tekrar basın."
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved."
+msgstr "Durduruldu. Çevrilenler kaydedildi."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "A translation is already running in another tab (%s). Stop it with «Stop» next to the hourglass, or wait for it to end: a second one would translate the same sentences twice."
+msgstr "Başka bir sekmede zaten bir çeviri çalışıyor (%s). Kum saatinin yanındaki «Durdur» ile durdurun ya da bitmesini bekleyin: ikinci bir çeviri aynı cümleleri iki kez çevirir."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translation quality: %1$s (%2$d/4)"
+msgstr "Çeviri kalitesi: %1$s (%2$d/4)"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Quality: %s"
+msgstr "Kalite: %s"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
+msgstr "Açık: her sayfa, yazı ve ürün her dilde çevrilmiş başlığından oluşturulan adresi alır; örneğin /it/about-us/ yerine /it/chi-siamo/. Asıl adresi açan ziyaretçiler ve arama motorları yeni adrese yönlendirilir (301). Düzenleyicide yazdığınız bir adres asla değiştirilmez ve oluşturulan adres, çeviriyi sonradan düzenleseniz de aynı kalır. Kapalı: her dil yeniden kendi adresinizi kullanır, zaten oluşturulmuş adresler için de (saklanırlar ve seçeneği tekrar açarsanız geri gelirler); bunlardan birini açan ziyaretçiler 301 ile asıl adrese yönlendirilir. Düzenleyicide yazdığınız adres kullanılmaya devam eder."

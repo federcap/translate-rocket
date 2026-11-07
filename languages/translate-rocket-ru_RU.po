@@ -7165,3 +7165,146 @@ msgstr "Около 2 запросов в минуту на каждую моде
 #, php-format
 msgid "Kept as it is automatically, no need to write it: your site's address (%s)."
 msgstr "Автоматически остаётся без изменений, вписывать его не нужно: адрес вашего сайта (%s)."
+
+#: src/Admin/OneClick.php
+msgid "Your whole site, translated in one click"
+msgstr "Весь ваш сайт — перевод в один клик"
+
+#: src/Admin/OneClick.php
+msgid "Reads every page"
+msgstr "Читает каждую страницу"
+
+#: src/Admin/OneClick.php
+msgid "pages, posts, products and archives"
+msgstr "страницы, записи, товары и архивы"
+
+#: src/Admin/OneClick.php
+msgid "Translates everything"
+msgstr "Переводит всё"
+
+#: src/Admin/OneClick.php
+msgid "texts, menus, buttons and SEO"
+msgstr "тексты, меню, кнопки и SEO"
+
+#: src/Admin/OneClick.php
+msgid "Puts it online"
+msgstr "Публикует на сайте"
+
+#: src/Admin/OneClick.php
+msgid "one address for each language"
+msgstr "отдельный адрес для каждого языка"
+
+#: src/Admin/OneClick.php
+msgid "Your site will be translated into:"
+msgstr "Ваш сайт будет переведён на:"
+
+#: src/Admin/OneClick.php
+msgid "No key, no account"
+msgstr "Без ключа и учётной записи"
+
+#: src/Admin/OneClick.php
+msgid "Keep this tab open while it works"
+msgstr "Не закрывайте вкладку, пока идёт работа"
+
+#: src/Admin/OneClick.php
+msgid "Now reading:"
+msgstr "Сейчас читается:"
+
+#: src/Admin/OneClick.php
+msgid "Now translating:"
+msgstr "Сейчас переводится:"
+
+#: src/Admin/OneClick.php
+msgid "Please enter a valid e-mail address."
+msgstr "Введите действительный адрес эл. почты."
+
+#: src/Admin/OneClick.php
+msgid "Stopping after the current sentence…"
+msgstr "Остановка после текущего предложения…"
+
+#: src/Admin/OneClick.php
+msgid "Stopped. Everything translated so far is saved. Press «Translate my site» to continue from where it stopped."
+msgstr "Остановлено. Всё переведённое сохранено. Нажмите «Перевести мой сайт», чтобы продолжить с того же места."
+
+#: src/Admin/OneClick.php
+msgid "Use another e-mail"
+msgstr "Использовать другой адрес"
+
+#: src/Admin/BrowserEngine.php
+msgid "Paused. Press «Resume» to go on from here."
+msgstr "Пауза. Нажмите «Продолжить», чтобы продолжить с этого места."
+
+#: src/Admin/BrowserEngine.php
+msgid "Chrome and Edge on a computer"
+msgstr "Chrome и Edge на компьютере"
+
+#: src/Admin/BrowserEngine.php
+msgid "translate on the device itself, one sentence at a time"
+msgstr "переводят прямо на устройстве, по одному предложению"
+
+#: src/Admin/BrowserEngine.php
+msgid "no account, no key"
+msgstr "без учётной записи и ключа"
+
+#: src/Admin/BrowserEngine.php
+msgid "Private"
+msgstr "Конфиденциально"
+
+#: src/Admin/BrowserEngine.php
+msgid "the text never leaves this computer"
+msgstr "текст никогда не покидает этот компьютер"
+
+#: src/Admin/BrowserEngine.php
+msgid "The quickest way"
+msgstr "Самый быстрый способ"
+
+#: src/Admin/BrowserEngine.php
+msgid "to have your site translated today"
+msgstr "перевести сайт уже сегодня"
+
+#: src/Admin/BrowserEngine.php
+msgid "Quality:"
+msgstr "Качество:"
+
+#: src/Admin/BrowserEngine.php
+msgid "below DeepL and the AI models"
+msgstr "ниже, чем у DeepL и моделей ИИ"
+
+#: src/Admin/BrowserEngine.php
+msgid "Better quality later?"
+msgstr "Позже нужно качество выше?"
+
+#: src/Admin/AutoPage.php
+msgid "Stop every translation running now (this tab, other tabs, Labs in the background)? What was translated stays."
+msgstr "Остановить все идущие переводы (эта вкладка, другие вкладки, Labs в фоне)? Переведённое сохранится."
+
+#: src/Admin/AutoPage.php
+msgid "Click again to stop everything"
+msgstr "Нажмите ещё раз, чтобы остановить всё"
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved: press the button again to go on."
+msgstr "Остановлено. Переведённое сохранено: нажмите кнопку ещё раз, чтобы продолжить."
+
+#: src/Admin/Admin.php
+msgid "Stopped. What was translated is saved."
+msgstr "Остановлено. Переведённое сохранено."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "A translation is already running in another tab (%s). Stop it with «Stop» next to the hourglass, or wait for it to end: a second one would translate the same sentences twice."
+msgstr "В другой вкладке уже идёт перевод (%s). Остановите его кнопкой «Стоп» рядом с песочными часами или дождитесь окончания: второй перевёл бы те же предложения дважды."
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Translation quality: %1$s (%2$d/4)"
+msgstr "Качество перевода: %1$s (%2$d/4)"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Quality: %s"
+msgstr "Качество: %s"
+
+#: src/Admin/Admin.php
+msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
+msgstr "Вкл.: каждая страница, запись и товар получают на каждом языке адрес из переведённого заголовка, например /it/chi-siamo/ вместо /it/about-us/. Посетители и поисковые системы, открывшие исходный адрес, перенаправляются на новый (301). Адрес, введённый вами в редакторе, никогда не меняется, а созданный адрес остаётся прежним, даже если позже изменить перевод. Выкл.: все языки снова используют ваш исходный адрес, в том числе для уже созданных (они сохраняются и вернутся, если снова включить опцию); посетители, открывшие такой адрес, перенаправляются на исходный с кодом 301. Адрес, введённый в редакторе, продолжает использоваться."

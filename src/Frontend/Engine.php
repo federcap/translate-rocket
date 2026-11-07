@@ -897,6 +897,15 @@ class Engine {
 			|| in_array( strtolower( $text ), array( 'eng', 'ita', 'deu', 'fra', 'spa', 'por', 'nld', 'rus', 'jpn', 'zho', 'kor', 'ara', 'pol', 'tur', 'ukr', 'ell', 'ron', 'ind', 'vie', 'tha', 'hin' ), true ) ) {
 			return true;
 		}
+		// 7/11/2026 (trqa-tre, Federico: «la lingua deve andare al 100%»): the code of a WordPress JavaScript template
+		// («<# if ( closeType ) { #>», «<# jQuery.each( actions, function() { #>») is not a sentence: once its <# … #>
+		// tags and {{ }} placeholders are taken out, nothing readable is left. Such rows stayed «missing» for ever.
+		if ( false !== strpos( $text, '<#' ) || false !== strpos( $text, '#>' ) ) {
+			$resto = preg_replace( '/<#.*?#>|\{\{\{?[^{}]*\}?\}\}/s', '', $text );
+			if ( ! preg_match( '/\p{L}/u', (string) $resto ) ) {
+				return true;
+			}
+		}
 		if ( in_array( strtolower( $text ), array( 'inherit', 'initial', 'unset', 'revert' ), true ) ) {
 			return true;
 		}
