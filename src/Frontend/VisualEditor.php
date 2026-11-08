@@ -248,7 +248,7 @@ class VisualEditor {
 				// chi ha manage_options, quindi non escono dalle mani dell'amministratore.
 				// Nomi inglesi: il prompt e' in inglese, e 'into Italian' si legge meglio di 'into Italiano'.
 				'pSrc'     => Languages::english_label( (string) ( Settings::get()['source_language'] ?? 'en' ) ),
-				'pDst'     => Languages::english_label( $lang ),
+				'pDst'     => \TranslateRocket\Script::prompt_name( $lang, Languages::english_label( $lang ) ),
 				'pGuide'   => mb_substr( trim( (string) ( Settings::get()['ai_guidance'] ?? '' ) ), 0, \TranslateRocket\Providers\LlmProvider::GUIDANCE_MAX ),
 				'pKeep'    => array_slice( array_values( array_filter( array_map( 'strval', (array) ( Settings::get()['exclude_strings'] ?? array() ) ), 'strlen' ) ), 0, 60 ),
 				'pGloss'   => array_slice( Settings::glossary( $lang ), 0, 60, true ),

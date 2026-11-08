@@ -1696,6 +1696,8 @@ class Strings {
 			if ( '' === $translation ) {
 				return false;
 			}
+			// 1.8.36: in the alphabet the owner chose (Serbian), whatever wrote it - engine, editor, import, Labs.
+			$translation = Script::apply( $lang, $translation, (string) $originale );
 			if ( \TranslateRocket\Frontend\InlineText::has_parts( $originale )
 				&& ! \TranslateRocket\Frontend\InlineText::parts_ok( $originale, $translation ) ) {
 				return false;

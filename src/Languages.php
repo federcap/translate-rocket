@@ -21,7 +21,12 @@ class Languages {
 	 * @return array<string, array{0:string,1:string,2:string}>
 	 */
 	public static function all(): array {
-		return array_merge( self::builtin(), self::custom() );
+		$all = array_merge( self::builtin(), self::custom() );
+		// 1.8.36: Serbian in Latin letters calls itself «Srpski» (switcher, menus).
+		if ( isset( $all['sr'] ) && Script::LATIN === Script::choice( 'sr' ) ) {
+			$all['sr'][0] = 'Srpski';
+		}
+		return $all;
 	}
 
 	/**

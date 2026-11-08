@@ -65,6 +65,8 @@ class Settings {
 			// 9/10/2026: put a language online by itself when it is fully translated (Automatic translation).
 			'auto_online'              => 0,
 			'custom_languages'         => array(),
+			// 1.8.36: the alphabet of a language written in two (Serbian): code => 'latn' | 'cyrl'. See Script.
+			'scripts'                  => array(),
 			'active_provider'          => '',
 			'provider_order'           => array(),
 			'providers'                => array(

@@ -1342,7 +1342,32 @@ class Admin {
 		$settings['cache_warmup']        = ! empty( $_POST['cache_warmup'] );
 		$settings['show_poweredby']      = ! empty( $_POST['show_poweredby'] );
 
+		// 1.8.36: Serbian alphabet (only sent when Serbian is among the languages).
+		$alfabeto_nuovo = '';
+		if ( isset( $_POST['script_sr'] ) ) {
+			$v       = sanitize_key( wp_unslash( $_POST['script_sr'] ) );
+			$v       = in_array( $v, array( \TranslateRocket\Script::LATIN, \TranslateRocket\Script::CYRILLIC ), true ) ? $v : '';
+			$scripts = ( isset( $settings['scripts'] ) && is_array( $settings['scripts'] ) ) ? $settings['scripts'] : array();
+			if ( '' !== $v && $v !== \TranslateRocket\Script::choice( 'sr' ) ) {
+				$alfabeto_nuovo = $v;
+			}
+			if ( '' === $v ) {
+				unset( $scripts['sr'] );
+			} else {
+				$scripts['sr'] = $v;
+			}
+			$settings['scripts'] = $scripts;
+		}
+
 		Settings::update( $settings );
+
+		if ( '' !== $alfabeto_nuovo ) {
+			// The translations already saved follow: a first slice now, the rest in the background.
+			\TranslateRocket\Script::start_conversion( 'sr' );
+			\TranslateRocket\Script::convert_step( 'sr', 3.0 );
+			\TranslateRocket\Strings::flush_maps( 'sr' );
+			\TranslateRocket\Cache::flush_later();
+		}
 		// The visibility just chosen here supersedes a pending "Go online" step.
 		if ( get_option( \TranslateRocket\Coexistence::PENDING ) ) {
 			delete_option( \TranslateRocket\Coexistence::PENDING );
@@ -7190,6 +7215,29 @@ JS;
 						wp_add_inline_script( 'trrocket-admin-info', $flag_data . self::flag_picker_js() );
 						?>
 					</div>
+
+					<?php
+					// 1.8.36: Serbian is written in two alphabets; the engines mixed them on the same page.
+					if ( in_array( 'sr', (array) ( $settings['target_languages'] ?? array() ), true ) ) :
+						$alfabeto = \TranslateRocket\Script::choice( 'sr' );
+						$avanzo   = \TranslateRocket\Script::progress( 'sr' );
+						?>
+					<table class="form-table trr-script-sr" role="presentation">
+						<tr>
+							<th scope="row"><?php esc_html_e( 'Serbian alphabet', 'translate-rocket' ); ?> <?php $this->info( __( 'Serbian is written in Latin and in Cyrillic letters. Without a choice each engine picks its own, and both can end up on the same page. Choose one: the AI is told to use it, every new translation is converted to it when it is saved (whatever engine made it), the Serbian translations already saved are converted in the background, and WordPress\'s and WooCommerce\'s own Serbian texts follow too. From Cyrillic to Latin the conversion is exact, letter by letter. From Latin to Cyrillic, words that are also in your original text (brand and model names), codes and short acronyms stay in Latin.', 'translate-rocket' ) ); ?></th>
+							<td>
+								<label style="display:block;margin-bottom:6px;"><input type="radio" name="script_sr" value="latn" <?php checked( \TranslateRocket\Script::LATIN, $alfabeto ); ?> /> <?php esc_html_e( 'Latin (latinica) — Srpski', 'translate-rocket' ); ?></label>
+								<label style="display:block;margin-bottom:6px;"><input type="radio" name="script_sr" value="cyrl" <?php checked( \TranslateRocket\Script::CYRILLIC, $alfabeto ); ?> /> <?php esc_html_e( 'Cyrillic (ћирилица) — Српски', 'translate-rocket' ); ?></label>
+								<label style="display:block;margin-bottom:6px;"><input type="radio" name="script_sr" value="" <?php checked( '', $alfabeto ); ?> /> <?php esc_html_e( 'No choice — as each engine writes it (the two alphabets can mix)', 'translate-rocket' ); ?></label>
+								<?php if ( '' !== $alfabeto && ! $avanzo['done'] ) : ?>
+									<p class="description"><?php echo esc_html( sprintf( /* translators: %s: number of translations */ __( 'Converting the Serbian translations already saved, in the background… %s changed so far.', 'translate-rocket' ), number_format_i18n( $avanzo['changed'] ) ) ); ?></p>
+								<?php elseif ( '' !== $alfabeto && $avanzo['changed'] > 0 ) : ?>
+									<p class="description">&#10003; <?php echo esc_html( sprintf( /* translators: %s: number of translations */ __( 'Done: %s Serbian translations converted.', 'translate-rocket' ), number_format_i18n( $avanzo['changed'] ) ) ); ?></p>
+								<?php endif; ?>
+							</td>
+						</tr>
+					</table>
+					<?php endif; ?>
 
 					<table class="form-table trr-adv" role="presentation">
 						<tr>

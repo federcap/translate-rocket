@@ -141,7 +141,8 @@ abstract class AbstractProvider implements ProviderInterface {
 	protected function lang_name( string $code ): string {
 		$all  = Languages::all();
 		$code = strtolower( $code );
-		return isset( $all[ $code ] ) ? $all[ $code ][1] : $code;
+		// 1.8.36: «Serbian» alone left the alphabet to each engine (Cyrillic and Latin on the same page).
+		return \TranslateRocket\Script::prompt_name( $code, isset( $all[ $code ] ) ? $all[ $code ][1] : $code );
 	}
 
 	/**

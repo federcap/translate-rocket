@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.35
+Stable tag: 1.8.36
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.36 =
+* New: choose the alphabet for Serbian (Settings, under your languages): Latin (latinica) or Cyrillic (ћирилица). Engines used to pick their own, so both could end up on the same page. Now the AI is told which one to use, every new translation is converted to it when it is saved (whatever engine made it), the Serbian translations already saved are converted in the background, and the theme's and WooCommerce's own Serbian texts follow too. Cyrillic to Latin is exact, letter by letter; from Latin to Cyrillic, brand and model names, codes and short acronyms stay in Latin. Nothing has to be translated again.
 
 = 1.8.35 =
 * Improved: translated page addresses are now made from the whole translated title, like the original WordPress address. Long product names (more than six words) used to keep the original address in every language; they now get their translated address at the next hourly pass, with a 301 from the old one. Addresses already made never change. Developers can set a limit with the `trrocket_auto_slug_max_words` filter.
@@ -684,6 +687,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.36 =
+Serbian in one alphabet: choose Latin or Cyrillic, and every translation follows it, the ones already made included.
 
 = 1.8.35 =
 Translated addresses from the whole title (long product names included); reCAPTCHA and hCaptcha in the page language.

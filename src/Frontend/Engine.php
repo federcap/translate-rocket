@@ -2353,6 +2353,8 @@ class Engine {
 		// 1.8.8: iubenda, Cookiebot and Usercentrics told the language of the page (their own legal texts).
 		if ( $this->is_secondary ) {
 			$out = \TranslateRocket\Integrations\ConsentBanners::adapt( $out, (string) $this->current );
+			// 1.8.36: the alphabet the owner chose for Serbian, on the whole finished page.
+			$out = \TranslateRocket\Script::page( (string) $this->current, $out );
 		}
 
 		// Store the finished translated page for the next anonymous visitor.

@@ -69,6 +69,7 @@ final class Plugin {
 		\TranslateRocket\Importers\Universal::boot(); // AJAX of the universal importer (Import screen)
 		\TranslateRocket\Importers\Check::boot(); // the check after an import (Import screen)
 		\TranslateRocket\ToneAdvisor::boot();         // «translation style from the kind of site» (AI Translation)
+		\TranslateRocket\Script::boot();              // 1.8.36: Serbian in the alphabet the owner chose
 		// Frasi lette intere ma tradotte a pezzi da una versione vecchia: si ricompongono (24/9/2026).
 		PiecesMigration::boot();
 
