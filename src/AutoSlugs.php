@@ -224,9 +224,17 @@ class AutoSlugs {
 		$base = sanitize_title( $title );
 		// 24/10/2026: a page title can be a slogan («From English-only to multilingual in an afternoon») — an address of
 		// six words at most, else none: the original address stays, and one can be typed in the editor.
+		// 8/11/2026 (1.8.35, Matjaž: 266 of 317 product names longer than six words had no translated address; «the url
+		// should be the same as the title» for long-tail searches): the whole title, as WordPress makes the original
+		// address. The six-word limit of 1.8.21 is gone; a site can still set one with this filter (0 = no limit).
+		$max    = (int) apply_filters( 'trrocket_auto_slug_max_words', 0, $post_id, $lang );
 		$parole = preg_split( '/[\s\-]+/u', trim( $title ), -1, PREG_SPLIT_NO_EMPTY );
 		$cjk    = (bool) preg_match( '/[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}\p{Thai}]/u', $title );
-		$lungo  = $cjk ? mb_strlen( (string) preg_replace( '/\s+/u', '', $title ) ) > 14 : count( (array) $parole ) > 6;
+		$lungo  = $max > 0 && ( $cjk ? mb_strlen( (string) preg_replace( '/\s+/u', '', $title ) ) > 14 * $max / 6 : count( (array) $parole ) > $max );
+		if ( strlen( $base ) > 190 && 0 === $max ) {
+			// the whole title, longer than WordPress keeps: cut at the last word that fits
+			$base = (string) preg_replace( '/-[^-]*$/', '', substr( $base, 0, 191 ) );
+		}
 		if ( '' === $base || $base === $original || strlen( $base ) > 190 || $lungo ) {
 			return '';
 		}

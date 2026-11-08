@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.34
+Stable tag: 1.8.35
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.35 =
+* Improved: translated page addresses are now made from the whole translated title, like the original WordPress address. Long product names (more than six words) used to keep the original address in every language; they now get their translated address at the next hourly pass, with a 301 from the old one. Addresses already made never change. Developers can set a limit with the `trrocket_auto_slug_max_words` filter.
+* New: reCAPTCHA and hCaptcha speak the page language on translated pages (Contact Form 7, WPForms, Elementor Pro, Gravity Forms and any plugin that loads them).
+* Tested: WooCommerce e-mails sent from the admin (order status, customer note, «Send order details») reach the customer in the order language; the admin «New order» e-mail stays in the site language.
 
 = 1.8.34 =
 * New: 100% guaranteed. A sentence an engine keeps sending back unchanged is tried three times, then kept as it is and counted as done, with «translate again» if you want another engine to try. A failing engine (quota, network) never counts as a try.
@@ -679,6 +684,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.35 =
+Translated addresses from the whole title (long product names included); reCAPTCHA and hCaptcha in the page language.
 
 = 1.8.34 =
 Every page now reaches 100%: sentences an engine cannot translate are kept after three tries, code is never sent to the engine, admin-only texts of plugins like Wordfence are no longer counted, and DE / DE-CH are told apart in the switcher.

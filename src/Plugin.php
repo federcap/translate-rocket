@@ -111,6 +111,8 @@ final class Plugin {
 		// Content shown only in some languages: the [translaterocket_language]
 		// shortcode, and the trrocket-only-xx / trrocket-hide-xx classes on blocks.
 		( new \TranslateRocket\Frontend\LanguageOnly() )->boot();
+		// reCAPTCHA / hCaptcha in the page language (1.8.35), whichever form plugin loads them.
+		( new \TranslateRocket\Frontend\CaptchaLanguage() )->boot();
 		// The same rule from the Advanced tab of every Elementor element (1.8.6): in the editor and on the site.
 		( new \TranslateRocket\Integrations\ElementorLanguages() )->boot();
 		// A whole menu of its own for a language (1.8.6), front end only.
