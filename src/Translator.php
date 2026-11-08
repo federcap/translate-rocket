@@ -266,12 +266,23 @@ class Translator {
 		// that is only an address — a domain, a web address, an e-mail — is the same in every language. Kept as it is,
 		// never sent to the engine.
 		foreach ( $pending as $text => $ids ) {
-			if ( self::only_address( (string) $text ) ) {
+			if ( self::only_address( (string) $text ) || self::only_code( (string) $text ) ) {
 				foreach ( (array) $ids as $id ) {
 					if ( Strings::save_translation( (int) $id, $lang, (string) $text, 1, 'kept' ) ) {
 						++$kept;
 					}
 				}
+				unset( $pending[ $text ] );
+			}
+		}
+
+		// 7/11/2026 (piflarnakupuje.top, Matjaž: Blocksy's compare table): a text already translated in pieces on one page
+		// («Paket:» / «1X RC avtomobil» / «1X akumulator», one paragraph each) shown elsewhere flattened into one line.
+		// The pieces' translations are joined, nothing goes to the engine.
+		foreach ( $pending as $text => $ids ) {
+			$joined = self::from_pieces( (string) $text, $lang );
+			if ( null !== $joined ) {
+				self::save_group( $ids, $lang, $joined, 'reuse', (string) $text, $count );
 				unset( $pending[ $text ] );
 			}
 		}
@@ -312,6 +323,8 @@ class Translator {
 				// as it was and counted as done («kept»): the page is complete, and the list says how many were kept.
 				// Only after an engine that answered: a failed batch keeps everything pending.
 				foreach ( $vuote as $text ) {
+					$prima = $count + $kept;
+					$one   = null;
 					if ( $deadline > 0 && microtime( true ) >= $deadline ) {
 						// 27/10/2026 (real tour on Cloudways: «Translate all» ended with 2 sentences left and no word):
 						// the step ran out of time here, so there is more to do — the next step picks them up.
@@ -372,6 +385,17 @@ class Translator {
 								++$kept;
 							}
 						}
+					}
+					// 7/11/2026 (1.8.34, «100% guaranteed»): an engine answered but the sentence is still to translate (sent
+					// back unchanged, marks lost). After the third such try it is kept as it is and counted, with «translate
+					// again» in the panel. A failed engine (quota, network) never counts as a try.
+					if ( null !== $one && $count + $kept === $prima && self::tried( $text, $lang ) >= 3 ) {
+						foreach ( $pending[ $text ] as $id ) {
+							if ( Strings::save_translation( (int) $id, $lang, $text, 1, 'kept' ) ) {
+								++$kept;
+							}
+						}
+						self::tried( $text, $lang, true );
 					}
 				}
 				continue;
@@ -810,6 +834,119 @@ class Translator {
 	 *
 	 * @param string $text Text.
 	 */
+	/**
+	 * 7/11/2026 (1.8.34): the translation of a «flattened» text, from the translations of its pieces — consecutive words
+	 * that are each a translated sentence, all found together on one page. Null when it does not split that way.
+	 */
+	private static function from_pieces( string $text, string $lang ): ?string {
+		$words = preg_split( '/\s+/u', trim( $text ) );
+		$n     = is_array( $words ) ? count( $words ) : 0;
+		if ( $n < 2 || $n > 60 || mb_strlen( $text ) > 1500 ) {
+			return null;
+		}
+		$spans = array();
+		for ( $i = 0; $i < $n; $i++ ) {
+			for ( $j = $i; $j < $n && $j < $i + 30; $j++ ) {
+				$piece = implode( ' ', array_slice( $words, $i, $j - $i + 1 ) );
+				if ( $piece !== $text ) {
+					$spans[ sha1( $piece ) ] = $piece;
+				}
+			}
+		}
+		global $wpdb;
+		$st    = Database::strings_table();
+		$tt    = Database::translations_table();
+		$found = array(); // piece => [ translation, string ids ]
+		foreach ( array_chunk( array_keys( $spans ), 500 ) as $chunk ) {
+			$ph   = implode( ',', array_fill( 0, count( $chunk ), '%s' ) );
+			$rows = $wpdb->get_results( $wpdb->prepare( "SELECT st.id, st.original, t.translation FROM {$st} st JOIN {$tt} t ON t.string_id = st.id AND t.language = %s AND t.status > 0 WHERE st.text_hash IN ({$ph})", array_merge( array( $lang ), $chunk ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table names and placeholders built here.
+			foreach ( (array) $rows as $r ) {
+				$o = trim( (string) $r->original );
+				if ( isset( $spans[ sha1( $o ) ] ) && '' !== trim( (string) $r->translation ) ) {
+					$found[ $o ][0]   = (string) $r->translation;
+					$found[ $o ][1][] = (int) $r->id;
+				}
+			}
+		}
+		if ( count( $found ) < 2 ) {
+			return null;
+		}
+		// Fewest pieces covering every word.
+		$best = array_fill( 0, $n + 1, null );
+		$best[ $n ] = array();
+		for ( $i = $n - 1; $i >= 0; $i-- ) {
+			for ( $j = min( $n - 1, $i + 29 ); $j >= $i; $j-- ) {
+				$piece = implode( ' ', array_slice( $words, $i, $j - $i + 1 ) );
+				if ( isset( $found[ $piece ] ) && null !== $best[ $j + 1 ] && ( null === $best[ $i ] || count( $best[ $j + 1 ] ) + 1 < count( $best[ $i ] ) ) ) {
+					$best[ $i ] = array_merge( array( $piece ), $best[ $j + 1 ] );
+				}
+			}
+		}
+		if ( null === $best[0] || count( $best[0] ) < 2 ) {
+			return null;
+		}
+		// All the pieces on one same page: the text they were split from.
+		$ot     = Database::occurrences_table();
+		$common = null;
+		foreach ( $best[0] as $piece ) {
+			$ids  = array_map( 'intval', $found[ $piece ][1] );
+			$urls = $wpdb->get_col( 'SELECT DISTINCT url_hash FROM ' . $ot . ' WHERE string_id IN (' . implode( ',', $ids ) . ')' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- integers only.
+			$common = null === $common ? $urls : array_intersect( $common, $urls );
+			if ( empty( $common ) ) {
+				return null;
+			}
+		}
+		$out = array();
+		foreach ( $best[0] as $piece ) {
+			$out[] = trim( $found[ $piece ][0] );
+		}
+		return implode( ' ', $out );
+	}
+
+	/**
+	 * 7/11/2026 (1.8.34): one more try of an engine that answered without translating; returns the tries so far.
+	 * $forget clears the count. Kept in one option (not autoloaded), at most 5,000 sentences.
+	 */
+	private static function tried( string $text, string $lang, bool $forget = false ): int {
+		$all = get_option( 'trrocket_tries', array() );
+		$all = is_array( $all ) ? $all : array();
+		$k   = md5( $lang . '|' . $text );
+		if ( $forget ) {
+			unset( $all[ $k ] );
+			update_option( 'trrocket_tries', $all, false );
+			return 0;
+		}
+		$all[ $k ] = (int) ( $all[ $k ] ?? 0 ) + 1;
+		if ( count( $all ) > 5000 ) {
+			$all = array_slice( $all, -5000, null, true );
+		}
+		update_option( 'trrocket_tries', $all, false );
+		return $all[ $k ];
+	}
+
+	/**
+	 * 7/11/2026 (1.8.34): a piece of code, not a sentence — «{{ $item->price }} => [0x1F]» — known from its shape: few
+	 * letters and the signs of code. Kept as it is in every language, never sent to the engine.
+	 */
+	public static function only_code( string $text ): bool {
+		$text = trim( $text );
+		$len  = mb_strlen( $text );
+		if ( $len < 3 ) {
+			return false;
+		}
+		$letters = (int) preg_match_all( '/\p{L}/u', $text );
+		if ( $letters / $len >= 0.4 ) {
+			return false;
+		}
+		$segni = 0;
+		foreach ( array( '{', '}', '[', ']', ';', '=', '$', '->', '=>', '()', '/*' ) as $g ) {
+			if ( false !== strpos( $text, $g ) ) {
+				++$segni;
+			}
+		}
+		return $segni >= 3;
+	}
+
 	public static function only_address( string $text ): bool {
 		$t = trim( $text );
 		if ( '' === $t || mb_strlen( $t ) > 200 || preg_match( '/\s/u', $t ) ) {

@@ -1627,14 +1627,43 @@ class Switcher {
 	 * @param array<string,mixed> $entry Entry.
 	 * @param string              $show  both|flag|name|code|flagcode.
 	 */
+	private static function base_shared( string $code ): bool {
+		$code = strtolower( $code );
+		$base = explode( '-', $code )[0];
+		$s    = \TranslateRocket\Settings::get();
+		$all  = array_merge( (array) ( $s['target_languages'] ?? array() ), array( (string) ( $s['default_language'] ?? '' ) ) );
+		if ( class_exists( '\TranslateRocket\Plugin' ) ) {
+			$all[] = (string) \TranslateRocket\Plugin::instance()->router()->default_language();
+		}
+		foreach ( $all as $other ) {
+			$other = strtolower( (string) $other );
+			if ( $other !== $code && explode( '-', $other )[0] === $base ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * The words next to the flag, if any (see label_text()).
+	 *
+	 * @param array<string,mixed> $entry Entry.
+	 * @param string              $show  both|flag|name|code|flagcode.
+	 */
 	private static function label_text( array $entry, string $show ): string {
 		if ( 'flag' === $show ) {
 			return '';
 		}
 		if ( 'code' === $show || 'flagcode' === $show ) {
 			// The bit before any region suffix, upper-cased: pt-br becomes PT.
-			$code = (string) ( $entry['code'] ?? '' );
-			return strtoupper( explode( '-', $code )[0] );
+			$code  = (string) ( $entry['code'] ?? '' );
+			$parts = explode( '-', $code );
+			// 7/11/2026 (lungomare.ee, «второй значок DE на CH»): with de and de-ch both on, two «DE» side by side.
+			// When another active language shares the base, the region is shown: DE-CH.
+			if ( count( $parts ) > 1 && self::base_shared( $code ) ) {
+				return strtoupper( $code );
+			}
+			return strtoupper( $parts[0] );
 		}
 		return (string) $entry['name'];
 	}

@@ -715,7 +715,9 @@ class Engine {
 					// loads for a signed-in administrator — quicktags, wplink, the media library — handed its 32 labels
 					// («Close all open tags») to every page the admin opened, and they counted as missing in every
 					// language. Scripts of the admin side are never what a visitor reads: left alone.
-					if ( ! preg_match( '#^(quicktags|wplink|editor|wp-editor|media-(views|editor|models|audiovideo|grid)|wp-admin|admin-bar|heartbeat|wp-auth-check|autosave|word-count|common|utils|thickbox|password-strength-meter|customize-[\w-]+|wp-color-picker|wp-pointer|wp-api-fetch|wp-api-request|wp-i18n|wp-hooks|wp-polyfill[\w-]*|wp-emoji[\w-]*|comment-reply)$#i', $h[2] ) ) {
+					// 7/11/2026 (1.8.34): for a signed-in user, only the blocks a visitor gets too (see note_visitor_scripts()).
+					$solo_admin = is_user_logged_in() && ! isset( self::visitor_scripts()[ strtolower( $h[2] ) ] );
+					if ( ! $solo_admin && ! preg_match( '#^(quicktags|wplink|editor|wp-editor|media-(views|editor|models|audiovideo|grid)|wp-admin|admin-bar|heartbeat|wp-auth-check|autosave|word-count|common|utils|thickbox|password-strength-meter|customize-[\w-]+|wp-color-picker|wp-pointer|wp-api-fetch|wp-api-request|wp-i18n|wp-hooks|wp-polyfill[\w-]*|wp-emoji[\w-]*|comment-reply)$#i', $h[2] ) ) {
 						$this->extra_tokens[] = $token;
 					}
 				} elseif ( 'script' === strtolower( $m[2] ) && strlen( $m[3] ) <= 300000
@@ -960,6 +962,45 @@ class Engine {
 			return;
 		}
 		add_action( 'template_redirect', array( $this, 'maybe_start' ), 1 );
+		add_action( 'wp_print_footer_scripts', array( self::class, 'note_visitor_scripts' ), PHP_INT_MAX );
+	}
+
+	/**
+	 * 7/11/2026 (lungomare.ee, 1.8.34): the script blocks a visitor really gets. Wordfence hands its 121 KB of admin
+	 * labels (wfi18njs-js-extra) only to a signed-in user: 1702 «sentences» of the home page counted as missing in
+	 * every language. Pages are read by an administrator, so the handles a signed-out visitor receives are noted here
+	 * (one small option, written only when a new one shows up) and only those are read for a signed-in user.
+	 */
+	public static function note_visitor_scripts(): void {
+		if ( is_user_logged_in() || ! function_exists( 'wp_scripts' ) ) {
+			return;
+		}
+		$ws   = wp_scripts();
+		$seen = self::visitor_scripts();
+		$new  = false;
+		foreach ( (array) $ws->done as $h ) {
+			$h = strtolower( (string) $h );
+			if ( isset( $seen[ $h ] ) || '' === $h ) {
+				continue;
+			}
+			if ( $ws->get_data( $h, 'data' ) || $ws->get_data( $h, 'before' ) || $ws->get_data( $h, 'after' ) ) {
+				$seen[ $h ] = 1;
+				$new        = true;
+			}
+		}
+		if ( $new && count( $seen ) <= 2000 ) {
+			update_option( 'trrocket_visitor_scripts', $seen, true );
+		}
+	}
+
+	/**
+	 * Script handles with sentences that a signed-out visitor has received (see note_visitor_scripts()).
+	 *
+	 * @return array<string,int>
+	 */
+	public static function visitor_scripts(): array {
+		$v = get_option( 'trrocket_visitor_scripts', array() );
+		return is_array( $v ) ? $v : array();
 	}
 
 	/**

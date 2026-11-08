@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.33
+Stable tag: 1.8.34
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,14 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.34 =
+* New: 100% guaranteed. A sentence an engine keeps sending back unchanged is tried three times, then kept as it is and counted as done, with «translate again» if you want another engine to try. A failing engine (quota, network) never counts as a try.
+* New: pieces of code (symbols with almost no letters) are kept as they are in every language and never sent to the engine.
+* Fixed: with two languages of the same family on (German and Swiss German), the «flag + code» switcher showed «DE» twice; now it shows DE and DE-CH.
+* Fixed: sentences that a security or admin plugin (Wordfence, for example) hands only to a signed-in administrator were collected as page text and counted as missing in every language. Now only the script texts a visitor really receives are collected.
+* Fixed: a text shown elsewhere «flattened» into one line — a product's short description in Blocksy's compare table — now reuses the translations of its pieces instead of waiting for the engine.
+* Fixed: the «Step-by-step setup guide» link is back on the Start screen.
 
 = 1.8.33 =
 * New: «Translate my site» shows what it does in three steps, your languages as flags right above the button, and a bigger button. While it works you can Pause or Stop it, and a line shows the page being read or the sentence being translated right now.
@@ -671,6 +679,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.34 =
+Every page now reaches 100%: sentences an engine cannot translate are kept after three tries, code is never sent to the engine, admin-only texts of plugins like Wordfence are no longer counted, and DE / DE-CH are told apart in the switcher.
 
 = 1.8.33 =
 A redesigned «Translate my site» with Pause and Stop, a «Stop» next to the hourglass that ends every running translation, the quality of each engine at a glance, and no more 99% because of WordPress template code.
