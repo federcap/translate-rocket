@@ -1332,6 +1332,25 @@ class Admin {
 		$settings['translate_meta']      = ! empty( $_POST['translate_meta'] );
 		$settings['translate_term_slugs'] = ! empty( $_POST['translate_term_slugs'] );
 		$settings['translate_slugs']      = ! empty( $_POST['translate_slugs'] );
+		// 1.8.37: translated URL bases, and the words the owner typed (an empty box = the suggested word).
+		$settings['translate_url_bases'] = ! empty( $_POST['translate_url_bases'] );
+		if ( isset( $_POST['url_bases_custom'] ) && is_array( $_POST['url_bases_custom'] ) ) {
+			$trr_ub = array();
+			foreach ( wp_unslash( $_POST['url_bases_custom'] ) as $trr_l => $trr_row ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitized value by value below.
+				$trr_l = strtolower( sanitize_key( (string) $trr_l ) );
+				if ( ! is_array( $trr_row ) || ! in_array( $trr_l, (array) $settings['target_languages'], true ) ) {
+					continue;
+				}
+				foreach ( $trr_row as $trr_b => $trr_w ) {
+					$trr_b = sanitize_title( (string) $trr_b );
+					$trr_w = sanitize_title( (string) $trr_w );
+					if ( '' !== $trr_b && '' !== $trr_w ) {
+						$trr_ub[ $trr_l ][ $trr_b ] = $trr_w;
+					}
+				}
+			}
+			$settings['url_bases_custom'] = $trr_ub;
+		}
 		$settings['translate_interface'] = ! empty( $_POST['translate_interface'] );
 		$settings['auto_redirect']       = ! empty( $_POST['auto_redirect'] );
 		$settings['translated_search']   = ! empty( $_POST['translated_search'] );
@@ -5853,7 +5872,47 @@ JS
 				<?php wp_nonce_field( 'trrocket_retranslate_terms', 'trrocket_terms_nonce' ); ?>
 				<h2><?php esc_html_e( 'Apply them to the sentences already translated', 'translate-rocket' ); ?> <?php $this->info( __( 'New names and glossary terms are used for the sentences translated from now on. Sentences already translated keep their translation, and scanning the pages again does not change them. This finds, in every language, only the translated sentences where a name was translated or a glossary term does not use its fixed translation, and puts them back to «missing» — then «Translate all missing» (or Labs) translates them again with the new rules. Save the lists first. One link undoes it.', 'translate-rocket' ) ); ?></h2>
 				<p class="description"><?php esc_html_e( 'Only the sentences that disagree with the names and the glossary above are translated again — not whole pages.', 'translate-rocket' ); ?></p>
+				<?php
+				// 9/11/2026 (piflarnakupuje.top: «is glossary not working? not changing words but taking out whole sentences
+				// already translated»): a glossary term inside a sentence is followed only by an AI engine (it gets the terms
+				// with the text). Google, DeepL and the browser's translator get the sentence alone, so the sentences put back
+				// to «missing» came back without the terms. Said here, before the click.
+				$trr_gl = array_filter( (array) ( $settings['glossary'] ?? array() ) );
+				$trr_en = \TranslateRocket\Providers\Registry::active();
+				if ( $trr_gl && ! ( $trr_en instanceof \TranslateRocket\Providers\LlmProvider ) ) :
+					?>
+					<div class="notice notice-warning inline" id="trr-terms-engine"><p>
+						<?php
+						printf(
+							/* translators: %s: name of the translation engine. */
+							esc_html__( 'Your engine (%s) does not follow glossary terms inside a sentence: only AI engines do (OpenAI, Claude, Gemini, Groq, OpenRouter, Cloudflare). The sentences put back to «missing» would come back without your terms. Choose an AI engine first, or correct single sentences in the visual editor. A text that is exactly a glossary term (a button, a menu item) uses your translation with any engine.', 'translate-rocket' ),
+							esc_html( $trr_en ? $trr_en->label() : __( 'the browser\'s translator', 'translate-rocket' ) )
+						);
+						?>
+					</p></div>
+				<?php endif; ?>
 				<?php submit_button( __( 'Translate again the sentences that contain them', 'translate-rocket' ), 'secondary', 'submit', false ); ?>
+				<?php
+				// 9/11/2026: the Undo link was only in the notice right after the run: leave the page and there was no way
+				// back, although the last five runs are kept. The latest one stays here, with its Undo.
+				$trr_all = (array) get_option( \TranslateRocket\TermRetranslate::BATCHES, array() );
+				$trr_id  = (string) key( $trr_all );
+				$trr_one = $trr_all ? (array) reset( $trr_all ) : array();
+				if ( '' !== $trr_id && ! empty( $trr_one['sentences'] ) && ! get_option( \TranslateRocket\TermRetranslate::JOB ) ) :
+					?>
+					<p class="description" id="trr-terms-last">
+						<?php
+						printf(
+							/* translators: 1: date and time, 2: number of sentences, 3: number of languages. */
+							esc_html__( 'Last time (%1$s): %2$d sentences in %3$d languages were put back to «missing».', 'translate-rocket' ),
+							esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) ( $trr_one['when'] ?? 0 ) ) ),
+							(int) $trr_one['sentences'],
+							(int) ( $trr_one['languages'] ?? 0 )
+						);
+						echo ' <a href="' . esc_url( wp_nonce_url( add_query_arg( 'trrocket_terms_undo', $trr_id, admin_url( 'admin.php?page=translate-rocket-exclusions' ) ), 'trrocket_terms_undo_' . $trr_id ) ) . '">' . esc_html__( 'Undo: put their translations back', 'translate-rocket' ) . '</a>';
+						?>
+					</p>
+				<?php endif; ?>
 			</form>
 		</div>
 		<?php
@@ -7289,6 +7348,40 @@ JS;
 									<?php esc_html_e( 'Translate the addresses of categories and tags', 'translate-rocket' ); ?>
 								</label>
 								<?php $this->consigliato( __( 'on', 'translate-rocket' ) ); ?>
+							</td>
+						</tr>
+						<tr id="trr-set-url-bases">
+							<th scope="row"><?php esc_html_e( 'Fixed words in addresses', 'translate-rocket' ); ?> <?php $this->info( __( 'On: the fixed first word of archive and product addresses is translated too, for example /it/prodotto/borsa/ and /de/kategorie/reisen/ instead of /it/product/borsa/ and /de/category/reisen/. Links, hreflang, the language switcher and the sitemap follow, and the address with the original word moves to the translated one with a 301. Common words (category, tag, product, product category, product tag) are built in for 33 languages; you can type your own below. Off: the addresses keep your words, and translated ones already visited move back with a 301.', 'translate-rocket' ) ); ?></th>
+							<td>
+								<label>
+									<input type="checkbox" name="translate_url_bases" value="1" <?php checked( ! empty( $settings['translate_url_bases'] ) ); ?> />
+									<?php esc_html_e( 'Translate /category/, /tag/, /product/ and the other fixed words', 'translate-rocket' ); ?>
+								</label>
+								<?php
+								$trr_bases = ! empty( $settings['translate_url_bases'] ) ? \TranslateRocket\UrlBases::bases() : array();
+								$trr_langs = array_values( array_map( 'strtolower', (array) ( $settings['target_languages'] ?? array() ) ) );
+								if ( $trr_bases && $trr_langs ) {
+									$trr_custom = isset( $settings['url_bases_custom'] ) && is_array( $settings['url_bases_custom'] ) ? $settings['url_bases_custom'] : array();
+									$trr_map    = \TranslateRocket\UrlBases::map();
+									echo '<details style="margin-top:10px"><summary>' . esc_html__( 'See or change the words', 'translate-rocket' ) . '</summary>';
+									echo '<p class="description">' . esc_html__( 'Leave a box empty to use the suggested word. A word the site already uses elsewhere is skipped.', 'translate-rocket' ) . '</p>';
+									echo '<div style="overflow-x:auto;max-width:100%"><table class="widefat striped" style="margin-top:8px;width:auto"><thead><tr><th>' . esc_html__( 'Language', 'translate-rocket' ) . '</th>';
+									foreach ( $trr_bases as $trr_b => $trr_i ) {
+										echo '<th><code>/' . esc_html( $trr_b ) . '/</code></th>';
+									}
+									echo '</tr></thead><tbody>';
+									foreach ( $trr_langs as $trr_l ) {
+										echo '<tr><td><strong>' . esc_html( strtoupper( $trr_l ) ) . '</strong></td>';
+										foreach ( $trr_bases as $trr_b => $trr_i ) {
+											$trr_val = (string) ( $trr_custom[ $trr_l ][ $trr_b ] ?? '' );
+											$trr_ph  = rawurldecode( (string) ( $trr_map[ $trr_l ][ $trr_b ] ?? \TranslateRocket\UrlBases::suggestion( $trr_b, $trr_i, $trr_l ) ) );
+											echo '<td><input type="text" class="regular-text" style="width:11em" name="url_bases_custom[' . esc_attr( $trr_l ) . '][' . esc_attr( $trr_b ) . ']" value="' . esc_attr( rawurldecode( $trr_val ) ) . '" placeholder="' . esc_attr( '' !== $trr_ph ? $trr_ph : $trr_b ) . '" /></td>';
+										}
+										echo '</tr>';
+									}
+									echo '</tbody></table></div></details>';
+								}
+								?>
 							</td>
 						</tr>
 						<tr>

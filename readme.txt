@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.36
+Stable tag: 1.8.37
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.37 =
+* New: translated URL bases. The fixed first word of archive and product addresses can be translated too: /it/prodotto/leather-bag/ and /de/kategorie/reisen/ instead of /it/product/leather-bag/ and /de/category/reisen/. Links, hreflang, the language switcher and the sitemap follow, and the address with the original word moves to the translated one with a 301. The words for category, tag, product, product category and product tag are built in for 33 languages, custom post types use their translated name, and you can type your own word for any language (Settings, «Fixed words in addresses»). Off by default; switched off again, the translated addresses already visited move back with a 301.
+* Fixed: a language could stay at 99% for ever. A few code snippets collected by older versions (WordPress media templates) had been "translated" in one language only; they are now kept as they are in every language, so the counter reaches 100%. Nothing is deleted and nothing has to be translated again.
+* Improved: Exclusions, «Translate again the sentences that contain them». If your engine is not an AI (Google, DeepL, the browser's translator), the screen now says before the click that it cannot follow glossary terms inside a sentence, so the sentences would come back without them. And the last run keeps its «Undo» link on the screen, also after you leave the page.
 
 = 1.8.36 =
 * New: choose the alphabet for Serbian (Settings, under your languages): Latin (latinica) or Cyrillic (ћирилица). Engines used to pick their own, so both could end up on the same page. Now the AI is told which one to use, every new translation is converted to it when it is saved (whatever engine made it), the Serbian translations already saved are converted in the background, and the theme's and WooCommerce's own Serbian texts follow too. Cyrillic to Latin is exact, letter by letter; from Latin to Cyrillic, brand and model names, codes and short acronyms stay in Latin. Nothing has to be translated again.
@@ -687,6 +692,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.37 =
+Translated URL bases (/it/prodotto/, /de/kategorie/), and a fix for languages stuck at 99%.
 
 = 1.8.36 =
 Serbian in one alphabet: choose Latin or Cyrillic, and every translation follows it, the ones already made included.

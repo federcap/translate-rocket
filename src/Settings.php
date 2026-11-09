@@ -95,6 +95,8 @@ class Settings {
 			'cache_warmup'             => true,
 			'translate_interface'      => true,
 			'translate_slugs'          => false,
+			'translate_url_bases'      => false, // 1.8.37: /it/prodotto/… instead of /it/product/…
+			'url_bases_custom'         => array(), // 1.8.37: language => original base => word typed by the owner
 			'auto_redirect'            => false,
 			'cache_pages'              => true,
 			'show_poweredby'           => false,

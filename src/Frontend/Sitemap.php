@@ -532,6 +532,7 @@ class Sitemap {
 		if ( $post_id > 0 ) {
 			$path = \TranslateRocket\Plugin::instance()->router()->swap_hierarchy( $path, $post_id, $lang );
 		}
+		$path = \TranslateRocket\UrlBases::to_translated( $path, $lang ); // 1.8.37: /product/x/ → /prodotto/x/
 		return \TranslateRocket\Plugin::instance()->router()->language_base( $lang ) . $path; // home/xx or the language's own domain
 	}
 

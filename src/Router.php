@@ -56,6 +56,17 @@ class Router {
 	private $old_post = 0;
 
 	/**
+	 * 1.8.37, translated URL bases: how the first word of the address was found ('translated', 'original', 'old' or
+	 * '' — see UrlBases::to_original), and the path as visited, before that word went back to the original.
+	 *
+	 * @var string
+	 */
+	private $base_how = '';
+
+	/** @var string */
+	private $visited_path = '';
+
+	/**
 	 * The request address as the visitor sent it, language prefix included (1.8.26: Themify's page cache keys its
 	 * files on $_SERVER['REQUEST_URI'] and needs the one with the language, see Integrations\Themify).
 	 *
@@ -421,6 +432,8 @@ class Router {
 		// On a term archive, use that language's translated term slug so the switcher,
 		// hreflang and canonical all agree on the same URL.
 		$path = $this->maybe_translate_term_path( $path, $lang );
+		// The fixed first word (/category/, /product/) in that language's word (1.8.37).
+		$path = UrlBases::to_translated( $path, $lang );
 
 		$url = $base . $prefix . $path;
 		// hreflang must name the canonical address of each version: a query string from
@@ -507,8 +520,12 @@ class Router {
 		$host      = (string) wp_parse_url( 'http://' . ( isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '' ), PHP_URL_HOST );
 		$host_lang = $this->language_of_host( $host );
 		if ( '' !== $host_lang ) {
-			$this->current    = $host_lang;
-			$this->clean_path = $relative;
+			$this->current      = $host_lang;
+			$this->visited_path = $relative;
+			$this->clean_path   = UrlBases::to_original( $relative, $host_lang, $this->base_how );
+			if ( $this->clean_path !== $relative ) {
+				$_SERVER['REQUEST_URI'] = $base_path . $this->clean_path . ( $this->query ? '?' . $this->query : '' );
+			}
 			return;
 		}
 
@@ -520,7 +537,10 @@ class Router {
 				$this->current = $candidate;
 
 				$stripped         = substr( $relative, strlen( '/' . $candidate ) );
-				$stripped         = '' === $stripped ? '/' : $stripped;
+				$stripped           = '' === $stripped ? '/' : $stripped;
+				$this->visited_path = $stripped;
+				// /it/prodotto/borsa/ is read by WordPress as /product/borsa/ (1.8.37, translated URL bases).
+				$stripped         = UrlBases::to_original( $stripped, $candidate, $this->base_how );
 				$this->clean_path = $stripped;
 
 				$_SERVER['REQUEST_URI'] = $base_path . $stripped . ( $this->query ? '?' . $this->query : '' );
@@ -677,7 +697,7 @@ class Router {
 		}
 
 		if ( $this->has_own_domain( $lang ) ) {
-			return $this->language_base( $lang ) . $rest;
+			return $this->language_base( $lang ) . UrlBases::to_translated( $rest, $lang );
 		}
 
 		// Re-entrancy guard: canonical/oEmbed/feed builders often pass an
@@ -687,7 +707,8 @@ class Router {
 			return $url;
 		}
 
-		return rtrim( $base, '/' ) . '/' . $lang . $rest;
+		// /product/borsa/ → /it/prodotto/borsa/ (1.8.37, translated URL bases; nothing when the setting is off).
+		return rtrim( $base, '/' ) . '/' . $lang . UrlBases::to_translated( $rest, $lang );
 	}
 
 	/**
@@ -1196,6 +1217,11 @@ class Router {
 		if ( $tradotto === $path || (int) ( $this->link_ids[ $solo ] ?? 0 ) !== $qid ) {
 			return '';
 		}
+		// 1.8.37: the path above has the original base (/product/x/) even when the visitor came through the
+		// translated one (/prodotto/x/) — that address is already the right one.
+		if ( '' !== $this->visited_path && self::same_path( $tradotto, $this->visited_path ) ) {
+			return '';
+		}
 		$wants_slash = '/' === substr( (string) get_option( 'permalink_structure' ), -1 );
 		$tradotto    = $wants_slash ? rtrim( $tradotto, '/' ) . '/' : rtrim( $tradotto, '/' );
 		return $this->language_base( $lang ) . $tradotto;
@@ -1232,6 +1258,29 @@ class Router {
 			wp_safe_redirect( $dove, 301, 'TranslateRocket' );
 			exit;
 		}
+		// 1.8.37: /it/product/borsa/ (or a word used before) → /it/prodotto/borsa/, archives included.
+		if ( in_array( $this->base_how, array( 'original', 'old' ), true ) && ! is_404() && ! is_feed() && ! \TranslateRocket\Frontend\Preview::language_blocked() ) {
+			$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( (string) $_SERVER['REQUEST_METHOD'] ) : 'GET'; // phpcs:ignore
+			$to     = $this->url_for_language( $this->current_language(), true );
+			$to_p   = (string) wp_parse_url( $to, PHP_URL_PATH );
+			$here   = (string) wp_parse_url( $this->language_base( $this->current_language() ) . $this->visited_path, PHP_URL_PATH );
+			if ( in_array( $method, array( 'GET', 'HEAD' ), true ) && '' !== $to_p && ! self::same_path( $to_p, $here ) ) {
+				wp_safe_redirect( $to, 301, 'TranslateRocket' );
+				exit;
+			}
+		}
+	}
+
+	/**
+	 * Two paths are the same address: one may carry a word encoded (%d0%ba…) and the other not, or a final slash.
+	 *
+	 * @param string $a Path.
+	 * @param string $b Path.
+	 */
+	private static function same_path( string $a, string $b ): bool {
+		$a = rtrim( rawurldecode( $a ), '/' );
+		$b = rtrim( rawurldecode( $b ), '/' );
+		return function_exists( 'mb_strtolower' ) ? mb_strtolower( $a, 'UTF-8' ) === mb_strtolower( $b, 'UTF-8' ) : strtolower( $a ) === strtolower( $b );
 	}
 
 	/**
@@ -1265,6 +1314,7 @@ class Router {
 				// page: a link to a draft, a private or a trashed page keeps the address it was written with.
 				$fatti[ $k ] = $this->swap_hierarchy( $solo, $id, $lang );
 			}
+			$fatti[ $k ] = UrlBases::to_translated( $fatti[ $k ], $lang ); // 1.8.37: /product/x/ → /prodotto/x/
 		}
 		return $fatti[ $k ] . $resto;
 	}

@@ -24,7 +24,7 @@ class Database {
 	/**
 	 * Schema version. Bump when the table structure changes.
 	 */
-	const DB_VERSION = '11'; // 11: WordPress JS templates «<# … #>» (1.8.33). 10: the clean-up of schema 9 once more, with code examples made only of tags (1.8.12)
+	const DB_VERSION = '12'; // 12: code kept because translated somewhere, copied as it is into the other languages (1.8.37). 11: WordPress JS templates «<# … #>» (1.8.33). 10: the clean-up of schema 9 once more, with code examples made only of tags (1.8.12)
 	// 6: the search index (14/10/2026); 7: visits per language (1.8.6); 8: the pages of the search index, for the light suggestions (1.8.10); 9: addresses, codes and tags collected as sentences removed (1.8.11)
 
 	/**
@@ -127,9 +127,11 @@ class Database {
 				}
 			}
 		} while ( count( (array) $righe ) === 2000 );
+		$tenute = array();
 		foreach ( array_chunk( $ids, 500 ) as $parte ) {
 			$lista    = implode( ',', $parte );
 			$tradotte = $wpdb->get_col( "SELECT DISTINCT string_id FROM {$tr} WHERE string_id IN ({$lista}) AND status > 0 AND translation IS NOT NULL AND translation <> ''" ); // phpcs:ignore WordPress.DB
+			$tenute   = array_merge( $tenute, array_map( 'intval', (array) $tradotte ) );
 			$via      = array_values( array_diff( $parte, array_map( 'intval', (array) $tradotte ) ) );
 			if ( empty( $via ) ) {
 				continue;
@@ -138,6 +140,15 @@ class Database {
 			$wpdb->query( "DELETE FROM {$occ} WHERE string_id IN ({$lista})" ); // phpcs:ignore WordPress.DB
 			$wpdb->query( "DELETE FROM {$tr} WHERE string_id IN ({$lista})" ); // phpcs:ignore WordPress.DB
 			$wpdb->query( "DELETE FROM {$st} WHERE id IN ({$lista})" ); // phpcs:ignore WordPress.DB
+		}
+		// 1.8.37 (Federico, trqa-tre: Spanish «always 99%»): a piece of code («<# if ( lock ) { #>») that an engine had
+		// «translated» in one language («.») stayed, and every other language kept it as missing for ever. The ones kept
+		// are copied as they are into the languages that miss them: nothing is deleted, and every language can reach 100%.
+		if ( $tenute ) {
+			$lingue = (array) ( Settings::get()['target_languages'] ?? array() );
+			if ( $lingue ) {
+				Strings::keep_as_is( $tenute, $lingue );
+			}
 		}
 	}
 
