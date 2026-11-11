@@ -160,7 +160,27 @@ class Translator {
 			update_option( 'trrocket_translating', $now, false );
 		}
 		self::$locks = 1;
+		// 1.8.38 (10/11/2026, 42,000 sentences in 25 languages, one tab open: «Another translation is running on this
+		// site», almost still): a step killed by the server's time limit never reaches the «finally» that gives the
+		// lock back, and the site stayed busy for 150 s after each one. PHP still runs the shutdown functions then.
+		if ( ! self::$lock_guard ) {
+			self::$lock_guard = true;
+			register_shutdown_function( array( __CLASS__, 'unlock_on_shutdown' ) );
+		}
 		return true;
+	}
+
+	/** @var bool The shutdown guard of the lock is registered (once per request). */
+	private static $lock_guard = false;
+
+	/**
+	 * The request ends with the lock still taken (time limit, fatal error): give it back.
+	 */
+	public static function unlock_on_shutdown(): void {
+		if ( self::$locks > 0 ) {
+			self::$locks = 0;
+			delete_option( 'trrocket_translating' );
+		}
 	}
 
 	/**
@@ -279,14 +299,6 @@ class Translator {
 		// 7/11/2026 (piflarnakupuje.top, Matjaž: Blocksy's compare table): a text already translated in pieces on one page
 		// («Paket:» / «1X RC avtomobil» / «1X akumulator», one paragraph each) shown elsewhere flattened into one line.
 		// The pieces' translations are joined, nothing goes to the engine.
-		foreach ( $pending as $text => $ids ) {
-			$joined = self::from_pieces( (string) $text, $lang );
-			if ( null !== $joined ) {
-				self::save_group( $ids, $lang, $joined, 'reuse', (string) $text, $count );
-				unset( $pending[ $text ] );
-			}
-		}
-
 		$fermato = false;
 		foreach ( array_chunk( array_keys( $pending ), max( 1, $batch ) ) as $texts ) {
 			if ( $deadline > 0 && microtime( true ) >= $deadline ) {
@@ -296,6 +308,20 @@ class Translator {
 			if ( AiUsage::over_limit() ) {
 				$error = __( 'Daily AI character limit reached.', 'translate-rocket' );
 				break;
+			}
+			// 10/11/2026 (Matjaž: «why are the translations so slow in the last updates?»): the pieces were looked up for
+			// every one of the 1,000 sentences read, at each step, though a step sends a few hundred: a thousand queries for
+			// nothing, 20 % fewer sentences a minute. Now only for the sentences about to be sent.
+			foreach ( $texts as $k => $text ) {
+				$joined = self::from_pieces( (string) $text, $lang );
+				if ( null !== $joined ) {
+					self::save_group( $pending[ $text ], $lang, $joined, 'reuse', (string) $text, $count );
+					unset( $texts[ $k ] );
+				}
+			}
+			$texts = array_values( $texts );
+			if ( empty( $texts ) ) {
+				continue;
 			}
 
 			$hit = self::first_ok( $providers, $dead, $texts, $source, $lang, $error, $resting );

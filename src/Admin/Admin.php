@@ -1479,7 +1479,7 @@ class Admin {
 		if ( isset( $_POST['post_id'], $_POST['slug'] ) ) {
 			$pid = (int) $_POST['post_id'];
 			if ( $pid > 0 && current_user_can( 'edit_post', $pid ) ) {
-				Slugs::set( $pid, $lang, sanitize_text_field( wp_unslash( $_POST['slug'] ) ) );
+				Slugs::set_by_hand( $pid, $lang, sanitize_text_field( wp_unslash( $_POST['slug'] ) ) );
 			}
 		}
 

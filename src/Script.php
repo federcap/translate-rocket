@@ -61,6 +61,7 @@ class Script {
 	 */
 	public static function boot(): void {
 		add_action( self::JOB, array( __CLASS__, 'convert_step' ) );
+		add_action( 'admin_init', array( __CLASS__, 'resume' ) );
 		foreach ( self::LANGS as $lang ) {
 			if ( '' !== self::choice( $lang ) ) {
 				// WordPress, WooCommerce and theme strings in sr_RS are Cyrillic: e-mails and AJAX answers too.
@@ -252,6 +253,40 @@ class Script {
 	}
 
 	/**
+	 * 1.8.38 (Matjaž: one paragraph still in Latin on a Cyrillic page). The conversion lived on a chain of
+	 * single WP-Cron events, each booked by the one before: one step that never ran or died (cron switched
+	 * off, a time limit) and it stopped for ever, with the screen still saying «converting». Now every
+	 * visit to the admin area books the step again if it is gone and does a short slice itself.
+	 */
+	public static function resume(): void {
+		if ( wp_doing_ajax() || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		// Once, on sites that chose an alphabet before 1.8.38: until then «Undo» of «Translate again» (and of the
+		// external AI) put the old sentences back as they were, in the other alphabet, after the conversion had
+		// finished. The saved translations are read one more time; what is already right is left alone.
+		if ( '1838' !== get_option( 'trrocket_script_redo' ) ) {
+			update_option( 'trrocket_script_redo', '1838', false );
+			foreach ( self::LANGS as $lang ) {
+				if ( '' !== self::choice( $lang ) && false !== get_option( self::DONE . '_' . $lang, false ) ) {
+					self::start_conversion( $lang );
+				}
+			}
+		}
+		foreach ( self::LANGS as $lang ) {
+			if ( '' === self::choice( $lang ) || self::progress( $lang )['done'] || false === get_option( self::DONE . '_' . $lang, false ) ) {
+				continue;
+			}
+			if ( ! wp_next_scheduled( self::JOB, array( $lang ) ) ) {
+				wp_schedule_single_event( time() + 2, self::JOB, array( $lang ) );
+			}
+			if ( ! get_transient( 'trrocket_script_busy_' . $lang ) ) {
+				self::convert_step( $lang, 2.0 );
+			}
+		}
+	}
+
+	/**
 	 * Progress of the conversion: last id seen, rows changed, finished.
 	 *
 	 * @return array{last:int,changed:int,done:bool}
@@ -283,6 +318,12 @@ class Script {
 		$st = Database::strings_table();
 		$t0 = microtime( true );
 		$changed_any = false;
+		// Somebody is at work (the admin slice waits), and the next step is booked before starting:
+		// if this one dies half-way, the chain goes on from the last slice saved.
+		set_transient( 'trrocket_script_busy_' . $lang, 1, 20 );
+		if ( ! wp_next_scheduled( self::JOB, array( $lang ) ) ) {
+			wp_schedule_single_event( time() + 60, self::JOB, array( $lang ) );
+		}
 		while ( microtime( true ) - $t0 < $budget ) {
 			$rows = $wpdb->get_results( $wpdb->prepare( "SELECT tr.string_id AS id, tr.translation AS t, st.original AS o FROM {$tr} tr INNER JOIN {$st} st ON st.id = tr.string_id WHERE tr.language = %s AND tr.string_id > %d AND tr.translation IS NOT NULL AND tr.translation <> '' ORDER BY tr.string_id ASC LIMIT 500", $lang, $p['last'] ) ); // phpcs:ignore WordPress.DB
 			if ( empty( $rows ) ) {
@@ -298,12 +339,15 @@ class Script {
 					$changed_any = true;
 				}
 			}
+			update_option( self::DONE . '_' . $lang, $p, false );
 		}
 		update_option( self::DONE . '_' . $lang, $p, false );
+		delete_transient( 'trrocket_script_busy_' . $lang );
 		if ( $changed_any || $p['done'] ) {
 			Strings::flush_maps( $lang );
 			Cache::flush_later();
 		}
+		wp_clear_scheduled_hook( self::JOB, array( $lang ) );
 		if ( ! $p['done'] ) {
 			wp_schedule_single_event( time() + 2, self::JOB, array( $lang ) );
 		}

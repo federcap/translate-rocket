@@ -2766,3 +2766,18 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .button.trr-stop-all[hidden]{display:none!important}
 /* 7/11/2026 (Federico): «Stop» centred on every screen, a bit bigger */
 .button.trr-stop-all{display:block;margin:4px auto 16px;font-size:14px;padding:4px 26px;box-shadow:0 4px 12px -6px rgba(220,38,38,.6)}
+
+/* 10/11/2026 (Federico): after Start the button keeps its colours, the rocket moves slowly and smoke comes out of its fire */
+.trr-go-rocket{position:relative}
+.trr-go-fire,.trr-go-smoke{position:absolute;pointer-events:none;opacity:0;border-radius:50%}
+.trr-oneclick .button-hero#trr-oneclick-go.is-flying:disabled{filter:none;cursor:progress;animation:trr-go-glow 2.6s ease-in-out infinite}
+.trr-oneclick .button-hero#trr-oneclick-go.is-flying .trr-go-rocket{animation:trr-go-fly 2.4s ease-in-out infinite}
+.is-flying .trr-go-fire{left:2%;bottom:2%;width:.32em;height:.32em;background:radial-gradient(circle,#fff7c2 0,#fbbf24 40%,rgba(249,115,22,.75) 65%,rgba(249,115,22,0) 72%);animation:trr-go-flame .28s ease-in-out infinite alternate}
+.is-flying .trr-go-smoke{left:0;bottom:0;width:.34em;height:.34em;background:rgba(255,255,255,.9);box-shadow:0 0 4px rgba(255,255,255,.6);animation:trr-go-puff 1.5s ease-out infinite}
+.is-flying .trr-go-smoke:nth-child(3){animation-delay:.5s}
+.is-flying .trr-go-smoke:nth-child(4){animation-delay:1s}
+.trr-oneclick .button-hero#trr-oneclick-go.is-paused .trr-go-rocket,.is-paused .trr-go-fire,.is-paused .trr-go-smoke{animation-play-state:paused}
+@keyframes trr-go-fly{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(5px,-4px) rotate(-3deg)}}
+@keyframes trr-go-flame{from{opacity:.95;transform:scale(.8)}to{opacity:.6;transform:scale(1.15)}}
+@keyframes trr-go-puff{0%{opacity:.85;transform:translate(0,0) scale(.5)}100%{opacity:0;transform:translate(-.9em,.7em) scale(2.3)}}
+@media (prefers-reduced-motion:reduce){.trr-go-fire,.trr-go-smoke{display:none}.trr-oneclick .button-hero#trr-oneclick-go.is-flying .trr-go-rocket{animation:none!important}}

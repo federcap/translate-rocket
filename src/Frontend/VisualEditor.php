@@ -730,7 +730,7 @@ class VisualEditor {
 			wp_send_json_error( 'forbidden', 403 );
 		}
 		if ( isset( $_POST['slug'] ) ) {
-			\TranslateRocket\Slugs::set( $post_id, $lang, sanitize_text_field( wp_unslash( $_POST['slug'] ) ) );
+			\TranslateRocket\Slugs::set_by_hand( $post_id, $lang, sanitize_text_field( wp_unslash( $_POST['slug'] ) ) );
 		}
 		$items = json_decode( isset( $_POST['items'] ) ? (string) wp_unslash( $_POST['items'] ) : '[]', true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- each field sanitized below.
 		if ( is_array( $items ) ) {

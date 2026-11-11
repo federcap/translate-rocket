@@ -138,10 +138,18 @@ class Cache {
 			return;
 		}
 		self::$da_svuotare = true;
+		// 1.8.38 (10/11/2026, dgtlagence.com on LiteSpeed: «the changes appear to be saved, but are not reflected on
+		// the live website»): server caches like LiteSpeed are emptied with a header of the response, and at the end
+		// of an AJAX or REST save the answer had already left — the request to empty them came too late and the
+		// visitors kept the old page. The small answer of such a save now waits in a buffer, and the flush runs
+		// before WordPress lets it go (its own shutdown step has priority 1).
+		if ( ! headers_sent() && ( ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) ) {
+			ob_start();
+		}
 		// On WP-CLI and inside `php -r` there is no shutdown action to lean on, so
 		// register with PHP itself: the cache must be dropped there too.
 		if ( function_exists( 'add_action' ) ) {
-			add_action( 'shutdown', array( __CLASS__, 'flush_booked' ), 1 );
+			add_action( 'shutdown', array( __CLASS__, 'flush_booked' ), 0 );
 		}
 		register_shutdown_function( array( __CLASS__, 'flush_booked' ) );
 	}

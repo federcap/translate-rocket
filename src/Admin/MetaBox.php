@@ -210,7 +210,7 @@ class MetaBox {
 					}
 				}
 				if ( isset( $_POST['slug'] ) ) {
-					Slugs::set( $post_id, $lang, sanitize_text_field( wp_unslash( $_POST['slug'] ) ) );
+					Slugs::set_by_hand( $post_id, $lang, sanitize_text_field( wp_unslash( $_POST['slug'] ) ) );
 				}
 				$msg = 'saved';
 				break;

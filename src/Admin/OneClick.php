@@ -89,7 +89,7 @@ class OneClick {
 					<li class="trr-oneclick-langchange"><a href="#trr-languages">✏️ <?php esc_html_e( 'change', 'translate-rocket' ); ?></a></li>
 				</ul>
 				<p class="trr-oneclick-btnrow">
-					<button type="button" class="button button-primary button-hero" id="trr-oneclick-go" disabled><span class="trr-go-rocket" aria-hidden="true">🚀</span><span class="trr-go-label"><?php esc_html_e( 'Translate my site', 'translate-rocket' ); ?></span></button>
+					<button type="button" class="button button-primary button-hero" id="trr-oneclick-go" disabled><span class="trr-go-rocket" aria-hidden="true">🚀<span class="trr-go-fire"></span><span class="trr-go-smoke"></span><span class="trr-go-smoke"></span><span class="trr-go-smoke"></span></span><span class="trr-go-label"><?php esc_html_e( 'Translate my site', 'translate-rocket' ); ?></span></button>
 				</p>
 				<p class="description trr-oneclick-free"><span class="trr-ocf-pill">🎁 <strong><?php esc_html_e( 'Free', 'translate-rocket' ); ?></strong></span> <span class="trr-ocf-pill">🔑 <strong><?php esc_html_e( 'No key, no account', 'translate-rocket' ); ?></strong></span> <span class="trr-ocf-pill">🖥️ <?php esc_html_e( 'Keep this tab open while it works', 'translate-rocket' ); ?></span></p>
 				<?php // 7/11/2026 (1.8.34): the guide link lost in the one-click redesign of 1.8.32, back on Start. ?>

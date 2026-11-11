@@ -290,10 +290,18 @@ class TermRetranslate {
 		}
 		while ( $next < $parts && microtime( true ) - $t0 < $budget ) {
 			foreach ( (array) get_option( self::PART . $batch . '_' . $next, array() ) as $lang => $rows ) {
+				// 10/11/2026 (a shop in Serbian: «Translate again», then the Cyrillic alphabet chosen, then «Undo» — the
+				// sentences put back were the old ones, in Latin, on a page otherwise in Cyrillic): what comes back is
+				// written in the alphabet chosen for the language, like every other translation that is saved.
+				$script = '' !== Script::choice( (string) $lang );
 				foreach ( array_chunk( (array) $rows, 300 ) as $chunk ) {
 					$vals = array();
+					$orig = $script ? Strings::originals( array_map( static fn( $r ) => is_array( $r ) ? (int) ( $r[0] ?? 0 ) : 0, $chunk ) ) : array();
 					foreach ( $chunk as $r ) {
 						if ( is_array( $r ) && count( $r ) >= 4 ) {
+							if ( $script ) {
+								$r[1] = Script::apply( (string) $lang, (string) $r[1], (string) ( $orig[ (int) $r[0] ] ?? '' ) );
+							}
 							$vals[] = $wpdb->prepare( '(%d,%s,%s,%d,%s,%s)', (int) $r[0], (string) $lang, (string) $r[1], (int) $r[2], (string) $r[3], current_time( 'mysql' ) );
 						}
 					}

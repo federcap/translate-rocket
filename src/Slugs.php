@@ -17,6 +17,15 @@ class Slugs {
 	const META_PREFIX = '_trrocket_slug_';
 
 	/**
+	 * 1.8.38: the addresses a page had before in a language (one meta row each), so that they move to the
+	 * present one with a 301 instead of answering 404.
+	 */
+	const OLD_PREFIX = '_trrocket_slugold_';
+
+	/** Option: at least one old address has been kept (until then nobody looks for them). */
+	const OLD_ANY = 'trrocket_slug_old_any';
+
+	/**
 	 * Get the translated slug for a post + language ('' if none).
 	 */
 	public static function get( int $post_id, string $lang ): string {
@@ -122,11 +131,56 @@ class Slugs {
 			return;
 		}
 		$slug = sanitize_title( $slug );
+		// 1.8.38 (10/11/2026, an address changed by hand in the visual editor: the one of before answered 404):
+		// the address it had until now is kept, and leads to the new one with a 301.
+		$before = (string) get_post_meta( $post_id, self::META_PREFIX . $lang, true );
+		if ( '' !== $before && $before !== $slug ) {
+			if ( ! in_array( $before, array_map( 'strval', (array) get_post_meta( $post_id, self::OLD_PREFIX . $lang, false ) ), true ) ) {
+				add_post_meta( $post_id, self::OLD_PREFIX . $lang, $before );
+			}
+			if ( ! get_option( self::OLD_ANY ) ) {
+				update_option( self::OLD_ANY, 1, true );
+			}
+		}
 		if ( '' === $slug ) {
 			delete_post_meta( $post_id, self::META_PREFIX . $lang );
 		} else {
 			update_post_meta( $post_id, self::META_PREFIX . $lang, $slug );
+			delete_post_meta( $post_id, self::OLD_PREFIX . $lang, $slug ); // back to an address it had before
 		}
+	}
+
+	/**
+	 * An address typed by somebody (visual editor, the box in the page editor, the Translations screen): it is
+	 * no longer one «made from the title», so switching the automatic addresses off will not take it away.
+	 */
+	public static function set_by_hand( int $post_id, string $lang, string $slug ): void {
+		if ( $post_id <= 0 ) {
+			return;
+		}
+		if ( sanitize_title( $slug ) === self::get( $post_id, $lang ) ) {
+			return;
+		}
+		self::set( $post_id, $lang, $slug );
+		delete_post_meta( $post_id, AutoSlugs::AUTO . $lang );
+	}
+
+	/**
+	 * The published post that had this address in a language before (and no post has it now), or 0.
+	 */
+	public static function resolve_old( string $slug, string $lang ): int {
+		$slug = sanitize_title( $slug );
+		if ( '' === $slug || ! get_option( self::OLD_ANY ) ) {
+			return 0;
+		}
+		global $wpdb;
+		$id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT pm.post_id FROM {$wpdb->postmeta} pm INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = %s AND pm.meta_value = %s AND p.post_status = 'publish' ORDER BY pm.meta_id DESC LIMIT 1", self::OLD_PREFIX . $lang, $slug ) ); // phpcs:ignore WordPress.DB
+		if ( $id <= 0 ) {
+			return 0;
+		}
+		// a page of the site is called like that: the address is its own
+		$own = (int) $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_status = 'publish' AND post_type NOT IN ( 'attachment', 'revision', 'nav_menu_item' ) AND ID <> %d LIMIT 1", $slug, $id ) ); // phpcs:ignore WordPress.DB
+		return $own > 0 ? 0 : $id;
 	}
 
 	/**

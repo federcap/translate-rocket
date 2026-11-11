@@ -227,6 +227,29 @@ class Strings {
 			// slider, a map, a form) are filed under the same address and recorded again at most once a day.
 			if ( $whole_page ) {
 				$wpdb->query( $wpdb->prepare( "DELETE FROM {$occurrences} WHERE url_hash = %s AND last_seen < %s", $url_hash, gmdate( 'Y-m-d H:i:s', (int) current_time( 'timestamp' ) - 2 * DAY_IN_SECONDS ) ) ); // phpcs:ignore WordPress.DB -- last_seen is site time, like $now
+				// 10/11/2026 (dgtlagence.com: «yesterday every language was at 100%, today several are around 70%»): a
+				// sentence that was on this page before, is not on it now, was never translated, and differs only in its
+				// numbers from one that is on it now, is the old value of a counter, a date or a price. It leaves the
+				// page at once instead of after two days.
+				$now_sig = array();
+				foreach ( $by_hash as $row ) {
+					if ( preg_match( '/\d/', $row['original'] ) ) {
+						$now_sig[ $row['type'] . '|' . preg_replace( '/\d+/', '#', $row['original'] ) ] = true;
+					}
+				}
+				if ( ! empty( $now_sig ) ) {
+					$translations = Database::translations_table();
+					$old          = (array) $wpdb->get_results( $wpdb->prepare( "SELECT st.id, st.original, st.type FROM {$occurrences} o INNER JOIN {$strings} st ON st.id = o.string_id WHERE o.url_hash = %s AND o.last_seen < %s AND st.original REGEXP '[0-9]' AND NOT EXISTS ( SELECT 1 FROM {$translations} tr WHERE tr.string_id = st.id AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> '' ) LIMIT 500", $url_hash, $now ) ); // phpcs:ignore WordPress.DB
+					$gone         = array();
+					foreach ( $old as $r ) {
+						if ( isset( $now_sig[ $r->type . '|' . preg_replace( '/\d+/', '#', (string) $r->original ) ] ) ) {
+							$gone[] = (int) $r->id;
+						}
+					}
+					if ( ! empty( $gone ) ) {
+						$wpdb->query( $wpdb->prepare( "DELETE FROM {$occurrences} WHERE url_hash = %s AND string_id IN (" . implode( ',', $gone ) . ')', $url_hash ) ); // phpcs:ignore WordPress.DB -- integer ids
+					}
+				}
 			}
 		}
 
@@ -599,7 +622,7 @@ class Strings {
 
 		return $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT st.id AS string_id, st.original, st.type, st.context, tr.translation, tr.status
+				"SELECT st.id AS string_id, st.original, st.type, st.context, tr.translation, tr.status, tr.updated_at
 				 FROM {$occurrences} o
 				 INNER JOIN {$strings} st ON st.id = o.string_id
 				 LEFT JOIN {$translations} tr ON tr.string_id = st.id AND tr.language = %s
@@ -991,6 +1014,25 @@ class Strings {
 	}
 
 	/**
+	 * The maps are keyed by the source text alone, but the same words can sit in more than one row: once as
+	 * page text and once as an attribute (a link whose title repeats its label). 10/11/2026 (Kenan: a menu
+	 * item corrected in the visual editor came back wrong after a reload): whichever row the database
+	 * returned last used to win, so an old machine translation of the title could replace the correction
+	 * made by hand on the text. Now the hand-made one wins over the machine one, and between equals the
+	 * most recent.
+	 *
+	 * @param array<string,string> $rank What already holds each key (status and date), filled here.
+	 */
+	private static function row_wins( array &$rank, string $key, $status, $updated ): bool {
+		$r = (int) $status . '|' . (string) $updated;
+		if ( isset( $rank[ $key ] ) && strcmp( $r, $rank[ $key ] ) < 0 ) {
+			return false;
+		}
+		$rank[ $key ] = $r;
+		return true;
+	}
+
+	/**
 	 * Original => translation map for a language (cached in a transient).
 	 *
 	 * @return array<string,string>
@@ -1014,7 +1056,7 @@ class Strings {
 
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT st.original AS o, tr.translation AS t
+				"SELECT st.original AS o, tr.translation AS t, tr.status AS s, tr.updated_at AS u
 				 FROM {$translations} tr
 				 INNER JOIN {$strings} st ON st.id = tr.string_id
 				 WHERE tr.language = %s AND tr.status > 0 AND tr.translation IS NOT NULL AND tr.translation <> ''",
@@ -1022,10 +1064,15 @@ class Strings {
 			)
 		); // phpcs:ignore WordPress.DB
 
-		$map = array();
+		$map  = array();
+		$rank = array();
 		foreach ( $rows as $row ) {
-			$map[ trim( $row->o ) ] = $row->t;
+			$k = trim( $row->o );
+			if ( self::row_wins( $rank, $k, $row->s, $row->u ) ) {
+				$map[ $k ] = $row->t;
+			}
 		}
+		unset( $rank );
 
 		// Glossary terms force a fixed translation for an exact string, overriding
 		// (or supplying) the stored one — for consistent brand/product wording.
@@ -1404,11 +1451,12 @@ class Strings {
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
 
+		$rank = array();
 		foreach ( array_chunk( array_keys( $missing ), 500 ) as $chunk ) {
 			$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%s' ) );
 			$rows         = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT st.original AS o, tr.translation AS t
+					"SELECT st.original AS o, tr.translation AS t, tr.status AS s, tr.updated_at AS u
 					 FROM {$strings} st
 					 INNER JOIN {$translations} tr ON tr.string_id = st.id AND tr.language = %s
 					 WHERE st.text_hash IN ({$placeholders})
@@ -1417,7 +1465,10 @@ class Strings {
 				)
 			); // phpcs:ignore WordPress.DB
 			foreach ( $rows as $row ) {
-				$cache[ trim( $row->o ) ] = $row->t;
+				$k = trim( $row->o );
+				if ( self::row_wins( $rank, $k, $row->s, $row->u ) ) {
+					$cache[ $k ] = $row->t;
+				}
 			}
 		}
 		// Remember the misses too, so they aren't re-queried this request.
@@ -1471,11 +1522,12 @@ class Strings {
 		$strings      = Database::strings_table();
 		$translations = Database::translations_table();
 		$fuori        = implode( ',', array_fill( 0, count( $escludi ), '%s' ) );
+		$rank = array();
 		foreach ( array_chunk( array_keys( $wanted ), 500 ) as $chunk ) {
 			$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%s' ) );
 			$rows         = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT st.original AS o, tr.translation AS t
+					"SELECT st.original AS o, tr.translation AS t, tr.status AS s, tr.updated_at AS u
 					 FROM {$strings} st
 					 INNER JOIN {$translations} tr ON tr.string_id = st.id AND tr.language = %s
 					 WHERE st.text_hash IN ({$placeholders})
@@ -1485,7 +1537,10 @@ class Strings {
 				)
 			); // phpcs:ignore WordPress.DB
 			foreach ( $rows as $row ) {
-				$out[ trim( (string) $row->o ) ] = (string) $row->t;
+				$k = trim( (string) $row->o );
+				if ( self::row_wins( $rank, $k, $row->s, $row->u ) ) {
+					$out[ $k ] = (string) $row->t;
+				}
 			}
 		}
 		return array_merge( $out, self::glossary_texts( array_values( $wanted ), $lang ) );
@@ -1577,10 +1632,14 @@ class Strings {
 		if ( is_array( $cached ) ) {
 			return $cached;
 		}
-		$map = array();
+		$map  = array();
+		$rank = array();
 		foreach ( self::for_page_language( $url_hash, $lang ) as $row ) {
 			if ( (int) $row->status > 0 && null !== $row->translation && '' !== $row->translation ) {
-				$map[ trim( $row->original ) ] = $row->translation;
+				$k = trim( $row->original );
+				if ( self::row_wins( $rank, $k, $row->status, $row->updated_at ?? '' ) ) {
+					$map[ $k ] = $row->translation;
+				}
 			}
 		}
 		foreach ( Settings::glossary( $lang ) as $term => $forced ) {

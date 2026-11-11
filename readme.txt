@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.37
+Stable tag: 1.8.38
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,17 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.38 =
+* Fixed: category addresses translated in full. On a shop whose categories sit one inside the other, only the last word of the address was translated (/en/k/1022/3d-printers/); now the parent categories are translated too (/en/k/nerd-lab/3d-printers/), for categories, tags, product categories and custom taxonomies. The old address moves to the new one with a 301, links typed by hand in the content follow, and page 2 and the following pages have the right hreflang.
+* Fixed: «Translate all» is fast again. Since 1.8.34 every step looked for ready-made pieces among all the sentences waiting (up to 1,000) before sending anything, which made large sites slower; now it looks only at the sentences it is about to send.
+* Fixed: «Another translation is running» with a single tab open. When the server cut a translation step half-way (time limit, memory), the lock stayed on for up to two minutes and the next clicks were refused; the lock is now released as soon as the step ends, however it ends.
+* Fixed: the percentages no longer go down by themselves on pages with a text that changes at every visit (a counter, a clock). The values of the past visits are no longer counted as sentences to translate; nothing translated is removed.
+* Fixed: Serbian alphabet. The conversion of the translations already saved could stop half-way (WP-Cron switched off, a time limit) with the screen still saying «converting»: it now starts again by itself when you open the admin area. And «Undo» of «Translate again» puts the sentences back in the alphabet you chose.
+* Fixed: a correction made by hand in the visual editor (a menu item, for example) could come back wrong after a reload when the same words were also saved as a link title with an older machine translation. The hand-made translation now always wins.
+* Fixed: changes made in the visual editor now reach visitors at once on servers with a cache emptied through the response (LiteSpeed and the like). The request to empty the cache used to leave after the answer of the save, too late, so the live site could keep showing the old text or the old address.
+* Fixed: when you change the translated address of a page (visual editor, SEO panel), the address it had before now moves to the new one with a 301 instead of answering 404. And an address typed by hand is no longer treated as one made automatically.
+* Improved: «Translate my site» — while it works the button keeps its colours and the rocket flies, and it stops when you press Pause.
 
 = 1.8.37 =
 * New: translated URL bases. The fixed first word of archive and product addresses can be translated too: /it/prodotto/leather-bag/ and /de/kategorie/reisen/ instead of /it/product/leather-bag/ and /de/category/reisen/. Links, hreflang, the language switcher and the sitemap follow, and the address with the original word moves to the translated one with a 301. The words for category, tag, product, product category and product tag are built in for 33 languages, custom post types use their translated name, and you can type your own word for any language (Settings, «Fixed words in addresses»). Off by default; switched off again, the translated addresses already visited move back with a 301.
@@ -692,6 +703,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.38 =
+Category addresses translated in full (parent categories too), «Translate all» fast again, percentages that no longer go down by themselves.
 
 = 1.8.37 =
 Translated URL bases (/it/prodotto/, /de/kategorie/), and a fix for languages stuck at 99%.

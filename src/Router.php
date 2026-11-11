@@ -67,6 +67,21 @@ class Router {
 	private $visited_path = '';
 
 	/**
+	 * 1.8.38, term archives: the slug of a term in a language, kept per request («term_id|lang» → slug); the fixed
+	 * start of each taxonomy's archive addresses («/k/» → product_cat), built once; and the term addresses our own
+	 * term-link filter has already written, which need no second look.
+	 *
+	 * @var array
+	 */
+	private $term_targets = array();
+
+	/** @var array|null */
+	private $term_bases = null;
+
+	/** @var array */
+	private $term_out = array();
+
+	/**
 	 * The request address as the visitor sent it, language prefix included (1.8.26: Themify's page cache keys its
 	 * files on $_SERVER['REQUEST_URI'] and needs the one with the language, see Integrations\Themify).
 	 *
@@ -883,11 +898,161 @@ class Router {
 		if ( $this->is_default( $this->current_language() ) || ! is_object( $term ) || empty( $term->slug ) || ! TermSlugs::enabled( (string) $taxonomy ) ) {
 			return $url;
 		}
+		if ( $term instanceof \WP_Term ) {
+			// 1.8.38: the parents too (/it/k/laboratorio-nerd/stampanti-3d/, not /it/k/102/stampanti-3d/).
+			$out  = $this->swap_term_chain( (string) $url, $term, $this->current_language() );
+			$base = (string) wp_parse_url( $this->language_base( $this->current_language() ), PHP_URL_PATH );
+			$p    = (string) wp_parse_url( $out, PHP_URL_PATH );
+			if ( '' !== $base && 0 === strpos( $p, $base . '/' ) ) {
+				$p = (string) substr( $p, strlen( $base ) );
+			}
+			$this->term_out[ $p ] = true;
+			return $out;
+		}
 		$tslug = TermSlugs::ensure( (int) $term->term_id, (string) $term->name, $this->current_language() );
 		if ( '' === $tslug || $tslug === $term->slug ) {
 			return $url;
 		}
 		return $this->replace_last_segment( (string) $url, (string) $term->slug, $tslug );
+	}
+
+	/**
+	 * The slug a term has in the addresses of a language: its own for the main language (or when the taxonomy's
+	 * addresses are not translated), the translated one otherwise. Kept per request.
+	 *
+	 * @param \WP_Term $term Term.
+	 * @param string   $lang Language.
+	 */
+	private function term_target( \WP_Term $term, string $lang ): string {
+		$k = (int) $term->term_id . '|' . $lang;
+		if ( ! isset( $this->term_targets[ $k ] ) ) {
+			$slug = (string) $term->slug;
+			if ( ! $this->is_default( $lang ) && TermSlugs::enabled( (string) $term->taxonomy ) ) {
+				$t = TermSlugs::ensure( (int) $term->term_id, (string) $term->name, $lang );
+				if ( '' !== $t ) {
+					$slug = $t;
+				}
+			}
+			$this->term_targets[ $k ] = $slug;
+		}
+		return $this->term_targets[ $k ];
+	}
+
+	/**
+	 * A slug as it is compared inside an address: decoded, lower case.
+	 *
+	 * @param string $slug Slug or path segment.
+	 */
+	private static function fold( string $slug ): string {
+		$slug = rawurldecode( $slug );
+		return function_exists( 'mb_strtolower' ) ? mb_strtolower( $slug, 'UTF-8' ) : strtolower( $slug );
+	}
+
+	/**
+	 * A term archive's address (URL or path, query allowed) with the slug of the term AND of each parent term set
+	 * for a language. 10/11/2026 (piflarnakupuje.top, «stil not all the url are translated»): a shop whose product
+	 * categories have numeric slugs, one inside the other, got /en/k/1022/3d-printers/ — only the last word was
+	 * translated. Each segment is recognised whichever form it has now (the term's own slug, or its translated slug
+	 * in the language of the request or in the target one), going up from the term to its parents; /page/2/ at the
+	 * end is left alone. A segment that is none of them stops the walk and the rest stays as written.
+	 *
+	 * @param string   $path Address.
+	 * @param \WP_Term $term The archive's term.
+	 * @param string   $lang Target language.
+	 */
+	private function swap_term_chain( string $path, \WP_Term $term, string $lang ): string {
+		$tax   = (string) $term->taxonomy;
+		$chain = array( $term );
+		if ( is_taxonomy_hierarchical( $tax ) ) {
+			foreach ( get_ancestors( (int) $term->term_id, $tax, 'taxonomy' ) as $aid ) {
+				$a = get_term( (int) $aid, $tax );
+				if ( $a instanceof \WP_Term ) {
+					$chain[] = $a;
+				}
+			}
+		}
+		$cut  = strcspn( $path, '?#' );
+		$tail = (string) substr( $path, $cut );
+		$segs = explode( '/', (string) substr( $path, 0, $cut ) );
+		$i    = count( $segs ) - 1;
+		while ( $i > 0 && '' === $segs[ $i ] ) {
+			$i--;
+		}
+		global $wp_rewrite;
+		$pag = ( is_object( $wp_rewrite ) && '' !== (string) $wp_rewrite->pagination_base ) ? (string) $wp_rewrite->pagination_base : 'page';
+		if ( $i > 1 && ctype_digit( $segs[ $i ] ) && $segs[ $i - 1 ] === $pag ) {
+			$i -= 2;
+		}
+		$cur = $this->current_language();
+		foreach ( $chain as $n => $t ) {
+			$target = $this->term_target( $t, $lang );
+			$known  = array( self::fold( (string) $t->slug ), self::fold( $target ) );
+			foreach ( array_unique( array( $cur, $lang ) ) as $l ) {
+				$x = $this->is_default( $l ) ? '' : TermSlugs::get( (int) $t->term_id, $l );
+				if ( '' !== $x ) {
+					$known[] = self::fold( $x );
+				}
+			}
+			if ( 0 === $n ) {
+				// the term itself: the last segment that is one of its slugs
+				while ( $i > 0 && ! in_array( self::fold( $segs[ $i ] ), $known, true ) ) {
+					$i--;
+				}
+				if ( $i <= 0 ) {
+					return $path;
+				}
+			} elseif ( $i <= 0 || ! in_array( self::fold( $segs[ $i ] ), $known, true ) ) {
+				break;
+			}
+			$segs[ $i ] = $target;
+			$i--;
+		}
+		return implode( '/', $segs ) . $tail;
+	}
+
+	/**
+	 * The term whose archive a path of this site is (no language prefix, no query), or null. Only for taxonomies
+	 * whose addresses start with a fixed word (/category/, /k/): without one a path cannot be told from a page.
+	 *
+	 * @param string $solo Path.
+	 * @param string $lang Language whose translated slugs may be in the path.
+	 */
+	private function term_of_path( string $solo, string $lang ): ?\WP_Term {
+		global $wp_rewrite;
+		if ( null === $this->term_bases ) {
+			$this->term_bases = array();
+			if ( is_object( $wp_rewrite ) && $wp_rewrite->using_permalinks() ) {
+				foreach ( get_taxonomies( array( 'public' => true ), 'objects' ) as $tx ) {
+					$st = 'post_format' === $tx->name ? '' : (string) $wp_rewrite->get_extra_permastruct( $tx->name );
+					$at = '' !== $st ? strpos( $st, '%' . $tx->name . '%' ) : false;
+					if ( false === $at ) {
+						continue;
+					}
+					$base = '/' . trim( (string) substr( $st, 0, $at ), '/' ) . '/';
+					if ( '//' !== $base && ! isset( $this->term_bases[ $base ] ) ) {
+						$this->term_bases[ $base ] = (string) $tx->name;
+					}
+				}
+			}
+		}
+		foreach ( $this->term_bases as $base => $tax ) {
+			if ( 0 !== strpos( $solo, $base ) ) {
+				continue;
+			}
+			$rest = trim( (string) substr( $solo, strlen( $base ) ), '/' );
+			$pag  = ( is_object( $wp_rewrite ) && '' !== (string) $wp_rewrite->pagination_base ) ? (string) $wp_rewrite->pagination_base : 'page';
+			$rest = (string) preg_replace( '#(^|/)' . preg_quote( $pag, '#' ) . '/\d+$#', '', $rest );
+			if ( '' === $rest ) {
+				return null;
+			}
+			$cut  = strrpos( $rest, '/' );
+			$last = false !== $cut ? (string) substr( $rest, $cut + 1 ) : $rest;
+			// As the request is read (resolve_request): a translated slug first, then the term's own.
+			$real = TermSlugs::resolve( $last, $lang, $tax );
+			$t    = get_term_by( 'slug', '' !== $real ? $real : $last, $tax );
+			return $t instanceof \WP_Term ? $t : null;
+		}
+		return null;
 	}
 
 	/**
@@ -967,20 +1132,10 @@ class Router {
 		if ( ! ( $term instanceof \WP_Term ) || empty( $term->slug ) ) {
 			return $path;
 		}
-		// Target slug for this language: the source slug for the default language, the
-		// translated slug for a secondary one. The current path's last segment is
-		// whichever slug the request used, so we rebuild it to the target.
-		$target = (string) $term->slug;
-		if ( ! $this->is_default( $lang ) && TermSlugs::enabled( (string) $term->taxonomy ) ) {
-			$t = TermSlugs::ensure( (int) $term->term_id, (string) $term->name, $lang );
-			if ( '' !== $t ) {
-				$target = $t;
-			}
-		}
-		$trimmed = rtrim( $path, '/' );
-		$cut     = strrpos( $trimmed, '/' );
-		$prefix  = ( false !== $cut ) ? substr( $trimmed, 0, $cut + 1 ) : '/';
-		return $prefix . $target . '/';
+		// Target slugs for this language: the source slugs for the default language, the translated ones for a
+		// secondary one — the term and its parents (1.8.38). The path holds whichever slugs the request used;
+		// /page/2/ after them stays (it used to be taken for the term's slug).
+		return $this->swap_term_chain( $path, $term, $lang );
 	}
 
 	/**
@@ -1259,7 +1414,22 @@ class Router {
 			exit;
 		}
 		// 1.8.37: /it/product/borsa/ (or a word used before) → /it/prodotto/borsa/, archives included.
-		if ( in_array( $this->base_how, array( 'original', 'old' ), true ) && ! is_404() && ! is_feed() && ! \TranslateRocket\Frontend\Preview::language_blocked() ) {
+		// 1.8.38: a term archive reached through an address that is not the one its links use — the original slugs
+		// (/it/k/102/103/), or the mix the plugin wrote until 1.8.37 (/it/k/102/stampanti-3d/) — moves there too.
+		$termine = null;
+		if ( ! $this->is_default( $this->current_language() ) && ! Coexistence::on() && '' !== $this->visited_path && ( is_category() || is_tag() || is_tax() ) ) {
+			$termine = get_queried_object();
+			// Only when the address it would move to leads back to this very term (two terms with the same translated name).
+			if ( $termine instanceof \WP_Term ) {
+				$slug = $this->term_target( $termine, $this->current_language() );
+				if ( $slug !== (string) $termine->slug && TermSlugs::resolve( $slug, $this->current_language(), (string) $termine->taxonomy ) !== (string) $termine->slug ) {
+					$termine = null;
+				}
+			} else {
+				$termine = null;
+			}
+		}
+		if ( ( null !== $termine || in_array( $this->base_how, array( 'original', 'old' ), true ) ) && ! is_404() && ! is_feed() && ! \TranslateRocket\Frontend\Preview::language_blocked() ) {
 			$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( (string) $_SERVER['REQUEST_METHOD'] ) : 'GET'; // phpcs:ignore
 			$to     = $this->url_for_language( $this->current_language(), true );
 			$to_p   = (string) wp_parse_url( $to, PHP_URL_PATH );
@@ -1313,6 +1483,13 @@ class Router {
 				// Sanitized again on the way out (it ends up in an href and a Location header), and only for a published
 				// page: a link to a draft, a private or a trashed page keeps the address it was written with.
 				$fatti[ $k ] = $this->swap_hierarchy( $solo, $id, $lang );
+			} elseif ( ! isset( $this->term_out[ $solo ] ) ) {
+				// 10/11/2026 (piflarnakupuje.top): a link to a category written by hand in a menu or in the text
+				// (/k/1022/) kept the original address, which is not the one hreflang and the canonical declare.
+				$termine = $this->term_of_path( $solo, $lang );
+				if ( null !== $termine ) {
+					$fatti[ $k ] = $this->swap_term_chain( $solo, $termine, $lang );
+				}
 			}
 			$fatti[ $k ] = UrlBases::to_translated( $fatti[ $k ], $lang ); // 1.8.37: /product/x/ → /prodotto/x/
 		}
@@ -1349,6 +1526,18 @@ class Router {
 				continue;
 			}
 			$val  = (string) $query_vars[ $qv ];
+			// 1.8.38: the parents' translated slugs go back to the real ones too (/it/k/laboratorio-nerd/stampanti-3d/).
+			if ( false !== strpos( $val, '/' ) ) {
+				$pezzi = explode( '/', $val );
+				for ( $n = count( $pezzi ) - 2; $n >= 0; $n-- ) {
+					$vero = '' !== $pezzi[ $n ] ? TermSlugs::resolve( $pezzi[ $n ], $this->current_language(), $tax ) : '';
+					if ( '' !== $vero ) {
+						$pezzi[ $n ] = $vero;
+					}
+				}
+				$val               = implode( '/', $pezzi );
+				$query_vars[ $qv ] = $val;
+			}
 			$cut  = strrpos( $val, '/' );
 			$last = ( false !== $cut ) ? substr( $val, $cut + 1 ) : $val;
 			$real = TermSlugs::resolve( $last, $this->current_language(), $tax );
@@ -1385,6 +1574,14 @@ class Router {
 		}
 
 		$id = Slugs::resolve( $slug, $this->current_language() );
+		if ( ! $id ) {
+			// 1.8.38: an address this page had before in this language (changed by hand, or made again): the page
+			// answers, then template_redirect sends the visitor to the present address with a 301.
+			$id = Slugs::resolve_old( $slug, $this->current_language() );
+			if ( $id ) {
+				$this->old_post = $id;
+			}
+		}
 		if ( ! $id ) {
 			// 25/10/2026 (translaterocket.com, /ja/特長/block-theme-menus/ → 404): the page itself has no translated slug
 			// in this language but a parent does, so the address mixes a translated parent and an original child.

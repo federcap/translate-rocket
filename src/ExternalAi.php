@@ -380,11 +380,18 @@ class ExternalAi {
 		$n     = (int) ( $info['restored'] ?? 0 );
 		$tra   = Database::translations_table();
 		$t0    = microtime( true );
+		// what comes back is written in the alphabet chosen for the language (Serbian), like every saved translation
+		$script = '' !== Script::choice( $lang );
 		while ( $next < $parts && microtime( true ) - $t0 < $budget ) {
-			foreach ( (array) get_option( self::UNDO . $batch . '_' . $next, array() ) as $r ) {
+			$rows = (array) get_option( self::UNDO . $batch . '_' . $next, array() );
+			$orig = $script ? Strings::originals( array_map( static fn( $r ) => (int) ( $r[0] ?? 0 ), $rows ) ) : array();
+			foreach ( $rows as $r ) {
 				if ( '' === (string) $r[1] && 0 === (int) $r[2] ) {
 					$wpdb->delete( $tra, array( 'string_id' => (int) $r[0], 'language' => $lang ) ); // phpcs:ignore WordPress.DB
 				} else {
+					if ( $script ) {
+						$r[1] = Script::apply( $lang, (string) $r[1], (string) ( $orig[ (int) $r[0] ] ?? '' ) );
+					}
 					$wpdb->replace( $tra, array( 'string_id' => (int) $r[0], 'language' => $lang, 'translation' => (string) $r[1], 'status' => (int) $r[2], 'provider' => (string) $r[3], 'updated_at' => current_time( 'mysql' ) ) ); // phpcs:ignore WordPress.DB
 				}
 				++$n;

@@ -33,6 +33,7 @@
 		paused = p;
 		if ( pauseBtn ) { pauseBtn.textContent = p ? ( '▶ ' + ( T.resume || 'Resume' ) ) : ( '⏸ ' + ( T.pause || 'Pause' ) ); }
 		if ( run ) { run.classList.toggle( 'is-paused', p ); }
+		go.classList.toggle( 'is-paused', p ); // 10/11/2026: the rocket stops with the bar
 		if ( p ) { if ( ! saidPaused ) { lastSaid = step.textContent; } saidPaused = true; say( T.paused || '' ); }
 		else if ( saidPaused ) { saidPaused = false; if ( busy && ! stopped && lastSaid ) { say( lastSaid ); } }
 		if ( ! p && resumeNow ) { var r = resumeNow; resumeNow = null; r(); }
@@ -454,6 +455,7 @@
 		if ( pauseBtn ) { pauseBtn.disabled = false; }
 		if ( stopBtn ) { stopBtn.disabled = false; }
 		go.disabled = true;
+		go.classList.add( 'is-flying' ); // 10/11/2026 (Federico): the rocket moves slowly, with smoke, while it works
 		end.hidden = true;
 		run.hidden = false;
 		bar( 2 );
@@ -514,6 +516,7 @@
 			if ( pauseBtn ) { pauseBtn.disabled = true; }
 			if ( stopBtn ) { stopBtn.disabled = true; }
 			go.disabled = false;
+			go.classList.remove( 'is-flying', 'is-paused' );
 		} );
 	} );
 
