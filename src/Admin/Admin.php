@@ -781,6 +781,25 @@ class Admin {
 					$out[] = $l;
 				}
 			}
+			// 12/11/2026 (kamer26.nl: «a few product categories were not translated after the automatic translation»;
+			// collaudo-scan-negozio): a category with nothing in it yet was never read, although it has a page of its own —
+			// its description, its SEO title — and often sits in the menu. Those with a description or in a menu are read
+			// too; the thousands of empty tags and attributes of a big shop are not.
+			global $wpdb;
+			$in_menu = array_map(
+				'intval',
+				(array) $wpdb->get_col( "SELECT DISTINCT o.meta_value FROM {$wpdb->postmeta} t JOIN {$wpdb->postmeta} o ON o.post_id = t.post_id AND o.meta_key = '_menu_item_object_id' WHERE t.meta_key = '_menu_item_type' AND t.meta_value = 'taxonomy'" )
+			);
+			$empty   = get_terms( array( 'taxonomy' => $taxes, 'hide_empty' => false, 'number' => 5000 ) );
+			foreach ( is_array( $empty ) ? $empty : array() as $term ) {
+				if ( (int) $term->count > 0 || ( '' === trim( (string) $term->description ) && ! in_array( (int) $term->term_id, $in_menu, true ) ) ) {
+					continue;
+				}
+				$l = get_term_link( $term );
+				if ( is_string( $l ) && '' !== $l ) {
+					$out[] = $l;
+				}
+			}
 		}
 		$out = array_values( array_unique( $out ) );
 		return $out;
