@@ -912,15 +912,30 @@ class Translator {
 			return null;
 		}
 		// All the pieces on one same page: the text they were split from.
+		// 11/11/2026 (Matjaž: «from_pieces function is causing the 500 errors… more than 10 strings per round throws a 500»;
+		// measured by collaudo-pezzi-taglia: pieces seen on 20,000 pages each, 1.4 s a sentence, 27 s for a step of 20):
+		// every piece's whole list of pages was read, and «Black» or «Cart» are on every page of a shop. Now the pages of
+		// the longest piece only, a thousand at most, and one question to the database: the first of them that has every
+		// other piece too. Not found there, the sentence goes to the engine.
 		$ot     = Database::occurrences_table();
-		$common = null;
-		foreach ( $best[0] as $piece ) {
-			$ids  = array_map( 'intval', $found[ $piece ][1] );
-			$urls = $wpdb->get_col( 'SELECT DISTINCT url_hash FROM ' . $ot . ' WHERE string_id IN (' . implode( ',', $ids ) . ')' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- integers only.
-			$common = null === $common ? $urls : array_intersect( $common, $urls );
-			if ( empty( $common ) ) {
-				return null;
+		$pieces = array_values( array_unique( $best[0] ) );
+		usort(
+			$pieces,
+			function ( $a, $b ) {
+				return strlen( $b ) - strlen( $a );
 			}
+		);
+		$sql = '';
+		foreach ( $pieces as $k => $piece ) {
+			$ids = implode( ',', array_map( 'intval', $found[ $piece ][1] ) );
+			if ( 0 === $k ) {
+				$sql = 'SELECT o0.url_hash FROM (SELECT DISTINCT url_hash FROM ' . $ot . ' WHERE string_id IN (' . $ids . ') LIMIT 1000) o0';
+			} else {
+				$sql .= ' STRAIGHT_JOIN ' . $ot . ' o' . $k . ' ON o' . $k . '.url_hash = o0.url_hash AND o' . $k . '.string_id IN (' . $ids . ')';
+			}
+		}
+		if ( null === $wpdb->get_var( $sql . ' LIMIT 1' ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- integers only.
+			return null;
 		}
 		$out = array();
 		foreach ( $best[0] as $piece ) {

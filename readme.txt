@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.38
+Stable tag: 1.8.39
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.39 =
+* Fixed: no more server errors (500) during «Translate all» on large shops. Short words that are on every page («Black», «Cart») made the search for ready-made pieces read tens of thousands of pages for each sentence; it now asks the database once, and a step of 20 sentences takes seconds again.
+* Fixed: setup in Safari or Firefox without a key. Who pressed «Finish» without pasting a free AI key landed on the copy-paste editor; now they get «Translate my site», which translates the whole site for free with MyMemory, in any browser, with no key.
+* Improved: when no engine is set up, the visual editor now points to «Translate my site» (free, with MyMemory) or to a free AI key.
 
 = 1.8.38 =
 * Fixed: category addresses translated in full. On a shop whose categories sit one inside the other, only the last word of the address was translated (/en/k/1022/3d-printers/); now the parent categories are translated too (/en/k/nerd-lab/3d-printers/), for categories, tags, product categories and custom taxonomies. The old address moves to the new one with a 301, links typed by hand in the content follow, and page 2 and the following pages have the right hreflang.
@@ -703,6 +708,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.39 =
+«Translate all» fast on large shops again (no more 500 errors), and setup without a key leads straight to free one-click translation.
 
 = 1.8.38 =
 Category addresses translated in full (parent categories too), «Translate all» fast again, percentages that no longer go down by themselves.

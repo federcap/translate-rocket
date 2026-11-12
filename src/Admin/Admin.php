@@ -6478,7 +6478,13 @@ JS;
 		// 5/11/2026 (Federico: «one click and it translates»): straight to the «Translate my site» button, the whole site
 		// in one go. The «done» screen (homepage first, then the editor) stays for whoever gave a key in the wizard —
 		// its whole path, errors included, is the proven one — and for the Advanced view.
+		// 12/11/2026 (two uninstalls the same day, «provider: none», 1 sentence translated out of 799, one from Safari):
+		// in a browser with no translator of its own the wizard preselects «free AI key»; who pressed «Finish» without
+		// pasting one landed on the copy-paste editor instead of «Translate my site», where MyMemory works in any browser.
 		$wiz_method = isset( $_POST['trr_method'] ) ? sanitize_key( $_POST['trr_method'] ) : 'manual';
+		if ( 'free' === $wiz_method && '' === (string) ( $settings['providers']['groq']['api_key'] ?? '' ) ) {
+			$wiz_method = 'manual';
+		}
 		if ( 'manual' === $wiz_method && ! get_option( 'trrocket_wizard_keycheck' ) && View::simple() ) {
 			wp_safe_redirect( admin_url( 'admin.php?page=translate-rocket#trr-oneclick' ) );
 			exit;
@@ -6638,7 +6644,7 @@ JS;
 					// 3/11/2026 (second «too complicated» of the day: Chrome, 8 minutes, no language saved — the wall was the key in
 					// step 2): ONE screen for everybody. Where this browser cannot translate by itself, it says how to go on anyway.
 					?>
-					<p class="trr-wiz-slow" id="trr-wiz-slow" style="margin:22px 0 0;padding:12px 16px;border-left:4px solid #2271b1;background:#f0f6fc;border-radius:6px;font-size:14px;line-height:1.55" hidden><?php esc_html_e( 'Press «Finish & start translating»: your languages are saved and your homepage opens ready to translate — copy its text into any translator and paste it back. To translate everything automatically, add a free AI key now in «More options», or later in AI Translation.', 'translate-rocket' ); ?></p>
+					<p class="trr-wiz-slow" id="trr-wiz-slow" style="margin:22px 0 0;padding:12px 16px;border-left:4px solid #2271b1;background:#f0f6fc;border-radius:6px;font-size:14px;line-height:1.55" hidden><?php esc_html_e( 'Press «Finish & start translating»: your languages are saved and one button translates your whole site for free with MyMemory, with no key, in any browser. For more words a day and better quality, add a free AI key now in «More options», or later in AI Translation.', 'translate-rocket' ); ?></p>
 					<p class="trr-wiz-quick" id="trr-wiz-quick" style="margin:22px 0 0;padding:12px 16px;border-left:4px solid #00a32a;background:#edfaef;border-radius:6px;font-size:14px;line-height:1.55" hidden><strong><?php esc_html_e( 'Nothing else to set up: this browser translates your site for free, with no key.', 'translate-rocket' ); ?></strong> <?php esc_html_e( 'Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner).', 'translate-rocket' ); ?></p>
 				</section>
 

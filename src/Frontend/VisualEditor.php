@@ -281,7 +281,7 @@ class VisualEditor {
 					'bulkHtml'       => __( 'Show HTML tags (bold, links…) instead of [1] [2]', 'translate-rocket' ),
 					'bulkAi'         => __( 'Auto-translate everything with AI', 'translate-rocket' ),
 					'bulkGt'         => __( 'Auto-translate everything with Google', 'translate-rocket' ),
-					'bulkNoProvider' => __( 'Add an AI key (or enable free Google) in TranslateRocket settings to auto-translate. Meanwhile, use copy-paste below.', 'translate-rocket' ),
+					'bulkNoProvider' => __( 'To translate automatically with no key, press «Translate my site» on the TranslateRocket page (free, with MyMemory), or add a free AI key in AI Translation. Meanwhile, use copy-paste below.', 'translate-rocket' ), // 12/11/2026: «free Google» is a Labs engine, not in this plugin
 					'bulkBrowser'    => __( 'Translate everything in this browser — no key', 'translate-rocket' ),
 					'bulkFirstClick' => __( 'Press the button to start. The first time, your browser downloads this language (about a minute), then it translates the page by itself.', 'translate-rocket' ),
 					'bulkBrowserTip' => __( 'Chrome and Edge on a computer can translate on the device itself: it costs nothing and the text never leaves your machine. Quality is below the AI models.', 'translate-rocket' ),
