@@ -440,6 +440,18 @@ class Router {
 		if ( function_exists( 'is_404' ) && did_action( 'wp' ) && is_404() ) {
 			return $base . '/';
 		}
+		// 12/11/2026 (Search Console of translaterocket.com: 2,677 pages «Not found», /it/特長/, /cs/ダウンロード/): browsers and
+		// Google ask for /ja/%E7%89%B9%E9%95%B7/, the slug is saved as WordPress writes it, %e7%89%b9%e9%95%b7. The swaps below
+		// found nothing, so hreflang and the switcher sent every language to the Japanese address. Same case as the slugs.
+		if ( false !== strpos( $path, '%' ) ) {
+			$path = (string) preg_replace_callback(
+				'/%[0-9A-F]{2}/i',
+				function ( $m ) {
+					return strtolower( $m[0] );
+				},
+				$path
+			);
+		}
 		// On a page reached through a translated slug (/it/albergo-aurora/) the request path
 		// carries THAT language's slug: every other language needs its own, or hreflang and the
 		// switcher point at addresses that don't exist (/albergo-aurora/, /es/albergo-aurora/).

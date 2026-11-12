@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.39
+Stable tag: 1.8.40
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.40 =
+* Fixed: on pages whose address is written in a non-Latin alphabet (Japanese, Chinese, Korean, Arabic, Persian, Russian, Ukrainian, Thai, Hindi, Greek…), hreflang and the language switcher sent the other languages to that same address (/it/特長/), which does not exist: Google found thousands of «Not found» pages. Browsers ask for the address as %E7%89%B9 and WordPress saves it as %e7%89%b9; the two are now the same thing, for pages, child pages and categories.
 
 = 1.8.39 =
 * Fixed: no more server errors (500) during «Translate all» on large shops. Short words that are on every page («Black», «Cart») made the search for ready-made pieces read tens of thousands of pages for each sentence; it now asks the database once, and a step of 20 sentences takes seconds again.
@@ -708,6 +711,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.40 =
+hreflang and the language switcher fixed on pages with an address in a non-Latin alphabet (Japanese, Chinese, Russian, Arabic…): no more «Not found» pages for Google.
 
 = 1.8.39 =
 «Translate all» fast on large shops again (no more 500 errors), and setup without a key leads straight to free one-click translation.
