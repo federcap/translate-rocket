@@ -386,6 +386,29 @@ class Admin {
 		?>
 		<script>
 		( function () {
+			// 13/11/2026 (bench, Chrome on a fresh install): the browser's own autofill once wrote the WordPress user
+			// name in this box — the wizard has key fields of type «password» right after it — so the list showed
+			// «No language matches» and nothing could be picked. Text that arrives in a box nobody has entered yet is
+			// taken out again; once somebody has clicked or tabbed into the box, whatever is in it is theirs.
+			var typed = false;
+			[ 'focusin', 'pointerdown', 'keydown', 'paste', 'drop', 'compositionstart' ].forEach( function ( e ) {
+				document.addEventListener( e, function ( ev ) {
+					if ( ev.target && ev.target.classList && ev.target.classList.contains( 'trr-lang-cerca-in' ) ) { typed = true; }
+				}, true );
+			} );
+			function unfill() {
+				if ( typed ) { return; }
+				document.querySelectorAll( '.trr-lang-cerca-in' ).forEach( function ( box ) {
+					if ( '' !== box.value ) {
+						box.value = '';
+						box.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+					}
+				} );
+			}
+			[ 0, 300, 1000, 2500, 6000 ].forEach( function ( ms ) { setTimeout( unfill, ms ); } );
+			document.addEventListener( 'change', function ( ev ) {
+				if ( ev.target && ev.target.classList && ev.target.classList.contains( 'trr-lang-cerca-in' ) ) { unfill(); }
+			} );
 			document.addEventListener( 'input', function ( ev ) {
 				var box = ev.target;
 				if ( ! box.classList || ! box.classList.contains( 'trr-lang-cerca-in' ) ) { return; }
@@ -839,6 +862,14 @@ class Admin {
 			if ( is_string( $u ) && '' !== $u ) {
 				$urls[] = $u;
 			}
+		}
+		// 13/11/2026 (kamer26.nl: «Scan for text found about 800 of the 1200 pages, then it says finished»): the browser
+		// moves on by a whole block after every answer. The block where the posts end gave only the posts left, so the
+		// next one started that many archives too far: with 600 posts and 600 categories, 400 categories were never read.
+		// That block is now filled up with the first archives.
+		$over = max( 0, $offset ) + self::SCAN_BLOCK - $posts;
+		if ( $over > 0 ) {
+			$urls = array_merge( $urls, array_slice( self::scannable_archives(), 0, $over ) );
 		}
 		return array_values( array_unique( $urls ) );
 	}
@@ -6596,7 +6627,7 @@ JS;
 			<form method="post" action="" class="trr-wiz">
 				<?php wp_nonce_field( 'trrocket_wizard', 'trrocket_wizard_nonce' ); ?>
 				<div class="trr-wiz-head">
-					<div class="trr-wiz-brand"><?php echo wp_kses( self::logo_svg(), \TranslateRocket\Kses::html_rules() ); ?><span><?php esc_html_e( 'TranslateRocket™ setup', 'translate-rocket' ); ?></span><?php /* 21/10/2026: la guida passo passo del sito */ ?><a class="trr-wiz-guide" href="<?php echo esc_url( self::doc( '/getting-started/' ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Step-by-step setup guide ↗', 'translate-rocket' ); ?></a></div>
+					<div class="trr-wiz-brand"><?php /* 13/11/2026: the starry banner with the lockup, as on the other screens */ ?><img class="trr-wiz-logo" src="<?php echo esc_url( TRROCKET_URL . 'assets/img/logo-white.png' ); ?>" alt="" width="1200" height="226" /><span class="screen-reader-text"><?php esc_html_e( 'TranslateRocket™ setup', 'translate-rocket' ); ?></span><?php /* 21/10/2026: la guida passo passo del sito */ ?><a class="trr-wiz-guide" href="<?php echo esc_url( self::doc( '/getting-started/' ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Step-by-step setup guide ↗', 'translate-rocket' ); ?></a></div>
 					<ol class="trr-wiz-steps">
 						<li class="is-current" data-dot="1"><?php esc_html_e( 'Languages', 'translate-rocket' ); ?></li>
 						<li data-dot="2"><?php esc_html_e( 'Translation', 'translate-rocket' ); ?></li>
@@ -6685,7 +6716,7 @@ JS;
 							<li><?php echo wp_kses( __( 'Press <strong>Create API Key</strong>, give it any name, and copy the key (it starts with <code>gsk_</code>).', 'translate-rocket' ), array( 'strong' => array(), 'code' => array() ) ); ?></li>
 							<li><?php esc_html_e( 'Paste it here:', 'translate-rocket' ); ?></li>
 						</ol>
-						<input type="password" name="wiz_free_key" id="trr-wiz-free-key" class="regular-text" placeholder="gsk_…" autocomplete="off" />
+						<input type="password" name="wiz_free_key" id="trr-wiz-free-key" class="regular-text" placeholder="gsk_…" autocomplete="new-password" data-lpignore="true" data-1p-ignore />
 						<button type="button" class="button" id="trr-wiz-free-try" data-nonce="<?php echo esc_attr( wp_create_nonce( 'trrocket_try_free_key' ) ); ?>"><?php esc_html_e( 'Try the key', 'translate-rocket' ); ?></button>
 						<span id="trr-wiz-free-out" aria-live="polite" style="margin-left:6px"></span>
 						<p class="description" style="margin:6px 0 0"><?php esc_html_e( 'More translations a day with Cloudflare Workers AI, also free: set it up later in AI Translation.', 'translate-rocket' ); ?></p>
@@ -6706,7 +6737,7 @@ JS;
 								<option value="<?php echo esc_attr( $pid ); ?>" data-signup="<?php echo esc_url( (string) ( $wiz_defs[ $pid ]['signup'] ?? '' ) ); ?>" data-get="<?php echo esc_attr( sprintf( $wiz_get, $plabel ) ); ?>"><?php echo esc_html( $plabel ); ?></option>
 							<?php endforeach; ?>
 						</select>
-						<input type="password" name="wiz_key" id="trr-wiz-key" class="regular-text" placeholder="<?php esc_attr_e( 'Paste your API key', 'translate-rocket' ); ?>" autocomplete="off" />
+						<input type="password" name="wiz_key" id="trr-wiz-key" class="regular-text" placeholder="<?php esc_attr_e( 'Paste your API key', 'translate-rocket' ); ?>" autocomplete="new-password" data-lpignore="true" data-1p-ignore />
 						<?php $wiz_first = (string) array_key_first( $prov ); ?>
 						<p class="trr-wiz-keylink"><a id="trr-wiz-keylink" class="button button-small" href="<?php echo esc_url( (string) ( $wiz_defs[ $wiz_first ]['signup'] ?? '' ) ); ?>" target="_blank" rel="noopener">&#128273; <span><?php echo esc_html( sprintf( $wiz_get, $prov[ $wiz_first ] ) ); ?></span></a></p>
 					</div>

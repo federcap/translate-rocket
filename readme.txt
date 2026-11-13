@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.41
+Stable tag: 1.8.42
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,11 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.42 =
+* Fixed: «Scan site for text» and «Translate my site» stopped early on sites with more than 500 pages. The addresses are read in blocks of 500, first pages and products and then categories; at the point where the pages end, a group of categories was skipped and the scan said «finished» (for example 800 of 1,200). Every category, tag and product category is now read.
+* Setup wizard: the language list can no longer be emptied by the browser. Chrome could fill the «Find a language» box with a saved user name on its own, so the list showed «No language matches» and no language could be picked. Text that nobody typed is taken out again, and the key fields no longer invite the browser to fill them.
+* Setup wizard: the header now has the starry banner with the logo, like the other screens.
 
 = 1.8.41 =
 * Fixed: «Scan site for text» and «Translate my site» now read the categories that hold nothing yet, too. A product category, a category or a tag with no items of its own was never read, so its page (description, SEO title) stayed in the original language, although it often sits in the menu. Those with a description or in a menu are now read; the empty tags and attributes of a big shop are still skipped.
@@ -714,6 +719,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.42 =
+Important for sites with more than 500 pages: the site scan no longer skips a group of categories and stops early. After updating, run «Scan site for text» again.
 
 = 1.8.41 =
 The site scan now reads empty categories that have a description or sit in a menu (WooCommerce product categories included).

@@ -940,7 +940,8 @@ th.trr-sortable:hover {
 }
 
 /* The hero replaces the per-page brand title; keep page <h1> as a section title. */
-.trr-hero {
+.trr-hero,
+.trr-wiz-head {
 	display: flex;
 	align-items: center;
 	gap: 16px;
@@ -1160,10 +1161,21 @@ th.trr-sortable:hover {
 	overflow: hidden;
 }
 
+/* 13/11/2026 (Federico: «il banner stellato col logo, non questo scarno»): the same night sky of .trr-hero (the
+   background comes from the rule above), with the white lockup instead of the small icon and the words. */
 .trr-wiz-head {
-	background: linear-gradient( 120deg, #4f46e5, #7c3aed 55%, #c026d3 );
+	display: block;
+	margin: 0;
+	border-radius: 0;
+	box-shadow: none;
 	color: #fff;
-	padding: 18px 24px;
+	padding: 20px 24px 18px;
+}
+
+.trr-wiz-logo {
+	width: min( 250px, 58% );
+	height: auto;
+	filter: drop-shadow( 0 3px 10px rgba( 0, 0, 0, 0.35 ) );
 }
 
 .trr-wiz-brand {
