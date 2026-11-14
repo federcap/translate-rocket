@@ -124,13 +124,31 @@ class Slugs {
 	}
 
 	/**
+	 * An address made from a text in a language, with the letters of that language: German «Über uns» → «ueber-uns»,
+	 * «Straße» → «strasse», Danish «å» → «aa». sanitize_title() alone follows the site's language, so on an Italian
+	 * or English site «Über uns» became «uber-uns» (14/11/2026, LATW 2.8 corrected the same; found on the 8.5 bench
+	 * for addresses typed by hand and for the automatic addresses of categories). An address already made (ASCII or
+	 * percent-encoded) comes out as it was.
+	 *
+	 * @param string $text Title, name or address.
+	 * @param string $lang Language of the address.
+	 */
+	public static function clean( string $text, string $lang ): string {
+		$loc = '' !== $lang ? Languages::locale( $lang ) : '';
+		if ( '' !== $loc && preg_match( '/[^\x00-\x7F]/', $text ) ) {
+			$text = remove_accents( $text, $loc );
+		}
+		return sanitize_title( $text );
+	}
+
+	/**
 	 * Save (or clear) the translated slug for a post + language.
 	 */
 	public static function set( int $post_id, string $lang, string $slug ): void {
 		if ( $post_id <= 0 ) {
 			return;
 		}
-		$slug = sanitize_title( $slug );
+		$slug = self::clean( $slug, $lang );
 		// 1.8.38 (10/11/2026, an address changed by hand in the visual editor: the one of before answered 404):
 		// the address it had until now is kept, and leads to the new one with a 301.
 		$before = (string) get_post_meta( $post_id, self::META_PREFIX . $lang, true );
@@ -158,7 +176,7 @@ class Slugs {
 		if ( $post_id <= 0 ) {
 			return;
 		}
-		if ( sanitize_title( $slug ) === self::get( $post_id, $lang ) ) {
+		if ( self::clean( $slug, $lang ) === self::get( $post_id, $lang ) ) {
 			return;
 		}
 		self::set( $post_id, $lang, $slug );

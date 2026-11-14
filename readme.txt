@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.42
+Stable tag: 1.8.43
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.43 =
+* Fixed: translated addresses now use the letters of their own language, whatever the language of the site. On an English or Italian site the German «Über uns» became «uber-uns» and «Größen» became «grosen»: now they are «ueber-uns» and «groessen», as German writes them (Danish «å» becomes «aa», and Catalan, Serbian and Bosnian are right too). This holds for addresses typed by hand and for the automatic addresses of categories and tags. Addresses made before stay as they are; an address that changes keeps sending visitors from the old one with a 301.
+* Tested with PHP 8.5, The SEO Framework 5.2.1 (translated pages in its sitemap) and Cookiebot 4.8.1 (the banner in the language of the page).
 
 = 1.8.42 =
 * Fixed: «Scan site for text» and «Translate my site» stopped early on sites with more than 500 pages. The addresses are read in blocks of 500, first pages and products and then categories; at the point where the pages end, a group of categories was skipped and the scan said «finished» (for example 800 of 1,200). Every category, tag and product category is now read.
@@ -719,6 +723,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.43 =
+German, Danish, Catalan, Serbian and Bosnian addresses now use the letters of their language (Über → ueber). Existing addresses do not change.
 
 = 1.8.42 =
 Important for sites with more than 500 pages: the site scan no longer skips a group of categories and stops early. After updating, run «Scan site for text» again.

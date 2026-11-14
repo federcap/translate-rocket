@@ -41,7 +41,7 @@ class TermSlugs {
 		if ( $term_id <= 0 ) {
 			return;
 		}
-		$slug = sanitize_title( $slug );
+		$slug = Slugs::clean( $slug, $lang ); // 14/11/2026: the letters of the address's language («Größen» → «groessen»)
 		if ( '' === $slug ) {
 			delete_term_meta( $term_id, self::META_PREFIX . $lang );
 		} else {
@@ -59,7 +59,9 @@ class TermSlugs {
 		$key      = trim( $name );
 		$map      = Strings::translate_texts( array( $key ), $lang );
 		$tname    = isset( $map[ $key ] ) ? (string) $map[ $key ] : '';
-		$slug     = '' !== $tname ? sanitize_title( $tname ) : '';
+		// 14/11/2026: with the letters of the language («Größen» → «groessen», not «grosen»). An address made before
+		// stays as it is: it changes only when the translated name changes (below).
+		$slug     = '' !== $tname ? Slugs::clean( $tname, $lang ) : '';
 		if ( '' !== $existing ) {
 			// 22/10/2026 (Federico, after the piflarnakupuje.top case: «se cambi il nome della categoria, l'indirizzo
 			// tradotto non lo segue… perché non farlo in questa?»): the slug was made once and kept for ever. Now it

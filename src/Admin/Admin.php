@@ -1393,7 +1393,7 @@ class Admin {
 				}
 				foreach ( $trr_row as $trr_b => $trr_w ) {
 					$trr_b = sanitize_title( (string) $trr_b );
-					$trr_w = sanitize_title( (string) $trr_w );
+					$trr_w = \TranslateRocket\Slugs::clean( (string) $trr_w, $trr_l ); // 14/11/2026: letters of that language
 					if ( '' !== $trr_b && '' !== $trr_w ) {
 						$trr_ub[ $trr_l ][ $trr_b ] = $trr_w;
 					}

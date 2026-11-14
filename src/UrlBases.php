@@ -216,7 +216,7 @@ class UrlBases {
 			$used = array();
 			foreach ( $bases as $base => $info ) {
 				$word = isset( $custom[ $lang ][ $base ] ) ? (string) $custom[ $lang ][ $base ] : self::suggestion( $base, $info, $lang );
-				$slug = sanitize_title( $word );
+				$slug = Slugs::clean( $word, (string) $lang ); // 14/11/2026: «Größe» → «groesse»
 				// Not the original, not another base's original or translation, not a language code.
 				if ( '' === $slug || $slug === $base || isset( $bases[ $slug ] ) || isset( $used[ $slug ] ) || in_array( $slug, $langs, true ) ) {
 					continue;
