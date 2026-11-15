@@ -88,6 +88,15 @@ class Settings {
 				'google'    => array(
 					'api_key' => '',
 				),
+				'deepseek'  => array(
+					'api_key' => '',
+					'model'   => 'deepseek-flash',
+				),
+				'qwen'      => array(
+					'api_key' => '',
+					'model'   => 'qwen3.8-flash',
+					'region'  => 'intl',
+				),
 			),
 			'serve_mode'               => 'everyone',
 			'translate_meta'           => true,

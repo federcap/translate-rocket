@@ -552,7 +552,7 @@ class Translator {
 		if ( false === strpos( $haystack, 'insufficient_quota' ) && preg_match( '/rate[ _-]?limit|try again in|too many requests/', $haystack ) ) {
 			return false;
 		}
-		$needles = array( 'insufficient_quota', 'quota', 'billing', 'credit', 'exceeded', 'payment', 'unauthorized', 'invalid_api_key', 'invalid api key', 'forbidden', 'http 401', 'http 403' );
+		$needles = array( 'insufficient_quota', 'quota', 'billing', 'credit', 'exceeded', 'payment', 'unauthorized', 'invalid_api_key', 'invalid api key', 'forbidden', 'http 401', 'http 403', 'http 402', 'insufficient balance', 'arrearage' ); // 1.8.45: DeepSeek answers 402 «Insufficient Balance», Alibaba Cloud «Arrearage»
 		foreach ( $needles as $needle ) {
 			if ( false !== strpos( $haystack, $needle ) ) {
 				return true;

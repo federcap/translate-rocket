@@ -61,6 +61,7 @@ class Admin {
 		add_action( 'wp_ajax_trrocket_gt', array( $this, 'ajax_gt' ) );
 		add_action( 'wp_ajax_trrocket_deepl_usage', array( $this, 'ajax_deepl_usage' ) );
 		add_action( 'wp_ajax_trrocket_test_provider', array( $this, 'ajax_test_provider' ) );
+		add_action( 'wp_ajax_trrocket_reach', array( $this, 'ajax_reach' ) ); // 15/11/2026: can this server reach the engine?
 		add_action( 'wp_ajax_trrocket_try_free_key', array( $this, 'ajax_try_free_key' ) );
 		add_action( 'admin_init', array( $this, 'maybe_clear_log' ) );
 		add_action( 'admin_init', array( $this, 'maybe_save_wizard' ) );
@@ -980,6 +981,36 @@ class Admin {
 	}
 
 	/**
+	 * AJAX: can this server reach an engine? (15/11/2026, Federico: «avvisare dall'hosting se ci sono limitazioni… blocchi
+	 * geografici».) One engine a call, so the page fills in line by line and a host that blocks everything costs a few
+	 * seconds a line, not a minute in one request. No key and no text leave the site.
+	 */
+	public function ajax_reach(): void {
+		check_ajax_referer( 'trrocket_models' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'error' => 'forbidden' ) );
+		}
+		$id    = isset( $_POST['provider'] ) ? sanitize_key( $_POST['provider'] ) : '';
+		$fresh = ! empty( $_POST['fresh'] );
+		$r     = $fresh ? null : \TranslateRocket\Providers\Reach::known( $id );
+		if ( null === $r ) {
+			$r = \TranslateRocket\Providers\Reach::check( $id );
+		}
+		if ( null === $r ) {
+			wp_send_json_error( array( 'error' => 'unknown-provider' ) );
+		}
+		$label = (string) ( self::provider_defs()[ $id ]['label'] ?? $id );
+		wp_send_json_success(
+			array(
+				'state'  => (string) $r['state'],
+				'text'   => \TranslateRocket\Providers\Reach::sentence( $r, $label ),
+				'badge'  => \TranslateRocket\Providers\Reach::badge( $r ),
+				'detail' => (string) $r['detail'],
+			)
+		);
+	}
+
+	/**
 	 * AJAX: live "Test connection" for a provider — translates one short word so
 	 * the Diagnostics page can confirm the key actually works end to end.
 	 */
@@ -1140,6 +1171,8 @@ class Admin {
 			'openai'     => 'gpt-4o-mini',
 			'gemini'     => 'gemini-flash-lite-latest',
 			'anthropic'  => 'claude-haiku-4-5',
+			'deepseek'   => \TranslateRocket\Providers\DeepSeekProvider::MODELS[0],
+			'qwen'       => \TranslateRocket\Providers\QwenProvider::MODELS[0],
 		);
 		return $tutti[ $id ] ?? '';
 	}
@@ -1151,7 +1184,7 @@ class Admin {
 	 */
 	public static function provider_fingerprint( string $id ): string {
 		$conf = (array) ( Settings::get()['providers'][ $id ] ?? array() );
-		return md5( (string) ( $conf['api_key'] ?? '' ) . '|' . (string) ( $conf['model'] ?? '' ) . '|' . (string) ( $conf['account'] ?? '' ) );
+		return md5( (string) ( $conf['api_key'] ?? '' ) . '|' . (string) ( $conf['model'] ?? '' ) . '|' . (string) ( $conf['account'] ?? '' ) . ( isset( $conf['region'] ) ? '|' . (string) $conf['region'] : '' ) );
 	}
 
 	/**
@@ -3768,6 +3801,34 @@ JS;
 				'recommended' => 'claude-haiku-4-5',
 				'signup' => 'https://console.anthropic.com/settings/keys',
 			),
+			// 15/11/2026 (a site owner with «regional restrictions for GPT and Claude»): DeepSeek and Qwen, with the owner's own key.
+			'deepseek'  => array(
+				'label'  => 'DeepSeek',
+				'model'  => true,
+				'help'   => __( 'Pay-as-you-go on the DeepSeek platform (China): needs a little credit. deepseek-flash is cheap and quick.', 'translate-rocket' ),
+				'models' => \TranslateRocket\Providers\DeepSeekProvider::MODELS,
+				'recommended' => \TranslateRocket\Providers\DeepSeekProvider::MODELS[0],
+				'signup' => 'https://platform.deepseek.com/api_keys',
+			),
+			'qwen'      => array(
+				'label'  => 'Qwen (Alibaba Cloud)',
+				'model'  => true,
+				'help'   => __( 'Pay-as-you-go on Alibaba Cloud Model Studio. A key works only in the region where you created it: choose that region below.', 'translate-rocket' ),
+				'models' => \TranslateRocket\Providers\QwenProvider::MODELS,
+				'recommended' => \TranslateRocket\Providers\QwenProvider::MODELS[0],
+				'signup' => 'https://www.alibabacloud.com/help/en/model-studio/get-api-key',
+				'fields' => array(
+					'region' => array(
+						'select',
+						__( 'Region of your key', 'translate-rocket' ),
+						array(
+							'intl' => array( __( 'International (Singapore)', 'translate-rocket' ), \TranslateRocket\Providers\QwenProvider::REGIONS['intl'] ),
+							'us'   => array( __( 'United States (Virginia)', 'translate-rocket' ), \TranslateRocket\Providers\QwenProvider::REGIONS['us'] ),
+							'cn'   => array( __( 'China (Beijing)', 'translate-rocket' ), \TranslateRocket\Providers\QwenProvider::REGIONS['cn'] ),
+						),
+					),
+				),
+			),
 		);
 		/**
 		 * Extra providers for the AI Translation screen.
@@ -4250,6 +4311,8 @@ JS;
 			'deepl'         => array( 'paid', 'excellent', __( 'Free plan with a monthly character allowance, then paid', 'translate-rocket' ), __( 'A DeepL key', 'translate-rocket' ), $srv, __( 'DeepL (EU)', 'translate-rocket' ) ),
 			'openai'        => array( 'paid', 'excellent', __( 'Paid per use', 'translate-rocket' ), __( 'An OpenAI key with credit', 'translate-rocket' ), $srv, __( 'OpenAI', 'translate-rocket' ) ),
 			'anthropic'     => array( 'paid', 'excellent', __( 'Paid per use', 'translate-rocket' ), __( 'An Anthropic key with credit', 'translate-rocket' ), $srv, __( 'Anthropic', 'translate-rocket' ) ),
+			'deepseek'      => array( 'paid', 'very-good', __( 'Paid per use', 'translate-rocket' ), __( 'A DeepSeek key with credit', 'translate-rocket' ), $srv, __( 'DeepSeek (China)', 'translate-rocket' ) ),
+			'qwen'          => array( 'paid', 'very-good', __( 'Paid per use', 'translate-rocket' ), __( 'An Alibaba Cloud Model Studio key', 'translate-rocket' ), $srv, __( 'Alibaba Cloud, in the region of your key (Singapore, United States or China)', 'translate-rocket' ) ),
 			'gemini'        => array( 'paid', 'excellent', __( 'Free tier with limits (not for sites aimed at the EU, Switzerland or the UK), then paid per use', 'translate-rocket' ), __( 'A Gemini key', 'translate-rocket' ), $srv, __( 'Google', 'translate-rocket' ) ),
 			'google'        => array( 'paid', 'very-good', __( 'About 500,000 characters a month free, then paid per use', 'translate-rocket' ), __( 'A Google Cloud key', 'translate-rocket' ), $srv, __( 'Google Cloud', 'translate-rocket' ) ),
 		);
@@ -4301,6 +4364,8 @@ JS;
 			'deepl'         => 'excellent',
 			'openai'        => 'excellent',
 			'anthropic'     => 'excellent',
+			'deepseek'      => 'very-good',
+			'qwen'          => 'very-good',
 			'gemini'        => 'excellent',
 			'google'        => 'very-good',
 		);
@@ -5016,6 +5081,7 @@ JS
 				<div class="trrocket-card">
 					<h2><?php esc_html_e( 'Provider &amp; keys', 'translate-rocket' ); ?> <?php $this->info( __( 'Choose which AI service does the translating and paste its API key. You pay the provider directly — TranslateRocket takes nothing.', 'translate-rocket' ) ); ?></h2>
 					<p class="description"><?php esc_html_e( 'You bring your own API key. Text is sent only to the provider you choose, only when you ask to translate.', 'translate-rocket' ); ?></p>
+					<p class="description trr-reach-intro" data-nonce="<?php echo esc_attr( wp_create_nonce( 'trrocket_models' ) ); ?>" data-fail="<?php esc_attr_e( 'The check did not finish. Reload the page to try again.', 'translate-rocket' ); ?>" data-wait="<?php esc_attr_e( 'Checking whether your server reaches this engine…', 'translate-rocket' ); ?>"><?php esc_html_e( 'Each engine below says whether your hosting can use it: your server asks the engine a small question, with no key and no text. This does not check your account: some engines refuse sign-ups from some countries, and you see that when you create the key.', 'translate-rocket' ); ?> <button type="button" class="button-link trr-reach-again"><?php esc_html_e( 'Check again', 'translate-rocket' ); ?></button></p>
 					<div class="trr-ai-activerow">
 						<label for="trrocket-active"><?php esc_html_e( 'Active provider', 'translate-rocket' ); ?></label>
 						<?php $this->info( __( 'The service used when you click “Translate with AI”. Leave on “None” to translate only by hand or copy-paste.', 'translate-rocket' ) ); ?>
@@ -5057,6 +5123,12 @@ JS
 								<?php if ( ! empty( $def['free'] ) ) : ?><span class="trr-ai-badge" style="background:#00a32a;color:#fff;border:0"><?php esc_html_e( 'Free', 'translate-rocket' ); ?></span><?php endif; ?>
 								<?php $provato = self::provider_tested( (string) $pid ); ?>
 								<span class="trr-ai-badge trr-ai-tested" <?php echo $provato ? '' : 'hidden'; ?> title="<?php echo esc_attr( $provato ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $provato ) : '' ); ?>">&#10003; <?php esc_html_e( 'Tested', 'translate-rocket' ); ?></span>
+								<?php
+								// 15/11/2026: an engine this server cannot use says so on the folded card too.
+								$trr_reach   = isset( \TranslateRocket\Providers\Reach::urls()[ $pid ] ) ? \TranslateRocket\Providers\Reach::known( (string) $pid ) : null;
+								$trr_reach_b = $trr_reach ? \TranslateRocket\Providers\Reach::badge( $trr_reach ) : '';
+								?>
+								<span class="trr-ai-badge trr-reach-badge" data-provider="<?php echo esc_attr( $pid ); ?>" style="background:#b32d2e;color:#fff;border:0" <?php echo '' !== $trr_reach_b ? '' : 'hidden'; ?>>&#9888; <span><?php echo esc_html( $trr_reach_b ); ?></span></span>
 								<?php if ( $is_active ) : ?><span class="trr-ai-badge is-on"><?php esc_html_e( 'Active', 'translate-rocket' ); ?></span><?php elseif ( $has_key ) : ?><span class="trr-ai-badge"><?php echo $senza_chiave ? esc_html__( 'Ready', 'translate-rocket' ) : esc_html__( 'Key set', 'translate-rocket' ); ?></span><?php endif; ?>
 								<button type="button" class="button-link trr-ai-fold" aria-expanded="<?php echo $aperto ? 'true' : 'false'; ?>" data-show="<?php esc_attr_e( 'Show', 'translate-rocket' ); ?>" data-hide="<?php esc_attr_e( 'Hide', 'translate-rocket' ); ?>"><?php echo $aperto ? esc_html__( 'Hide', 'translate-rocket' ) : esc_html__( 'Show', 'translate-rocket' ); ?></button>
 							</div>
@@ -5084,6 +5156,9 @@ JS
 									<?php endif; ?>
 									<?php // 15/11/2026 (Federico: the engine's terms are the user's, who picks the engine): DeepL §8.3.3, Google Cloud Translation Service Terms §25. ?>
 									<p class="description trr-engine-terms"><?php esc_html_e( 'Some engines ask you to show visitors that a page was machine-translated or to credit them. Check your engine\'s terms.', 'translate-rocket' ); ?></p>
+									<?php if ( isset( \TranslateRocket\Providers\Reach::urls()[ $pid ] ) ) : ?>
+										<p class="description trr-reach is-<?php echo esc_attr( $trr_reach ? (string) $trr_reach['state'] : 'pending' ); ?>" data-provider="<?php echo esc_attr( $pid ); ?>" role="status"><span class="trr-reach-text"><?php echo esc_html( $trr_reach ? ( 'ok' === $trr_reach['state'] ? '✓ ' : '⚠ ' ) . \TranslateRocket\Providers\Reach::sentence( $trr_reach, (string) $def['label'] ) : __( 'Checking whether your server reaches this engine…', 'translate-rocket' ) ); ?></span></p>
+									<?php endif; ?>
 									<?php if ( ! empty( $def['guide'] ) ) : ?>
 										<details class="trr-ai-guide" style="margin:8px 0;padding:6px 10px;background:#f6f7f7;border:1px solid #dcdcde;border-radius:6px"<?php echo $has_key ? '' : ' open'; ?>>
 											<summary style="cursor:pointer;font-weight:600">&#128273; <?php esc_html_e( 'Get your free key in 2 minutes', 'translate-rocket' ); ?></summary>
@@ -5245,6 +5320,48 @@ JS
 						</div>
 					<?php endforeach; ?>
 					</div>
+					<style>.trr-reach.is-ok{color:#1a7f37}.trr-reach.is-region,.trr-reach.is-blocked,.trr-reach.is-net{color:#b32d2e;font-weight:600}.trr-reach.is-down{color:#996800}.trr-reach.is-pending{opacity:.7}</style>
+					<script>
+					// 15/11/2026: «can my hosting use this engine?», one engine at a time, after the page is drawn.
+					( function () {
+						var intro = document.querySelector( '.trr-reach-intro' );
+						if ( ! intro || ! window.fetch ) { return; }
+						var stati = [ 'ok', 'region', 'blocked', 'net', 'down', 'pending' ];
+						function metti( riga, stato, testo, dettaglio ) {
+							stati.forEach( function ( s ) { riga.classList.remove( 'is-' + s ); } );
+							riga.classList.add( 'is-' + stato );
+							var vecchi = riga.querySelectorAll( 'details' );
+							for ( var k = 0; k < vecchi.length; k++ ) { vecchi[ k ].parentNode.removeChild( vecchi[ k ] ); }
+							riga.querySelector( '.trr-reach-text' ).textContent = testo;
+							if ( dettaglio && 'ok' !== stato && window.TRRocketDettagli ) { window.TRRocketDettagli( riga, dettaglio ); }
+						}
+						function chiedi( righe, fresco ) {
+							var riga = righe.shift();
+							if ( ! riga ) { return; }
+							var id = riga.getAttribute( 'data-provider' );
+							var corpo = 'action=trrocket_reach&_wpnonce=' + encodeURIComponent( intro.getAttribute( 'data-nonce' ) ) + '&provider=' + encodeURIComponent( id ) + ( fresco ? '&fresh=1' : '' );
+							fetch( ajaxurl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: corpo } )
+								.then( function ( r ) { if ( ! r.ok ) { throw new Error( 'HTTP ' + r.status ); } return r.json(); } )
+								.then( function ( res ) {
+									if ( ! res || ! res.success || ! res.data ) { throw new Error( 'no data' ); }
+									metti( riga, res.data.state, ( 'ok' === res.data.state ? '✓ ' : '⚠ ' ) + res.data.text, res.data.detail );
+									var segno = document.querySelector( '.trr-reach-badge[data-provider="' + id + '"]' );
+									if ( segno ) { segno.hidden = ! res.data.badge; segno.querySelector( 'span' ).textContent = res.data.badge || ''; }
+								} )
+								.catch( function () { metti( riga, 'down', intro.getAttribute( 'data-fail' ), '' ); } )
+								.then( function () { chiedi( righe, fresco ); } );
+						}
+						function parti( selettore, fresco ) {
+							var righe = Array.prototype.slice.call( document.querySelectorAll( selettore ) );
+							if ( fresco ) { righe.forEach( function ( r ) { metti( r, 'pending', intro.getAttribute( 'data-wait' ), '' ); } ); }
+							// two at a time: quick enough, and gentle on a small hosting
+							var a = righe.filter( function ( r, i ) { return 0 === i % 2; } ), b = righe.filter( function ( r, i ) { return 1 === i % 2; } );
+							chiedi( a, fresco ); chiedi( b, fresco );
+						}
+						parti( '.trr-reach.is-pending', false );
+						intro.querySelector( '.trr-reach-again' ).addEventListener( 'click', function () { parti( '.trr-reach', true ); } );
+					} )();
+					</script>
 					<script>
 					( function () {
 						// One-word test for each provider (the same check as Diagnostics, where nobody found it).
@@ -6474,7 +6591,7 @@ JS;
 		if ( 'ai' === ( isset( $_POST['trr_method'] ) ? sanitize_key( $_POST['trr_method'] ) : 'manual' ) ) {
 			$pid = isset( $_POST['wiz_provider'] ) ? sanitize_key( $_POST['wiz_provider'] ) : '';
 			$key = isset( $_POST['wiz_key'] ) ? sanitize_text_field( wp_unslash( $_POST['wiz_key'] ) ) : '';
-			if ( in_array( $pid, array( 'deepl', 'openai', 'anthropic', 'gemini', 'google' ), true ) && '' !== $key ) {
+			if ( in_array( $pid, array( 'deepl', 'openai', 'anthropic', 'gemini', 'google', 'deepseek', 'qwen' ), true ) && '' !== $key ) {
 				if ( ! isset( $settings['providers'][ $pid ] ) || ! is_array( $settings['providers'][ $pid ] ) ) {
 					$settings['providers'][ $pid ] = array();
 				}
@@ -6623,6 +6740,8 @@ JS;
 			'anthropic' => 'Anthropic (Claude)',
 			'gemini'    => 'Google Gemini',
 			'google'    => 'Google Translate',
+			'deepseek'  => 'DeepSeek',
+			'qwen'      => 'Qwen (Alibaba Cloud)',
 		);
 		?>
 		<div class="wrap trrocket-wrap trrocket-wizard">

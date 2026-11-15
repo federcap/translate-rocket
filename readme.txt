@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.44
+Stable tag: 1.8.45
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ You translate however you like:
 * ✍️ **By hand**, in a clear per-page editor (also inside the post/page screen) with red highlighting for what's still missing — plus a copy & paste box for bulk Google translation.
 * 💬 **With ChatGPT or Gemini, no key** — one button copies the whole page with a translation prompt written for your site; paste the answer back and every line goes to its place.
 * 🆓 **With free AI, on your own free account** — Cloudflare Workers AI (about 1,900 sentences a day with Llama 3.3 70B, or 11,000 with a plain translation model), Groq (gpt-oss-120b) or OpenRouter's free models. A two-minute guide gets you the key, no card needed; a counter shows today's free share, and when it runs out the next provider in your chain carries on.
-* 🤖 **With AI** — bring your own key for DeepL, OpenAI, Google Gemini, Anthropic (Claude) or Google Cloud Translate. Text is sent only to the provider you choose, only when you ask.
+* 🤖 **With AI** — bring your own key for DeepL, OpenAI, Google Gemini, Anthropic (Claude), Google Cloud Translate, DeepSeek or Qwen (Alibaba Cloud). Text is sent only to the provider you choose, only when you ask.
 
 = Highlights =
 
@@ -94,7 +94,7 @@ The plugin stays free either way — nothing here is locked behind that. Write t
 
 This plugin can connect to third-party services, but only with your involvement:
 
-* **AI translation providers (optional).** If you add an API key and ask to translate, the relevant text is sent to the provider you selected so it can return a translation. No text is sent until you configure a provider and trigger a translation. You choose the translation engines and accept their terms directly with them. Some engines (for example DeepL or Google Cloud Translation) ask you to tell visitors that a page was machine-translated, or to credit them: check your engine's terms. TranslateRocket does not add these notices for you. Providers and policies:
+* **AI translation providers (optional).** If you add an API key and ask to translate, the relevant text is sent to the provider you selected so it can return a translation. No text is sent until you configure a provider and trigger a translation. When you open the AI Translation screen, your server asks each provider's address one small question with no key and no text, to tell you whether your hosting can reach it. You choose the translation engines and accept their terms directly with them. Some engines (for example DeepL or Google Cloud Translation) ask you to tell visitors that a page was machine-translated, or to credit them: check your engine's terms. TranslateRocket does not add these notices for you. Providers and policies:
   * DeepL — service: https://www.deepl.com/en/pro , privacy: https://www.deepl.com/en/privacy
   * OpenAI — service: https://platform.openai.com , privacy: https://openai.com/policies/privacy-policy/
   * Google Cloud Translation / Gemini — service: https://cloud.google.com/translate , privacy: https://policies.google.com/privacy
@@ -102,6 +102,8 @@ This plugin can connect to third-party services, but only with your involvement:
   * Cloudflare Workers AI — service: https://developers.cloudflare.com/workers-ai/ , privacy: https://www.cloudflare.com/privacypolicy/
   * Groq — service: https://console.groq.com , privacy: https://groq.com/privacy-policy/
   * OpenRouter (and the provider of the model you pick there) — service: https://openrouter.ai , privacy: https://openrouter.ai/privacy
+  * DeepSeek — service: https://platform.deepseek.com , terms: https://cdn.deepseek.com/policies/en-US/deepseek-open-platform-terms-of-service.html , privacy: https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html
+  * Qwen, on Alibaba Cloud Model Studio (in the region of your key: Singapore, United States or China) — service: https://www.alibabacloud.com/product/modelstudio , privacy: https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-privacy-policy
 * **MyMemory (only when you press «Translate my site» and no other engine can do it).** In the Simple view, «Translate my site» uses your own AI key if you set one, otherwise the translator built into Chrome or Edge, which works on your computer and sends nothing. Only when neither is available (Firefox, Safari, a phone, a plain-http admin) are the site's texts sent, one sentence at a time, to the free public MyMemory API by Translated (about 5,000 characters a day, no account). No personal data is sent, unless you tick the box under «Translate my site» (never ticked for you), or press the button shown when the daily limit runs out, that lets MyMemory know your e-mail address: it then allows about 50,000 characters a day. You can remove the address at any time from the same card. Service: https://mymemory.translated.net , terms and privacy: https://mymemory.translated.net/terms-and-conditions
 * **Google Translate (manual, always available).** Every editor offers a per-phrase link and a copy-paste box that open Google Translate (translate.google.com) prefilled, so you translate on Google's own site and paste the result back. This is just a convenience link — your browser, not the plugin, contacts Google. Service: https://translate.google.com , terms: https://policies.google.com/terms , privacy: https://policies.google.com/privacy
 * **Optional one-click Google auto-fill (off by default).** A site owner can opt in (the `TRROCKET_AUTO_GOOGLE` constant / the `trrocket_auto_google` filter) to let the server fetch a translation from Google's free endpoint with one click. This uses an undocumented endpoint and is best-effort, so it is disabled out of the box and the plugin never calls it on its own. For dependable automatic translation use the official AI providers below.
@@ -221,6 +223,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.45 =
+* New: two more AI engines with your own key, DeepSeek and Qwen (Alibaba Cloud Model Studio), for sites that cannot use OpenAI or Anthropic where they are. They work like the other engines: in «Translate all», in the fallback chain and in the editors, with your glossary, protected words and house style. For Qwen you pick the region of your key (Singapore, United States or China). Thanks to Alexey for asking.
+* New: on AI Translation every engine says whether your hosting can use it. Your server asks the engine a small question, with no key and no text, and the card tells you if the engine is reached, if it does not serve the country or region where your server is, or if your host blocks the connection — before you buy any credit. «Check again» repeats it.
 
 = 1.8.44 =
 * Improved: the AI provider settings and the «External services» section say that some engines (for example DeepL or Google Cloud Translation) ask you to tell visitors a page was machine-translated, or to credit them. You choose the engine and accept its terms; TranslateRocket does not add these notices for you.
@@ -726,6 +732,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.45 =
+Two more AI engines with your own key: DeepSeek and Qwen (Alibaba Cloud). Each engine card now says whether your hosting can reach it.
 
 = 1.8.44 =
 A note next to each engine key: some engines ask you to tell visitors that pages are machine-translated, or to credit them.

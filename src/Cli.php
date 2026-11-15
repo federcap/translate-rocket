@@ -43,7 +43,7 @@ final class Cli {
 	 * : Every target language of the site, one after the other.
 	 *
 	 * [--engine=<id>]
-	 * : One engine only (deepl, openai, anthropic, gemini, google, groq, cloudflare, openrouter, or one added by Labs).
+	 * : One engine only (deepl, openai, anthropic, gemini, google, groq, cloudflare, openrouter, deepseek, qwen, or one added by Labs).
 	 * Without it, your priority order on the AI screen.
 	 *
 	 * [--batch=<sentences>]

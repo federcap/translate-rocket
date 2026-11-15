@@ -32,6 +32,8 @@ class Savings {
 		'openai'    => 3.0,
 		'anthropic' => 4.0,
 		'gemini'    => 2.0,
+		'deepseek'  => 1.0,
+		'qwen'      => 1.0,
 	);
 
 	/**

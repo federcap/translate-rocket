@@ -7479,3 +7479,83 @@ msgstr "Attivo: ogni pagina, articolo e prodotto riceve in ogni lingua l’indir
 #: src/Admin/Admin.php
 msgid "Some engines ask you to show visitors that a page was machine-translated or to credit them. Check your engine's terms."
 msgstr "Alcuni motori chiedono di avvisare i visitatori che la pagina è tradotta automaticamente o di citarli. Controlla i termini del tuo motore."
+
+#: src/Admin/Admin.php
+msgid "Pay-as-you-go on the DeepSeek platform (China): needs a little credit. deepseek-flash is cheap and quick."
+msgstr "A consumo sulla piattaforma DeepSeek (Cina): serve un po’ di credito. deepseek-flash costa poco ed è veloce."
+
+#: src/Admin/Admin.php
+msgid "Pay-as-you-go on Alibaba Cloud Model Studio. A key works only in the region where you created it: choose that region below."
+msgstr "A consumo su Alibaba Cloud Model Studio. Una chiave funziona solo nella regione in cui l’hai creata: scegli quella regione qui sotto."
+
+#: src/Admin/Admin.php
+msgid "Region of your key"
+msgstr "Regione della tua chiave"
+
+#: src/Admin/Admin.php
+msgid "International (Singapore)"
+msgstr "Internazionale (Singapore)"
+
+#: src/Admin/Admin.php
+msgid "United States (Virginia)"
+msgstr "Stati Uniti (Virginia)"
+
+#: src/Admin/Admin.php
+msgid "China (Beijing)"
+msgstr "Cina (Pechino)"
+
+#: src/Admin/Admin.php
+msgid "A DeepSeek key with credit"
+msgstr "Una chiave DeepSeek con credito"
+
+#: src/Admin/Admin.php
+msgid "DeepSeek (China)"
+msgstr "DeepSeek (Cina)"
+
+#: src/Admin/Admin.php
+msgid "An Alibaba Cloud Model Studio key"
+msgstr "Una chiave di Alibaba Cloud Model Studio"
+
+#: src/Admin/Admin.php
+msgid "Alibaba Cloud, in the region of your key (Singapore, United States or China)"
+msgstr "Alibaba Cloud, nella regione della tua chiave (Singapore, Stati Uniti o Cina)"
+
+#: src/Providers/Reach.php
+msgid "Your server reaches %s: your hosting can use it."
+msgstr "Il tuo server raggiunge %s: il tuo hosting può usarlo."
+
+#: src/Providers/Reach.php
+msgid "%s does not serve the country or region where your server is. Use another engine, or ask your host about a server in another region."
+msgstr "%s non è disponibile nel paese o nella regione in cui si trova il tuo server. Usa un altro motore, oppure chiedi al tuo hosting un server in un’altra regione."
+
+#: src/Providers/Reach.php
+msgid "Something between your server and %s blocked the request (a firewall or a proxy). Ask your host to allow it, or use another engine."
+msgstr "Qualcosa tra il tuo server e %s ha bloccato la richiesta (un firewall o un proxy). Chiedi al tuo hosting di permetterla, oppure usa un altro motore."
+
+#: src/Providers/Reach.php
+msgid "Your server reaches %1$s, but it answers with an error right now (HTTP %2$d). Try again later."
+msgstr "Il tuo server raggiunge %1$s, ma in questo momento risponde con un errore (HTTP %2$d). Riprova più tardi."
+
+#: src/Providers/Reach.php
+msgid "Your server cannot reach %s. Your host may block outgoing connections to it: ask your host, or use another engine."
+msgstr "Il tuo server non riesce a raggiungere %s. Il tuo hosting potrebbe bloccare le connessioni in uscita verso questo servizio: chiedilo al tuo hosting, oppure usa un altro motore."
+
+#: src/Providers/Reach.php
+msgid "Region blocked"
+msgstr "Regione bloccata"
+
+#: src/Providers/Reach.php
+msgid "Unreachable"
+msgstr "Non raggiungibile"
+
+#: src/Providers/Reach.php
+msgid "Checking whether your server reaches this engine…"
+msgstr "Controllo se il tuo server raggiunge questo motore…"
+
+#: src/Providers/Reach.php
+msgid "Each engine below says whether your hosting can use it: your server asks the engine a small question, with no key and no text. This does not check your account: some engines refuse sign-ups from some countries, and you see that when you create the key."
+msgstr "Ogni motore qui sotto dice se il tuo hosting può usarlo: il tuo server fa al motore una piccola domanda, senza chiave e senza testi. Questo non controlla il tuo account: alcuni motori rifiutano le iscrizioni da alcuni paesi, e lo vedi quando crei la chiave."
+
+#: src/Providers/Reach.php
+msgid "The check did not finish. Reload the page to try again."
+msgstr "Il controllo non è finito. Ricarica la pagina per riprovare."

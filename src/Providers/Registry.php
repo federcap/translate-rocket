@@ -33,8 +33,10 @@ class Registry {
 			new CloudflareProvider( (array) ( $cfg['cloudflare'] ?? array() ) ),
 			new GroqProvider( (array) ( $cfg['groq'] ?? array() ) ),
 			new OpenRouterProvider( (array) ( $cfg['openrouter'] ?? array() ) ),
+			new DeepSeekProvider( (array) ( $cfg['deepseek'] ?? array() ) ),
+			new QwenProvider( (array) ( $cfg['qwen'] ?? array() ) ),
 		);
-		$ids = array( 'deepl' => true, 'openai' => true, 'google' => true, 'gemini' => true, 'anthropic' => true, 'cloudflare' => true, 'groq' => true, 'openrouter' => true );
+		$ids = array( 'deepl' => true, 'openai' => true, 'google' => true, 'gemini' => true, 'anthropic' => true, 'cloudflare' => true, 'groq' => true, 'openrouter' => true, 'deepseek' => true, 'qwen' => true );
 
 		/**
 		 * Extra translation providers from another plugin. Each one must implement
@@ -87,6 +89,8 @@ class Registry {
 			'cloudflare' => CloudflareProvider::class,
 			'groq'       => GroqProvider::class,
 			'openrouter' => OpenRouterProvider::class,
+			'deepseek'   => DeepSeekProvider::class,
+			'qwen'       => QwenProvider::class,
 		);
 		if ( ! isset( $map[ $id ] ) ) {
 			// A provider added by another plugin: the one it registered.
