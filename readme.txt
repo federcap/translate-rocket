@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.46
+Stable tag: 1.8.47
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.47 =
+* Fixed: WordPress' own sitemap (wp-sitemap.xml) did not list the translated addresses of pages, posts and products: TranslateRocket used a hook that WordPress does not have. It now adds them, with the translated slug and leaving out pages hidden from a language, and it reads those settings for the whole sitemap at once. The TranslateRocket sitemap (translaterocket-sitemap.xml) already had them.
 
 = 1.8.46 =
 * Improved: switching a language online on the Languages page now says how many of its sentences are not translated yet, and that visitors would read them in your site language, with a «Translate them first» button. The «Go online» notice shown after deactivating another translation plugin says the same, language by language. Thanks to Alain for the honest feedback.
@@ -736,6 +739,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.47 =
+WordPress' own sitemap (wp-sitemap.xml) lists the translated addresses again.
 
 = 1.8.46 =
 A language switched online says how many sentences are still untranslated. The visual editor finds the SEO title and description on translated WooCommerce products.

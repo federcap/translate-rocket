@@ -40,6 +40,12 @@ class Sitemap {
 	/** @var int[]|null Page ids, worked out once per request. */
 	private static $ids = null;
 
+	/** @var array<string,int> Post id by address, filled while WordPress builds one page of its sitemap. */
+	private $core_ids = array();
+
+	/** @var array<string,bool>|null «id|lang» of the pages hidden from a language, read once per request. */
+	private static $excluded = null;
+
 	/**
 	 * Hook into WordPress.
 	 */
@@ -55,7 +61,9 @@ class Sitemap {
 		// index, so it's discoverable from the one index users submit to Google.
 		add_filter( 'rank_math/sitemap/index', array( $this, 'index_entry' ) );
 		// WordPress' own wp-sitemap.xml (sites without an SEO plugin): the translated addresses too (16/10/2026).
-		add_filter( 'wp_sitemaps_posts_url_list', array( $this, 'core_url_list' ), 20, 2 );
+		// 15/11/2026: it was hooked to «wp_sitemaps_posts_url_list», a filter WordPress does not have, so the core sitemap
+		// never listed a translated page. WordPress' real way in is «wp_sitemaps_posts_pre_url_list» (see core_pre_url_list).
+		add_filter( 'wp_sitemaps_posts_pre_url_list', array( $this, 'core_pre_url_list' ), 20, 3 );
 		add_filter( 'wpseo_sitemap_index', array( $this, 'index_entry' ) );
 		// 21/10/2026 (The SEO Framework, banco): its /sitemap.xml is one list, not an index, so our sitemap had no way in
 		// and the translated pages were in no sitemap Google is given. Its own filter takes extra addresses.
@@ -448,6 +456,51 @@ class Sitemap {
 	 * @param string $post_type Post type of the page.
 	 * @return mixed
 	 */
+	public function core_pre_url_list( $url_list, $post_type = '', $page_num = 1 ) {
+		if ( null !== $url_list || \TranslateRocket\Coexistence::on() || ! function_exists( 'wp_sitemaps_get_server' ) ) {
+			return $url_list; // another plugin already answered, or TranslateRocket is standing aside
+		}
+		$server   = wp_sitemaps_get_server();
+		$provider = ( is_object( $server ) && isset( $server->registry ) ) ? $server->registry->get_provider( 'posts' ) : null;
+		if ( ! $provider || ! method_exists( $provider, 'get_url_list' ) ) {
+			return $url_list;
+		}
+		// WordPress' own list for this page, built by WordPress itself; the id of each post is noted on the way.
+		$this->core_ids = array();
+		$nota           = function ( $entry, $post ) {
+			if ( is_array( $entry ) && isset( $entry['loc'] ) && is_object( $post ) ) {
+				$this->core_ids[ (string) $entry['loc'] ] = (int) $post->ID;
+			}
+			return $entry;
+		};
+		remove_filter( 'wp_sitemaps_posts_pre_url_list', array( $this, 'core_pre_url_list' ), 20 );
+		add_filter( 'wp_sitemaps_posts_entry', $nota, PHP_INT_MAX, 2 );
+		$list = $provider->get_url_list( (int) $page_num, (string) $post_type );
+		remove_filter( 'wp_sitemaps_posts_entry', $nota, PHP_INT_MAX );
+		add_filter( 'wp_sitemaps_posts_pre_url_list', array( $this, 'core_pre_url_list' ), 20, 3 );
+		$out            = $this->core_url_list( $list, (string) $post_type );
+		$this->core_ids = array();
+		return $out;
+	}
+
+	/**
+	 * Whether a page is hidden from a language (Exclusions), for many pages: one query for the whole site, not three
+	 * get_post_meta() per page and language (WordPress' sitemap does not load the meta of its 2.000 pages).
+	 */
+	private static function excluded( int $post_id, string $lang ): bool {
+		if ( null === self::$excluded ) {
+			global $wpdb;
+			self::$excluded = array();
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$rows = $wpdb->get_results( $wpdb->prepare( "SELECT post_id, meta_key FROM {$wpdb->postmeta} WHERE meta_key LIKE %s AND meta_value <> ''", $wpdb->esc_like( \TranslateRocket\Exclusions::META_PREFIX ) . '%' ) );
+			$n    = strlen( \TranslateRocket\Exclusions::META_PREFIX );
+			foreach ( (array) $rows as $r ) {
+				self::$excluded[ (int) $r->post_id . '|' . strtolower( substr( (string) $r->meta_key, $n ) ) ] = true;
+			}
+		}
+		return isset( self::$excluded[ $post_id . '|' . strtolower( $lang ) ] );
+	}
+
 	public function core_url_list( $url_list, $post_type = '' ) {
 		unset( $post_type );
 		if ( ! is_array( $url_list ) || \TranslateRocket\Coexistence::on() ) {
@@ -467,12 +520,12 @@ class Sitemap {
 			if ( '' === $loc || 0 !== strpos( $loc, $home ) || false !== strpos( $loc, '?' ) ) {
 				continue;
 			}
-			$id = (int) url_to_postid( $loc );
+			$id = (int) ( $this->core_ids[ $loc ] ?? url_to_postid( $loc ) );
 			if ( $id > 0 && in_array( $id, self::hidden_ids(), true ) ) {
 				continue; // Kept out of search engines: no language copies either.
 			}
 			foreach ( $langs as $lang ) {
-				if ( $id > 0 && '' !== (string) ( \TranslateRocket\Exclusions::get( $id, (string) $lang )['mode'] ?? '' ) ) {
+				if ( $id > 0 && self::excluded( $id, (string) $lang ) ) {
 					continue;
 				}
 				$copia        = is_array( $entry ) ? $entry : array();
