@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.43
+Stable tag: 1.8.44
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,7 +94,7 @@ The plugin stays free either way — nothing here is locked behind that. Write t
 
 This plugin can connect to third-party services, but only with your involvement:
 
-* **AI translation providers (optional).** If you add an API key and ask to translate, the relevant text is sent to the provider you selected so it can return a translation. No text is sent until you configure a provider and trigger a translation. Providers and policies:
+* **AI translation providers (optional).** If you add an API key and ask to translate, the relevant text is sent to the provider you selected so it can return a translation. No text is sent until you configure a provider and trigger a translation. You choose the translation engines and accept their terms directly with them. Some engines (for example DeepL or Google Cloud Translation) ask you to tell visitors that a page was machine-translated, or to credit them: check your engine's terms. TranslateRocket does not add these notices for you. Providers and policies:
   * DeepL — service: https://www.deepl.com/en/pro , privacy: https://www.deepl.com/en/privacy
   * OpenAI — service: https://platform.openai.com , privacy: https://openai.com/policies/privacy-policy/
   * Google Cloud Translation / Gemini — service: https://cloud.google.com/translate , privacy: https://policies.google.com/privacy
@@ -221,6 +221,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.44 =
+* Improved: the AI provider settings and the «External services» section say that some engines (for example DeepL or Google Cloud Translation) ask you to tell visitors a page was machine-translated, or to credit them. You choose the engine and accept its terms; TranslateRocket does not add these notices for you.
 
 = 1.8.43 =
 * Fixed: translated addresses now use the letters of their own language, whatever the language of the site. On an English or Italian site the German «Über uns» became «uber-uns» and «Größen» became «grosen»: now they are «ueber-uns» and «groessen», as German writes them (Danish «å» becomes «aa», and Catalan, Serbian and Bosnian are right too). This holds for addresses typed by hand and for the automatic addresses of categories and tags. Addresses made before stay as they are; an address that changes keeps sending visitors from the old one with a 301.
@@ -723,6 +726,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.44 =
+A note next to each engine key: some engines ask you to tell visitors that pages are machine-translated, or to credit them.
 
 = 1.8.43 =
 German, Danish, Catalan, Serbian and Bosnian addresses now use the letters of their language (Über → ueber). Existing addresses do not change.

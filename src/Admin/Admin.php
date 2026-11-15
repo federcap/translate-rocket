@@ -5082,6 +5082,8 @@ JS
 									<?php if ( '' !== $def['help'] ) : ?>
 										<p class="description"><?php echo esc_html( $def['help'] ); ?></p>
 									<?php endif; ?>
+									<?php // 15/11/2026 (Federico: the engine's terms are the user's, who picks the engine): DeepL §8.3.3, Google Cloud Translation Service Terms §25. ?>
+									<p class="description trr-engine-terms"><?php esc_html_e( 'Some engines ask you to show visitors that a page was machine-translated or to credit them. Check your engine\'s terms.', 'translate-rocket' ); ?></p>
 									<?php if ( ! empty( $def['guide'] ) ) : ?>
 										<details class="trr-ai-guide" style="margin:8px 0;padding:6px 10px;background:#f6f7f7;border:1px solid #dcdcde;border-radius:6px"<?php echo $has_key ? '' : ' open'; ?>>
 											<summary style="cursor:pointer;font-weight:600">&#128273; <?php esc_html_e( 'Get your free key in 2 minutes', 'translate-rocket' ); ?></summary>
