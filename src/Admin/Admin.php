@@ -7324,6 +7324,14 @@ JS;
 							</div>
 						<?php endforeach; ?>
 					</div>
+					<?php
+					// 15/11/2026 (ticket #16, Alain: «even simple sentences weren't being translated»): he switched French online
+					// with a third of the sentences still untranslated, and nothing told him visitors would read them in English.
+					// Switching a language online now says, right here, how many sentences are still missing (lang-online.js).
+					?>
+					<div class="notice notice-warning inline trr-online-warn" hidden
+						data-line="<?php echo esc_attr( sprintf( /* translators: 1: language name, 2: sentences still untranslated, 3: all sentences, 4: the site language. */ __( '%1$s: %2$s of %3$s sentences are not translated yet. If you save now, visitors will read them in %4$s.', 'translate-rocket' ), '%1$s', '%2$s', '%3$s', Languages::label( (string) $source ) ) ); ?>"
+						data-button="<?php esc_attr_e( 'Translate them first', 'translate-rocket' ); ?>"></div>
 
 					<?php
 					// Quali fra le lingue scelte sono ancora in lavorazione.
@@ -7340,7 +7348,7 @@ JS;
 						<h3><?php esc_html_e( 'Published, or still being translated?', 'translate-rocket' ); ?>
 							<?php $this->info( __( 'A language kept offline is invisible to visitors: it is left out of the language switcher, out of your sitemap and out of the hreflang tags, and anyone landing on one of its URLs is sent to your default language. You keep working on it normally — and you can see it on the real pages, because whoever can preview still sees everything. Put it online when you are happy with it.', 'translate-rocket' ) ); ?>
 						</h3>
-						<p class="description"><?php esc_html_e( 'Add a language today, publish it when it is ready. Nothing half-translated ever reaches your visitors or Google.', 'translate-rocket' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Add a language today, publish it when it is ready. While it is offline, nothing half-translated reaches your visitors or Google.', 'translate-rocket' ); ?></p>
 						<?php $trr_live_now = AutoPage::live(); // the hourglass is right from the first paint ?>
 						<table class="trr-lang-state-table">
 							<tbody>
@@ -7353,7 +7361,7 @@ JS;
 								$perc    = $totale > 0 ? (int) floor( 100 * $fatte / $totale ) : 0; // floor: 99.6% is not «100%»
 								$is_off  = in_array( (string) $code, $offline_ora, true );
 								?>
-								<tr class="<?php echo $is_off ? 'is-offline' : ''; ?>" data-code="<?php echo esc_attr( (string) $code ); ?>" data-trr-live="<?php echo esc_attr( (string) $code ); ?>">
+								<tr class="<?php echo $is_off ? 'is-offline' : ''; ?>" data-code="<?php echo esc_attr( (string) $code ); ?>" data-trr-live="<?php echo esc_attr( (string) $code ); ?>" data-manca="<?php echo (int) $manca; ?>" data-totale="<?php echo (int) $totale; ?>" data-nome="<?php echo esc_attr( $nome ); ?>" data-vai="<?php echo esc_url( add_query_arg( 'trr_go', '1', $this->editor_url( (string) $code ) ) ); ?>">
 									<th scope="row">
 										<span class="trrocket-flag"><?php echo wp_kses( \TranslateRocket\Flags::html( (string) $code, '' ), \TranslateRocket\Kses::html_rules() ); ?></span>
 										<strong><?php echo esc_html( $nome ); ?></strong>

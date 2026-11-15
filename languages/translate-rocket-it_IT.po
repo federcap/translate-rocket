@@ -7559,3 +7559,25 @@ msgstr "Ogni motore qui sotto dice se il tuo hosting può usarlo: il tuo server 
 #: src/Providers/Reach.php
 msgid "The check did not finish. Reload the page to try again."
 msgstr "Il controllo non è finito. Ricarica la pagina per riprovare."
+
+#: src/Admin/Admin.php
+msgid "%1$s: %2$s of %3$s sentences are not translated yet. If you save now, visitors will read them in %4$s."
+msgstr "%1$s: %2$s frasi su %3$s non sono ancora tradotte. Se salvi adesso, i visitatori le leggeranno in %4$s."
+
+#: src/Admin/Admin.php
+msgid "Translate them first"
+msgstr "Prima traducile"
+
+#: src/Admin/Admin.php
+msgid "Add a language today, publish it when it is ready. While it is offline, nothing half-translated reaches your visitors or Google."
+msgstr "Aggiungi una lingua oggi, pubblicala quando è pronta. Finché è offline, niente di tradotto a metà arriva ai visitatori o a Google."
+
+#: src/Admin/Admin.php
+msgid "Not translated yet: %1$s. Online, visitors would read them in %2$s: translate them first."
+msgstr "Ancora da tradurre: %1$s. Online, i visitatori le leggerebbero in %2$s: prima traducile."
+
+#: src/Coexistence.php
+msgid "%1$s %2$s sentence"
+msgid_plural "%1$s %2$s sentences"
+msgstr[0] "%1$s %2$s frase"
+msgstr[1] "%1$s %2$s frasi"

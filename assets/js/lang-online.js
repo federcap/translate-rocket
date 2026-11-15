@@ -32,6 +32,60 @@
 		if ( tr ) {
 			tr.classList.toggle( 'is-offline', spenta );
 		}
+		avvisa();
+	}
+
+	// 15/11/2026 (ticket #16): a language switched from offline to online while sentences are still missing is said here,
+	// before saving: how many, and that visitors will read them in the site language. No dialog: one line per language.
+	function avvisa() {
+		var box = document.querySelector( '.trr-online-warn' );
+		if ( ! box ) {
+			return;
+		}
+		while ( box.firstChild ) {
+			box.removeChild( box.firstChild );
+		}
+		var righe = 0;
+		grid.querySelectorAll( '.trrocket-lang-item[data-era-spenta="1"]' ).forEach( function ( item ) {
+			var off = item.querySelector( '.trr-onoff-in' );
+			var pick = item.querySelector( 'input[name="target_languages[]"]' );
+			if ( ! off || off.checked || ( pick && ! pick.checked ) ) {
+				return;
+			}
+			var tr = riga( item.getAttribute( 'data-code' ) || '' );
+			if ( ! tr ) {
+				return;
+			}
+			// The same numbers as the row underneath («489 / 734»), which the live script keeps current.
+			var manca = parseInt( tr.getAttribute( 'data-manca' ) || '0', 10 );
+			var totale = tr.getAttribute( 'data-totale' ) || '';
+			var n = tr.querySelector( '.trr-auto-n' );
+			var m = n ? /(\d[\d.,\s]*)\s*\/\s*(\d[\d.,\s]*)/.exec( n.textContent || '' ) : null;
+			if ( m ) {
+				var fatte = parseInt( m[1].replace( /\D/g, '' ), 10 );
+				var tot = parseInt( m[2].replace( /\D/g, '' ), 10 );
+				if ( tot >= fatte ) {
+					manca = tot - fatte;
+					totale = String( tot );
+				}
+			}
+			if ( manca <= 0 ) {
+				return;
+			}
+			var p = document.createElement( 'p' );
+			p.textContent = ( box.getAttribute( 'data-line' ) || '' )
+				.replace( '%1$s', tr.getAttribute( 'data-nome' ) || '' )
+				.replace( '%2$s', String( manca ) )
+				.replace( '%3$s', totale ) + ' ';
+			var a = document.createElement( 'a' );
+			a.className = 'button button-small button-primary';
+			a.href = tr.getAttribute( 'data-vai' ) || '#';
+			a.textContent = box.getAttribute( 'data-button' ) || '';
+			p.appendChild( a );
+			box.appendChild( p );
+			righe++;
+		} );
+		box.hidden = 0 === righe;
 	}
 
 	grid.addEventListener( 'change', function ( e ) {

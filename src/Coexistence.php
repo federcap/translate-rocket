@@ -724,6 +724,25 @@ final class Coexistence {
 			);
 			echo '</strong> ';
 			esc_html_e( 'Visitors still see the original language. Look at a few pages on their real addresses, then put the translations online for everyone.', 'translate-rocket' );
+			// 15/11/2026 (ticket #16): what is still untranslated is said before «Go online», not discovered on the pages.
+			$mancano = array();
+			foreach ( (array) ( Settings::get()['target_languages'] ?? array() ) as $l ) {
+				$n = (int) ( Strings::language_stats( (string) $l )['missing'] ?? 0 ); // the numbers of the Languages page
+				if ( $n > 0 ) {
+					/* translators: 1: language name, 2: how many sentences. */
+					$mancano[] = sprintf( _n( '%1$s %2$s sentence', '%1$s %2$s sentences', $n, 'translate-rocket' ), Languages::label( (string) $l ), number_format_i18n( $n ) );
+				}
+			}
+			if ( ! empty( $mancano ) ) {
+				echo '</p><p>';
+				printf(
+					/* translators: 1: e.g. "Français 245 sentences, Nederlands 734 sentences", 2: the site language. */
+					esc_html__( 'Not translated yet: %1$s. Online, visitors would read them in %2$s: translate them first.', 'translate-rocket' ),
+					esc_html( implode( ', ', $mancano ) ),
+					esc_html( Languages::label( (string) ( Settings::get()['source_language'] ?? 'en' ) ) )
+				);
+				echo ' <a href="' . esc_url( admin_url( 'admin.php?page=translate-rocket-strings' ) ) . '">' . esc_html__( 'Go to the translations', 'translate-rocket' ) . '</a>';
+			}
 			echo '</p><p><a class="button button-primary" href="' . esc_url( wp_nonce_url( add_query_arg( 'trrocket_golive', '1' ), 'trrocket_golive' ) ) . '">';
 			esc_html_e( 'Go online', 'translate-rocket' );
 			echo '</a> ';

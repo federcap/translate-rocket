@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.45
+Stable tag: 1.8.46
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.46 =
+* Improved: switching a language online on the Languages page now says how many of its sentences are not translated yet, and that visitors would read them in your site language, with a «Translate them first» button. The «Go online» notice shown after deactivating another translation plugin says the same, language by language. Thanks to Alain for the honest feedback.
+* Fixed: on WooCommerce products and other custom post types with a translated address, the SEO panel of the visual editor said «Not detected on this page yet» for the SEO title and meta description (Rank Math and the other SEO plugins), and the sentences of the translated product were filed under the translated address instead of the original one. Pages and posts were not affected. Thanks to Rolf for the report.
 
 = 1.8.45 =
 * New: two more AI engines with your own key, DeepSeek and Qwen (Alibaba Cloud Model Studio), for sites that cannot use OpenAI or Anthropic where they are. They work like the other engines: in «Translate all», in the fallback chain and in the editors, with your glossary, protected words and house style. For Qwen you pick the region of your key (Singapore, United States or China). Thanks to Alexey for asking.
@@ -732,6 +736,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.46 =
+A language switched online says how many sentences are still untranslated. The visual editor finds the SEO title and description on translated WooCommerce products.
 
 = 1.8.45 =
 Two more AI engines with your own key: DeepSeek and Qwen (Alibaba Cloud). Each engine card now says whether your hosting can reach it.

@@ -340,12 +340,22 @@ class Router {
 		remove_filter( 'home_url', array( $this, 'filter_home_url' ), 10 );
 		remove_filter( 'page_link', array( $this, 'filter_page_link' ), 20 );
 		remove_filter( 'post_link', array( $this, 'filter_post_link' ), 20 );
+		// 15/11/2026 (ticket #33, WooCommerce + Rank Math): products and the other post types kept their translated slug
+		// here (/produkt/annual-license/ instead of /produkt/jahreslizenz/), so on a translated product the visual editor's
+		// SEO panel looked under the wrong address and said «Not detected on this page yet». Pages and posts were fine.
+		$cpt = false !== has_filter( 'post_type_link', array( $this, 'filter_post_link' ) );
+		if ( $cpt ) {
+			remove_filter( 'post_type_link', array( $this, 'filter_post_link' ), 20 );
+		}
 
 		$permalink = (string) get_permalink( $post_id );
 
 		add_filter( 'home_url', array( $this, 'filter_home_url' ), 10, 2 );
 		add_filter( 'page_link', array( $this, 'filter_page_link' ), 20, 2 );
 		add_filter( 'post_link', array( $this, 'filter_post_link' ), 20, 2 );
+		if ( $cpt ) {
+			add_filter( 'post_type_link', array( $this, 'filter_post_link' ), 20, 2 );
+		}
 
 		$path = wp_parse_url( $permalink, PHP_URL_PATH );
 		$path = is_string( $path ) ? $path : '/';
