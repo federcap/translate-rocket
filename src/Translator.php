@@ -41,14 +41,8 @@ class Translator {
 			? Strings::untranslated_for_page_language( $url_hash, $lang )
 			: Strings::untranslated_for_language( $lang, 500 );
 
-		$rows = array_values(
-			array_filter(
-				$rows,
-				static function ( $row ) {
-					return ! NoTranslate::text_excluded( (string) $row->original );
-				}
-			)
-		);
+		$letti = count( $rows ); // before the excluded ones leave: «is there more?» is asked of what was read
+		$rows  = self::keep_excluded( $rows, $lang );
 		if ( empty( $rows ) ) {
 			return array(
 				'ok'    => true,
@@ -94,7 +88,7 @@ class Translator {
 			'error' => ( $fail >= 5 )
 				? __( 'Google Translate stopped responding (it may be rate-limiting). Some strings were translated — try again in a moment for the rest.', 'translate-rocket' )
 				: '',
-			'more'  => $fermato && $fail < 5,
+			'more'  => $fail < 5 && ( $fermato || ( '' === $url_hash && $letti >= 500 && $count > 0 ) ),
 		);
 	}
 
@@ -124,6 +118,29 @@ class Translator {
 			Strings::defer_end();
 			self::unlock();
 		}
+	}
+
+	/**
+	 * 1.8.48 (16/11/2026, Matjaž: «it needs like 40 passes to finish… and it still leaves untranslated text»): the
+	 * sentences excluded in «Words & phrases» are never translated, so they stayed «missing» for ever. They came back at
+	 * the top of every block of 1,000 read, the block looked short and «Translate all» stopped as if it had finished;
+	 * and the language never reached 100%. Now they are saved as kept (the original is their translation, as the page
+	 * shows it) and leave the list; the rest is returned.
+	 *
+	 * @param array<int,object> $rows Rows with string_id and original.
+	 * @param string            $lang Language.
+	 * @return array<int,object>
+	 */
+	private static function keep_excluded( array $rows, string $lang ): array {
+		$out = array();
+		foreach ( $rows as $row ) {
+			if ( NoTranslate::text_excluded( (string) $row->original ) ) {
+				Strings::save_translation( (int) $row->string_id, $lang, (string) $row->original, 1, Strings::KEPT );
+				continue;
+			}
+			$out[] = $row;
+		}
+		return $out;
 	}
 
 	/** @var int Nested translate_missing() calls in this request: the lock is taken by the first. */
@@ -241,15 +258,19 @@ class Translator {
 				: Strings::untranslated_for_language( $lang, 1000 );
 		}
 
-		// Never send user-excluded strings to the AI.
-		$rows = array_values(
-			array_filter(
-				$rows,
-				static function ( $row ) {
-					return ! NoTranslate::text_excluded( (string) $row->original );
-				}
-			)
-		);
+		$letti = count( $rows ); // before the excluded ones leave: «is there more?» is asked of what was read
+		if ( $migliora ) {
+			// «Improve with AI» reads sentences that have a translation already: the excluded ones are only left out.
+			$rows = array_values( array_filter( $rows, static fn( $row ) => ! NoTranslate::text_excluded( (string) $row->original ) ) );
+		} else {
+			$rows = self::keep_excluded( $rows, $lang );
+			// A whole block of excluded sentences (a long «Words & phrases» list): read on, they have left the list now.
+			for ( $giro = 0; $giro < 20 && empty( $rows ) && '' === $url_hash && $letti >= 1000; $giro++ ) {
+				$rows  = Strings::untranslated_for_language( $lang, 1000 );
+				$letti = count( $rows );
+				$rows  = self::keep_excluded( $rows, $lang );
+			}
+		}
 
 		if ( empty( $rows ) ) {
 			return array(
@@ -477,7 +498,8 @@ class Translator {
 			// Unix time the first engine comes back when every engine is resting; 0 otherwise.
 			'resting_until' => $riprende,
 			// Something is left: the step stopped at its deadline, or the 1000 read were all there was room for.
-			'more'  => $count > 0 && count( $dead ) < count( $providers ) && ( $fermato || count( $rows ) >= 1000 ),
+			// 1.8.48 (16/11/2026, Matjaž: «40 passes»): counted on the rows read, not on the ones left after the exclusions.
+			'more'  => $count > 0 && count( $dead ) < count( $providers ) && ( $fermato || $letti >= 1000 ),
 		);
 	}
 
@@ -650,15 +672,7 @@ class Translator {
 			? Strings::untranslated_for_page_language( $url_hash, $lang )
 			: Strings::untranslated_for_language( $lang, $limit );
 
-		// Never hand user-excluded strings to any engine.
-		$rows = array_values(
-			array_filter(
-				$rows,
-				static function ( $row ) {
-					return ! NoTranslate::text_excluded( (string) $row->original );
-				}
-			)
-		);
+		$rows = self::keep_excluded( $rows, $lang ); // never handed to any engine
 
 		$reused  = 0;
 		$pending = self::reuse_pass( $rows, $lang, $reused );

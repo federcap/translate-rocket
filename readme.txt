@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.47
+Stable tag: 1.8.48
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.48 =
+* Fixed: with sentences excluded in «Words & phrases», «Translate all» stopped after about a thousand sentences as if it had finished, and had to be pressed again and again on a big site; the excluded sentences also stayed «missing» for ever, so the language never reached 100% and pages kept coming back as not finished. They are now kept as they are and counted as done, and «Translate all» goes on to the end in one run. Thanks to Matjaž for insisting.
 
 = 1.8.47 =
 * Fixed: WordPress' own sitemap (wp-sitemap.xml) did not list the translated addresses of pages, posts and products: TranslateRocket used a hook that WordPress does not have. It now adds them, with the translated slug and leaving out pages hidden from a language, and it reads those settings for the whole sitemap at once. The TranslateRocket sitemap (translaterocket-sitemap.xml) already had them.
@@ -739,6 +742,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.48 =
+«Translate all» no longer stops early when some sentences are excluded in «Words & phrases».
 
 = 1.8.47 =
 WordPress' own sitemap (wp-sitemap.xml) lists the translated addresses again.
