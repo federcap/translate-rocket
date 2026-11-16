@@ -31,6 +31,78 @@
 	   hidden sizer share one grid column), so no JavaScript measuring is needed. */
 }() );
 
+/* 1.8.49 (Tom, Astra: «mein Sprachmenü klappt immer auf wenn ich es mit dem Mauszeiger berühre»): the languages in a
+   classic theme's menu with «Open: on click». The theme opens its submenus on hover; frontend.css keeps ours closed
+   until a click on the language item (its link or the theme's arrow), and a click elsewhere or Esc closes it again. */
+( function () {
+	'use strict';
+	function sub( li ) {
+		for ( var n = li.firstElementChild; n; n = n.nextElementSibling ) {
+			if ( 'UL' === n.tagName ) { return n; }
+		}
+		return null;
+	}
+	function close( li ) {
+		li.classList.remove( 'trrocket-menu-open' );
+		var u = sub( li );
+		if ( u ) { u.style.removeProperty( 'left' ); }
+		var a = li.querySelector( 'a' );
+		if ( a ) { a.setAttribute( 'aria-expanded', 'false' ); }
+	}
+	function open( li ) {
+		li.classList.add( 'trrocket-menu-open' );
+		var u = sub( li );
+		if ( u ) {
+			// Some themes park a closed submenu far off-screen (left:-999em) and bring it back only on hover: keep it
+			// where it is now, or bring it under the item if it is out of sight (a tap, no hover).
+			var r = u.getBoundingClientRect();
+			if ( r.right < 0 || r.left > window.innerWidth ) {
+				u.style.setProperty( 'left', 'auto', 'important' );
+			} else {
+				u.style.setProperty( 'left', window.getComputedStyle( u ).left, 'important' );
+			}
+		}
+		var a = li.querySelector( 'a' );
+		if ( a ) { a.setAttribute( 'aria-expanded', 'true' ); }
+	}
+	// Only a list that flies out over the page (the computer's header menu) is ours to open. In a phone menu the
+	// theme unfolds it in place with its own arrow: that one stays the theme's.
+	function fly( li ) {
+		var u = sub( li );
+		var f = !! u && /absolute|fixed/.test( window.getComputedStyle( u ).position );
+		li.classList.toggle( 'trrocket-menu-fly', f );
+		if ( ! f ) { close( li ); }
+		return f;
+	}
+	function mark() {
+		Array.prototype.forEach.call( document.querySelectorAll( 'li.trrocket-menu-click' ), fly );
+	}
+	if ( 'loading' !== document.readyState ) { mark(); } else { document.addEventListener( 'DOMContentLoaded', mark ); }
+	var tm = null;
+	window.addEventListener( 'resize', function () { window.clearTimeout( tm ); tm = window.setTimeout( mark, 150 ); } );
+	document.addEventListener( 'click', function ( e ) {
+		var t  = e.target;
+		var li = ( t && t.closest ) ? t.closest( 'li.trrocket-menu-click' ) : null;
+		if ( li && ! fly( li ) ) { li = null; } // a phone menu: the theme's own way
+		var u  = li ? sub( li ) : null;
+		var head = !! li && ! ( u && u.contains( t ) );
+		Array.prototype.forEach.call( document.querySelectorAll( 'li.trrocket-menu-click.trrocket-menu-open' ), function ( o ) {
+			if ( o !== li || ! head ) {
+				if ( ! ( o.contains( t ) && ! head ) ) { close( o ); }
+			}
+		} );
+		if ( head ) {
+			e.preventDefault();
+			if ( li.classList.contains( 'trrocket-menu-open' ) ) { close( li ); } else { open( li ); }
+		}
+	}, true );
+	document.addEventListener( 'keyup', function ( e ) {
+		if ( 'Escape' === e.key ) {
+			Array.prototype.forEach.call( document.querySelectorAll( 'li.trrocket-menu-click.trrocket-menu-open' ), close );
+		}
+	} );
+}() );
+
 /* Scrollable switcher (type="scroll"): both arrows stay in place and just disable at each
    edge (no flicker). Hover (or hold) an arrow to scroll continuously; leaving it stops. */
 ( function () {

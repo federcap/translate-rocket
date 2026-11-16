@@ -1444,6 +1444,20 @@ class Admin {
 		$settings['cache_warmup']        = ! empty( $_POST['cache_warmup'] );
 		$settings['show_poweredby']      = ! empty( $_POST['show_poweredby'] );
 
+		// 1.8.49 (Tom, Austria): the flag of a language spoken in several countries. Only sent from the Languages page.
+		if ( isset( $_POST['flag_choice'] ) && is_array( $_POST['flag_choice'] ) ) {
+			$trr_fc = array();
+			$trr_va = \TranslateRocket\Flags::variants();
+			foreach ( wp_unslash( $_POST['flag_choice'] ) as $trr_l => $trr_c ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- checked against the known list below.
+				$trr_l = strtolower( sanitize_key( (string) $trr_l ) );
+				$trr_c = sanitize_key( (string) $trr_c );
+				if ( isset( $trr_va[ $trr_l ][ $trr_c ] ) && array_key_first( $trr_va[ $trr_l ] ) !== $trr_c ) {
+					$trr_fc[ $trr_l ] = $trr_c;
+				}
+			}
+			$settings['flag_choice'] = $trr_fc;
+		}
+
 		// 1.8.36: Serbian alphabet (only sent when Serbian is among the languages).
 		$alfabeto_nuovo = '';
 		if ( isset( $_POST['script_sr'] ) ) {
@@ -7478,6 +7492,40 @@ JS;
 								<?php elseif ( '' !== $alfabeto && $avanzo['changed'] > 0 ) : ?>
 									<p class="description">&#10003; <?php echo esc_html( sprintf( /* translators: %s: number of translations */ __( 'Done: %s Serbian translations converted.', 'translate-rocket' ), number_format_i18n( $avanzo['changed'] ) ) ); ?></p>
 								<?php endif; ?>
+							</td>
+						</tr>
+					</table>
+					<?php endif; ?>
+
+					<?php
+					// 1.8.49 (Tom, Austria: «statt der deutschen Flagge eine österreichische»): the flag of each language of the
+					// site that is spoken in several countries — the original language too.
+					$trr_va    = \TranslateRocket\Flags::variants();
+					$trr_flang = array_values( array_unique( array_merge( array( (string) ( $settings['source_language'] ?? '' ) ), (array) ( $settings['target_languages'] ?? array() ) ) ) );
+					$trr_flang = array_values( array_filter( $trr_flang, static function ( $c ) use ( $trr_va ) { return isset( $trr_va[ $c ] ); } ) );
+					if ( ! empty( $trr_flang ) ) :
+						$trr_fsel = (array) ( $settings['flag_choice'] ?? array() );
+						?>
+					<table class="form-table trr-adv trr-flag-choice" role="presentation">
+						<tr>
+							<th scope="row"><?php esc_html_e( 'Flags', 'translate-rocket' ); ?> <?php $this->info( __( 'A language spoken in several countries can show the flag of your country in the language switcher: German with the Austrian or Swiss flag, English with the American one, Spanish with the Mexican one, and so on. Only the flag changes: the language, its address (/de/) and the translations stay the same.', 'translate-rocket' ) ); ?></th>
+							<td>
+								<?php foreach ( $trr_flang as $trr_l ) : ?>
+									<fieldset class="trr-flag-row" style="margin-bottom:10px;text-align:left;">
+										<legend style="font-weight:600;margin-bottom:4px;text-align:left;"><?php echo esc_html( Languages::label( $trr_l ) ); ?></legend>
+										<?php
+										$trr_ora = (string) ( $trr_fsel[ $trr_l ] ?? '' );
+										$trr_ora = isset( $trr_va[ $trr_l ][ $trr_ora ] ) ? $trr_ora : (string) array_key_first( $trr_va[ $trr_l ] );
+										foreach ( $trr_va[ $trr_l ] as $trr_c => $trr_nome ) :
+											?>
+											<label style="display:inline-flex;align-items:center;gap:5px;margin:0 14px 6px 0;">
+												<input type="radio" name="flag_choice[<?php echo esc_attr( $trr_l ); ?>]" value="<?php echo esc_attr( $trr_c ); ?>" <?php checked( $trr_ora, $trr_c ); ?> />
+												<span class="trrocket-flag"><?php echo wp_kses( \TranslateRocket\Flags::country( $trr_c ), \TranslateRocket\Kses::html_rules() ); ?></span>
+												<?php echo esc_html( $trr_nome ); ?>
+											</label>
+										<?php endforeach; ?>
+									</fieldset>
+								<?php endforeach; ?>
 							</td>
 						</tr>
 					</table>

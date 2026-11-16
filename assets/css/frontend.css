@@ -476,3 +476,7 @@
 .trrocket-floating.trrocket-scrolling{opacity:0;pointer-events:none}
 }
 @media (prefers-reduced-motion:reduce){.trrocket-floating{transition:none}}
+/* 1.8.49 (Tom, Astra): languages in a classic theme's menu, «Open: on click» — the theme's hover/focus no longer opens the list, a click does (switcher.js). Only where the list is a flyout
+   (trrocket-menu-fly, set by switcher.js): a phone menu that unfolds in place stays the theme's. */
+li.trrocket-menu-fly:not(.trrocket-menu-open)>ul{display:none!important}
+li.trrocket-menu-fly.trrocket-menu-open>ul{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}

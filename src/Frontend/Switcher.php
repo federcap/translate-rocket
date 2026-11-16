@@ -1228,7 +1228,10 @@ class Switcher {
 				}
 			}
 			$current = $current ?? $entries[0];
-			$parent  = $make( $current, $root, array( 'menu-item-has-children', 'trrocket-lang-current' ) );
+			// 1.8.49 (Tom, Astra: «mein Sprachmenü klappt immer auf wenn ich es mit dem Mauszeiger berühre… mit beiden
+			// Einstellungen»): in a classic theme's menu the theme opened our list on hover whatever «Open» said. On click,
+			// the list now waits for a click (switcher.js + frontend.css), as in the Navigation block.
+			$parent  = $make( $current, $root, array_merge( array( 'menu-item-has-children', 'trrocket-lang-current' ), 'hover' === ( $s['dd_trigger'] ?? 'click' ) ? array() : array( 'trrocket-menu-click' ) ) );
 			$nuove[] = $parent;
 			foreach ( $entries as $e ) {
 				if ( $e['code'] !== $current['code'] ) {

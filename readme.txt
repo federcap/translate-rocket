@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.48
+Stable tag: 1.8.49
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.49 =
+* Fixed: in the menu of a classic theme (Astra, GeneratePress, OceanWP and others) the language list opened as soon as the mouse touched it, even with «Open: on click». It now waits for a click, stays open while the mouse moves away, and closes with a click elsewhere or Esc; on phones the theme's own menu works as before.
+* New: a flag of your choice for languages spoken in several countries (Languages → Advanced → Flags): German with the Austrian or Swiss flag, English with the American, Canadian, Australian, Irish or New Zealand one, Spanish with the Mexican, Argentinian, Colombian, Chilean or American one, French with the Belgian, Swiss or Canadian one, and more. Only the flag changes. Thanks to Tom for both.
 
 = 1.8.48 =
 * Fixed: with sentences excluded in «Words & phrases», «Translate all» stopped after about a thousand sentences as if it had finished, and had to be pressed again and again on a big site; the excluded sentences also stayed «missing» for ever, so the language never reached 100% and pages kept coming back as not finished. They are now kept as they are and counted as done, and «Translate all» goes on to the end in one run. Thanks to Matjaž for insisting.
@@ -742,6 +746,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.49 =
+The language list in classic theme menus really opens on click; choose the flag of your country for German, English, Spanish, French and more.
 
 = 1.8.48 =
 «Translate all» no longer stops early when some sentences are excluded in «Words & phrases».

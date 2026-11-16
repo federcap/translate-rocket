@@ -48,6 +48,10 @@ class Flags {
 	 * @param string $custom Stored custom flag value ("svg:fr", an emoji, or "").
 	 */
 	public static function markup( string $code, string $custom = '' ): string {
+		$scelta = self::chosen( $code );
+		if ( '' !== $scelta ) {
+			return self::country( $scelta );
+		}
 		$svg = self::svg( $code );
 		if ( '' !== $svg ) {
 			return $svg;
@@ -78,6 +82,125 @@ class Flags {
 		}
 		$emoji = ( '' !== $custom && 0 !== strpos( $custom, 'svg:' ) ) ? $custom : "\xF0\x9F\x8C\x90";
 		return esc_html( $emoji );
+	}
+
+	/**
+	 * 16/11/2026 (Tom, an Austrian site in German: «statt der deutschen Flagge eine österreichische… vielleicht wollen
+	 * das auch andere, z.B. Französisch in der Schweiz, oder Spanisch und Englisch in vielen anderen Ländern»). Languages
+	 * spoken in several countries: which flags can stand for them. The first one is the usual flag.
+	 *
+	 * @return array<string,array<string,string>> language code => country code => country name.
+	 */
+	public static function variants(): array {
+		$n = array(
+			'de' => __( 'Germany', 'translate-rocket' ),
+			'at' => __( 'Austria', 'translate-rocket' ),
+			'ch' => __( 'Switzerland', 'translate-rocket' ),
+			'gb' => __( 'United Kingdom', 'translate-rocket' ),
+			'us' => __( 'United States', 'translate-rocket' ),
+			'ca' => __( 'Canada', 'translate-rocket' ),
+			'au' => __( 'Australia', 'translate-rocket' ),
+			'ie' => __( 'Ireland', 'translate-rocket' ),
+			'nz' => __( 'New Zealand', 'translate-rocket' ),
+			'es' => __( 'Spain', 'translate-rocket' ),
+			'mx' => __( 'Mexico', 'translate-rocket' ),
+			'ar' => __( 'Argentina', 'translate-rocket' ),
+			'co' => __( 'Colombia', 'translate-rocket' ),
+			'cl' => __( 'Chile', 'translate-rocket' ),
+			'fr' => __( 'France', 'translate-rocket' ),
+			'be' => __( 'Belgium', 'translate-rocket' ),
+			'it' => __( 'Italy', 'translate-rocket' ),
+			'nl' => __( 'Netherlands', 'translate-rocket' ),
+			'pt' => __( 'Portugal', 'translate-rocket' ),
+			'br' => __( 'Brazil', 'translate-rocket' ),
+		);
+		$per = array(
+			'de'    => array( 'de', 'at', 'ch' ),
+			'en'    => array( 'gb', 'us', 'ca', 'au', 'ie', 'nz' ),
+			'es'    => array( 'es', 'mx', 'ar', 'co', 'cl', 'us' ),
+			'fr'    => array( 'fr', 'be', 'ch', 'ca' ),
+			'it'    => array( 'it', 'ch' ),
+			'nl'    => array( 'nl', 'be' ),
+			'pt'    => array( 'pt', 'br' ),
+			'pt-br' => array( 'br', 'pt' ),
+		);
+		$out = array();
+		foreach ( $per as $lang => $paesi ) {
+			foreach ( $paesi as $c ) {
+				$out[ $lang ][ $c ] = $n[ $c ];
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * The country flag the owner chose for a language, '' for the usual one.
+	 */
+	public static function chosen( string $code ): string {
+		$code = strtolower( $code );
+		$all  = Settings::get()['flag_choice'] ?? array();
+		$c    = ( is_array( $all ) && isset( $all[ $code ] ) ) ? (string) $all[ $code ] : '';
+		if ( '' === $c ) {
+			return '';
+		}
+		$v = self::variants()[ $code ] ?? array();
+		return ( isset( $v[ $c ] ) && array_key_first( $v ) !== $c ) ? $c : '';
+	}
+
+	/**
+	 * A country's flag (codes of variants()), '' if unknown.
+	 */
+	public static function country( string $c ): string {
+		$lang  = array(
+			'de' => 'de',
+			'ch' => 'de-ch',
+			'gb' => 'en',
+			'ca' => 'fr-ca',
+			'ie' => 'ga',
+			'es' => 'es',
+			'mx' => 'es-mx',
+			'fr' => 'fr',
+			'it' => 'it',
+			'nl' => 'nl',
+			'pt' => 'pt',
+			'br' => 'pt-br',
+		);
+		$inner = isset( $lang[ $c ] ) ? ( self::map()[ $lang[ $c ] ] ?? '' ) : ( self::countries()[ $c ] ?? '' );
+		if ( '' === $inner ) {
+			return '';
+		}
+		return '<svg class="trrocket-flag-svg" width="21" height="14" viewBox="0 0 30 20" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">' . $inner . '</svg>';
+	}
+
+	/**
+	 * Country flags that are not the flag of a language code (local coordinates 0..30 wide, 0..20 tall).
+	 *
+	 * @return array<string,string>
+	 */
+	private static function countries(): array {
+		$us = '<rect width="30" height="20" fill="#fff"/>';
+		for ( $i = 0; $i < 13; $i += 2 ) {
+			$us .= '<rect y="' . round( $i * 20 / 13, 2 ) . '" width="30" height="1.54" fill="#B22234"/>';
+		}
+		$us .= '<rect width="12" height="10.77" fill="#3C3B6E"/>';
+		for ( $r = 0; $r < 4; $r++ ) {
+			for ( $k = 0; $k < 5; $k++ ) {
+				$us .= '<circle cx="' . ( 1.4 + $k * 2.3 ) . '" cy="' . ( 1.5 + $r * 2.6 ) . '" r=".45" fill="#fff"/>';
+			}
+		}
+		$uk = '<g transform="scale(.5)">' . self::map()['en'] . '</g>';
+		$au = '<rect width="30" height="20" fill="#012169"/>' . $uk . '<circle cx="7.5" cy="15" r="1.7" fill="#fff"/><circle cx="22.5" cy="4" r=".9" fill="#fff"/><circle cx="26" cy="8.5" r=".9" fill="#fff"/><circle cx="19.5" cy="10" r=".9" fill="#fff"/><circle cx="22.5" cy="16.5" r=".9" fill="#fff"/><circle cx="24.5" cy="12" r=".5" fill="#fff"/>';
+		$nz = '<rect width="30" height="20" fill="#012169"/>' . $uk . '<circle cx="22.5" cy="4" r="1" fill="#C8102E" stroke="#fff" stroke-width=".4"/><circle cx="26" cy="8.5" r="1" fill="#C8102E" stroke="#fff" stroke-width=".4"/><circle cx="19.5" cy="9.5" r=".9" fill="#C8102E" stroke="#fff" stroke-width=".4"/><circle cx="22.5" cy="16" r="1.1" fill="#C8102E" stroke="#fff" stroke-width=".4"/>';
+		return array(
+			'at' => '<rect width="30" height="20" fill="#C8102E"/><rect y="6.67" width="30" height="6.66" fill="#fff"/>',
+			'us' => $us,
+			'au' => $au,
+			'nz' => $nz,
+			'ar' => '<rect width="30" height="20" fill="#74ACDF"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><circle cx="15" cy="10" r="1.9" fill="#F6B40E"/>',
+			'co' => '<rect width="30" height="20" fill="#CE1126"/><rect width="30" height="15" fill="#003893"/><rect width="30" height="10" fill="#FCD116"/>',
+			'cl' => '<rect width="30" height="20" fill="#D52B1E"/><rect width="30" height="10" fill="#fff"/><rect width="10" height="10" fill="#0039A6"/><polygon points="5,2.2 5.66,4.1 7.66,4.1 6.04,5.3 6.66,7.2 5,6 3.34,7.2 3.96,5.3 2.34,4.1 4.34,4.1" fill="#fff"/>',
+			'be' => '<rect width="10" height="20" fill="#000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/>',
+		);
 	}
 
 	/**
