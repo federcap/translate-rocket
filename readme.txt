@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.49
+Stable tag: 1.8.50
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.50 =
+* Fixed: in the menu of a classic theme with «Open: on click», the theme's little arrow next to the language now turns while the list is open, and is hidden when «Arrow» is switched off (Switcher → More style options). Thanks to Tom.
 
 = 1.8.49 =
 * Fixed: in the menu of a classic theme (Astra, GeneratePress, OceanWP and others) the language list opened as soon as the mouse touched it, even with «Open: on click». It now waits for a click, stays open while the mouse moves away, and closes with a click elsewhere or Esc; on phones the theme's own menu works as before.
@@ -746,6 +749,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.50 =
+The arrow next to the language in classic theme menus turns when the list opens, and follows the «Arrow» option.
 
 = 1.8.49 =
 The language list in classic theme menus really opens on click; choose the flag of your country for German, English, Spanish, French and more.

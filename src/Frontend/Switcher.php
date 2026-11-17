@@ -1231,7 +1231,9 @@ class Switcher {
 			// 1.8.49 (Tom, Astra: «mein Sprachmenü klappt immer auf wenn ich es mit dem Mauszeiger berühre… mit beiden
 			// Einstellungen»): in a classic theme's menu the theme opened our list on hover whatever «Open» said. On click,
 			// the list now waits for a click (switcher.js + frontend.css), as in the Navigation block.
-			$parent  = $make( $current, $root, array_merge( array( 'menu-item-has-children', 'trrocket-lang-current' ), 'hover' === ( $s['dd_trigger'] ?? 'click' ) ? array() : array( 'trrocket-menu-click' ) ) );
+			// 17/11/2026 (Tom again: «the little arrow does not turn, with or without the Arrow option»): the arrow is the
+			// theme's; it turns while our list is open (frontend.css) and goes away when «Arrow» is off.
+			$parent  = $make( $current, $root, array_merge( array( 'menu-item-has-children', 'trrocket-lang-current' ), 'hover' === ( $s['dd_trigger'] ?? 'click' ) ? array() : array( 'trrocket-menu-click' ), empty( $s['dd_caret'] ) ? array( 'trrocket-menu-nocaret' ) : array() ) );
 			$nuove[] = $parent;
 			foreach ( $entries as $e ) {
 				if ( $e['code'] !== $current['code'] ) {

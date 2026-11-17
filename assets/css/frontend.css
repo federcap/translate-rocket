@@ -480,3 +480,10 @@
    (trrocket-menu-fly, set by switcher.js): a phone menu that unfolds in place stays the theme's. */
 li.trrocket-menu-fly:not(.trrocket-menu-open)>ul{display:none!important}
 li.trrocket-menu-fly.trrocket-menu-open>ul{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+/* 17/11/2026 (Tom, Astra): the theme's own arrow next to the language turns while the list is open, and is not shown
+   when «Arrow» is off. Arrows of the common themes (Astra, GeneratePress, OceanWP, Kadence, Neve, Blocksy, Elementor
+   menus); the flag is never touched. */
+li.trrocket-menu-fly>a :is(.dropdown-menu-toggle,.ast-icon,.nav-arrow,.dropdown-nav-toggle,.caret-wrap,.caret,.sub-arrow,.ct-toggle-dropdown-desktop,.submenu-indicator,.menu-item-arrow):not(.trrocket-flag-wrap *),li.trrocket-menu-fly>:is(.dropdown-menu-toggle,.dropdown-nav-special-toggle,.ct-toggle-dropdown-desktop){transition:transform .2s ease;transform-origin:50% 50%}
+li.trrocket-menu-fly.trrocket-menu-open>a :is(.dropdown-menu-toggle,.nav-arrow,.dropdown-nav-toggle,.caret-wrap,.sub-arrow,.ct-toggle-dropdown-desktop,.submenu-indicator,.menu-item-arrow):not(.trrocket-flag-wrap *),li.trrocket-menu-fly.trrocket-menu-open>:is(.dropdown-menu-toggle,.dropdown-nav-special-toggle,.ct-toggle-dropdown-desktop){transform:rotate(180deg)}
+li.trrocket-menu-fly.trrocket-menu-nocaret>a :is(.dropdown-menu-toggle,.nav-arrow,.dropdown-nav-toggle,.caret-wrap,.sub-arrow,.ct-toggle-dropdown-desktop,.submenu-indicator,.menu-item-arrow):not(.trrocket-flag-wrap *),li.trrocket-menu-fly.trrocket-menu-nocaret>:is(.dropdown-menu-toggle,.dropdown-nav-special-toggle,.ct-toggle-dropdown-desktop){display:none!important}
+@media (prefers-reduced-motion:reduce){li.trrocket-menu-fly>a :is(.dropdown-menu-toggle,.nav-arrow,.dropdown-nav-toggle,.caret-wrap,.sub-arrow){transition:none}}
