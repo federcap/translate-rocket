@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.50
+Stable tag: 1.8.51
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.51 =
+* New: the dropdown of the language switcher can open as a panel with the languages side by side, in 2 to 6 columns, the current one highlighted (two columns on phones), and its button can show the word «Language», or a word of your own, instead of the current language (Switcher → Dropdown button, Dropdown list). Handy when the languages are many.
+* Fixed: when a free AI engine answered «request too large» (Groq's free plan with long texts, 20 sentences at a time), it was taken for an account out of credit: the engine was shown as unavailable and the sentences stayed untranslated. The requests now get smaller by themselves, the same sentences are asked again, and the size the engine accepted is remembered.
+* Fixed: «Translate all» reloaded the page as if it had finished when an engine broke after translating part of the sentences. The reason now stays on the screen, with what is left to translate. Thanks to Matjaž.
+* Improved: when a translation fails, the log (Diagnostics) gives the reason of every engine in your order, not only of the last one.
 
 = 1.8.50 =
 * Fixed: in the menu of a classic theme with «Open: on click», the theme's little arrow next to the language now turns while the list is open, and is hidden when «Arrow» is switched off (Switcher → More style options). Thanks to Tom.
@@ -749,6 +755,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.51 =
+The language dropdown can open as a panel with several columns. «Translate all» no longer stops without a word when an engine breaks, and a «request too large» from a free engine is handled with smaller requests.
 
 = 1.8.50 =
 The arrow next to the language in classic theme menus turns when the list opens, and follows the «Arrow» option.

@@ -7252,3 +7252,40 @@ msgstr "品質：%s"
 #: src/Admin/Admin.php
 msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
 msgstr "オン：各ページ・投稿・商品に、言語ごとに翻訳後のタイトルから作ったアドレスが付きます（例：/it/about-us/ ではなく /it/chi-siamo/）。元のアドレスを開いた訪問者や検索エンジンは新しいアドレスへ転送されます（301）。エディターで入力したアドレスは変更されず、一度作ったアドレスは後で翻訳を編集しても変わりません。オフ：すべての言語で元のアドレスに戻ります。作成済みのアドレスも同様です（保存されており、再びオンにすると戻ります）。それらを開いた訪問者は 301 で元のアドレスへ転送されます。エディターで入力したアドレスは引き続き使われます。"
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "ドロップダウンのボタン"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "現在の言語を表示"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "「Language」という語を表示"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "ボタンに表示する任意の語"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "「Language」を選ぶと、ボックスに任意の語を入力できます。その語はどの言語でも同じまま表示されます。"
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "ドロップダウンのリスト"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "1列（ボタンと同じ幅）"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "%d列のパネル"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "パネルはすべての言語を横に並べて表示し、現在の言語を強調します。言語が多いときに便利です。スマートフォンでは2列になります。"

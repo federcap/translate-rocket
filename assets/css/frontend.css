@@ -412,6 +412,75 @@
 	background: rgba( 0, 0, 0, 0.06 );
 }
 
+/* 1.8.51 — the dropdown as a PANEL: a button (the current language, or the word «Language») that opens a box with
+   every language side by side, the current one highlighted. The box is wider than the button, so it stands apart from
+   it (a small gap, all corners round); switcher.js keeps it inside the screen. Two columns on phones. */
+.trrocket-dd.trrocket-dd-panel .trrocket-dd-menu {
+	width: max-content;
+	max-width: calc( 100vw - 16px );
+	max-height: min( 70vh, 460px );
+	overflow: auto;
+	left: auto;
+	right: 0;
+	margin-top: 6px;
+	padding: 8px;
+	gap: 2px 4px;
+	grid-template-columns: repeat( 3, minmax( max-content, 1fr ) );
+	border: 1px solid #e2e2e2;
+	border-radius: 8px;
+}
+.trrocket-dd.trrocket-dd-panel.is-open .trrocket-dd-menu {
+	display: grid;
+}
+@media ( hover: hover ) {
+	.trrocket-dd.trrocket-dd-panel.trrocket-dd-hover:hover .trrocket-dd-menu {
+		display: grid;
+	}
+	/* opened by the mouse: no gap, or the pointer would leave the button before reaching the box */
+	.trrocket-dd.trrocket-dd-panel.trrocket-dd-hover .trrocket-dd-menu {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+	.trrocket-dd.trrocket-dd-panel.trrocket-dd-hover:hover .trrocket-dd-toggle {
+		border-radius: 8px;
+	}
+}
+.trrocket-dd.trrocket-dd-cols-2 .trrocket-dd-menu { grid-template-columns: repeat( 2, minmax( max-content, 1fr ) ); }
+.trrocket-dd.trrocket-dd-cols-4 .trrocket-dd-menu { grid-template-columns: repeat( 4, minmax( max-content, 1fr ) ); }
+.trrocket-dd.trrocket-dd-cols-5 .trrocket-dd-menu { grid-template-columns: repeat( 5, minmax( max-content, 1fr ) ); }
+.trrocket-dd.trrocket-dd-cols-6 .trrocket-dd-menu { grid-template-columns: repeat( 6, minmax( max-content, 1fr ) ); }
+@media ( max-width: 600px ) {
+	.trrocket-dd.trrocket-dd-panel .trrocket-dd-menu { grid-template-columns: repeat( 2, minmax( 0, 1fr ) ); }
+	/* two columns on a phone: a long name (Bahasa Indonesia with its flag) goes on two lines, not out of the box */
+	.trrocket-dd.trrocket-dd-panel .trrocket-dd-menu a,
+	.trrocket-dd.trrocket-dd-panel .trrocket-dd-menu .trrocket-current > span { white-space: normal; overflow-wrap: anywhere; min-width: 0; }
+	.trrocket-dd.trrocket-dd-panel .trrocket-dd-menu li { min-width: 0; }
+	.trrocket-dd.trrocket-dd-panel .trrocket-dd-menu .trrocket-flag-wrap { flex: 0 0 auto; }
+}
+.trrocket-dd-up .trrocket-dd.trrocket-dd-panel .trrocket-dd-menu {
+	margin-top: 0;
+	margin-bottom: 6px;
+	border: 1px solid #e2e2e2;
+}
+.trrocket-dd.trrocket-dd-panel.is-open .trrocket-dd-toggle,
+.trrocket-dd-up .trrocket-dd.trrocket-dd-panel.is-open .trrocket-dd-toggle {
+	border-radius: 8px;
+}
+.trrocket-dd-panel .trrocket-dd-menu a,
+.trrocket-dd-panel .trrocket-dd-menu .trrocket-current > span {
+	border-radius: 6px;
+}
+.trrocket-dd-panel .trrocket-dd-menu .trrocket-current > span {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px;
+	white-space: nowrap;
+	line-height: 1.3;
+	font-weight: 700;
+	background: rgba( 0, 0, 0, 0.06 );
+}
+
 /* Scrollable horizontal switcher (type="scroll") — compact bar for many languages. */
 .trrocket-scroll{display:inline-flex;align-items:center;gap:2px;max-width:100%;vertical-align:middle}
 .trrocket-scroll-viewport{overflow-x:auto;overflow-y:hidden;scroll-behavior:smooth;-ms-overflow-style:none;scrollbar-width:none}

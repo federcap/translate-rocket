@@ -2,12 +2,38 @@
 ( function () {
 	'use strict';
 
+	/* 1.8.51 — a panel (several columns) is wider than its button: it opens towards the side of the screen with more
+	   room and never goes past the edges. Measured when it opens, so it follows a resized window too. */
+	function place( dd ) {
+		if ( ! dd.classList.contains( 'trrocket-dd-panel' ) ) { return; }
+		var m = dd.querySelector( '.trrocket-dd-menu' );
+		var t = dd.querySelector( '.trrocket-dd-overlay .trrocket-dd-toggle' );
+		if ( ! m || ! t ) { return; }
+		m.style.left = ''; m.style.right = '';
+		var vw = document.documentElement.clientWidth, w = m.offsetWidth;
+		if ( ! w ) { return; }
+		var r = t.getBoundingClientRect(), base = dd.getBoundingClientRect();
+		var x = ( r.left + r.width / 2 > vw / 2 ) ? r.right - w : r.left;
+		x = Math.max( 8, Math.min( x, vw - w - 8 ) );
+		m.style.left = Math.round( x - base.left ) + 'px';
+		m.style.right = 'auto';
+	}
+	document.addEventListener( 'mouseover', function ( e ) {
+		var dd = ( e.target && e.target.closest ) ? e.target.closest( '.trrocket-dd-panel.trrocket-dd-hover' ) : null;
+		if ( dd && ! dd.trrPlaced ) {
+			dd.trrPlaced = true;
+			place( dd );
+			window.setTimeout( function () { dd.trrPlaced = false; }, 400 );
+		}
+	} );
+
 	document.addEventListener( 'click', function ( e ) {
 		var toggle = ( e.target && e.target.closest ) ? e.target.closest( '.trrocket-dd-toggle' ) : null;
 
 		Array.prototype.forEach.call( document.querySelectorAll( '.trrocket-dd' ), function ( dd ) {
 			if ( toggle && dd.contains( toggle ) ) {
 				var open = dd.classList.toggle( 'is-open' );
+				if ( open ) { place( dd ); }
 				toggle.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
 			} else {
 				dd.classList.remove( 'is-open' );

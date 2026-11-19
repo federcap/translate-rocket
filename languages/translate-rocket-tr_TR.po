@@ -8125,3 +8125,40 @@ msgstr "Kalite: %s"
 #: src/Admin/Admin.php
 msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
 msgstr "Açık: her sayfa, yazı ve ürün her dilde çevrilmiş başlığından oluşturulan adresi alır; örneğin /it/about-us/ yerine /it/chi-siamo/. Asıl adresi açan ziyaretçiler ve arama motorları yeni adrese yönlendirilir (301). Düzenleyicide yazdığınız bir adres asla değiştirilmez ve oluşturulan adres, çeviriyi sonradan düzenleseniz de aynı kalır. Kapalı: her dil yeniden kendi adresinizi kullanır, zaten oluşturulmuş adresler için de (saklanırlar ve seçeneği tekrar açarsanız geri gelirler); bunlardan birini açan ziyaretçiler 301 ile asıl adrese yönlendirilir. Düzenleyicide yazdığınız adres kullanılmaya devam eder."
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "Açılır menü düğmesi"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "Geçerli dili gösterir"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "«Language» sözcüğünü gösterir"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "Düğme için kendi sözcüğünüz"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "«Language» ile kutuya kendi sözcüğünüzü yazabilirsiniz: her dilde aynı kalır."
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "Açılır liste"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "Tek sütun, düğme genişliğinde"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "%d sütunlu panel"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "Panel tüm dilleri yan yana gösterir ve geçerli dili vurgular: dil sayısı çok olduğunda kullanışlıdır. Telefonlarda iki sütun kullanır."

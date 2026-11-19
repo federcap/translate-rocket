@@ -8125,3 +8125,40 @@ msgstr "کیفیت: %s"
 #: src/Admin/Admin.php
 msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
 msgstr "روشن: هر برگه، نوشته و محصول در هر زبان نشانی ساخته‌شده از عنوان ترجمه‌شده‌اش را می‌گیرد، مثلاً /it/chi-siamo/ به‌جای /it/about-us/. بازدیدکنندگان و موتورهای جست‌وجویی که نشانی اصلی را باز کنند به نشانی جدید فرستاده می‌شوند (301). نشانی‌ای که در ویرایشگر نوشته‌اید هرگز تغییر نمی‌کند و نشانیِ ساخته‌شده حتی اگر بعداً ترجمه را ویرایش کنید ثابت می‌ماند. خاموش: هر زبان دوباره از نشانی خود شما استفاده می‌کند، حتی برای نشانی‌های ساخته‌شده (نگه داشته می‌شوند و اگر دوباره روشنش کنید برمی‌گردند)؛ بازدیدکنندگانی که یکی از آن‌ها را باز کنند با 301 به نشانی اصلی فرستاده می‌شوند. نشانی‌ای که در ویرایشگر نوشته‌اید همچنان استفاده می‌شود."
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "دکمهٔ فهرست کشویی"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "زبان فعلی را نشان می‌دهد"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "واژهٔ «Language» را نشان می‌دهد"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "واژهٔ دلخواه شما برای دکمه"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "با «Language» می‌توانید واژهٔ دلخواه خود را در کادر بنویسید: در همهٔ زبان‌ها یکسان می‌ماند."
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "فهرست کشویی"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "یک ستون، هم‌عرض دکمه"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "پنل با %d ستون"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "پنل همهٔ زبان‌ها را کنار هم نشان می‌دهد و زبان فعلی را برجسته می‌کند: وقتی زبان‌ها زیادند کاربردی است. در تلفن همراه از دو ستون استفاده می‌کند."

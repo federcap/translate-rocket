@@ -161,6 +161,21 @@ class Translator {
 	private static $broke = false;
 
 	/**
+	 * 1.8.51: an engine said «request too large»; the size to go on with (0 = none said so).
+	 *
+	 * @var int
+	 */
+	private static $too_big = 0;
+
+	/**
+	 * 1.8.51: what each engine that failed in this run said (provider id => message), for the log: the line used
+	 * to carry the last engine's words only, and why the first three had stopped was nowhere.
+	 *
+	 * @var array<string,string>
+	 */
+	private static $whys = array();
+
+	/**
 	 * Take the site's translation lock (see translate_missing).
 	 */
 	private static function lock(): bool {
@@ -248,6 +263,17 @@ class Translator {
 			$scelta = (int) ( Settings::get()['ai_batch'] ?? 0 );
 			$batch  = $scelta > 0 ? $scelta : min( array_map( static fn( $p ) => $p->batch_size(), $providers ) );
 		}
+		// 1.8.51 (19/11/2026, razis-oldbooks.gr: free Groq, 20 book descriptions in one request = 9,450 tokens against
+		// 8,000 a minute → HTTP 413 «Request too large»): an engine that said «too large» a while ago gets the size it
+		// accepted, from the first request of this step.
+		foreach ( $providers as $p ) {
+			$sta = (int) get_transient( 'trrocket_fit_' . $p->id() );
+			if ( $sta > 0 ) {
+				$batch = max( 1, min( $batch, $sta ) );
+			}
+		}
+		self::$too_big = 0;
+		self::$whys    = array();
 
 		// «Improve with AI»: not the missing sentences but the ones the browser translated.
 		if ( $migliora ) {
@@ -321,7 +347,9 @@ class Translator {
 		// («Paket:» / «1X RC avtomobil» / «1X akumulator», one paragraph each) shown elsewhere flattened into one line.
 		// The pieces' translations are joined, nothing goes to the engine.
 		$fermato = false;
-		foreach ( array_chunk( array_keys( $pending ), max( 1, $batch ) ) as $texts ) {
+		$coda    = array_keys( $pending ); // a queue, not fixed chunks: the size can shrink on the way (1.8.51)
+		while ( ! empty( $coda ) ) {
+			$texts = array_splice( $coda, 0, max( 1, $batch ) );
 			if ( $deadline > 0 && microtime( true ) >= $deadline ) {
 				$fermato = true;
 				break;
@@ -346,6 +374,20 @@ class Translator {
 			}
 
 			$hit = self::first_ok( $providers, $dead, $texts, $source, $lang, $error, $resting );
+			// 1.8.51: an engine answered «request too large» for this many sentences. From here on the requests are
+			// half the size; and when no other engine took the batch, the same sentences are asked again, smaller —
+			// not one by one (slow, and every step again), and the engine is not given up for lost.
+			if ( self::$too_big > 0 ) {
+				$nuovo         = max( 1, min( $batch, self::$too_big ) );
+				self::$too_big = 0;
+				if ( $nuovo < $batch ) {
+					$batch = $nuovo;
+					if ( null === $hit ) {
+						$coda = array_merge( $texts, $coda );
+						continue;
+					}
+				}
+			}
 			if ( null !== $hit ) {
 				$vuote = array();
 				foreach ( $hit['translations'] as $i => $translation ) {
@@ -486,7 +528,8 @@ class Translator {
 				'ai',
 				/* translators: %s: language code. */
 				sprintf( __( 'AI translation failed (→ %s).', 'translate-rocket' ), $lang ),
-				$error
+				// 1.8.51: every engine's reason, in the order of the chain — not the last one's only.
+				count( self::$whys + array_intersect_key( self::$resting_why, $resting ) ) > 1 ? implode( ' · ', array_unique( array_map( 'strval', array_values( self::$whys + array_intersect_key( self::$resting_why, $resting ) ) ) ) ) : $error
 			);
 		}
 
@@ -537,6 +580,19 @@ class Translator {
 				}
 				continue;
 			}
+			self::$whys[ $provider->id() ] = (string) $result->error;
+			// 1.8.51 (19/11/2026, razis-oldbooks.gr): «HTTP 413: Request too large … please reduce your message size and
+			// try again. Need more tokens? Upgrade … /settings/billing» is not an empty wallet («billing» made it one, and
+			// Groq was «unavailable» for twelve hours): the request was too big. The run goes on with smaller ones.
+			if ( self::is_too_large( (string) $result->error ) ) {
+				$error = $result->error;
+				if ( count( $texts ) > 1 ) {
+					$meta          = (int) ceil( count( $texts ) / 2 );
+					self::$too_big = self::$too_big > 0 ? min( self::$too_big, $meta ) : $meta;
+					set_transient( 'trrocket_fit_' . $provider->id(), $meta, 6 * HOUR_IN_SECONDS );
+				}
+				continue;
+			}
 			self::$broke = true;
 			$error       = $result->error;
 			if ( self::is_permanent( $result->error ) ) {
@@ -559,10 +615,21 @@ class Translator {
 	}
 
 	/**
+	 * 1.8.51: the engine refused the request for its size (too many sentences, or too long, for its limit per
+	 * minute or its context): smaller requests pass.
+	 */
+	private static function is_too_large( string $error ): bool {
+		return (bool) preg_match( '/http 413|request too large|payload too large|reduce your message size|reduce the length of|maximum context length|context_length_exceeded|context window/i', $error );
+	}
+
+	/**
 	 * Whether an error means the provider can't be used for the rest of this run
 	 * (exhausted quota / billing, or a rejected key) rather than a passing glitch.
 	 */
 	private static function is_permanent( string $error ): bool {
+		if ( self::is_too_large( $error ) ) {
+			return false; // the request was too big, the account is fine (1.8.51)
+		}
 		// A plain HTTP 429 can be a passing rate limit (already retried in the
 		// provider), so it's NOT listed here — only quota/billing/auth errors,
 		// which won't fix themselves during this run, retire a provider.

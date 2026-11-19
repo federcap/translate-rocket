@@ -7280,3 +7280,40 @@ msgstr "Kwaliteit: %s"
 #: src/Admin/Admin.php
 msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
 msgstr "Aan: elke pagina, elk bericht en elk product krijgt in elke taal het adres op basis van de vertaalde titel, bijvoorbeeld /it/chi-siamo/ in plaats van /it/about-us/. Bezoekers en zoekmachines die het oorspronkelijke adres openen, worden naar het nieuwe gestuurd (301). Een adres dat je in de editor hebt getypt, wordt nooit gewijzigd, en een eenmaal gemaakt adres blijft hetzelfde, ook als je de vertaling later aanpast. Uit: elke taal gebruikt weer je eigen adres, ook voor al gemaakte adressen (ze blijven bewaard en komen terug als je dit weer aanzet); bezoekers die er een openen, gaan met een 301 naar het oorspronkelijke adres. Een adres dat je in de editor hebt getypt, blijft in gebruik."
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "Dropdownknop"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "Toont de huidige taal"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "Toont het woord «Language»"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "Je eigen woord voor de knop"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "Met «Language» kun je in het vak je eigen woord schrijven: het blijft in elke taal hetzelfde."
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "Dropdownlijst"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "Eén kolom, even breed als de knop"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "Paneel met %d kolommen"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "Een paneel toont alle talen naast elkaar, met de huidige gemarkeerd: handig als er veel talen zijn. Op telefoons gebruikt het twee kolommen."

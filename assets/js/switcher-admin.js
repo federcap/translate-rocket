@@ -183,7 +183,7 @@
 	   comando che non fa niente ma sembra acceso e' peggio di uno spento: si
 	   prova, non succede nulla e si pensa che sia rotto.
 	   ----------------------------------------------------------------------- */
-	var SOLO_TENDINA = [ 'sw_dd_trigger', 'sw_dd_caret', 'sw_animation' ];
+	var SOLO_TENDINA = [ 'sw_dd_trigger', 'sw_dd_caret', 'sw_animation', 'sw_dd_label', 'sw_dd_label_text', 'sw_dd_cols' ];
 
 	/* 7/10/2026 (Federico styled «header» and the menu kept showing Default): one click moves this
 	   profile into the header menu and saves. */

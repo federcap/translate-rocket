@@ -2793,3 +2793,6 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 @keyframes trr-go-flame{from{opacity:.95;transform:scale(.8)}to{opacity:.6;transform:scale(1.15)}}
 @keyframes trr-go-puff{0%{opacity:.85;transform:translate(0,0) scale(.5)}100%{opacity:0;transform:translate(-.9em,.7em) scale(2.3)}}
 @media (prefers-reduced-motion:reduce){.trr-go-fire,.trr-go-smoke{display:none}.trr-oneclick .button-hero#trr-oneclick-go.is-flying .trr-go-rocket{animation:none!important}}
+
+/* 1.8.51: the dropdown's button and list (panel) sit next to «Layout»; with another layout they are not shown. */
+.trrocket-wrap tr.trr-sw-solo-dd.trr-off { display: none; }

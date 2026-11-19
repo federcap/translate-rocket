@@ -30,6 +30,27 @@ class Switcher {
 	private $divider = 'none';
 
 	/**
+	 * 1.8.51 — the dropdown of the profile being drawn: what its button says (current|word), the owner's own
+	 * word, and the columns of its list (1 = a list as wide as the button, 2..6 = a panel).
+	 *
+	 * @var array{label:string,text:string,cols:int}
+	 */
+	private $dd = array( 'label' => 'current', 'text' => '', 'cols' => 1 );
+
+	/**
+	 * Reads the dropdown options of a profile (see $dd).
+	 *
+	 * @param array<string,mixed> $s Profile settings.
+	 */
+	private function dd_setup( array $s ): void {
+		$this->dd = array(
+			'label' => 'word' === ( $s['dd_label'] ?? '' ) ? 'word' : 'current',
+			'text'  => trim( (string) ( $s['dd_label_text'] ?? '' ) ),
+			'cols'  => max( 1, min( 6, (int) ( $s['dd_cols'] ?? 1 ) ) ),
+		);
+	}
+
+	/**
 	 * Draw only the languages visitors can see (the live preview).
 	 *
 	 * @var bool
@@ -606,6 +627,8 @@ class Switcher {
 			// Opening upwards the two surfaces meet the other way round.
 			$out .= $scope . '.trrocket-dd-up .trrocket-dd-menu{border-radius:' . $rv . ' ' . $rv . ' 0 0;}';
 			$out .= $scope . '.trrocket-dd-up .trrocket-dd.is-open .trrocket-dd-toggle{border-radius:0 0 ' . $rv . ' ' . $rv . ';}';
+			// 1.8.51: a panel stands apart from its button, so both keep all their corners.
+			$out .= $scope . ' .trrocket-dd-panel .trrocket-dd-menu,' . $scope . ' .trrocket-dd.trrocket-dd-panel.is-open .trrocket-dd-toggle,' . $scope . ' .trrocket-dd.trrocket-dd-panel.trrocket-dd-hover:hover .trrocket-dd-toggle,' . $scope . '.trrocket-dd-up .trrocket-dd.trrocket-dd-panel.is-open .trrocket-dd-toggle{border-radius:' . $rv . ';}';
 		}
 
 		// Per-profile device visibility: hide this switcher entirely on one
@@ -685,6 +708,7 @@ class Switcher {
 		$id   = isset( $atts['id'] ) ? sanitize_key( $atts['id'] ) : 'default';
 		$s    = self::profile_settings( $id );
 		$this->divider = (string) ( $s['divider'] ?? 'none' );
+		$this->dd_setup( $s );
 		// Placement is one either/or choice: if the default switcher is floating,
 		// don't also output its inline shortcode/block, so the page never shows two.
 		if ( 'default' === $id && ! empty( $s['floating'] ) ) {
@@ -729,6 +753,7 @@ class Switcher {
 	 */
 	public function preview_parts( array $s, string $view ): array {
 		$this->divider = (string) ( $s['divider'] ?? 'none' );
+		$this->dd_setup( $s );
 		$atts          = array(
 			'id'      => 'preview',
 			'type'    => (string) ( $s['type'] ?? 'inline' ),
@@ -757,6 +782,18 @@ class Switcher {
 			},
 			$css
 		);
+		// 1.8.51: frontend.css gives a panel two columns below 600px, and the preview frame is often narrower than
+		// that: the «Desktop» view showed two columns whatever was chosen. There the panel keeps the chosen columns.
+		// And its height follows the screen (70vh): in a frame as tall as the closed switcher that left four rows to
+		// scroll. In the preview the panel is as tall as its languages, and the frame grows with it.
+		if ( $this->dd['cols'] > 1 ) {
+			$pan  = '.trrocket-sw-preview .trrocket-dd.trrocket-dd-panel .trrocket-dd-menu';
+			$css .= $pan . '{max-height:none;}';
+			if ( 'phone' !== $view ) {
+				$css .= $pan . '{grid-template-columns:repeat(' . (int) $this->dd['cols'] . ',minmax(max-content,1fr));}'
+					. $pan . ' a,' . $pan . ' .trrocket-current span{white-space:nowrap;overflow-wrap:normal;}';
+			}
+		}
 		return array(
 			'html' => ( '' === $html ? '' : '<div class="trrocket-sw trrocket-sw-preview" translate="no">' . $html . '</div>' )
 				. ( empty( $nascoste ) ? '' : '<p class="trr-sw-offline-note" style="margin:10px 0 0;font:12px/1.4 system-ui,sans-serif;color:#6b7089;text-align:center">'
@@ -830,6 +867,7 @@ class Switcher {
 		}
 		$ripiego = $ripiego || $solo_telefono;
 		$this->divider = (string) ( $s['divider'] ?? 'none' );
+		$this->dd_setup( $s );
 		$pos  = in_array( $s['float_pos'] ?? '', array( 'bottom-right', 'bottom-left', 'top-right', 'top-left', 'custom' ), true ) ? $s['float_pos'] : 'bottom-right';
 		if ( $ripiego ) {
 			$pos = 'bottom-right';
@@ -893,6 +931,7 @@ class Switcher {
 			return;
 		}
 		$this->divider = 'none';
+		$this->dd_setup( array() );
 		$entries       = $this->entries( array( 'type' => 'inline', 'current' => 'show' ), ! empty( $s['english_names'] ) );
 		if ( count( $entries ) < 2 ) {
 			return;
@@ -970,6 +1009,7 @@ class Switcher {
 			return;
 		}
 		$this->divider = (string) ( $s['divider'] ?? 'none' );
+		$this->dd_setup( $s );
 		$type          = (string) ( $s['type'] ?? 'inline' );
 		$html          = $this->build(
 			array(
@@ -1169,6 +1209,7 @@ class Switcher {
 		}
 		$s             = null !== $segnaposto ? array_merge( self::settings(), self::in_menu() ? self::menu_settings() : array() ) : self::menu_settings();
 		$this->divider = (string) ( $s['divider'] ?? 'none' );
+		$this->dd_setup( $s );
 		$show          = (string) ( $s['show'] ?? 'both' );
 		$dropdown      = 'dropdown' === ( $s['type'] ?? '' );
 		$entries       = $this->entries( array( 'type' => $dropdown ? 'dropdown' : 'inline', 'current' => $s['current'] ?? 'show' ), ! empty( $s['english_names'] ) );
@@ -1719,16 +1760,25 @@ class Switcher {
 			return '';
 		}
 
+		// 1.8.51: a panel lists every language in its usual order, the current one highlighted in its place.
+		$panel  = $this->dd['cols'] > 1;
+		$word   = 'word' === $this->dd['label'];
 		$menu   = '';
 		$widest = $current;
-		foreach ( $others as $entry ) {
+		foreach ( ( $panel ? $entries : $others ) as $entry ) {
+			if ( $panel && (string) $entry['code'] === (string) $current['code'] ) {
+				$menu .= '<li class="trrocket-current"><span>' . $this->label_html( $entry, $show ) . '</span></li>';
+				continue;
+			}
 			$menu .= '<li><a href="' . esc_url( $entry['href'] ) . '">' . $this->label_html( $entry, $show ) . '</a></li>';
 			if ( mb_strlen( self::label_text( $entry, $show ) ) > mb_strlen( self::label_text( $widest, $show ) ) ) {
 				$widest = $entry;
 			}
 		}
 
-		$dd_class   = 'trrocket-dd' . ( 'hover' === $trigger ? ' trrocket-dd-hover' : '' );
+		$dd_class   = 'trrocket-dd' . ( 'hover' === $trigger ? ' trrocket-dd-hover' : '' )
+			. ( $panel ? ' trrocket-dd-panel trrocket-dd-cols-' . (int) $this->dd['cols'] : '' )
+			. ( $word ? ' trrocket-dd-word' : '' );
 		$caret_html = $caret
 			? '<span class="trrocket-dd-caret" aria-hidden="true"><svg viewBox="0 0 10 6" width="10" height="6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'
 			: '';
@@ -1751,6 +1801,12 @@ class Switcher {
 		if ( '' !== self::label_text( $widest, $show ) && false !== strpos( $anchor_label, $nome_largo ) ) {
 			$anchor_label = str_replace( $nome_largo, '<span class="trrocket-name trrocket-dd-names">' . $tutti . '</span>', $anchor_label );
 		}
+		// The button says «Language» (or the owner's word) instead of the current language: the word alone gives the width.
+		$toggle_label = $this->label_html( $current, $show );
+		if ( $word ) {
+			$toggle_label = '<span class="trrocket-name trrocket-dd-wordtext">' . esc_html( '' !== $this->dd['text'] ? $this->dd['text'] : __( 'Language', 'translate-rocket' ) ) . '</span>';
+			$anchor_label = $toggle_label;
+		}
 		$anchor = '<div class="trrocket-dd-anchor" aria-hidden="true">'
 			. '<span class="trrocket-dd-toggle">' . $anchor_label . $caret_html . '</span>'
 			. '</div>';
@@ -1759,7 +1815,7 @@ class Switcher {
 			. $anchor
 			. '<div class="trrocket-dd-overlay">'
 			. '<button type="button" class="trrocket-dd-toggle" aria-haspopup="true" aria-expanded="false">'
-			. $this->label_html( $current, $show )
+			. $toggle_label
 			. $caret_html
 			. '</button>'
 			. '<ul class="trrocket-dd-menu">' . $menu . '</ul>'

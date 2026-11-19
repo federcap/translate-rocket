@@ -7581,3 +7581,40 @@ msgid "%1$s %2$s sentence"
 msgid_plural "%1$s %2$s sentences"
 msgstr[0] "%1$s %2$s frase"
 msgstr[1] "%1$s %2$s frasi"
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "Pulsante della tendina"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "Mostra la lingua corrente"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "Mostra la parola «Language»"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "La tua parola per il pulsante"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "Con «Language» puoi scrivere una parola tua nella casella: resta uguale in ogni lingua."
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "Lista della tendina"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "Una colonna, larga quanto il pulsante"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "Riquadro a %d colonne"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "Un riquadro mostra tutte le lingue una accanto all’altra, con quella corrente evidenziata: comodo quando le lingue sono tante. Sui telefoni usa due colonne."

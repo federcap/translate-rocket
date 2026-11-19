@@ -2643,6 +2643,11 @@ class Admin {
 		$trigger           = isset( $_POST['sw_dd_trigger'] ) ? sanitize_key( $_POST['sw_dd_trigger'] ) : 'click';
 		$sw['dd_trigger']  = in_array( $trigger, array( 'click', 'hover' ), true ) ? $trigger : 'click';
 		$sw['dd_caret']    = ! empty( $_POST['sw_dd_caret'] );
+		// 1.8.51: the button can say «Language», and the list can be a panel with columns.
+		$dd_label          = isset( $_POST['sw_dd_label'] ) ? sanitize_key( $_POST['sw_dd_label'] ) : 'current';
+		$sw['dd_label']    = in_array( $dd_label, array( 'current', 'word' ), true ) ? $dd_label : 'current';
+		$sw['dd_label_text'] = isset( $_POST['sw_dd_label_text'] ) ? mb_substr( sanitize_text_field( wp_unslash( $_POST['sw_dd_label_text'] ) ), 0, 40 ) : '';
+		$sw['dd_cols']     = isset( $_POST['sw_dd_cols'] ) ? max( 1, min( 6, (int) $_POST['sw_dd_cols'] ) ) : 1;
 		foreach ( array( 'flag_tl', 'flag_tr', 'flag_br', 'flag_bl' ) as $ck ) {
 			$sw[ $ck ] = isset( $_POST[ 'sw_' . $ck ] ) ? min( 50, max( 0, (int) $_POST[ 'sw_' . $ck ] ) ) : 0;
 		}
@@ -3011,6 +3016,23 @@ class Admin {
 									<option value="flagcode" <?php selected( $g( 'show' ), 'flagcode' ); ?>><?php esc_html_e( 'Flag + code (EN, IT…)', 'translate-rocket' ); ?></option>
 									<option value="code" <?php selected( $g( 'show' ), 'code' ); ?>><?php esc_html_e( 'Code only (EN, IT…)', 'translate-rocket' ); ?></option>
 								</select>
+							</td></tr>
+							<tr class="trr-sw-solo-dd"><th scope="row"><?php esc_html_e( 'Dropdown button', 'translate-rocket' ); ?></th><td>
+								<select id="sw_dd_label" name="sw_dd_label">
+									<option value="current" <?php selected( $g( 'dd_label' ), 'current' ); ?>><?php esc_html_e( 'Shows the current language', 'translate-rocket' ); ?></option>
+									<option value="word" <?php selected( $g( 'dd_label' ), 'word' ); ?>><?php esc_html_e( 'Shows the word «Language»', 'translate-rocket' ); ?></option>
+								</select>
+								<input type="text" id="sw_dd_label_text" name="sw_dd_label_text" maxlength="40" class="regular-text" style="max-width:180px" value="<?php echo esc_attr( (string) $g( 'dd_label_text' ) ); ?>" placeholder="<?php esc_attr_e( 'Language', 'translate-rocket' ); ?>" aria-label="<?php esc_attr_e( 'Your own word for the button', 'translate-rocket' ); ?>" />
+								<p class="description"><?php esc_html_e( 'With «Language» you can write your own word in the box: it stays the same in every language.', 'translate-rocket' ); ?></p>
+							</td></tr>
+							<tr class="trr-sw-solo-dd"><th scope="row"><?php esc_html_e( 'Dropdown list', 'translate-rocket' ); ?></th><td>
+								<select id="sw_dd_cols" name="sw_dd_cols">
+									<option value="1" <?php selected( (int) $g( 'dd_cols' ) <= 1 ); ?>><?php esc_html_e( 'One column, as wide as the button', 'translate-rocket' ); ?></option>
+									<?php for ( $trr_c = 2; $trr_c <= 6; $trr_c++ ) : ?>
+									<option value="<?php echo (int) $trr_c; ?>" <?php selected( (int) $g( 'dd_cols' ), $trr_c ); ?>><?php echo esc_html( sprintf( /* translators: %d: number of columns */ __( 'Panel with %d columns', 'translate-rocket' ), $trr_c ) ); ?></option>
+									<?php endfor; ?>
+								</select>
+								<p class="description"><?php esc_html_e( 'A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns.', 'translate-rocket' ); ?></p>
 							</td></tr>
 						</table>
 					</div>
@@ -4132,7 +4154,10 @@ JS;
 						}).then(function(j){
 							if(!j||!j.success){throw new Error((j&&j.data&&j.data.error)||'?');}
 							var x=j.data;if(x.already||x.stopped){ferma(x.already||x.stopped);return;}riprove=0;fatte=x.total;tenute=x.kept||0;giri++;scrivi(x.left);if(x.wait&&giri<2000){txt.textContent=x.waitmsg||T.wait||txt.textContent;setTimeout(giro,x.wait*1000);return;}
-							if(x.error&&!x.count){ferma(x.error);return;}
+							// 1.8.51 (19/11/2026, Matjaž: «why does the translate all stop… until i refresh»): a step that translated
+							// something and then met a broken engine reloaded the page as if all were done, without a word.
+							// When sentences are left and nothing more is coming, the reason stays on the screen.
+							if(x.error&&(!x.count||(!x.more&&x.left>0))){ferma(x.error);return;}
 							if(x.more&&x.count>0&&giri<400){giro();return;}
 								// 16/10/2026: the engine left sentences behind (often not in the site's language): say so, with
 								// the way to them, instead of reloading as if all were done.

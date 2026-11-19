@@ -8097,3 +8097,40 @@ msgstr "Kualitas: %s"
 #: src/Admin/Admin.php
 msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
 msgstr "Aktif: setiap halaman, pos, dan produk mendapat alamat dari judul terjemahannya di setiap bahasa, misalnya /it/chi-siamo/ alih-alih /it/about-us/. Pengunjung dan mesin pencari yang membuka alamat asli dialihkan ke alamat baru (301). Alamat yang Anda ketik di editor tidak pernah diubah, dan alamat yang sudah dibuat tetap sama meski Anda mengedit terjemahannya nanti. Nonaktif: setiap bahasa kembali memakai alamat Anda sendiri, juga untuk alamat yang sudah dibuat (alamat itu disimpan dan kembali jika Anda mengaktifkannya lagi); pengunjung yang membukanya dialihkan ke alamat asli dengan 301. Alamat yang Anda ketik di editor tetap dipakai."
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "Tombol dropdown"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "Menampilkan bahasa saat ini"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "Menampilkan kata «Language»"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "Kata Anda sendiri untuk tombol"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "Dengan «Language» Anda dapat menulis kata Anda sendiri di kotak: kata itu tetap sama di setiap bahasa."
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "Daftar dropdown"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "Satu kolom, selebar tombol"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "Panel dengan %d kolom"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "Panel menampilkan semua bahasa berdampingan, dengan bahasa saat ini disorot: praktis bila bahasanya banyak. Di ponsel, panel memakai dua kolom."

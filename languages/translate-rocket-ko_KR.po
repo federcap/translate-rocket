@@ -8097,3 +8097,40 @@ msgstr "품질: %s"
 #: src/Admin/Admin.php
 msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
 msgstr "켜기: 모든 페이지, 글, 상품이 언어마다 번역된 제목으로 만든 주소를 갖습니다. 예: /it/about-us/ 대신 /it/chi-siamo/. 원래 주소를 연 방문자와 검색 엔진은 새 주소로 이동합니다(301). 편집기에서 직접 입력한 주소는 절대 바뀌지 않으며, 한 번 만든 주소는 나중에 번역을 수정해도 그대로입니다. 끄기: 모든 언어가 다시 원래 주소를 사용하며, 이미 만든 주소도 마찬가지입니다(저장되어 있다가 다시 켜면 돌아옵니다). 그 주소를 연 방문자는 301로 원래 주소로 이동합니다. 편집기에서 입력한 주소는 계속 사용됩니다."
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "드롭다운 버튼"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "현재 언어를 표시"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "«Language»라는 단어를 표시"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "버튼에 표시할 나만의 단어"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "«Language»를 선택하면 상자에 원하는 단어를 쓸 수 있습니다. 이 단어는 모든 언어에서 그대로 표시됩니다."
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "드롭다운 목록"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "한 열, 버튼과 같은 너비"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "%d열 패널"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "패널은 모든 언어를 나란히 보여 주고 현재 언어를 강조합니다. 언어가 많을 때 편리합니다. 휴대폰에서는 두 열을 사용합니다."

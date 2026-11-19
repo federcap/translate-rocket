@@ -7278,3 +7278,40 @@ msgstr "Qualität: %s"
 #: src/Admin/Admin.php
 msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
 msgstr "An: Jede Seite, jeder Beitrag und jedes Produkt erhält in jeder Sprache die Adresse aus dem übersetzten Titel, zum Beispiel /it/chi-siamo/ statt /it/about-us/. Besucher und Suchmaschinen, die die ursprüngliche Adresse öffnen, werden auf die neue weitergeleitet (301). Eine Adresse, die Sie im Editor eingegeben haben, wird nie geändert, und eine einmal erstellte Adresse bleibt gleich, auch wenn Sie die Übersetzung später bearbeiten. Aus: Jede Sprache verwendet wieder Ihre eigene Adresse, auch für bereits erstellte Adressen (sie bleiben erhalten und kommen zurück, wenn Sie die Option wieder einschalten); Besucher, die eine davon öffnen, werden mit 301 zur ursprünglichen Adresse geleitet. Eine im Editor eingegebene Adresse bleibt in Gebrauch."
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "Dropdown-Schaltfläche"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "Zeigt die aktuelle Sprache"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "Zeigt das Wort „Language“"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "Ihr eigenes Wort für die Schaltfläche"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "Mit „Language“ können Sie im Feld ein eigenes Wort eingeben: Es bleibt in jeder Sprache gleich."
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "Dropdown-Liste"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "Eine Spalte, so breit wie die Schaltfläche"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "Panel mit %d Spalten"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "Ein Panel zeigt alle Sprachen nebeneinander, die aktuelle ist hervorgehoben: praktisch bei vielen Sprachen. Auf Smartphones nutzt es zwei Spalten."

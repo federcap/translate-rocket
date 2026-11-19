@@ -8097,3 +8097,40 @@ msgstr "质量：%s"
 #: src/Admin/Admin.php
 msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
 msgstr "开启：每个页面、文章和产品在每种语言中都会获得由其翻译后标题生成的网址，例如用 /it/chi-siamo/ 代替 /it/about-us/。打开原网址的访客和搜索引擎会被转到新网址（301）。您在编辑器中手动填写的网址永远不会被更改，网址一旦生成，即使之后修改翻译也保持不变。关闭：所有语言重新使用您自己的网址，已生成的网址也一样（它们会被保留，重新开启后会恢复）；打开这些网址的访客会以 301 被转到原网址。您在编辑器中填写的网址继续使用。"
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "下拉按钮"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "显示当前语言"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "显示“Language”一词"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "按钮上的自定义文字"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "选择“Language”时，可以在框中填写自己的文字：它在所有语言中保持不变。"
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "下拉列表"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "一列，与按钮同宽"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "%d 列面板"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "面板并排显示所有语言，并突出显示当前语言：语言较多时很方便。在手机上使用两列。"

@@ -159,6 +159,9 @@ class Settings {
 				'width_px'      => '',
 				'dd_trigger'    => 'click',
 				'dd_caret'      => true,
+				'dd_label'      => 'current', // 1.8.51: what the dropdown's button says — current | word («Language»)
+				'dd_label_text' => '',        // the owner's own word instead of «Language»
+				'dd_cols'       => 1,         // 1 = a list as wide as the button; 2..6 = a panel with that many columns
 				'flag_tl'       => 0,
 				'flag_tr'       => 0,
 				'flag_br'       => 0,

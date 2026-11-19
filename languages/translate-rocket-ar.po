@@ -8237,3 +8237,40 @@ msgstr "الجودة: %s"
 #: src/Admin/Admin.php
 msgid "On: each page, post and product gets in every language the address made from its translated title, for example /it/chi-siamo/ instead of /it/about-us/. Visitors and search engines that open the original address are sent to the new one (301). An address you typed in the editor is never changed, and once made an address stays the same even if you edit the translation later. Off: every language uses your own address again, also for the addresses already made (they are kept, and come back if you switch this on again); visitors who open one of them are sent to the original address with a 301. An address you typed in the editor stays in use."
 msgstr "تشغيل: تحصل كل صفحة ومقالة ومنتج في كل لغة على عنوان مأخوذ من عنوانها المترجم، مثل /it/chi-siamo/ بدلًا من /it/about-us/. الزوار ومحركات البحث الذين يفتحون العنوان الأصلي يُحوَّلون إلى الجديد (301). العنوان الذي كتبته في المحرر لا يتغير أبدًا، والعنوان بعد إنشائه يبقى كما هو حتى لو عدّلت الترجمة لاحقًا. إيقاف: تعود كل لغة إلى استخدام عنوانك الأصلي، حتى للعناوين المنشأة سابقًا (تُحفظ وتعود إذا شغّلت الخيار مجددًا)؛ والزوار الذين يفتحون أحدها يُحوَّلون إلى العنوان الأصلي بتحويل 301. العنوان الذي كتبته في المحرر يبقى مستخدمًا."
+
+#: src/Admin/Admin.php
+msgid "Dropdown button"
+msgstr "زر القائمة المنسدلة"
+
+#: src/Admin/Admin.php
+msgid "Shows the current language"
+msgstr "يعرض اللغة الحالية"
+
+#: src/Admin/Admin.php
+msgid "Shows the word «Language»"
+msgstr "يعرض كلمة «Language»"
+
+#: src/Admin/Admin.php
+msgid "Your own word for the button"
+msgstr "كلمتك الخاصة للزر"
+
+#: src/Admin/Admin.php
+msgid "With «Language» you can write your own word in the box: it stays the same in every language."
+msgstr "مع «Language» يمكنك كتابة كلمتك الخاصة في المربع: تبقى كما هي في كل اللغات."
+
+#: src/Admin/Admin.php
+msgid "Dropdown list"
+msgstr "قائمة منسدلة"
+
+#: src/Admin/Admin.php
+msgid "One column, as wide as the button"
+msgstr "عمود واحد بعرض الزر"
+
+#: src/Admin/Admin.php
+#, php-format
+msgid "Panel with %d columns"
+msgstr "لوحة من %d أعمدة"
+
+#: src/Admin/Admin.php
+msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
+msgstr "تعرض اللوحة كل اللغات جنبًا إلى جنب مع إبراز اللغة الحالية: مفيدة عندما تكون اللغات كثيرة. على الهواتف تستخدم عمودين."
