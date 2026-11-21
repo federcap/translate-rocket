@@ -8162,3 +8162,8 @@ msgstr "پنل با %d ستون"
 #: src/Admin/Admin.php
 msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
 msgstr "پنل همهٔ زبان‌ها را کنار هم نشان می‌دهد و زبان فعلی را برجسته می‌کند: وقتی زبان‌ها زیادند کاربردی است. در تلفن همراه از دو ستون استفاده می‌کند."
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
+msgstr "ذخیره نشد: %s را دوباره دور واژه‌هایی که به آن‌ها تعلق دارند بگذارید (یک پیوند، متن پررنگ)."

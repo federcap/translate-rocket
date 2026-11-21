@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.51
+Stable tag: 1.8.52
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.52 =
+* Fixed: in the visual editor, when the [1] [2] markers of a link or of bold text were removed from a translation, the save was refused with a small green line at the bottom, and it looked as if the window had frozen. Now a red box says «Not saved» and which markers are missing, the translation box is outlined in red, and both go away as soon as you type again. Thanks to Nikolai.
+* Improved: any other save the server refuses in the visual editor is now shown in red too.
 
 = 1.8.51 =
 * New: the dropdown of the language switcher can open as a panel with the languages side by side, in 2 to 6 columns, the current one highlighted (two columns on phones), and its button can show the word «Language», or a word of your own, instead of the current language (Switcher → Dropdown button, Dropdown list). Handy when the languages are many.
@@ -755,6 +759,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.52 =
+The visual editor now says clearly, in red, when a translation is not saved because the [1] [2] markers of a link are missing.
 
 = 1.8.51 =
 The language dropdown can open as a panel with several columns. «Translate all» no longer stops without a word when an engine breaks, and a «request too large» from a free engine is handled with smaller requests.

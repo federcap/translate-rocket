@@ -540,6 +540,47 @@
 		return VE.i18n.saveFailed || '⚠';
 	}
 
+	// 21/11/2026 (Nikolai, inglese → russo: «tolgo i numeri tra parentesi quadre e la finestra si blocca»). Non si
+	// bloccava: il salvataggio veniva rifiutato perché mancavano i segni del link, ma lo diceva una riga verde in fondo,
+	// che sembrava un avviso qualsiasi. Ora: messaggio rosso che dice QUALI segni mancano, campo bordato di rosso;
+	// tutto sparisce appena si torna a scrivere.
+	function segniMancanti( fonte, val, re ) {
+		var manca = [];
+		( String( fonte ).match( re ) || [] ).forEach( function ( s ) {
+			if ( -1 === String( val ).indexOf( s ) && -1 === manca.indexOf( s ) ) {
+				manca.push( s );
+			}
+		} );
+		return manca;
+	}
+	function testoSegni( manca ) {
+		return ( VE.i18n.markersMissing || 'Not saved: put back %s around the words they belong to (a link, bold text).' ).replace( '%s', manca.join( ' ' ) );
+	}
+	function msgOk( msg, testo ) {
+		msg.classList.remove( 'trrocket-ve-msg-err' );
+		msg.textContent = testo;
+	}
+	function msgErrore( pop, msg, testo ) {
+		msg.textContent = testo;
+		msg.classList.add( 'trrocket-ve-msg-err' );
+		// Il riquadro del messaggio, non quello aperto adesso: la risposta del server può arrivare dopo un cambio.
+		var box = ( msg.closest && msg.closest( '.trrocket-ve-pop' ) ) || pop;
+		var t = box ? box.querySelector( '.trrocket-ve-tr' ) : null;
+		if ( t ) {
+			t.classList.add( 'trrocket-ve-tr-err' );
+			if ( ! t.trrErrAscolto ) {
+				t.trrErrAscolto = true;
+				t.addEventListener( 'input', function () {
+					if ( t.classList.contains( 'trrocket-ve-tr-err' ) ) {
+						t.classList.remove( 'trrocket-ve-tr-err' );
+						msgOk( msg, '' );
+					}
+				} );
+			}
+		}
+		try { msg.scrollIntoView( { block: 'nearest' } ); } catch ( e ) {}
+	}
+
 	// All on-page editable texts, in document order, that are actually visible.
 	function navItems() {
 		return Array.prototype.filter.call(
@@ -1005,7 +1046,13 @@
 		// thenNext = true -> after saving jump to the next text; after = run instead
 		// of the default close (used by the auto-save-before-leaving flow).
 		function save( thenNext, after ) {
-			msg.textContent = VE.i18n.working;
+			// Solo le frasi con i segni <1>…</1> (un link, un grassetto dentro): un «[1]» scritto nel testo non conta.
+			var manca = ( activeEl && activeEl.getAttribute( 'data-trr-parts' ) && '' !== ta.value.trim() ) ? segniMancanti( src, ta.value, /<\/?\d+>/g ) : [];
+			if ( manca.length ) {
+				msgErrore( pop, msg, testoSegni( manca ) );
+				return;
+			}
+			msgOk( msg, VE.i18n.working );
 			busyAll( pop, true );
 			var val = ta.value;
 			var target = activeEl;
@@ -1046,7 +1093,7 @@
 					msg.textContent = VE.i18n.saved;
 					setTimeout( closePop, 500 );
 				} else {
-					msg.textContent = perche( res );
+					msgErrore( pop, msg, perche( res ) );
 				}
 			} );
 		}
@@ -1237,10 +1284,18 @@
 			var val = ta.value;
 			var mapping = parseBlock( val, ser.slots );
 			if ( ! mapping ) {
-				msg.textContent = VE.i18n.blockMarkers || '⚠';
+				// Quali segni mancano: i pezzi fissi tra un testo e l'altro ([2][3], o i tag veri nella vista HTML).
+				var manca = [];
+				ser.slots.forEach( function ( sl ) {
+					var f = sl.fixed ? sl.fixed.trim() : '';
+					if ( f && -1 === val.indexOf( f ) && -1 === manca.indexOf( f ) ) {
+						manca.push( f );
+					}
+				} );
+				msgErrore( pop, msg, manca.length ? testoSegni( manca ) : ( VE.i18n.blockMarkers || '⚠' ) );
 				return;
 			}
-			msg.textContent = VE.i18n.working;
+			msgOk( msg, VE.i18n.working );
 			busyAll( pop, true );
 			var items = mapping.map( function ( m ) {
 				return { src: decode( m.span.getAttribute( 'data-trr-src' ) ), translation: trimEdge( m.value ) };
@@ -1272,7 +1327,7 @@
 					msg.textContent = VE.i18n.saved;
 					setTimeout( closePop, 500 );
 				} else {
-					msg.textContent = perche( res );
+					msgErrore( pop, msg, perche( res ) );
 				}
 			} );
 		}
@@ -1458,7 +1513,7 @@
 					msg.textContent = VE.i18n.saved;
 					setTimeout( closePop, 500 );
 				} else {
-					msg.textContent = perche( res );
+					msgErrore( pop, msg, perche( res ) );
 				}
 			} );
 		}

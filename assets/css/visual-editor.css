@@ -598,6 +598,25 @@ body {
 	color: #1a7f37;
 }
 
+/* 21/11/2026: «not saved» must not look like a green note (Nikolai thought the window had frozen). */
+.trrocket-ve-pop .trrocket-ve-msg.trrocket-ve-msg-err {
+	display: block;
+	padding: 7px 9px;
+	border: 1px solid #fda29b;
+	border-radius: 6px;
+	background: #fef3f2;
+	color: #b42318;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.4;
+	text-align: left;
+}
+
+.trrocket-ve-pop .trrocket-ve-tr.trrocket-ve-tr-err {
+	border-color: #d92d20 !important;
+	box-shadow: 0 0 0 2px rgba(217, 45, 32, .18);
+}
+
 /* Small spinner shown inside a button while it works (save / AI / Google). */
 .trrocket-ve-spin {
 	display: inline-block;

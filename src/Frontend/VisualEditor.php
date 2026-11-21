@@ -379,6 +379,8 @@ class VisualEditor {
 				'restoreTip'   => __( 'Put the original text back (e.g. if the [1] [2] markers got broken), then translate again.', 'translate-rocket' ),
 				'blockHint'    => __( 'Markers like [1] [2] are formatting (bold, links). Keep them where they are.', 'translate-rocket' ),
 					'blockMarkers' => __( '⚠ Keep all the [1] [2] markers so the bold/links can be restored.', 'translate-rocket' ),
+					/* translators: %s: the missing markers, e.g. "[2] [3]" or "<1> </1>". */
+					'markersMissing' => __( 'Not saved: put back %s around the words they belong to (a link, bold text).', 'translate-rocket' ),
 					'allDone' => __( 'Already translated', 'translate-rocket' ),
 					'saved'   => __( 'Saved', 'translate-rocket' ),
 					// Quando un salvataggio non va: un simbolo muto non dice se il

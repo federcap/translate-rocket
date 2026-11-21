@@ -8134,3 +8134,8 @@ msgstr "Panel dengan %d kolom"
 #: src/Admin/Admin.php
 msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
 msgstr "Panel menampilkan semua bahasa berdampingan, dengan bahasa saat ini disorot: praktis bila bahasanya banyak. Di ponsel, panel memakai dua kolom."
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
+msgstr "Tidak disimpan: kembalikan %s di sekitar kata-kata tempatnya (tautan, teks tebal)."

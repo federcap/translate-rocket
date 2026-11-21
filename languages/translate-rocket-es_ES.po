@@ -7315,3 +7315,8 @@ msgstr "Panel de %d columnas"
 #: src/Admin/Admin.php
 msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
 msgstr "Un panel muestra todos los idiomas uno junto a otro, con el actual resaltado: útil cuando hay muchos idiomas. En móviles usa dos columnas."
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
+msgstr "No guardado: vuelve a poner %s alrededor de las palabras a las que pertenecen (un enlace, texto en negrita)."

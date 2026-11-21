@@ -8274,3 +8274,8 @@ msgstr "لوحة من %d أعمدة"
 #: src/Admin/Admin.php
 msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
 msgstr "تعرض اللوحة كل اللغات جنبًا إلى جنب مع إبراز اللغة الحالية: مفيدة عندما تكون اللغات كثيرة. على الهواتف تستخدم عمودين."
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
+msgstr "لم يُحفظ: أعد %s حول الكلمات التي تخصها (رابط، نص غامق)."

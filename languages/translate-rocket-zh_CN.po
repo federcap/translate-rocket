@@ -8134,3 +8134,8 @@ msgstr "%d 列面板"
 #: src/Admin/Admin.php
 msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
 msgstr "面板并排显示所有语言，并突出显示当前语言：语言较多时很方便。在手机上使用两列。"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
+msgstr "未保存：请把 %s 放回它们所属的文字两侧（链接、粗体）。"

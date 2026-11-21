@@ -7289,3 +7289,8 @@ msgstr "%d列のパネル"
 #: src/Admin/Admin.php
 msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
 msgstr "パネルはすべての言語を横に並べて表示し、現在の言語を強調します。言語が多いときに便利です。スマートフォンでは2列になります。"
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
+msgstr "保存されていません：%s を元の語句の前後に戻してください（リンク、太字など）。"

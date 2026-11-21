@@ -8162,3 +8162,8 @@ msgstr "%d sütunlu panel"
 #: src/Admin/Admin.php
 msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
 msgstr "Panel tüm dilleri yan yana gösterir ve geçerli dili vurgular: dil sayısı çok olduğunda kullanışlıdır. Telefonlarda iki sütun kullanır."
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
+msgstr "Kaydedilmedi: %s işaretlerini ait oldukları sözcüklerin çevresine geri koyun (bağlantı, kalın yazı)."

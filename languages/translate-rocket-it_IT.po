@@ -7618,3 +7618,8 @@ msgstr "Riquadro a %d colonne"
 #: src/Admin/Admin.php
 msgid "A panel shows every language side by side, with the current one highlighted: handy when the languages are many. On phones it uses two columns."
 msgstr "Un riquadro mostra tutte le lingue una accanto all’altra, con quella corrente evidenziata: comodo quando le lingue sono tante. Sui telefoni usa due colonne."
+
+#: src/Frontend/VisualEditor.php
+#, php-format
+msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
+msgstr "Non salvato: rimetti %s intorno alle parole a cui appartengono (un link, un grassetto)."
