@@ -553,6 +553,60 @@
 		} );
 		return manca;
 	}
+	// 21/11/2026 (Nikolai: «a normal user does not need to know about these markers, just fix the text»). Before
+	// saving, the markers the user removed are put back by themselves. ref = the text with all its markers (the
+	// translation shown when the window opened, or the original); tokens = the markers in ref order. For each one
+	// missing: right after the text that came before it, or right before the text that came after it, if those
+	// words are still there; otherwise at the same place in proportion, on a word boundary. Markers still present
+	// are left alone. If the result is still broken, the red message of 1.8.52 says so, as before.
+	function rimettiSegni( ref, val, tokens ) {
+		ref = String( ref );
+		var out = String( val ), rPos = 0, vPos = 0, prevEnd = 0;
+		for ( var i = 0; i < tokens.length; i++ ) {
+			var t = tokens[ i ];
+			var ri = ref.indexOf( t, rPos );
+			if ( -1 === ri ) { continue; }
+			var vi = out.indexOf( t, vPos );
+			if ( -1 !== vi ) {
+				vPos = vi + t.length; rPos = ri + t.length; prevEnd = rPos;
+				continue;
+			}
+			var at = -1;
+			var prima = ref.slice( prevEnd, ri ).trim();
+			if ( prima ) {
+				var k = out.indexOf( prima, vPos );
+				if ( -1 !== k ) { at = k + prima.length; }
+			}
+			if ( -1 === at ) {
+				var dopoFine = ref.length;
+				for ( var j = i + 1; j < tokens.length; j++ ) {
+					var nj = ref.indexOf( tokens[ j ], ri + t.length );
+					if ( -1 !== nj ) { dopoFine = nj; break; }
+				}
+				var dopo = ref.slice( ri + t.length, dopoFine ).trim();
+				if ( dopo ) {
+					var k2 = out.indexOf( dopo, vPos );
+					if ( -1 !== k2 ) { at = k2; }
+				}
+			}
+			if ( -1 === at ) {
+				at = Math.round( ( ri / Math.max( 1, ref.length ) ) * out.length );
+				if ( at < vPos ) { at = vPos; }
+				if ( at > out.length ) { at = out.length; }
+				// On a word boundary: never inside a word.
+				while ( at < out.length && at > vPos && /\S/.test( out.charAt( at - 1 ) ) && /\S/.test( out.charAt( at ) ) ) { at++; }
+			}
+			// Same side of the space as in ref: «Book <1>our» stays «Book <1>our», «apartments</1> today» likewise.
+			if ( /\s/.test( ref.charAt( ri - 1 ) ) ) {
+				while ( at < out.length && /\s/.test( out.charAt( at ) ) ) { at++; }
+			} else if ( /\s/.test( ref.charAt( ri + t.length ) ) ) {
+				while ( at > vPos && /\s/.test( out.charAt( at - 1 ) ) ) { at--; }
+			}
+			out = out.slice( 0, at ) + t + out.slice( at );
+			vPos = at + t.length; rPos = ri + t.length; prevEnd = rPos;
+		}
+		return out;
+	}
 	function testoSegni( manca ) {
 		return ( VE.i18n.markersMissing || 'Not saved: put back %s around the words they belong to (a link, bold text).' ).replace( '%s', manca.join( ' ' ) );
 	}
@@ -1047,7 +1101,16 @@
 		// of the default close (used by the auto-save-before-leaving flow).
 		function save( thenNext, after ) {
 			// Solo le frasi con i segni <1>…</1> (un link, un grassetto dentro): un «[1]» scritto nel testo non conta.
-			var manca = ( activeEl && activeEl.getAttribute( 'data-trr-parts' ) && '' !== ta.value.trim() ) ? segniMancanti( src, ta.value, /<\/?\d+>/g ) : [];
+			var conSegni = activeEl && activeEl.getAttribute( 'data-trr-parts' ) && '' !== ta.value.trim();
+			var manca = conSegni ? segniMancanti( src, ta.value, /<\/?\d+>/g ) : [];
+			if ( manca.length ) {
+				// 1.8.53: put them back by themselves, from the translation the window opened with (or the original).
+				var prec = activeEl.getAttribute( 'data-trr-cur' );
+				prec = prec ? decodeURIComponent( prec ) : '';
+				var rif = ( prec && ! segniMancanti( src, prec, /<\/?\d+>/g ).length ) ? prec : src;
+				ta.value = rimettiSegni( rif, ta.value, rif.match( /<\/?\d+>/g ) || [] );
+				manca = segniMancanti( src, ta.value, /<\/?\d+>/g );
+			}
 			if ( manca.length ) {
 				msgErrore( pop, msg, testoSegni( manca ) );
 				return;
@@ -1283,6 +1346,14 @@
 		function save( thenNext, after ) {
 			var val = ta.value;
 			var mapping = parseBlock( val, ser.slots );
+			if ( ! mapping && '' !== val.trim() ) {
+				// 1.8.53: put the removed [n] markers (or tags) back by themselves, then try again.
+				var fissi = [];
+				ser.slots.forEach( function ( sl ) { if ( sl.fixed && sl.fixed.trim() ) { fissi.push( sl.fixed ); } } );
+				var rip = rimettiSegni( ser.str, val, fissi );
+				var map2 = parseBlock( rip, ser.slots );
+				if ( map2 ) { ta.value = val = rip; mapping = map2; }
+			}
 			if ( ! mapping ) {
 				// Quali segni mancano: i pezzi fissi tra un testo e l'altro ([2][3], o i tag veri nella vista HTML).
 				var manca = [];

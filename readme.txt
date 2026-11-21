@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.52
+Stable tag: 1.8.53
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.53 =
+* Improved: in the visual editor you no longer need to know about the [1] [2] markers of a link or of bold text. Write the translation as plain text and save: the editor puts the markers back by itself, around the same words when they are still there. Thanks to Nikolai.
+* Fixed: with All in One SEO, /translaterocket-sitemap.xml answered "page not found", because All in One SEO takes over every address ending in -sitemap.xml. TranslateRocket now answers first, so Google can read the sitemap of your translated pages. Thanks to Jeroen.
 
 = 1.8.52 =
 * Fixed: in the visual editor, when the [1] [2] markers of a link or of bold text were removed from a translation, the save was refused with a small green line at the bottom, and it looked as if the window had frozen. Now a red box says «Not saved» and which markers are missing, the translation box is outlined in red, and both go away as soon as you type again. Thanks to Nikolai.
@@ -759,6 +763,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.53 =
+Visual editor: write plain text, the link markers are put back by themselves. The TranslateRocket sitemap works again next to All in One SEO.
 
 = 1.8.52 =
 The visual editor now says clearly, in red, when a translation is not saved because the [1] [2] markers of a link are missing.

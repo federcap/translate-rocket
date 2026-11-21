@@ -56,6 +56,10 @@ class Sitemap {
 		add_action( 'init', array( $this, 'add_rewrite' ) );
 		add_filter( 'query_vars', array( $this, 'query_var' ) );
 		add_action( 'template_redirect', array( $this, 'maybe_output' ), 0 );
+		// 21/11/2026 (Jeroen, food-and-more.be, All in One SEO 5.0.5): AIOSEO takes every «<name>-sitemap.xml» address
+		// as one of its own and answered 404 for ours before template_redirect, while listing it in its own index.
+		// The address is ours: it is answered as soon as WordPress has read the request.
+		add_action( 'parse_request', array( $this, 'maybe_output_early' ), 0 );
 		add_filter( 'robots_txt', array( $this, 'robots' ), 10, 1 );
 		// If Rank Math or Yoast is active, also list our sitemap in their sitemap
 		// index, so it's discoverable from the one index users submit to Google.
@@ -345,6 +349,27 @@ class Sitemap {
 			return $output;
 		}
 		return $output . "\nSitemap: " . home_url( '/translaterocket-sitemap.xml' ) . "\n";
+	}
+
+	/**
+	 * Our own address (/translaterocket-sitemap.xml, -N.xml), answered right after the request is parsed, before an SEO
+	 * plugin that claims every «-sitemap.xml» can send a 404. Anything else — hidden preview, a file number that
+	 * does not exist — is left to maybe_output(), which answers it the usual way.
+	 */
+	public function maybe_output_early(): void {
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput, WordPress.Security.NonceVerification.Recommended
+		$req  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$path = (string) strtok( $req, '?' );
+		$m    = array();
+		if ( ! preg_match( '#/translaterocket-sitemap(?:-([0-9]{1,6}))?\.xml$#', $path, $m ) || Preview::hidden() ) {
+			return;
+		}
+		$n = isset( $m[1] ) && '' !== $m[1] ? (int) $m[1] : 0;
+		if ( $n > 0 && $n > self::file_count() ) {
+			return;
+		}
+		$this->render( $n );
+		exit;
 	}
 
 	/**
