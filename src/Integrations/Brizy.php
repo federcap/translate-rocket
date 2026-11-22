@@ -43,6 +43,57 @@ class Brizy {
 	public static function boot(): void {
 		add_filter( 'brizy_content', array( __CLASS__, 'enter' ), PHP_INT_MIN );
 		add_filter( 'brizy_content', array( __CLASS__, 'leave' ), PHP_INT_MAX );
+		add_filter( 'get_post_metadata', array( __CLASS__, 'rules_for_copy' ), 10, 4 );
+	}
+
+	/**
+	 * Re-entrancy guard of rules_for_copy().
+	 *
+	 * @var bool
+	 */
+	private static $reading = false;
+
+	/**
+	 * 22/11/2026 (lungomare.ee: «при переходе на русский пропала верхушка сайта», reproduced with collaudo-copia-brizy):
+	 * Brizy shows its global blocks — the site header, the footer — by rules tied to the page's ID («only on page
+	 * 1220»). An independent copy is another post, so the Russian page lost its header. While a copy is served, a rule
+	 * that names the source page names its copy too. Nothing is written: only what Brizy reads for this request.
+	 *
+	 * @param mixed  $value    Short-circuit value (null = read the database).
+	 * @param int    $post_id  Post the meta belongs to (a Brizy global block or template).
+	 * @param string $meta_key Meta key.
+	 * @param bool   $single   Single value asked.
+	 * @return mixed
+	 */
+	public static function rules_for_copy( $value, $post_id, $meta_key, $single ) {
+		if ( self::$reading || ( 'brizy-rules' !== $meta_key && 'brizy-template-rules' !== $meta_key ) || ! \TranslateRocket\Frontend\CopyServer::is_serving_copy() ) {
+			return $value;
+		}
+		$source = \TranslateRocket\Frontend\CopyServer::source_id();
+		$copy   = \TranslateRocket\Frontend\CopyServer::serving_id();
+		self::$reading = true;
+		$rules         = get_post_meta( (int) $post_id, $meta_key, true );
+		self::$reading = false;
+		if ( ! is_array( $rules ) || $source <= 0 || $copy <= 0 ) {
+			return $value;
+		}
+		$changed = false;
+		foreach ( $rules as $i => $rule ) {
+			if ( ! is_array( $rule ) || empty( $rule['entityValues'] ) || ! is_array( $rule['entityValues'] ) ) {
+				continue;
+			}
+			$ids = array_map( 'strval', $rule['entityValues'] );
+			if ( in_array( (string) $source, $ids, true ) && ! in_array( (string) $copy, $ids, true ) ) {
+				$rules[ $i ]['entityValues'][] = $copy;
+				$changed                      = true;
+			}
+		}
+		if ( ! $changed ) {
+			return $value;
+		}
+		// get_metadata() takes [0] of what we return when a single value is asked.
+		unset( $single );
+		return array( $rules );
 	}
 
 	/**

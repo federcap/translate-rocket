@@ -37,7 +37,64 @@ class CopyServer {
 		if ( is_admin() ) {
 			return;
 		}
-		add_action( 'wp', array( $this, 'maybe_swap' ) );
+		// 22/11/2026 (lungomare.ee, Brizy): page builders choose the page they draw on `wp` too. Hooked at the default
+		// priority, a builder loaded before us kept drawing the original page — the edits made in the copy never
+		// showed. The swap now runs first, so everyone sees the same page.
+		add_action( 'wp', array( $this, 'maybe_swap' ), -1000 );
+		// The served copy is a draft in the database (so it never leaks as a page of its own), but for this
+		// request it IS the public page: WordPress printed no canonical for it and SEO plugins /xx/?page_id=N.
+		add_filter( 'get_post_status', array( $this, 'served_status' ), 10, 2 );
+		foreach ( array( 'page_link', 'post_link', 'post_type_link' ) as $hook ) {
+			add_filter( $hook, array( $this, 'served_link' ), PHP_INT_MAX, 2 );
+		}
+	}
+
+	/**
+	 * The source post id of the copy being served (0 = none).
+	 *
+	 * @var int
+	 */
+	private static $source = 0;
+
+	/**
+	 * The source post id of the copy being served (0 if none).
+	 */
+	public static function source_id(): int {
+		return self::$source;
+	}
+
+	/**
+	 * While it is served, the copy counts as published.
+	 *
+	 * @param mixed $status Post status.
+	 * @param mixed $post   Post object.
+	 * @return mixed
+	 */
+	public function served_status( $status, $post ) {
+		if ( self::$serving > 0 && 'draft' === $status && $post instanceof \WP_Post && (int) $post->ID === self::$serving ) {
+			return 'publish';
+		}
+		return $status;
+	}
+
+	/**
+	 * The address of the served copy is the address of its source in this language
+	 * (/it/guida/), never the draft's own ?page_id=N.
+	 *
+	 * @param mixed $link Permalink.
+	 * @param mixed $post Post id or object.
+	 * @return mixed
+	 */
+	public function served_link( $link, $post ) {
+		if ( self::$serving <= 0 || self::$source <= 0 ) {
+			return $link;
+		}
+		$id = $post instanceof \WP_Post ? (int) $post->ID : (int) $post;
+		if ( $id !== self::$serving ) {
+			return $link;
+		}
+		$real = get_permalink( self::$source );
+		return is_string( $real ) && '' !== $real ? $real : $link;
 	}
 
 	/**
@@ -96,5 +153,6 @@ class CopyServer {
 		$wp_query->post_count        = 1;
 		$GLOBALS['post']             = $copy;
 		self::$serving               = $copy_id;
+		self::$source                = $source_id;
 	}
 }

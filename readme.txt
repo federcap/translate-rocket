@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.53
+Stable tag: 1.8.54
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.54 =
+* Fixed: an independent copy of a page built with Brizy lost the site header (and every other Brizy global block shown only on that page), and on some sites the edits made in the copy did not show at all. The copy now gets the same global blocks as its original page. Thanks to Nikolai.
+* Fixed: a page served from an independent copy had no canonical address, or one like /it/?page_id=123. It now declares the address visitors see.
 
 = 1.8.53 =
 * Improved: in the visual editor you no longer need to know about the [1] [2] markers of a link or of bold text. Write the translation as plain text and save: the editor puts the markers back by itself, around the same words when they are still there. Thanks to Nikolai.
@@ -763,6 +767,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.54 =
+Independent copies of Brizy pages keep the site header, and every independent copy declares the right canonical address.
 
 = 1.8.53 =
 Visual editor: write plain text, the link markers are put back by themselves. The TranslateRocket sitemap works again next to All in One SEO.
