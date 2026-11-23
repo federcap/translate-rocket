@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.54
+Stable tag: 1.8.55
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -223,6 +223,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.55 =
+* Fixed: in the page editor, the «SEO and indexing» box of the homepage could show the SEO title and meta description of another page. A draft page, or an independent copy (which is a draft), has an address like /?page_id=123, and its sentences seen by the administrator were filed under the homepage. They are still learnt and translated, but no longer filed under any page. Sites already affected: open the homepage once as an administrator and the foreign title and description go away at once. Thanks to Nikolai.
 
 = 1.8.54 =
 * Fixed: an independent copy of a page built with Brizy lost the site header (and every other Brizy global block shown only on that page), and on some sites the edits made in the copy did not show at all. The copy now gets the same global blocks as its original page. Thanks to Nikolai.
@@ -767,6 +770,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.55 =
+The SEO box of the homepage no longer shows the title and description of a draft or of an independent copy.
 
 = 1.8.54 =
 Independent copies of Brizy pages keep the site header, and every independent copy declares the right canonical address.

@@ -250,6 +250,21 @@ class Strings {
 						$wpdb->query( $wpdb->prepare( "DELETE FROM {$occurrences} WHERE url_hash = %s AND string_id IN (" . implode( ',', $gone ) . ')', $url_hash ) ); // phpcs:ignore WordPress.DB -- integer ids
 					}
 				}
+				// 23/11/2026 (lungomare.ee: the SEO box of the Home showed the title of another page, filed there by a draft
+				// opened in preview — see Engine): a page has its own SEO title and description. When the whole page has just been read and
+				// they are in what was found, every other title or description filed under this address is not this page's:
+				// it leaves at once, not after two days.
+				foreach ( array( 'title', 'description' ) as $what ) {
+					$mine = array();
+					foreach ( $by_hash as $row ) {
+						if ( 'meta' === $row['type'] && $what === $row['context'] && isset( $id_by_hash[ $row['hash'] ] ) ) {
+							$mine[] = (int) $id_by_hash[ $row['hash'] ];
+						}
+					}
+					if ( ! empty( $mine ) ) {
+						$wpdb->query( $wpdb->prepare( "DELETE o FROM {$occurrences} o INNER JOIN {$strings} st ON st.id = o.string_id WHERE o.url_hash = %s AND st.type = 'meta' AND st.context = %s AND o.string_id NOT IN (" . implode( ',', $mine ) . ')', $url_hash, $what ) ); // phpcs:ignore WordPress.DB -- integer ids
+					}
+				}
 			}
 		}
 

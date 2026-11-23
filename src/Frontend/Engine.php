@@ -2285,9 +2285,15 @@ class Engine {
 		if ( $this->do_collect && ! empty( $collected ) && ! ( function_exists( 'is_404' ) && is_404() ) ) {
 			$router = Plugin::instance()->router();
 			$qid    = ( function_exists( 'is_singular' ) && is_singular() ) ? (int) get_queried_object_id() : 0;
-			$url    = $qid > 0 ? $router->canonical_path( $qid ) : $router->current_clean_path();
+			// 23/11/2026 (lungomare.ee: the SEO box of the Home showed the title and description of another page;
+			// reproduced with collaudo-bozza-home). A page that is not published — a draft opened in preview, and so
+			// every independent copy — has /?page_id=N for an address: its path is «/», and its sentences were filed
+			// under the homepage. Such a page has no address of its own yet: its sentences are still learnt (they get
+			// translated), but they are filed under no page.
+			$sola = $qid > 0 && ( \TranslateRocket\Copies::is_copy( $qid ) || in_array( (string) get_post_status( $qid ), array( 'draft', 'pending', 'auto-draft', 'future' ), true ) );
+			$url    = $sola ? '' : ( $qid > 0 ? $router->canonical_path( $qid ) : $router->current_clean_path() );
 			$title  = function_exists( 'wp_get_document_title' ) ? wp_strip_all_tags( wp_get_document_title() ) : '';
-			Strings::remember_batch( $collected, $this->secondary, $url, $title, true );
+			Strings::remember_batch( $collected, $this->secondary, $url, $title, ! $sola );
 			// This page has just been read: it is no longer waiting for a scan.
 			if ( $qid > 0 ) {
 				\TranslateRocket\Rescan::forget( $qid );
