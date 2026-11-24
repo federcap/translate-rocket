@@ -7320,3 +7320,36 @@ msgstr "Um painel mostra todos os idiomas lado a lado, com o atual em destaque: 
 #, php-format
 msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
 msgstr "Não salvo: coloque %s de volta em volta das palavras a que pertencem (um link, texto em negrito)."
+
+#: src/Admin/AutoPage.php
+msgid "Free setup on request, for small sites: we configure TranslateRocket for you and start the translation. Larger sites need more time and resources, so we look at each case and tell you what we can do."
+msgstr "Configuração gratuita sob pedido, para sites pequenos: configuramos o TranslateRocket para você e iniciamos a tradução. Sites maiores precisam de mais tempo e recursos, então avaliamos cada caso e dizemos o que podemos fazer."
+
+#: src/Admin/Ticket.php
+msgid "Hello, I would like a free setup of TranslateRocket on my site.\n\nLanguages I want:\nWhat my site is about:\nRoughly how many pages:"
+msgstr "Olá, gostaria de uma configuração gratuita do TranslateRocket no meu site.\n\nIdiomas que quero:\nSobre o que é o meu site:\nNúmero aproximado de páginas:"
+
+#: src/Admin/PremiumNote.php
+msgid "New: TranslateRocket Premium — double-checked translation"
+msgstr "Novidade: TranslateRocket Premium — tradução com dupla verificação"
+
+#: src/Admin/PremiumNote.php
+msgid "Two or three engines translate every sentence, automatic checks compare numbers, prices, links and names, an AI judge settles only the sentences in doubt, and you have the last word. It also translates a page by itself when you publish it, with the double check. It is a separate plugin that works with your own keys."
+msgstr "Dois ou três motores traduzem cada frase, verificações automáticas comparam números, preços, links e nomes, um juiz de IA decide apenas as frases em dúvida, e a última palavra é sua. Também traduz uma página sozinho quando você a publica, com a dupla verificação. É um plugin separado que funciona com as suas próprias chaves."
+
+#: src/Admin/PremiumNote.php
+msgid "Nothing is taken away from this plugin: it stays free, with everything it has today."
+msgstr "Nada é retirado deste plugin: ele continua gratuito, com tudo o que tem hoje."
+
+#: src/Admin/PremiumNote.php
+msgid "See Premium"
+msgstr "Ver o Premium"
+
+#: src/Admin/Growth.php
+#, php-format
+msgid "TranslateRocket has translated %s strings on this site, for free. Reviews are what helps other people find it. Would you leave one?"
+msgstr "O TranslateRocket traduziu %s strings neste site, de graça. As avaliações são o que ajuda outras pessoas a encontrá-lo. Você deixaria uma?"
+
+#: src/Admin/Overview.php
+msgid "Or ask for a free setup (for small sites)"
+msgstr "Ou peça uma configuração gratuita (para sites pequenos)"

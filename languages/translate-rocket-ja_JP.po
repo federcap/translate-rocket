@@ -7294,3 +7294,36 @@ msgstr "パネルはすべての言語を横に並べて表示し、現在の言
 #, php-format
 msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
 msgstr "保存されていません：%s を元の語句の前後に戻してください（リンク、太字など）。"
+
+#: src/Admin/AutoPage.php
+msgid "Free setup on request, for small sites: we configure TranslateRocket for you and start the translation. Larger sites need more time and resources, so we look at each case and tell you what we can do."
+msgstr "小規模サイト向けの無料セットアップをご依頼いただけます：TranslateRocket の設定と翻訳の開始をこちらで行います。大きなサイトはより多くの時間とリソースが必要なため、個別に検討し、対応できる内容をお知らせします。"
+
+#: src/Admin/Ticket.php
+msgid "Hello, I would like a free setup of TranslateRocket on my site.\n\nLanguages I want:\nWhat my site is about:\nRoughly how many pages:"
+msgstr "こんにちは。私のサイトで TranslateRocket の無料セットアップをお願いしたいです。\n\n希望する言語：\nサイトの内容：\nおおよそのページ数："
+
+#: src/Admin/PremiumNote.php
+msgid "New: TranslateRocket Premium — double-checked translation"
+msgstr "新登場：TranslateRocket Premium — 二重チェック翻訳"
+
+#: src/Admin/PremiumNote.php
+msgid "Two or three engines translate every sentence, automatic checks compare numbers, prices, links and names, an AI judge settles only the sentences in doubt, and you have the last word. It also translates a page by itself when you publish it, with the double check. It is a separate plugin that works with your own keys."
+msgstr "2つまたは3つのエンジンがすべての文を翻訳し、自動チェックが数字・価格・リンク・名前を照合し、AI の審査役が疑わしい文だけを判定し、最終判断はあなたが行います。ページを公開すると、二重チェック付きで自動的に翻訳もします。ご自身のキーで動作する別のプラグインです。"
+
+#: src/Admin/PremiumNote.php
+msgid "Nothing is taken away from this plugin: it stays free, with everything it has today."
+msgstr "このプラグインから取り除かれるものはありません。現在の機能すべてを備えたまま、無料のままです。"
+
+#: src/Admin/PremiumNote.php
+msgid "See Premium"
+msgstr "Premium を見る"
+
+#: src/Admin/Growth.php
+#, php-format
+msgid "TranslateRocket has translated %s strings on this site, for free. Reviews are what helps other people find it. Would you leave one?"
+msgstr "TranslateRocket はこのサイトで %s 件の文字列を無料で翻訳しました。レビューは、ほかの人がこのプラグインを見つける助けになります。レビューを書いていただけませんか？"
+
+#: src/Admin/Overview.php
+msgid "Or ask for a free setup (for small sites)"
+msgstr "または無料セットアップを依頼（小規模サイト向け）"

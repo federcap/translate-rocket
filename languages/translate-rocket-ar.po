@@ -8279,3 +8279,36 @@ msgstr "تعرض اللوحة كل اللغات جنبًا إلى جنب مع إ
 #, php-format
 msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
 msgstr "لم يُحفظ: أعد %s حول الكلمات التي تخصها (رابط، نص غامق)."
+
+#: src/Admin/AutoPage.php
+msgid "Free setup on request, for small sites: we configure TranslateRocket for you and start the translation. Larger sites need more time and resources, so we look at each case and tell you what we can do."
+msgstr "إعداد مجاني عند الطلب للمواقع الصغيرة: نقوم بإعداد TranslateRocket لك ونبدأ الترجمة. المواقع الأكبر تحتاج إلى وقت وموارد أكثر، لذلك ندرس كل حالة على حدة ونخبرك بما يمكننا فعله."
+
+#: src/Admin/Ticket.php
+msgid "Hello, I would like a free setup of TranslateRocket on my site.\n\nLanguages I want:\nWhat my site is about:\nRoughly how many pages:"
+msgstr "مرحبًا، أرغب في إعداد مجاني لـ TranslateRocket على موقعي.\n\nاللغات التي أريدها:\nموضوع موقعي:\nعدد الصفحات تقريبًا:"
+
+#: src/Admin/PremiumNote.php
+msgid "New: TranslateRocket Premium — double-checked translation"
+msgstr "جديد: TranslateRocket Premium — ترجمة بتحقق مزدوج"
+
+#: src/Admin/PremiumNote.php
+msgid "Two or three engines translate every sentence, automatic checks compare numbers, prices, links and names, an AI judge settles only the sentences in doubt, and you have the last word. It also translates a page by itself when you publish it, with the double check. It is a separate plugin that works with your own keys."
+msgstr "يترجم محرّكان أو ثلاثة كل جملة، وتقارن الفحوص التلقائية الأرقام والأسعار والروابط والأسماء، ويحسم حَكَم يعمل بالذكاء الاصطناعي الجمل المشكوك فيها فقط، والكلمة الأخيرة لك. كما يترجم الصفحة من تلقاء نفسه عند نشرها، مع التحقق المزدوج. إنها إضافة مستقلة تعمل بمفاتيحك الخاصة."
+
+#: src/Admin/PremiumNote.php
+msgid "Nothing is taken away from this plugin: it stays free, with everything it has today."
+msgstr "لا يُنتزع شيء من هذه الإضافة: تبقى مجانية بكل ما فيها اليوم."
+
+#: src/Admin/PremiumNote.php
+msgid "See Premium"
+msgstr "تعرّف على Premium"
+
+#: src/Admin/Growth.php
+#, php-format
+msgid "TranslateRocket has translated %s strings on this site, for free. Reviews are what helps other people find it. Would you leave one?"
+msgstr "ترجم TranslateRocket %s من النصوص في هذا الموقع مجانًا. المراجعات هي ما يساعد الآخرين في العثور عليه. هل تترك واحدة؟"
+
+#: src/Admin/Overview.php
+msgid "Or ask for a free setup (for small sites)"
+msgstr "أو اطلب إعدادًا مجانيًا (للمواقع الصغيرة)"

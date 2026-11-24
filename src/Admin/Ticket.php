@@ -293,7 +293,7 @@ class Ticket {
 				<tr>
 					<th scope="row"><label for="trr-tk-message"><?php esc_html_e( 'What happened', 'translate-rocket' ); ?></label></th>
 					<td>
-						<textarea id="trr-tk-message" rows="6" class="large-text" <?php echo $trr_setup ? 'autofocus' : ''; ?> placeholder="<?php esc_attr_e( 'What you were doing, what you expected, and what happened instead.', 'translate-rocket' ); ?>"><?php echo $trr_setup ? esc_textarea( __( "Hello, please set up TranslateRocket on my site for me.\n\nLanguages I want:\nWhat my site is about:\n\nI can create a temporary administrator account for you, and remove it when you are done.", 'translate-rocket' ) ) : ''; ?></textarea>
+						<textarea id="trr-tk-message" rows="6" class="large-text" <?php echo $trr_setup ? 'autofocus' : ''; ?> placeholder="<?php esc_attr_e( 'What you were doing, what you expected, and what happened instead.', 'translate-rocket' ); ?>"><?php echo $trr_setup ? esc_textarea( __( "Hello, I would like a free setup of TranslateRocket on my site.\n\nLanguages I want:\nWhat my site is about:\nRoughly how many pages:", 'translate-rocket' ) ) : ''; ?></textarea>
 					</td>
 				</tr>
 				<tr>

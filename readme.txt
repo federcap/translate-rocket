@@ -5,11 +5,11 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.55
+Stable tag: 1.8.56
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Translate your whole site in one click, with no API key, from any browser. Unlimited languages, free, no paid tier.
+Translate your whole site in one click, with no API key, from any browser. Unlimited languages, free.
 
 == Description ==
 
@@ -84,6 +84,18 @@ The full list, with what was checked and the date of the last test: https://tran
 
 Something missing, or not behaving? Tell me from https://translaterocket.com/support/ and I will test it.
 
+= Double-checked translation, in TranslateRocket Premium =
+
+A translation engine alone is right most of the time, and nobody tells you which sentences are the other ones. **TranslateRocket Premium** is a separate plugin made for sites where a wrong sentence matters:
+
+* **Two or three engines** of different families translate every sentence, with your own keys.
+* **Automatic checks** compare numbers, prices, links, names and the words you protect.
+* **An AI judge** reads the versions only where the engines disagree, and says why it chose.
+* **You have the last word**: every sentence has a confidence score, and the doubtful ones wait for you in a review list.
+* It can also translate a page by itself when you publish it, with the same double check.
+
+It is machine translation checked by machines, not a sworn or certified translation. Premium is sold separately at https://translaterocket.com/premium/ and is not hosted on WordPress.org. **Nothing in this plugin is locked, limited or waiting for a licence**: TranslateRocket stays free, with everything it has today.
+
 = Need a hand with your site? =
 
 **I can do it for you.** I am the developer of TranslateRocket, and I also build and translate WordPress sites for a living: a new multilingual site from scratch, an existing site taken from one language to ten, a migration away from a paid plugin, or a stubborn theme that will not translate. You get the person who wrote the engine, not a support queue.
@@ -127,11 +139,11 @@ https://www.youtube.com/watch?v=FgrO7Fqun4U
 
 = Is it really free? =
 
-Yes. All translation features and unlimited languages are free, with no paid tier inside the plugin. You only ever pay your own AI provider, directly, if you choose to use AI.
+Yes. All translation features and unlimited languages are free, with no paid tier inside the plugin. You only ever pay your own AI provider, directly, if you choose to use AI. A separate plugin, TranslateRocket Premium, adds a double check by several engines for those who want it; nothing in this plugin depends on it and nothing is taken away.
 
-= How do you keep it free with no income from it? =
+= How do you keep it free? =
 
-I build websites for a living, and I use TranslateRocket on every multilingual site I make. Every fix reaches those sites the day I release it, so the plugin gets maintained because I need it maintained — publishing it for everyone costs me nothing on top of that. What comes back is worth more to me than a licence fee would be: bug reports from setups I could never reproduce on my own, which end up improving my own clients' sites too. Donations are welcome and change nothing about what the plugin does.
+I build websites for a living, and I use TranslateRocket on every multilingual site I make. Every fix reaches those sites the day I release it, so the plugin gets maintained because I need it maintained — publishing it for everyone costs me nothing on top of that. What comes back is worth more to me than a licence fee would be: bug reports from setups I could never reproduce on my own, which end up improving my own clients' sites too. Donations are welcome and change nothing about what the plugin does. There is also a separate paid plugin, TranslateRocket Premium, which adds a double check by several engines; this plugin is not a trimmed version of it and loses nothing because of it.
 
 **And if you want that work done on your own site, you can hire me.** Building and fixing WordPress sites is the day job: a site built from scratch, a design put right, a multilingual setup done properly, custom development, a migration off a plugin that charges you every month. That is where the money comes from — not from crippling this plugin. Ask me from the "Help & Feedback" screen inside the plugin, or at https://translaterocket.com/support/ .
 
@@ -223,6 +235,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.56 =
+* Fixed: with «This browser» chosen in «Translate with», the «Translate» button of a single page sent that page to the first AI engine with a key instead. It now opens the sentences of that page, where the browser translates them; nothing is sent to another engine. Thanks to Marie-Dominique.
+* Changed: the free setup on request now says plainly what it covers. We set up small sites for you and start the translation; larger sites need more time and resources, so we look at each case and tell you what we can do. The request form asks roughly how many pages your site has, and no longer offers an administrator account: if we ever need access, we will ask.
+* New: a short card on the AI Translation page and in the overview says what TranslateRocket Premium is: a separate plugin that has every sentence translated by two or three engines and checked. It is a description with a link, nothing more. Nothing in this plugin is locked or limited: it stays free, with everything it has today. The card is not shown where Premium is installed.
+* Changed: the invitation to leave a review no longer says «It has no paid version», and this page describes Premium in its own section.
 
 = 1.8.55 =
 * Fixed: in the page editor, the «SEO and indexing» box of the homepage could show the SEO title and meta description of another page. A draft page, or an independent copy (which is a draft), has an address like /?page_id=123, and its sentences seen by the administrator were filed under the homepage. They are still learnt and translated, but no longer filed under any page. Sites already affected: open the homepage once as an administrator and the foreign title and description go away at once. Thanks to Nikolai.
@@ -770,6 +788,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.56 =
+The free setup on request is now described clearly (small sites; larger ones case by case). A card says what the separate Premium plugin is. Nothing changes in the free features.
 
 = 1.8.55 =
 The SEO box of the homepage no longer shows the title and description of a draft or of an independent copy.

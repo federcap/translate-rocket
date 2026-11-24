@@ -8139,3 +8139,36 @@ msgstr "面板并排显示所有语言，并突出显示当前语言：语言较
 #, php-format
 msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
 msgstr "未保存：请把 %s 放回它们所属的文字两侧（链接、粗体）。"
+
+#: src/Admin/AutoPage.php
+msgid "Free setup on request, for small sites: we configure TranslateRocket for you and start the translation. Larger sites need more time and resources, so we look at each case and tell you what we can do."
+msgstr "小型网站可按需免费设置：我们为您配置 TranslateRocket 并启动翻译。较大的网站需要更多时间和资源，因此我们会逐一评估，并告诉您我们能做什么。"
+
+#: src/Admin/Ticket.php
+msgid "Hello, I would like a free setup of TranslateRocket on my site.\n\nLanguages I want:\nWhat my site is about:\nRoughly how many pages:"
+msgstr "您好，我想在我的网站上免费设置 TranslateRocket。\n\n需要的语言：\n网站的主题：\n大约的页面数量："
+
+#: src/Admin/PremiumNote.php
+msgid "New: TranslateRocket Premium — double-checked translation"
+msgstr "新推出：TranslateRocket Premium — 双重校验翻译"
+
+#: src/Admin/PremiumNote.php
+msgid "Two or three engines translate every sentence, automatic checks compare numbers, prices, links and names, an AI judge settles only the sentences in doubt, and you have the last word. It also translates a page by itself when you publish it, with the double check. It is a separate plugin that works with your own keys."
+msgstr "两到三个引擎翻译每一句话，自动检查会比对数字、价格、链接和名称，AI 裁判只对有疑问的句子作出判断，最终决定权在您手中。发布页面时，它还会自动翻译该页面，并进行双重校验。它是一个独立的插件，使用您自己的密钥工作。"
+
+#: src/Admin/PremiumNote.php
+msgid "Nothing is taken away from this plugin: it stays free, with everything it has today."
+msgstr "本插件不会被削减任何功能：它保持免费，现有的一切都保留。"
+
+#: src/Admin/PremiumNote.php
+msgid "See Premium"
+msgstr "了解 Premium"
+
+#: src/Admin/Growth.php
+#, php-format
+msgid "TranslateRocket has translated %s strings on this site, for free. Reviews are what helps other people find it. Would you leave one?"
+msgstr "TranslateRocket 已在本站免费翻译了 %s 条字符串。评价能帮助其他人找到它。您愿意留下一条吗？"
+
+#: src/Admin/Overview.php
+msgid "Or ask for a free setup (for small sites)"
+msgstr "或申请免费设置（适用于小型网站）"

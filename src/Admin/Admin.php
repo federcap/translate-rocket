@@ -4034,9 +4034,12 @@ JS;
 					var ln=document.getElementById('trr-engine-labsnote'),N=window.TRRocketEngineNote||{};if(ln){ln.hidden=!N[v];ln.textContent=N[v]||'';ln.classList.toggle('is-unofficial',/labs:(edge|yandex)/.test(v));}
 					var mm=document.getElementById('trr-engine-mm');if(mm){mm.hidden=('labs:mymemory'!==v);}
 					// The per-page «AI» buttons follow the choice (the browser works on the whole language: they keep the priority order).
-					if(one){var h=one.querySelector('input[name="engine"]');if(!h){h=document.createElement('input');h.type='hidden';h.name='engine';one.appendChild(h);}h.value=('browser'===v||W[v])?'':v;var auto=s.querySelector('option[value=""]'),no=!h.value&&(!auto||auto.disabled);document.querySelectorAll('button[form="trr-ai-onepage"]').forEach(function(x){x.disabled=no;});}
+					if(one){var h=one.querySelector('input[name="engine"]');if(!h){h=document.createElement('input');h.type='hidden';h.name='engine';one.appendChild(h);}h.value=('browser'===v||W[v])?'':v;var auto=s.querySelector('option[value=""]'),no=!h.value&&(!auto||auto.disabled);document.querySelectorAll('button[form="trr-ai-onepage"]').forEach(function(x){x.disabled=no&&'browser'!==v;});}
 				}
 				s.addEventListener('change',sync);sync();
+				// 1.8.56 (a user chose «This browser», pressed «Translate» on a row and the page went to her first AI key instead):
+				// with «This browser» the row button opens that page's sentences, where the browser translates them. Nothing is sent to another engine.
+				document.addEventListener('click',function(ev){var b=ev.target&&ev.target.closest?ev.target.closest('button[form="trr-ai-onepage"]'):null;if(!b||'browser'!==s.value){return;}var u=b.getAttribute('data-trr-editor');if(!u){return;}ev.preventDefault();window.location.href=u+'#trr-browser-engine';},true);
 				// 14/10/2026: one menu. The list shows each engine with its tier on the left (FREE in green, FREE with a
 				// daily limit in amber, a paid key in blue), the quality on the right and the limit under the name.
 				var I=document.getElementById('trr-engine-info'),pk=document.getElementById('trr-epick'),pb=document.getElementById('trr-epick-btn'),pl=document.getElementById('trr-epick-list');
@@ -5114,6 +5117,7 @@ JS
 			<?php endif; ?>
 
 			<?php \TranslateRocket\Admin\LabsPromo::banner( 'ai' ); ?>
+			<?php \TranslateRocket\Admin\PremiumNote::render( 'ai' ); // 24/11/2026: what Premium is, where one chooses how to translate. ?>
 
 			<form method="post" action="">
 				<?php wp_nonce_field( 'trrocket_save_ai', 'trrocket_ai_nonce' ); ?>
@@ -8400,6 +8404,7 @@ JS;
 								<?php // Il valore del pulsante e' il "loc" che finisce nel POST: un solo modulo per tutta la tabella invece di uno per riga. ?>
 								<button type="submit" form="trr-ai-onepage" class="button button-small button-primary" name="loc"
 									value="<?php echo esc_attr( $page->url_hash ); ?>"
+									data-trr-editor="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>"
 									title="<?php esc_attr_e( 'Translate this page with the engine chosen above', 'translate-rocket' ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></button>
 							<?php elseif ( $missing > 0 ) : ?>
 								<a class="button button-small button-primary" href="<?php echo esc_url( $this->editor_url( $lang, $page->url_hash ) ); ?>" title="<?php esc_attr_e( 'No engine is ready: translate by hand or with your browser', 'translate-rocket' ); ?>"><?php esc_html_e( 'Translate', 'translate-rocket' ); ?></a>

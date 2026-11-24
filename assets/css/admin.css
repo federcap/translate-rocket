@@ -2796,3 +2796,12 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 
 /* 1.8.51: the dropdown's button and list (panel) sit next to «Layout»; with another layout they are not shown. */
 .trrocket-wrap tr.trr-sw-solo-dd.trr-off { display: none; }
+
+/* 1.8.56: the card that says what TranslateRocket Premium is (AI Translation page and overview). Description and link only. */
+.trr-premium-note { margin: 16px 0; padding: 16px 20px; border: 1px solid #d9d6fe; border-left: 4px solid #6d5df0; border-radius: 10px; background: #f8f7ff; max-width: 980px; }
+.trr-premium-note p { margin: 0 0 8px; font-size: 14px; line-height: 1.55; }
+.trr-premium-note p:last-child { margin-bottom: 0; }
+.trr-premium-note .trr-premium-note-tit { font-size: 15px; font-weight: 600; color: #1e1b4b; }
+.trr-premium-note .trr-premium-note-tit .dashicons { color: #6d5df0; vertical-align: text-bottom; }
+.trr-premium-note .trr-premium-note-free { color: #166534; font-weight: 600; }
+.trr-ov .trr-premium-note { margin: 4px 0 14px; max-width: none; }

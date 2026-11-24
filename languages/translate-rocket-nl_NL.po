@@ -7322,3 +7322,36 @@ msgstr "Een paneel toont alle talen naast elkaar, met de huidige gemarkeerd: han
 #, php-format
 msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
 msgstr "Niet opgeslagen: zet %s terug rond de woorden waar ze bij horen (een link, vetgedrukte tekst)."
+
+#: src/Admin/AutoPage.php
+msgid "Free setup on request, for small sites: we configure TranslateRocket for you and start the translation. Larger sites need more time and resources, so we look at each case and tell you what we can do."
+msgstr "Gratis installatie op aanvraag, voor kleine sites: wij stellen TranslateRocket voor je in en starten de vertaling. Grotere sites vragen meer tijd en middelen, dus we bekijken elk geval apart en laten je weten wat we kunnen doen."
+
+#: src/Admin/Ticket.php
+msgid "Hello, I would like a free setup of TranslateRocket on my site.\n\nLanguages I want:\nWhat my site is about:\nRoughly how many pages:"
+msgstr "Hallo, ik wil graag een gratis installatie van TranslateRocket op mijn site.\n\nTalen die ik wil:\nWaar mijn site over gaat:\nOngeveer hoeveel pagina's:"
+
+#: src/Admin/PremiumNote.php
+msgid "New: TranslateRocket Premium — double-checked translation"
+msgstr "Nieuw: TranslateRocket Premium — dubbel gecontroleerde vertaling"
+
+#: src/Admin/PremiumNote.php
+msgid "Two or three engines translate every sentence, automatic checks compare numbers, prices, links and names, an AI judge settles only the sentences in doubt, and you have the last word. It also translates a page by itself when you publish it, with the double check. It is a separate plugin that works with your own keys."
+msgstr "Twee of drie engines vertalen elke zin, automatische controles vergelijken getallen, prijzen, links en namen, een AI-rechter beslist alleen over de twijfelachtige zinnen, en jij hebt het laatste woord. Het vertaalt een pagina ook vanzelf wanneer je die publiceert, met de dubbele controle. Het is een aparte plugin die met je eigen sleutels werkt."
+
+#: src/Admin/PremiumNote.php
+msgid "Nothing is taken away from this plugin: it stays free, with everything it has today."
+msgstr "Er wordt niets uit deze plugin weggehaald: hij blijft gratis, met alles wat hij vandaag heeft."
+
+#: src/Admin/PremiumNote.php
+msgid "See Premium"
+msgstr "Premium bekijken"
+
+#: src/Admin/Growth.php
+#, php-format
+msgid "TranslateRocket has translated %s strings on this site, for free. Reviews are what helps other people find it. Would you leave one?"
+msgstr "TranslateRocket heeft op deze site %s teksten vertaald, gratis. Beoordelingen helpen anderen om de plugin te vinden. Wil je er een achterlaten?"
+
+#: src/Admin/Overview.php
+msgid "Or ask for a free setup (for small sites)"
+msgstr "Of vraag een gratis installatie aan (voor kleine sites)"

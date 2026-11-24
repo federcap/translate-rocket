@@ -261,11 +261,12 @@ class Overview {
 					<?php endif; ?>
 				</div>
 			</div>
+			<?php PremiumNote::render( 'overview' ); // 24/11/2026: Premium is a separate plugin; here only what it is. ?>
 			<p class="trr-ov-help">
 				<strong><?php esc_html_e( 'Fast support, free.', 'translate-rocket' ); ?></strong>
 				<?php esc_html_e( 'Stuck, or something looks wrong? Write in the forum: the developer answers quickly, usually the same day.', 'translate-rocket' ); ?>
 				<a href="https://wordpress.org/support/plugin/translate-rocket/#new-topic-0" target="_blank" rel="noopener"><?php esc_html_e( 'Ask for help', 'translate-rocket' ); ?> ↗</a>
-				· <a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-diagnostics&setup=1#trr-tk-subject' ) ); ?>"><?php esc_html_e( 'Or ask us to set it up for you, free', 'translate-rocket' ); ?></a>
+				· <a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-diagnostics&setup=1#trr-tk-subject' ) ); ?>"><?php esc_html_e( 'Or ask for a free setup (for small sites)', 'translate-rocket' ); ?></a>
 			</p>
 		</details>
 		<?php

@@ -8139,3 +8139,36 @@ msgstr "Panel menampilkan semua bahasa berdampingan, dengan bahasa saat ini diso
 #, php-format
 msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
 msgstr "Tidak disimpan: kembalikan %s di sekitar kata-kata tempatnya (tautan, teks tebal)."
+
+#: src/Admin/AutoPage.php
+msgid "Free setup on request, for small sites: we configure TranslateRocket for you and start the translation. Larger sites need more time and resources, so we look at each case and tell you what we can do."
+msgstr "Penyiapan gratis atas permintaan, untuk situs kecil: kami mengonfigurasi TranslateRocket untuk Anda dan memulai terjemahannya. Situs yang lebih besar membutuhkan lebih banyak waktu dan sumber daya, jadi kami menilai setiap kasus dan memberi tahu Anda apa yang bisa kami lakukan."
+
+#: src/Admin/Ticket.php
+msgid "Hello, I would like a free setup of TranslateRocket on my site.\n\nLanguages I want:\nWhat my site is about:\nRoughly how many pages:"
+msgstr "Halo, saya ingin penyiapan gratis TranslateRocket di situs saya.\n\nBahasa yang saya inginkan:\nTentang apa situs saya:\nPerkiraan jumlah halaman:"
+
+#: src/Admin/PremiumNote.php
+msgid "New: TranslateRocket Premium — double-checked translation"
+msgstr "Baru: TranslateRocket Premium — terjemahan dengan pemeriksaan ganda"
+
+#: src/Admin/PremiumNote.php
+msgid "Two or three engines translate every sentence, automatic checks compare numbers, prices, links and names, an AI judge settles only the sentences in doubt, and you have the last word. It also translates a page by itself when you publish it, with the double check. It is a separate plugin that works with your own keys."
+msgstr "Dua atau tiga mesin menerjemahkan setiap kalimat, pemeriksaan otomatis membandingkan angka, harga, tautan, dan nama, juri AI hanya memutuskan kalimat yang meragukan, dan keputusan terakhir ada di tangan Anda. Plugin ini juga menerjemahkan halaman dengan sendirinya saat Anda menerbitkannya, dengan pemeriksaan ganda. Ini plugin terpisah yang bekerja dengan kunci Anda sendiri."
+
+#: src/Admin/PremiumNote.php
+msgid "Nothing is taken away from this plugin: it stays free, with everything it has today."
+msgstr "Tidak ada yang dikurangi dari plugin ini: tetap gratis, dengan semua yang dimilikinya saat ini."
+
+#: src/Admin/PremiumNote.php
+msgid "See Premium"
+msgstr "Lihat Premium"
+
+#: src/Admin/Growth.php
+#, php-format
+msgid "TranslateRocket has translated %s strings on this site, for free. Reviews are what helps other people find it. Would you leave one?"
+msgstr "TranslateRocket telah menerjemahkan %s string di situs ini, gratis. Ulasanlah yang membantu orang lain menemukannya. Maukah Anda menulis satu?"
+
+#: src/Admin/Overview.php
+msgid "Or ask for a free setup (for small sites)"
+msgstr "Atau minta penyiapan gratis (untuk situs kecil)"

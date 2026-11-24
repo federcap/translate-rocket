@@ -799,7 +799,8 @@ class AutoPage {
 			<?php // 9/10/2026 (Federico: «una richiesta per fare io la traduzione su richiesta: avremmo siti reali»). ?>
 			<div class="trrocket-card trr-auto-setup">
 				<h2><?php esc_html_e( 'Prefer that we do it for you?', 'translate-rocket' ); ?></h2>
-				<p><?php esc_html_e( 'Free setup on request: we configure TranslateRocket on your site, start the translation and tell you when it is done. You only give us a temporary administrator account, and remove it afterwards.', 'translate-rocket' ); ?></p>
+				<?php // 24/11/2026 (Federico, ticket #38 con 9.500 pagine): installazione gratuita solo per siti piccoli, gli altri caso per caso; niente offerta di account amministratore. ?>
+				<p><?php esc_html_e( 'Free setup on request, for small sites: we configure TranslateRocket for you and start the translation. Larger sites need more time and resources, so we look at each case and tell you what we can do.', 'translate-rocket' ); ?></p>
 				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-diagnostics&setup=1#trr-tk-subject' ) ); ?>"><?php esc_html_e( 'Ask for a free setup', 'translate-rocket' ); ?></a></p>
 			</div>
 		</div>

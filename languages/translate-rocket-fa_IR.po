@@ -8167,3 +8167,36 @@ msgstr "پنل همهٔ زبان‌ها را کنار هم نشان می‌ده�
 #, php-format
 msgid "Not saved: put back %s around the words they belong to (a link, bold text)."
 msgstr "ذخیره نشد: %s را دوباره دور واژه‌هایی که به آن‌ها تعلق دارند بگذارید (یک پیوند، متن پررنگ)."
+
+#: src/Admin/AutoPage.php
+msgid "Free setup on request, for small sites: we configure TranslateRocket for you and start the translation. Larger sites need more time and resources, so we look at each case and tell you what we can do."
+msgstr "راه‌اندازی رایگان در صورت درخواست، برای سایت‌های کوچک: TranslateRocket را برایتان پیکربندی می‌کنیم و ترجمه را آغاز می‌کنیم. سایت‌های بزرگ‌تر به زمان و منابع بیشتری نیاز دارند، پس هر مورد را جداگانه بررسی می‌کنیم و به شما می‌گوییم چه کاری از دستمان برمی‌آید."
+
+#: src/Admin/Ticket.php
+msgid "Hello, I would like a free setup of TranslateRocket on my site.\n\nLanguages I want:\nWhat my site is about:\nRoughly how many pages:"
+msgstr "سلام، می‌خواهم TranslateRocket به‌صورت رایگان روی سایتم راه‌اندازی شود.\n\nزبان‌هایی که می‌خواهم:\nموضوع سایت من:\nتعداد تقریبی صفحه‌ها:"
+
+#: src/Admin/PremiumNote.php
+msgid "New: TranslateRocket Premium — double-checked translation"
+msgstr "تازه: TranslateRocket Premium — ترجمه با بررسی دوگانه"
+
+#: src/Admin/PremiumNote.php
+msgid "Two or three engines translate every sentence, automatic checks compare numbers, prices, links and names, an AI judge settles only the sentences in doubt, and you have the last word. It also translates a page by itself when you publish it, with the double check. It is a separate plugin that works with your own keys."
+msgstr "دو یا سه موتور هر جمله را ترجمه می‌کنند، بررسی‌های خودکار عددها، قیمت‌ها، پیوندها و نام‌ها را مقایسه می‌کنند، یک داور هوش مصنوعی فقط درباره جمله‌های مشکوک تصمیم می‌گیرد و حرف آخر با شماست. همچنین هر برگه را هنگام انتشار، خودش با بررسی دوگانه ترجمه می‌کند. این یک افزونه جداگانه است که با کلیدهای خود شما کار می‌کند."
+
+#: src/Admin/PremiumNote.php
+msgid "Nothing is taken away from this plugin: it stays free, with everything it has today."
+msgstr "چیزی از این افزونه کم نمی‌شود: با همه امکانات امروزش رایگان می‌ماند."
+
+#: src/Admin/PremiumNote.php
+msgid "See Premium"
+msgstr "دیدن Premium"
+
+#: src/Admin/Growth.php
+#, php-format
+msgid "TranslateRocket has translated %s strings on this site, for free. Reviews are what helps other people find it. Would you leave one?"
+msgstr "TranslateRocket در این سایت %s رشته را رایگان ترجمه کرده است. دیدگاه‌ها به دیگران کمک می‌کنند آن را پیدا کنند. یک دیدگاه می‌نویسید؟"
+
+#: src/Admin/Overview.php
+msgid "Or ask for a free setup (for small sites)"
+msgstr "یا راه‌اندازی رایگان بخواهید (برای سایت‌های کوچک)"
