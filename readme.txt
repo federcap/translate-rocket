@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.57
+Stable tag: 1.8.58
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,7 +221,7 @@ https://www.youtube.com/watch?v=Bc83GXh1NvI
 
 Yes. «Translate my site» then uses MyMemory, the free public service of Translated: no key, no account, about 5,000 characters a day, about 50,000 if you tick the optional box that gives it your e-mail. TranslateRocket Labs, a separate free add-on you can ask for at https://translaterocket.com/labs/, adds more free engines with no key that work from any browser, phones included — each one is switched on only after you read and accept its conditions. Labs is not needed: everything described on this page works without it.
 
-Both, in one minute — a page translated in the browser with no key, then Labs translating a new page the moment it is published:
+A one-minute video: a page translated in the browser with no key, then Labs at work (recorded with an earlier version of Labs):
 
 https://www.youtube.com/watch?v=Zsf1PXWFhVI
 
@@ -235,6 +235,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.58 =
+* Changed: the «Labs ✨» screen, the overview and the Automatic translation screen present TranslateRocket Labs only for what it is now looked after for: translation engines that need no key, from any browser. Translating a page when you publish it and keeping the whole site translated are presented as part of TranslateRocket Premium, a separate plugin. Sites that already have Labs keep seeing every Labs function they use. Nothing changes in the free plugin's own features.
 
 = 1.8.57 =
 * Fixed: fewer addresses for crawlers to walk. On a translated address WordPress announced three technical addresses of its own in the page and in the HTTP headers: the short link (/it/?p=12), the oEmbed preview and the REST address of the content. Each existed once per language, so a site with many languages offered tens of thousands of uncached addresses, and a crawler walking them could slow the server down. They are now announced on the original address only, as before TranslateRocket.
@@ -792,6 +795,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.58 =
+The Labs and overview screens now present Labs only for its engines with no key; automatic translation on publish is presented as part of the separate Premium plugin. Nothing changes in the free features.
 
 = 1.8.57 =
 Fewer technical addresses for crawlers on translated pages (lighter on the server), and pages kept in their original language are no longer announced as translations.

@@ -7383,3 +7383,79 @@ msgstr "TranslateRocket бесплатно перевёл на этом сайт
 #: src/Admin/Overview.php
 msgid "Or ask for a free setup (for small sites)"
 msgstr "Или запросите бесплатную настройку (для небольших сайтов)"
+
+#: src/Admin/LabsPromo.php
+msgid "free: translate with no API key, from any browser."
+msgstr "бесплатно: переводите без API-ключа, из любого браузера."
+
+#: src/Admin/LabsPromo.php
+msgid "The free add-on with translation engines that need no key."
+msgstr "Бесплатное дополнение с движками перевода, которым не нужен ключ."
+
+#: src/Admin/LabsPromo.php
+msgid "A free add-on for TranslateRocket with translation engines that need no API key, from any browser — phones included."
+msgstr "Бесплатное дополнение к TranslateRocket с движками перевода, которым не нужен API-ключ, из любого браузера — включая телефоны."
+
+#: src/Admin/LabsPromo.php
+msgid "What is included, what Labs adds, and what is in Premium"
+msgstr "Что включено, что добавляет Labs и что есть в Premium"
+
+#: src/Admin/LabsPromo.php
+msgid "Every sentence translated by two or three engines, checked, and settled by an AI judge where they disagree"
+msgstr "Каждое предложение переводят два или три движка, его проверяют, а где они расходятся — решает ИИ-судья"
+
+#: src/Admin/LabsPromo.php
+msgid "A confidence score on every sentence, and the doubtful ones in a list to review"
+msgstr "Оценка надёжности для каждого предложения, а сомнительные — в списке для проверки"
+
+#: src/Admin/LabsPromo.php
+msgid "Every page translated by itself when you publish it, with the double check"
+msgstr "Каждая страница переводится сама при публикации, с двойной проверкой"
+
+#: src/Admin/LabsPromo.php
+msgid "The whole site kept translated by itself, and a weekly report"
+msgstr "Весь сайт сам поддерживается переведённым, и еженедельный отчёт"
+
+#: src/Admin/LabsPromo.php
+msgid "Want your site translated and checked by itself? That is Premium."
+msgstr "Хотите, чтобы сайт сам переводился и проверялся? Это Premium."
+
+#: src/Admin/LabsPromo.php
+msgid "New functions are released in TranslateRocket Premium, a separate plugin that works with your own keys: two or three engines on every sentence, automatic checks, an AI judge for the sentences in doubt, a page translated the moment you publish it, and the whole site kept translated."
+msgstr "Новые функции выходят в TranslateRocket Premium — отдельном плагине, который работает с вашими собственными ключами: два или три движка на каждое предложение, автоматические проверки, ИИ-судья для сомнительных предложений, страница переводится в момент публикации, и весь сайт остаётся переведённым."
+
+#: src/Admin/LabsPromo.php
+msgid "Labs is experimental. Our work on it now goes to its engines without a key, which use unofficial services of other companies and may stop working; its other functions are no longer developed."
+msgstr "Labs — экспериментальный. Сейчас наша работа над ним посвящена движкам без ключа: они используют неофициальные сервисы других компаний и могут перестать работать; остальные его функции больше не развиваются."
+
+#: src/Admin/AutoPage.php
+msgid "comes with TranslateRocket Premium: the whole site in the background and every new page as you publish it, with the double check."
+msgstr "есть в TranslateRocket Premium: весь сайт в фоне и каждая новая страница при публикации, с двойной проверкой."
+
+#: src/Admin/LabsPromo.php
+msgid "Translation from any browser and phones: your server does the work"
+msgstr "Перевод из любого браузера и с телефона: работу делает ваш сервер"
+
+#: src/Admin/LabsPromo.php
+msgid "✓ + Labs: Premium works together with Labs. The engines without a key are unofficial services, so they stay in the free Labs: install both and you have everything."
+msgstr "✓ + Labs: Premium работает вместе с Labs. Движки без ключа — неофициальные сервисы, поэтому они остаются в бесплатном Labs: установите оба, и у вас будет всё."
+
+#: src/Admin/LabsPromo.php
+msgid "Goes on in the background on your server, with no browser tab open"
+msgstr "Продолжается в фоне на вашем сервере, без открытой вкладки браузера"
+
+#: src/Admin/LabsPromo.php
+msgid "More engines with no key, called by your server (Microsoft Edge Translator, Yandex and others)"
+msgstr "Больше движков без ключа, которые вызывает ваш сервер (Microsoft Edge Translator, Yandex и другие)"
+
+#: src/Admin/LabsPromo.php
+msgid "The whole site kept translated by itself, with the double check"
+msgstr "Весь сайт сам остаётся переведённым, с двойной проверкой"
+
+#: src/Admin/LabsPromo.php
+msgid "✓ + Labs: Premium works together with Labs. The engines without a key are unofficial services, so they stay in the free Labs: install both to use them. Their translations do not go through the double check."
+msgstr "✓ + Labs: Premium работает вместе с Labs. Движки без ключа — неофициальные сервисы, поэтому они остаются в бесплатном Labs: установите оба, чтобы ими пользоваться. Их переводы не проходят двойную проверку."
+
+#: src/Admin/AutoPage.php
+msgid "Labs, the free add-on, can also translate the whole site in the background, without the double check; its functions other than the engines with no key are no longer developed."
+msgstr "Labs, бесплатное дополнение, тоже может переводить весь сайт в фоне, без двойной проверки; его функции, кроме движков без ключа, больше не развиваются."

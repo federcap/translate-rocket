@@ -8172,3 +8172,79 @@ msgstr "TranslateRocket 已在本站免费翻译了 %s 条字符串。评价能�
 #: src/Admin/Overview.php
 msgid "Or ask for a free setup (for small sites)"
 msgstr "或申请免费设置（适用于小型网站）"
+
+#: src/Admin/LabsPromo.php
+msgid "free: translate with no API key, from any browser."
+msgstr "免费：无需 API 密钥，任何浏览器都能翻译。"
+
+#: src/Admin/LabsPromo.php
+msgid "The free add-on with translation engines that need no key."
+msgstr "免费附加组件，自带无需密钥的翻译引擎。"
+
+#: src/Admin/LabsPromo.php
+msgid "A free add-on for TranslateRocket with translation engines that need no API key, from any browser — phones included."
+msgstr "TranslateRocket 的免费附加组件，自带无需 API 密钥的翻译引擎，任何浏览器都能用，包括手机。"
+
+#: src/Admin/LabsPromo.php
+msgid "What is included, what Labs adds, and what is in Premium"
+msgstr "包含哪些功能、Labs 增加什么、Premium 里有什么"
+
+#: src/Admin/LabsPromo.php
+msgid "Every sentence translated by two or three engines, checked, and settled by an AI judge where they disagree"
+msgstr "每句话由两到三个引擎翻译并检查，结果不一致时由 AI 裁判决定"
+
+#: src/Admin/LabsPromo.php
+msgid "A confidence score on every sentence, and the doubtful ones in a list to review"
+msgstr "每句话都有可信度评分，存疑的句子列入待审清单"
+
+#: src/Admin/LabsPromo.php
+msgid "Every page translated by itself when you publish it, with the double check"
+msgstr "发布页面时自动翻译，并进行双重校验"
+
+#: src/Admin/LabsPromo.php
+msgid "The whole site kept translated by itself, and a weekly report"
+msgstr "整个网站自动保持已翻译状态，每周还有报告"
+
+#: src/Admin/LabsPromo.php
+msgid "Want your site translated and checked by itself? That is Premium."
+msgstr "想让网站自动翻译并检查？这就是 Premium。"
+
+#: src/Admin/LabsPromo.php
+msgid "New functions are released in TranslateRocket Premium, a separate plugin that works with your own keys: two or three engines on every sentence, automatic checks, an AI judge for the sentences in doubt, a page translated the moment you publish it, and the whole site kept translated."
+msgstr "新功能在 TranslateRocket Premium 中发布。它是一个独立插件，使用您自己的密钥工作：每句话两到三个引擎、自动检查、为存疑句子把关的 AI 裁判、发布即翻译的页面，以及始终保持翻译的整个网站。"
+
+#: src/Admin/LabsPromo.php
+msgid "Labs is experimental. Our work on it now goes to its engines without a key, which use unofficial services of other companies and may stop working; its other functions are no longer developed."
+msgstr "Labs 属于实验性质。我们现在只维护它的免密钥引擎，这些引擎使用其他公司的非官方服务，可能停止工作；它的其他功能不再开发。"
+
+#: src/Admin/AutoPage.php
+msgid "comes with TranslateRocket Premium: the whole site in the background and every new page as you publish it, with the double check."
+msgstr "TranslateRocket Premium 提供：在后台翻译整个网站，每个新页面在发布时翻译，并进行双重校验。"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation from any browser and phones: your server does the work"
+msgstr "可在任何浏览器和手机上翻译：工作由您的服务器完成"
+
+#: src/Admin/LabsPromo.php
+msgid "✓ + Labs: Premium works together with Labs. The engines without a key are unofficial services, so they stay in the free Labs: install both and you have everything."
+msgstr "✓ + Labs：Premium 可与 Labs 一起使用。免密钥引擎属于非官方服务，因此保留在免费的 Labs 中：两者都安装，就拥有全部功能。"
+
+#: src/Admin/LabsPromo.php
+msgid "Goes on in the background on your server, with no browser tab open"
+msgstr "在您的服务器上后台进行，无需打开浏览器标签页"
+
+#: src/Admin/LabsPromo.php
+msgid "More engines with no key, called by your server (Microsoft Edge Translator, Yandex and others)"
+msgstr "更多无需密钥的引擎，由您的服务器调用（Microsoft Edge Translator、Yandex 等）"
+
+#: src/Admin/LabsPromo.php
+msgid "The whole site kept translated by itself, with the double check"
+msgstr "整个网站自动保持翻译状态，并经过双重检查"
+
+#: src/Admin/LabsPromo.php
+msgid "✓ + Labs: Premium works together with Labs. The engines without a key are unofficial services, so they stay in the free Labs: install both to use them. Their translations do not go through the double check."
+msgstr "✓ + Labs：Premium 可与 Labs 一起使用。免密钥引擎属于非官方服务，因此保留在免费的 Labs 中：两者都安装即可使用。它们的翻译不经过双重检查。"
+
+#: src/Admin/AutoPage.php
+msgid "Labs, the free add-on, can also translate the whole site in the background, without the double check; its functions other than the engines with no key are no longer developed."
+msgstr "免费附加组件 Labs 也能在后台翻译整个网站，但不经过双重检查；除免密钥引擎外，它的其他功能已不再开发。"

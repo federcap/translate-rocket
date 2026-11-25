@@ -60,7 +60,8 @@ class LabsPromo {
 		// One line by default since 5/10/2026 («Labs is too much in the way»): the full box only for
 		// whoever asked to see it («Show», remembered per user as «0»).
 		if ( '0' !== (string) get_user_meta( get_current_user_id(), 'trrocket_labs_banner_min', true ) ) {
-			echo '<p class="trr-lb-min">✨ <strong>TranslateRocket Labs</strong> — ' . esc_html__( 'free: translate with no API key, from any browser, automatically.', 'translate-rocket' )
+			// 25/11/2026 (Federico): Labs is presented only for its engines without a key; the rest is Premium's.
+			echo '<p class="trr-lb-min">✨ <strong>TranslateRocket Labs</strong> — ' . esc_html__( 'free: translate with no API key, from any browser.', 'translate-rocket' )
 				. ' <a href="' . esc_url( $page ) . '">' . esc_html__( 'See what Labs adds', 'translate-rocket' ) . ' →</a>'
 				. ' <a class="trr-lb-toggle" href="' . esc_url( $toggle( true ) ) . '">' . esc_html__( 'Show', 'translate-rocket' ) . '</a></p>';
 			return;
@@ -68,7 +69,6 @@ class LabsPromo {
 		$vantaggi = array(
 			array( 'dashicons-unlock', __( 'No API key needed', 'translate-rocket' ), __( 'No account, no card: switch it on and your site gets translated.', 'translate-rocket' ) ),
 			array( 'dashicons-smartphone', __( 'Any browser, even phones', 'translate-rocket' ), __( 'Firefox, Safari, a tablet: your server does the work, not Chrome.', 'translate-rocket' ) ),
-			array( 'dashicons-performance', __( 'Translates by itself', 'translate-rocket' ), __( 'The whole site in one click, and every page you publish is translated automatically.', 'translate-rocket' ) ),
 			array( 'dashicons-randomize', __( 'Never stuck', 'translate-rocket' ), __( 'Key out of credit or engine busy? The next one in your order takes over.', 'translate-rocket' ) ),
 		);
 		?>
@@ -78,7 +78,7 @@ class LabsPromo {
 				<span class="trr-lb-gem" aria-hidden="true">✨</span>
 				<div>
 					<div class="trr-lb-tit">TranslateRocket Labs <span class="trr-lb-free"><?php esc_html_e( 'Free', 'translate-rocket' ); ?></span></div>
-					<div class="trr-lb-sub"><?php esc_html_e( 'The free add-on that does the translating for you.', 'translate-rocket' ); ?></div>
+					<div class="trr-lb-sub"><?php esc_html_e( 'The free add-on with translation engines that need no key.', 'translate-rocket' ); ?></div>
 				</div>
 			</div>
 			<ul class="trr-lb-list">
@@ -176,11 +176,11 @@ class LabsPromo {
 				.trr-lp-plain{margin:10px 0 0;font-weight:700;color:#6d28d9}
 				.trr-lp-cmp{width:100%;border-collapse:collapse;margin:4px 0 0}
 				.trr-lp-cmp th,.trr-lp-cmp td{padding:9px 10px;border-bottom:1px solid #eceef6;text-align:left;vertical-align:top}
-				.trr-lp-cmp th{font-size:13px;color:#50575e;font-weight:600}
+				.trr-lp-cmp th{font-size:13px;color:#50575e;font-weight:600}.trr-lp-cmp .trr-lp-short{display:none}
 				.trr-lp-cmp td.si{color:#008a20;font-weight:700;white-space:nowrap}
 				.trr-lp-cmp td.no{color:#8c8f94;white-space:nowrap}
-				.trr-lp-cmp td.lab{color:#6d28d9;font-weight:700;white-space:nowrap}
-				@media (max-width:600px){.trr-lp-cmp th,.trr-lp-cmp td{padding:8px 6px;font-size:13px}}
+				.trr-lp-cmp td.lab{color:#6d28d9;font-weight:700;white-space:nowrap}.trr-lp-cmp td.pre{color:#a16207;font-weight:700;white-space:nowrap}.trr-lp-premium{border-left:4px solid #d9a326}
+				@media (max-width:600px){.trr-lp-cmp th,.trr-lp-cmp td{padding:8px 6px;font-size:13px}.trr-lp-cmp th{font-size:12px;padding:8px 3px}.trr-lp-cmp .trr-lp-long{display:none}.trr-lp-cmp .trr-lp-short{display:inline}.trr-lp-cmp td.si,.trr-lp-cmp td.lab,.trr-lp-cmp td.pre,.trr-lp-cmp td.no{padding:8px 3px;text-align:center;white-space:normal}}
 				.trr-lp-example{margin:6px 0 4px;color:#3c434a;line-height:1.7}
 				.trr-lp-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:14px;margin:22px 0}
 				.trr-lp-tile{box-sizing:border-box;border-radius:18px;padding:20px 18px;color:#fff;box-shadow:0 12px 26px rgba(79,70,229,.2)}
@@ -207,76 +207,78 @@ class LabsPromo {
 			<div class="trr-lp">
 				<div class="trr-lp-hero">
 					<h1><span aria-hidden="true" style="-webkit-text-fill-color:initial">✨</span> TranslateRocket Labs</h1>
-					<p><?php esc_html_e( 'A free add-on for TranslateRocket that translates your site with no API key, from any browser — phones included — and does more of the work by itself.', 'translate-rocket' ); ?></p>
+					<p><?php esc_html_e( 'A free add-on for TranslateRocket with translation engines that need no API key, from any browser — phones included.', 'translate-rocket' ); ?></p>
 					<p class="trr-lp-plain"><?php esc_html_e( 'Free, on request — one key per site', 'translate-rocket' ); ?></p>
 				</div>
 
 				<?php
 				// 5/10/2026 (Federico): one place that says what is in the free plugin and what Labs adds.
+				// 25/11/2026 (Federico): Labs is presented only for its engines without a key; what is being developed now
+				// (translation on publish, the whole site kept translated, the weekly report, the double check) is Premium's.
+				// Columns: free plugin, Labs, Premium (1 = included, 0 = no, 2 = with Labs installed beside Premium: the engines
+				// without a key are unofficial services and never go into the paid plugin — 25/11/2026, Federico: «Premium must do
+				// what Labs does, and more»).
 				$cmp = array(
-					array( __( 'Unlimited languages, each on its own address for Google', 'translate-rocket' ), true, true ),
-					array( __( 'Translation with your own AI key (free Groq, Cloudflare, OpenRouter; or OpenAI, Claude, Gemini, DeepL, Google)', 'translate-rocket' ), true, true ),
-					array( __( 'Free translation in Chrome and Edge, no key', 'translate-rocket' ), true, true ),
-					array( __( 'Visual editor: click a sentence on your page and change it', 'translate-rocket' ), true, true ),
-					array( __( 'SEO: translated addresses, hreflang, sitemaps, titles and descriptions', 'translate-rocket' ), true, true ),
-					array( __( 'WooCommerce, contact forms and their e-mails in the visitor\'s language', 'translate-rocket' ), true, true ),
-					array( __( 'Import from WPML, Polylang, TranslatePress, Weglot and others', 'translate-rocket' ), true, true ),
+					array( __( 'Unlimited languages, each on its own address for Google', 'translate-rocket' ), 1, 1, 1 ),
+					array( __( 'Translation with your own AI key (free Groq, Cloudflare, OpenRouter; or OpenAI, Claude, Gemini, DeepL, Google)', 'translate-rocket' ), 1, 1, 1 ),
+					array( __( 'Free translation in Chrome and Edge, no key', 'translate-rocket' ), 1, 1, 1 ),
+					array( __( 'Visual editor: click a sentence on your page and change it', 'translate-rocket' ), 1, 1, 1 ),
+					array( __( 'SEO: translated addresses, hreflang, sitemaps, titles and descriptions', 'translate-rocket' ), 1, 1, 1 ),
+					array( __( 'WooCommerce, contact forms and their e-mails in the visitor\'s language', 'translate-rocket' ), 1, 1, 1 ),
+					array( __( 'Import from WPML, Polylang, TranslatePress, Weglot and others', 'translate-rocket' ), 1, 1, 1 ),
 					// 29/10/2026 (Federico: «are all the benefits here? is search there?»).
-					array( __( 'A search box that searches in the language of the page, with suggestions while typing', 'translate-rocket' ), true, true ),
-					array( __( 'Language switcher and search box with ready-made styles and a live preview', 'translate-rocket' ), true, true ),
-					array( __( 'Images, alt texts and link titles of their own for each language', 'translate-rocket' ), true, true ),
-					array( __( 'Translation with no key at all, from any browser and phones', 'translate-rocket' ), false, true ),
-					array( __( 'Every page translated by itself when you publish it', 'translate-rocket' ), false, true ),
-					array( __( 'Engines in the order you choose: if one stops, the next one translates', 'translate-rocket' ), false, true ),
-					array( __( 'A domain for each language (mysite.de instead of mysite.com/de/)', 'translate-rocket' ), false, true ),
-					array( __( 'A second opinion, external collaborators, a weekly report', 'translate-rocket' ), false, true ),
-					array( __( 'Quality that grows: a little of the free engines\' work polished with AI every day', 'translate-rocket' ), false, true ),
-					array( __( 'Remote help from support, without giving your password', 'translate-rocket' ), false, true ),
+					array( __( 'A search box that searches in the language of the page, with suggestions while typing', 'translate-rocket' ), 1, 1, 1 ),
+					array( __( 'Language switcher and search box with ready-made styles and a live preview', 'translate-rocket' ), 1, 1, 1 ),
+					array( __( 'Images, alt texts and link titles of their own for each language', 'translate-rocket' ), 1, 1, 1 ),
+					array( __( 'Goes on in the background on your server, with no browser tab open', 'translate-rocket' ), 0, 1, 1 ),
+					// 25/11/2026 (review): the free plugin already translates with no key (Chrome/Edge, MyMemory); Labs adds more such engines.
+					array( __( 'More engines with no key, called by your server (Microsoft Edge Translator, Yandex and others)', 'translate-rocket' ), 0, 1, 2 ),
+					array( __( 'Engines in the order you choose: if one stops, the next one translates', 'translate-rocket' ), 0, 1, 2 ),
+					array( __( 'Every sentence translated by two or three engines, checked, and settled by an AI judge where they disagree', 'translate-rocket' ), 0, 0, 1 ),
+					array( __( 'A confidence score on every sentence, and the doubtful ones in a list to review', 'translate-rocket' ), 0, 0, 1 ),
+					array( __( 'Every page translated by itself when you publish it, with the double check', 'translate-rocket' ), 0, 0, 1 ),
+					array( __( 'The whole site kept translated by itself, with the double check', 'translate-rocket' ), 0, 0, 1 ),
 				);
+				$cella = static function ( int $si, string $quale ): void {
+					if ( 2 === $si ) {
+						echo '<td class="pre">✓ + Labs</td>';
+						return;
+					}
+					if ( ! $si ) {
+						echo '<td class="no">—</td>';
+						return;
+					}
+					echo '<td class="' . esc_attr( 'free' === $quale ? 'si' : ( 'labs' === $quale ? 'lab' : 'pre' ) ) . '">✓</td>';
+				};
 				?>
 				<div class="trr-lp-box">
-					<h2><?php esc_html_e( 'What is included, and what Labs adds', 'translate-rocket' ); ?></h2>
-					<table class="trr-lp-cmp">
-						<thead><tr><th></th><th><?php esc_html_e( 'TranslateRocket (free)', 'translate-rocket' ); ?></th><th><?php esc_html_e( 'With Labs', 'translate-rocket' ); ?></th></tr></thead>
-						<tbody>
-							<?php foreach ( $cmp as $r ) : ?>
-								<tr>
-									<td><?php echo esc_html( $r[0] ); ?></td>
-									<td class="<?php echo $r[1] ? 'si' : 'no'; ?>"><?php echo $r[1] ? '✓ ' . esc_html__( 'Included', 'translate-rocket' ) : '—'; ?></td>
-									<td class="<?php echo $r[1] ? 'si' : 'lab'; ?>"><?php echo $r[1] ? '✓' : '✓ ' . esc_html__( 'Labs', 'translate-rocket' ); ?></td>
-								</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
+					<h2><?php esc_html_e( 'What is included, what Labs adds, and what is in Premium', 'translate-rocket' ); ?></h2>
+					<div style="overflow-x:auto">
+						<table class="trr-lp-cmp">
+							<thead><tr><th></th><th><span class="trr-lp-long"><?php esc_html_e( 'TranslateRocket (free)', 'translate-rocket' ); ?></span><span class="trr-lp-short"><?php esc_html_e( 'Free', 'translate-rocket' ); ?></span></th><th><span class="trr-lp-long"><?php esc_html_e( 'With Labs', 'translate-rocket' ); ?></span><span class="trr-lp-short">Labs</span></th><th>Premium</th></tr></thead>
+							<tbody>
+								<?php foreach ( $cmp as $r ) : ?>
+									<tr>
+										<td><?php echo esc_html( $r[0] ); ?></td>
+										<?php
+										$cella( $r[1], 'free' );
+										$cella( $r[2], 'labs' );
+										$cella( $r[3], 'premium' );
+										?>
+									</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+					</div>
+					<p class="description" style="margin:10px 0 0"><?php esc_html_e( '✓ + Labs: Premium works together with Labs. The engines without a key are unofficial services, so they stay in the free Labs: install both to use them. Their translations do not go through the double check.', 'translate-rocket' ); ?></p>
 				</div>
 
 				<div class="trr-lp-tiles">
 					<?php
-					$tile( 'dashicons-performance', __( 'Instant translation', 'translate-rocket' ), __( 'Your whole site in one click — and every new page translates itself the moment you publish it.', 'translate-rocket' ), '#ec4899', '#8b5cf6' );
 					$tile( 'dashicons-unlock', __( 'No API key', 'translate-rocket' ), __( 'No account, no card, nothing to set up. Switch it on and it translates.', 'translate-rocket' ), '#8b5cf6', '#3b82f6' );
 					$tile( 'dashicons-smartphone', __( 'Any browser, phones too', 'translate-rocket' ), __( 'Your server does the work: Firefox, Safari, a phone or a tablet — it all works.', 'translate-rocket' ), '#3b82f6', '#22d3ee' );
 					$tile( 'dashicons-randomize', __( 'Always translated', 'translate-rocket' ), __( 'Your API keys, the browser, and free engines — in the order you choose. If one stops, the next takes over.', 'translate-rocket' ), '#0ea5e9', '#ec4899' );
 					?>
-				</div>
-
-				<div class="trr-lp-box">
-					<h2><?php esc_html_e( 'What Labs does by itself', 'translate-rocket' ); ?></h2>
-					<div class="trr-lp-feats">
-						<?php
-						$feat( '🌍', __( 'The whole site in one click', 'translate-rocket' ), __( 'Every published page, post and product, a few at a time, while you do something else.', 'translate-rocket' ) );
-						$feat( '📝', __( 'Translate on publish', 'translate-rocket' ), __( 'Publish or update a page: its new text is translated into your languages in the background.', 'translate-rocket' ) );
-						$feat( '🧭', __( 'Menus, widgets, Customizer', 'translate-rocket' ), __( 'Changes that appear on every page are picked up and translated by themselves.', 'translate-rocket' ) );
-						$feat( '🤖', __( 'Free engines, no key', 'translate-rocket' ), __( 'Free translation engines, each switched on only after you read and accept its conditions.', 'translate-rocket' ) );
-						$feat( '🔍', __( 'A second opinion', 'translate-rocket' ), __( 'Every day a free AI rereads what the machine engines translated and lists the doubtful sentences, with a correction. You decide.', 'translate-rocket' ) );
-						$feat( '🤝', __( 'External collaborators', 'translate-rocket' ), __( 'A secret link for a translator or a reviewer: no WordPress account, only the pages and languages you choose, and their work waits for your approval.', 'translate-rocket' ) );
-						$feat( '💎', __( 'Polish with AI', 'translate-rocket' ), __( 'With an AI key, a little of the free engines\' work is translated again every day, so quality grows over time.', 'translate-rocket' ) );
-						$feat( '📬', __( 'A weekly report', 'translate-rocket' ), __( 'Every Monday, a short e-mail: what was translated and what is still waiting.', 'translate-rocket' ) );
-						$feat( '🌐', __( 'A domain for each language', 'translate-rocket' ), __( 'mysite.de instead of mysite.com/de/: links, switcher, hreflang and sitemap follow, old addresses move with a permanent redirect.', 'translate-rocket' ) );
-						$feat( '🧑‍💻', __( 'Remote help, without your password', 'translate-rocket' ), __( 'Let TranslateRocket support set up and fix your translations: only the translation tools, for 1 to 7 days, with a log of what was done and a Revoke button.', 'translate-rocket' ) );
-						$feat( '🔄', __( 'Updates itself', 'translate-rocket' ), __( 'New versions appear in Plugins, like any other update.', 'translate-rocket' ) );
-						$feat( '🛟', __( 'Pauses on its own', 'translate-rocket' ), __( 'If a service asks to slow down, Labs pauses it and the next engine takes over.', 'translate-rocket' ) );
-						?>
-					</div>
 				</div>
 
 				<div class="trr-lp-box">
@@ -286,9 +288,18 @@ class LabsPromo {
 					<p style="margin:10px 0 0;color:#50575e"><?php esc_html_e( 'Drag the engines into the order you want and switch each one on or off. If one is missing, out of credit or paused, the next one translates the page: one way or another, every page gets translated.', 'translate-rocket' ); ?></p>
 				</div>
 
+				<?php if ( ! defined( 'TRRPREM_VERSION' ) ) : ?>
+					<div class="trr-lp-box trr-lp-premium">
+						<h2><?php esc_html_e( 'Want your site translated and checked by itself? That is Premium.', 'translate-rocket' ); ?></h2>
+						<p style="margin:0 0 12px;color:#3c434a"><?php esc_html_e( 'New functions are released in TranslateRocket Premium, a separate plugin that works with your own keys: two or three engines on every sentence, automatic checks, an AI judge for the sentences in doubt, a page translated the moment you publish it, and the whole site kept translated.', 'translate-rocket' ); ?></p>
+						<p style="margin:0"><a class="button" href="<?php echo esc_url( PremiumNote::URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'See Premium', 'translate-rocket' ); ?> ↗</a></p>
+					</div>
+				<?php endif; ?>
+
 				<div class="trr-lp-cta">
 					<a href="<?php echo esc_url( self::site_url() ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Ask for Labs — free', 'translate-rocket' ); ?> ↗</a>
 					<p class="trr-lp-note"><?php esc_html_e( 'Labs is a separate plugin, sent by e-mail with a key for your site. The free TranslateRocket stays complete and unchanged. Some engines in Labs are optional free services, each with its own conditions, and marked as experimental.', 'translate-rocket' ); ?></p>
+					<p class="trr-lp-note"><?php esc_html_e( 'Labs is experimental. Our work on it now goes to its engines without a key, which use unofficial services of other companies and may stop working; its other functions are no longer developed.', 'translate-rocket' ); ?></p>
 				</div>
 			</div>
 		</div>

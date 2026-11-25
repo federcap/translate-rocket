@@ -7327,3 +7327,79 @@ msgstr "TranslateRocket はこのサイトで %s 件の文字列を無料で翻�
 #: src/Admin/Overview.php
 msgid "Or ask for a free setup (for small sites)"
 msgstr "または無料セットアップを依頼（小規模サイト向け）"
+
+#: src/Admin/LabsPromo.php
+msgid "free: translate with no API key, from any browser."
+msgstr "無料：API キーなしで、どのブラウザからでも翻訳。"
+
+#: src/Admin/LabsPromo.php
+msgid "The free add-on with translation engines that need no key."
+msgstr "キー不要の翻訳エンジンを備えた無料アドオン。"
+
+#: src/Admin/LabsPromo.php
+msgid "A free add-on for TranslateRocket with translation engines that need no API key, from any browser — phones included."
+msgstr "API キー不要の翻訳エンジンを備えた TranslateRocket 用の無料アドオン。どのブラウザからでも使えます（スマートフォンも）。"
+
+#: src/Admin/LabsPromo.php
+msgid "What is included, what Labs adds, and what is in Premium"
+msgstr "含まれるもの、Labs が加えるもの、Premium にあるもの"
+
+#: src/Admin/LabsPromo.php
+msgid "Every sentence translated by two or three engines, checked, and settled by an AI judge where they disagree"
+msgstr "すべての文を 2〜3 のエンジンが翻訳・チェックし、食い違う箇所は AI の審査役が判定"
+
+#: src/Admin/LabsPromo.php
+msgid "A confidence score on every sentence, and the doubtful ones in a list to review"
+msgstr "すべての文に信頼度スコア、疑わしい文は確認用のリストに"
+
+#: src/Admin/LabsPromo.php
+msgid "Every page translated by itself when you publish it, with the double check"
+msgstr "ページを公開すると自動で翻訳、二重チェック付き"
+
+#: src/Admin/LabsPromo.php
+msgid "The whole site kept translated by itself, and a weekly report"
+msgstr "サイト全体を自動で翻訳済みに保ち、毎週レポート"
+
+#: src/Admin/LabsPromo.php
+msgid "Want your site translated and checked by itself? That is Premium."
+msgstr "サイトを自動で翻訳・チェックしたいなら、それが Premium です。"
+
+#: src/Admin/LabsPromo.php
+msgid "New functions are released in TranslateRocket Premium, a separate plugin that works with your own keys: two or three engines on every sentence, automatic checks, an AI judge for the sentences in doubt, a page translated the moment you publish it, and the whole site kept translated."
+msgstr "新機能は TranslateRocket Premium で提供されます。ご自身のキーで動作する別のプラグインで、すべての文に 2〜3 のエンジン、自動チェック、疑わしい文には AI の審査役、公開した瞬間のページ翻訳、サイト全体を翻訳済みに保つ機能があります。"
+
+#: src/Admin/LabsPromo.php
+msgid "Labs is experimental. Our work on it now goes to its engines without a key, which use unofficial services of other companies and may stop working; its other functions are no longer developed."
+msgstr "Labs は試験的なアドオンです。現在の作業はキー不要の翻訳エンジンに絞っており、これらは他社の非公式サービスを使うため停止する可能性があります。その他の機能はもう開発されません。"
+
+#: src/Admin/AutoPage.php
+msgid "comes with TranslateRocket Premium: the whole site in the background and every new page as you publish it, with the double check."
+msgstr "TranslateRocket Premium の機能です：サイト全体をバックグラウンドで、新しいページは公開時に、二重チェック付きで翻訳。"
+
+#: src/Admin/LabsPromo.php
+msgid "Translation from any browser and phones: your server does the work"
+msgstr "どのブラウザやスマートフォンからでも翻訳：作業はサーバーが行います"
+
+#: src/Admin/LabsPromo.php
+msgid "✓ + Labs: Premium works together with Labs. The engines without a key are unofficial services, so they stay in the free Labs: install both and you have everything."
+msgstr "✓ + Labs：Premium は Labs と一緒に動作します。キー不要のエンジンは非公式サービスのため、無料の Labs に残ります。両方をインストールすれば、すべて使えます。"
+
+#: src/Admin/LabsPromo.php
+msgid "Goes on in the background on your server, with no browser tab open"
+msgstr "ブラウザのタブを開かなくても、サーバー上でバックグラウンドで進みます"
+
+#: src/Admin/LabsPromo.php
+msgid "More engines with no key, called by your server (Microsoft Edge Translator, Yandex and others)"
+msgstr "サーバーから呼び出す、キー不要のエンジンを追加（Microsoft Edge Translator、Yandex など）"
+
+#: src/Admin/LabsPromo.php
+msgid "The whole site kept translated by itself, with the double check"
+msgstr "サイト全体を自動で翻訳済みに保ちます（ダブルチェック付き）"
+
+#: src/Admin/LabsPromo.php
+msgid "✓ + Labs: Premium works together with Labs. The engines without a key are unofficial services, so they stay in the free Labs: install both to use them. Their translations do not go through the double check."
+msgstr "✓ + Labs：Premium は Labs と一緒に動作します。キー不要のエンジンは非公式サービスのため、無料の Labs に残ります。使うには両方をインストールしてください。それらの翻訳はダブルチェックを通りません。"
+
+#: src/Admin/AutoPage.php
+msgid "Labs, the free add-on, can also translate the whole site in the background, without the double check; its functions other than the engines with no key are no longer developed."
+msgstr "無料アドオンの Labs でも、ダブルチェックなしでサイト全体をバックグラウンドで翻訳できます。ただし、キー不要のエンジン以外の機能は今後開発されません。"

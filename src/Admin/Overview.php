@@ -131,6 +131,7 @@ class Overview {
 				'on'  => $on( 'edge_unofficial' ) || $on( 'mymemory' ) || $on( 'google_unofficial' ) || $on( 'yandex_unofficial' ),
 				'ico' => 'unlock',
 				'dove' => '#trrlabs-order',
+				'motori' => true,
 				'tit' => __( 'Translate with no key at all, from your server', 'translate-rocket' ),
 				'doc' => '/labs/no-key-server-engines/',
 				'info' => __( 'Labs adds free engines that need no key and no account — Microsoft Edge Translator, MyMemory, Yandex — called by your server. Some are unofficial endpoints: you read and accept their conditions before they are switched on.', 'translate-rocket' ),
@@ -147,6 +148,7 @@ class Overview {
 				'on'  => $on( 'groq_ai' ) || $on( 'openrouter_ai' ) || $on( 'cloudflare_ai' ),
 				'ico' => 'networking',
 				'dove' => '#trrlabs-chain',
+				'motori' => true,
 				'tit' => __( 'More free AI engines, one after the other when one runs out', 'translate-rocket' ),
 				'doc' => '/features/engine-order/',
 				'info' => __( 'Set up several free AI providers (Groq, OpenRouter, Cloudflare) and Labs chains them: when one reaches its daily limit, the next continues, so even a large site keeps moving.', 'translate-rocket' ),
@@ -155,6 +157,7 @@ class Overview {
 				'on'  => 'browser' !== (string) ( $lab['run_where'] ?? 'both' ),
 				'ico' => 'smartphone',
 				'dove' => '#trrlabs-dove',
+				'motori' => true,
 				'tit' => __( 'Works from any browser, phones too', 'translate-rocket' ),
 				'doc' => '/labs/translation-station/',
 				'info' => __( 'The work runs on your server, not in the open browser tab: it goes on while you use a phone, a tablet or any browser, and when nobody is in wp-admin at all.', 'translate-rocket' ),
@@ -202,6 +205,12 @@ class Overview {
 				'info' => __( 'Once a week an e-mail tells you what was translated on your site and what is still waiting, so you know where things stand without opening wp-admin.', 'translate-rocket' ),
 			),
 		);
+		// 25/11/2026 (Federico): to whoever does not have Labs, Labs is presented only for its engines without a key
+		// (its other functions are no longer developed; new ones go to Premium). With Labs installed every line stays,
+		// so the functions already in use can still be found and switched.
+		if ( ! $labs ) {
+			$plus = array_values( array_filter( $plus, static function ( array $r ): bool { return ! empty( $r['motori'] ); } ) );
+		}
 		$labs_url = $labs ? $page( 'translate-rocket-labs' ) : $page( LabsPromo::SLUG );
 		?>
 		<details class="trrocket-card trr-ov" open>
