@@ -122,6 +122,18 @@ class Router {
 		if ( ! is_admin() ) {
 			add_action( 'wp_head', array( $this, 'hreflang_tags' ) );
 			add_action( 'wp_head', array( $this, 'og_locale_tags' ), 6 );
+			// 1.8.57 (24/11/2026, translaterocket.com at load 30): on a translated address WordPress announces three
+			// technical addresses of its own — the short link (/it/?p=12), the oEmbed preview and the REST address of the
+			// content — and with the language in home_url() each of them exists once per language. With 23 languages a
+			// crawler found tens of thousands of uncached addresses to walk. They are announced on the original address
+			// only, where they were before TranslateRocket.
+			if ( ! $this->is_default( $this->current_language() ) ) {
+				add_action( 'init', array( $this, 'no_technical_links' ), 20 );
+			}
+			// 1.8.57 (a site with pages written in French and in English): a page kept in its own language by
+			// «Pages (URL paths)» has one real address. Under /es/ it is the same text, so the search engines are told
+			// where the original is (see hreflang_tags() and Sitemap::core_url_list() too).
+			add_filter( 'get_canonical_url', array( $this, 'canonical_of_untranslated_path' ), 20 );
 			add_filter( 'page_link', array( $this, 'filter_page_link' ), 20, 2 );
 			add_filter( 'post_link', array( $this, 'filter_post_link' ), 20, 2 );
 			add_filter( 'post_type_link', array( $this, 'filter_post_link' ), 20, 2 );
@@ -751,10 +763,48 @@ class Router {
 	/**
 	 * Output hreflang alternate links in <head> for SEO.
 	 */
+	/**
+	 * On a translated address: WordPress' short link, oEmbed discovery links and REST link are not announced
+	 * (in the page and in the HTTP headers). See boot().
+	 */
+	public function no_technical_links(): void {
+		remove_action( 'wp_head', 'wp_shortlink_wp_head', 10 );
+		remove_action( 'wp_head', 'rest_output_link_wp_head', 10 );
+		remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
+		remove_action( 'template_redirect', 'wp_shortlink_header', 11 );
+		remove_action( 'template_redirect', 'rest_output_link_header', 11 );
+	}
+
+	/**
+	 * Whether the page being served is kept in its original language by «Pages (URL paths)».
+	 */
+	private function untranslated_path(): bool {
+		return NoTranslate::path_excluded( $this->current_clean_path() );
+	}
+
+	/**
+	 * A page kept in its original language, opened under a language prefix: its canonical address is the original one.
+	 *
+	 * @param string $canonical The canonical URL WordPress worked out.
+	 * @return string
+	 */
+	public function canonical_of_untranslated_path( $canonical ) {
+		if ( $this->is_default( $this->current_language() ) || ! $this->untranslated_path() ) {
+			return $canonical;
+		}
+		$original = (string) $this->url_for_language( $this->default_language(), false );
+		return '' !== $original ? $original : $canonical;
+	}
+
 	public function hreflang_tags(): void {
 		// While translations are in admin-only preview, don't advertise the
 		// language URLs to crawlers — they redirect to the default language.
 		if ( \TranslateRocket\Frontend\Preview::hidden() ) {
+			return;
+		}
+		// 1.8.57: a page kept in its original language by «Pages (URL paths)» has no versions in other languages.
+		// Announcing them told search engines that the same French text was also the Spanish page.
+		if ( $this->untranslated_path() ) {
 			return;
 		}
 		// A page that doesn't exist has no versions in other languages: alternates on a 404

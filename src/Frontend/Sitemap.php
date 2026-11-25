@@ -549,6 +549,11 @@ class Sitemap {
 			if ( $id > 0 && in_array( $id, self::hidden_ids(), true ) ) {
 				continue; // Kept out of search engines: no language copies either.
 			}
+			// 1.8.57: a page kept in its original language by «Pages (URL paths)» has no language copies to list
+			// (our own sitemap already left them out; WordPress' wp-sitemap.xml did not).
+			if ( NoTranslate::path_excluded( (string) wp_parse_url( $loc, PHP_URL_PATH ) ) ) {
+				continue;
+			}
 			foreach ( $langs as $lang ) {
 				if ( $id > 0 && self::excluded( $id, (string) $lang ) ) {
 					continue;

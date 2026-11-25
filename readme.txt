@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.56
+Stable tag: 1.8.57
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -235,6 +235,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.57 =
+* Fixed: fewer addresses for crawlers to walk. On a translated address WordPress announced three technical addresses of its own in the page and in the HTTP headers: the short link (/it/?p=12), the oEmbed preview and the REST address of the content. Each existed once per language, so a site with many languages offered tens of thousands of uncached addresses, and a crawler walking them could slow the server down. They are now announced on the original address only, as before TranslateRocket.
+* Fixed: a page kept in its original language with «Pages (URL paths)» is no longer presented to search engines as a translation. Under a language address it declared itself as its own canonical page, carried hreflang tags and was listed in WordPress' wp-sitemap.xml. Now its canonical address is the original one, it has no hreflang tags and no language copies in the sitemap. The page still opens under the language address, in its original text, so an excluded checkout keeps the visitor's language. Thanks to Marie-Dominique.
 
 = 1.8.56 =
 * Fixed: with «This browser» chosen in «Translate with», the «Translate» button of a single page sent that page to the first AI engine with a key instead. It now opens the sentences of that page, where the browser translates them; nothing is sent to another engine. Thanks to Marie-Dominique.
@@ -788,6 +792,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.57 =
+Fewer technical addresses for crawlers on translated pages (lighter on the server), and pages kept in their original language are no longer announced as translations.
 
 = 1.8.56 =
 The free setup on request is now described clearly (small sites; larger ones case by case). A card says what the separate Premium plugin is. Nothing changes in the free features.
