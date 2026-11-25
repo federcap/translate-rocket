@@ -22,6 +22,9 @@ class Slugs {
 	 */
 	const OLD_PREFIX = '_trrocket_slugold_';
 
+	/** 1.8.59: how many old addresses are kept per page (or term) and language. */
+	const OLD_KEEP = 5;
+
 	/** Option: at least one old address has been kept (until then nobody looks for them). */
 	const OLD_ANY = 'trrocket_slug_old_any';
 
@@ -153,8 +156,15 @@ class Slugs {
 		// the address it had until now is kept, and leads to the new one with a 301.
 		$before = (string) get_post_meta( $post_id, self::META_PREFIX . $lang, true );
 		if ( '' !== $before && $before !== $slug ) {
-			if ( ! in_array( $before, array_map( 'strval', (array) get_post_meta( $post_id, self::OLD_PREFIX . $lang, false ) ), true ) ) {
+			$old = array_map( 'strval', (array) get_post_meta( $post_id, self::OLD_PREFIX . $lang, false ) );
+			if ( ! in_array( $before, $old, true ) ) {
 				add_post_meta( $post_id, self::OLD_PREFIX . $lang, $before );
+				$old[] = $before;
+			}
+			// 1.8.59: the last OLD_KEEP only (oldest first in the list), so a page retranslated many times does not
+			// pile up rows for ever.
+			while ( count( $old ) > self::OLD_KEEP ) {
+				delete_post_meta( $post_id, self::OLD_PREFIX . $lang, (string) array_shift( $old ) );
 			}
 			if ( ! get_option( self::OLD_ANY ) ) {
 				update_option( self::OLD_ANY, 1, true );

@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 1.8.58
+Stable tag: 1.8.59
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -235,6 +235,12 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.59 =
+* Fixed: fewer «Not found (404)» pages in Search Console. An address that mixes two languages — the prefix of one language with the page name of another, like /es/ followed by a Chinese page name, written by an old bug of the language switcher that search engines still remember — now moves with a permanent redirect (301) to the same page in the language of the prefix. The same happens for a translated page name with no language prefix at all.
+* Fixed: when the translated address of a page or of a category changes, the address of before keeps working inside longer addresses too (a child page under a parent page whose translated name changed), with a 301 to the present one. The last five addresses per page and language are remembered.
+* The redirect happens only when the whole address, word by word, belongs to exactly one published page, post or archive. Drafts, private and password-protected pages are never revealed, and an address that could be two different pages stays a 404.
+* For developers: the filter trrocket_resolve_404 switches this off; the filter trrocket_404_redirect lets an add-on give its own address for a 404 that is left; the action trrocket_404 fires when a page request really ends as a 404.
 
 = 1.8.58 =
 * Changed: the «Labs ✨» screen, the overview and the Automatic translation screen present TranslateRocket Labs only for what it is now looked after for: translation engines that need no key, from any browser. Translating a page when you publish it and keeping the whole site translated are presented as part of TranslateRocket Premium, a separate plugin. Sites that already have Labs keep seeing every Labs function they use. Nothing changes in the free plugin's own features.
@@ -795,6 +801,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.59 =
+Addresses that mix two languages, and old translated addresses, now move to the right page with a 301 instead of answering «Not found».
 
 = 1.8.58 =
 The Labs and overview screens now present Labs only for its engines with no key; automatic translation on publish is presented as part of the separate Premium plugin. Nothing changes in the free features.

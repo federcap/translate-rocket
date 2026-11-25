@@ -1,3 +1,9 @@
+= 1.8.59 =
+* Fixed: fewer «Not found (404)» pages in Search Console. An address that mixes two languages — the prefix of one language with the page name of another, like /es/ followed by a Chinese page name, written by an old bug of the language switcher that search engines still remember — now moves with a permanent redirect (301) to the same page in the language of the prefix. The same happens for a translated page name with no language prefix at all.
+* Fixed: when the translated address of a page or of a category changes, the address of before keeps working inside longer addresses too (a child page under a parent page whose translated name changed), with a 301 to the present one. The last five addresses per page and language are remembered.
+* The redirect happens only when the whole address, word by word, belongs to exactly one published page, post or archive. Drafts, private and password-protected pages are never revealed, and an address that could be two different pages stays a 404.
+* For developers: the filter trrocket_resolve_404 switches this off; the filter trrocket_404_redirect lets an add-on give its own address for a 404 that is left; the action trrocket_404 fires when a page request really ends as a 404.
+
 = 1.8.0 =
 * New: «Automatic translation», one page to switch it on and watch it work. A bar for each language moves by itself while the page is open, an hourglass marks the language being translated right now, the engines are one list in the order really used, and a language can go online by itself once it is fully translated (it waits until the whole site has been read).
 * New: «Everything you can do — all free» at the top of the plugin: what TranslateRocket does on your site, with its state and the page where it is set, and what the free add-on Labs adds.

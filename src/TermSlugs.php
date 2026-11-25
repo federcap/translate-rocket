@@ -42,6 +42,11 @@ class TermSlugs {
 			return;
 		}
 		$slug = Slugs::clean( $slug, $lang ); // 14/11/2026: the letters of the address's language («Größen» → «groessen»)
+		// 1.8.59: whoever changes it (an import run again, not only a renamed term): the address of before is kept.
+		$before = self::get( $term_id, $lang );
+		if ( '' !== $before && $before !== $slug ) {
+			self::remember_old( $term_id, $lang, $before );
+		}
 		if ( '' === $slug ) {
 			delete_term_meta( $term_id, self::META_PREFIX . $lang );
 		} else {
@@ -131,9 +136,14 @@ class TermSlugs {
 	 * @param string $slug    The slug it had.
 	 */
 	private static function remember_old( int $term_id, string $lang, string $slug ): void {
-		$old = (array) get_term_meta( $term_id, self::OLD_PREFIX . $lang, false );
+		$old = array_map( 'strval', (array) get_term_meta( $term_id, self::OLD_PREFIX . $lang, false ) );
 		if ( '' !== $slug && ! in_array( $slug, $old, true ) ) {
 			add_term_meta( $term_id, self::OLD_PREFIX . $lang, $slug );
+			$old[] = $slug;
+		}
+		// 1.8.59: the last few only (oldest first in the list), as for pages.
+		while ( count( $old ) > Slugs::OLD_KEEP ) {
+			delete_term_meta( $term_id, self::OLD_PREFIX . $lang, (string) array_shift( $old ) );
 		}
 	}
 

@@ -43,6 +43,7 @@ if ( is_array( $trrocket_settings ) && ! empty( $trrocket_settings['delete_data_
 	delete_option( 'trrocket_auto_ritmo' );
 delete_option( 'trrocket_added_props' );
 	delete_option( 'trrocket_auto_moved' );
+	delete_option( 'trrocket_404_miss' ); // 1.8.59: 404 addresses looked up a short time ago
 
 	// Per-term meta: translated term slugs.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE %s", $wpdb->esc_like( '_trrocket_' ) . '%' ) );

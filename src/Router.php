@@ -97,6 +97,54 @@ class Router {
 	}
 
 	/**
+	 * 1.8.59: the path as the visitor wrote it, without the language prefix and before a translated first word
+	 * (/prodotto/) went back to the original one (/product/). Starts with «/».
+	 */
+	public function visited_path(): string {
+		return '' !== $this->visited_path ? $this->visited_path : $this->clean_path;
+	}
+
+	/**
+	 * 1.8.59: the query string of the request, without «?».
+	 */
+	public function request_query(): string {
+		return $this->query;
+	}
+
+	/**
+	 * 1.8.59: the path of a term archive with the term's own slugs and the original first word, whatever the language
+	 * of the request (as canonical_path() does for a post). '' when the term has no address of its own.
+	 *
+	 * @param \WP_Term $term Term.
+	 */
+	public function original_term_path( \WP_Term $term ): string {
+		$home = false !== has_filter( 'home_url', array( $this, 'filter_home_url' ) );
+		$link = false !== has_filter( 'term_link', array( $this, 'filter_term_link' ) );
+		if ( $home ) {
+			remove_filter( 'home_url', array( $this, 'filter_home_url' ), 10 );
+		}
+		if ( $link ) {
+			remove_filter( 'term_link', array( $this, 'filter_term_link' ), 20 );
+		}
+		$url = get_term_link( $term );
+		if ( $home ) {
+			add_filter( 'home_url', array( $this, 'filter_home_url' ), 10, 2 );
+		}
+		if ( $link ) {
+			add_filter( 'term_link', array( $this, 'filter_term_link' ), 20, 3 );
+		}
+		if ( ! is_string( $url ) || '' === $url || false !== strpos( $url, '?' ) ) {
+			return '';
+		}
+		$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+		$base = rtrim( (string) wp_parse_url( (string) get_option( 'home' ), PHP_URL_PATH ), '/' );
+		if ( '' !== $base && 0 === strpos( $path, $base . '/' ) ) {
+			$path = (string) substr( $path, strlen( $base ) );
+		}
+		return '/' . ltrim( $path, '/' );
+	}
+
+	/**
 	 * Hook into WordPress.
 	 */
 	public function boot(): void {
@@ -1015,7 +1063,7 @@ class Router {
 	 *
 	 * @param string $slug Slug or path segment.
 	 */
-	private static function fold( string $slug ): string {
+	public static function fold( string $slug ): string { // public: NotFound (1.8.59)
 		$slug = rawurldecode( $slug );
 		return function_exists( 'mb_strtolower' ) ? mb_strtolower( $slug, 'UTF-8' ) : strtolower( $slug );
 	}
@@ -1519,7 +1567,7 @@ class Router {
 	 * @param string $a Path.
 	 * @param string $b Path.
 	 */
-	private static function same_path( string $a, string $b ): bool {
+	public static function same_path( string $a, string $b ): bool { // public: NotFound (1.8.59)
 		$a = rtrim( rawurldecode( $a ), '/' );
 		$b = rtrim( rawurldecode( $b ), '/' );
 		return function_exists( 'mb_strtolower' ) ? mb_strtolower( $a, 'UTF-8' ) === mb_strtolower( $b, 'UTF-8' ) : strtolower( $a ) === strtolower( $b );

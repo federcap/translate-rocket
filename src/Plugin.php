@@ -137,6 +137,9 @@ final class Plugin {
 		( new \TranslateRocket\CacheWarmup() )->register(); // 1.8.18: pages ready again a minute after a flush
 		( new \TranslateRocket\AutoSlugs() )->register(); // 1.8.21: page addresses from their translated titles
 		( new \TranslateRocket\UrlBases() )->register(); // 1.8.37: translated URL bases (/it/prodotto/…)
+		if ( ! $coexist && ! is_admin() ) {
+			( new \TranslateRocket\NotFound() )->register(); // 1.8.59: a 404 with another language's slug, or an old one, moves to its page
+		}
 		if ( is_admin() ) {
 			( new \TranslateRocket\Admin\NavMenuSwitcher() )->register(); // 1.8.21: «Language switcher» in Appearance → Menus
 			( new \TranslateRocket\Admin\ExternalAiPage() )->register(); // 1.8.21: translate with ChatGPT, Gemini, Claude… through a file

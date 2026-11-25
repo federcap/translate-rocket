@@ -247,6 +247,33 @@ class UrlBases {
 	}
 
 	/**
+	 * 1.8.59: the original bases a word stands for in ANY language, today's words and the ones used before
+	 * (/es/产品/x/ carries the Chinese word for /product/). One entry when the word is unambiguous.
+	 *
+	 * @param string $segment First segment of a path.
+	 * @return string[]
+	 */
+	public static function originals_of( string $segment ): array {
+		$d   = self::data();
+		$out = array();
+		foreach ( (array) ( $d['map'] ?? array() ) as $words ) {
+			foreach ( (array) $words as $base => $slug ) {
+				if ( self::same( $segment, (string) $slug ) ) {
+					$out[ (string) $base ] = true;
+				}
+			}
+		}
+		foreach ( (array) ( $d['old'] ?? array() ) as $words ) {
+			foreach ( (array) $words as $was => $base ) {
+				if ( self::same( $segment, (string) $was ) ) {
+					$out[ (string) $base ] = true;
+				}
+			}
+		}
+		return array_map( 'strval', array_keys( $out ) );
+	}
+
+	/**
 	 * A path with its first word translated for a language (or as it was).
 	 *
 	 * @param string $path Path starting with «/», no language prefix (query allowed).
