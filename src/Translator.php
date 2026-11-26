@@ -168,6 +168,20 @@ class Translator {
 	private static $too_big = 0;
 
 	/**
+	 * 26/11/2026 (ticket #39): the last first_ok() met a request that timed out.
+	 *
+	 * @var bool
+	 */
+	private static $timed_out = false;
+
+	/**
+	 * 26/11/2026 (ticket #39): an engine was set to rest because its limit per minute said how long to wait.
+	 *
+	 * @var bool
+	 */
+	private static $rate_rest = false;
+
+	/**
 	 * 1.8.51: what each engine that failed in this run said (provider id => message), for the log: the line used
 	 * to carry the last engine's words only, and why the first three had stopped was nowhere.
 	 *
@@ -240,6 +254,15 @@ class Translator {
 		if ( '' !== $solo ) {
 			$scelto    = Registry::get( $solo );
 			$providers = ( $scelto && $scelto->is_configured() ) ? array( $scelto ) : array();
+			// d998 (26/11/2026, nl site, 76 languages, Safari): MyMemory's free day over said «the engine you chose is not
+			// ready: check it on the AI Translation screen» — a key problem for someone who has no key. Say what it is.
+			if ( empty( $providers ) && \TranslateRocket\Providers\MyMemoryProvider::ID === $solo ) {
+				return array(
+					'ok'    => false,
+					'count' => 0,
+					'error' => __( 'MyMemory\'s free daily limit is reached. The rest is translated when you press the button again tomorrow — or now, in Chrome or Edge on a computer, or with a free AI key.', 'translate-rocket' ),
+				);
+			}
 			if ( empty( $providers ) ) {
 				return array(
 					'ok'    => false,
@@ -274,6 +297,28 @@ class Translator {
 		}
 		self::$too_big = 0;
 		self::$whys    = array();
+		// 26/11/2026 (ticket #39, PHP 7.4 site translating French into 8 languages with its own OpenAI key: «Translate all»
+		// stuck at 20 % and then «the connection dropped»; reproduced on the bench): the size of a request was counted in
+		// sentences only. Twenty long paragraphs are some 11,000 characters: the AI needs more than the 60 s the request
+		// waits, cURL gives up (error 28), the request was tried three times (180 s) and the host cut the step (504) —
+		// every step again on the same twenty paragraphs, so the bar never moved. An AI request now also carries at most
+		// this many characters, and a request that timed out is asked again in halves (first_ok(), $too_big).
+		$budget = 0;
+		foreach ( $providers as $p ) {
+			if ( $p instanceof \TranslateRocket\Providers\LlmProvider ) {
+				/**
+				 * Most characters sent to an AI in one request (0 = no limit).
+				 *
+				 * @param int $chars Characters.
+				 */
+				$budget = max( 0, (int) apply_filters( 'trrocket_ai_request_chars', 4000 ) );
+				break;
+			}
+		}
+		$fit_chars = (int) get_transient( 'trrocket_fit_chars' );
+		if ( $budget > 0 && $fit_chars > 0 ) {
+			$budget = min( $budget, $fit_chars );
+		}
 
 		// «Improve with AI»: not the missing sentences but the ones the browser translated.
 		if ( $migliora ) {
@@ -320,7 +365,8 @@ class Translator {
 		$error  = '';
 		$dead   = array(); // provider id => permanent-error message (out of credit / bad key).
 		$resting = array(); // provider id => unix time it comes back (it did not try: a pause, an hourly share used up).
-		self::$broke = false; // a real failure in this run (not a rest): then it is logged as a failure, as before.
+		self::$broke     = false; // a real failure in this run (not a rest): then it is logged as a failure, as before.
+		self::$rate_rest = false;
 
 		// Free pass first: the same text may already be translated under another
 		// type/context (attribute vs text node vs interface string) or on another
@@ -347,9 +393,22 @@ class Translator {
 		// («Paket:» / «1X RC avtomobil» / «1X akumulator», one paragraph each) shown elsewhere flattened into one line.
 		// The pieces' translations are joined, nothing goes to the engine.
 		$fermato = false;
+		$ridotto = false; // 26/11/2026 (ticket #39): a request was sent back to the queue, smaller
 		$coda    = array_keys( $pending ); // a queue, not fixed chunks: the size can shrink on the way (1.8.51)
 		while ( ! empty( $coda ) ) {
 			$texts = array_splice( $coda, 0, max( 1, $batch ) );
+			if ( $budget > 0 ) {
+				// 26/11/2026 (ticket #39): no more than $budget characters in one AI request; the rest goes back in the queue.
+				$somma = 0;
+				foreach ( $texts as $k => $t ) {
+					$somma += mb_strlen( (string) $t );
+					if ( $k > 0 && $somma > $budget ) {
+						$coda  = array_merge( array_slice( $texts, $k ), $coda );
+						$texts = array_slice( $texts, 0, $k );
+						break;
+					}
+				}
+			}
 			if ( $deadline > 0 && microtime( true ) >= $deadline ) {
 				$fermato = true;
 				break;
@@ -380,10 +439,17 @@ class Translator {
 			if ( self::$too_big > 0 ) {
 				$nuovo         = max( 1, min( $batch, self::$too_big ) );
 				self::$too_big = 0;
+				if ( self::$timed_out && count( $texts ) > 1 ) {
+					// 26/11/2026 (ticket #39): the AI did not answer in time — half the characters too, remembered for 6 hours.
+					$meta_chars = max( 500, (int) ceil( array_sum( array_map( 'mb_strlen', $texts ) ) / 2 ) );
+					$budget     = $budget > 0 ? min( $budget, $meta_chars ) : $meta_chars;
+					set_transient( 'trrocket_fit_chars', $budget, 6 * HOUR_IN_SECONDS );
+				}
 				if ( $nuovo < $batch ) {
 					$batch = $nuovo;
 					if ( null === $hit ) {
-						$coda = array_merge( $texts, $coda );
+						$coda    = array_merge( $texts, $coda );
+						$ridotto = true;
 						continue;
 					}
 				}
@@ -494,6 +560,13 @@ class Translator {
 			// merge an item). Retry one string at a time across the chain, so a
 			// single bad response never loses the batch.
 			foreach ( $texts as $text ) {
+				// 26/11/2026 (ticket #39): one sentence at a time had no clock — after a request that timed out, twenty
+				// more of up to 60 s each, far beyond what the host gives a step. At the deadline the rest waits for the
+				// next step; a single sentence that just timed out is not sent again at once.
+				if ( ( $deadline > 0 && microtime( true ) >= $deadline ) || ( 1 === count( $texts ) && self::$timed_out ) ) {
+					$fermato = $fermato || ( $deadline > 0 && microtime( true ) >= $deadline );
+					break;
+				}
 				$one = self::first_ok( $providers, $dead, array( $text ), $source, $lang, $error, $resting );
 				if ( null !== $one && isset( $one['translations'][0] ) && '' !== trim( (string) $one['translations'][0] ) ) {
 					self::save_group( $pending[ $text ], $lang, (string) $one['translations'][0], $one['provider'], $text, $count );
@@ -523,7 +596,7 @@ class Translator {
 					implode( ' · ', array_unique( array_map( 'strval', array_intersect_key( self::$resting_why, $resting ) ) ) )
 				);
 			}
-		} elseif ( '' !== $error && 0 === $count ) {
+		} elseif ( '' !== $error && 0 === $count && ! ( $ridotto && $fermato ) ) {
 			Logger::error(
 				'ai',
 				/* translators: %s: language code. */
@@ -543,6 +616,11 @@ class Translator {
 			// Something is left: the step stopped at its deadline, or the 1000 read were all there was room for.
 			// 1.8.48 (16/11/2026, Matjaž: «40 passes»): counted on the rows read, not on the ones left after the exclusions.
 			'more'  => $count > 0 && count( $dead ) < count( $providers ) && ( $fermato || $letti >= 1000 ),
+			// 26/11/2026 (ticket #39): the whole step went on one request that timed out (or was too large), now queued
+			// again in halves: nothing translated yet, but nothing broken — the page comes back at once (Admin: «wait»).
+			'shrunk' => $ridotto && $fermato && 0 === $count && count( $dead ) < count( $providers ),
+			// 26/11/2026 (ticket #39): the rest came from a limit per minute that said how long (not a free engine's day).
+			'rate_rest' => $riprende > 0 && self::$rate_rest,
 		);
 	}
 
@@ -559,6 +637,7 @@ class Translator {
 	 * @return array{translations:string[],provider:string}|null
 	 */
 	private static function first_ok( array $providers, array &$dead, array $texts, string $source, string $target, string &$error, array &$resting = array() ): ?array {
+		self::$timed_out = false;
 		foreach ( $providers as $provider ) {
 			if ( isset( $dead[ $provider->id() ] ) || isset( $resting[ $provider->id() ] ) ) {
 				continue;
@@ -584,7 +663,26 @@ class Translator {
 			// 1.8.51 (19/11/2026, razis-oldbooks.gr): «HTTP 413: Request too large … please reduce your message size and
 			// try again. Need more tokens? Upgrade … /settings/billing» is not an empty wallet («billing» made it one, and
 			// Groq was «unavailable» for twelve hours): the request was too big. The run goes on with smaller ones.
-			if ( self::is_too_large( (string) $result->error ) ) {
+			// 26/11/2026 (ticket #39, on the bench): OpenAI's limit per minute («Rate limit reached … Please try again in
+			// 20s») outlasted the three quick tries, and with nothing translated the run stopped with «too many requests»
+			// for the owner to press again. When the engine says how long, it rests that long and the page waits for it.
+			$dopo = self::retry_after( (string) $result->error );
+			if ( $dopo > 0 ) {
+				$resting[ $provider->id() ]           = time() + $dopo;
+				self::$resting_why[ $provider->id() ] = $result->error;
+				self::$rate_rest                      = true;
+				if ( '' === $error ) {
+					$error = $result->error;
+				}
+				continue;
+			}
+			// 26/11/2026 (ticket #39): a request the AI did not answer in time (cURL error 28) is a request too big for the
+			// wait, not a broken engine: asked again in halves, like «too large».
+			$tardi = self::is_timeout( (string) $result->error );
+			if ( $tardi ) {
+				self::$timed_out = true;
+			}
+			if ( $tardi || self::is_too_large( (string) $result->error ) ) {
 				$error = $result->error;
 				if ( count( $texts ) > 1 ) {
 					$meta          = (int) ceil( count( $texts ) / 2 );
@@ -612,6 +710,29 @@ class Translator {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 26/11/2026 (ticket #39): the engine did not answer within the wait of the request (cURL error 28, or the 524 of
+	 * Cloudflare in front of it). A smaller request is answered sooner.
+	 */
+	private static function is_timeout( string $error ): bool {
+		return (bool) preg_match( '/curl error 28|operation timed out|timed out after|http 524/i', $error );
+	}
+
+	/**
+	 * 26/11/2026 (ticket #39): seconds an engine's limit per minute asks to wait («try again in 20s», «in 1m30s»,
+	 * «in 450ms»), 0 when it is not a rate limit, says nothing, or asks for more than 3 minutes.
+	 */
+	private static function retry_after( string $error ): int {
+		if ( false !== stripos( $error, 'insufficient_quota' ) || ! preg_match( '/rate[ _-]?limit|too many requests/i', $error ) ) {
+			return 0;
+		}
+		if ( ! preg_match( '/try again in\s+(?:(\d+)m)?\s*(\d+(?:\.\d+)?)(ms|s)\b/i', $error, $m ) ) {
+			return 0;
+		}
+		$s = (float) $m[2] / ( 'ms' === strtolower( $m[3] ) ? 1000 : 1 ) + 60 * (int) $m[1];
+		return ( $s > 0 && $s <= 180 ) ? (int) ceil( $s ) : 0;
 	}
 
 	/**

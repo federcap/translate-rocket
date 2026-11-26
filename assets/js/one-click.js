@@ -288,13 +288,19 @@
 			var langs = d.langs || [];
 			var missing = 0;
 			end.innerHTML = '';
+			// d998 (26/11/2026): «Done! Your site is now in» listed 76 languages, 74 of them with 0 sentences. Only the
+			// languages that went online are named; the others are counted as waiting.
+			var live = langs.filter( function ( x ) { return false !== x.online; } );
 			var h = document.createElement( 'p' );
-			h.className = 'trr-oneclick-ok';
-			h.textContent = fmt( T.done, langs.map( function ( x ) { return x.label; } ).join( ', ' ) );
+			h.className = live.length === langs.length ? 'trr-oneclick-ok' : 'trr-oneclick-part';
+			var names = live.map( function ( x ) { return x.label; } ).join( ', ' );
+			h.textContent = live.length === langs.length ? fmt( T.done, names )
+				: ( live.length ? fmt( T.donePart, names, langs.length - live.length ) : ( T.noneYet || '' ) );
 			end.appendChild( h );
 			var p = document.createElement( 'p' );
 			langs.forEach( function ( x ) {
 				missing += x.missing || 0;
+				if ( false === x.online ) { return; }
 				var a = document.createElement( 'a' );
 				a.className = 'button';
 				a.href = x.home;
@@ -486,6 +492,9 @@
 							return inBrowser( l, tr, share );
 						}
 						eng.textContent = C.mmEmail && T.withFreeMail ? T.withFreeMail : T.withFree;
+						// d998 (26/11/2026): MyMemory's day is over — the other languages are not asked one by one
+						// («Español: 0 of 69», «Français: 0 of 69»… for 74 languages, five minutes of a bar that moved for nothing).
+						if ( limited ) { return { left: l.missing || 0 }; }
 						return onServer( l, C.free, share );
 					} ).then( function ( r ) {
 						left += ( r && r.left ) || 0;

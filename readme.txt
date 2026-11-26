@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 1.8.59
+Stable tag: 1.8.60
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -235,6 +235,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.60 =
+* Fixed: «Translate all» with an AI and your own key (OpenAI and others) stopped at the same percentage and then lost the connection, on pages with long paragraphs. A request now carries at most about 4,000 characters; a request the AI answers too slowly is split in two and asked again, instead of being sent again whole; and a pause the AI asks for (its limit of requests per minute) is waited out instead of stopping the run.
+* Fixed: «Translate my site» with many languages and no key. When the free daily limit of MyMemory is reached, the run stops asking the remaining languages one by one; a language with nothing translated yet stays hidden from visitors (it no longer goes online with the original text and its own hreflang); and the message says that the free limit of the day is reached, instead of asking to check a key.
 
 = 1.8.59 =
 * Fixed: fewer «Not found (404)» pages in Search Console. An address that mixes two languages — the prefix of one language with the page name of another, like /es/ followed by a Chinese page name, written by an old bug of the language switcher that search engines still remember — now moves with a permanent redirect (301) to the same page in the language of the prefix. The same happens for a translated page name with no language prefix at all.
@@ -801,6 +805,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.60 =
+«Translate all» with an AI no longer stops on long paragraphs or on the AI's limit per minute; with many languages and no key, languages with nothing translated stay hidden from visitors.
 
 = 1.8.59 =
 Addresses that mix two languages, and old translated addresses, now move to the right page with a 301 instead of answering «Not found».

@@ -7429,3 +7429,20 @@ msgstr "✓ + Labs: Premium arbeitet mit Labs zusammen. Die Übersetzer ohne Sch
 #: src/Admin/AutoPage.php
 msgid "Labs, the free add-on, can also translate the whole site in the background, without the double check; its functions other than the engines with no key are no longer developed."
 msgstr "Labs, die kostenlose Erweiterung, kann die ganze Website ebenfalls im Hintergrund übersetzen, ohne die doppelte Prüfung; seine Funktionen außer den Übersetzern ohne Schlüssel werden nicht mehr weiterentwickelt."
+
+msgid "MyMemory's free daily limit is reached. The rest is translated when you press the button again tomorrow — or now, in Chrome or Edge on a computer, or with a free AI key."
+msgstr "Das kostenlose Tageslimit von MyMemory ist erreicht. Der Rest wird übersetzt, wenn Sie morgen erneut auf die Schaltfläche klicken – oder gleich jetzt in Chrome oder Edge auf einem Computer oder mit einem kostenlosen KI-Schlüssel."
+
+msgid "No language could be translated yet: the free daily limit was already reached."
+msgstr "Noch keine Sprache konnte übersetzt werden: Das kostenlose Tageslimit war bereits erreicht."
+
+#, php-format
+msgid "Online now: %1$s. %2$s languages wait for the next run and stay hidden from visitors until then."
+msgstr "Jetzt online: %1$s. %2$s Sprachen warten auf den nächsten Durchlauf und bleiben bis dahin für Besucher verborgen."
+
+msgid "The AI took too long to answer a large request: the translation goes on by itself with smaller requests. Keep this page open."
+msgstr "Die KI hat zu lange gebraucht, um eine große Anfrage zu beantworten: Die Übersetzung läuft von selbst mit kleineren Anfragen weiter. Lassen Sie diese Seite geöffnet."
+
+#, php-format
+msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "Der Übersetzer hat um eine kurze Pause gebeten (sein Limit an Anfragen pro Minute): Die Übersetzung geht in %d Sekunden von selbst weiter. Lassen Sie diese Seite geöffnet."

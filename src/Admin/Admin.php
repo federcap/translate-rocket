@@ -4504,6 +4504,9 @@ JS;
 				@set_time_limit( 120 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			}
 			$r = Translator::translate_missing( $lang, $loc, 0, false, $solo, microtime( true ) + 25 );
+			if ( ! empty( $r['shrunk'] ) ) {
+				$r['more'] = true; // 26/11/2026 (ticket #39): the run goes on — hourglass, heartbeat and caches as for any step
+			}
 			// 2/11/2026: one page shows at once; the whole site, step after step, empties the site's caches at most every
 			// ten minutes and at once on its last step (Cache::bulk_step()).
 			if ( '' !== $loc ) {
@@ -4544,15 +4547,29 @@ JS;
 		// the step ended as if the work were done. A short rest is waited out here, with a sentence that says so.
 		$pausa = ! empty( $r['resting_until'] ) ? (int) $r['resting_until'] - time() : 0;
 		$pausa = ( $pausa > 0 && $pausa <= 180 && 0 !== $resta ) ? max( 3, $pausa + 1 ) : 0;
+		// 26/11/2026 (ticket #39): a step spent on one request that timed out, now asked again in halves — nothing translated
+		// in it, nothing broken. Before, «nothing translated» stopped the run with the timeout as an error; now the next
+		// step starts at once, with a sentence that says why the bar waited.
+		$ridotto = empty( $pausa ) && ! empty( $r['shrunk'] ) && 0 !== $resta;
+		if ( $ridotto ) {
+			$r['error'] = '';
+		}
 		wp_send_json_success(
 			array(
 				'count' => (int) $r['count'],
 				'total' => $totale,
 				'kept'  => $tenute,
-				'more'  => ! empty( $r['more'] ) || $pausa > 0,
-				/* translators: %d: seconds. */
-				'waitmsg' => $pausa > 0 ? sprintf( __( 'The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open.', 'translate-rocket' ), $pausa ) : '',
-				'wait'  => $pausa > 0 ? $pausa : ( ! empty( $r['busy'] ) ? 8 : 0 ), // 1.8.14: another process is translating — come back in 8 s
+				'more'  => ! empty( $r['more'] ) || $pausa > 0 || $ridotto,
+				// 26/11/2026 (ticket #39): an AI with the owner's key (OpenAI) is not «the free engine».
+				'waitmsg' => $pausa > 0 ? sprintf(
+					! empty( $r['rate_rest'] )
+						/* translators: %d: seconds. */
+						? __( 'The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open.', 'translate-rocket' )
+						/* translators: %d: seconds. */
+						: __( 'The free engine asked for a short pause (its limit per minute): the translation goes on by itself in %d seconds. Keep this page open.', 'translate-rocket' ),
+					$pausa
+				) : ( $ridotto ? __( 'The AI took too long to answer a large request: the translation goes on by itself with smaller requests. Keep this page open.', 'translate-rocket' ) : '' ),
+				'wait'  => $pausa > 0 ? $pausa : ( $ridotto ? 1 : ( ! empty( $r['busy'] ) ? 8 : 0 ) ), // 1.8.14: another process is translating — come back in 8 s
 				'left'  => $resta,
 				'error' => '' !== (string) $r['error'] ? self::shown_error( (string) $r['error'] ) : '',
 				// Sentences the engine gave nothing back for (often not in the site's language): where to see them.

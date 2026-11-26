@@ -188,6 +188,12 @@ abstract class AbstractProvider implements ProviderInterface {
 			if ( 429 === $code && false !== stripos( $raw, 'insufficient_quota' ) ) {
 				$transient = false;
 			}
+			// 26/11/2026 (ticket #39): a request that waited its whole timeout (cURL error 28) is not sent again as it is:
+			// the same request takes as long again — three tries were 180 s, past what most hosts give a request. The
+			// translation asks again in smaller pieces (Translator::first_ok()).
+			if ( '' !== $err && preg_match( '/curl error 28|timed out/i', $err ) ) {
+				break;
+			}
 			if ( ! $transient || $i === $attempts ) {
 				break;
 			}

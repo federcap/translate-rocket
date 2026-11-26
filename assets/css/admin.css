@@ -2644,6 +2644,7 @@ textarea.trr-etr { width: 100%; box-sizing: border-box; resize: vertical; overfl
 .trr-oneclick-run .trr-prog{max-width:520px;margin:12px 0 6px}
 .trr-oneclick-run .trr-prog-fill{background:#4f46e5;transition:width .4s}
 .trr-oneclick-ok{font-size:16px;font-weight:600;color:#065f46}
+.trr-oneclick-part{font-size:15px;font-weight:600;color:#92400e}
 .trr-oneclick-end .button{margin:0 6px 6px 0}
 .trr-oneclick-first{font-size:15px;max-width:760px}
 /* 5/11/2026: in the Simple view «Translate my site» does it all: no per-language Translate button, no online switch */

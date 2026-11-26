@@ -8248,3 +8248,20 @@ msgstr "✓ + Labs: Premium bekerja bersama Labs. Mesin tanpa kunci adalah layan
 #: src/Admin/AutoPage.php
 msgid "Labs, the free add-on, can also translate the whole site in the background, without the double check; its functions other than the engines with no key are no longer developed."
 msgstr "Labs, add-on gratis, juga dapat menerjemahkan seluruh situs di latar belakang, tanpa pemeriksaan ganda; fiturnya selain mesin tanpa kunci tidak lagi dikembangkan."
+
+msgid "MyMemory's free daily limit is reached. The rest is translated when you press the button again tomorrow — or now, in Chrome or Edge on a computer, or with a free AI key."
+msgstr "Batas harian gratis MyMemory sudah tercapai. Sisanya diterjemahkan saat Anda menekan tombol lagi besok — atau sekarang juga, di Chrome atau Edge pada komputer, atau dengan kunci AI gratis."
+
+msgid "No language could be translated yet: the free daily limit was already reached."
+msgstr "Belum ada bahasa yang bisa diterjemahkan: batas harian gratis sudah tercapai."
+
+#, php-format
+msgid "Online now: %1$s. %2$s languages wait for the next run and stay hidden from visitors until then."
+msgstr "Online sekarang: %1$s. %2$s bahasa menunggu putaran berikutnya dan tetap tersembunyi dari pengunjung sampai saat itu."
+
+msgid "The AI took too long to answer a large request: the translation goes on by itself with smaller requests. Keep this page open."
+msgstr "AI terlalu lama menjawab permintaan besar: terjemahan berlanjut sendiri dengan permintaan yang lebih kecil. Biarkan halaman ini tetap terbuka."
+
+#, php-format
+msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "Mesin meminta jeda singkat (batas permintaannya per menit): terjemahan berlanjut sendiri dalam %d detik. Biarkan halaman ini tetap terbuka."

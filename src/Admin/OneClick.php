@@ -172,6 +172,9 @@ class OneClick {
 					/* translators: %s: list of languages. */
 					'done'       => __( 'Done! Your site is now in %s.', 'translate-rocket' ),
 					'see'        => __( 'See it', 'translate-rocket' ),
+					/* translators: 1: list of languages online, 2: how many languages wait. */
+					'donePart'   => __( 'Online now: %1$s. %2$s languages wait for the next run and stay hidden from visitors until then.', 'translate-rocket' ),
+					'noneYet'    => __( 'No language could be translated yet: the free daily limit was already reached.', 'translate-rocket' ),
 					/* translators: %s: number of sentences. */
 					'partial'    => __( '%s sentences are still waiting. Press the button again tomorrow to finish them — or open this page in Chrome or Edge on a computer, which translates without a daily limit.', 'translate-rocket' ),
 					'limit'      => __( 'The free daily limit is reached for today.', 'translate-rocket' ),
@@ -241,7 +244,17 @@ class OneClick {
 		}
 		$s       = Settings::get();
 		$targets = self::targets();
-		$s['offline_languages'] = array_values( array_diff( array_map( 'strval', (array) ( $s['offline_languages'] ?? array() ) ), $targets ) );
+		// d998 (26/11/2026): with 76 languages and MyMemory's free day, 74 of them had 0 sentences and all 76 went online —
+		// the Dutch pages under /es/, /fr/… with hreflang, while the card said «Done! Your site is now in» all of them.
+		// A language with nothing translated yet stays offline; it goes online on the run that translates it.
+		$empty = array();
+		foreach ( $targets as $l ) {
+			if ( 0 === \TranslateRocket\Strings::translated_count( $l ) ) {
+				$empty[] = $l;
+			}
+		}
+		$offline                = array_diff( array_map( 'strval', (array) ( $s['offline_languages'] ?? array() ) ), $targets );
+		$s['offline_languages'] = array_values( array_unique( array_merge( $offline, $empty ) ) );
 		Settings::update( $s );
 		\TranslateRocket\Cache::flush();
 		$out = array();
@@ -250,6 +263,7 @@ class OneClick {
 				'label'   => Languages::label( $l ),
 				'home'    => \TranslateRocket\Plugin::instance()->router()->home_for_language( $l ),
 				'missing' => \TranslateRocket\Strings::untranslated_count( $l ),
+				'online'  => ! in_array( $l, $empty, true ),
 			);
 		}
 		wp_send_json_success( array( 'langs' => $out ) );

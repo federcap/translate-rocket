@@ -7732,3 +7732,20 @@ msgstr "✓ + Labs: il Premium lavora insieme a Labs. I motori senza chiave sono
 #: src/Admin/AutoPage.php
 msgid "Labs, the free add-on, can also translate the whole site in the background, without the double check; its functions other than the engines with no key are no longer developed."
 msgstr "Anche Labs, il componente aggiuntivo gratuito, può tradurre tutto il sito in background, senza il doppio controllo; le sue funzioni diverse dai motori senza chiave non vengono più sviluppate."
+
+msgid "MyMemory's free daily limit is reached. The rest is translated when you press the button again tomorrow — or now, in Chrome or Edge on a computer, or with a free AI key."
+msgstr "Il limite gratuito giornaliero di MyMemory è raggiunto. Il resto si traduce quando premi di nuovo il pulsante domani — oppure subito, in Chrome o Edge su un computer, o con una chiave AI gratuita."
+
+msgid "No language could be translated yet: the free daily limit was already reached."
+msgstr "Non è stato ancora possibile tradurre nessuna lingua: il limite gratuito giornaliero era già raggiunto."
+
+#, php-format
+msgid "Online now: %1$s. %2$s languages wait for the next run and stay hidden from visitors until then."
+msgstr "Online adesso: %1$s. %2$s lingue aspettano il prossimo giro e fino ad allora restano nascoste ai visitatori."
+
+msgid "The AI took too long to answer a large request: the translation goes on by itself with smaller requests. Keep this page open."
+msgstr "L'AI ci ha messo troppo a rispondere a una richiesta grande: la traduzione continua da sola con richieste più piccole. Tieni aperta questa pagina."
+
+#, php-format
+msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "Il motore ha chiesto una breve pausa (il suo limite di richieste al minuto): la traduzione riprende da sola tra %d secondi. Tieni aperta questa pagina."

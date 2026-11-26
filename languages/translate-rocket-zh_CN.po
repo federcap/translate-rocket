@@ -8248,3 +8248,20 @@ msgstr "✓ + Labs：Premium 可与 Labs 一起使用。免密钥引擎属于非
 #: src/Admin/AutoPage.php
 msgid "Labs, the free add-on, can also translate the whole site in the background, without the double check; its functions other than the engines with no key are no longer developed."
 msgstr "免费附加组件 Labs 也能在后台翻译整个网站，但不经过双重检查；除免密钥引擎外，它的其他功能已不再开发。"
+
+msgid "MyMemory's free daily limit is reached. The rest is translated when you press the button again tomorrow — or now, in Chrome or Edge on a computer, or with a free AI key."
+msgstr "MyMemory 的每日免费额度已用完。剩下的内容会在你明天再次点击按钮时翻译——或者现在就在电脑上的 Chrome 或 Edge 中翻译，或使用免费的 AI 密钥。"
+
+msgid "No language could be translated yet: the free daily limit was already reached."
+msgstr "还没有任何语言能被翻译：每日免费额度已经用完了。"
+
+#, php-format
+msgid "Online now: %1$s. %2$s languages wait for the next run and stay hidden from visitors until then."
+msgstr "现已上线：%1$s。另有 %2$s 种语言等待下一轮，在此之前对访客隐藏。"
+
+msgid "The AI took too long to answer a large request: the translation goes on by itself with smaller requests. Keep this page open."
+msgstr "AI 回答一个较大的请求用时过长：翻译会用更小的请求自动继续。请保持此页面打开。"
+
+#, php-format
+msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
+msgstr "引擎要求短暂暂停（每分钟请求数上限）：翻译将在 %d 秒后自动继续。请保持此页面打开。"
