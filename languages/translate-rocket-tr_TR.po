@@ -8293,3 +8293,14 @@ msgstr "Yapay zekâ büyük bir isteği yanıtlamakta çok gecikti: çeviri daha
 #, php-format
 msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
 msgstr "Motor kısa bir mola istedi (dakikadaki istek sınırı): çeviri %d saniye içinde kendiliğinden devam edecek. Bu sayfayı açık tutun."
+
+msgid "Saving the translations…"
+msgstr "Çeviriler kaydediliyor…"
+
+#, php-format
+msgid "Done: translated into %1$s. Only you can see it for now, with Preview: %2$s still runs the languages of your public site. Deactivate %2$s and one button puts these translations online."
+msgstr "Tamam: %1$s diline çevrildi. Şimdilik bunu yalnızca siz Önizleme ile görebilirsiniz: herkese açık sitenizin dillerini hâlâ %2$s yönetiyor. %2$s eklentisini devre dışı bırakın, tek bir düğme bu çevirileri yayına alır."
+
+#, php-format
+msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
+msgstr "%s için hiçbir dil ayarlanmamış, bu yüzden çevrilmiş sayfaları TranslateRocket devraldı — şimdilik yalnızca yöneticiler görebilir."

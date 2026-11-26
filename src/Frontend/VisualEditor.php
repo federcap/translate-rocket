@@ -163,13 +163,33 @@ class VisualEditor {
 		if ( empty( $secondary ) ) {
 			return;
 		}
+		// 26/11/2026 (who left after 22 minutes, «it broke the design», Elementor + Jetpack + Popup Maker + Yoast, Safari):
+		// with many plugins the admin bar is already full, and our 147 px item pushed «Howdy» and the search onto a second
+		// row that WordPress draws ON the site's header (1366 and 1440 px wrapped only with us). The label now sits in its
+		// own span; admin_bar_fit() keeps just the rocket when the bar would wrap. The name stays as the tooltip.
+		$label = __( 'Translate visually', 'translate-rocket' );
 		$bar->add_node(
 			array(
 				'id'    => 'trrocket-ve',
-				'title' => '🚀 ' . __( 'Translate visually', 'translate-rocket' ),
+				'title' => '<span class="trr-ab-ico" aria-hidden="true">🚀</span><span class="trr-ab-label"> ' . esc_html( $label ) . '</span>',
 				'href'  => add_query_arg( self::PARAM, '1', $router->url_for_language( $secondary[0] ) ),
+				'meta'  => array( 'title' => $label ),
 			)
 		);
+		if ( $bar->get_node( 'user-actions' ) ) {
+			// Last resort when even the rocket does not fit: the same link inside the «Howdy» menu (hidden otherwise).
+			$bar->add_node(
+				array(
+					'parent' => 'user-actions',
+					'id'     => 'trrocket-ve-account',
+					'title'  => '🚀 ' . esc_html( $label ),
+					'href'   => add_query_arg( self::PARAM, '1', $router->url_for_language( $secondary[0] ) ),
+				)
+			);
+		}
+		if ( ! has_action( 'wp_footer', array( __CLASS__, 'admin_bar_fit' ) ) ) {
+			add_action( 'wp_footer', array( __CLASS__, 'admin_bar_fit' ), 1001 ); // after the bar, drawn at wp_footer 1000 (or wp_body_open)
+		}
 		foreach ( $secondary as $code ) {
 			$bar->add_node(
 				array(
@@ -180,6 +200,19 @@ class VisualEditor {
 				)
 			);
 		}
+	}
+
+	/**
+	 * 26/11/2026: «Translate visually» shrinks to its rocket when the admin bar would otherwise wrap onto the site's
+	 * header (see admin_bar()). Checked on load and on resize; nothing changes while the bar fits in one row.
+	 */
+	public static function admin_bar_fit(): void {
+		if ( ! function_exists( 'is_admin_bar_showing' ) || ! is_admin_bar_showing() ) {
+			return;
+		}
+		echo "<style>#wpadminbar #wp-admin-bar-trrocket-ve .trr-ab-ico{margin-right:0}#wpadminbar.trr-ab-compact #wp-admin-bar-trrocket-ve .trr-ab-label{display:none}#wpadminbar #wp-admin-bar-trrocket-ve-account{display:none}#wpadminbar.trr-ab-hide #wp-admin-bar-trrocket-ve{display:none}#wpadminbar.trr-ab-hide #wp-admin-bar-trrocket-ve-account{display:list-item}</style>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed CSS
+		// Step by step: full label → rocket only → moved into the «Howdy» menu; each step only while the bar still wraps.
+		echo "<script>(function(){function w(b,s){return s.getBoundingClientRect().top-b.getBoundingClientRect().top>5;}function fit(){var b=document.getElementById('wpadminbar'),s=document.getElementById('wp-admin-bar-top-secondary');if(!b||!s||!document.getElementById('wp-admin-bar-trrocket-ve')){return;}b.classList.remove('trr-ab-compact','trr-ab-hide');if(w(b,s)){b.classList.add('trr-ab-compact');if(w(b,s)&&document.getElementById('wp-admin-bar-trrocket-ve-account')){b.classList.add('trr-ab-hide');if(w(b,s)){b.classList.remove('trr-ab-hide');}}}}fit();window.addEventListener('load',fit);var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(fit,150);});})();</script>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed script
 	}
 
 	/**

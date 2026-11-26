@@ -8265,3 +8265,14 @@ msgstr "AI terlalu lama menjawab permintaan besar: terjemahan berlanjut sendiri 
 #, php-format
 msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
 msgstr "Mesin meminta jeda singkat (batas permintaannya per menit): terjemahan berlanjut sendiri dalam %d detik. Biarkan halaman ini tetap terbuka."
+
+msgid "Saving the translations…"
+msgstr "Menyimpan terjemahan…"
+
+#, php-format
+msgid "Done: translated into %1$s. Only you can see it for now, with Preview: %2$s still runs the languages of your public site. Deactivate %2$s and one button puts these translations online."
+msgstr "Selesai: diterjemahkan ke %1$s. Untuk saat ini hanya Anda yang dapat melihatnya, dengan Pratinjau: %2$s masih mengatur bahasa situs publik Anda. Nonaktifkan %2$s dan satu tombol akan menayangkan terjemahan ini."
+
+#, php-format
+msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
+msgstr "%s tidak memiliki bahasa yang diatur, jadi TranslateRocket mengambil alih halaman terjemahan — untuk saat ini hanya terlihat oleh administrator."

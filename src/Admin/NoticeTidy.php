@@ -24,7 +24,7 @@ class NoticeTidy {
 	/**
 	 * Our notices, most important first (data-trrocket values).
 	 */
-	const ORDER = array( 'provider-down', 'preview', 'copy', 'copy-cleanup', 'changed', 'welcome', 'review', 'donate' );
+	const ORDER = array( 'coexist-live', 'coexist', 'provider-down', 'preview', 'copy', 'copy-cleanup', 'changed', 'welcome', 'review', 'donate' );
 
 	/**
 	 * Whether output is being captured.

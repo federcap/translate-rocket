@@ -65,10 +65,13 @@ class OneClick {
 				'bcp'     => BrowserEngine::bcp47( $l ),
 				'missing' => $m,
 				'online'  => ! in_array( $l, $offline, true ),
-				'home'    => \TranslateRocket\Plugin::instance()->router()->home_for_language( $l ),
+				'home'    => \TranslateRocket\Coexistence::on() ? \TranslateRocket\Coexistence::preview_url( $l ) : \TranslateRocket\Plugin::instance()->router()->home_for_language( $l ),
 			);
 		}
 		$names = implode( ', ', wp_list_pluck( $langs, 'label' ) );
+		// d1054 (26/11/2026): side by side nothing goes online. «Done! Your site is now in…» and /es/ (a 404, or the other
+		// plugin's own page) made a working translation look like nothing had happened.
+		$coex = \TranslateRocket\Coexistence::on() ? \TranslateRocket\Coexistence::active_names() : '';
 		?>
 		<div class="trrocket-card trr-oneclick" id="trr-oneclick">
 			<?php // 7/11/2026 (Federico): the most important button of the plugin — centred, coloured, a rocket and a line on what it does. ?>
@@ -168,10 +171,10 @@ class OneClick {
 					'withBrowser' => __( 'Translating with the translator built into your browser — free, on this computer.', 'translate-rocket' ),
 					'withFree'   => __( 'Translating with MyMemory — free, about 5,000 characters a day.', 'translate-rocket' ),
 					'withFreeMail' => __( 'Translating with MyMemory — free, about 50,000 characters a day with your e-mail.', 'translate-rocket' ),
-					'finishing'  => __( 'Putting the languages online…', 'translate-rocket' ),
-					/* translators: %s: list of languages. */
-					'done'       => __( 'Done! Your site is now in %s.', 'translate-rocket' ),
-					'see'        => __( 'See it', 'translate-rocket' ),
+					'finishing'  => '' !== $coex ? __( 'Saving the translations…', 'translate-rocket' ) : __( 'Putting the languages online…', 'translate-rocket' ),
+					/* translators: 1: list of languages, 2: the other translation plugin, e.g. "Polylang". */
+					'done'       => '' !== $coex ? str_replace( '%2$s', $coex, __( 'Done: translated into %1$s. Only you can see it for now, with Preview: %2$s still runs the languages of your public site. Deactivate %2$s and one button puts these translations online.', 'translate-rocket' ) ) : __( 'Done! Your site is now in %s.', 'translate-rocket' ),
+					'see'        => '' !== $coex ? __( 'Preview', 'translate-rocket' ) : __( 'See it', 'translate-rocket' ),
 					/* translators: 1: list of languages online, 2: how many languages wait. */
 					'donePart'   => __( 'Online now: %1$s. %2$s languages wait for the next run and stay hidden from visitors until then.', 'translate-rocket' ),
 					'noneYet'    => __( 'No language could be translated yet: the free daily limit was already reached.', 'translate-rocket' ),
@@ -261,7 +264,7 @@ class OneClick {
 		foreach ( $targets as $l ) {
 			$out[] = array(
 				'label'   => Languages::label( $l ),
-				'home'    => \TranslateRocket\Plugin::instance()->router()->home_for_language( $l ),
+				'home'    => \TranslateRocket\Coexistence::on() ? \TranslateRocket\Coexistence::preview_url( $l ) : \TranslateRocket\Plugin::instance()->router()->home_for_language( $l ),
 				'missing' => \TranslateRocket\Strings::untranslated_count( $l ),
 				'online'  => ! in_array( $l, $empty, true ),
 			);

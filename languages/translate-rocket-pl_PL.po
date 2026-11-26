@@ -7476,3 +7476,14 @@ msgstr "AI zbyt długo odpowiadała na duże zapytanie: tłumaczenie toczy się 
 #, php-format
 msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
 msgstr "Silnik poprosił o krótką przerwę (jego limit zapytań na minutę): tłumaczenie wznowi się samo za %d s. Nie zamykaj tej strony."
+
+msgid "Saving the translations…"
+msgstr "Zapisywanie tłumaczeń…"
+
+#, php-format
+msgid "Done: translated into %1$s. Only you can see it for now, with Preview: %2$s still runs the languages of your public site. Deactivate %2$s and one button puts these translations online."
+msgstr "Gotowe: przetłumaczono na %1$s. Na razie widzisz to tylko Ty, przez Podgląd: językami Twojej publicznej witryny nadal zarządza %2$s. Dezaktywuj %2$s, a jeden przycisk opublikuje te tłumaczenia."
+
+#, php-format
+msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
+msgstr "%s nie ma ustawionego żadnego języka, więc TranslateRocket przejął przetłumaczone strony — na razie widoczne tylko dla administratorów."

@@ -8265,3 +8265,14 @@ msgstr "AI 回答一个较大的请求用时过长：翻译会用更小的请求
 #, php-format
 msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
 msgstr "引擎要求短暂暂停（每分钟请求数上限）：翻译将在 %d 秒后自动继续。请保持此页面打开。"
+
+msgid "Saving the translations…"
+msgstr "正在保存翻译…"
+
+#, php-format
+msgid "Done: translated into %1$s. Only you can see it for now, with Preview: %2$s still runs the languages of your public site. Deactivate %2$s and one button puts these translations online."
+msgstr "完成：已翻译为 %1$s。目前只有你能通过预览看到：公开网站的语言仍由 %2$s 管理。停用 %2$s 后，一个按钮即可让这些翻译上线。"
+
+#, php-format
+msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
+msgstr "%s 没有设置任何语言，因此 TranslateRocket 接管了已翻译的页面——目前仅管理员可见。"

@@ -85,7 +85,8 @@ final class Coexistence {
 	private static function known(): array {
 		return array(
 			'wpml'           => array( 'WPML', defined( 'ICL_SITEPRESS_VERSION' ) ),
-			'polylang'       => array( 'Polylang', defined( 'POLYLANG_VERSION' ) || defined( 'POLYLANG_BASENAME' ) ),
+			// d1054 (26/11/2026): Polylang installed but never set up serves no language: nothing to stand aside for.
+			'polylang'       => array( 'Polylang', ( defined( 'POLYLANG_VERSION' ) || defined( 'POLYLANG_BASENAME' ) ) && self::polylang_set_up() ),
 			'translatepress' => array( 'TranslatePress', class_exists( 'TRP_Translate_Press', false ) ),
 			'weglot'         => array( 'Weglot', defined( 'WEGLOT_VERSION' ) ),
 			'gtranslate'     => array( 'GTranslate', defined( 'GTRANSLATE_VERSION' ) || class_exists( 'GTranslate', false ) ),
@@ -97,6 +98,14 @@ final class Coexistence {
 			'falang'         => array( 'Falang', defined( 'FALANG_VERSION' ) ),
 			'sublanguage'    => array( 'Sublanguage', class_exists( 'Sublanguage_core', false ) ),
 		);
+	}
+
+	/**
+	 * Has Polylang at least one language? (It records the default one with the first language added.)
+	 */
+	private static function polylang_set_up(): bool {
+		$o = get_option( 'polylang' );
+		return is_array( $o ) && ! empty( $o['default_lang'] );
 	}
 
 	/**
@@ -279,7 +288,7 @@ final class Coexistence {
 		$vedi    = Plugin::instance()->router()->url_for_language( $targets[0] );
 		$bacheca = admin_url( 'admin.php?page=translate-rocket' );
 		?>
-		<div class="trr-affiancato" id="trr-affiancato" role="status">
+		<div class="trr-affiancato notranslate" id="trr-affiancato" role="status" translate="no" data-no-translation>
 			<span class="trr-affiancato-t">
 				<?php
 				printf(
@@ -648,7 +657,7 @@ final class Coexistence {
 
 		if ( isset( $_GET['trrocket_live'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display only.
 			$offline = Plugin::instance()->router()->offline_languages();
-			echo '<div class="notice notice-success is-dismissible"><p><strong>';
+			echo '<div class="notice notice-success is-dismissible" data-trrocket="coexist-live"><p><strong>';
 			esc_html_e( 'TranslateRocket is online.', 'translate-rocket' );
 			echo '</strong> ';
 			esc_html_e( 'Visitors now see the translations, the language switcher and the translated addresses.', 'translate-rocket' );
@@ -670,7 +679,7 @@ final class Coexistence {
 
 		if ( self::undecided() ) {
 			$names = self::join_names( self::active() );
-			echo '<div class="notice notice-warning"><p><strong>';
+			echo '<div class="notice notice-warning" data-trrocket="coexist"><p><strong>';
 			printf(
 				/* translators: %s: the other translation plugin(s), e.g. "Polylang". */
 				esc_html__( '%s is active, and TranslateRocket keeps serving your translated pages as before.', 'translate-rocket' ),
@@ -687,7 +696,7 @@ final class Coexistence {
 		if ( self::on() ) {
 			$names  = self::join_names( self::active() );
 			$target = self::first_target();
-			echo '<div class="notice notice-info"><p><strong>';
+			echo '<div class="notice notice-info" data-trrocket="coexist"><p><strong>';
 			esc_html_e( 'TranslateRocket is running side by side — your site is not affected.', 'translate-rocket' );
 			echo '</strong> ';
 			printf(
@@ -716,12 +725,21 @@ final class Coexistence {
 		$pending = get_option( self::PENDING );
 		if ( ! empty( $pending ) && is_array( $pending ) ) {
 			$target = self::first_target();
-			echo '<div class="notice notice-warning"><p><strong>';
-			printf(
-				/* translators: %s: the translation plugin(s) just deactivated. */
-				esc_html__( '%s is deactivated. TranslateRocket has taken over the translated pages — visible only to administrators for now.', 'translate-rocket' ),
-				esc_html( self::join_names( $pending ) )
-			);
+			echo '<div class="notice notice-warning" data-trrocket="coexist"><p><strong>';
+			if ( ( defined( 'POLYLANG_VERSION' ) || defined( 'POLYLANG_BASENAME' ) ) && in_array( 'Polylang', $pending, true ) ) {
+				// d1054: Polylang still active but with no language (see known()): it was not deactivated.
+				printf(
+					/* translators: %s: "Polylang". */
+					esc_html__( '%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now.', 'translate-rocket' ),
+					'Polylang'
+				);
+			} else {
+				printf(
+					/* translators: %s: the translation plugin(s) just deactivated. */
+					esc_html__( '%s is deactivated. TranslateRocket has taken over the translated pages — visible only to administrators for now.', 'translate-rocket' ),
+					esc_html( self::join_names( $pending ) )
+				);
+			}
 			echo '</strong> ';
 			esc_html_e( 'Visitors still see the original language. Look at a few pages on their real addresses, then put the translations online for everyone.', 'translate-rocket' );
 			// 15/11/2026 (ticket #16): what is still untranslated is said before «Go online», not discovered on the pages.

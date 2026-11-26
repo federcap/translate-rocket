@@ -8293,3 +8293,14 @@ msgstr "هوش مصنوعی برای پاسخ به یک درخواست بزرگ 
 #, php-format
 msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
 msgstr "موتور یک مکث کوتاه خواست (سقف درخواست‌هایش در دقیقه): ترجمه پس از %d ثانیه خودبه‌خود ادامه می‌یابد. این صفحه را باز نگه دارید."
+
+msgid "Saving the translations…"
+msgstr "در حال ذخیرهٔ ترجمه‌ها…"
+
+#, php-format
+msgid "Done: translated into %1$s. Only you can see it for now, with Preview: %2$s still runs the languages of your public site. Deactivate %2$s and one button puts these translations online."
+msgstr "انجام شد: به %1$s ترجمه شد. فعلاً فقط شما آن را با پیش‌نمایش می‌بینید: زبان‌های سایت عمومی شما هنوز در دست %2$s است. %2$s را غیرفعال کنید تا یک دکمه این ترجمه‌ها را منتشر کند."
+
+#, php-format
+msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
+msgstr "در %s هیچ زبانی تنظیم نشده است، پس TranslateRocket صفحه‌های ترجمه‌شده را بر عهده گرفت — فعلاً فقط برای مدیران قابل مشاهده است."

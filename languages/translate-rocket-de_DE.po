@@ -7446,3 +7446,14 @@ msgstr "Die KI hat zu lange gebraucht, um eine große Anfrage zu beantworten: Di
 #, php-format
 msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
 msgstr "Der Übersetzer hat um eine kurze Pause gebeten (sein Limit an Anfragen pro Minute): Die Übersetzung geht in %d Sekunden von selbst weiter. Lassen Sie diese Seite geöffnet."
+
+msgid "Saving the translations…"
+msgstr "Übersetzungen werden gespeichert…"
+
+#, php-format
+msgid "Done: translated into %1$s. Only you can see it for now, with Preview: %2$s still runs the languages of your public site. Deactivate %2$s and one button puts these translations online."
+msgstr "Fertig: übersetzt in %1$s. Vorerst sehen nur Sie es, mit Vorschau: %2$s verwaltet noch die Sprachen Ihrer öffentlichen Website. Deaktivieren Sie %2$s, und ein Klick bringt diese Übersetzungen online."
+
+#, php-format
+msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
+msgstr "%s hat keine Sprache eingerichtet, daher hat TranslateRocket die übersetzten Seiten übernommen — vorerst nur für Administratoren sichtbar."

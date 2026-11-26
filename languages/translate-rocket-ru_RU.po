@@ -7476,3 +7476,14 @@ msgstr "ИИ слишком долго отвечал на большой зап
 #, php-format
 msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
 msgstr "Сервис попросил короткую паузу (его лимит запросов в минуту): перевод продолжится сам через %d с. Не закрывайте эту страницу."
+
+msgid "Saving the translations…"
+msgstr "Сохраняем переводы…"
+
+#, php-format
+msgid "Done: translated into %1$s. Only you can see it for now, with Preview: %2$s still runs the languages of your public site. Deactivate %2$s and one button puts these translations online."
+msgstr "Готово: переведено на %1$s. Пока это видите только вы, через Предпросмотр: языками вашего публичного сайта всё ещё управляет %2$s. Отключите %2$s, и одна кнопка опубликует эти переводы."
+
+#, php-format
+msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
+msgstr "В %s не настроен ни один язык, поэтому TranslateRocket взял на себя переведённые страницы — пока они видны только администраторам."

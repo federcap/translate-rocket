@@ -7448,3 +7448,14 @@ msgstr "De AI deed er te lang over om een groot verzoek te beantwoorden: de vert
 #, php-format
 msgid "The engine asked for a short pause (its limit of requests per minute): the translation goes on by itself in %d seconds. Keep this page open."
 msgstr "De vertaalmachine vroeg om een korte pauze (zijn limiet aan verzoeken per minuut): de vertaling gaat over %d seconden vanzelf verder. Houd deze pagina open."
+
+msgid "Saving the translations…"
+msgstr "De vertalingen worden opgeslagen…"
+
+#, php-format
+msgid "Done: translated into %1$s. Only you can see it for now, with Preview: %2$s still runs the languages of your public site. Deactivate %2$s and one button puts these translations online."
+msgstr "Klaar: vertaald naar %1$s. Voorlopig zie alleen jij het, met Voorbeeld: %2$s regelt nog de talen van je openbare site. Deactiveer %2$s en één knop zet deze vertalingen online."
+
+#, php-format
+msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
+msgstr "%s heeft geen taal ingesteld, dus TranslateRocket heeft de vertaalde pagina's overgenomen — voorlopig alleen zichtbaar voor beheerders."

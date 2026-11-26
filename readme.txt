@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 1.8.60
+Stable tag: 1.8.61
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -235,6 +235,10 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.61 =
+* Fixed: with many plugins in the admin bar (Elementor Pro, JetEngine, Yoast and others), the «Translate visually» item pushed the bar onto a second row, drawn over the site's header. The item now shrinks to its rocket, and when even that does not fit it moves into the «Howdy» menu: the bar stays on one row.
+* Fixed: Polylang installed but with no language set up no longer puts TranslateRocket on the side: the translations go online as usual. With Polylang really in use, the end of «Translate my site» now says that only you can see the translations (with Preview) until Polylang is deactivated, instead of «Your site is now in…» with links that answered «Not found»; and the notice that explains it is always shown first.
 
 = 1.8.60 =
 * Fixed: «Translate all» with an AI and your own key (OpenAI and others) stopped at the same percentage and then lost the connection, on pages with long paragraphs. A request now carries at most about 4,000 characters; a request the AI answers too slowly is split in two and asked again, instead of being sent again whole; and a pause the AI asks for (its limit of requests per minute) is waited out instead of stopping the run.
@@ -805,6 +809,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.61 =
+The admin bar stays on one row with many plugins; Polylang with no language no longer blocks the translations, and with Polylang in use the end of «Translate my site» says clearly what to do.
 
 = 1.8.60 =
 «Translate all» with an AI no longer stops on long paragraphs or on the AI's limit per minute; with many languages and no key, languages with nothing translated stay hidden from visitors.
