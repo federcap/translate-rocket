@@ -7760,3 +7760,26 @@ msgstr "Fatto: tradotto in %1$s. Per ora lo vedi solo tu, con Anteprima: le ling
 #, php-format
 msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
 msgstr "%s non ha nessuna lingua impostata, quindi TranslateRocket ha preso in carico le pagine tradotte — per ora visibili solo agli amministratori."
+
+#, php-format
+msgid "%s already runs the languages of this site."
+msgstr "%s gestisce già le lingue di questo sito."
+
+#, php-format
+msgid "While it is active, TranslateRocket works side by side: it translates, but only you see the result, with Preview. Your visitors keep seeing %s."
+msgstr "Finché è attivo, TranslateRocket lavora affiancato: traduce, ma il risultato lo vedi solo tu, con Anteprima. I tuoi visitatori continuano a vedere %s."
+
+#, php-format
+msgid "Its languages now: %s."
+msgstr "Le sue lingue adesso: %s."
+
+#, php-format
+msgid "Two ways: import its translations into TranslateRocket, or deactivate %s and let TranslateRocket put your languages online."
+msgstr "Due strade: importa le sue traduzioni in TranslateRocket, oppure disattiva %s e lascia che TranslateRocket metta online le tue lingue."
+
+msgid "Shows you a preview"
+msgstr "Ti mostra un'anteprima"
+
+#, php-format
+msgid "%s keeps your public site"
+msgstr "%s resta sul sito pubblico"

@@ -7431,3 +7431,26 @@ msgstr "完了：%1$s に翻訳しました。今はプレビューであなた�
 #, php-format
 msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
 msgstr "%s には言語が設定されていないため、TranslateRocket が翻訳ページを引き継ぎました。今のところ管理者にだけ表示されます。"
+
+#, php-format
+msgid "%s already runs the languages of this site."
+msgstr "%s がすでにこのサイトの言語を管理しています。"
+
+#, php-format
+msgid "While it is active, TranslateRocket works side by side: it translates, but only you see the result, with Preview. Your visitors keep seeing %s."
+msgstr "有効なあいだ、TranslateRocket は並行して動きます。翻訳はしますが、結果はプレビューであなただけが見られます。訪問者には引き続き %s が表示されます。"
+
+#, php-format
+msgid "Its languages now: %s."
+msgstr "現在の言語：%s。"
+
+#, php-format
+msgid "Two ways: import its translations into TranslateRocket, or deactivate %s and let TranslateRocket put your languages online."
+msgstr "方法は2つ：その翻訳を TranslateRocket に取り込むか、%s を無効にして TranslateRocket に言語を公開させます。"
+
+msgid "Shows you a preview"
+msgstr "プレビューを表示"
+
+#, php-format
+msgid "%s keeps your public site"
+msgstr "公開サイトは %s のまま"

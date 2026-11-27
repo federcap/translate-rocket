@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, language, woocommerce
 Requires at least: 5.6
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 1.8.61
+Stable tag: 1.8.62
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -235,6 +235,9 @@ https://www.youtube.com/watch?v=Zsf1PXWFhVI
 6. Design the language switcher — dropdown or list, flags, colours — with a live preview.
 
 == Changelog ==
+
+= 1.8.62 =
+* Fixed: with Polylang (or WPML) running the languages, TranslateRocket now says so from the start: the setup wizard explains that it works side by side and gives the two ways (import its translations, or deactivate it); the one-click card says «Shows you a preview» instead of «Puts it online»; and the site scan no longer reads the other plugin's own language copies (its French pages) as text to translate.
 
 = 1.8.61 =
 * Fixed: with many plugins in the admin bar (Elementor Pro, JetEngine, Yoast and others), the «Translate visually» item pushed the bar onto a second row, drawn over the site's header. The item now shrinks to its rocket, and when even that does not fit it moves into the «Howdy» menu: the bar stays on one row.
@@ -809,6 +812,9 @@ plugin and readable at
 https://plugins.svn.wordpress.org/translate-rocket/trunk/changelog.txt
 
 == Upgrade Notice ==
+
+= 1.8.62 =
+With Polylang or WPML on the site, the setup and the one-click card say clearly that only you see the translations for now, and the scan skips their language copies.
 
 = 1.8.61 =
 The admin bar stays on one row with many plugins; Polylang with no language no longer blocks the translations, and with Polylang in use the end of «Translate my site» says clearly what to do.

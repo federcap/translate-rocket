@@ -7457,3 +7457,26 @@ msgstr "Pronto: traduzido para %1$s. Por enquanto só você pode ver, com Pré-v
 #, php-format
 msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
 msgstr "%s não tem nenhum idioma configurado, então o TranslateRocket assumiu as páginas traduzidas — por enquanto visíveis apenas para administradores."
+
+#, php-format
+msgid "%s already runs the languages of this site."
+msgstr "%s já gerencia os idiomas deste site."
+
+#, php-format
+msgid "While it is active, TranslateRocket works side by side: it translates, but only you see the result, with Preview. Your visitors keep seeing %s."
+msgstr "Enquanto estiver ativo, o TranslateRocket trabalha ao lado: traduz, mas só você vê o resultado, com Pré-visualização. Seus visitantes continuam vendo %s."
+
+#, php-format
+msgid "Its languages now: %s."
+msgstr "Os idiomas dele agora: %s."
+
+#, php-format
+msgid "Two ways: import its translations into TranslateRocket, or deactivate %s and let TranslateRocket put your languages online."
+msgstr "Dois caminhos: importar as traduções dele para o TranslateRocket, ou desativar %s e deixar o TranslateRocket colocar seus idiomas online."
+
+msgid "Shows you a preview"
+msgstr "Mostra uma pré-visualização"
+
+#, php-format
+msgid "%s keeps your public site"
+msgstr "%s continua no seu site público"

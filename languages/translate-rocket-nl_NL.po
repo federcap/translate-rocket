@@ -7459,3 +7459,26 @@ msgstr "Klaar: vertaald naar %1$s. Voorlopig zie alleen jij het, met Voorbeeld: 
 #, php-format
 msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
 msgstr "%s heeft geen taal ingesteld, dus TranslateRocket heeft de vertaalde pagina's overgenomen — voorlopig alleen zichtbaar voor beheerders."
+
+#, php-format
+msgid "%s already runs the languages of this site."
+msgstr "%s regelt al de talen van deze site."
+
+#, php-format
+msgid "While it is active, TranslateRocket works side by side: it translates, but only you see the result, with Preview. Your visitors keep seeing %s."
+msgstr "Zolang het actief is, werkt TranslateRocket ernaast: het vertaalt, maar alleen jij ziet het resultaat, met Voorbeeld. Je bezoekers blijven %s zien."
+
+#, php-format
+msgid "Its languages now: %s."
+msgstr "De talen nu: %s."
+
+#, php-format
+msgid "Two ways: import its translations into TranslateRocket, or deactivate %s and let TranslateRocket put your languages online."
+msgstr "Twee wegen: importeer de vertalingen in TranslateRocket, of deactiveer %s en laat TranslateRocket je talen online zetten."
+
+msgid "Shows you a preview"
+msgstr "Toont je een voorbeeld"
+
+#, php-format
+msgid "%s keeps your public site"
+msgstr "%s blijft op je openbare site"

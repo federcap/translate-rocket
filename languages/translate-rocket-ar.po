@@ -8416,3 +8416,26 @@ msgstr "تم: الترجمة إلى %1$s. يمكنك وحدك رؤيتها ال�
 #, php-format
 msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
 msgstr "لا توجد أي لغة مُعدّة في %s، لذلك تولّى TranslateRocket الصفحات المترجمة — وهي مرئية للمسؤولين فقط حاليًا."
+
+#, php-format
+msgid "%s already runs the languages of this site."
+msgstr "%s يدير لغات هذا الموقع بالفعل."
+
+#, php-format
+msgid "While it is active, TranslateRocket works side by side: it translates, but only you see the result, with Preview. Your visitors keep seeing %s."
+msgstr "ما دام مفعّلًا، يعمل TranslateRocket بجانبه: يترجم، لكنك وحدك ترى النتيجة عبر معاينة. يواصل زوارك رؤية %s."
+
+#, php-format
+msgid "Its languages now: %s."
+msgstr "لغاته الآن: %s."
+
+#, php-format
+msgid "Two ways: import its translations into TranslateRocket, or deactivate %s and let TranslateRocket put your languages online."
+msgstr "طريقتان: استورد ترجماته إلى TranslateRocket، أو عطّل %s ودع TranslateRocket ينشر لغاتك."
+
+msgid "Shows you a preview"
+msgstr "يعرض لك معاينة"
+
+#, php-format
+msgid "%s keeps your public site"
+msgstr "%s يبقى على موقعك العام"

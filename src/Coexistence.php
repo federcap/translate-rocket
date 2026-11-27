@@ -360,6 +360,55 @@ final class Coexistence {
 	}
 
 	/**
+	 * d1054 (26/11/2026): the languages the other plugin serves besides the site's own, by name ("Français, Deutsch").
+	 * Polylang and WPML only; empty when unknown.
+	 */
+	public static function other_languages(): string {
+		$out = array();
+		if ( function_exists( 'pll_languages_list' ) && function_exists( 'pll_default_language' ) ) {
+			$def   = (string) pll_default_language();
+			$slugs = (array) pll_languages_list( array( 'fields' => 'slug' ) );
+			$names = (array) pll_languages_list( array( 'fields' => 'name' ) );
+			foreach ( $slugs as $i => $slug ) {
+				if ( (string) $slug !== $def && isset( $names[ $i ] ) ) {
+					$out[] = (string) $names[ $i ];
+				}
+			}
+		} elseif ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			$def = (string) apply_filters( 'wpml_default_language', null );
+			foreach ( (array) apply_filters( 'wpml_active_languages', null, array( 'skip_missing' => 0 ) ) as $code => $l ) {
+				if ( (string) $code !== $def && is_array( $l ) && ! empty( $l['native_name'] ) ) {
+					$out[] = (string) $l['native_name'];
+				}
+			}
+		}
+		return implode( ', ', array_slice( $out, 0, 12 ) );
+	}
+
+	/**
+	 * d1054 (26/11/2026): is this post (or term) one of the other plugin's own language copies — a Polylang or WPML
+	 * translation, not the original? The site scan skipped nothing, and read «À propos» as English text to translate.
+	 *
+	 * @param int    $id   Post or term ID.
+	 * @param string $kind 'post' or 'term'.
+	 */
+	public static function foreign_copy( int $id, string $kind = 'post' ): bool {
+		if ( function_exists( 'pll_default_language' ) ) {
+			$def  = (string) pll_default_language();
+			$lang = 'term' === $kind
+				? ( function_exists( 'pll_get_term_language' ) ? pll_get_term_language( $id ) : '' )
+				: ( function_exists( 'pll_get_post_language' ) ? pll_get_post_language( $id ) : '' );
+			return '' !== $def && is_string( $lang ) && '' !== $lang && $lang !== $def;
+		}
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) && 'post' === $kind ) {
+			$def  = (string) apply_filters( 'wpml_default_language', null );
+			$lang = apply_filters( 'wpml_element_language_code', null, array( 'element_id' => $id, 'element_type' => 'post_' . get_post_type( $id ) ) );
+			return '' !== $def && is_string( $lang ) && '' !== $lang && $lang !== $def;
+		}
+		return false;
+	}
+
+	/**
 	 * An address opened as a preview in a language (the home page by default).
 	 *
 	 * @param string $lang Language code.

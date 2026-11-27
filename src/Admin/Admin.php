@@ -800,6 +800,9 @@ class Admin {
 		if ( $taxes ) {
 			$terms = get_terms( array( 'taxonomy' => $taxes, 'hide_empty' => true, 'number' => 5000 ) );
 			foreach ( is_array( $terms ) ? $terms : array() as $term ) {
+				if ( self::foreign_term( $term ) ) {
+					continue;
+				}
 				$l = get_term_link( $term );
 				if ( is_string( $l ) && '' !== $l ) {
 					$out[] = $l;
@@ -816,7 +819,7 @@ class Admin {
 			);
 			$empty   = get_terms( array( 'taxonomy' => $taxes, 'hide_empty' => false, 'number' => 5000 ) );
 			foreach ( is_array( $empty ) ? $empty : array() as $term ) {
-				if ( (int) $term->count > 0 || ( '' === trim( (string) $term->description ) && ! in_array( (int) $term->term_id, $in_menu, true ) ) ) {
+				if ( (int) $term->count > 0 || self::foreign_term( $term ) || ( '' === trim( (string) $term->description ) && ! in_array( (int) $term->term_id, $in_menu, true ) ) ) {
 					continue;
 				}
 				$l = get_term_link( $term );
@@ -827,6 +830,19 @@ class Admin {
 		}
 		$out = array_values( array_unique( $out ) );
 		return $out;
+	}
+
+	/**
+	 * d1054: terms of the other plugin's languages (Polylang's «Non classé») are left out of the scan.
+	 *
+	 * @param \WP_Term $term Term.
+	 */
+	private static function foreign_term( $term ): bool {
+		static $coex = null;
+		if ( null === $coex ) {
+			$coex = \TranslateRocket\Coexistence::on();
+		}
+		return $coex && $term instanceof \WP_Term && \TranslateRocket\Coexistence::foreign_copy( (int) $term->term_id, 'term' );
 	}
 
 	/**
@@ -858,7 +874,11 @@ class Admin {
 				'suppress_filters' => true,
 			)
 		);
+		$coex = \TranslateRocket\Coexistence::on();
 		foreach ( (array) $ids as $id ) {
+			if ( $coex && \TranslateRocket\Coexistence::foreign_copy( (int) $id ) ) {
+				continue; // d1054: Polylang's /fr/ copy is not text in the site's language
+			}
 			$u = get_permalink( (int) $id );
 			if ( is_string( $u ) && '' !== $u ) {
 				$urls[] = $u;
@@ -6820,6 +6840,38 @@ JS;
 				<section class="trr-wiz-step is-current" data-step="1">
 					<h2><?php esc_html_e( 'What languages?', 'translate-rocket' ); ?></h2>
 					<p class="trr-wiz-lead"><?php esc_html_e( 'Pick the language your site is written in, then the languages to translate it into.', 'translate-rocket' ); ?></p>
+					<?php
+					// d1054 (26/11/2026): with Polylang (or WPML…) running the languages, the setup said «your homepage is translated
+					// in front of you» and nothing went online. Say it here, with the two ways out.
+					if ( \TranslateRocket\Coexistence::on() ) :
+						$trr_coex  = \TranslateRocket\Coexistence::active_names();
+						$trr_other = \TranslateRocket\Coexistence::other_languages();
+						?>
+						<div class="trr-wiz-coexist" style="margin:0 0 18px;padding:12px 16px;border-left:4px solid #dba617;background:#fcf9e8;border-radius:6px;font-size:14px;line-height:1.55">
+							<p style="margin:0 0 6px"><strong>
+							<?php
+							/* translators: %s: the other translation plugin, e.g. "Polylang". */
+							echo esc_html( sprintf( __( '%s already runs the languages of this site.', 'translate-rocket' ), $trr_coex ) );
+							?>
+							</strong>
+							<?php
+							/* translators: %s: the other translation plugin, e.g. "Polylang". */
+							echo esc_html( sprintf( __( 'While it is active, TranslateRocket works side by side: it translates, but only you see the result, with Preview. Your visitors keep seeing %s.', 'translate-rocket' ), $trr_coex ) );
+							if ( '' !== $trr_other ) {
+								echo ' ';
+								/* translators: %s: languages, e.g. "Français, Deutsch". */
+								echo esc_html( sprintf( __( 'Its languages now: %s.', 'translate-rocket' ), $trr_other ) );
+							}
+							?>
+							</p>
+							<p style="margin:0">
+							<?php
+							/* translators: %s: the other translation plugin, e.g. "Polylang". */
+							echo esc_html( sprintf( __( 'Two ways: import its translations into TranslateRocket, or deactivate %s and let TranslateRocket put your languages online.', 'translate-rocket' ), $trr_coex ) );
+							?>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=translate-rocket-import' ) ); ?>"><?php esc_html_e( 'Import translations', 'translate-rocket' ); ?></a></p>
+						</div>
+					<?php endif; ?>
 					<?php // 3/11/2026 (Federico: «tutto in 2 colonne, testo a sinistra e select e input a destra»): a form, label | control. ?>
 					<div class="trr-wiz-form">
 						<label class="trr-wiz-lab" for="trr-wiz-source"><?php esc_html_e( 'My site is written in:', 'translate-rocket' ); ?></label>
@@ -6876,7 +6928,9 @@ JS;
 					// step 2): ONE screen for everybody. Where this browser cannot translate by itself, it says how to go on anyway.
 					?>
 					<p class="trr-wiz-slow" id="trr-wiz-slow" style="margin:22px 0 0;padding:12px 16px;border-left:4px solid #2271b1;background:#f0f6fc;border-radius:6px;font-size:14px;line-height:1.55" hidden><?php esc_html_e( 'Press «Finish & start translating»: your languages are saved and one button translates your whole site for free with MyMemory, with no key, in any browser. For more words a day and better quality, add a free AI key now in «More options», or later in AI Translation.', 'translate-rocket' ); ?></p>
+					<?php if ( ! \TranslateRocket\Coexistence::on() ) : // d1054: side by side the homepage is not translated in front of you (see the box above). ?>
 					<p class="trr-wiz-quick" id="trr-wiz-quick" style="margin:22px 0 0;padding:12px 16px;border-left:4px solid #00a32a;background:#edfaef;border-radius:6px;font-size:14px;line-height:1.55" hidden><strong><?php esc_html_e( 'Nothing else to set up: this browser translates your site for free, with no key.', 'translate-rocket' ); ?></strong> <?php esc_html_e( 'Press «Finish & start translating» and your homepage is translated in front of you. The switcher goes in your menu (or floats in a corner).', 'translate-rocket' ); ?></p>
+					<?php endif; ?>
 				</section>
 
 				<!-- Step 2: translation method -->

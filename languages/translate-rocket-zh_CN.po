@@ -8276,3 +8276,26 @@ msgstr "完成：已翻译为 %1$s。目前只有你能通过预览看到：公�
 #, php-format
 msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
 msgstr "%s 没有设置任何语言，因此 TranslateRocket 接管了已翻译的页面——目前仅管理员可见。"
+
+#, php-format
+msgid "%s already runs the languages of this site."
+msgstr "%s 已在管理本站的语言。"
+
+#, php-format
+msgid "While it is active, TranslateRocket works side by side: it translates, but only you see the result, with Preview. Your visitors keep seeing %s."
+msgstr "在它启用期间，TranslateRocket 并行工作：会翻译，但只有你能通过预览看到结果。访客仍然看到 %s。"
+
+#, php-format
+msgid "Its languages now: %s."
+msgstr "它现在的语言：%s。"
+
+#, php-format
+msgid "Two ways: import its translations into TranslateRocket, or deactivate %s and let TranslateRocket put your languages online."
+msgstr "两种方式：把它的翻译导入 TranslateRocket，或停用 %s，让 TranslateRocket 把你的语言上线。"
+
+msgid "Shows you a preview"
+msgstr "为你显示预览"
+
+#, php-format
+msgid "%s keeps your public site"
+msgstr "公开网站仍由 %s 负责"

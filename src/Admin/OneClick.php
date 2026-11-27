@@ -81,7 +81,16 @@ class OneClick {
 				<ul class="trr-oneclick-steps">
 					<li><span class="trr-ocs-ico" aria-hidden="true">📄</span><strong><?php esc_html_e( 'Reads every page', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'pages, posts, products and archives', 'translate-rocket' ); ?></span></li>
 					<li><span class="trr-ocs-ico" aria-hidden="true">🌍</span><strong><?php esc_html_e( 'Translates everything', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'texts, menus, buttons and SEO', 'translate-rocket' ); ?></span></li>
-					<li><span class="trr-ocs-ico" aria-hidden="true">✅</span><strong><?php esc_html_e( 'Puts it online', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'one address for each language', 'translate-rocket' ); ?></span></li>
+					<?php if ( '' !== $coex ) : // d1054: side by side nothing goes online; do not promise it. ?>
+						<li><span class="trr-ocs-ico" aria-hidden="true">👁️</span><strong><?php esc_html_e( 'Shows you a preview', 'translate-rocket' ); ?></strong><span>
+						<?php
+						/* translators: %s: the other translation plugin, e.g. "Polylang". */
+						echo esc_html( sprintf( __( '%s keeps your public site', 'translate-rocket' ), $coex ) );
+						?>
+						</span></li>
+					<?php else : ?>
+						<li><span class="trr-ocs-ico" aria-hidden="true">✅</span><strong><?php esc_html_e( 'Puts it online', 'translate-rocket' ); ?></strong><span><?php esc_html_e( 'one address for each language', 'translate-rocket' ); ?></span></li>
+					<?php endif; ?>
 				</ul>
 				<?php // 7/11/2026 (Federico): the target languages as flag + name chips, right above the button. ?>
 				<p class="trr-oneclick-into"><?php esc_html_e( 'Your site will be translated into:', 'translate-rocket' ); ?></p>

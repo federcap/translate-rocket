@@ -8276,3 +8276,26 @@ msgstr "Selesai: diterjemahkan ke %1$s. Untuk saat ini hanya Anda yang dapat mel
 #, php-format
 msgid "%s has no language set up, so TranslateRocket has taken over the translated pages — visible only to administrators for now."
 msgstr "%s tidak memiliki bahasa yang diatur, jadi TranslateRocket mengambil alih halaman terjemahan — untuk saat ini hanya terlihat oleh administrator."
+
+#, php-format
+msgid "%s already runs the languages of this site."
+msgstr "%s sudah mengatur bahasa situs ini."
+
+#, php-format
+msgid "While it is active, TranslateRocket works side by side: it translates, but only you see the result, with Preview. Your visitors keep seeing %s."
+msgstr "Selama aktif, TranslateRocket bekerja berdampingan: menerjemahkan, tetapi hanya Anda yang melihat hasilnya, dengan Pratinjau. Pengunjung tetap melihat %s."
+
+#, php-format
+msgid "Its languages now: %s."
+msgstr "Bahasanya sekarang: %s."
+
+#, php-format
+msgid "Two ways: import its translations into TranslateRocket, or deactivate %s and let TranslateRocket put your languages online."
+msgstr "Dua cara: impor terjemahannya ke TranslateRocket, atau nonaktifkan %s dan biarkan TranslateRocket menayangkan bahasa Anda."
+
+msgid "Shows you a preview"
+msgstr "Menampilkan pratinjau"
+
+#, php-format
+msgid "%s keeps your public site"
+msgstr "%s tetap di situs publik Anda"
